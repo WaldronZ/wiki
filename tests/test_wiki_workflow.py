@@ -387,6 +387,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("治理命令", quality_html)
             self.assertIn("copy-quality-command", quality_html)
             self.assertIn("python3 scripts/check_quality.py docs", quality_html)
+            self.assertIn("python3 scripts/apply_status_workflow.py docs --input &lt;taxonomy_status_workflow.json&gt; --write", quality_html)
             self.assertIn("python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv", quality_html)
             self.assertIn("python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv", quality_html)
             self.assertIn("python3 scripts/export_taxonomy_balance.py docs --format project --max-score 50 --output docs/exports/taxonomy-balance-project.csv", quality_html)
@@ -499,6 +500,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(artifact_by_href["manifest.json"]["status"], "generated_after_inventory")
             self.assertTrue(manifest["publish_checks"]["artifacts_present"])
             self.assertIn("python3 scripts/check_quality.py docs", manifest["commands"])
+            self.assertIn("python3 scripts/apply_status_workflow.py docs --input <taxonomy_status_workflow.json> --write", manifest["commands"])
             self.assertIn("python3 scripts/export_actions.py docs --output docs/exports/actions.md", manifest["commands"])
             self.assertIn("python3 scripts/export_taxonomy_load.py docs --format csv --output docs/exports/taxonomy-load.csv", manifest["commands"])
             recipe_by_id = {item["id"]: item for item in manifest["command_recipes"]}
@@ -506,6 +508,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertFalse(recipe_by_id["quality_gate"]["mutates"])
             self.assertFalse(recipe_by_id["apply_metadata_dry_run"]["mutates"])
             self.assertEqual(recipe_by_id["apply_metadata_dry_run"]["command"], "python3 scripts/apply_library_metadata.py docs --input <csv>")
+            self.assertEqual(recipe_by_id["apply_status_workflow"]["output"], "docs/guides/taxonomy.json")
             self.assertEqual(recipe_by_id["actions_project"]["output"], "docs/exports/actions-project.csv")
             self.assertEqual(recipe_by_id["taxonomy_balance_project"]["output"], "docs/exports/taxonomy-balance-project.csv")
             self.assertEqual(recipe_by_id["taxonomy_actions_patch"]["output"], "docs/exports/taxonomy-action-patch.csv")
@@ -515,6 +518,10 @@ class WikiWorkflowTest(unittest.TestCase):
                 ["taxonomy_actions_markdown", "taxonomy_actions_patch", "apply_metadata_dry_run", "quality_gate"],
             )
             self.assertEqual(playbook_by_id["weekly_action_review"]["steps"], ["actions_markdown", "actions_project", "quality_gate"])
+            self.assertEqual(
+                playbook_by_id["status_workflow_rollout"]["steps"],
+                ["apply_status_workflow_dry_run", "apply_status_workflow", "build_wiki", "strict_validate"],
+            )
             release_html = (report_dir / "release.html").read_text(encoding="utf-8")
             self.assertIn("知识库发布摘要", release_html)
             self.assertIn("Manifest JSON", release_html)
@@ -532,6 +539,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("复制命令组", release_html)
             self.assertIn("taxonomy_balance_project", release_html)
             self.assertIn("taxonomy_actions_patch", release_html)
+            self.assertIn("status_workflow_rollout", release_html)
             self.assertIn("copy-release-command", release_html)
             self.assertIn("copyReleaseCommand", release_html)
             self.assertIn("Alpha 论文", release_html)
@@ -1060,6 +1068,71 @@ class WikiWorkflowTest(unittest.TestCase):
             quality_html = (report_dir / "quality.html").read_text(encoding="utf-8")
             self.assertIn("库内重复报告", quality_html)
             self.assertIn("2601.00001-alpha-paper-copy", quality_html)
+
+    def test_apply_status_workflow_merges_dynamic_config(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_name:
+            report_dir = self.make_report_dir(Path(tmp_name))
+            self.run_cmd("scripts/build_wiki.py", str(report_dir))
+
+            workflow_path = Path(tmp_name) / "taxonomy_status_workflow.json"
+            workflow_path.write_text(
+                json.dumps(
+                    {
+                        "active_status_workflow": "lab",
+                        "status_workflows": {
+                            "lab": {
+                                "status_values": ["queued", "reading", "read", "implemented", "shelved"],
+                                "reading_stage_values": ["skimmed", "deep_read", "code_checked"],
+                                "review_stage_values": ["fresh", "due", "reviewed", "evergreen"],
+                            }
+                        },
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            dry = self.run_cmd("scripts/apply_status_workflow.py", str(report_dir), "--input", str(workflow_path))
+            self.assertIn("DRY  ADD workflow lab", dry.stdout)
+            taxonomy_before = json.loads((report_dir / "guides" / "taxonomy.json").read_text(encoding="utf-8"))
+            self.assertEqual(taxonomy_before["active_status_workflow"], "research")
+            self.assertNotIn("lab", taxonomy_before["status_workflows"])
+
+            write = self.run_cmd(
+                "scripts/apply_status_workflow.py",
+                str(report_dir),
+                "--input",
+                str(workflow_path),
+                "--write",
+            )
+            self.assertIn("WRITE  ADD workflow lab", write.stdout)
+            taxonomy_after = json.loads((report_dir / "guides" / "taxonomy.json").read_text(encoding="utf-8"))
+            self.assertEqual(taxonomy_after["active_status_workflow"], "lab")
+            self.assertIn("research", taxonomy_after["status_workflows"])
+            self.assertEqual(taxonomy_after["status_values"], ["queued", "reading", "read", "implemented", "shelved"])
+            self.assertEqual(taxonomy_after["reading_stage_values"], ["skimmed", "deep_read", "code_checked"])
+            self.assertEqual(taxonomy_after["review_stage_values"], ["fresh", "due", "reviewed", "evergreen"])
+
+            self.run_cmd("scripts/build_wiki.py", str(report_dir))
+            self.run_cmd("scripts/validate_wiki.py", str(report_dir), "--strict-taxonomy")
+            papers = json.loads((report_dir / "papers.json").read_text(encoding="utf-8"))
+            self.assertEqual(papers["controls"]["active_status_workflow"], "lab")
+            self.assertEqual(papers["controls"]["status"], ["queued", "reading", "read", "implemented", "shelved"])
+            self.assertIn("lab", papers["controls"]["status_workflows"])
+
+            broken_path = Path(tmp_name) / "broken_status_workflow.json"
+            broken_path.write_text(
+                json.dumps({"name": "broken", "status_values": ["read"]}),
+                encoding="utf-8",
+            )
+            broken = self.run_cmd(
+                "scripts/apply_status_workflow.py",
+                str(report_dir),
+                "--input",
+                str(broken_path),
+                check=False,
+            )
+            self.assertNotEqual(broken.returncode, 0)
+            self.assertIn("missing required keys", broken.stderr)
 
     def test_invalid_taxonomy_config_fails_validation(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_name:

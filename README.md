@@ -66,6 +66,7 @@ paper_reader/
 ├── scripts/
 │   ├── apply_library_metadata.py
 │   ├── apply_review_plan.py
+│   ├── apply_status_workflow.py
 │   ├── apply_taxonomy_aliases.py
 │   ├── build_wiki.py
 │   ├── check_quality.py
@@ -90,6 +91,7 @@ paper_reader/
 - `scripts/build_wiki.py` 用于扫描报告并生成 wiki 汇总页
 - `scripts/render_report_html.py` 是稳定 HTML 渲染兜底脚本，用于修复公式裸露、图片破图等展示问题
 - `scripts/apply_review_plan.py` 用于把 `docs/review.json` 的建议复习日期安全写回报告 frontmatter，默认只 dry-run
+- `scripts/apply_status_workflow.py` 用于把 `docs/taxonomy.html` 下载的 `taxonomy_status_workflow.json` 安全合并到 `guides/taxonomy.json`，默认只 dry-run
 - `scripts/export_library_csv.py` 用于把 `papers.json`、`review.json` 和 `quality.json` 合并导出成 CSV，便于用表格工具批量管理
 - `scripts/export_reading_list.py` 用于按研究线、状态、方向、主题、方法或重要性导出 Markdown 阅读清单、BibTeX 或链接列表
 - `scripts/export_actions.py` 用于把 `actions.json` 导出成统一 checklist、审计 CSV 或可自定义任务状态的项目任务 CSV
@@ -209,7 +211,7 @@ has_code: true
 
 分类建议见 [`docs/guides/taxonomy.md`](docs/guides/taxonomy.md)。核心原则是：`domains/tracks/problems` 管结构层级，`topics/methods` 管交叉筛选，`research_line/line_role` 管研究脉络，`status/reading_stage/review_stage` 管个人阅读状态。
 
-标签别名、研究线角色排序、阅读状态、阅读阶段和复习阶段可在 [`docs/guides/taxonomy.json`](docs/guides/taxonomy.json) 里自定义；修改后运行 `python3 scripts/build_wiki.py docs` 即可刷新筛选项、论文库批量下拉框和状态看板列。状态体系既支持根层 `status_values` 这种简单配置，也支持 `status_workflows` 保存多套命名流程，并用 `active_status_workflow` 选择当前默认启用的一套。`docs/taxonomy.html` 会展示当前状态工作流配置，并提供浏览器内状态工作流设计器，可以载入已有 workflow、编辑候选状态、复制或下载保留全部 workflow 的 `taxonomy_status_workflow.json` 片段，再合并回 `taxonomy.json`；`docs/index.html`、`docs/library.html`、`docs/timeline.html`、`docs/matrix.html` 和 `docs/board.html` 会读取全部命名 workflow，允许在不同浏览视图里动态切换状态语义；看板也支持新增临时状态列并导出 CSV，用来试跑一套新流程。构建后的 `docs/papers.json`、`docs/stats.json` 和 `docs/manifest.json` 会把当前启用状态与全部状态 workflow 写入 `controls`，方便后续页面或桌面软件动态读取。
+标签别名、研究线角色排序、阅读状态、阅读阶段和复习阶段可在 [`docs/guides/taxonomy.json`](docs/guides/taxonomy.json) 里自定义；修改后运行 `python3 scripts/build_wiki.py docs` 即可刷新筛选项、论文库批量下拉框和状态看板列。状态体系既支持根层 `status_values` 这种简单配置，也支持 `status_workflows` 保存多套命名流程，并用 `active_status_workflow` 选择当前默认启用的一套。`docs/taxonomy.html` 会展示当前状态工作流配置，并提供浏览器内状态工作流设计器，可以载入已有 workflow、编辑候选状态、复制或下载保留全部 workflow 的 `taxonomy_status_workflow.json` 片段；下载后先运行 `python3 scripts/apply_status_workflow.py docs --input ~/Downloads/taxonomy_status_workflow.json` 预览，再加 `--write` 合并回 `taxonomy.json`。`docs/index.html`、`docs/library.html`、`docs/timeline.html`、`docs/matrix.html` 和 `docs/board.html` 会读取全部命名 workflow，允许在不同浏览视图里动态切换状态语义；看板也支持新增临时状态列并导出 CSV，用来试跑一套新流程。构建后的 `docs/papers.json`、`docs/stats.json` 和 `docs/manifest.json` 会把当前启用状态与全部状态 workflow 写入 `controls`，方便后续页面或桌面软件动态读取。
 
 新增报告时可以从 [`docs/guides/report.template.md`](docs/guides/report.template.md) 复制章节骨架；报告 frontmatter 的字段类型、必填项、评分范围和日期格式由 [`docs/guides/metadata.schema.json`](docs/guides/metadata.schema.json) 描述；候选论文 CSV 的字段契约由 [`docs/guides/inbox.schema.json`](docs/guides/inbox.schema.json) 描述；分类配置字段由 [`docs/guides/taxonomy.schema.json`](docs/guides/taxonomy.schema.json) 描述，当前 `taxonomy.json` 已带 `$schema` 引用，支持编辑器自动提示。`python3 scripts/validate_wiki.py docs --strict-taxonomy` 会同时校验 schema、报告元数据、inbox CSV、分类漂移和生成页面，适合作为发布或开源协作前的质量门禁。
 
@@ -289,6 +291,14 @@ python3 scripts/export_taxonomy_actions.py docs --format patch --action merge_ca
 python3 scripts/export_taxonomy_balance.py docs --format project --max-score 50 --assignee taxonomy-owner --output docs/exports/taxonomy-balance-project.csv
 python3 scripts/export_taxonomy_load.py docs --format csv --signal dense_tags --output docs/exports/taxonomy-load.csv
 python3 scripts/export_taxonomy_load.py docs --format patch --signal sparse_tags --output docs/exports/taxonomy-load-patch.csv
+```
+
+应用状态工作流设计器导出的配置：
+
+```bash
+python3 scripts/apply_status_workflow.py docs --input ~/Downloads/taxonomy_status_workflow.json
+python3 scripts/apply_status_workflow.py docs --input ~/Downloads/taxonomy_status_workflow.json --write
+python3 scripts/build_wiki.py docs
 ```
 
 `taxonomy-action-patch.csv` 会保留 `source_value` / `action` / `severity` 等审计列，同时把目标字段填成可写回的列；正式应用前建议先人工确认目标值并 dry-run。把表格里编辑过的分类和状态字段写回报告 frontmatter：
