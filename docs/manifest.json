@@ -604,6 +604,39 @@
       "mutates": false
     }
   ],
+  "governance_playbooks": [
+    {
+      "id": "taxonomy_merge_batch",
+      "label": "Taxonomy merge batch",
+      "description": "Review merge candidates, prepare a metadata patch, dry-run it, then refresh quality gates.",
+      "steps": [
+        "taxonomy_actions_markdown",
+        "taxonomy_actions_patch",
+        "apply_metadata",
+        "quality_gate"
+      ]
+    },
+    {
+      "id": "taxonomy_balance_review",
+      "label": "Taxonomy balance review",
+      "description": "Turn overloaded or sparse taxonomy buckets into project tasks before changing labels.",
+      "steps": [
+        "taxonomy_balance_project",
+        "taxonomy_actions_project",
+        "quality_gate"
+      ]
+    },
+    {
+      "id": "release_readiness",
+      "label": "Release readiness",
+      "description": "Rebuild the wiki, validate strict taxonomy, then run the full quality gate before publishing.",
+      "steps": [
+        "build_wiki",
+        "strict_validate",
+        "quality_gate"
+      ]
+    }
+  ],
   "commands": [
     "python3 scripts/build_wiki.py docs",
     "python3 scripts/check_quality.py docs",

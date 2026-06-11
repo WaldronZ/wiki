@@ -363,11 +363,18 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertFalse(recipe_by_id["quality_gate"]["mutates"])
             self.assertEqual(recipe_by_id["taxonomy_balance_project"]["output"], "docs/exports/taxonomy-balance-project.csv")
             self.assertEqual(recipe_by_id["taxonomy_actions_patch"]["output"], "docs/exports/taxonomy-action-patch.csv")
+            playbook_by_id = {item["id"]: item for item in manifest["governance_playbooks"]}
+            self.assertEqual(
+                playbook_by_id["taxonomy_merge_batch"]["steps"],
+                ["taxonomy_actions_markdown", "taxonomy_actions_patch", "apply_metadata", "quality_gate"],
+            )
             release_html = (report_dir / "release.html").read_text(encoding="utf-8")
             self.assertIn("知识库发布摘要", release_html)
             self.assertIn("Manifest JSON", release_html)
             self.assertIn("推荐命令", release_html)
             self.assertIn("命令 Recipes", release_html)
+            self.assertIn("治理 Playbooks", release_html)
+            self.assertIn("Taxonomy merge batch", release_html)
             self.assertIn("taxonomy_balance_project", release_html)
             self.assertIn("taxonomy_actions_patch", release_html)
             self.assertIn("copy-release-command", release_html)

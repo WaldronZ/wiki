@@ -1402,6 +1402,42 @@ def command_recipes_manifest() -> list[dict[str, Any]]:
     ]
 
 
+def governance_playbooks_manifest() -> list[dict[str, Any]]:
+    return [
+        {
+            "id": "taxonomy_merge_batch",
+            "label": "Taxonomy merge batch",
+            "description": "Review merge candidates, prepare a metadata patch, dry-run it, then refresh quality gates.",
+            "steps": [
+                "taxonomy_actions_markdown",
+                "taxonomy_actions_patch",
+                "apply_metadata",
+                "quality_gate",
+            ],
+        },
+        {
+            "id": "taxonomy_balance_review",
+            "label": "Taxonomy balance review",
+            "description": "Turn overloaded or sparse taxonomy buckets into project tasks before changing labels.",
+            "steps": [
+                "taxonomy_balance_project",
+                "taxonomy_actions_project",
+                "quality_gate",
+            ],
+        },
+        {
+            "id": "release_readiness",
+            "label": "Release readiness",
+            "description": "Rebuild the wiki, validate strict taxonomy, then run the full quality gate before publishing.",
+            "steps": [
+                "build_wiki",
+                "strict_validate",
+                "quality_gate",
+            ],
+        },
+    ]
+
+
 def build_manifest(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> dict[str, Any]:
     quality = build_quality_report(papers)
     review = build_review_plan(papers)
@@ -1409,6 +1445,7 @@ def build_manifest(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
     pages = wiki_pages_manifest()
     data_files = data_files_manifest()
     command_recipes = command_recipes_manifest()
+    governance_playbooks = governance_playbooks_manifest()
     quality_queues = {name: len(slugs) for name, slugs in quality["queues"].items()}
     review_queues = {name: len(slugs) for name, slugs in review["queues"].items()}
     publish_checks = {
@@ -1440,6 +1477,7 @@ def build_manifest(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
         "pages": pages,
         "data_files": data_files,
         "command_recipes": command_recipes,
+        "governance_playbooks": governance_playbooks,
         "commands": [recipe["command"] for recipe in command_recipes],
     }
 
@@ -4748,6 +4786,15 @@ def render_release(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
         "</tr>"
         for recipe in manifest["command_recipes"]
     )
+    recipe_by_id = {str(recipe["id"]): recipe for recipe in manifest["command_recipes"]}
+    playbook_rows = "".join(
+        "<tr>"
+        f"<td>{html.escape(str(playbook['label']))}<div class=\"meta\">{html.escape(str(playbook['id']))}</div></td>"
+        f"<td>{html.escape(str(playbook['description']))}</td>"
+        f"<td>{'<br>'.join(html.escape(str(recipe_by_id.get(step, {}).get('label', step))) for step in playbook.get('steps', []))}</td>"
+        "</tr>"
+        for playbook in manifest.get("governance_playbooks", [])
+    )
     command_html = "\n".join(html.escape(command) for command in manifest["commands"])
     line_rows = "".join(
         "<tr>"
@@ -4810,6 +4857,10 @@ def render_release(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
   <section>
     <h2 class="section-title">命令 Recipes</h2>
     <div class="table-wrap"><table class="data-table"><thead><tr><th>命令</th><th>类型</th><th>输出</th><th>写入</th><th>CLI</th><th>操作</th></tr></thead><tbody>{recipe_rows}</tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">治理 Playbooks</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>批次</th><th>用途</th><th>步骤</th></tr></thead><tbody>{playbook_rows}</tbody></table></div>
   </section>
 </main>
 <script>
