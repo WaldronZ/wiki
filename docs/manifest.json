@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-11T22:21:58",
+  "generated_at": "2026-06-12T01:39:54",
   "name": "AutoPaperReader Wiki",
   "count": 5,
   "publish_ready": false,
@@ -536,8 +536,8 @@
       "description": "卡片检索、筛选、研究线概览",
       "exists": true,
       "status": "ok",
-      "size_bytes": 236775,
-      "sha256": "c61121dea19bc056eff659f24366e1a94f8d884d7ef0ad24759d63a0fbf82ad6",
+      "size_bytes": 241622,
+      "sha256": "1fd81f39216c0eb4e232cd2b8559138ed19acde15dd689ebd246a307ced0d3b3",
       "hash_mode": "normalized"
     },
     {
@@ -567,7 +567,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 44965,
-      "sha256": "4dbdae9d290468fbc50896c8fcdb5987eb3924c51af94321f6482684e042f8de",
+      "sha256": "7e526bd68112462866196bf7e6036081222c0809c08503809a9a72782a071d1c",
       "hash_mode": "raw"
     },
     {

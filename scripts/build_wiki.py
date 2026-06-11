@@ -2288,6 +2288,8 @@ def render_line_overview(papers: list[dict[str, Any]]) -> str:
 
 def render_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     taxonomy = taxonomy_counts(papers)
+    controls = control_options()
+    index_controls = {key: value for key, value in controls.items() if key != "shared_views"}
     data = {
         "papers": [public_paper(paper) for paper in papers],
         "search_index": [
@@ -2299,6 +2301,7 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         ],
         "tags": tag_counts(papers),
         "taxonomy": taxonomy,
+        "controls": index_controls,
         "shared_views": shared_views_for("index"),
         "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
     }
@@ -2345,6 +2348,7 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <select id="domain"><option value="">全部领域</option>{render_topic_options(taxonomy["domains"])}</select>
     <select id="line"><option value="">全部研究线</option>{render_topic_options(taxonomy["research_lines"])}</select>
     <select id="role"><option value="">全部角色</option>{render_topic_options(taxonomy["line_roles"])}</select>
+    <select id="statusWorkflow" aria-label="状态体系"></select>
     <select id="topic"><option value="">全部主题</option>{render_topic_options(taxonomy["topics"])}</select>
     <select id="method"><option value="">全部方法</option>{render_topic_options(taxonomy["methods"])}</select>
     <select id="status"><option value="">全部状态</option>{render_topic_options(taxonomy["statuses"])}</select>
@@ -2387,6 +2391,7 @@ const search = document.querySelector("#search");
 const domain = document.querySelector("#domain");
 const line = document.querySelector("#line");
 const role = document.querySelector("#role");
+const statusWorkflow = document.querySelector("#statusWorkflow");
 const topic = document.querySelector("#topic");
 const method = document.querySelector("#method");
 const status = document.querySelector("#status");
@@ -2411,6 +2416,15 @@ const exportSavedViews = document.querySelector("#exportSavedViews");
 const importSavedViews = document.querySelector("#importSavedViews");
 const searchTextBySlug = new Map((window.PAPER_WIKI.search_index || []).map(item => [item.slug, item.search_text || ""]));
 const sharedViews = window.PAPER_WIKI.shared_views || [];
+const wikiControls = window.PAPER_WIKI.controls || {{}};
+const statusWorkflows = wikiControls.status_workflows || {{}};
+const activeStatusWorkflow = wikiControls.active_status_workflow || Object.keys(statusWorkflows)[0] || "default";
+const fallbackStatusValues = Array.isArray(wikiControls.status) ? wikiControls.status : [];
+const fallbackStageValues = Array.isArray(wikiControls.reading_stage) ? wikiControls.reading_stage : [];
+const fallbackReviewStageValues = Array.isArray(wikiControls.review_stage) ? wikiControls.review_stage : [];
+const observedStatusValues = Array.from(new Set(papers.map(p => p.status).filter(Boolean)));
+const observedStageValues = Array.from(new Set(papers.map(p => p.reading_stage).filter(Boolean)));
+const observedReviewStageValues = Array.from(new Set(papers.map(p => p.review_stage).filter(Boolean)));
 let currentPage = 1;
 const savedViewsKey = "autopaperreader:index:savedViews";
 const queryControls = [
@@ -2418,6 +2432,7 @@ const queryControls = [
   ["domain", domain],
   ["line", line],
   ["role", role],
+  ["workflow", statusWorkflow],
   ["topic", topic],
   ["method", method],
   ["status", status],
@@ -2442,8 +2457,56 @@ function getPageSize() {{
   return pageSize.value === "all" ? Infinity : Number(pageSize.value || 12);
 }}
 
+function orderedUnique(values) {{
+  return Array.from(new Set(values.map(value => String(value || "").trim()).filter(Boolean)));
+}}
+
+function workflowValuesFor(name, key, fallbackValues, observedValues) {{
+  const workflow = statusWorkflows[name] || {{}};
+  const configured = Array.isArray(workflow[key]) ? workflow[key] : fallbackValues;
+  return orderedUnique([...configured, ...observedValues]);
+}}
+
+function statusValuesForWorkflow(name) {{
+  return workflowValuesFor(name, "status_values", fallbackStatusValues, observedStatusValues);
+}}
+
+function valueCount(key, value) {{
+  return papers.filter(p => String(p[key] || "") === value).length;
+}}
+
+function replaceWorkflowOptions(select, placeholder, values, field, withCounts = false) {{
+  const current = select.value;
+  select.replaceChildren(new Option(placeholder, ""));
+  values.forEach(value => {{
+    const label = withCounts ? `${{value}} (${{valueCount(field, value)}})` : value;
+    select.appendChild(new Option(label, value));
+  }});
+  select.value = values.includes(current) ? current : "";
+}}
+
+function populateStatusWorkflowOptions() {{
+  const names = Object.keys(statusWorkflows);
+  const workflowNames = names.length ? names : [activeStatusWorkflow];
+  statusWorkflow.replaceChildren(...workflowNames.map(name => {{
+    const label = name === activeStatusWorkflow ? `${{name}} (默认)` : name;
+    return new Option(label, name);
+  }}));
+  statusWorkflow.value = workflowNames.includes(activeStatusWorkflow) ? activeStatusWorkflow : workflowNames[0] || "";
+}}
+
+function applyStatusWorkflow() {{
+  const workflowName = statusWorkflow.value || activeStatusWorkflow;
+  const statusValues = statusValuesForWorkflow(workflowName);
+  const stageValues = workflowValuesFor(workflowName, "reading_stage_values", fallbackStageValues, observedStageValues);
+  const reviewStageValues = workflowValuesFor(workflowName, "review_stage_values", fallbackReviewStageValues, observedReviewStageValues);
+  replaceWorkflowOptions(status, "全部状态", statusValues, "status", true);
+  replaceWorkflowOptions(stage, "阅读阶段", stageValues, "reading_stage", true);
+  replaceWorkflowOptions(reviewStage, "复习阶段", reviewStageValues, "review_stage", true);
+}}
+
 function defaultValueFor(key) {{
-  return key === "sort" ? "default" : key === "size" ? "12" : "";
+  return key === "workflow" ? activeStatusWorkflow : key === "sort" ? "default" : key === "size" ? "12" : "";
 }}
 
 function currentState() {{
@@ -2458,8 +2521,13 @@ function currentState() {{
 
 function applyState(state) {{
   queryControls.forEach(([key, el]) => {{
+    if (["status", "stage", "reviewStage"].includes(key)) return;
     el.value = state[key] || defaultValueFor(key);
   }});
+  applyStatusWorkflow();
+  status.value = state.status || defaultValueFor("status");
+  stage.value = state.stage || defaultValueFor("stage");
+  reviewStage.value = state.reviewStage || defaultValueFor("reviewStage");
   currentPage = Number(state.page || 1) || 1;
   render();
 }}
@@ -2467,8 +2535,13 @@ function applyState(state) {{
 function readStateFromUrl() {{
   const params = new URLSearchParams(window.location.search);
   queryControls.forEach(([key, el]) => {{
+    if (["status", "stage", "reviewStage"].includes(key)) return;
     el.value = params.has(key) ? params.get(key) : defaultValueFor(key);
   }});
+  applyStatusWorkflow();
+  status.value = params.has("status") ? params.get("status") : defaultValueFor("status");
+  stage.value = params.has("stage") ? params.get("stage") : defaultValueFor("stage");
+  reviewStage.value = params.has("reviewStage") ? params.get("reviewStage") : defaultValueFor("reviewStage");
   currentPage = Number(params.get("page") || 1) || 1;
 }}
 
@@ -2683,8 +2756,9 @@ function render() {{
   writeStateToUrl();
 }}
 
-const filterControls = [search, domain, line, role, topic, method, status, stage, code, importance, reviewStage, review, sort, pageSize];
+const filterControls = [search, domain, line, role, statusWorkflow, topic, method, status, stage, code, importance, reviewStage, review, sort, pageSize];
 filterControls.forEach(el => el.addEventListener("input", () => {{
+  if (el === statusWorkflow) applyStatusWorkflow();
   currentPage = 1;
   render();
 }}));
@@ -2700,6 +2774,7 @@ resetFilters.addEventListener("click", () => {{
   queryControls.forEach(([key, el]) => {{
     el.value = defaultValueFor(key);
   }});
+  applyStatusWorkflow();
   currentPage = 1;
   render();
 }});
@@ -2761,6 +2836,7 @@ savedView.addEventListener("change", () => {{
   const view = source === "shared" ? sharedViews[index] : readSavedViews()[index];
   if (view) applyState(view.state || {{}});
 }});
+populateStatusWorkflowOptions();
 readStateFromUrl();
 refreshSavedViews();
 render();
