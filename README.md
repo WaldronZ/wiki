@@ -58,7 +58,8 @@ paper_reader/
 │   ├── guides/
 │   │   ├── taxonomy.md
 │   │   ├── taxonomy.json
-│   │   └── metadata.schema.json
+│   │   ├── metadata.schema.json
+│   │   └── inbox.schema.json
 │   └── .gitkeep
 ├── scripts/
 │   ├── apply_library_metadata.py
@@ -157,6 +158,7 @@ paper_reader/
 - `docs/taxonomy_actions.json`：机器可读分类治理任务，列出长尾合并候选、过载拆分候选、空候选状态和关注项
 - `docs/manifest.json`：机器可读发布清单，包含页面入口、数据文件、质量状态、重复报告发布门禁、队列规模、常用命令、command recipes 和治理 playbooks
 - `docs/guides/metadata.schema.json`：报告 frontmatter 字段契约，用于校验类型、日期格式和评分范围
+- `docs/guides/inbox.schema.json`：候选论文 `inbox.csv` 字段契约，用于校验批量 intake 的必填列、状态、优先级和日期格式
 
 ## Wiki 分类
 
@@ -199,7 +201,7 @@ has_code: true
 
 标签别名、研究线角色排序、阅读状态、阅读阶段和复习阶段可在 [`docs/guides/taxonomy.json`](docs/guides/taxonomy.json) 里自定义；修改后运行 `python3 scripts/build_wiki.py docs` 即可刷新筛选项、论文库批量下拉框和状态看板列。状态体系既支持根层 `status_values` 这种简单配置，也支持 `status_workflows` 保存多套命名流程，并用 `active_status_workflow` 选择当前默认启用的一套。`docs/taxonomy.html` 会展示当前状态工作流配置，并提供浏览器内状态工作流设计器，可以载入已有 workflow、编辑候选状态、复制或下载保留全部 workflow 的 `taxonomy_status_workflow.json` 片段，再合并回 `taxonomy.json`；`docs/board.html` 会读取全部命名 workflow，允许在看板里动态切换状态列，也支持新增临时状态列并导出 CSV，用来试跑一套新流程。构建后的 `docs/papers.json`、`docs/stats.json` 和 `docs/manifest.json` 会把当前启用状态与全部状态 workflow 写入 `controls`，方便后续页面或桌面软件动态读取。
 
-报告 frontmatter 的字段类型、必填项、评分范围和日期格式由 [`docs/guides/metadata.schema.json`](docs/guides/metadata.schema.json) 描述。`python3 scripts/validate_wiki.py docs --strict-taxonomy` 会同时校验 schema、报告元数据、分类漂移和生成页面，适合作为发布或开源协作前的质量门禁。
+报告 frontmatter 的字段类型、必填项、评分范围和日期格式由 [`docs/guides/metadata.schema.json`](docs/guides/metadata.schema.json) 描述；候选论文 CSV 的字段契约由 [`docs/guides/inbox.schema.json`](docs/guides/inbox.schema.json) 描述。`python3 scripts/validate_wiki.py docs --strict-taxonomy` 会同时校验 schema、报告元数据、inbox CSV、分类漂移和生成页面，适合作为发布或开源协作前的质量门禁。
 
 首页和论文库表格的筛选、排序、分页状态会写入 URL query string。比如按研究线、重要性排序后复制浏览器地址，即可分享同一个论文列表视图。常用状态组合也可以保存为浏览器本地视图，并用「导出视图」/「导入视图」在浏览器、设备或团队成员之间迁移；需要团队共用时，点击「复制共享视图」即可把当前筛选生成 `shared_views` JSON，写进 `docs/guides/taxonomy.json` 后会随仓库同步到所有人的 wiki 下拉框里。
 

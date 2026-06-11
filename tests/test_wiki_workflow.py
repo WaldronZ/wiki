@@ -153,6 +153,10 @@ class WikiWorkflowTest(unittest.TestCase):
             (ROOT / "docs" / "guides" / "metadata.schema.json").read_text(encoding="utf-8"),
             encoding="utf-8",
         )
+        (guides_dir / "inbox.schema.json").write_text(
+            (ROOT / "docs" / "guides" / "inbox.schema.json").read_text(encoding="utf-8"),
+            encoding="utf-8",
+        )
         for slug, text in {
             "2601.00001-alpha-paper": REPORT_A,
             "2501.00002-beta-paper": REPORT_B,
@@ -396,11 +400,13 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("taxonomy_actions.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("manifest.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("guides/metadata.schema.json", {item["href"] for item in manifest["contract_files"]})
+            self.assertIn("guides/inbox.schema.json", {item["href"] for item in manifest["contract_files"]})
             artifact_by_href = {item["href"]: item for item in manifest["artifact_inventory"]}
             self.assertEqual(artifact_by_href["index.html"]["status"], "ok")
             self.assertRegex(artifact_by_href["index.html"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertGreater(artifact_by_href["index.html"]["size_bytes"], 0)
             self.assertEqual(artifact_by_href["guides/metadata.schema.json"]["kind"], "contract")
+            self.assertEqual(artifact_by_href["guides/inbox.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["manifest.json"]["status"], "generated_after_inventory")
             self.assertTrue(manifest["publish_checks"]["artifacts_present"])
             self.assertIn("python3 scripts/check_quality.py docs", manifest["commands"])
@@ -425,6 +431,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("Artifact Inventory", release_html)
             self.assertIn("SHA-256", release_html)
             self.assertIn("guides/metadata.schema.json", release_html)
+            self.assertIn("guides/inbox.schema.json", release_html)
             self.assertIn("命令 Recipes", release_html)
             self.assertIn("治理 Playbooks", release_html)
             self.assertIn("Taxonomy merge batch", release_html)
@@ -955,6 +962,25 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("shared_views[0].page", result.stderr)
             self.assertIn("shared_views[0].state has unknown keys", result.stderr)
             self.assertIn("shared_views[1].name", result.stderr)
+
+    def test_invalid_inbox_csv_fails_validation(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_name:
+            report_dir = self.make_report_dir(Path(tmp_name))
+            (report_dir / "inbox.csv").write_text(
+                "id,title,status,priority,added_at\n"
+                "paper-1,Broken Candidate,unknown,urgent,2026-99-99\n"
+                "paper-1,Duplicate Candidate,queued,high,2026-06-11\n",
+                encoding="utf-8",
+            )
+            self.run_cmd("scripts/build_wiki.py", str(report_dir))
+
+            result = self.run_cmd("scripts/validate_wiki.py", str(report_dir), check=False)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("inbox.csv missing required column(s): link", result.stderr)
+            self.assertIn("inbox.csv row 2: status must be one of", result.stderr)
+            self.assertIn("inbox.csv row 2: priority must be one of", result.stderr)
+            self.assertIn("inbox.csv row 2: added_at must be a valid YYYY-MM-DD date", result.stderr)
+            self.assertIn("inbox.csv row 3: duplicate id 'paper-1'", result.stderr)
 
     def test_strict_taxonomy_detects_report_value_drift(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_name:

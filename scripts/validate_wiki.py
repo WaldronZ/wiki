@@ -8,6 +8,7 @@ fresh clones before publishing a large paper library.
 from __future__ import annotations
 
 import argparse
+import csv
 import datetime as dt
 import json
 import re
@@ -72,6 +73,27 @@ DEFAULT_METADATA_SCHEMA: dict[str, Any] = {
         "confidence": {"type": "integer", "min": 1, "max": 5},
         "reproducibility": {"type": "integer", "min": 1, "max": 5},
         "has_code": {"type": "boolean"},
+    },
+}
+
+DEFAULT_INBOX_SCHEMA: dict[str, Any] = {
+    "required": ["title", "link"],
+    "fields": {
+        "id": {"type": "string", "required": False},
+        "title": {"type": "string", "required": True},
+        "link": {"type": "string", "required": True},
+        "status": {"type": "string", "required": False, "enum": ["queued", "triaged", "reading", "done", "skipped"]},
+        "priority": {"type": "string", "required": False, "enum": ["high", "normal", "medium", "low"]},
+        "tags": {"type": "list", "required": False, "separator": ";"},
+        "note": {"type": "string", "required": False},
+        "added_at": {"type": "date", "required": False},
+    },
+    "aliases": {
+        "title": ["name", "paper"],
+        "link": ["url", "arxiv_url"],
+        "note": ["notes"],
+        "added_at": ["created_at"],
+        "tags": ["topics"],
     },
 }
 
@@ -306,6 +328,97 @@ def load_metadata_schema(report_dir: Path, errors: list[str], warnings: list[str
                     errors.append(f"guides/metadata.schema.json: fields.{name}.pattern is invalid: {exc}")
 
     return schema
+
+
+def load_inbox_schema(report_dir: Path, errors: list[str], warnings: list[str]) -> dict[str, Any]:
+    schema_path = report_dir / "guides" / "inbox.schema.json"
+    if not schema_path.exists():
+        warnings.append("guides/inbox.schema.json missing; using built-in inbox CSV schema")
+        return DEFAULT_INBOX_SCHEMA
+
+    try:
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        errors.append(f"guides/inbox.schema.json: invalid JSON: {exc}")
+        return DEFAULT_INBOX_SCHEMA
+
+    if not isinstance(schema, dict):
+        errors.append("guides/inbox.schema.json: root must be an object")
+        return DEFAULT_INBOX_SCHEMA
+
+    fields = schema.get("fields")
+    required = schema.get("required", [])
+    if not isinstance(fields, dict):
+        errors.append("guides/inbox.schema.json: fields must be an object")
+        return DEFAULT_INBOX_SCHEMA
+    if not isinstance(required, list) or not all(isinstance(item, str) and item.strip() for item in required):
+        errors.append("guides/inbox.schema.json: required must be a list of non-empty strings")
+    elif sorted(set(required) - set(fields)):
+        errors.append("guides/inbox.schema.json: required fields must be defined in fields")
+    return schema
+
+
+def inbox_header_aliases(schema: dict[str, Any]) -> dict[str, str]:
+    aliases: dict[str, str] = {}
+    for field in (schema.get("fields") or {}):
+        aliases[str(field)] = str(field)
+    for canonical, values in (schema.get("aliases") or {}).items():
+        if not isinstance(values, list):
+            continue
+        for alias in values:
+            aliases[str(alias)] = str(canonical)
+    return aliases
+
+
+def validate_inbox_csv(report_dir: Path, schema: dict[str, Any], errors: list[str], warnings: list[str]) -> None:
+    inbox_path = report_dir / "inbox.csv"
+    if not inbox_path.exists():
+        return
+
+    try:
+        with inbox_path.open("r", encoding="utf-8-sig", newline="") as handle:
+            reader = csv.DictReader(handle)
+            raw_fields = [str(field or "").strip() for field in (reader.fieldnames or [])]
+            if not raw_fields:
+                errors.append("inbox.csv must contain a header row")
+                return
+            alias_map = inbox_header_aliases(schema)
+            canonical_fields = [alias_map.get(field, field) for field in raw_fields]
+            required = set(schema.get("required") or [])
+            missing_required = sorted(required - set(canonical_fields))
+            if missing_required:
+                errors.append(f"inbox.csv missing required column(s): {', '.join(missing_required)}")
+            unknown = sorted({field for field in canonical_fields if field not in (schema.get("fields") or {})})
+            if unknown:
+                warnings.append(f"inbox.csv has unknown column(s): {', '.join(unknown)}")
+
+            seen_ids: set[str] = set()
+            for row_index, row in enumerate(reader, start=2):
+                normalized = {alias_map.get(str(key or "").strip(), str(key or "").strip()): str(value or "").strip() for key, value in row.items()}
+                if not any(normalized.values()):
+                    continue
+                for field in required:
+                    if not normalized.get(field):
+                        errors.append(f"inbox.csv row {row_index}: missing required '{field}'")
+                item_id = normalized.get("id")
+                if item_id:
+                    if item_id in seen_ids:
+                        errors.append(f"inbox.csv row {row_index}: duplicate id {item_id!r}")
+                    seen_ids.add(item_id)
+                for field, spec in (schema.get("fields") or {}).items():
+                    value = normalized.get(str(field), "")
+                    if not value:
+                        continue
+                    enum = spec.get("enum") if isinstance(spec, dict) else None
+                    if isinstance(enum, list) and value not in enum:
+                        errors.append(f"inbox.csv row {row_index}: {field} must be one of {', '.join(str(item) for item in enum)}")
+                    if isinstance(spec, dict) and spec.get("type") == "date":
+                        try:
+                            dt.date.fromisoformat(value)
+                        except ValueError:
+                            errors.append(f"inbox.csv row {row_index}: {field} must be a valid YYYY-MM-DD date")
+    except OSError as exc:
+        errors.append(f"inbox.csv: {exc}")
 
 
 def validate_schema_value(md_name: str, field: str, value: Any, spec: dict[str, Any], errors: list[str]) -> None:
@@ -875,9 +988,11 @@ def main() -> int:
         errors.append(f"report directory does not exist: {report_dir}")
     else:
         schema = load_metadata_schema(report_dir, errors, warnings)
+        inbox_schema = load_inbox_schema(report_dir, errors, warnings)
         reports = validate_reports(report_dir, schema, errors, warnings)
         config = validate_taxonomy_config(report_dir, errors, warnings)
         validate_controlled_taxonomy(reports, config, errors, warnings, args.strict_taxonomy)
+        validate_inbox_csv(report_dir, inbox_schema, errors, warnings)
         validate_json(report_dir, reports, errors)
         validate_pages(report_dir, reports, errors)
 
