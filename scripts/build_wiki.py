@@ -43,6 +43,7 @@ GENERATED_FIXED_PATHS = (
     "workflow.json",
     "status.json",
     "batch.json",
+    "collections.json",
     "pivot.json",
     "compare.json",
     "taxonomy_map.json",
@@ -3586,6 +3587,7 @@ DATA_CONSUMER_HINTS = {
     "workflow.json": ["workflow", "desktop", "filters"],
     "status.json": ["workflow", "runtime-selector", "desktop"],
     "batch.json": ["batch-planning", "classification", "ops", "desktop"],
+    "collections.json": ["collections", "shared-views", "queues", "desktop"],
     "pivot.json": ["analytics", "classification", "desktop"],
     "compare.json": ["comparison", "curation", "desktop"],
     "taxonomy_map.json": ["taxonomy", "graph", "desktop"],
@@ -3687,7 +3689,7 @@ def build_catalog_payload(report_dir: Path, papers: list[dict[str, Any]], inbox_
         {
             "name": "Desktop sync bootstrap",
             "command": "read docs/catalog.json, docs/papers.json, docs/search_index.json",
-            "uses": ["catalog.json", "papers.json", "search_index.json", "workflow.json", "batch.json"],
+            "uses": ["catalog.json", "papers.json", "search_index.json", "workflow.json", "batch.json", "collections.json"],
             "outputs": ["local searchable paper library"],
         },
         {
@@ -3714,7 +3716,7 @@ def build_catalog_payload(report_dir: Path, papers: list[dict[str, Any]], inbox_
         "data_resources": data_resources,
         "contracts": contracts,
         "integration_recipes": integration_recipes,
-        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "batch.json"],
+        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "batch.json", "collections.json"],
     }
 
 
@@ -3738,7 +3740,7 @@ def write_catalog_placeholders(report_dir: Path) -> None:
         "data_resources": [],
         "contracts": [],
         "integration_recipes": [],
-        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "batch.json"],
+        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "batch.json", "collections.json"],
     }
     (report_dir / "catalog.json").write_text(
         json.dumps(payload, ensure_ascii=False, indent=2),
@@ -3889,7 +3891,7 @@ def build_onboarding_payload(report_dir: Path, papers: list[dict[str, Any]], inb
         "contribution_paths": contribution_paths,
         "command_groups": command_groups,
         "contracts": contract_files_manifest(),
-        "bootstrap_files": ["command.json", "onboarding.json", "catalog.json", "manifest.json", "papers.json", "batch.json", "intake.json", "routing.json", "quality.json"],
+        "bootstrap_files": ["command.json", "onboarding.json", "catalog.json", "manifest.json", "papers.json", "batch.json", "collections.json", "intake.json", "routing.json", "quality.json"],
         "core_pages": [
             item
             for item in wiki_pages_manifest()
@@ -3972,6 +3974,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "workflow.json", "description": "状态工作流配置、分布和漂移审计"},
         {"href": "status.json", "description": "运行时状态选择器、状态字段选项和论文状态快照"},
         {"href": "batch.json", "description": "按分类、状态和治理缺口生成的可执行论文批次"},
+        {"href": "collections.json", "description": "共享视图、智能集合和研究线集合的机器可读入口"},
         {"href": "pivot.json", "description": "分类透视表维度、论文投影和交叉分布"},
         {"href": "compare.json", "description": "论文对比视图数据和推荐对比集合"},
         {"href": "taxonomy_map.json", "description": "分类节点、共现边、研究线簇和图谱治理建议"},
@@ -14548,7 +14551,24 @@ def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     (report_dir / "dashboard.html").write_text(page_shell("管理控制台", body), encoding="utf-8")
 
 
-def render_collections(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+def collection_paper_summary(paper: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "slug": paper["slug"],
+        "title": paper.get("title") or paper["slug"],
+        "title_zh": paper.get("title_zh") or paper.get("title") or paper["slug"],
+        "href": paper_href(paper),
+        "research_line": paper.get("research_line") or "Unassigned",
+        "line_role": paper.get("line_role") or "",
+        "year": paper.get("year") or "",
+        "importance": paper.get("importance") or "",
+        "status": paper.get("status") or "",
+        "reading_stage": paper.get("reading_stage") or "",
+        "review_stage": paper.get("review_stage") or "",
+        "next_review": paper.get("next_review") or "",
+    }
+
+
+def build_collections_payload(papers: list[dict[str, Any]]) -> dict[str, Any]:
     quality = build_quality_report(papers)
     review_plan = build_review_plan(papers)
     today = dt.date.today().isoformat()
@@ -14557,42 +14577,21 @@ def render_collections(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     def items_from_slugs(slugs: list[str]) -> list[dict[str, Any]]:
         return [paper_by_slug[slug] for slug in slugs if slug in paper_by_slug]
 
-    def sample_list(items: list[dict[str, Any]]) -> str:
-        if not items:
-            return '<div class="empty">暂无论文。</div>'
-        rows = "".join(
-            f'<li><a href="{html.escape(paper_href(paper))}">{html.escape(paper["title_zh"] or paper["title"])}</a>'
-            f' <span class="meta">{html.escape(str(paper.get("research_line") or "Unassigned"))}</span></li>'
-            for paper in items[:5]
-        )
-        more = f'<div class="meta">另有 {len(items) - 5} 篇未显示。</div>' if len(items) > 5 else ""
-        return f'<ol class="queue-list">{rows}</ol>{more}'
-
-    def smart_card(title: str, href: str, note: str, items: list[dict[str, Any]]) -> str:
-        return f"""<section class="collection-card">
-  <header><h2><a href="{html.escape(href)}">{html.escape(title)}</a></h2><strong>{len(items)}</strong></header>
-  <p class="meta">{html.escape(note)}</p>
-  {sample_list(items)}
-</section>"""
-
-    shared_rows = []
+    shared_views = []
     for view in SHARED_VIEWS:
         state = view.get("state") or {}
-        count = sum(1 for paper in papers if matches_view_state(paper, state, today))
-        shared_rows.append(
-            "<tr>"
-            f'<td><a href="{html.escape(view_href(view))}">{html.escape(str(view["name"]))}</a></td>'
-            f"<td>{html.escape(str(view.get('page') or 'all'))}</td>"
-            f"<td>{count}</td>"
-            f"<td><code>{html.escape(json.dumps(state, ensure_ascii=False, sort_keys=True))}</code></td>"
-            "</tr>"
+        matched = [paper for paper in papers if matches_view_state(paper, state, today)]
+        shared_views.append(
+            {
+                "name": str(view.get("name") or ""),
+                "page": str(view.get("page") or "all"),
+                "href": view_href(view),
+                "state": state,
+                "count": len(matched),
+                "slugs": [paper["slug"] for paper in matched],
+                "sample_papers": [collection_paper_summary(paper) for paper in matched[:8]],
+            }
         )
-    shared_table = (
-        '<table class="data-table"><thead><tr><th>视图</th><th>页面</th><th>命中</th><th>筛选状态</th></tr></thead>'
-        f"<tbody>{''.join(shared_rows)}</tbody></table>"
-        if shared_rows
-        else '<div class="empty">还没有共享视图。可以在 guides/taxonomy.json 的 shared_views 中添加。</div>'
-    )
 
     due_review = [
         paper
@@ -14610,33 +14609,135 @@ def render_collections(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     no_review_plan = items_from_slugs(review_plan["queues"].get("needs_plan", []))
     no_code_observation = items_from_slugs(quality["queues"].get("no_code_observation", []))
 
-    smart_cards = [
-        smart_card("重点论文", page_query_href("library.html", importance="5", sort="importance"), "importance >= 5 的核心阅读对象。", high_importance),
-        smart_card("待复习", page_query_href("review.html"), f"next_review <= {today} 的复习队列。", due_review),
-        smart_card("需建复习计划", page_query_href("review.html"), "缺少 next_review 的论文。", no_review_plan),
-        smart_card("待补分类", page_query_href("quality.html"), "缺少必要 taxonomy 或研究线角色的论文。", missing_taxonomy),
-        smart_card("分类偏薄", page_query_href("quality.html"), "结构分类或 topic/method 太少，检索入口不足。", taxonomy_sparse),
-        smart_card("分类过密", page_query_href("quality.html"), "topic/method 过多，可能需要收敛为核心标签。", taxonomy_dense),
-        smart_card("Taxonomy Drift", page_query_href("quality.html"), "状态、阶段或角色不在 taxonomy.json 允许值中的论文。", taxonomy_drift),
-        smart_card("缺代码观察", page_query_href("gaps.html"), "尚未记录代码仓库或代码实现观察的论文。", no_code_observation),
+    smart_specs = [
+        ("high_importance", "重点论文", page_query_href("library.html", importance="5", sort="importance"), "importance >= 5 的核心阅读对象。", high_importance),
+        ("due_review", "待复习", page_query_href("review.html"), f"next_review <= {today} 的复习队列。", due_review),
+        ("needs_review_plan", "需建复习计划", page_query_href("review.html"), "缺少 next_review 的论文。", no_review_plan),
+        ("missing_taxonomy", "待补分类", page_query_href("quality.html"), "缺少必要 taxonomy 或研究线角色的论文。", missing_taxonomy),
+        ("taxonomy_sparse", "分类偏薄", page_query_href("quality.html"), "结构分类或 topic/method 太少，检索入口不足。", taxonomy_sparse),
+        ("taxonomy_dense", "分类过密", page_query_href("quality.html"), "topic/method 过多，可能需要收敛为核心标签。", taxonomy_dense),
+        ("taxonomy_drift", "Taxonomy Drift", page_query_href("quality.html"), "状态、阶段或角色不在 taxonomy.json 允许值中的论文。", taxonomy_drift),
+        ("no_code_observation", "缺代码观察", page_query_href("gaps.html"), "尚未记录代码仓库或代码实现观察的论文。", no_code_observation),
+    ]
+    smart_collections = [
+        {
+            "id": key,
+            "title": title,
+            "href": href,
+            "note": note,
+            "count": len(items),
+            "slugs": [paper["slug"] for paper in items],
+            "sample_papers": [collection_paper_summary(paper) for paper in items[:8]],
+        }
+        for key, title, href, note, items in smart_specs
     ]
 
     grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for paper in papers:
         grouped[str(paper.get("research_line") or "Unassigned")].append(paper)
-    line_rows = []
+    research_lines = []
     for line in sorted(grouped, key=lambda name: (-len(grouped[name]), name.lower())):
         items = grouped[line]
         href = f"lines/{slugify_label(line)}.html" if line != "Unassigned" else page_query_href("library.html", line=line)
         five_star = sum(1 for paper in items if int(paper.get("importance") or 0) >= 5)
         needs_plan = sum(1 for paper in items if not paper.get("next_review"))
+        roles = Counter(str(paper.get("line_role") or "unclassified") for paper in items)
+        topics = Counter(topic for paper in items for topic in paper.get("topics", []))
+        methods = Counter(method for paper in items for method in paper.get("methods", []))
+        research_lines.append(
+            {
+                "name": line,
+                "href": href,
+                "library_href": page_query_href("library.html", line=line, sort="importance"),
+                "count": len(items),
+                "high_importance": five_star,
+                "needs_review_plan": needs_plan,
+                "roles": dict(sorted(roles.items(), key=lambda item: (-item[1], item[0]))),
+                "top_topics": [{"value": value, "count": count} for value, count in topics.most_common(8)],
+                "top_methods": [{"value": value, "count": count} for value, count in methods.most_common(8)],
+                "slugs": [paper["slug"] for paper in sorted(items, key=lambda paper: paper["slug"])],
+                "sample_papers": [
+                    collection_paper_summary(paper)
+                    for paper in sorted(items, key=lambda paper: (-(int(paper.get("importance") or 0)), -(int(paper.get("year") or 0)), paper["title"]))[:8]
+                ],
+            }
+        )
+
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": len(papers),
+        "shared_view_count": len(shared_views),
+        "smart_collection_count": len(smart_collections),
+        "research_line_count": len(research_lines),
+        "shared_views": shared_views,
+        "smart_collections": smart_collections,
+        "research_lines": research_lines,
+        "links": {
+            "html": "collections.html",
+            "library": "library.html",
+            "dashboard": "dashboard.html",
+            "quality": "quality.html",
+            "review": "review.html",
+        },
+    }
+
+
+def write_collections_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_collections_payload(papers)
+    (report_dir / "collections.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
+def render_collections(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_collections_payload(papers)
+
+    def sample_list(items: list[dict[str, Any]]) -> str:
+        if not items:
+            return '<div class="empty">暂无论文。</div>'
+        rows = "".join(
+            f'<li><a href="{html.escape(str(paper.get("href") or ""))}">{html.escape(str(paper.get("title_zh") or paper.get("title") or paper.get("slug") or ""))}</a>'
+            f' <span class="meta">{html.escape(str(paper.get("research_line") or "Unassigned"))}</span></li>'
+            for paper in items[:5]
+        )
+        more = f'<div class="meta">另有 {len(items) - 5} 篇未显示。</div>' if len(items) > 5 else ""
+        return f'<ol class="queue-list">{rows}</ol>{more}'
+
+    def smart_card(item: dict[str, Any]) -> str:
+        return f"""<section class="collection-card">
+  <header><h2><a href="{html.escape(str(item["href"]))}">{html.escape(str(item["title"]))}</a></h2><strong>{int(item["count"])}</strong></header>
+  <p class="meta">{html.escape(str(item["note"]))}</p>
+  {sample_list(item.get("sample_papers", []))}
+</section>"""
+
+    shared_rows = [
+        "<tr>"
+        f'<td><a href="{html.escape(str(view["href"]))}">{html.escape(str(view["name"]))}</a></td>'
+        f"<td>{html.escape(str(view.get('page') or 'all'))}</td>"
+        f"<td>{int(view['count'])}</td>"
+        f"<td><code>{html.escape(json.dumps(view.get('state') or {}, ensure_ascii=False, sort_keys=True))}</code></td>"
+        "</tr>"
+        for view in payload["shared_views"]
+    ]
+    shared_table = (
+        '<table class="data-table"><thead><tr><th>视图</th><th>页面</th><th>命中</th><th>筛选状态</th></tr></thead>'
+        f"<tbody>{''.join(shared_rows)}</tbody></table>"
+        if shared_rows
+        else '<div class="empty">还没有共享视图。可以在 guides/taxonomy.json 的 shared_views 中添加。</div>'
+    )
+
+    smart_cards = [smart_card(item) for item in payload["smart_collections"]]
+
+    line_rows = []
+    for line in payload["research_lines"]:
         line_rows.append(
             "<tr>"
-            f'<td><a href="{html.escape(href)}">{html.escape(line)}</a></td>'
-            f"<td>{len(items)}</td>"
-            f"<td>{five_star}</td>"
-            f"<td>{needs_plan}</td>"
-            f'<td><a href="{html.escape(page_query_href("library.html", line=line, sort="importance"))}">打开集合</a></td>'
+            f'<td><a href="{html.escape(str(line["href"]))}">{html.escape(str(line["name"]))}</a></td>'
+            f"<td>{int(line['count'])}</td>"
+            f"<td>{int(line['high_importance'])}</td>"
+            f"<td>{int(line['needs_review_plan'])}</td>"
+            f'<td><a href="{html.escape(str(line["library_href"]))}">打开集合</a></td>'
             "</tr>"
         )
     line_table = (
@@ -14689,6 +14790,7 @@ def render_collections(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <p class="lead">把共享筛选视图、研究线入口和系统自动队列集中到一个目录里。适合论文库变大后作为团队协作、周复盘和选题规划的入口。</p>
   <div class="stats">
     <a class="stat" href="index.html">卡片首页</a>
+    <a class="stat" href="collections.json">Collections JSON</a>
     <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="collections.html">集合视图</a>
@@ -14697,8 +14799,10 @@ def render_collections(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
-    <span class="stat">共享视图 {len(SHARED_VIEWS)}</span>
-    <span class="stat">论文 {len(papers)}</span>
+    <span class="stat">共享视图 {payload["shared_view_count"]}</span>
+    <span class="stat">智能集合 {payload["smart_collection_count"]}</span>
+    <span class="stat">研究线 {payload["research_line_count"]}</span>
+    <span class="stat">论文 {payload["count"]}</span>
   </div>
 </header>
 <main class="shell">
@@ -18820,6 +18924,7 @@ def build_wiki(report_dir: Path) -> int:
     write_workflow_json(report_dir, papers)
     write_status_json(report_dir, papers)
     write_batch_json(report_dir, papers)
+    write_collections_json(report_dir, papers)
     write_pivot_json(report_dir, papers)
     write_compare_json(report_dir, papers)
     write_taxonomy_map_json(report_dir, papers)

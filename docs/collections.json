@@ -1,0 +1,650 @@
+{
+  "generated_at": "2026-06-12T06:24:28",
+  "count": 5,
+  "shared_view_count": 3,
+  "smart_collection_count": 8,
+  "research_line_count": 2,
+  "shared_views": [
+    {
+      "name": "重点论文",
+      "page": "all",
+      "href": "library.html?importance=5&sort=importance",
+      "state": {
+        "importance": "5",
+        "sort": "importance"
+      },
+      "count": 2,
+      "slugs": [
+        "2604.11035-introspective-dlm",
+        "2307.08691-flashattention-2"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2604.11035-introspective-dlm",
+          "title": "Introspective Diffusion Language Models",
+          "title_zh": "内省式扩散语言模型",
+          "href": "2604.11035-introspective-dlm.html",
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "line_role": "foundation",
+          "year": 2026,
+          "importance": 5,
+          "status": "read",
+          "reading_stage": "deep_read",
+          "review_stage": "",
+          "next_review": ""
+        },
+        {
+          "slug": "2307.08691-flashattention-2",
+          "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning",
+          "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
+          "href": "2307.08691-flashattention-2.html",
+          "research_line": "Efficient Attention Kernels",
+          "line_role": "foundation",
+          "year": 2023,
+          "importance": 5,
+          "status": "read",
+          "reading_stage": "deep_read",
+          "review_stage": "",
+          "next_review": ""
+        }
+      ]
+    },
+    {
+      "name": "未设置复习",
+      "page": "index",
+      "href": "index.html?review=none&sort=importance",
+      "state": {
+        "review": "none",
+        "sort": "importance"
+      },
+      "count": 5,
+      "slugs": [
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus",
+        "2501.01005-flashinfer",
+        "2307.08691-flashattention-2"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2602.06036-dflash",
+          "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
+          "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
+          "href": "2602.06036-dflash.html",
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "line_role": "followup",
+          "year": 2026,
+          "importance": 4,
+          "status": "read",
+          "reading_stage": "deep_read",
+          "review_stage": "",
+          "next_review": ""
+        },
+        {
+          "slug": "2604.11035-introspective-dlm",
+          "title": "Introspective Diffusion Language Models",
+          "title_zh": "内省式扩散语言模型",
+          "href": "2604.11035-introspective-dlm.html",
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "line_role": "foundation",
+          "year": 2026,
+          "importance": 5,
+          "status": "read",
+          "reading_stage": "deep_read",
+          "review_stage": "",
+          "next_review": ""
+        },
+        {
+          "slug": "2605.12825-orthrus",
+          "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion",
+          "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+          "href": "2605.12825-orthrus.html",
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "line_role": "variant",
+          "year": 2026,
+          "importance": 4,
+          "status": "read",
+          "reading_stage": "deep_read",
+          "review_stage": "",
+          "next_review": ""
+        },
+        {
+          "slug": "2501.01005-flashinfer",
+          "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
+          "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
+          "href": "2501.01005-flashinfer.html",
+          "research_line": "Efficient Attention Kernels",
+          "line_role": "system",
+          "year": 2025,
+          "importance": 4,
+          "status": "read",
+          "reading_stage": "deep_read",
+          "review_stage": "",
+          "next_review": ""
+        },
+        {
+          "slug": "2307.08691-flashattention-2",
+          "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning",
+          "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
+          "href": "2307.08691-flashattention-2.html",
+          "research_line": "Efficient Attention Kernels",
+          "line_role": "foundation",
+          "year": 2023,
+          "importance": 5,
+          "status": "read",
+          "reading_stage": "deep_read",
+          "review_stage": "",
+          "next_review": ""
+        }
+      ]
+    },
+    {
+      "name": "Attention Kernels",
+      "page": "library",
+      "href": "library.html?track=Attention+Kernels&sort=year",
+      "state": {
+        "track": "Attention Kernels",
+        "sort": "year"
+      },
+      "count": 2,
+      "slugs": [
+        "2501.01005-flashinfer",
+        "2307.08691-flashattention-2"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2501.01005-flashinfer",
+          "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
+          "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
+          "href": "2501.01005-flashinfer.html",
+          "research_line": "Efficient Attention Kernels",
+          "line_role": "system",
+          "year": 2025,
+          "importance": 4,
+          "status": "read",
+          "reading_stage": "deep_read",
+          "review_stage": "",
+          "next_review": ""
+        },
+        {
+          "slug": "2307.08691-flashattention-2",
+          "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning",
+          "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
+          "href": "2307.08691-flashattention-2.html",
+          "research_line": "Efficient Attention Kernels",
+          "line_role": "foundation",
+          "year": 2023,
+          "importance": 5,
+          "status": "read",
+          "reading_stage": "deep_read",
+          "review_stage": "",
+          "next_review": ""
+        }
+      ]
+    }
+  ],
+  "smart_collections": [
+    {
+      "id": "high_importance",
+      "title": "重点论文",
+      "href": "library.html?importance=5&sort=importance",
+      "note": "importance >= 5 的核心阅读对象。",
+      "count": 2,
+      "slugs": [
+        "2604.11035-introspective-dlm",
+        "2307.08691-flashattention-2"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2604.11035-introspective-dlm",
+          "title": "Introspective Diffusion Language Models",
+          "title_zh": "内省式扩散语言模型",
+          "href": "2604.11035-introspective-dlm.html",
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "line_role": "foundation",
+          "year": 2026,
+          "importance": 5,
+          "status": "read",
+          "reading_stage": "deep_read",
+          "review_stage": "",
+          "next_review": ""
+        },
+        {
+          "slug": "2307.08691-flashattention-2",
+          "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning",
+          "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
+          "href": "2307.08691-flashattention-2.html",
+          "research_line": "Efficient Attention Kernels",
+          "line_role": "foundation",
+          "year": 2023,
+          "importance": 5,
+          "status": "read",
+          "reading_stage": "deep_read",
+          "review_stage": "",
+          "next_review": ""
+        }
+      ]
+    },
+    {
+      "id": "due_review",
+      "title": "待复习",
+      "href": "review.html",
+      "note": "next_review <= 2026-06-12 的复习队列。",
+      "count": 0,
+      "slugs": [],
+      "sample_papers": []
+    },
+    {
+      "id": "needs_review_plan",
+      "title": "需建复习计划",
+      "href": "review.html",
+      "note": "缺少 next_review 的论文。",
+      "count": 5,
+      "slugs": [
+        "2604.11035-introspective-dlm",
+        "2307.08691-flashattention-2",
+        "2602.06036-dflash",
+        "2605.12825-orthrus",
+        "2501.01005-flashinfer"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2604.11035-introspective-dlm",
+          "title": "Introspective Diffusion Language Models",
+          "title_zh": "内省式扩散语言模型",
+          "href": "2604.11035-introspective-dlm.html",
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "line_role": "foundation",
+          "year": 2026,
+          "importance": 5,
+          "status": "read",
+          "reading_stage": "deep_read",
+          "review_stage": "",
+          "next_review": ""
+        },
+        {
+          "slug": "2307.08691-flashattention-2",
+          "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning",
+          "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
+          "href": "2307.08691-flashattention-2.html",
+          "research_line": "Efficient Attention Kernels",
+          "line_role": "foundation",
+          "year": 2023,
+          "importance": 5,
+          "status": "read",
+          "reading_stage": "deep_read",
+          "review_stage": "",
+          "next_review": ""
+        },
+        {
+          "slug": "2602.06036-dflash",
+          "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
+          "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
+          "href": "2602.06036-dflash.html",
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "line_role": "followup",
+          "year": 2026,
+          "importance": 4,
+          "status": "read",
+          "reading_stage": "deep_read",
+          "review_stage": "",
+          "next_review": ""
+        },
+        {
+          "slug": "2605.12825-orthrus",
+          "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion",
+          "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+          "href": "2605.12825-orthrus.html",
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "line_role": "variant",
+          "year": 2026,
+          "importance": 4,
+          "status": "read",
+          "reading_stage": "deep_read",
+          "review_stage": "",
+          "next_review": ""
+        },
+        {
+          "slug": "2501.01005-flashinfer",
+          "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
+          "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
+          "href": "2501.01005-flashinfer.html",
+          "research_line": "Efficient Attention Kernels",
+          "line_role": "system",
+          "year": 2025,
+          "importance": 4,
+          "status": "read",
+          "reading_stage": "deep_read",
+          "review_stage": "",
+          "next_review": ""
+        }
+      ]
+    },
+    {
+      "id": "missing_taxonomy",
+      "title": "待补分类",
+      "href": "quality.html",
+      "note": "缺少必要 taxonomy 或研究线角色的论文。",
+      "count": 0,
+      "slugs": [],
+      "sample_papers": []
+    },
+    {
+      "id": "taxonomy_sparse",
+      "title": "分类偏薄",
+      "href": "quality.html",
+      "note": "结构分类或 topic/method 太少，检索入口不足。",
+      "count": 0,
+      "slugs": [],
+      "sample_papers": []
+    },
+    {
+      "id": "taxonomy_dense",
+      "title": "分类过密",
+      "href": "quality.html",
+      "note": "topic/method 过多，可能需要收敛为核心标签。",
+      "count": 2,
+      "slugs": [
+        "2501.01005-flashinfer",
+        "2604.11035-introspective-dlm"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2501.01005-flashinfer",
+          "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
+          "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
+          "href": "2501.01005-flashinfer.html",
+          "research_line": "Efficient Attention Kernels",
+          "line_role": "system",
+          "year": 2025,
+          "importance": 4,
+          "status": "read",
+          "reading_stage": "deep_read",
+          "review_stage": "",
+          "next_review": ""
+        },
+        {
+          "slug": "2604.11035-introspective-dlm",
+          "title": "Introspective Diffusion Language Models",
+          "title_zh": "内省式扩散语言模型",
+          "href": "2604.11035-introspective-dlm.html",
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "line_role": "foundation",
+          "year": 2026,
+          "importance": 5,
+          "status": "read",
+          "reading_stage": "deep_read",
+          "review_stage": "",
+          "next_review": ""
+        }
+      ]
+    },
+    {
+      "id": "taxonomy_drift",
+      "title": "Taxonomy Drift",
+      "href": "quality.html",
+      "note": "状态、阶段或角色不在 taxonomy.json 允许值中的论文。",
+      "count": 0,
+      "slugs": [],
+      "sample_papers": []
+    },
+    {
+      "id": "no_code_observation",
+      "title": "缺代码观察",
+      "href": "gaps.html",
+      "note": "尚未记录代码仓库或代码实现观察的论文。",
+      "count": 0,
+      "slugs": [],
+      "sample_papers": []
+    }
+  ],
+  "research_lines": [
+    {
+      "name": "Parallel Decoding with Diffusion Models",
+      "href": "lines/parallel-decoding-with-diffusion-models.html",
+      "library_href": "library.html?line=Parallel+Decoding+with+Diffusion+Models&sort=importance",
+      "count": 3,
+      "high_importance": 1,
+      "needs_review_plan": 3,
+      "roles": {
+        "followup": 1,
+        "foundation": 1,
+        "variant": 1
+      },
+      "top_topics": [
+        {
+          "value": "Diffusion Language Models",
+          "count": 3
+        },
+        {
+          "value": "Speculative Decoding",
+          "count": 3
+        },
+        {
+          "value": "LLM Inference",
+          "count": 2
+        },
+        {
+          "value": "LLM Serving",
+          "count": 2
+        },
+        {
+          "value": "Parallel Decoding",
+          "count": 2
+        },
+        {
+          "value": "LLM",
+          "count": 1
+        },
+        {
+          "value": "KV Cache",
+          "count": 1
+        }
+      ],
+      "top_methods": [
+        {
+          "value": "block diffusion",
+          "count": 1
+        },
+        {
+          "value": "KV injection",
+          "count": 1
+        },
+        {
+          "value": "parallel drafting",
+          "count": 1
+        },
+        {
+          "value": "Speculative Decoding",
+          "count": 1
+        },
+        {
+          "value": "target hidden features",
+          "count": 1
+        },
+        {
+          "value": "gated LoRA",
+          "count": 1
+        },
+        {
+          "value": "introspective consistency",
+          "count": 1
+        },
+        {
+          "value": "introspective strided decoding",
+          "count": 1
+        }
+      ],
+      "slugs": [
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2604.11035-introspective-dlm",
+          "title": "Introspective Diffusion Language Models",
+          "title_zh": "内省式扩散语言模型",
+          "href": "2604.11035-introspective-dlm.html",
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "line_role": "foundation",
+          "year": 2026,
+          "importance": 5,
+          "status": "read",
+          "reading_stage": "deep_read",
+          "review_stage": "",
+          "next_review": ""
+        },
+        {
+          "slug": "2602.06036-dflash",
+          "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
+          "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
+          "href": "2602.06036-dflash.html",
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "line_role": "followup",
+          "year": 2026,
+          "importance": 4,
+          "status": "read",
+          "reading_stage": "deep_read",
+          "review_stage": "",
+          "next_review": ""
+        },
+        {
+          "slug": "2605.12825-orthrus",
+          "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion",
+          "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+          "href": "2605.12825-orthrus.html",
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "line_role": "variant",
+          "year": 2026,
+          "importance": 4,
+          "status": "read",
+          "reading_stage": "deep_read",
+          "review_stage": "",
+          "next_review": ""
+        }
+      ]
+    },
+    {
+      "name": "Efficient Attention Kernels",
+      "href": "lines/efficient-attention-kernels.html",
+      "library_href": "library.html?line=Efficient+Attention+Kernels&sort=importance",
+      "count": 2,
+      "high_importance": 1,
+      "needs_review_plan": 2,
+      "roles": {
+        "foundation": 1,
+        "system": 1
+      },
+      "top_topics": [
+        {
+          "value": "Attention Kernels",
+          "count": 1
+        },
+        {
+          "value": "GPU Systems",
+          "count": 1
+        },
+        {
+          "value": "Inference Optimization",
+          "count": 1
+        },
+        {
+          "value": "KV Cache",
+          "count": 1
+        },
+        {
+          "value": "LLM Serving",
+          "count": 1
+        },
+        {
+          "value": "Efficient Attention",
+          "count": 1
+        },
+        {
+          "value": "GPU Kernel Optimization",
+          "count": 1
+        },
+        {
+          "value": "Long Context",
+          "count": 1
+        }
+      ],
+      "top_methods": [
+        {
+          "value": "FlashAttention",
+          "count": 2
+        },
+        {
+          "value": "block-sparse attention",
+          "count": 1
+        },
+        {
+          "value": "composable KV-cache format",
+          "count": 1
+        },
+        {
+          "value": "CUDA Graph",
+          "count": 1
+        },
+        {
+          "value": "JIT compilation",
+          "count": 1
+        },
+        {
+          "value": "load-balanced scheduling",
+          "count": 1
+        },
+        {
+          "value": "CUDA / GPU parallelism",
+          "count": 1
+        },
+        {
+          "value": "online softmax",
+          "count": 1
+        }
+      ],
+      "slugs": [
+        "2307.08691-flashattention-2",
+        "2501.01005-flashinfer"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2307.08691-flashattention-2",
+          "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning",
+          "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
+          "href": "2307.08691-flashattention-2.html",
+          "research_line": "Efficient Attention Kernels",
+          "line_role": "foundation",
+          "year": 2023,
+          "importance": 5,
+          "status": "read",
+          "reading_stage": "deep_read",
+          "review_stage": "",
+          "next_review": ""
+        },
+        {
+          "slug": "2501.01005-flashinfer",
+          "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
+          "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
+          "href": "2501.01005-flashinfer.html",
+          "research_line": "Efficient Attention Kernels",
+          "line_role": "system",
+          "year": 2025,
+          "importance": 4,
+          "status": "read",
+          "reading_stage": "deep_read",
+          "review_stage": "",
+          "next_review": ""
+        }
+      ]
+    }
+  ],
+  "links": {
+    "html": "collections.html",
+    "library": "library.html",
+    "dashboard": "dashboard.html",
+    "quality": "quality.html",
+    "review": "review.html"
+  }
+}

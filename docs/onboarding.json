@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T06:18:44",
+  "generated_at": "2026-06-12T06:24:28",
   "count": 5,
   "inbox_count": 0,
   "readiness_score": "100%",
@@ -256,6 +256,7 @@
     "manifest.json",
     "papers.json",
     "batch.json",
+    "collections.json",
     "intake.json",
     "routing.json",
     "quality.json"

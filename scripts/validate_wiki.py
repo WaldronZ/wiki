@@ -148,6 +148,7 @@ REQUIRED_PAGES = {
     "workflow.json",
     "status.json",
     "batch.json",
+    "collections.json",
     "pivot.json",
     "compare.json",
     "taxonomy_map.json",
@@ -579,6 +580,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     workflow_path = report_dir / "workflow.json"
     status_path = report_dir / "status.json"
     batch_path = report_dir / "batch.json"
+    collections_path = report_dir / "collections.json"
     pivot_path = report_dir / "pivot.json"
     compare_path = report_dir / "compare.json"
     taxonomy_map_path = report_dir / "taxonomy_map.json"
@@ -622,6 +624,9 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         return
     if not batch_path.exists():
         errors.append("missing batch.json")
+        return
+    if not collections_path.exists():
+        errors.append("missing collections.json")
         return
     if not pivot_path.exists():
         errors.append("missing pivot.json")
@@ -684,6 +689,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     workflow_data = json.loads(workflow_path.read_text(encoding="utf-8"))
     status_data = json.loads(status_path.read_text(encoding="utf-8"))
     batch_data = json.loads(batch_path.read_text(encoding="utf-8"))
+    collections_data = json.loads(collections_path.read_text(encoding="utf-8"))
     pivot_data = json.loads(pivot_path.read_text(encoding="utf-8"))
     compare_data = json.loads(compare_path.read_text(encoding="utf-8"))
     taxonomy_map_data = json.loads(taxonomy_map_path.read_text(encoding="utf-8"))
@@ -981,6 +987,42 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     batch_links = batch_data.get("links")
     if not isinstance(batch_links, dict) or not {"library", "actions", "review", "facets"}.issubset(batch_links):
         errors.append("batch.json links must include library, actions, review, and facets")
+
+    if collections_data.get("count") != len(report_slugs):
+        errors.append(f"collections.json count {collections_data.get('count')} != markdown report count {len(report_slugs)}")
+    missing_collections = sorted({"shared_views", "smart_collections", "research_lines", "links"} - set(collections_data))
+    if missing_collections:
+        errors.append(f"collections.json missing keys: {', '.join(missing_collections)}")
+    for group_key, count_key in (
+        ("shared_views", "shared_view_count"),
+        ("smart_collections", "smart_collection_count"),
+        ("research_lines", "research_line_count"),
+    ):
+        group_items = collections_data.get(group_key)
+        if not isinstance(group_items, list):
+            errors.append(f"collections.json {group_key} must be a list")
+            continue
+        if collections_data.get(count_key) != len(group_items):
+            errors.append(f"collections.json {count_key} must match {group_key} length")
+        for index, item in enumerate(group_items):
+            if not isinstance(item, dict):
+                errors.append(f"collections.json {group_key}[{index}] must be an object")
+                continue
+            slugs = item.get("slugs")
+            if not isinstance(slugs, list):
+                errors.append(f"collections.json {group_key}[{index}].slugs must be a list")
+                continue
+            unknown_slugs = sorted(str(slug) for slug in slugs if str(slug) not in report_slugs)
+            if unknown_slugs:
+                errors.append(f"collections.json {group_key}[{index}] references unknown slugs: {unknown_slugs}")
+            sample_papers = item.get("sample_papers", [])
+            if not isinstance(sample_papers, list):
+                errors.append(f"collections.json {group_key}[{index}].sample_papers must be a list")
+                continue
+            sample_slugs = sorted(str(paper.get("slug") or "") for paper in sample_papers if isinstance(paper, dict))
+            unknown_sample_slugs = [slug for slug in sample_slugs if slug and slug not in report_slugs]
+            if unknown_sample_slugs:
+                errors.append(f"collections.json {group_key}[{index}] references unknown sample paper slugs: {unknown_sample_slugs}")
 
     if pivot_data.get("count") != len(report_slugs):
         errors.append(f"pivot.json count {pivot_data.get('count')} != markdown report count {len(report_slugs)}")

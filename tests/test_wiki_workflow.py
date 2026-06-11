@@ -311,6 +311,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "workflow.json",
                 "status.json",
                 "batch.json",
+                "collections.json",
                 "pivot.json",
                 "compare.json",
                 "taxonomy_map.json",
@@ -764,6 +765,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("onboarding.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("command.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("status.json", {item["href"] for item in catalog["data_resources"]})
+            self.assertIn("collections.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("intake.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("dedupe.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("registry.json", {item["href"] for item in catalog["data_resources"]})
@@ -1030,6 +1032,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("workflow.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("status.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("batch.json", {item["href"] for item in manifest["data_files"]})
+            self.assertIn("collections.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("pivot.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("compare.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("taxonomy_map.json", {item["href"] for item in manifest["data_files"]})
@@ -1172,6 +1175,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("freshness.json", release_html)
             self.assertIn("workflow.html", release_html)
             self.assertIn("workflow.json", release_html)
+            self.assertIn("collections.json", release_html)
             self.assertIn("pivot.html", release_html)
             self.assertIn("pivot.json", release_html)
             self.assertIn("compare.html", release_html)
@@ -1223,12 +1227,23 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("LLM Systems", dashboard_html)
             collections_html = (report_dir / "collections.html").read_text(encoding="utf-8")
             self.assertIn("集合视图", collections_html)
+            self.assertIn("Collections JSON", collections_html)
             self.assertIn("共享视图", collections_html)
             self.assertIn("重点队列", collections_html)
             self.assertIn("智能集合", collections_html)
             self.assertIn("需建复习计划", collections_html)
             self.assertIn("分类偏薄", collections_html)
             self.assertIn("分类过密", collections_html)
+            collections = json.loads((report_dir / "collections.json").read_text(encoding="utf-8"))
+            self.assertEqual(collections["count"], 2)
+            self.assertEqual(collections["shared_view_count"], len(collections["shared_views"]))
+            self.assertEqual(collections["smart_collection_count"], len(collections["smart_collections"]))
+            self.assertEqual(collections["research_line_count"], len(collections["research_lines"]))
+            self.assertTrue(any(view["name"] == "重点队列" for view in collections["shared_views"]))
+            self.assertTrue(any(item["id"] == "needs_review_plan" for item in collections["smart_collections"]))
+            serving_line = next(item for item in collections["research_lines"] if item["name"] == "LLM Serving")
+            self.assertIn("2601.00001-alpha-paper", serving_line["slugs"])
+            self.assertIn("sample_papers", serving_line)
             balance_html = (report_dir / "balance.html").read_text(encoding="utf-8")
             self.assertIn("分类均衡复盘", balance_html)
             self.assertIn('id="balanceRows"', balance_html)
