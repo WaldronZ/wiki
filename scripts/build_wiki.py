@@ -45,6 +45,7 @@ GENERATED_FIXED_PATHS = (
     "batch.json",
     "collections.json",
     "coverage.json",
+    "gaps.json",
     "pivot.json",
     "compare.json",
     "taxonomy_map.json",
@@ -3590,6 +3591,7 @@ DATA_CONSUMER_HINTS = {
     "batch.json": ["batch-planning", "classification", "ops", "desktop"],
     "collections.json": ["collections", "shared-views", "queues", "desktop"],
     "coverage.json": ["coverage", "taxonomy", "project-management", "desktop"],
+    "gaps.json": ["research-gaps", "planning", "project-management", "desktop"],
     "pivot.json": ["analytics", "classification", "desktop"],
     "compare.json": ["comparison", "curation", "desktop"],
     "taxonomy_map.json": ["taxonomy", "graph", "desktop"],
@@ -3691,7 +3693,7 @@ def build_catalog_payload(report_dir: Path, papers: list[dict[str, Any]], inbox_
         {
             "name": "Desktop sync bootstrap",
             "command": "read docs/catalog.json, docs/papers.json, docs/search_index.json",
-            "uses": ["catalog.json", "papers.json", "search_index.json", "workflow.json", "batch.json", "collections.json", "coverage.json"],
+            "uses": ["catalog.json", "papers.json", "search_index.json", "workflow.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
             "outputs": ["local searchable paper library"],
         },
         {
@@ -3718,7 +3720,7 @@ def build_catalog_payload(report_dir: Path, papers: list[dict[str, Any]], inbox_
         "data_resources": data_resources,
         "contracts": contracts,
         "integration_recipes": integration_recipes,
-        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "batch.json", "collections.json", "coverage.json"],
+        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
     }
 
 
@@ -3742,7 +3744,7 @@ def write_catalog_placeholders(report_dir: Path) -> None:
         "data_resources": [],
         "contracts": [],
         "integration_recipes": [],
-        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "batch.json", "collections.json", "coverage.json"],
+        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
     }
     (report_dir / "catalog.json").write_text(
         json.dumps(payload, ensure_ascii=False, indent=2),
@@ -3893,7 +3895,7 @@ def build_onboarding_payload(report_dir: Path, papers: list[dict[str, Any]], inb
         "contribution_paths": contribution_paths,
         "command_groups": command_groups,
         "contracts": contract_files_manifest(),
-        "bootstrap_files": ["command.json", "onboarding.json", "catalog.json", "manifest.json", "papers.json", "batch.json", "collections.json", "coverage.json", "intake.json", "routing.json", "quality.json"],
+        "bootstrap_files": ["command.json", "onboarding.json", "catalog.json", "manifest.json", "papers.json", "batch.json", "collections.json", "coverage.json", "gaps.json", "intake.json", "routing.json", "quality.json"],
         "core_pages": [
             item
             for item in wiki_pages_manifest()
@@ -3978,6 +3980,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "batch.json", "description": "按分类、状态和治理缺口生成的可执行论文批次"},
         {"href": "collections.json", "description": "共享视图、智能集合和研究线集合的机器可读入口"},
         {"href": "coverage.json", "description": "研究线分类覆盖、字段缺口、缺失 slug 和 owner 信号"},
+        {"href": "gaps.json", "description": "研究线缺口、下一步行动和运营队列"},
         {"href": "pivot.json", "description": "分类透视表维度、论文投影和交叉分布"},
         {"href": "compare.json", "description": "论文对比视图数据和推荐对比集合"},
         {"href": "taxonomy_map.json", "description": "分类节点、共现边、研究线簇和图谱治理建议"},
@@ -4293,6 +4296,22 @@ def command_recipes_manifest() -> list[dict[str, Any]]:
             "label": "Export coverage topic patch",
             "command": "python3 scripts/export_coverage.py docs --format patch --field topics --set-value <topic> --output docs/exports/coverage-topic-patch.csv",
             "output": "docs/exports/coverage-topic-patch.csv",
+            "mutates": False,
+        },
+        {
+            "id": "gaps_markdown",
+            "kind": "export",
+            "label": "Export research gap checklist",
+            "command": "python3 scripts/export_gaps.py docs --output docs/exports/gaps.md",
+            "output": "docs/exports/gaps.md",
+            "mutates": False,
+        },
+        {
+            "id": "gaps_project",
+            "kind": "export",
+            "label": "Export research gap project tasks",
+            "command": "python3 scripts/export_gaps.py docs --format project --min-priority 20 --output docs/exports/gaps-project.csv",
+            "output": "docs/exports/gaps-project.csv",
             "mutates": False,
         },
         {
@@ -13808,6 +13827,8 @@ def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
         ("导出覆盖缺口清单", "python3 scripts/export_coverage.py docs --output docs/exports/coverage.md"),
         ("导出覆盖项目任务", "python3 scripts/export_coverage.py docs --format project --risk high --risk medium --output docs/exports/coverage-project.csv"),
         ("导出覆盖 topic patch", "python3 scripts/export_coverage.py docs --format patch --field topics --set-value <topic> --output docs/exports/coverage-topic-patch.csv"),
+        ("导出研究缺口清单", "python3 scripts/export_gaps.py docs --output docs/exports/gaps.md"),
+        ("导出研究缺口项目任务", "python3 scripts/export_gaps.py docs --format project --min-priority 20 --output docs/exports/gaps-project.csv"),
         ("导出集合清单", "python3 scripts/export_collections.py docs --output docs/exports/collections.md"),
         ("导出集合项目任务", "python3 scripts/export_collections.py docs --format project --output docs/exports/collections-project.csv"),
         ("导出 Owner 工作量", "python3 scripts/export_ownership.py docs --output docs/exports/ownership.md"),
@@ -18619,36 +18640,34 @@ if (firstNonEmpty) renderMatrixDetail(firstNonEmpty.dataset.line, firstNonEmpty.
     (report_dir / "matrix.html").write_text(page_shell("研究线年份矩阵", body, data, matrix_css), encoding="utf-8")
 
 
-def render_gaps(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+def gaps_paper_summary(paper: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "slug": paper["slug"],
+        "title": paper.get("title") or paper["slug"],
+        "title_zh": paper.get("title_zh") or paper.get("title") or paper["slug"],
+        "href": paper_href(paper),
+        "research_line": paper.get("research_line") or "Unassigned",
+        "status": paper.get("status") or "",
+        "importance": paper.get("importance") or "",
+    }
+
+
+def build_gaps_payload(papers: list[dict[str, Any]]) -> dict[str, Any]:
     current_year = dt.date.today().year
-    recommended_roles = ["foundation", "baseline", "main", "system"]
     quality = build_quality_report(papers)
     review = build_review_plan(papers)
     taxonomy_load_by_slug = {item["slug"]: item for item in quality.get("taxonomy_load", [])}
+    paper_by_slug = {paper["slug"]: paper for paper in papers}
     grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for paper in papers:
         grouped[str(paper.get("research_line") or "Unassigned")].append(paper)
 
-    def queue_item(paper: dict[str, Any], reason: str) -> str:
-        labels = [
-            str(paper.get("research_line") or "Unassigned"),
-            str(paper.get("status") or ""),
-            f'I {paper.get("importance")}' if paper.get("importance") else "",
-            reason,
-        ]
-        flags = "".join(f'<span class="flag">{html.escape(label)}</span>' for label in labels if label)
-        return (
-            f'<li><a href="{html.escape(paper_href(paper))}">{html.escape(paper["title_zh"] or paper["title"])}</a>'
-            f'<div class="card-flags">{flags}</div></li>'
-        )
-
-    line_rows = []
-    line_cards = []
-    all_actions: list[tuple[int, str, str, str]] = []
+    lines = []
+    all_actions: list[dict[str, Any]] = []
     for line in sorted(grouped, key=lambda name: (-len(grouped[name]), name == "Unassigned", name.lower())):
         items = grouped[line]
         roles = {str(paper.get("line_role") or "") for paper in items if paper.get("line_role")}
-        missing_roles = [role for role in recommended_roles if role not in roles]
+        missing_roles = [role for role in ROADMAP_RECOMMENDED_ROLES if role not in roles]
         years = sorted({int(paper["year"]) for paper in items if isinstance(paper.get("year"), int)})
         latest_year = max(years) if years else None
         stale_years = current_year - latest_year if latest_year else None
@@ -18698,33 +18717,133 @@ def render_gaps(report_dir: Path, papers: list[dict[str, Any]]) -> None:
             actions.append(f"补代码观察 {len(no_code)} 篇")
         if not actions:
             actions.append("保持观察")
+        line_href = f"lines/{slugify_label(line)}.html" if line != "Unassigned" else "library.html?line=Unassigned"
+        action_items = []
         for action in actions[:4]:
             priority = 100 - score
-            all_actions.append((priority, line, action, str(latest_year or "unknown")))
+            action_item = {
+                "line": line,
+                "priority": priority,
+                "type": "maintain" if action == "保持观察" else "gap",
+                "label": action,
+                "latest_year": latest_year,
+                "href": page_query_href("library.html", line=line),
+                "slugs": [paper["slug"] for paper in items],
+            }
+            action_items.append(action_item)
+            all_actions.append(action_item)
+        lines.append(
+            {
+                "id": slugify_label(line),
+                "line": line,
+                "href": line_href,
+                "count": len(items),
+                "score": score,
+                "latest_year": latest_year,
+                "stale_years": stale_years,
+                "missing_roles": missing_roles,
+                "missing_taxonomy_slugs": [paper["slug"] for paper in missing_taxonomy],
+                "taxonomy_load_slugs": [paper["slug"] for paper in taxonomy_load],
+                "no_review_slugs": [paper["slug"] for paper in no_review],
+                "no_code_slugs": [paper["slug"] for paper in no_code],
+                "high_priority_papers": [gaps_paper_summary(paper) for paper in high_priority[:6]],
+                "actions": action_items,
+            }
+        )
 
-        line_href = f"lines/{slugify_label(line)}.html" if line != "Unassigned" else "library.html?line=Unassigned"
+    def queue_summaries(slugs: list[str]) -> list[dict[str, Any]]:
+        return [gaps_paper_summary(paper_by_slug[slug]) for slug in slugs if slug in paper_by_slug]
+
+    queues = {
+        "needs_review_plan": queue_summaries(list(review["queues"].get("needs_plan", []))),
+        "missing_taxonomy": queue_summaries(list(quality["queues"].get("missing_required_metadata", []))),
+        "taxonomy_sparse": queue_summaries(list(quality["queues"].get("taxonomy_sparse", []))),
+        "taxonomy_dense": queue_summaries(list(quality["queues"].get("taxonomy_dense", []))),
+        "no_code_observation": queue_summaries(list(quality["queues"].get("no_code_observation", []))),
+    }
+    actions_sorted = sorted(all_actions, key=lambda item: (-int(item["priority"]), item["line"], item["label"]))
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": len(papers),
+        "line_count": len(lines),
+        "action_count": len(all_actions),
+        "recommended_roles": ROADMAP_RECOMMENDED_ROLES,
+        "summary": {
+            "avg_score": round(sum(int(line["score"]) for line in lines) / len(lines), 1) if lines else 100,
+            "low_score_lines": sum(1 for line in lines if int(line["score"]) < 70),
+            "missing_role_lines": sum(1 for line in lines if line["missing_roles"]),
+            "missing_taxonomy": sum(len(line["missing_taxonomy_slugs"]) for line in lines),
+            "taxonomy_load": sum(len(line["taxonomy_load_slugs"]) for line in lines),
+            "needs_review_plan": len(queues["needs_review_plan"]),
+            "no_code_observation": len(queues["no_code_observation"]),
+        },
+        "lines": lines,
+        "actions": actions_sorted,
+        "queues": queues,
+        "links": {
+            "html": "gaps.html",
+            "dashboard": "dashboard.html",
+            "collections": "collections.html",
+            "related": "related.html",
+            "library": "library.html",
+            "matrix": "matrix.html",
+            "timeline": "timeline.html",
+            "taxonomy": "taxonomy.html",
+            "review": "review.html",
+        },
+    }
+
+
+def write_gaps_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_gaps_payload(papers)
+    (report_dir / "gaps.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+
+def render_gaps(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_gaps_payload(papers)
+
+    def queue_item(paper: dict[str, Any], reason: str) -> str:
+        labels = [
+            str(paper.get("research_line") or "Unassigned"),
+            str(paper.get("status") or ""),
+            f'I {paper.get("importance")}' if paper.get("importance") else "",
+            reason,
+        ]
+        flags = "".join(f'<span class="flag">{html.escape(label)}</span>' for label in labels if label)
+        return (
+            f'<li><a href="{html.escape(str(paper.get("href") or ""))}">{html.escape(str(paper.get("title_zh") or paper.get("title") or paper.get("slug") or ""))}</a>'
+            f'<div class="card-flags">{flags}</div></li>'
+        )
+
+    line_rows = []
+    line_cards = []
+    for line in payload["lines"]:
+        actions = [str(action.get("label") or "") for action in line.get("actions", [])]
         line_rows.append(
             "<tr>"
-            f'<td><a href="{html.escape(line_href)}">{html.escape(line)}</a></td>'
-            f"<td>{len(items)}</td>"
-            f"<td>{score}</td>"
-            f"<td>{html.escape(str(latest_year or 'unknown'))}</td>"
-            f"<td>{html.escape(', '.join(missing_roles) or '-')}</td>"
-            f"<td>{len(missing_taxonomy)}</td>"
-            f"<td>{len(taxonomy_load)}</td>"
-            f"<td>{len(no_review)}</td>"
-            f"<td>{len(no_code)}</td>"
+            f'<td><a href="{html.escape(str(line["href"]))}">{html.escape(str(line["line"]))}</a></td>'
+            f"<td>{int(line['count'])}</td>"
+            f"<td>{int(line['score'])}</td>"
+            f"<td>{html.escape(str(line.get('latest_year') or 'unknown'))}</td>"
+            f"<td>{html.escape(', '.join(line.get('missing_roles', [])) or '-')}</td>"
+            f"<td>{len(line.get('missing_taxonomy_slugs', []))}</td>"
+            f"<td>{len(line.get('taxonomy_load_slugs', []))}</td>"
+            f"<td>{len(line.get('no_review_slugs', []))}</td>"
+            f"<td>{len(line.get('no_code_slugs', []))}</td>"
             f"<td>{html.escape('; '.join(actions[:3]))}</td>"
             "</tr>"
         )
         chip_html = "".join(f'<span class="chip">{html.escape(action)}</span>' for action in actions[:4])
-        paper_links = "".join(queue_item(paper, "重点") for paper in high_priority[:3])
+        paper_links = "".join(queue_item(paper, "重点") for paper in line.get("high_priority_papers", [])[:3])
         if not paper_links:
             paper_links = '<li class="meta">暂无 5 星论文。</li>'
         line_cards.append(
-            f"""<section class="gap-card" data-score="{score}">
-  <header><h2><a href="{html.escape(line_href)}">{html.escape(line)}</a></h2><strong>{score}</strong></header>
-  <div class="meta">论文 {len(items)} · 最新 {html.escape(str(latest_year or 'unknown'))}</div>
+            f"""<section class="gap-card" data-score="{int(line['score'])}">
+  <header><h2><a href="{html.escape(str(line['href']))}">{html.escape(str(line['line']))}</a></h2><strong>{int(line['score'])}</strong></header>
+  <div class="meta">论文 {int(line['count'])} · 最新 {html.escape(str(line.get('latest_year') or 'unknown'))}</div>
   <div class="chips">{chip_html}</div>
   <ol class="queue-list">{paper_links}</ol>
 </section>"""
@@ -18732,12 +18851,12 @@ def render_gaps(report_dir: Path, papers: list[dict[str, Any]]) -> None:
 
     action_rows = "".join(
         "<tr>"
-        f"<td>{priority}</td>"
-        f'<td><a href="{html.escape(page_query_href("library.html", line=line))}">{html.escape(line)}</a></td>'
-        f"<td>{html.escape(action)}</td>"
-        f"<td>{html.escape(year)}</td>"
+        f"<td>{int(action.get('priority') or 0)}</td>"
+        f'<td><a href="{html.escape(str(action.get("href") or ""))}">{html.escape(str(action.get("line") or ""))}</a></td>'
+        f"<td>{html.escape(str(action.get('label') or ''))}</td>"
+        f"<td>{html.escape(str(action.get('latest_year') or 'unknown'))}</td>"
         "</tr>"
-        for priority, line, action, year in sorted(all_actions, key=lambda item: (-item[0], item[1], item[2]))[:24]
+        for action in payload["actions"][:24]
     )
     action_table = (
         '<table class="data-table"><thead><tr><th>优先级</th><th>研究线</th><th>建议动作</th><th>最新年份</th></tr></thead>'
@@ -18752,37 +18871,12 @@ def render_gaps(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         else '<div class="empty">还没有研究线。</div>'
     )
 
-    need_plan = [
-        paper
-        for paper in papers
-        if paper["slug"] in set(review["queues"].get("needs_plan", []))
-    ]
-    taxonomy_queue = [
-        paper
-        for paper in papers
-        if paper["slug"] in set(quality["queues"].get("missing_required_metadata", []))
-    ]
-    code_queue = [
-        paper
-        for paper in papers
-        if paper["slug"] in set(quality["queues"].get("no_code_observation", []))
-    ]
-    taxonomy_sparse_queue = [
-        paper
-        for paper in papers
-        if paper["slug"] in set(quality["queues"].get("taxonomy_sparse", []))
-    ]
-    taxonomy_dense_queue = [
-        paper
-        for paper in papers
-        if paper["slug"] in set(quality["queues"].get("taxonomy_dense", []))
-    ]
     queue_blocks = [
-        ("需建复习计划", need_plan, "review"),
-        ("待补分类", taxonomy_queue, "taxonomy"),
-        ("分类偏薄", taxonomy_sparse_queue, "sparse"),
-        ("分类过密", taxonomy_dense_queue, "dense"),
-        ("缺代码观察", code_queue, "code"),
+        ("需建复习计划", payload["queues"]["needs_review_plan"], "review"),
+        ("待补分类", payload["queues"]["missing_taxonomy"], "taxonomy"),
+        ("分类偏薄", payload["queues"]["taxonomy_sparse"], "sparse"),
+        ("分类过密", payload["queues"]["taxonomy_dense"], "dense"),
+        ("缺代码观察", payload["queues"]["no_code_observation"], "code"),
     ]
 
     def render_queue(items: list[dict[str, Any]], reason: str) -> str:
@@ -18847,9 +18941,10 @@ def render_gaps(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="timeline.html">时间轴</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="review.html">复习计划</a>
-    <span class="stat">论文 {len(papers)}</span>
-    <span class="stat">研究线 {len(grouped)}</span>
-    <span class="stat">建议 {len(all_actions)}</span>
+    <a class="stat" href="gaps.json">Gaps JSON</a>
+    <span class="stat">论文 {payload["count"]}</span>
+    <span class="stat">研究线 {payload["line_count"]}</span>
+    <span class="stat">建议 {payload["action_count"]}</span>
   </div>
 </header>
 <main class="shell">
@@ -19084,6 +19179,7 @@ def build_wiki(report_dir: Path) -> int:
     write_batch_json(report_dir, papers)
     write_collections_json(report_dir, papers)
     write_coverage_json(report_dir, papers)
+    write_gaps_json(report_dir, papers)
     write_pivot_json(report_dir, papers)
     write_compare_json(report_dir, papers)
     write_taxonomy_map_json(report_dir, papers)

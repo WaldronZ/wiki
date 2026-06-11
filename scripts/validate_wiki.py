@@ -150,6 +150,7 @@ REQUIRED_PAGES = {
     "batch.json",
     "collections.json",
     "coverage.json",
+    "gaps.json",
     "pivot.json",
     "compare.json",
     "taxonomy_map.json",
@@ -583,6 +584,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     batch_path = report_dir / "batch.json"
     collections_path = report_dir / "collections.json"
     coverage_path = report_dir / "coverage.json"
+    gaps_path = report_dir / "gaps.json"
     pivot_path = report_dir / "pivot.json"
     compare_path = report_dir / "compare.json"
     taxonomy_map_path = report_dir / "taxonomy_map.json"
@@ -632,6 +634,9 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         return
     if not coverage_path.exists():
         errors.append("missing coverage.json")
+        return
+    if not gaps_path.exists():
+        errors.append("missing gaps.json")
         return
     if not pivot_path.exists():
         errors.append("missing pivot.json")
@@ -696,6 +701,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     batch_data = json.loads(batch_path.read_text(encoding="utf-8"))
     collections_data = json.loads(collections_path.read_text(encoding="utf-8"))
     coverage_data = json.loads(coverage_path.read_text(encoding="utf-8"))
+    gaps_data = json.loads(gaps_path.read_text(encoding="utf-8"))
     pivot_data = json.loads(pivot_path.read_text(encoding="utf-8"))
     compare_data = json.loads(compare_path.read_text(encoding="utf-8"))
     taxonomy_map_data = json.loads(taxonomy_map_path.read_text(encoding="utf-8"))
@@ -1091,6 +1097,71 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     coverage_links = coverage_data.get("links")
     if not isinstance(coverage_links, dict) or not {"html", "library", "balance", "facets", "quality", "lines"}.issubset(coverage_links):
         errors.append("coverage.json links must include html, library, balance, facets, quality, and lines")
+
+    if gaps_data.get("count") != len(report_slugs):
+        errors.append(f"gaps.json count {gaps_data.get('count')} != markdown report count {len(report_slugs)}")
+    required_gaps = {"line_count", "action_count", "recommended_roles", "summary", "lines", "actions", "queues", "links"}
+    missing_gaps = sorted(required_gaps - set(gaps_data))
+    if missing_gaps:
+        errors.append(f"gaps.json missing keys: {', '.join(missing_gaps)}")
+    gap_lines = gaps_data.get("lines")
+    if not isinstance(gap_lines, list):
+        errors.append("gaps.json lines must be a list")
+        gap_lines = []
+    elif gaps_data.get("line_count") != len(gap_lines):
+        errors.append("gaps.json line_count must match lines length")
+    for index, line in enumerate(gap_lines):
+        if not isinstance(line, dict):
+            errors.append(f"gaps.json lines[{index}] must be an object")
+            continue
+        for key in ("id", "line", "href", "count", "score", "missing_roles", "missing_taxonomy_slugs", "taxonomy_load_slugs", "no_review_slugs", "no_code_slugs", "actions"):
+            if key not in line:
+                errors.append(f"gaps.json lines[{index}] missing {key}")
+        for key in ("missing_taxonomy_slugs", "taxonomy_load_slugs", "no_review_slugs", "no_code_slugs"):
+            slugs = line.get(key)
+            if not isinstance(slugs, list):
+                errors.append(f"gaps.json lines[{index}].{key} must be a list")
+                continue
+            unknown_gap_slugs = sorted(str(slug) for slug in slugs if str(slug) not in report_slugs)
+            if unknown_gap_slugs:
+                errors.append(f"gaps.json lines[{index}].{key} references unknown slugs: {unknown_gap_slugs}")
+        if not isinstance(line.get("actions"), list):
+            errors.append(f"gaps.json lines[{index}].actions must be a list")
+    gap_actions = gaps_data.get("actions")
+    if not isinstance(gap_actions, list):
+        errors.append("gaps.json actions must be a list")
+        gap_actions = []
+    elif gaps_data.get("action_count") != len(gap_actions):
+        errors.append("gaps.json action_count must match actions length")
+    for index, action in enumerate(gap_actions):
+        if not isinstance(action, dict):
+            errors.append(f"gaps.json actions[{index}] must be an object")
+            continue
+        for key in ("line", "priority", "type", "label", "href", "slugs"):
+            if key not in action:
+                errors.append(f"gaps.json actions[{index}] missing {key}")
+        slugs = action.get("slugs")
+        if not isinstance(slugs, list):
+            errors.append(f"gaps.json actions[{index}].slugs must be a list")
+        else:
+            unknown_action_slugs = sorted(str(slug) for slug in slugs if str(slug) not in report_slugs)
+            if unknown_action_slugs:
+                errors.append(f"gaps.json actions[{index}] references unknown slugs: {unknown_action_slugs}")
+    gap_queues = gaps_data.get("queues")
+    if not isinstance(gap_queues, dict):
+        errors.append("gaps.json queues must be an object")
+    else:
+        for key, items in gap_queues.items():
+            if not isinstance(items, list):
+                errors.append(f"gaps.json queues.{key} must be a list")
+                continue
+            queue_slugs = {str(item.get("slug") or "") for item in items if isinstance(item, dict)}
+            unknown_queue_slugs = sorted(slug for slug in queue_slugs if slug and slug not in report_slugs)
+            if unknown_queue_slugs:
+                errors.append(f"gaps.json queues.{key} references unknown slugs: {unknown_queue_slugs}")
+    gap_links = gaps_data.get("links")
+    if not isinstance(gap_links, dict) or not {"html", "dashboard", "collections", "related", "library", "matrix", "timeline", "taxonomy", "review"}.issubset(gap_links):
+        errors.append("gaps.json links missing required entries")
 
     if pivot_data.get("count") != len(report_slugs):
         errors.append(f"pivot.json count {pivot_data.get('count')} != markdown report count {len(report_slugs)}")

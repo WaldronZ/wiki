@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-06-12T06:51:21",
+  "generated_at": "2026-06-12T07:00:53",
   "count": 5,
   "inbox_count": 0,
   "page_count": 39,
-  "data_file_count": 30,
+  "data_file_count": 31,
   "contract_count": 5,
   "pages": [
     {
@@ -278,7 +278,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T06:51:21",
+      "generated_at": "2026-06-12T07:00:53",
       "consumers": [
         "frontend",
         "desktop",
@@ -305,7 +305,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T06:51:21",
+      "generated_at": "2026-06-12T07:00:53",
       "consumers": [
         "search",
         "desktop"
@@ -368,7 +368,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T06:51:21",
+      "generated_at": "2026-06-12T07:00:53",
       "consumers": [
         "dashboard",
         "ops",
@@ -437,7 +437,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T06:51:21",
+      "generated_at": "2026-06-12T07:00:53",
       "consumers": [
         "quality-gate",
         "ops",
@@ -469,7 +469,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T06:51:21",
+      "generated_at": "2026-06-12T07:00:53",
       "consumers": [
         "review",
         "scheduler",
@@ -514,7 +514,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T06:51:21",
+      "generated_at": "2026-06-12T07:00:53",
       "consumers": [
         "freshness",
         "maintenance"
@@ -552,7 +552,7 @@
         }
       ],
       "declared_count": 55,
-      "generated_at": "2026-06-12T06:51:21",
+      "generated_at": "2026-06-12T07:00:53",
       "consumers": [
         "taxonomy",
         "project-management",
@@ -584,7 +584,7 @@
         }
       ],
       "declared_count": 62,
-      "generated_at": "2026-06-12T06:51:21",
+      "generated_at": "2026-06-12T07:00:53",
       "consumers": [
         "tasks",
         "project-management",
@@ -633,7 +633,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T06:51:21",
+      "generated_at": "2026-06-12T07:00:53",
       "consumers": [
         "command-center",
         "desktop",
@@ -686,7 +686,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T06:51:21",
+      "generated_at": "2026-06-12T07:00:53",
       "consumers": [
         "workflow",
         "desktop",
@@ -738,7 +738,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T06:51:21",
+      "generated_at": "2026-06-12T07:00:53",
       "consumers": [
         "workflow",
         "runtime-selector",
@@ -791,7 +791,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T06:51:21",
+      "generated_at": "2026-06-12T07:00:53",
       "consumers": [
         "batch-planning",
         "classification",
@@ -839,7 +839,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T06:51:21",
+      "generated_at": "2026-06-12T07:00:53",
       "consumers": [
         "collections",
         "shared-views",
@@ -889,10 +889,69 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T06:51:21",
+      "generated_at": "2026-06-12T07:00:53",
       "consumers": [
         "coverage",
         "taxonomy",
+        "project-management",
+        "desktop"
+      ],
+      "error": ""
+    },
+    {
+      "href": "gaps.json",
+      "description": "研究线缺口、下一步行动和运营队列",
+      "exists": true,
+      "size_bytes": 10304,
+      "top_level_keys": [
+        "action_count",
+        "actions",
+        "count",
+        "generated_at",
+        "line_count",
+        "lines",
+        "links",
+        "queues",
+        "recommended_roles",
+        "summary"
+      ],
+      "collections": [
+        {
+          "key": "recommended_roles",
+          "type": "list",
+          "count": 4
+        },
+        {
+          "key": "summary",
+          "type": "object",
+          "count": 7
+        },
+        {
+          "key": "lines",
+          "type": "list",
+          "count": 2
+        },
+        {
+          "key": "actions",
+          "type": "list",
+          "count": 6
+        },
+        {
+          "key": "queues",
+          "type": "object",
+          "count": 5
+        },
+        {
+          "key": "links",
+          "type": "object",
+          "count": 9
+        }
+      ],
+      "declared_count": 5,
+      "generated_at": "2026-06-12T07:00:53",
+      "consumers": [
+        "research-gaps",
+        "planning",
         "project-management",
         "desktop"
       ],
@@ -928,7 +987,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T06:51:21",
+      "generated_at": "2026-06-12T07:00:53",
       "consumers": [
         "analytics",
         "classification",
@@ -972,7 +1031,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T06:51:21",
+      "generated_at": "2026-06-12T07:00:53",
       "consumers": [
         "comparison",
         "curation",
@@ -1040,7 +1099,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T06:51:21",
+      "generated_at": "2026-06-12T07:00:53",
       "consumers": [
         "taxonomy",
         "graph",
@@ -1080,7 +1139,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T06:51:21",
+      "generated_at": "2026-06-12T07:00:53",
       "consumers": [
         "taxonomy",
         "clusters",
@@ -1131,7 +1190,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T06:51:21",
+      "generated_at": "2026-06-12T07:00:53",
       "consumers": [
         "research-lines",
         "planning",
@@ -1200,7 +1259,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T06:51:21",
+      "generated_at": "2026-06-12T07:00:53",
       "consumers": [
         "ops",
         "capacity-planning",
@@ -1240,7 +1299,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T06:51:21",
+      "generated_at": "2026-06-12T07:00:53",
       "consumers": [
         "ops",
         "owners",
@@ -1305,7 +1364,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T06:51:21",
+      "generated_at": "2026-06-12T07:00:53",
       "consumers": [
         "taxonomy",
         "intake",
@@ -1317,7 +1376,7 @@
       "href": "onboarding.json",
       "description": "开源贡献路径、质量门和数据契约清单",
       "exists": true,
-      "size_bytes": 9258,
+      "size_bytes": 9275,
       "top_level_keys": [
         "bootstrap_files",
         "command_groups",
@@ -1363,7 +1422,7 @@
         {
           "key": "bootstrap_files",
           "type": "list",
-          "count": 11
+          "count": 12
         },
         {
           "key": "core_pages",
@@ -1377,7 +1436,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T06:51:21",
+      "generated_at": "2026-06-12T07:00:53",
       "consumers": [
         "open-source",
         "contributors",
@@ -1389,7 +1448,7 @@
       "href": "snapshot.json",
       "description": "当前知识库治理快照和发布基线",
       "exists": true,
-      "size_bytes": 15928,
+      "size_bytes": 16107,
       "top_level_keys": [
         "action_groups",
         "active_status_workflow",
@@ -1456,7 +1515,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T06:51:21",
+      "generated_at": "2026-06-12T07:00:53",
       "consumers": [
         "release",
         "audit",
@@ -1531,7 +1590,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T06:51:21",
+      "generated_at": "2026-06-12T07:00:53",
       "consumers": [
         "intake",
         "dedupe",
@@ -1575,7 +1634,7 @@
         }
       ],
       "declared_count": 0,
-      "generated_at": "2026-06-12T06:51:21",
+      "generated_at": "2026-06-12T07:00:53",
       "consumers": [
         "intake",
         "dedupe"
@@ -1634,7 +1693,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T06:51:21",
+      "generated_at": "2026-06-12T07:00:53",
       "consumers": [
         "dedupe",
         "quality",
@@ -1700,7 +1759,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T06:51:21",
+      "generated_at": "2026-06-12T07:00:53",
       "consumers": [
         "taxonomy",
         "registry",
@@ -1773,7 +1832,7 @@
         {
           "key": "data_files",
           "type": "list",
-          "count": 30
+          "count": 31
         },
         {
           "key": "contract_files",
@@ -1783,12 +1842,12 @@
         {
           "key": "artifact_inventory",
           "type": "list",
-          "count": 74
+          "count": 75
         },
         {
           "key": "command_recipes",
           "type": "list",
-          "count": 37
+          "count": 39
         },
         {
           "key": "governance_playbooks",
@@ -1798,11 +1857,11 @@
         {
           "key": "commands",
           "type": "list",
-          "count": 37
+          "count": 39
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T06:51:21",
+      "generated_at": "2026-06-12T07:00:53",
       "consumers": [
         "release",
         "audit",
@@ -1897,7 +1956,8 @@
         "workflow.json",
         "batch.json",
         "collections.json",
-        "coverage.json"
+        "coverage.json",
+        "gaps.json"
       ],
       "outputs": [
         "local searchable paper library"
@@ -1936,6 +1996,7 @@
     "workflow.json",
     "batch.json",
     "collections.json",
-    "coverage.json"
+    "coverage.json",
+    "gaps.json"
   ]
 }

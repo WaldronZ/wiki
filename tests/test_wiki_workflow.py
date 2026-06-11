@@ -313,6 +313,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "batch.json",
                 "collections.json",
                 "coverage.json",
+                "gaps.json",
                 "pivot.json",
                 "compare.json",
                 "taxonomy_map.json",
@@ -873,6 +874,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv", quality_html)
             self.assertIn("python3 scripts/export_batches.py docs --format patch --gap review --field review_stage --set-value due --output docs/exports/batches-review-patch.csv", quality_html)
             self.assertIn("python3 scripts/export_coverage.py docs --format project --risk high --risk medium --output docs/exports/coverage-project.csv", quality_html)
+            self.assertIn("python3 scripts/export_gaps.py docs --format project --min-priority 20 --output docs/exports/gaps-project.csv", quality_html)
             self.assertIn("python3 scripts/export_collections.py docs --format project --output docs/exports/collections-project.csv", quality_html)
             self.assertIn("python3 scripts/export_ownership.py docs --format project --only-open-queues --output docs/exports/ownership-project.csv", quality_html)
             self.assertIn("python3 scripts/export_roadmap.py docs --format project --output docs/exports/roadmap-project.csv", quality_html)
@@ -1116,6 +1118,50 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertNotEqual(unsafe_coverage_export.returncode, 0)
             self.assertIn("Refusing to write a Markdown export", unsafe_coverage_export.stderr)
 
+            gaps_export_path = report_dir / "exports" / "gaps.md"
+            self.run_cmd(
+                "scripts/export_gaps.py",
+                str(report_dir),
+                "--output",
+                str(gaps_export_path),
+            )
+            gaps_export = gaps_export_path.read_text(encoding="utf-8")
+            self.assertIn("# AutoPaperReader Research Gaps", gaps_export)
+            self.assertIn("LLM Serving", gaps_export)
+            self.assertIn("补复习计划", gaps_export)
+
+            gaps_project_path = report_dir / "exports" / "gaps-project.csv"
+            self.run_cmd(
+                "scripts/export_gaps.py",
+                str(report_dir),
+                "--format",
+                "project",
+                "--min-priority",
+                "1",
+                "--task-status",
+                "ready",
+                "--assignee",
+                "research-owner",
+                "--output",
+                str(gaps_project_path),
+            )
+            gaps_project_rows = list(csv.DictReader(gaps_project_path.read_text(encoding="utf-8").splitlines()))
+            self.assertTrue(gaps_project_rows)
+            self.assertTrue(any(row["line"] == "LLM Serving" for row in gaps_project_rows))
+            self.assertEqual(gaps_project_rows[0]["status"], "ready")
+            self.assertEqual(gaps_project_rows[0]["assignee"], "research-owner")
+            self.assertIn("gap", gaps_project_rows[0]["labels"])
+
+            unsafe_gaps_export = self.run_cmd(
+                "scripts/export_gaps.py",
+                str(report_dir),
+                "--output",
+                str(report_dir / "gaps.md"),
+                check=False,
+            )
+            self.assertNotEqual(unsafe_gaps_export.returncode, 0)
+            self.assertIn("Refusing to write a Markdown export", unsafe_gaps_export.stderr)
+
             collections_export_path = report_dir / "exports" / "collections.md"
             self.run_cmd(
                 "scripts/export_collections.py",
@@ -1310,6 +1356,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("batch.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("collections.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("coverage.json", {item["href"] for item in manifest["data_files"]})
+            self.assertIn("gaps.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("pivot.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("compare.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("taxonomy_map.json", {item["href"] for item in manifest["data_files"]})
@@ -1354,6 +1401,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertRegex(artifact_by_href["batch.json"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["coverage.json"]["status"], "ok")
             self.assertRegex(artifact_by_href["coverage.json"]["sha256"], r"^[0-9a-f]{64}$")
+            self.assertEqual(artifact_by_href["gaps.json"]["status"], "ok")
+            self.assertRegex(artifact_by_href["gaps.json"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["intake.html"]["status"], "ok")
             self.assertRegex(artifact_by_href["intake.html"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["intake.json"]["status"], "ok")
@@ -1404,6 +1453,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("python3 scripts/export_actions.py docs --output docs/exports/actions.md", manifest["commands"])
             self.assertIn("python3 scripts/export_batches.py docs --output docs/exports/batches.md", manifest["commands"])
             self.assertIn("python3 scripts/export_coverage.py docs --output docs/exports/coverage.md", manifest["commands"])
+            self.assertIn("python3 scripts/export_gaps.py docs --output docs/exports/gaps.md", manifest["commands"])
             self.assertIn("python3 scripts/export_taxonomy_registry.py docs --output docs/exports/taxonomy-registry.md", manifest["commands"])
             self.assertIn("python3 scripts/export_taxonomy_load.py docs --format csv --output docs/exports/taxonomy-load.csv", manifest["commands"])
             self.assertIn("python3 scripts/export_collections.py docs --output docs/exports/collections.md", manifest["commands"])
@@ -1431,6 +1481,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(recipe_by_id["coverage_markdown"]["output"], "docs/exports/coverage.md")
             self.assertEqual(recipe_by_id["coverage_project"]["output"], "docs/exports/coverage-project.csv")
             self.assertEqual(recipe_by_id["coverage_topic_patch"]["output"], "docs/exports/coverage-topic-patch.csv")
+            self.assertEqual(recipe_by_id["gaps_markdown"]["output"], "docs/exports/gaps.md")
+            self.assertEqual(recipe_by_id["gaps_project"]["output"], "docs/exports/gaps-project.csv")
             self.assertEqual(recipe_by_id["collections_markdown"]["output"], "docs/exports/collections.md")
             self.assertEqual(recipe_by_id["collections_project"]["kind"], "export")
             self.assertEqual(recipe_by_id["ownership_markdown"]["output"], "docs/exports/ownership.md")
@@ -1636,10 +1688,16 @@ class WikiWorkflowTest(unittest.TestCase):
             gaps_html = (report_dir / "gaps.html").read_text(encoding="utf-8")
             self.assertIn("研究缺口与下一步行动", gaps_html)
             self.assertIn("研究线健康卡片", gaps_html)
+            self.assertIn("Gaps JSON", gaps_html)
             self.assertIn("LLM Serving", gaps_html)
             self.assertIn("需建复习计划", gaps_html)
             self.assertIn("粒度提示", gaps_html)
             self.assertIn("分类偏薄", gaps_html)
+            gaps = json.loads((report_dir / "gaps.json").read_text(encoding="utf-8"))
+            self.assertEqual(gaps["count"], 2)
+            self.assertTrue(gaps["actions"])
+            self.assertIn("needs_review_plan", gaps["queues"])
+            self.assertTrue(any(item["line"] == "LLM Serving" for item in gaps["lines"]))
 
             csv_path = report_dir / "library.csv"
             self.run_cmd("scripts/export_library_csv.py", str(report_dir), "--output", str(csv_path))
