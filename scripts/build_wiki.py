@@ -16,6 +16,7 @@ import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlencode
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -29,6 +30,7 @@ GENERATED_FIXED_PATHS = (
     "library.html",
     "review.html",
     "dashboard.html",
+    "taxonomy.html",
     "tags.html",
     "lines/index.html",
 )
@@ -405,6 +407,12 @@ def slugify_label(value: str) -> str:
 
 def paper_href(paper: dict[str, Any], prefix: str = "") -> str:
     return prefix + (paper["html_path"] or paper["md_path"])
+
+
+def page_query_href(page: str, **params: str) -> str:
+    clean = {key: value for key, value in params.items() if value}
+    query = urlencode(clean)
+    return f"{page}?{query}" if query else page
 
 
 def role_rank(role: str) -> int:
@@ -933,6 +941,16 @@ def page_shell(title: str, body: str, data: dict[str, Any] | None = None) -> str
     .queue-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }}
     .queue-list {{ margin: 0; padding-left: 18px; }}
     .queue-list li {{ margin: 8px 0; }}
+    .taxonomy-board {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }}
+    .taxonomy-panel {{
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+    }}
+    .taxonomy-panel h2 {{ margin: 0 0 10px; font-size: 20px; }}
+    .taxonomy-panel .data-table {{ border: 0; }}
+    .matrix-link {{ display: inline-flex; min-width: 32px; justify-content: center; }}
     .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; }}
     .card {{
       background: var(--panel);
@@ -1118,6 +1136,7 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="lines/index.html">研究线</a>
     <a class="stat" href="tags.html">分类总览</a>
     <a class="stat" href="quality.json">质量 JSON</a>
@@ -1578,6 +1597,7 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="index.html">卡片首页</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="review.html">复习计划</a>
+    <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="lines/index.html">研究线</a>
     <a class="stat" href="tags.html">分类总览</a>
     <a class="stat" href="quality.json">质量 JSON</a>
@@ -1885,6 +1905,7 @@ def render_review(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="index.html">返回首页</a>
     <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="review.json">复习 JSON</a>
     <span class="stat">论文 {len(items)}</span>
   </div>
@@ -2027,6 +2048,7 @@ def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="lines/index.html">研究线</a>
+    <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="tags.html">分类总览</a>
     <a class="stat" href="quality.json">质量 JSON</a>
     <span class="stat">生成时间 {html.escape(dt.datetime.now().isoformat(timespec="seconds"))}</span>
@@ -2052,6 +2074,234 @@ def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
 </main>
 """
     (report_dir / "dashboard.html").write_text(page_shell("管理控制台", body), encoding="utf-8")
+
+
+def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    taxonomy = taxonomy_counts(papers)
+    guide_link = (
+        '<a class="stat" href="guides/taxonomy.md">分类指南</a>'
+        if (report_dir / "guides" / "taxonomy.md").exists()
+        else ""
+    )
+
+    def paper_link_list(items: list[dict[str, Any]], empty: str) -> str:
+        if not items:
+            return f'<div class="empty">{html.escape(empty)}</div>'
+        rows = "".join(
+            f'<li><a href="{html.escape(paper_href(paper))}">{html.escape(paper["title_zh"] or paper["title"])}</a> '
+            f'<span class="meta">{html.escape(str(paper.get("research_line") or "Unassigned"))}</span></li>'
+            for paper in items[:10]
+        )
+        more = f'<div class="meta">另有 {len(items) - 10} 篇未显示。</div>' if len(items) > 10 else ""
+        return f'<ol class="queue-list">{rows}</ol>{more}'
+
+    def count_link(count: int, **params: str) -> str:
+        href = page_query_href("library.html", **params)
+        return f'<a class="matrix-link" href="{html.escape(href)}">{count}</a>' if count else '<span class="meta">0</span>'
+
+    def top_chips(counter: Counter[str], limit: int = 4) -> str:
+        if not counter:
+            return '<span class="meta">暂无</span>'
+        return "".join(
+            f'<span class="chip">{html.escape(name)} {count}</span>'
+            for name, count in counter.most_common(limit)
+        )
+
+    domain_rows = []
+    for domain in taxonomy["domains"]:
+        items = [paper for paper in papers if domain in paper.get("domains", [])]
+        tracks = Counter(track for paper in items for track in paper.get("tracks", []))
+        problems = Counter(problem for paper in items for problem in paper.get("problems", []))
+        lines = Counter(str(paper.get("research_line") or "Unassigned") for paper in items)
+        domain_rows.append(
+            "<tr>"
+            f'<td><a href="{html.escape(page_query_href("library.html", domain=domain))}">{html.escape(domain)}</a></td>'
+            f"<td>{len(items)}</td>"
+            f"<td>{top_chips(tracks)}</td>"
+            f"<td>{top_chips(problems)}</td>"
+            f"<td>{top_chips(lines)}</td>"
+            "</tr>"
+        )
+    domain_table = (
+        '<table class="data-table"><thead><tr><th>Domain</th><th>论文</th><th>主要 Track</th><th>主要 Problem</th><th>研究线</th></tr></thead>'
+        f"<tbody>{''.join(domain_rows)}</tbody></table>"
+        if domain_rows
+        else '<div class="empty">还没有 domain 分类。</div>'
+    )
+
+    track_rows = []
+    for track in taxonomy["tracks"]:
+        items = [paper for paper in papers if track in paper.get("tracks", [])]
+        domains = Counter(domain for paper in items for domain in paper.get("domains", []))
+        problems = Counter(problem for paper in items for problem in paper.get("problems", []))
+        track_rows.append(
+            "<tr>"
+            f'<td><a href="{html.escape(page_query_href("library.html", track=track))}">{html.escape(track)}</a></td>'
+            f"<td>{len(items)}</td>"
+            f"<td>{top_chips(domains, 3)}</td>"
+            f"<td>{top_chips(problems, 5)}</td>"
+            "</tr>"
+        )
+    track_table = (
+        '<table class="data-table"><thead><tr><th>Track</th><th>论文</th><th>Domain</th><th>Problem</th></tr></thead>'
+        f"<tbody>{''.join(track_rows)}</tbody></table>"
+        if track_rows
+        else '<div class="empty">还没有 track 分类。</div>'
+    )
+
+    role_values = list(ROLE_ORDER.keys())
+    extra_roles = sorted(
+        {
+            str(paper.get("line_role") or "unclassified")
+            for paper in papers
+            if str(paper.get("line_role") or "unclassified") not in ROLE_ORDER
+        }
+    )
+    role_values.extend(extra_roles)
+
+    line_rows = []
+    for line in taxonomy["research_lines"]:
+        if line == "Unassigned":
+            continue
+        items = [paper for paper in papers if paper.get("research_line") == line]
+        cells = []
+        for role in role_values:
+            count = sum(1 for paper in items if (paper.get("line_role") or "unclassified") == role)
+            cells.append(f"<td>{count_link(count, line=line, role=role)}</td>")
+        line_link = f"lines/{slugify_label(line)}.html"
+        line_rows.append(
+            "<tr>"
+            f'<td><a href="{html.escape(line_link)}">{html.escape(line)}</a></td>'
+            f"<td>{len(items)}</td>"
+            f"{''.join(cells)}"
+            "</tr>"
+        )
+    role_header = "".join(f"<th>{html.escape(role)}</th>" for role in role_values)
+    line_matrix = (
+        '<table class="data-table"><thead><tr><th>研究线</th><th>论文</th>'
+        f"{role_header}</tr></thead><tbody>{''.join(line_rows)}</tbody></table>"
+        if line_rows
+        else '<div class="empty">还没有研究线。</div>'
+    )
+
+    statuses = list(taxonomy["statuses"].keys())
+    stages = list(taxonomy["reading_stages"].keys())
+    stage_header = "".join(f"<th>{html.escape(stage)}</th>" for stage in stages)
+    state_rows = []
+    for status in statuses:
+        status_items = [paper for paper in papers if paper.get("status") == status]
+        cells = []
+        for stage in stages:
+            count = sum(1 for paper in status_items if paper.get("reading_stage") == stage)
+            cells.append(f"<td>{count_link(count, status=status, stage=stage)}</td>")
+        state_rows.append(
+            "<tr>"
+            f'<td><a href="{html.escape(page_query_href("library.html", status=status))}">{html.escape(status)}</a></td>'
+            f"<td>{len(status_items)}</td>"
+            f"{''.join(cells)}"
+            "</tr>"
+        )
+    state_matrix = (
+        '<table class="data-table"><thead><tr><th>Status</th><th>论文</th>'
+        f"{stage_header}</tr></thead><tbody>{''.join(state_rows)}</tbody></table>"
+    )
+
+    review_rows = []
+    for stage, count in taxonomy["review_stages"].items():
+        review_rows.append(
+            "<tr>"
+            f'<td><a href="{html.escape(page_query_href("library.html", reviewStage=stage))}">{html.escape(stage)}</a></td>'
+            f"<td>{count}</td>"
+            "</tr>"
+        )
+    review_table = (
+        '<table class="data-table"><thead><tr><th>Review stage</th><th>论文</th></tr></thead>'
+        f"<tbody>{''.join(review_rows)}</tbody></table>"
+    )
+
+    long_tail = Counter(
+        tag
+        for paper in papers
+        for tag in [*paper.get("topics", []), *paper.get("methods", [])]
+    )
+    tail_items = [
+        (tag, count)
+        for tag, count in sorted(long_tail.items(), key=lambda item: (item[1], item[0].lower()))
+        if count == 1
+    ][:24]
+    tail_html = (
+        '<div class="tag-list">'
+        + "".join(f'<span class="tag-pill"><span>{html.escape(tag)}</span><strong>{count}</strong></span>' for tag, count in tail_items)
+        + "</div>"
+        if tail_items
+        else '<div class="empty">暂无长尾 topic/method。</div>'
+    )
+
+    queue_specs = [
+        ("缺 Domain", [paper for paper in papers if not paper.get("domains")], "所有论文都有 domain。"),
+        ("缺 Track", [paper for paper in papers if not paper.get("tracks")], "所有论文都有 track。"),
+        ("缺 Problem", [paper for paper in papers if not paper.get("problems")], "所有论文都有 problem。"),
+        ("缺 Topic", [paper for paper in papers if not paper.get("topics")], "所有论文都有 topic。"),
+        ("缺 Method", [paper for paper in papers if not paper.get("methods")], "所有论文都有 method。"),
+        (
+            "缺研究线",
+            [paper for paper in papers if paper.get("research_line") == "Unassigned"],
+            "所有论文都有 research_line。",
+        ),
+        ("缺角色", [paper for paper in papers if not paper.get("line_role")], "所有论文都有 line_role。"),
+    ]
+    queue_cards = "".join(
+        f'<section class="role-section"><h2>{html.escape(title)} <span class="meta">{len(items)}</span></h2>{paper_link_list(items, empty)}</section>'
+        for title, items, empty in queue_specs
+    )
+
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Taxonomy Operations</div>
+  <h1>分类治理</h1>
+  <p class="lead">面向大量论文的分类治理视图：检查 domain / track / problem 层级、研究线角色矩阵、状态分布和需要补齐的元数据队列。所有计数都可以回跳到论文库表格继续筛选。</p>
+  <div class="stats">
+    <a class="stat" href="index.html">返回首页</a>
+    <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="tags.html">分类总览</a>
+    {guide_link}
+    <a class="stat" href="papers.json">JSON 索引</a>
+    <span class="stat">论文 {len(papers)}</span>
+    <span class="stat">Domain {len(taxonomy["domains"])}</span>
+    <span class="stat">Research line {len(taxonomy["research_lines"])}</span>
+  </div>
+</header>
+<main class="shell">
+  <section>
+    <h2 class="section-title">结构分类层级</h2>
+    <div class="taxonomy-board">
+      <section class="taxonomy-panel"><h2>Domain -> Track / Problem</h2>{domain_table}</section>
+      <section class="taxonomy-panel"><h2>Track -> Problem</h2>{track_table}</section>
+    </div>
+  </section>
+  <section>
+    <h2 class="section-title">研究线角色矩阵</h2>
+    <div class="table-wrap">{line_matrix}</div>
+  </section>
+  <section>
+    <h2 class="section-title">状态矩阵</h2>
+    <div class="taxonomy-board">
+      <section class="taxonomy-panel"><h2>Status x Reading stage</h2>{state_matrix}</section>
+      <section class="taxonomy-panel"><h2>Review stage</h2>{review_table}</section>
+    </div>
+  </section>
+  <section>
+    <h2 class="section-title">治理队列</h2>
+    <div class="queue-grid">{queue_cards}</div>
+  </section>
+  <section>
+    <h2 class="section-title">长尾 Topic / Method</h2>
+    {tail_html}
+  </section>
+</main>
+"""
+    (report_dir / "taxonomy.html").write_text(page_shell("分类治理", body), encoding="utf-8")
 
 
 def render_line_pages(report_dir: Path, papers: list[dict[str, Any]]) -> None:
@@ -2126,6 +2376,7 @@ def render_line_pages(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="../library.html">论文库表格</a>
     <a class="stat" href="../review.html">复习计划</a>
     <a class="stat" href="../dashboard.html">管理控制台</a>
+    <a class="stat" href="../taxonomy.html">分类治理</a>
     <a class="stat" href="index.html">全部研究线</a>
     <span class="stat">论文 {len(items)}</span>
     <span class="stat">角色 {len(role_groups)}</span>
@@ -2147,6 +2398,7 @@ def render_line_pages(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="../library.html">论文库表格</a>
     <a class="stat" href="../review.html">复习计划</a>
     <a class="stat" href="../dashboard.html">管理控制台</a>
+    <a class="stat" href="../taxonomy.html">分类治理</a>
     <a class="stat" href="../tags.html">分类总览</a>
     <span class="stat">研究线 {len(grouped)}</span>
     <span class="stat">论文 {sum(len(items) for items in grouped.values())}</span>
@@ -2219,6 +2471,7 @@ def render_tags(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="taxonomy.html">分类治理</a>
     <span class="stat">分类 {len(grouped)}</span>
     <span class="stat">论文 {len(papers)}</span>
   </div>
@@ -2239,6 +2492,7 @@ def build_wiki(report_dir: Path) -> int:
     render_library(report_dir, papers)
     render_review(report_dir, papers)
     render_dashboard(report_dir, papers)
+    render_taxonomy(report_dir, papers)
     render_line_pages(report_dir, papers)
     render_tags(report_dir, papers)
     return len(papers)

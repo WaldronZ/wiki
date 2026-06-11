@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>管理控制台</title>
+  <title>分类治理</title>
   <style>
     :root {
       color-scheme: light;
@@ -284,36 +284,47 @@
 
 
 <header class="shell">
-  <div class="eyebrow">Knowledge Base Operations</div>
-  <h1>管理控制台</h1>
-  <p class="lead">面向大量论文的运营视图：看分类覆盖、研究线健康度、复习队列和需要补元数据的报告。所有数据来自 markdown frontmatter 与 wiki 索引。</p>
+  <div class="eyebrow">Taxonomy Operations</div>
+  <h1>分类治理</h1>
+  <p class="lead">面向大量论文的分类治理视图：检查 domain / track / problem 层级、研究线角色矩阵、状态分布和需要补齐的元数据队列。所有计数都可以回跳到论文库表格继续筛选。</p>
   <div class="stats">
     <a class="stat" href="index.html">返回首页</a>
     <a class="stat" href="library.html">论文库表格</a>
-    <a class="stat" href="review.html">复习计划</a>
-    <a class="stat" href="lines/index.html">研究线</a>
-    <a class="stat" href="taxonomy.html">分类治理</a>
+    <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="tags.html">分类总览</a>
-    <a class="stat" href="quality.json">质量 JSON</a>
-    <span class="stat">生成时间 2026-06-11T16:48:29</span>
+    <a class="stat" href="guides/taxonomy.md">分类指南</a>
+    <a class="stat" href="papers.json">JSON 索引</a>
+    <span class="stat">论文 5</span>
+    <span class="stat">Domain 1</span>
+    <span class="stat">Research line 2</span>
   </div>
 </header>
 <main class="shell">
   <section>
-    <h2 class="section-title">总览</h2>
-    <div class="metric-grid"><section class="metric-card"><span>论文</span><strong>5</strong><span>已纳入 wiki 的报告数</span></section><section class="metric-card"><span>质量分</span><strong>92.0</strong><span>元数据、复习计划和代码观察综合分</span></section><section class="metric-card"><span>研究线</span><strong>2</strong><span>有明确 research_line 的脉络</span></section><section class="metric-card"><span>代码覆盖</span><strong>100%</strong><span>包含代码观察或代码仓库线索</span></section><section class="metric-card"><span>分类覆盖</span><strong>100%</strong><span>必要 taxonomy 字段完整</span></section><section class="metric-card"><span>高优先级</span><strong>2</strong><span>importance &gt;= 5</span></section><section class="metric-card"><span>待复习</span><strong>0</strong><span>next_review &lt;= 2026-06-11</span></section><section class="metric-card"><span>需建复习计划</span><strong>5</strong><span>缺 next_review 的建议队列</span></section><section class="metric-card"><span>待补分类</span><strong>0</strong><span>缺 taxonomy 或 line role</span></section></div>
+    <h2 class="section-title">结构分类层级</h2>
+    <div class="taxonomy-board">
+      <section class="taxonomy-panel"><h2>Domain -> Track / Problem</h2><table class="data-table"><thead><tr><th>Domain</th><th>论文</th><th>主要 Track</th><th>主要 Problem</th><th>研究线</th></tr></thead><tbody><tr><td><a href="library.html?domain=LLM+Systems">LLM Systems</a></td><td>5</td><td><span class="chip">Inference Acceleration 3</span><span class="chip">Parallel Decoding 3</span><span class="chip">Attention Kernels 2</span><span class="chip">Inference Serving Systems 1</span></td><td><span class="chip">Lossless Speculative Decoding 1</span><span class="chip">Parallel Diffusion Decoding 1</span><span class="chip">Memory-Efficient Parallel Token Generation 1</span><span class="chip">Customizable Attention Serving 1</span></td><td><span class="chip">Parallel Decoding with Diffusion Models 3</span><span class="chip">Efficient Attention Kernels 2</span></td></tr></tbody></table></section>
+      <section class="taxonomy-panel"><h2>Track -> Problem</h2><table class="data-table"><thead><tr><th>Track</th><th>论文</th><th>Domain</th><th>Problem</th></tr></thead><tbody><tr><td><a href="library.html?track=Inference+Acceleration">Inference Acceleration</a></td><td>3</td><td><span class="chip">LLM Systems 3</span></td><td><span class="chip">Lossless Speculative Decoding 1</span><span class="chip">Parallel Diffusion Decoding 1</span><span class="chip">Memory-Efficient Parallel Token Generation 1</span></td></tr><tr><td><a href="library.html?track=Parallel+Decoding">Parallel Decoding</a></td><td>3</td><td><span class="chip">LLM Systems 3</span></td><td><span class="chip">Lossless Speculative Decoding 1</span><span class="chip">Parallel Diffusion Decoding 1</span><span class="chip">Memory-Efficient Parallel Token Generation 1</span></td></tr><tr><td><a href="library.html?track=Attention+Kernels">Attention Kernels</a></td><td>2</td><td><span class="chip">LLM Systems 2</span></td><td><span class="chip">Customizable Attention Serving 1</span><span class="chip">Efficient Exact Attention 1</span></td></tr><tr><td><a href="library.html?track=Inference+Serving+Systems">Inference Serving Systems</a></td><td>1</td><td><span class="chip">LLM Systems 1</span></td><td><span class="chip">Customizable Attention Serving 1</span></td></tr></tbody></table></section>
+    </div>
   </section>
   <section>
-    <h2 class="section-title">研究线健康度</h2>
-    <table class="data-table"><thead><tr><th>研究线</th><th>论文</th><th>角色</th><th>平均重要性</th><th>代码覆盖</th></tr></thead><tbody><tr><td><a href="lines/parallel-decoding-with-diffusion-models.html">Parallel Decoding with Diffusion Models</a></td><td>3</td><td>foundation, variant, followup</td><td>4.3</td><td>100%</td></tr><tr><td><a href="lines/efficient-attention-kernels.html">Efficient Attention Kernels</a></td><td>2</td><td>foundation, system</td><td>4.5</td><td>100%</td></tr></tbody></table>
+    <h2 class="section-title">研究线角色矩阵</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>研究线</th><th>论文</th><th>foundation</th><th>baseline</th><th>main</th><th>system</th><th>variant</th><th>followup</th><th>survey</th></tr></thead><tbody><tr><td><a href="lines/parallel-decoding-with-diffusion-models.html">Parallel Decoding with Diffusion Models</a></td><td>3</td><td><a class="matrix-link" href="library.html?line=Parallel+Decoding+with+Diffusion+Models&amp;role=foundation">1</a></td><td><span class="meta">0</span></td><td><span class="meta">0</span></td><td><span class="meta">0</span></td><td><a class="matrix-link" href="library.html?line=Parallel+Decoding+with+Diffusion+Models&amp;role=variant">1</a></td><td><a class="matrix-link" href="library.html?line=Parallel+Decoding+with+Diffusion+Models&amp;role=followup">1</a></td><td><span class="meta">0</span></td></tr><tr><td><a href="lines/efficient-attention-kernels.html">Efficient Attention Kernels</a></td><td>2</td><td><a class="matrix-link" href="library.html?line=Efficient+Attention+Kernels&amp;role=foundation">1</a></td><td><span class="meta">0</span></td><td><span class="meta">0</span></td><td><a class="matrix-link" href="library.html?line=Efficient+Attention+Kernels&amp;role=system">1</a></td><td><span class="meta">0</span></td><td><span class="meta">0</span></td><td><span class="meta">0</span></td></tr></tbody></table></div>
   </section>
   <section>
-    <h2 class="section-title">管理队列</h2>
-    <div class="queue-grid"><section class="role-section"><h2>高优先级 <span class="meta">2</span></h2><ol class="queue-list"><li><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a> <span class="meta">Efficient Attention Kernels</span></li><li><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> <span class="meta">Parallel Decoding with Diffusion Models</span></li></ol></section><section class="role-section"><h2>待补分类 <span class="meta">0</span></h2><div class="empty">taxonomy 覆盖完整。</div></section><section class="role-section"><h2>待复习 <span class="meta">0</span></h2><div class="empty">没有到期复习项。</div></section><section class="role-section"><h2>未设置复习 <span class="meta">5</span></h2><ol class="queue-list"><li><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a> <span class="meta">Parallel Decoding with Diffusion Models</span></li><li><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> <span class="meta">Parallel Decoding with Diffusion Models</span></li><li><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a> <span class="meta">Parallel Decoding with Diffusion Models</span></li><li><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a> <span class="meta">Efficient Attention Kernels</span></li><li><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a> <span class="meta">Efficient Attention Kernels</span></li></ol></section><section class="role-section"><h2>无代码观察 <span class="meta">0</span></h2><div class="empty">所有论文都有代码观察或代码线索。</div></section></div>
+    <h2 class="section-title">状态矩阵</h2>
+    <div class="taxonomy-board">
+      <section class="taxonomy-panel"><h2>Status x Reading stage</h2><table class="data-table"><thead><tr><th>Status</th><th>论文</th><th>deep_read</th><th>code_checked</th><th>normal_read</th><th>skim</th></tr></thead><tbody><tr><td><a href="library.html?status=read">read</a></td><td>5</td><td><a class="matrix-link" href="library.html?status=read&amp;stage=deep_read">5</a></td><td><span class="meta">0</span></td><td><span class="meta">0</span></td><td><span class="meta">0</span></td></tr><tr><td><a href="library.html?status=archived">archived</a></td><td>0</td><td><span class="meta">0</span></td><td><span class="meta">0</span></td><td><span class="meta">0</span></td><td><span class="meta">0</span></td></tr><tr><td><a href="library.html?status=reading">reading</a></td><td>0</td><td><span class="meta">0</span></td><td><span class="meta">0</span></td><td><span class="meta">0</span></td><td><span class="meta">0</span></td></tr><tr><td><a href="library.html?status=skimmed">skimmed</a></td><td>0</td><td><span class="meta">0</span></td><td><span class="meta">0</span></td><td><span class="meta">0</span></td><td><span class="meta">0</span></td></tr><tr><td><a href="library.html?status=unread">unread</a></td><td>0</td><td><span class="meta">0</span></td><td><span class="meta">0</span></td><td><span class="meta">0</span></td><td><span class="meta">0</span></td></tr></tbody></table></section>
+      <section class="taxonomy-panel"><h2>Review stage</h2><table class="data-table"><thead><tr><th>Review stage</th><th>论文</th></tr></thead><tbody><tr><td><a href="library.html?reviewStage=due">due</a></td><td>0</td></tr><tr><td><a href="library.html?reviewStage=fresh">fresh</a></td><td>0</td></tr><tr><td><a href="library.html?reviewStage=reviewed">reviewed</a></td><td>0</td></tr></tbody></table></section>
+    </div>
   </section>
   <section>
-    <h2 class="section-title">质量队列</h2>
-    <table class="data-table"><thead><tr><th>队列</th><th>数量</th><th>样例 slug</th></tr></thead><tbody><tr><td>missing_required_metadata</td><td>0</td><td></td></tr><tr><td>needs_review_plan</td><td>5</td><td>2602.06036-dflash, 2604.11035-introspective-dlm, 2605.12825-orthrus, 2501.01005-flashinfer, 2307.08691-flashattention-2</td></tr><tr><td>due_review</td><td>0</td><td></td></tr><tr><td>no_code_observation</td><td>0</td><td></td></tr><tr><td>high_importance</td><td>2</td><td>2307.08691-flashattention-2, 2604.11035-introspective-dlm</td></tr></tbody></table>
+    <h2 class="section-title">治理队列</h2>
+    <div class="queue-grid"><section class="role-section"><h2>缺 Domain <span class="meta">0</span></h2><div class="empty">所有论文都有 domain。</div></section><section class="role-section"><h2>缺 Track <span class="meta">0</span></h2><div class="empty">所有论文都有 track。</div></section><section class="role-section"><h2>缺 Problem <span class="meta">0</span></h2><div class="empty">所有论文都有 problem。</div></section><section class="role-section"><h2>缺 Topic <span class="meta">0</span></h2><div class="empty">所有论文都有 topic。</div></section><section class="role-section"><h2>缺 Method <span class="meta">0</span></h2><div class="empty">所有论文都有 method。</div></section><section class="role-section"><h2>缺研究线 <span class="meta">0</span></h2><div class="empty">所有论文都有 research_line。</div></section><section class="role-section"><h2>缺角色 <span class="meta">0</span></h2><div class="empty">所有论文都有 line_role。</div></section></div>
+  </section>
+  <section>
+    <h2 class="section-title">长尾 Topic / Method</h2>
+    <div class="tag-list"><span class="tag-pill"><span>Attention Kernels</span><strong>1</strong></span><span class="tag-pill"><span>block diffusion</span><strong>1</strong></span><span class="tag-pill"><span>block-sparse attention</span><strong>1</strong></span><span class="tag-pill"><span>composable KV-cache format</span><strong>1</strong></span><span class="tag-pill"><span>CUDA / GPU parallelism</span><strong>1</strong></span><span class="tag-pill"><span>CUDA Graph</span><strong>1</strong></span><span class="tag-pill"><span>dual-view attention</span><strong>1</strong></span><span class="tag-pill"><span>Efficient Attention</span><strong>1</strong></span><span class="tag-pill"><span>forward KL distillation</span><strong>1</strong></span><span class="tag-pill"><span>gated LoRA</span><strong>1</strong></span><span class="tag-pill"><span>GPU Kernel Optimization</span><strong>1</strong></span><span class="tag-pill"><span>GPU Systems</span><strong>1</strong></span><span class="tag-pill"><span>Inference Optimization</span><strong>1</strong></span><span class="tag-pill"><span>intra-model consensus</span><strong>1</strong></span><span class="tag-pill"><span>introspective consistency</span><strong>1</strong></span><span class="tag-pill"><span>introspective strided decoding</span><strong>1</strong></span><span class="tag-pill"><span>JIT compilation</span><strong>1</strong></span><span class="tag-pill"><span>KV injection</span><strong>1</strong></span><span class="tag-pill"><span>LLM</span><strong>1</strong></span><span class="tag-pill"><span>load-balanced scheduling</span><strong>1</strong></span><span class="tag-pill"><span>logit-shifted causal training</span><strong>1</strong></span><span class="tag-pill"><span>Long Context</span><strong>1</strong></span><span class="tag-pill"><span>masked diffusion</span><strong>1</strong></span><span class="tag-pill"><span>online softmax</span><strong>1</strong></span></div>
   </section>
 </main>
 

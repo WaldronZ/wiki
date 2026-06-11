@@ -148,6 +148,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "library.html",
                 "review.html",
                 "dashboard.html",
+                "taxonomy.html",
                 "tags.html",
                 "papers.json",
                 "search_index.json",
