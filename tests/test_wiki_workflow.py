@@ -120,6 +120,18 @@ class WikiWorkflowTest(unittest.TestCase):
                     "status_values": ["unread", "triaged", "reading", "read", "archived"],
                     "reading_stage_values": ["skimmed", "deep_read", "code_checked"],
                     "review_stage_values": ["fresh", "due", "reviewed"],
+                    "shared_views": [
+                        {
+                            "name": "重点队列",
+                            "page": "all",
+                            "state": {"importance": "5", "sort": "importance"},
+                        },
+                        {
+                            "name": "Kernel 方向",
+                            "page": "library",
+                            "state": {"track": "Attention Kernels", "sort": "year"},
+                        },
+                    ],
                 }
             ),
             encoding="utf-8",
@@ -167,6 +179,11 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(papers["taxonomy"]["statuses"]["triaged"], 0)
             index_html = (report_dir / "index.html").read_text(encoding="utf-8")
             self.assertIn('<option value="triaged">triaged (0)</option>', index_html)
+            self.assertIn('"shared_views": [{"name": "重点队列"', index_html)
+            self.assertNotIn("Kernel 方向", index_html)
+            library_html = (report_dir / "library.html").read_text(encoding="utf-8")
+            self.assertIn('"shared_views": [{"name": "重点队列"', library_html)
+            self.assertIn("Kernel 方向", library_html)
 
             review = json.loads((report_dir / "review.json").read_text(encoding="utf-8"))
             self.assertEqual(review["count"], 2)
@@ -243,6 +260,10 @@ class WikiWorkflowTest(unittest.TestCase):
                         "label_aliases": {"": "Broken", "ok": ""},
                         "role_order": ["foundation", "foundation", ""],
                         "status_values": "read",
+                        "shared_views": [
+                            {"name": "bad", "page": "sidebar", "state": {"unknown": "x"}},
+                            {"name": "", "page": "all", "state": {}},
+                        ],
                     }
                 ),
                 encoding="utf-8",
@@ -253,6 +274,9 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("guides/taxonomy.json", result.stderr)
             self.assertIn("duplicate value", result.stderr)
             self.assertIn("status_values must be a list", result.stderr)
+            self.assertIn("shared_views[0].page", result.stderr)
+            self.assertIn("shared_views[0].state has unknown keys", result.stderr)
+            self.assertIn("shared_views[1].name", result.stderr)
 
     def test_strict_taxonomy_detects_report_value_drift(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_name:

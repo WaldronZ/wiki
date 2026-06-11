@@ -39,5 +39,31 @@
     "fresh",
     "due",
     "reviewed"
+  ],
+  "shared_views": [
+    {
+      "name": "重点论文",
+      "page": "all",
+      "state": {
+        "importance": "5",
+        "sort": "importance"
+      }
+    },
+    {
+      "name": "未设置复习",
+      "page": "index",
+      "state": {
+        "review": "none",
+        "sort": "importance"
+      }
+    },
+    {
+      "name": "Attention Kernels",
+      "page": "library",
+      "state": {
+        "track": "Attention Kernels",
+        "sort": "year"
+      }
+    }
   ]
 }

@@ -62,6 +62,26 @@ TAXONOMY_CONFIG_LIST_FIELDS = {
     "reading_stage_values",
     "review_stage_values",
 }
+SHARED_VIEW_PAGES = {"all", "index", "library"}
+SHARED_VIEW_STATE_KEYS = {
+    "q",
+    "domain",
+    "track",
+    "problem",
+    "line",
+    "role",
+    "topic",
+    "method",
+    "status",
+    "stage",
+    "reviewStage",
+    "review",
+    "code",
+    "importance",
+    "sort",
+    "size",
+    "page",
+}
 
 
 class LinkParser(HTMLParser):
@@ -325,7 +345,7 @@ def validate_taxonomy_config(report_dir: Path, errors: list[str], warnings: list
         errors.append("guides/taxonomy.json: root must be an object")
         return {}
 
-    known_fields = {"label_aliases", *TAXONOMY_CONFIG_LIST_FIELDS}
+    known_fields = {"label_aliases", "shared_views", *TAXONOMY_CONFIG_LIST_FIELDS}
     unknown_fields = sorted(set(config) - known_fields)
     if unknown_fields:
         warnings.append(f"guides/taxonomy.json: unknown fields ignored: {', '.join(unknown_fields)}")
@@ -356,6 +376,36 @@ def validate_taxonomy_config(report_dir: Path, errors: list[str], warnings: list
             if normalized in seen:
                 errors.append(f"guides/taxonomy.json: {field} has duplicate value '{value}'")
             seen.add(normalized)
+
+    shared_views = config.get("shared_views", [])
+    if shared_views is not None and not isinstance(shared_views, list):
+        errors.append("guides/taxonomy.json: shared_views must be a list")
+    elif isinstance(shared_views, list):
+        seen_names: set[str] = set()
+        for index, view in enumerate(shared_views):
+            if not isinstance(view, dict):
+                errors.append(f"guides/taxonomy.json: shared_views[{index}] must be an object")
+                continue
+            name = view.get("name")
+            if not isinstance(name, str) or not name.strip():
+                errors.append(f"guides/taxonomy.json: shared_views[{index}].name must be a non-empty string")
+            else:
+                normalized_name = name.strip().lower()
+                if normalized_name in seen_names:
+                    errors.append(f"guides/taxonomy.json: shared_views has duplicate name '{name}'")
+                seen_names.add(normalized_name)
+            page = view.get("page", "all")
+            if page not in SHARED_VIEW_PAGES:
+                errors.append(f"guides/taxonomy.json: shared_views[{index}].page must be one of all, index, library")
+            state = view.get("state")
+            if not isinstance(state, dict) or not state:
+                errors.append(f"guides/taxonomy.json: shared_views[{index}].state must be a non-empty object")
+                continue
+            unknown_state = sorted(set(str(key) for key in state) - SHARED_VIEW_STATE_KEYS)
+            if unknown_state:
+                errors.append(
+                    f"guides/taxonomy.json: shared_views[{index}].state has unknown keys: {', '.join(unknown_state)}"
+                )
     return config
 
 

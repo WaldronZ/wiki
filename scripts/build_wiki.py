@@ -78,12 +78,33 @@ DEFAULT_ROLE_ORDER = [
 DEFAULT_STATUS_VALUES = ["unread", "skimmed", "reading", "read", "archived"]
 DEFAULT_READING_STAGE_VALUES = ["skim", "normal_read", "deep_read", "code_checked"]
 DEFAULT_REVIEW_STAGE_VALUES = ["fresh", "due", "reviewed"]
+VIEW_PAGES = {"all", "index", "library"}
+VIEW_STATE_KEYS = {
+    "q",
+    "domain",
+    "track",
+    "problem",
+    "line",
+    "role",
+    "topic",
+    "method",
+    "status",
+    "stage",
+    "reviewStage",
+    "review",
+    "code",
+    "importance",
+    "sort",
+    "size",
+    "page",
+}
 
 LABEL_ALIASES = DEFAULT_LABEL_ALIASES.copy()
 ROLE_ORDER = {role: index for index, role in enumerate(DEFAULT_ROLE_ORDER)}
 STATUS_VALUES = DEFAULT_STATUS_VALUES.copy()
 READING_STAGE_VALUES = DEFAULT_READING_STAGE_VALUES.copy()
 REVIEW_STAGE_VALUES = DEFAULT_REVIEW_STAGE_VALUES.copy()
+SHARED_VIEWS: list[dict[str, Any]] = []
 
 
 def parse_args() -> argparse.Namespace:
@@ -104,13 +125,14 @@ def parse_args() -> argparse.Namespace:
 
 def load_taxonomy_config(report_dir: Path) -> None:
     """Load optional taxonomy normalization config for this report directory."""
-    global LABEL_ALIASES, ROLE_ORDER, STATUS_VALUES, READING_STAGE_VALUES, REVIEW_STAGE_VALUES
+    global LABEL_ALIASES, ROLE_ORDER, STATUS_VALUES, READING_STAGE_VALUES, REVIEW_STAGE_VALUES, SHARED_VIEWS
 
     LABEL_ALIASES = DEFAULT_LABEL_ALIASES.copy()
     ROLE_ORDER = {role: index for index, role in enumerate(DEFAULT_ROLE_ORDER)}
     STATUS_VALUES = DEFAULT_STATUS_VALUES.copy()
     READING_STAGE_VALUES = DEFAULT_READING_STAGE_VALUES.copy()
     REVIEW_STAGE_VALUES = DEFAULT_REVIEW_STAGE_VALUES.copy()
+    SHARED_VIEWS = []
 
     config_path = report_dir / "guides" / "taxonomy.json"
     if not config_path.exists():
@@ -142,6 +164,7 @@ def load_taxonomy_config(report_dir: Path) -> None:
     STATUS_VALUES = configured_values(config, "status_values", DEFAULT_STATUS_VALUES)
     READING_STAGE_VALUES = configured_values(config, "reading_stage_values", DEFAULT_READING_STAGE_VALUES)
     REVIEW_STAGE_VALUES = configured_values(config, "review_stage_values", DEFAULT_REVIEW_STAGE_VALUES)
+    SHARED_VIEWS = configured_shared_views(config)
 
 
 def configured_values(config: dict[str, Any], key: str, defaults: list[str]) -> list[str]:
@@ -150,6 +173,37 @@ def configured_values(config: dict[str, Any], key: str, defaults: list[str]) -> 
         return defaults.copy()
     cleaned = [str(value).strip() for value in values if str(value).strip()]
     return cleaned or defaults.copy()
+
+
+def configured_shared_views(config: dict[str, Any]) -> list[dict[str, Any]]:
+    views = config.get("shared_views") or []
+    if not isinstance(views, list):
+        return []
+    cleaned: list[dict[str, Any]] = []
+    for view in views:
+        if not isinstance(view, dict):
+            continue
+        name = str(view.get("name") or "").strip()
+        state = view.get("state") or {}
+        page = str(view.get("page") or "all").strip()
+        if not name or page not in VIEW_PAGES or not isinstance(state, dict):
+            continue
+        normalized_state = {
+            str(key): str(value)
+            for key, value in state.items()
+            if str(key) in VIEW_STATE_KEYS and str(value).strip()
+        }
+        if normalized_state:
+            cleaned.append({"name": name, "page": page, "state": normalized_state})
+    return cleaned
+
+
+def shared_views_for(page: str) -> list[dict[str, Any]]:
+    return [
+        {"name": view["name"], "state": view["state"]}
+        for view in SHARED_VIEWS
+        if view.get("page") in {"all", page}
+    ]
 
 
 def strip_frontmatter(text: str) -> tuple[dict[str, Any], str]:
@@ -1113,6 +1167,7 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         ],
         "tags": tag_counts(papers),
         "taxonomy": taxonomy,
+        "shared_views": shared_views_for("index"),
         "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
     }
     cards = "\n".join(render_card(paper) for paper in papers)
@@ -1206,6 +1261,7 @@ const savedView = document.querySelector("#savedView");
 const saveView = document.querySelector("#saveView");
 const deleteView = document.querySelector("#deleteView");
 const searchTextBySlug = new Map((window.PAPER_WIKI.search_index || []).map(item => [item.slug, item.search_text || ""]));
+const sharedViews = window.PAPER_WIKI.shared_views || [];
 let currentPage = 1;
 const savedViewsKey = "autopaperreader:index:savedViews";
 const queryControls = [
@@ -1296,7 +1352,18 @@ function writeSavedViews(views) {{
 function refreshSavedViews() {{
   const views = readSavedViews();
   savedView.replaceChildren(new Option("选择视图", ""));
-  views.forEach((view, index) => savedView.add(new Option(view.name, String(index))));
+  if (sharedViews.length) {{
+    const sharedGroup = document.createElement("optgroup");
+    sharedGroup.label = "共享视图";
+    sharedViews.forEach((view, index) => sharedGroup.appendChild(new Option(view.name, `shared:${{index}}`)));
+    savedView.appendChild(sharedGroup);
+  }}
+  if (views.length) {{
+    const localGroup = document.createElement("optgroup");
+    localGroup.label = "本地视图";
+    views.forEach((view, index) => localGroup.appendChild(new Option(view.name, `local:${{index}}`)));
+    savedView.appendChild(localGroup);
+  }}
 }}
 
 function card(p) {{
@@ -1419,11 +1486,14 @@ saveView.addEventListener("click", () => {{
   views.unshift({{ name: normalized, state: currentState() }});
   if (!writeSavedViews(views)) return;
   refreshSavedViews();
-  savedView.value = "0";
+  savedView.value = "local:0";
 }});
 deleteView.addEventListener("click", () => {{
-  if (!savedView.value) return;
-  const index = Number(savedView.value);
+  if (!savedView.value || !savedView.value.startsWith("local:")) {{
+    if (savedView.value.startsWith("shared:")) window.alert("共享视图来自 taxonomy.json，不能在页面里删除。");
+    return;
+  }}
+  const index = Number(savedView.value.split(":")[1]);
   const views = readSavedViews();
   views.splice(index, 1);
   if (!writeSavedViews(views)) return;
@@ -1431,7 +1501,9 @@ deleteView.addEventListener("click", () => {{
 }});
 savedView.addEventListener("change", () => {{
   if (!savedView.value) return;
-  const view = readSavedViews()[Number(savedView.value)];
+  const [source, indexText] = savedView.value.split(":");
+  const index = Number(indexText);
+  const view = source === "shared" ? sharedViews[index] : readSavedViews()[index];
   if (view) applyState(view.state || {{}});
 }});
 readStateFromUrl();
@@ -1588,6 +1660,7 @@ def render_library_row(paper: dict[str, Any]) -> str:
 def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     taxonomy = taxonomy_counts(papers)
     rows = "\n".join(render_library_row(paper) for paper in papers)
+    data = {"shared_views": shared_views_for("library")}
     body = f"""
 <header class="shell">
   <div class="eyebrow">Paper Library</div>
@@ -1670,6 +1743,7 @@ const nextPage = document.querySelector("#nextPage");
 const savedView = document.querySelector("#savedView");
 const saveView = document.querySelector("#saveView");
 const deleteView = document.querySelector("#deleteView");
+const sharedViews = window.PAPER_WIKI.shared_views || [];
 let currentPage = 1;
 const savedViewsKey = "autopaperreader:library:savedViews";
 const controls = [
@@ -1758,7 +1832,18 @@ function writeSavedViews(views) {{
 function refreshSavedViews() {{
   const views = readSavedViews();
   savedView.replaceChildren(new Option("选择视图", ""));
-  views.forEach((view, index) => savedView.add(new Option(view.name, String(index))));
+  if (sharedViews.length) {{
+    const sharedGroup = document.createElement("optgroup");
+    sharedGroup.label = "共享视图";
+    sharedViews.forEach((view, index) => sharedGroup.appendChild(new Option(view.name, `shared:${{index}}`)));
+    savedView.appendChild(sharedGroup);
+  }}
+  if (views.length) {{
+    const localGroup = document.createElement("optgroup");
+    localGroup.label = "本地视图";
+    views.forEach((view, index) => localGroup.appendChild(new Option(view.name, `local:${{index}}`)));
+    savedView.appendChild(localGroup);
+  }}
 }}
 
 function sortRows(rows) {{
@@ -1836,11 +1921,14 @@ saveView.addEventListener("click", () => {{
   views.unshift({{ name: normalized, state: currentState() }});
   if (!writeSavedViews(views)) return;
   refreshSavedViews();
-  savedView.value = "0";
+  savedView.value = "local:0";
 }});
 deleteView.addEventListener("click", () => {{
-  if (!savedView.value) return;
-  const index = Number(savedView.value);
+  if (!savedView.value || !savedView.value.startsWith("local:")) {{
+    if (savedView.value.startsWith("shared:")) window.alert("共享视图来自 taxonomy.json，不能在页面里删除。");
+    return;
+  }}
+  const index = Number(savedView.value.split(":")[1]);
   const views = readSavedViews();
   views.splice(index, 1);
   if (!writeSavedViews(views)) return;
@@ -1848,7 +1936,9 @@ deleteView.addEventListener("click", () => {{
 }});
 savedView.addEventListener("change", () => {{
   if (!savedView.value) return;
-  const view = readSavedViews()[Number(savedView.value)];
+  const [source, indexText] = savedView.value.split(":");
+  const index = Number(indexText);
+  const view = source === "shared" ? sharedViews[index] : readSavedViews()[index];
   if (view) applyState(view.state || {{}});
 }});
 prevPage.addEventListener("click", () => {{
@@ -1865,7 +1955,7 @@ refreshSavedViews();
 render();
 </script>
 """
-    (report_dir / "library.html").write_text(page_shell("论文库表格", body), encoding="utf-8")
+    (report_dir / "library.html").write_text(page_shell("论文库表格", body, data), encoding="utf-8")
 
 
 def render_review_row(item: dict[str, Any]) -> str:

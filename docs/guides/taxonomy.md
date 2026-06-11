@@ -97,11 +97,29 @@ has_code: true
 
 `role_order` 会影响研究线详情页和首页研究线概览中的论文排序。`status_values`、`reading_stage_values` 和 `review_stage_values` 会进入首页和论文库表格的筛选项；即使某个状态当前还没有论文使用，也可以先作为可选管理状态出现。
 
+`shared_views` 可以把常用筛选队列随仓库同步到首页和论文库表格。`page` 支持 `all`、`index`、`library`；`state` 使用 URL query 里的筛选键，例如 `importance`、`status`、`line`、`track`、`review`、`sort`：
+
+```json
+{
+  "shared_views": [
+    {
+      "name": "重点论文",
+      "page": "all",
+      "state": {
+        "importance": "5",
+        "sort": "importance"
+      }
+    }
+  ]
+}
+```
+
 `python3 scripts/validate_wiki.py docs` 会校验 `taxonomy.json` 的基本结构：
 
 - `label_aliases` 必须是 object，key 和 value 都是非空字符串。
 - `role_order`、`status_values`、`reading_stage_values`、`review_stage_values` 必须是字符串列表。
 - 列表里不能有重复值或空值。
+- `shared_views` 必须是对象列表，每个视图都要有非空 `name` 和非空 `state`。
 
 报告里的 `status`、`reading_stage`、`review_stage` 和 `line_role` 如果不在 `taxonomy.json` 对应列表中，普通校验会给 warning，方便你逐步治理旧报告；发布或团队协作前可以使用严格模式把它升级为 error：
 
