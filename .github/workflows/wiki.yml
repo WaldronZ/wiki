@@ -16,7 +16,7 @@ jobs:
           python-version: "3.11"
 
       - name: Check Python syntax
-        run: python -m py_compile scripts/build_wiki.py scripts/render_report_html.py scripts/validate_wiki.py
+        run: python -m py_compile scripts/build_wiki.py scripts/render_report_html.py scripts/validate_wiki.py scripts/apply_review_plan.py
 
       - name: Check generated wiki is current
         run: python scripts/build_wiki.py docs --check

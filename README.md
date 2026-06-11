@@ -44,6 +44,7 @@ paper_reader/
 │   │   └── taxonomy.md
 │   └── .gitkeep
 ├── scripts/
+│   ├── apply_review_plan.py
 │   ├── build_wiki.py
 │   └── render_report_html.py
 └── sources/
@@ -58,6 +59,7 @@ paper_reader/
 - `docs/` 用于存放论文阅读报告和静态 wiki
 - `scripts/build_wiki.py` 用于扫描报告并生成 wiki 汇总页
 - `scripts/render_report_html.py` 是稳定 HTML 渲染兜底脚本，用于修复公式裸露、图片破图等展示问题
+- `scripts/apply_review_plan.py` 用于把 `docs/review.json` 的建议复习日期安全写回报告 frontmatter，默认只 dry-run
 
 ## 工作流概览
 
@@ -160,6 +162,14 @@ python3 scripts/build_wiki.py docs --check
 
 ```bash
 python3 scripts/validate_wiki.py docs
+```
+
+预览并写入复习计划建议：
+
+```bash
+python3 scripts/apply_review_plan.py docs
+python3 scripts/apply_review_plan.py docs --write
+python3 scripts/build_wiki.py docs
 ```
 
 仓库也提供 GitHub Actions workflow：每次 push / pull request 会检查脚本语法、确认 wiki 生成物已更新并运行验证脚本。
