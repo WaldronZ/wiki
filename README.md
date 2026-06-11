@@ -210,7 +210,7 @@ title,link,status,priority,tags,note
 Example Paper,https://arxiv.org/abs/2601.00001,queued,high,LLM Serving;Batching,先读方法
 ```
 
-刷新后打开 `docs/inbox.html`，可以筛选候选论文、查看疑似重复项，并复制单篇论文的阅读任务给 agent 流程。
+刷新后打开 `docs/inbox.html`，可以筛选候选论文、查看疑似重复项，并复制单篇论文或当前筛选结果的阅读任务给 agent 流程。
 
 开源协作时，可以直接用 GitHub issue forms 收集输入：`Paper intake` 对应新增候选论文，`Taxonomy governance` 对应标签合并、拆分、状态 workflow 调整，`Report quality issue` 对应元数据、渲染、重复报告或过期分析问题。PR 模板会要求说明是否更新生成物、是否影响当前 active workflow，以及是否通过质量门禁。
 

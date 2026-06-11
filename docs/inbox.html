@@ -374,7 +374,12 @@
   </div>
 </div>
 <main class="shell">
-  <div class="results-bar"><strong id="inboxCount">显示 0 / 0 条</strong></div>
+  <div class="results-bar">
+    <strong id="inboxCount">显示 0 / 0 条</strong>
+    <div class="results-actions">
+      <button id="copyVisiblePrompts" class="button" type="button">复制当前筛选任务</button>
+    </div>
+  </div>
   <div class="table-wrap">
     <table class="library-table">
       <thead><tr><th>论文</th><th>状态</th><th>标签</th><th>备注</th><th>去重</th><th>操作</th></tr></thead>
@@ -389,31 +394,61 @@ const inboxStatus = document.querySelector("#inboxStatus");
 const inboxPriority = document.querySelector("#inboxPriority");
 const inboxDuplicate = document.querySelector("#inboxDuplicate");
 const inboxCount = document.querySelector("#inboxCount");
+const copyVisiblePrompts = document.querySelector("#copyVisiblePrompts");
+let visibleInboxRows = [...inboxRows];
+
+function promptForRow(row) {
+  const button = row.querySelector(".copy-prompt");
+  return button ? `请按 AutoPaperReader 工作流阅读这篇论文：${button.dataset.prompt}` : "";
+}
+
+async function copyText(text, fallbackTitle) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    window.prompt(fallbackTitle, text);
+    return false;
+  }
+}
 
 function renderInbox() {
   const q = inboxSearch.value.trim().toLowerCase();
   let visible = 0;
+  visibleInboxRows = [];
   inboxRows.forEach(row => {
     const hit = (!q || row.dataset.search.includes(q))
       && (!inboxStatus.value || row.dataset.status === inboxStatus.value)
       && (!inboxPriority.value || row.dataset.priority === inboxPriority.value)
       && (!inboxDuplicate.value || row.dataset.duplicate === inboxDuplicate.value);
     row.hidden = !hit;
-    if (hit) visible += 1;
+    if (hit) {
+      visible += 1;
+      visibleInboxRows.push(row);
+    }
   });
   inboxCount.textContent = `显示 ${visible} / ${inboxRows.length} 条`;
 }
 
 [inboxSearch, inboxStatus, inboxPriority, inboxDuplicate].forEach(el => el.addEventListener("input", renderInbox));
+copyVisiblePrompts.addEventListener("click", async () => {
+  const prompts = visibleInboxRows.map(promptForRow).filter(Boolean);
+  if (!prompts.length) {
+    window.alert("当前筛选结果为空。");
+    return;
+  }
+  const text = prompts.map((prompt, index) => `${index + 1}. ${prompt}`).join("\n");
+  const copied = await copyText(text, "复制当前筛选任务");
+  copyVisiblePrompts.textContent = copied ? `已复制 ${prompts.length} 条` : "复制当前筛选任务";
+  if (copied) setTimeout(() => copyVisiblePrompts.textContent = "复制当前筛选任务", 1400);
+});
 document.querySelectorAll(".copy-prompt").forEach(button => {
   button.addEventListener("click", async () => {
     const prompt = `请按 AutoPaperReader 工作流阅读这篇论文：${button.dataset.prompt}`;
-    try {
-      await navigator.clipboard.writeText(prompt);
+    const copied = await copyText(prompt, "复制任务");
+    if (copied) {
       button.textContent = "已复制";
       setTimeout(() => button.textContent = "复制任务", 1200);
-    } catch {
-      window.prompt("复制任务", prompt);
     }
   });
 });

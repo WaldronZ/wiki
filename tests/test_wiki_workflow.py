@@ -266,6 +266,8 @@ class WikiWorkflowTest(unittest.TestCase):
             inbox_html = (report_dir / "inbox.html").read_text(encoding="utf-8")
             self.assertIn("Gamma Paper", inbox_html)
             self.assertIn("复制任务", inbox_html)
+            self.assertIn('id="copyVisiblePrompts"', inbox_html)
+            self.assertIn("visibleInboxRows", inbox_html)
             quality = json.loads((report_dir / "quality.json").read_text(encoding="utf-8"))
             self.assertIn("taxonomy_drift", quality)
             self.assertEqual(quality["taxonomy_drift"], [])
