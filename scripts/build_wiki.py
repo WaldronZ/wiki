@@ -5396,7 +5396,7 @@ def page_shell(
     base_prefix: str = "",
 ) -> str:
     embedded = ""
-    css_extra = f"\n{extra_css}" if extra_css else ""
+    css_extra = f"\n{extra_css.strip()}" if extra_css else ""
     quick_nav_prefix = json.dumps(base_prefix)
     quick_entries_json = json.dumps(quick_open_entries(), ensure_ascii=False)
     if data is not None:
@@ -5951,9 +5951,37 @@ def render_line_overview(papers: list[dict[str, Any]]) -> str:
 """
 
 
-def render_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+def render_index_lane(lane: dict[str, Any]) -> str:
+    metrics = " · ".join(
+        f"{item.get('label')}: {item.get('value')}"
+        for item in lane.get("metrics", [])[:3]
+    )
+    pages = "".join(
+        f'<a class="chip" href="{html.escape(str(page.get("href") or ""))}">{html.escape(str(page.get("title") or ""))}</a>'
+        for page in lane.get("pages", [])[:4]
+    )
+    next_action = str((lane.get("next_actions") or [""])[0] or "")
+    return f"""
+<article class="home-lane" data-persona="{html.escape(str(lane.get("persona") or ""), quote=True)}">
+  <div class="home-lane-main">
+    <span class="flag">{html.escape(str(lane.get("persona") or ""))}</span>
+    <h2>{html.escape(str(lane.get("title") or ""))}</h2>
+    <p>{html.escape(str(lane.get("description") or ""))}</p>
+    <div class="meta">{html.escape(metrics)}</div>
+  </div>
+  <div class="home-lane-actions">
+    <a class="button primary" href="{html.escape(str(lane.get("primary_href") or "command.html"))}">进入</a>
+    <a class="button" href="command.html">详情</a>
+  </div>
+  <div class="chips">{pages}</div>
+  <div class="home-next">{html.escape(next_action)}</div>
+</article>"""
+
+
+def render_index(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
     taxonomy = taxonomy_counts(papers)
     controls = control_options()
+    command_payload = build_command_center_payload(report_dir, papers, inbox_items)
     index_controls = {key: value for key, value in controls.items() if key != "shared_views"}
     data = {
         "papers": [public_paper(paper) for paper in papers],
@@ -5967,11 +5995,105 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         "tags": tag_counts(papers),
         "taxonomy": taxonomy,
         "controls": index_controls,
+        "command": command_payload,
         "shared_views": shared_views_for("index"),
         "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
     }
     cards = "\n".join(render_card(paper) for paper in papers)
     line_overview = render_line_overview(papers)
+    lane_cards = "".join(render_index_lane(lane) for lane in command_payload["lanes"])
+    command_next = "".join(
+        "<tr>"
+        f'<td><a href="{html.escape(str(item["href"]))}">{html.escape(str(item["label"]))}</a></td>'
+        f"<td>{html.escape(str(item['count']))}</td>"
+        f"<td>{html.escape(str(item['reason']))}</td>"
+        "</tr>"
+        for item in command_payload["recommended_next"]
+    )
+    index_css = """
+    .home-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(320px, .9fr);
+      gap: 18px;
+      align-items: start;
+      margin-top: 22px;
+    }
+    .home-primary-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .home-command-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 16px;
+    }
+    .home-command-panel h2 {
+      margin: 0 0 10px;
+      font-size: 20px;
+      letter-spacing: 0;
+    }
+    .home-command-panel .data-table {
+      border: 0;
+      background: transparent;
+    }
+    .home-lanes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .home-lane {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: start;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 16px;
+    }
+    .home-lane-main h2 {
+      margin: 6px 0 6px;
+      font-size: 20px;
+      letter-spacing: 0;
+    }
+    .home-lane-main p {
+      margin: 0 0 8px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .home-lane-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: end;
+    }
+    .home-lane .chips {
+      grid-column: 1 / -1;
+      margin-top: 0;
+      padding-top: 0;
+    }
+    .home-next {
+      grid-column: 1 / -1;
+      color: var(--muted);
+      font-size: 13px;
+      border-top: 1px solid color-mix(in srgb, var(--line) 72%, transparent);
+      padding-top: 10px;
+    }
+    @media (max-width: 860px) {
+      .home-hero { grid-template-columns: 1fr; }
+      .home-lane { grid-template-columns: 1fr; }
+      .home-lane-actions { justify-content: start; }
+    }
+    """
     empty = """
       <div class="empty">
         还没有论文报告。生成第一篇 <code>docs/&lt;slug&gt;.md</code> 后，再运行
@@ -5982,12 +6104,21 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
 <header class="shell">
   <div class="eyebrow">AutoPaperReader Wiki</div>
   <h1>我的论文知识库</h1>
-  <p class="lead">这里汇总每一篇独立阅读报告，并按主题、方法、年份和代码可复现性进行浏览。每次新增报告后运行构建脚本即可刷新。</p>
+  <p class="lead">这里汇总每一篇独立阅读报告，并按阅读、导入、分类治理、状态流、研究综合和开源发布组织成可执行工作台。</p>
+  <div class="home-primary-actions">
+    <a class="button primary" href="command.html">打开命令中心</a>
+    <a class="button" href="library.html">进入论文库</a>
+    <a class="button" href="actions.html">查看行动队列</a>
+    <a class="button" href="registry.html">治理标签</a>
+  </div>
   <div class="stats">
     <span class="stat">论文 {len(papers)}</span>
     <span class="stat">研究线 {len(taxonomy["research_lines"])}</span>
     <span class="stat">分类 {len(data["tags"])}</span>
+    <span class="stat">行动 {command_payload["summary"]["actions"]}</span>
+    <span class="stat">High {command_payload["summary"]["high_actions"]}</span>
     <span class="stat">最近更新 {html.escape(data["generated_at"])}</span>
+    <a class="stat" href="command.html">命令中心</a>
     <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="inbox.html">待处理池</a>
@@ -6027,7 +6158,22 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   </div>
 </div>
 <main class="shell">
+  <section class="home-hero">
+    <div>
+      <h2 class="section-title">按场景进入</h2>
+      <div class="home-lanes">{lane_cards}</div>
+    </div>
+    <aside class="home-command-panel">
+      <h2>推荐下一步</h2>
+      <div class="table-wrap"><table class="data-table"><thead><tr><th>行动</th><th>数量</th><th>原因</th></tr></thead><tbody>{command_next}</tbody></table></div>
+      <div class="links">
+        <a class="button" href="command.json">Command JSON</a>
+        <a class="button" href="manifest.json">Manifest JSON</a>
+      </div>
+    </aside>
+  </section>
   {line_overview}
+  <h2 class="section-title">论文检索</h2>
   <div class="results-bar">
     <strong id="resultCount">显示 {len(papers)} / {len(papers)} 篇</strong>
     <div class="results-actions">
@@ -6507,7 +6653,7 @@ refreshSavedViews();
 render();
 </script>
 """
-    (report_dir / "index.html").write_text(page_shell("我的论文知识库", body, data), encoding="utf-8")
+    (report_dir / "index.html").write_text(page_shell("我的论文知识库", body, data, extra_css=index_css), encoding="utf-8")
 
 
 def render_topic_options(tags: dict[str, int]) -> str:
@@ -17865,7 +18011,7 @@ def build_wiki(report_dir: Path) -> int:
     write_ownership_json(report_dir, papers)
     write_routing_json(report_dir, papers)
     write_onboarding_json(report_dir, papers, inbox_items)
-    render_index(report_dir, papers)
+    render_index(report_dir, papers, inbox_items)
     render_library(report_dir, papers)
     render_board(report_dir, papers)
     render_workflow(report_dir, papers)
