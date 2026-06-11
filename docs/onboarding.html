@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Efficient Attention Kernels</title>
+  <title>开源上手控制台</title>
   <style>
     :root {
       color-scheme: light;
@@ -350,6 +350,77 @@
       .data-table { display: block; overflow-x: auto; }
       header { padding-top: 28px; }
     }
+
+    .onboarding-hero {
+      display: grid;
+      grid-template-columns: minmax(220px, 280px) 1fr;
+      gap: 16px;
+      align-items: stretch;
+      margin-bottom: 18px;
+    }
+    .readiness-score {
+      display: grid;
+      place-items: center;
+      min-height: 210px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      text-align: center;
+      padding: 18px;
+    }
+    .readiness-score strong {
+      display: block;
+      font-size: 54px;
+      line-height: 1;
+    }
+    .onboarding-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
+    }
+    .onboarding-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+    }
+    .card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .card-head a {
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .command-stack {
+      display: grid;
+      gap: 6px;
+    }
+    .command-stack .button,
+    td .button {
+      justify-content: flex-start;
+      white-space: normal;
+      text-align: left;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+    }
+    .onboarding-toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .onboarding-card[hidden] { display: none; }
+    @media (max-width: 820px) {
+      .onboarding-hero { grid-template-columns: 1fr; }
+    }
+    
   </style>
 </head>
 <body>
@@ -366,32 +437,134 @@
 </div>
 
 <header class="shell">
-  <div class="eyebrow">Research Line</div>
-  <h1>Efficient Attention Kernels</h1>
-  <p class="lead">按论文在该研究线中的角色组织：foundation、baseline、main、system、variant、followup 等角色来自 frontmatter，可按你的分类习惯自由扩展。</p>
+  <div class="eyebrow">Open Source Onboarding</div>
+  <h1>开源上手控制台</h1>
+  <p class="lead">把贡献入口、质量门、数据契约和常用命令收在一个页面里。适合新贡献者、第二台机器、未来桌面软件或 DMG 首次打开时快速理解这个知识库怎么维护。</p>
   <div class="stats">
-    <a class="stat" href="../index.html">返回首页</a>
-    <a class="stat" href="../library.html">论文库表格</a>
-    <a class="stat" href="../review.html">复习计划</a>
-    <a class="stat" href="../dashboard.html">管理控制台</a>
-    <a class="stat" href="../collections.html">集合视图</a>
-    <a class="stat" href="../related.html">关联网络</a>
-    <a class="stat" href="../gaps.html">研究缺口</a>
-    <a class="stat" href="../taxonomy.html">分类治理</a>
-    <a class="stat" href="../timeline.html">时间轴</a>
-    <a class="stat" href="../matrix.html">研究矩阵</a>
-    <a class="stat" href="index.html">全部研究线</a>
-    <span class="stat">论文 2</span>
-    <span class="stat">角色 2</span>
+    <a class="stat" href="onboarding.json">Onboarding JSON</a>
+    <a class="stat" href="catalog.html">数据目录</a>
+    <a class="stat" href="release.html">发布摘要</a>
+    <a class="stat" href="quality.html">质量治理</a>
+    <a class="stat" href="routing.html">分类路由器</a>
+    <span class="stat">论文 5</span>
+    <span class="stat">Inbox 0</span>
   </div>
 </header>
 <main class="shell">
-  <div class="line-detail"><section class="role-section"><h2>foundation <span class="meta">1</span></h2><article class="paper-row"><div><h3><a href="../2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></h3><div class="meta">FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning</div><div class="chips"><span class="chip">Efficient Attention</span><span class="chip">GPU Kernel Optimization</span><span class="chip">Long Context</span><span class="chip">CUDA / GPU parallelism</span><span class="chip">FlashAttention</span><span class="chip">online softmax</span></div></div><div class="card-flags"><span class="flag">2023</span><span class="flag">重要性 5</span><span class="flag">状态 read</span><span class="flag">有代码</span></div></article></section><section class="role-section"><h2>system <span class="meta">1</span></h2><article class="paper-row"><div><h3><a href="../2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></h3><div class="meta">FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving</div><div class="chips"><span class="chip">Attention Kernels</span><span class="chip">GPU Systems</span><span class="chip">Inference Optimization</span><span class="chip">block-sparse attention</span><span class="chip">composable KV-cache format</span><span class="chip">CUDA Graph</span></div></div><div class="card-flags"><span class="flag">2025</span><span class="flag">重要性 4</span><span class="flag">状态 read</span><span class="flag">有代码</span></div></article></section></div>
+  <section class="onboarding-hero">
+    <div class="readiness-score">
+      <div>
+        <span class="meta">Open-source readiness</span>
+        <strong>100%</strong>
+        <span class="flag">13/13 checks</span>
+      </div>
+    </div>
+    <div class="metric-grid">
+      <section class="metric-card"><span>贡献路径</span><strong>4</strong><span>intake / quality / taxonomy / release</span></section>
+      <section class="metric-card"><span>契约文件</span><strong>5</strong><span>schema 和模板</span></section>
+      <section class="metric-card"><span>启动数据</span><strong>6</strong><span>给脚本或桌面端读取</span></section>
+      <section class="metric-card"><span>常用命令</span><strong>5</strong><span>可一键复制</span></section>
+    </div>
+  </section>
+  <section>
+    <h2 class="section-title">贡献路径</h2>
+    <div class="onboarding-toolbar">
+      <input id="onboardingSearch" type="search" placeholder="搜索 intake、taxonomy、release">
+      <span class="stat" id="onboardingCount">0 paths</span>
+    </div>
+    <div class="onboarding-grid" id="onboardingPaths"><article class="onboarding-card" data-search="add or triage candidate papers paper-intake routing.html inbox.html library.html">
+  <div class="card-head">
+    <span class="flag">paper-intake</span>
+    <a href="inbox.html">Add or triage candidate papers</a>
+  </div>
+  <p class="meta">Issue / PR: <code>.github/ISSUE_TEMPLATE/paper-intake.yml</code></p>
+  <p class="meta">Contract: <a href="guides/inbox.schema.json">guides/inbox.schema.json</a></p>
+  <div class="chips"><a class="chip" href="routing.html">routing.html</a><a class="chip" href="inbox.html">inbox.html</a><a class="chip" href="library.html">library.html</a></div>
+  <div class="command-stack"><button class="button copy-command" type="button" data-command="python3 scripts/apply_inbox_items.py docs --input &lt;candidate_csv&gt;">python3 scripts/apply_inbox_items.py docs --input &lt;candidate_csv&gt;</button><button class="button copy-command" type="button" data-command="python3 scripts/apply_inbox_items.py docs --input &lt;candidate_csv&gt; --write">python3 scripts/apply_inbox_items.py docs --input &lt;candidate_csv&gt; --write</button><button class="button copy-command" type="button" data-command="python3 scripts/build_wiki.py docs">python3 scripts/build_wiki.py docs</button></div>
+</article><article class="onboarding-card" data-search="fix report metadata or rendering issues report-quality quality.html review.html freshness.html">
+  <div class="card-head">
+    <span class="flag">report-quality</span>
+    <a href="quality.html">Fix report metadata or rendering issues</a>
+  </div>
+  <p class="meta">Issue / PR: <code>.github/ISSUE_TEMPLATE/report-quality.yml</code></p>
+  <p class="meta">Contract: <a href="guides/metadata.schema.json">guides/metadata.schema.json</a></p>
+  <div class="chips"><a class="chip" href="quality.html">quality.html</a><a class="chip" href="review.html">review.html</a><a class="chip" href="freshness.html">freshness.html</a></div>
+  <div class="command-stack"><button class="button copy-command" type="button" data-command="python3 scripts/validate_wiki.py docs --strict-taxonomy">python3 scripts/validate_wiki.py docs --strict-taxonomy</button><button class="button copy-command" type="button" data-command="python3 scripts/check_quality.py docs">python3 scripts/check_quality.py docs</button></div>
+</article><article class="onboarding-card" data-search="govern labels, status workflows, and research lines taxonomy-governance facets.html balance.html coverage.html ownership.html">
+  <div class="card-head">
+    <span class="flag">taxonomy-governance</span>
+    <a href="taxonomy.html">Govern labels, status workflows, and research lines</a>
+  </div>
+  <p class="meta">Issue / PR: <code>.github/ISSUE_TEMPLATE/taxonomy-governance.yml</code></p>
+  <p class="meta">Contract: <a href="guides/taxonomy.schema.json">guides/taxonomy.schema.json</a></p>
+  <div class="chips"><a class="chip" href="facets.html">facets.html</a><a class="chip" href="balance.html">balance.html</a><a class="chip" href="coverage.html">coverage.html</a><a class="chip" href="ownership.html">ownership.html</a></div>
+  <div class="command-stack"><button class="button copy-command" type="button" data-command="python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md">python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md</button><button class="button copy-command" type="button" data-command="python3 scripts/apply_taxonomy_aliases.py docs --write">python3 scripts/apply_taxonomy_aliases.py docs --write</button><button class="button copy-command" type="button" data-command="python3 scripts/check_quality.py docs">python3 scripts/check_quality.py docs</button></div>
+</article><article class="onboarding-card" data-search="prepare a publishable wiki snapshot release-readiness release.html snapshot.html catalog.html">
+  <div class="card-head">
+    <span class="flag">release-readiness</span>
+    <a href="release.html">Prepare a publishable wiki snapshot</a>
+  </div>
+  <p class="meta">Issue / PR: <code>.github/PULL_REQUEST_TEMPLATE.md</code></p>
+  <p class="meta">Contract: <a href="manifest.json">manifest.json</a></p>
+  <div class="chips"><a class="chip" href="release.html">release.html</a><a class="chip" href="snapshot.html">snapshot.html</a><a class="chip" href="catalog.html">catalog.html</a></div>
+  <div class="command-stack"><button class="button copy-command" type="button" data-command="python3 scripts/build_wiki.py docs">python3 scripts/build_wiki.py docs</button><button class="button copy-command" type="button" data-command="python3 scripts/build_wiki.py docs --check">python3 scripts/build_wiki.py docs --check</button><button class="button copy-command" type="button" data-command="python3 scripts/check_quality.py docs">python3 scripts/check_quality.py docs</button></div>
+</article></div>
+  </section>
+  <section>
+    <h2 class="section-title">快速开始</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>#</th><th>步骤</th><th>命令</th></tr></thead><tbody><tr><td>1</td><td><a href="onboarding.html">Open the contributor console</a><div class="meta">Start from this page to choose the right contribution path.</div></td><td>-</td></tr><tr><td>2</td><td><a href="routing.html">Route a new paper before writing metadata</a><div class="meta">Use title and abstract to pick an initial research line and taxonomy labels.</div></td><td>-</td></tr><tr><td>3</td><td><a href="library.html">Edit or review papers in the dense library</a><div class="meta">Filter, select, export metadata patches, and manage status workflows.</div></td><td>-</td></tr><tr><td>4</td><td><a href="quality.html">Run the local quality gate</a><div class="meta">Use the same checks as CI before opening a PR.</div></td><td><button class="button copy-command" type="button" data-command="python3 scripts/check_quality.py docs">python3 scripts/check_quality.py docs</button></td></tr></tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">开源就绪检查</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>状态</th><th>资产</th><th>路径</th></tr></thead><tbody><tr><td><span class="flag">ok</span></td><td><a href="../README.md">Project overview</a></td><td><code>README.md</code></td></tr><tr><td><span class="flag">ok</span></td><td><a href="../CONTRIBUTING.md">Contribution guide</a></td><td><code>CONTRIBUTING.md</code></td></tr><tr><td><span class="flag">ok</span></td><td><a href="../LICENSE">Open-source license</a></td><td><code>LICENSE</code></td></tr><tr><td><span class="flag">ok</span></td><td><a href="../.github/workflows/wiki-quality.yml">CI quality gate</a></td><td><code>.github/workflows/wiki-quality.yml</code></td></tr><tr><td><span class="flag">ok</span></td><td><a href="../.github/PULL_REQUEST_TEMPLATE.md">Pull request template</a></td><td><code>.github/PULL_REQUEST_TEMPLATE.md</code></td></tr><tr><td><span class="flag">ok</span></td><td><a href="../.github/ISSUE_TEMPLATE/paper-intake.yml">Paper intake issue form</a></td><td><code>.github/ISSUE_TEMPLATE/paper-intake.yml</code></td></tr><tr><td><span class="flag">ok</span></td><td><a href="../.github/ISSUE_TEMPLATE/taxonomy-governance.yml">Taxonomy governance issue form</a></td><td><code>.github/ISSUE_TEMPLATE/taxonomy-governance.yml</code></td></tr><tr><td><span class="flag">ok</span></td><td><a href="../.github/ISSUE_TEMPLATE/report-quality.yml">Report quality issue form</a></td><td><code>.github/ISSUE_TEMPLATE/report-quality.yml</code></td></tr><tr><td><span class="flag">ok</span></td><td><a href="guides/report.template.md">Report template</a></td><td><code>docs/guides/report.template.md</code></td></tr><tr><td><span class="flag">ok</span></td><td><a href="guides/metadata.schema.json">Metadata schema</a></td><td><code>docs/guides/metadata.schema.json</code></td></tr><tr><td><span class="flag">ok</span></td><td><a href="guides/inbox.schema.json">Inbox schema</a></td><td><code>docs/guides/inbox.schema.json</code></td></tr><tr><td><span class="flag">ok</span></td><td><a href="guides/taxonomy.schema.json">Taxonomy schema</a></td><td><code>docs/guides/taxonomy.schema.json</code></td></tr><tr><td><span class="flag">ok</span></td><td><a href="../scripts/check_quality.py">Local quality gate</a></td><td><code>scripts/check_quality.py</code></td></tr></tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">数据契约</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>文件</th><th>用途</th></tr></thead><tbody><tr><td><a href="guides/report.template.md">guides/report.template.md</a></td><td>中文论文阅读报告模板</td></tr><tr><td><a href="guides/metadata.schema.json">guides/metadata.schema.json</a></td><td>报告 frontmatter 字段契约</td></tr><tr><td><a href="guides/inbox.schema.json">guides/inbox.schema.json</a></td><td>候选论文 inbox.csv 字段契约</td></tr><tr><td><a href="guides/taxonomy.schema.json">guides/taxonomy.schema.json</a></td><td>taxonomy.json 配置字段契约</td></tr><tr><td><a href="guides/taxonomy.json">guides/taxonomy.json</a></td><td>分类别名、状态工作流和共享视图配置</td></tr></tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">常用命令</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>场景</th><th>命令</th></tr></thead><tbody><tr><td><a href="release.html">Build wiki</a></td><td><button class="button copy-command" type="button" data-command="python3 scripts/build_wiki.py docs">python3 scripts/build_wiki.py docs</button></td></tr><tr><td><a href="release.html">Check generated artifacts</a></td><td><button class="button copy-command" type="button" data-command="python3 scripts/build_wiki.py docs --check">python3 scripts/build_wiki.py docs --check</button></td></tr><tr><td><a href="quality.html">Strict validation</a></td><td><button class="button copy-command" type="button" data-command="python3 scripts/validate_wiki.py docs --strict-taxonomy">python3 scripts/validate_wiki.py docs --strict-taxonomy</button></td></tr><tr><td><a href="quality.html">Quality gate</a></td><td><button class="button copy-command" type="button" data-command="python3 scripts/check_quality.py docs">python3 scripts/check_quality.py docs</button></td></tr><tr><td><a href="actions.html">Export unified actions</a></td><td><button class="button copy-command" type="button" data-command="python3 scripts/export_actions.py docs --output docs/exports/actions.md">python3 scripts/export_actions.py docs --output docs/exports/actions.md</button></td></tr></tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">启动数据</h2>
+    <div class="stats"><a class="stat" href="onboarding.json">onboarding.json</a><a class="stat" href="catalog.json">catalog.json</a><a class="stat" href="manifest.json">manifest.json</a><a class="stat" href="papers.json">papers.json</a><a class="stat" href="routing.json">routing.json</a><a class="stat" href="quality.json">quality.json</a></div>
+  </section>
 </main>
+<script>
+const onboardingCards = Array.from(document.querySelectorAll(".onboarding-card"));
+const onboardingSearch = document.querySelector("#onboardingSearch");
+const onboardingCount = document.querySelector("#onboardingCount");
+
+function renderOnboardingCards() {
+  const q = onboardingSearch.value.trim().toLowerCase();
+  onboardingCards.forEach(card => {
+    card.hidden = q && !(card.dataset.search || "").includes(q);
+  });
+  onboardingCount.textContent = `${onboardingCards.filter(card => !card.hidden).length} paths`;
+}
+
+async function copyCommand(command, button) {
+  try {
+    await navigator.clipboard.writeText(command);
+    const original = button.textContent;
+    button.textContent = "已复制";
+    setTimeout(() => button.textContent = original, 1200);
+  } catch (error) {
+    window.prompt("复制命令", command);
+  }
+}
+
+document.querySelectorAll(".copy-command").forEach(button => {
+  button.addEventListener("click", () => copyCommand(button.dataset.command || "", button));
+});
+onboardingSearch.addEventListener("input", renderOnboardingCards);
+renderOnboardingCards();
+</script>
 
 <script>
 (() => {
-  const prefix = "../";
+  const prefix = "";
   const openButton = document.querySelector("#quickOpen");
   const panel = document.querySelector("#quickPanel");
   const search = document.querySelector("#quickSearch");

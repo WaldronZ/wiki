@@ -42,6 +42,7 @@ GENERATED_FIXED_PATHS = (
     "scale.json",
     "ownership.json",
     "routing.json",
+    "onboarding.json",
     "catalog.json",
     "snapshot.json",
     "manifest.json",
@@ -55,6 +56,7 @@ GENERATED_FIXED_PATHS = (
     "scale.html",
     "ownership.html",
     "routing.html",
+    "onboarding.html",
     "catalog.html",
     "inbox.html",
     "quality.html",
@@ -2626,6 +2628,7 @@ DATA_CONSUMER_HINTS = {
     "scale.json": ["ops", "capacity-planning", "desktop"],
     "ownership.json": ["ops", "owners", "project-management"],
     "routing.json": ["taxonomy", "intake", "classification"],
+    "onboarding.json": ["open-source", "contributors", "desktop"],
     "snapshot.json": ["release", "audit", "desktop"],
     "inbox.json": ["intake", "dedupe"],
     "manifest.json": ["release", "audit", "ci"],
@@ -2773,6 +2776,159 @@ def write_catalog_placeholders(report_dir: Path) -> None:
     )
 
 
+def repo_file_status(path: str, label: str, href: str | None = None) -> dict[str, Any]:
+    return {
+        "path": path,
+        "label": label,
+        "href": href or path,
+        "exists": (ROOT / path).exists(),
+    }
+
+
+def build_onboarding_payload(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> dict[str, Any]:
+    readiness_checks = [
+        repo_file_status("README.md", "Project overview", "../README.md"),
+        repo_file_status("CONTRIBUTING.md", "Contribution guide", "../CONTRIBUTING.md"),
+        repo_file_status("LICENSE", "Open-source license", "../LICENSE"),
+        repo_file_status(".github/workflows/wiki-quality.yml", "CI quality gate", "../.github/workflows/wiki-quality.yml"),
+        repo_file_status(".github/PULL_REQUEST_TEMPLATE.md", "Pull request template", "../.github/PULL_REQUEST_TEMPLATE.md"),
+        repo_file_status(".github/ISSUE_TEMPLATE/paper-intake.yml", "Paper intake issue form", "../.github/ISSUE_TEMPLATE/paper-intake.yml"),
+        repo_file_status(".github/ISSUE_TEMPLATE/taxonomy-governance.yml", "Taxonomy governance issue form", "../.github/ISSUE_TEMPLATE/taxonomy-governance.yml"),
+        repo_file_status(".github/ISSUE_TEMPLATE/report-quality.yml", "Report quality issue form", "../.github/ISSUE_TEMPLATE/report-quality.yml"),
+        repo_file_status("docs/guides/report.template.md", "Report template", "guides/report.template.md"),
+        repo_file_status("docs/guides/metadata.schema.json", "Metadata schema", "guides/metadata.schema.json"),
+        repo_file_status("docs/guides/inbox.schema.json", "Inbox schema", "guides/inbox.schema.json"),
+        repo_file_status("docs/guides/taxonomy.schema.json", "Taxonomy schema", "guides/taxonomy.schema.json"),
+        repo_file_status("scripts/check_quality.py", "Local quality gate", "../scripts/check_quality.py"),
+    ]
+    passed = sum(1 for item in readiness_checks if item["exists"])
+    readiness_score = percent(passed, len(readiness_checks))
+    quickstart_steps = [
+        {
+            "order": 1,
+            "title": "Open the contributor console",
+            "href": "onboarding.html",
+            "command": "",
+            "why": "Start from this page to choose the right contribution path.",
+        },
+        {
+            "order": 2,
+            "title": "Route a new paper before writing metadata",
+            "href": "routing.html",
+            "command": "",
+            "why": "Use title and abstract to pick an initial research line and taxonomy labels.",
+        },
+        {
+            "order": 3,
+            "title": "Edit or review papers in the dense library",
+            "href": "library.html",
+            "command": "",
+            "why": "Filter, select, export metadata patches, and manage status workflows.",
+        },
+        {
+            "order": 4,
+            "title": "Run the local quality gate",
+            "href": "quality.html",
+            "command": "python3 scripts/check_quality.py docs",
+            "why": "Use the same checks as CI before opening a PR.",
+        },
+    ]
+    contribution_paths = [
+        {
+            "id": "paper-intake",
+            "title": "Add or triage candidate papers",
+            "entry": "inbox.html",
+            "issue_template": ".github/ISSUE_TEMPLATE/paper-intake.yml",
+            "contract": "guides/inbox.schema.json",
+            "recommended_pages": ["routing.html", "inbox.html", "library.html"],
+            "commands": [
+                "python3 scripts/apply_inbox_items.py docs --input <candidate_csv>",
+                "python3 scripts/apply_inbox_items.py docs --input <candidate_csv> --write",
+                "python3 scripts/build_wiki.py docs",
+            ],
+        },
+        {
+            "id": "report-quality",
+            "title": "Fix report metadata or rendering issues",
+            "entry": "quality.html",
+            "issue_template": ".github/ISSUE_TEMPLATE/report-quality.yml",
+            "contract": "guides/metadata.schema.json",
+            "recommended_pages": ["quality.html", "review.html", "freshness.html"],
+            "commands": [
+                "python3 scripts/validate_wiki.py docs --strict-taxonomy",
+                "python3 scripts/check_quality.py docs",
+            ],
+        },
+        {
+            "id": "taxonomy-governance",
+            "title": "Govern labels, status workflows, and research lines",
+            "entry": "taxonomy.html",
+            "issue_template": ".github/ISSUE_TEMPLATE/taxonomy-governance.yml",
+            "contract": "guides/taxonomy.schema.json",
+            "recommended_pages": ["facets.html", "balance.html", "coverage.html", "ownership.html"],
+            "commands": [
+                "python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md",
+                "python3 scripts/apply_taxonomy_aliases.py docs --write",
+                "python3 scripts/check_quality.py docs",
+            ],
+        },
+        {
+            "id": "release-readiness",
+            "title": "Prepare a publishable wiki snapshot",
+            "entry": "release.html",
+            "issue_template": ".github/PULL_REQUEST_TEMPLATE.md",
+            "contract": "manifest.json",
+            "recommended_pages": ["release.html", "snapshot.html", "catalog.html"],
+            "commands": [
+                "python3 scripts/build_wiki.py docs",
+                "python3 scripts/build_wiki.py docs --check",
+                "python3 scripts/check_quality.py docs",
+            ],
+        },
+    ]
+    command_groups = [
+        {"label": "Build wiki", "command": "python3 scripts/build_wiki.py docs", "href": "release.html"},
+        {"label": "Check generated artifacts", "command": "python3 scripts/build_wiki.py docs --check", "href": "release.html"},
+        {"label": "Strict validation", "command": "python3 scripts/validate_wiki.py docs --strict-taxonomy", "href": "quality.html"},
+        {"label": "Quality gate", "command": "python3 scripts/check_quality.py docs", "href": "quality.html"},
+        {"label": "Export unified actions", "command": "python3 scripts/export_actions.py docs --output docs/exports/actions.md", "href": "actions.html"},
+    ]
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": len(papers),
+        "inbox_count": len(inbox_items),
+        "readiness_score": readiness_score,
+        "readiness_passed": passed,
+        "readiness_total": len(readiness_checks),
+        "readiness_checks": readiness_checks,
+        "quickstart_steps": quickstart_steps,
+        "contribution_paths": contribution_paths,
+        "command_groups": command_groups,
+        "contracts": contract_files_manifest(),
+        "bootstrap_files": ["onboarding.json", "catalog.json", "manifest.json", "papers.json", "routing.json", "quality.json"],
+        "core_pages": [
+            item
+            for item in wiki_pages_manifest()
+            if item["href"] in {"onboarding.html", "routing.html", "library.html", "quality.html", "taxonomy.html", "release.html", "catalog.html"}
+        ],
+        "links": {
+            "catalog": "catalog.html",
+            "manifest": "manifest.json",
+            "release": "release.html",
+            "quality": "quality.html",
+            "routing": "routing.html",
+        },
+    }
+
+
+def write_onboarding_json(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
+    payload = build_onboarding_payload(report_dir, papers, inbox_items)
+    (report_dir / "onboarding.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
 def wiki_pages_manifest() -> list[dict[str, str]]:
     return [
         {"title": "首页", "href": "index.html", "kind": "view", "description": "卡片检索、筛选、研究线概览"},
@@ -2795,6 +2951,7 @@ def wiki_pages_manifest() -> list[dict[str, str]]:
         {"title": "规模就绪", "href": "scale.html", "kind": "ops", "description": "大规模论文库容量、风险和扩展建议"},
         {"title": "Owner 工作台", "href": "ownership.html", "kind": "ops", "description": "研究线 owner、工作量和治理队列"},
         {"title": "分类路由器", "href": "routing.html", "kind": "workflow", "description": "新论文研究线和标签推荐"},
+        {"title": "开源上手", "href": "onboarding.html", "kind": "ops", "description": "贡献路径、质量门和数据契约"},
         {"title": "数据目录", "href": "catalog.html", "kind": "ops", "description": "机器数据、页面和契约的接入目录"},
         {"title": "待处理池", "href": "inbox.html", "kind": "workflow", "description": "候选论文队列和去重提示"},
         {"title": "复习计划", "href": "review.html", "kind": "workflow", "description": "待复习、需建计划、建议日期"},
@@ -2825,6 +2982,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "scale.json", "description": "规模就绪评分、容量投影和大库治理风险"},
         {"href": "ownership.json", "description": "研究线 owner、工作量和治理队列"},
         {"href": "routing.json", "description": "新论文分类路由画像和推荐权重"},
+        {"href": "onboarding.json", "description": "开源贡献路径、质量门和数据契约清单"},
         {"href": "catalog.json", "description": "机器数据、页面入口和契约字段目录"},
         {"href": "snapshot.json", "description": "当前知识库治理快照和发布基线"},
         {"href": "inbox.json", "description": "候选论文队列和重复项"},
@@ -8833,6 +8991,217 @@ renderRouting();
     (report_dir / "routing.html").write_text(page_shell("新论文分类路由器", body, extra_css=routing_css), encoding="utf-8")
 
 
+def render_onboarding(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
+    payload = build_onboarding_payload(report_dir, papers, inbox_items)
+    check_rows = "".join(
+        "<tr>"
+        f"<td><span class=\"flag\">{'ok' if item.get('exists') else 'missing'}</span></td>"
+        f"<td><a href=\"{html.escape(str(item.get('href') or ''))}\">{html.escape(str(item.get('label') or ''))}</a></td>"
+        f"<td><code>{html.escape(str(item.get('path') or ''))}</code></td>"
+        "</tr>"
+        for item in payload["readiness_checks"]
+    )
+    path_cards = "".join(
+        f"""<article class="onboarding-card" data-search="{html.escape(' '.join([str(path.get('title') or ''), str(path.get('id') or ''), ' '.join(path.get('recommended_pages', []))]).lower(), quote=True)}">
+  <div class="card-head">
+    <span class="flag">{html.escape(str(path.get("id") or ""))}</span>
+    <a href="{html.escape(str(path.get("entry") or "index.html"))}">{html.escape(str(path.get("title") or ""))}</a>
+  </div>
+  <p class="meta">Issue / PR: <code>{html.escape(str(path.get("issue_template") or ""))}</code></p>
+  <p class="meta">Contract: <a href="{html.escape(str(path.get("contract") or ""))}">{html.escape(str(path.get("contract") or ""))}</a></p>
+  <div class="chips">{"".join(f'<a class="chip" href="{html.escape(page)}">{html.escape(page)}</a>' for page in path.get("recommended_pages", []))}</div>
+  <div class="command-stack">{"".join(f'<button class="button copy-command" type="button" data-command="{html.escape(command, quote=True)}">{html.escape(command)}</button>' for command in path.get("commands", []))}</div>
+</article>"""
+        for path in payload["contribution_paths"]
+    )
+    step_rows = "".join(
+        "<tr>"
+        f"<td>{step['order']}</td>"
+        f"<td><a href=\"{html.escape(str(step['href']))}\">{html.escape(str(step['title']))}</a><div class=\"meta\">{html.escape(str(step['why']))}</div></td>"
+        f"<td>{'<button class=\"button copy-command\" type=\"button\" data-command=\"' + html.escape(str(step.get('command')), quote=True) + '\">' + html.escape(str(step.get('command'))) + '</button>' if step.get('command') else '-'}</td>"
+        "</tr>"
+        for step in payload["quickstart_steps"]
+    )
+    contract_rows = "".join(
+        "<tr>"
+        f"<td><a href=\"{html.escape(str(contract['href']))}\">{html.escape(str(contract['href']))}</a></td>"
+        f"<td>{html.escape(str(contract['description']))}</td>"
+        "</tr>"
+        for contract in payload["contracts"]
+    )
+    command_rows = "".join(
+        "<tr>"
+        f"<td><a href=\"{html.escape(str(command['href']))}\">{html.escape(str(command['label']))}</a></td>"
+        f"<td><button class=\"button copy-command\" type=\"button\" data-command=\"{html.escape(str(command['command']), quote=True)}\">{html.escape(str(command['command']))}</button></td>"
+        "</tr>"
+        for command in payload["command_groups"]
+    )
+    bootstrap = "".join(f'<a class="stat" href="{html.escape(file)}">{html.escape(file)}</a>' for file in payload["bootstrap_files"])
+    onboarding_css = """
+    .onboarding-hero {
+      display: grid;
+      grid-template-columns: minmax(220px, 280px) 1fr;
+      gap: 16px;
+      align-items: stretch;
+      margin-bottom: 18px;
+    }
+    .readiness-score {
+      display: grid;
+      place-items: center;
+      min-height: 210px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      text-align: center;
+      padding: 18px;
+    }
+    .readiness-score strong {
+      display: block;
+      font-size: 54px;
+      line-height: 1;
+    }
+    .onboarding-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
+    }
+    .onboarding-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+    }
+    .card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .card-head a {
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .command-stack {
+      display: grid;
+      gap: 6px;
+    }
+    .command-stack .button,
+    td .button {
+      justify-content: flex-start;
+      white-space: normal;
+      text-align: left;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+    }
+    .onboarding-toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .onboarding-card[hidden] { display: none; }
+    @media (max-width: 820px) {
+      .onboarding-hero { grid-template-columns: 1fr; }
+    }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Open Source Onboarding</div>
+  <h1>开源上手控制台</h1>
+  <p class="lead">把贡献入口、质量门、数据契约和常用命令收在一个页面里。适合新贡献者、第二台机器、未来桌面软件或 DMG 首次打开时快速理解这个知识库怎么维护。</p>
+  <div class="stats">
+    <a class="stat" href="onboarding.json">Onboarding JSON</a>
+    <a class="stat" href="catalog.html">数据目录</a>
+    <a class="stat" href="release.html">发布摘要</a>
+    <a class="stat" href="quality.html">质量治理</a>
+    <a class="stat" href="routing.html">分类路由器</a>
+    <span class="stat">论文 {payload["count"]}</span>
+    <span class="stat">Inbox {payload["inbox_count"]}</span>
+  </div>
+</header>
+<main class="shell">
+  <section class="onboarding-hero">
+    <div class="readiness-score">
+      <div>
+        <span class="meta">Open-source readiness</span>
+        <strong>{html.escape(str(payload["readiness_score"]))}</strong>
+        <span class="flag">{payload["readiness_passed"]}/{payload["readiness_total"]} checks</span>
+      </div>
+    </div>
+    <div class="metric-grid">
+      <section class="metric-card"><span>贡献路径</span><strong>{len(payload["contribution_paths"])}</strong><span>intake / quality / taxonomy / release</span></section>
+      <section class="metric-card"><span>契约文件</span><strong>{len(payload["contracts"])}</strong><span>schema 和模板</span></section>
+      <section class="metric-card"><span>启动数据</span><strong>{len(payload["bootstrap_files"])}</strong><span>给脚本或桌面端读取</span></section>
+      <section class="metric-card"><span>常用命令</span><strong>{len(payload["command_groups"])}</strong><span>可一键复制</span></section>
+    </div>
+  </section>
+  <section>
+    <h2 class="section-title">贡献路径</h2>
+    <div class="onboarding-toolbar">
+      <input id="onboardingSearch" type="search" placeholder="搜索 intake、taxonomy、release">
+      <span class="stat" id="onboardingCount">0 paths</span>
+    </div>
+    <div class="onboarding-grid" id="onboardingPaths">{path_cards}</div>
+  </section>
+  <section>
+    <h2 class="section-title">快速开始</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>#</th><th>步骤</th><th>命令</th></tr></thead><tbody>{step_rows}</tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">开源就绪检查</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>状态</th><th>资产</th><th>路径</th></tr></thead><tbody>{check_rows}</tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">数据契约</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>文件</th><th>用途</th></tr></thead><tbody>{contract_rows}</tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">常用命令</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>场景</th><th>命令</th></tr></thead><tbody>{command_rows}</tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">启动数据</h2>
+    <div class="stats">{bootstrap}</div>
+  </section>
+</main>
+<script>
+const onboardingCards = Array.from(document.querySelectorAll(".onboarding-card"));
+const onboardingSearch = document.querySelector("#onboardingSearch");
+const onboardingCount = document.querySelector("#onboardingCount");
+
+function renderOnboardingCards() {{
+  const q = onboardingSearch.value.trim().toLowerCase();
+  onboardingCards.forEach(card => {{
+    card.hidden = q && !(card.dataset.search || "").includes(q);
+  }});
+  onboardingCount.textContent = `${{onboardingCards.filter(card => !card.hidden).length}} paths`;
+}}
+
+async function copyCommand(command, button) {{
+  try {{
+    await navigator.clipboard.writeText(command);
+    const original = button.textContent;
+    button.textContent = "已复制";
+    setTimeout(() => button.textContent = original, 1200);
+  }} catch (error) {{
+    window.prompt("复制命令", command);
+  }}
+}}
+
+document.querySelectorAll(".copy-command").forEach(button => {{
+  button.addEventListener("click", () => copyCommand(button.dataset.command || "", button));
+}});
+onboardingSearch.addEventListener("input", renderOnboardingCards);
+renderOnboardingCards();
+</script>
+"""
+    (report_dir / "onboarding.html").write_text(page_shell("开源上手控制台", body, extra_css=onboarding_css), encoding="utf-8")
+
+
 def render_catalog(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
     payload = build_catalog_payload(report_dir, papers, inbox_items)
     resource_rows = []
@@ -14252,6 +14621,7 @@ def build_wiki(report_dir: Path) -> int:
     write_scale_json(report_dir, papers, inbox_items)
     write_ownership_json(report_dir, papers)
     write_routing_json(report_dir, papers)
+    write_onboarding_json(report_dir, papers, inbox_items)
     render_index(report_dir, papers)
     render_library(report_dir, papers)
     render_board(report_dir, papers)
@@ -14262,6 +14632,7 @@ def build_wiki(report_dir: Path) -> int:
     render_scale(report_dir, papers, inbox_items)
     render_ownership(report_dir, papers)
     render_routing(report_dir, papers)
+    render_onboarding(report_dir, papers, inbox_items)
     render_inbox(report_dir, inbox_items)
     render_review(report_dir, papers)
     render_freshness(report_dir, papers)

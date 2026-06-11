@@ -1,0 +1,296 @@
+{
+  "generated_at": "2026-06-12T04:30:56",
+  "count": 5,
+  "inbox_count": 0,
+  "readiness_score": "100%",
+  "readiness_passed": 13,
+  "readiness_total": 13,
+  "readiness_checks": [
+    {
+      "path": "README.md",
+      "label": "Project overview",
+      "href": "../README.md",
+      "exists": true
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "label": "Contribution guide",
+      "href": "../CONTRIBUTING.md",
+      "exists": true
+    },
+    {
+      "path": "LICENSE",
+      "label": "Open-source license",
+      "href": "../LICENSE",
+      "exists": true
+    },
+    {
+      "path": ".github/workflows/wiki-quality.yml",
+      "label": "CI quality gate",
+      "href": "../.github/workflows/wiki-quality.yml",
+      "exists": true
+    },
+    {
+      "path": ".github/PULL_REQUEST_TEMPLATE.md",
+      "label": "Pull request template",
+      "href": "../.github/PULL_REQUEST_TEMPLATE.md",
+      "exists": true
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/paper-intake.yml",
+      "label": "Paper intake issue form",
+      "href": "../.github/ISSUE_TEMPLATE/paper-intake.yml",
+      "exists": true
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/taxonomy-governance.yml",
+      "label": "Taxonomy governance issue form",
+      "href": "../.github/ISSUE_TEMPLATE/taxonomy-governance.yml",
+      "exists": true
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/report-quality.yml",
+      "label": "Report quality issue form",
+      "href": "../.github/ISSUE_TEMPLATE/report-quality.yml",
+      "exists": true
+    },
+    {
+      "path": "docs/guides/report.template.md",
+      "label": "Report template",
+      "href": "guides/report.template.md",
+      "exists": true
+    },
+    {
+      "path": "docs/guides/metadata.schema.json",
+      "label": "Metadata schema",
+      "href": "guides/metadata.schema.json",
+      "exists": true
+    },
+    {
+      "path": "docs/guides/inbox.schema.json",
+      "label": "Inbox schema",
+      "href": "guides/inbox.schema.json",
+      "exists": true
+    },
+    {
+      "path": "docs/guides/taxonomy.schema.json",
+      "label": "Taxonomy schema",
+      "href": "guides/taxonomy.schema.json",
+      "exists": true
+    },
+    {
+      "path": "scripts/check_quality.py",
+      "label": "Local quality gate",
+      "href": "../scripts/check_quality.py",
+      "exists": true
+    }
+  ],
+  "quickstart_steps": [
+    {
+      "order": 1,
+      "title": "Open the contributor console",
+      "href": "onboarding.html",
+      "command": "",
+      "why": "Start from this page to choose the right contribution path."
+    },
+    {
+      "order": 2,
+      "title": "Route a new paper before writing metadata",
+      "href": "routing.html",
+      "command": "",
+      "why": "Use title and abstract to pick an initial research line and taxonomy labels."
+    },
+    {
+      "order": 3,
+      "title": "Edit or review papers in the dense library",
+      "href": "library.html",
+      "command": "",
+      "why": "Filter, select, export metadata patches, and manage status workflows."
+    },
+    {
+      "order": 4,
+      "title": "Run the local quality gate",
+      "href": "quality.html",
+      "command": "python3 scripts/check_quality.py docs",
+      "why": "Use the same checks as CI before opening a PR."
+    }
+  ],
+  "contribution_paths": [
+    {
+      "id": "paper-intake",
+      "title": "Add or triage candidate papers",
+      "entry": "inbox.html",
+      "issue_template": ".github/ISSUE_TEMPLATE/paper-intake.yml",
+      "contract": "guides/inbox.schema.json",
+      "recommended_pages": [
+        "routing.html",
+        "inbox.html",
+        "library.html"
+      ],
+      "commands": [
+        "python3 scripts/apply_inbox_items.py docs --input <candidate_csv>",
+        "python3 scripts/apply_inbox_items.py docs --input <candidate_csv> --write",
+        "python3 scripts/build_wiki.py docs"
+      ]
+    },
+    {
+      "id": "report-quality",
+      "title": "Fix report metadata or rendering issues",
+      "entry": "quality.html",
+      "issue_template": ".github/ISSUE_TEMPLATE/report-quality.yml",
+      "contract": "guides/metadata.schema.json",
+      "recommended_pages": [
+        "quality.html",
+        "review.html",
+        "freshness.html"
+      ],
+      "commands": [
+        "python3 scripts/validate_wiki.py docs --strict-taxonomy",
+        "python3 scripts/check_quality.py docs"
+      ]
+    },
+    {
+      "id": "taxonomy-governance",
+      "title": "Govern labels, status workflows, and research lines",
+      "entry": "taxonomy.html",
+      "issue_template": ".github/ISSUE_TEMPLATE/taxonomy-governance.yml",
+      "contract": "guides/taxonomy.schema.json",
+      "recommended_pages": [
+        "facets.html",
+        "balance.html",
+        "coverage.html",
+        "ownership.html"
+      ],
+      "commands": [
+        "python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md",
+        "python3 scripts/apply_taxonomy_aliases.py docs --write",
+        "python3 scripts/check_quality.py docs"
+      ]
+    },
+    {
+      "id": "release-readiness",
+      "title": "Prepare a publishable wiki snapshot",
+      "entry": "release.html",
+      "issue_template": ".github/PULL_REQUEST_TEMPLATE.md",
+      "contract": "manifest.json",
+      "recommended_pages": [
+        "release.html",
+        "snapshot.html",
+        "catalog.html"
+      ],
+      "commands": [
+        "python3 scripts/build_wiki.py docs",
+        "python3 scripts/build_wiki.py docs --check",
+        "python3 scripts/check_quality.py docs"
+      ]
+    }
+  ],
+  "command_groups": [
+    {
+      "label": "Build wiki",
+      "command": "python3 scripts/build_wiki.py docs",
+      "href": "release.html"
+    },
+    {
+      "label": "Check generated artifacts",
+      "command": "python3 scripts/build_wiki.py docs --check",
+      "href": "release.html"
+    },
+    {
+      "label": "Strict validation",
+      "command": "python3 scripts/validate_wiki.py docs --strict-taxonomy",
+      "href": "quality.html"
+    },
+    {
+      "label": "Quality gate",
+      "command": "python3 scripts/check_quality.py docs",
+      "href": "quality.html"
+    },
+    {
+      "label": "Export unified actions",
+      "command": "python3 scripts/export_actions.py docs --output docs/exports/actions.md",
+      "href": "actions.html"
+    }
+  ],
+  "contracts": [
+    {
+      "href": "guides/report.template.md",
+      "description": "中文论文阅读报告模板"
+    },
+    {
+      "href": "guides/metadata.schema.json",
+      "description": "报告 frontmatter 字段契约"
+    },
+    {
+      "href": "guides/inbox.schema.json",
+      "description": "候选论文 inbox.csv 字段契约"
+    },
+    {
+      "href": "guides/taxonomy.schema.json",
+      "description": "taxonomy.json 配置字段契约"
+    },
+    {
+      "href": "guides/taxonomy.json",
+      "description": "分类别名、状态工作流和共享视图配置"
+    }
+  ],
+  "bootstrap_files": [
+    "onboarding.json",
+    "catalog.json",
+    "manifest.json",
+    "papers.json",
+    "routing.json",
+    "quality.json"
+  ],
+  "core_pages": [
+    {
+      "title": "论文库表格",
+      "href": "library.html",
+      "kind": "view",
+      "description": "密集筛选、列管理、批量更新"
+    },
+    {
+      "title": "发布摘要",
+      "href": "release.html",
+      "kind": "ops",
+      "description": "页面入口、数据文件、质量状态"
+    },
+    {
+      "title": "分类路由器",
+      "href": "routing.html",
+      "kind": "workflow",
+      "description": "新论文研究线和标签推荐"
+    },
+    {
+      "title": "开源上手",
+      "href": "onboarding.html",
+      "kind": "ops",
+      "description": "贡献路径、质量门和数据契约"
+    },
+    {
+      "title": "数据目录",
+      "href": "catalog.html",
+      "kind": "ops",
+      "description": "机器数据、页面和契约的接入目录"
+    },
+    {
+      "title": "质量治理",
+      "href": "quality.html",
+      "kind": "ops",
+      "description": "弱元数据、别名建议、taxonomy drift"
+    },
+    {
+      "title": "分类治理",
+      "href": "taxonomy.html",
+      "kind": "ops",
+      "description": "分类矩阵、状态工作流、治理队列"
+    }
+  ],
+  "links": {
+    "catalog": "catalog.html",
+    "manifest": "manifest.json",
+    "release": "release.html",
+    "quality": "quality.html",
+    "routing": "routing.html"
+  }
+}

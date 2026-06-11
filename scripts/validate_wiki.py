@@ -108,6 +108,7 @@ REQUIRED_PAGES = {
     "scale.html",
     "ownership.html",
     "routing.html",
+    "onboarding.html",
     "catalog.html",
     "inbox.html",
     "quality.html",
@@ -139,6 +140,7 @@ REQUIRED_PAGES = {
     "scale.json",
     "ownership.json",
     "routing.json",
+    "onboarding.json",
     "catalog.json",
     "snapshot.json",
     "manifest.json",
@@ -563,6 +565,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     scale_path = report_dir / "scale.json"
     ownership_path = report_dir / "ownership.json"
     routing_path = report_dir / "routing.json"
+    onboarding_path = report_dir / "onboarding.json"
     catalog_path = report_dir / "catalog.json"
     stats_path = report_dir / "stats.json"
     inbox_path = report_dir / "inbox.json"
@@ -604,6 +607,9 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     if not routing_path.exists():
         errors.append("missing routing.json")
         return
+    if not onboarding_path.exists():
+        errors.append("missing onboarding.json")
+        return
     if not catalog_path.exists():
         errors.append("missing catalog.json")
         return
@@ -632,6 +638,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     scale_data = json.loads(scale_path.read_text(encoding="utf-8"))
     ownership_data = json.loads(ownership_path.read_text(encoding="utf-8"))
     routing_data = json.loads(routing_path.read_text(encoding="utf-8"))
+    onboarding_data = json.loads(onboarding_path.read_text(encoding="utf-8"))
     catalog_data = json.loads(catalog_path.read_text(encoding="utf-8"))
     stats_data = json.loads(stats_path.read_text(encoding="utf-8"))
     inbox_data = json.loads(inbox_path.read_text(encoding="utf-8"))
@@ -1116,6 +1123,59 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
             errors.append(f"routing.json label_profiles[{index}].field has invalid value")
         if not isinstance(profile.get("terms"), list) or not profile.get("terms"):
             errors.append(f"routing.json label_profiles[{index}].terms must be a non-empty list")
+
+    if onboarding_data.get("count") != len(report_slugs):
+        errors.append(f"onboarding.json count {onboarding_data.get('count')} != markdown report count {len(report_slugs)}")
+    required_onboarding = {
+        "readiness_score",
+        "readiness_checks",
+        "quickstart_steps",
+        "contribution_paths",
+        "command_groups",
+        "contracts",
+        "bootstrap_files",
+        "links",
+    }
+    missing_onboarding = sorted(required_onboarding - set(onboarding_data))
+    if missing_onboarding:
+        errors.append(f"onboarding.json missing keys: {', '.join(missing_onboarding)}")
+    readiness_checks = onboarding_data.get("readiness_checks")
+    if not isinstance(readiness_checks, list) or not readiness_checks:
+        errors.append("onboarding.json readiness_checks must be a non-empty list")
+        readiness_checks = []
+    for index, item in enumerate(readiness_checks):
+        if not isinstance(item, dict):
+            errors.append(f"onboarding.json readiness_checks[{index}] must be an object")
+            continue
+        for key in ("path", "label", "href", "exists"):
+            if key not in item:
+                errors.append(f"onboarding.json readiness_checks[{index}] missing {key}")
+        if not isinstance(item.get("exists"), bool):
+            errors.append(f"onboarding.json readiness_checks[{index}].exists must be boolean")
+    contribution_paths = onboarding_data.get("contribution_paths")
+    if not isinstance(contribution_paths, list) or not contribution_paths:
+        errors.append("onboarding.json contribution_paths must be a non-empty list")
+        contribution_paths = []
+    for index, item in enumerate(contribution_paths):
+        if not isinstance(item, dict):
+            errors.append(f"onboarding.json contribution_paths[{index}] must be an object")
+            continue
+        for key in ("id", "title", "entry", "contract", "recommended_pages", "commands"):
+            if key not in item:
+                errors.append(f"onboarding.json contribution_paths[{index}] missing {key}")
+        if not isinstance(item.get("recommended_pages"), list):
+            errors.append(f"onboarding.json contribution_paths[{index}].recommended_pages must be a list")
+        if not isinstance(item.get("commands"), list):
+            errors.append(f"onboarding.json contribution_paths[{index}].commands must be a list")
+    if not isinstance(onboarding_data.get("quickstart_steps"), list) or not onboarding_data.get("quickstart_steps"):
+        errors.append("onboarding.json quickstart_steps must be a non-empty list")
+    if not isinstance(onboarding_data.get("command_groups"), list) or not onboarding_data.get("command_groups"):
+        errors.append("onboarding.json command_groups must be a non-empty list")
+    if not isinstance(onboarding_data.get("contracts"), list) or not onboarding_data.get("contracts"):
+        errors.append("onboarding.json contracts must be a non-empty list")
+    bootstrap_files = onboarding_data.get("bootstrap_files")
+    if not isinstance(bootstrap_files, list) or "onboarding.json" not in bootstrap_files:
+        errors.append("onboarding.json bootstrap_files must include onboarding.json")
 
     if catalog_data.get("count") != len(report_slugs):
         errors.append(f"catalog.json count {catalog_data.get('count')} != markdown report count {len(report_slugs)}")
