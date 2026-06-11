@@ -219,6 +219,11 @@ class WikiWorkflowTest(unittest.TestCase):
                 ["unread", "triaged", "reading", "read", "archived"],
             )
             self.assertEqual(papers["controls"]["active_status_workflow"], "research")
+            self.assertIn("simple", papers["controls"]["status_workflows"])
+            self.assertEqual(
+                papers["controls"]["status_workflows"]["research"]["status_values"],
+                ["unread", "triaged", "reading", "read", "archived"],
+            )
             self.assertEqual(papers["controls"]["reading_stage"], ["skimmed", "deep_read", "code_checked"])
             index_html = (report_dir / "index.html").read_text(encoding="utf-8")
             self.assertIn('<option value="triaged">triaged (0)</option>', index_html)
@@ -272,6 +277,9 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn('data-status="triaged"', board_html)
             self.assertIn("status_board_patch.csv", board_html)
             self.assertIn('draggable="true"', board_html)
+            self.assertIn('id="boardWorkflow"', board_html)
+            self.assertIn("const boardWorkflows =", board_html)
+            self.assertIn("applyWorkflow(boardWorkflow.value)", board_html)
             self.assertIn('id="newStatusName"', board_html)
             self.assertIn("新增状态列", board_html)
             inbox = json.loads((report_dir / "inbox.json").read_text(encoding="utf-8"))
@@ -326,6 +334,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertTrue(stats["research_lines"])
             self.assertEqual(stats["shared_views"], 2)
             self.assertEqual(stats["controls"]["review_stage"], ["fresh", "due", "reviewed"])
+            self.assertIn("research", stats["controls"]["status_workflows"])
             manifest = json.loads((report_dir / "manifest.json").read_text(encoding="utf-8"))
             self.assertEqual(manifest["count"], 2)
             self.assertTrue(manifest["publish_checks"]["no_duplicate_reports"])

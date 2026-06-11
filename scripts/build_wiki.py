@@ -119,6 +119,7 @@ ROLE_ORDER = {role: index for index, role in enumerate(DEFAULT_ROLE_ORDER)}
 STATUS_VALUES = DEFAULT_STATUS_VALUES.copy()
 READING_STAGE_VALUES = DEFAULT_READING_STAGE_VALUES.copy()
 REVIEW_STAGE_VALUES = DEFAULT_REVIEW_STAGE_VALUES.copy()
+STATUS_WORKFLOWS: dict[str, dict[str, list[str]]] = {}
 SHARED_VIEWS: list[dict[str, Any]] = []
 ACTIVE_STATUS_WORKFLOW = ""
 
@@ -141,13 +142,14 @@ def parse_args() -> argparse.Namespace:
 
 def load_taxonomy_config(report_dir: Path) -> None:
     """Load optional taxonomy normalization config for this report directory."""
-    global LABEL_ALIASES, ROLE_ORDER, STATUS_VALUES, READING_STAGE_VALUES, REVIEW_STAGE_VALUES, SHARED_VIEWS, ACTIVE_STATUS_WORKFLOW
+    global LABEL_ALIASES, ROLE_ORDER, STATUS_VALUES, READING_STAGE_VALUES, REVIEW_STAGE_VALUES, STATUS_WORKFLOWS, SHARED_VIEWS, ACTIVE_STATUS_WORKFLOW
 
     LABEL_ALIASES = DEFAULT_LABEL_ALIASES.copy()
     ROLE_ORDER = {role: index for index, role in enumerate(DEFAULT_ROLE_ORDER)}
     STATUS_VALUES = DEFAULT_STATUS_VALUES.copy()
     READING_STAGE_VALUES = DEFAULT_READING_STAGE_VALUES.copy()
     REVIEW_STAGE_VALUES = DEFAULT_REVIEW_STAGE_VALUES.copy()
+    STATUS_WORKFLOWS = {}
     SHARED_VIEWS = []
     ACTIVE_STATUS_WORKFLOW = ""
 
@@ -183,6 +185,16 @@ def load_taxonomy_config(report_dir: Path) -> None:
     STATUS_VALUES = configured_values(workflow_config, "status_values", DEFAULT_STATUS_VALUES)
     READING_STAGE_VALUES = configured_values(workflow_config, "reading_stage_values", DEFAULT_READING_STAGE_VALUES)
     REVIEW_STAGE_VALUES = configured_values(workflow_config, "review_stage_values", DEFAULT_REVIEW_STAGE_VALUES)
+    STATUS_WORKFLOWS = configured_status_workflows(config)
+    current_workflow_name = ACTIVE_STATUS_WORKFLOW or "default"
+    STATUS_WORKFLOWS.setdefault(
+        current_workflow_name,
+        {
+            "status_values": STATUS_VALUES.copy(),
+            "reading_stage_values": READING_STAGE_VALUES.copy(),
+            "review_stage_values": REVIEW_STAGE_VALUES.copy(),
+        },
+    )
     SHARED_VIEWS = configured_shared_views(config)
 
 
@@ -204,6 +216,25 @@ def configured_status_workflow(config: dict[str, Any]) -> tuple[str, dict[str, A
             merged.update(active_workflow)
             return active_name, merged
     return active_name, config
+
+
+def configured_status_workflows(config: dict[str, Any]) -> dict[str, dict[str, list[str]]]:
+    workflows = config.get("status_workflows") or {}
+    if not isinstance(workflows, dict):
+        return {}
+    cleaned: dict[str, dict[str, list[str]]] = {}
+    for name, workflow in workflows.items():
+        workflow_name = str(name).strip()
+        if not workflow_name or not isinstance(workflow, dict):
+            continue
+        merged = config.copy()
+        merged.update(workflow)
+        cleaned[workflow_name] = {
+            "status_values": configured_values(merged, "status_values", DEFAULT_STATUS_VALUES),
+            "reading_stage_values": configured_values(merged, "reading_stage_values", DEFAULT_READING_STAGE_VALUES),
+            "review_stage_values": configured_values(merged, "review_stage_values", DEFAULT_REVIEW_STAGE_VALUES),
+        }
+    return cleaned
 
 
 def configured_shared_views(config: dict[str, Any]) -> list[dict[str, Any]]:
@@ -238,11 +269,27 @@ def shared_views_for(page: str) -> list[dict[str, Any]]:
 
 
 def control_options() -> dict[str, Any]:
+    workflow_name = ACTIVE_STATUS_WORKFLOW or "default"
+    status_workflows = STATUS_WORKFLOWS or {
+        workflow_name: {
+            "status_values": STATUS_VALUES.copy(),
+            "reading_stage_values": READING_STAGE_VALUES.copy(),
+            "review_stage_values": REVIEW_STAGE_VALUES.copy(),
+        }
+    }
     return {
         "active_status_workflow": ACTIVE_STATUS_WORKFLOW,
         "status": STATUS_VALUES.copy(),
         "reading_stage": READING_STAGE_VALUES.copy(),
         "review_stage": REVIEW_STAGE_VALUES.copy(),
+        "status_workflows": {
+            name: {
+                "status_values": values.get("status_values", []).copy(),
+                "reading_stage_values": values.get("reading_stage_values", []).copy(),
+                "review_stage_values": values.get("review_stage_values", []).copy(),
+            }
+            for name, values in status_workflows.items()
+        },
         "line_role": list(ROLE_ORDER.keys()),
         "shared_views": SHARED_VIEWS.copy(),
     }
@@ -3528,6 +3575,18 @@ def render_board_card(paper: dict[str, Any]) -> str:
 def render_board(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     taxonomy = taxonomy_counts(papers)
     controls = control_options()
+    status_workflows = controls.get("status_workflows") or {}
+    active_workflow = controls.get("active_status_workflow") or next(iter(status_workflows), "")
+    workflow_options = "".join(
+        f'<option value="{html.escape(name, quote=True)}"{" selected" if name == active_workflow else ""}>{html.escape(name)}</option>'
+        for name in status_workflows
+    )
+    workflow_select = (
+        f'<select id="boardWorkflow" aria-label="状态工作流">{workflow_options}</select>'
+        if workflow_options
+        else '<select id="boardWorkflow" aria-label="状态工作流"><option value="">默认状态流</option></select>'
+    )
+    workflow_json = json.dumps(status_workflows, ensure_ascii=False)
     statuses = list(taxonomy["statuses"].keys())
     fallback_statuses = sorted(
         {
@@ -3659,6 +3718,7 @@ def render_board(report_dir: Path, papers: list[dict[str, Any]]) -> None:
 <div class="toolbar">
   <div class="shell controls">
     <input id="boardSearch" type="search" placeholder="搜索标题、作者、研究线、分类、状态">
+    {workflow_select}
     <select id="boardLine"><option value="">全部研究线</option>{render_topic_options(taxonomy["research_lines"])}</select>
     <select id="boardTrack"><option value="">全部方向</option>{render_topic_options(taxonomy["tracks"])}</select>
     <select id="boardImportance"><option value="">重要性</option><option value="5">5 星</option><option value="4">4 星及以上</option><option value="3">3 星及以上</option></select>
@@ -3684,7 +3744,9 @@ def render_board(report_dir: Path, papers: list[dict[str, Any]]) -> None:
 const boardCards = Array.from(document.querySelectorAll(".board-card"));
 const boardWrap = document.querySelector("#boardWrap");
 let dropzones = Array.from(document.querySelectorAll(".board-dropzone"));
+const boardWorkflows = {workflow_json};
 const boardSearch = document.querySelector("#boardSearch");
+const boardWorkflow = document.querySelector("#boardWorkflow");
 const boardLine = document.querySelector("#boardLine");
 const boardTrack = document.querySelector("#boardTrack");
 const boardImportance = document.querySelector("#boardImportance");
@@ -3769,13 +3831,8 @@ function attachDropzone(zone) {{
   }});
 }}
 
-function addBoardColumn(status) {{
+function createBoardColumn(status) {{
   const normalized = String(status || "").trim();
-  if (!normalized) return;
-  if (dropzones.some(zone => zone.dataset.status === normalized)) {{
-    window.alert("这个状态列已经存在。");
-    return;
-  }}
   const section = document.createElement("section");
   section.className = "board-column";
   section.dataset.status = normalized;
@@ -3790,9 +3847,53 @@ function addBoardColumn(status) {{
   zone.className = "board-dropzone";
   zone.dataset.status = normalized;
   section.append(header, zone);
+  attachDropzone(zone);
+  return {{ section, zone }};
+}}
+
+function addBoardColumn(status) {{
+  const normalized = String(status || "").trim();
+  if (!normalized) return;
+  if (dropzones.some(zone => zone.dataset.status === normalized)) {{
+    window.alert("这个状态列已经存在。");
+    return;
+  }}
+  const {{ section, zone }} = createBoardColumn(normalized);
   boardWrap.appendChild(section);
   dropzones.push(zone);
-  attachDropzone(zone);
+  renderBoard();
+}}
+
+function uniqueValues(values) {{
+  const seen = new Set();
+  return values
+    .map(value => String(value || "").trim())
+    .filter(value => {{
+      if (!value || seen.has(value)) return false;
+      seen.add(value);
+      return true;
+    }});
+}}
+
+function applyWorkflow(name) {{
+  const workflow = boardWorkflows[name] || {{}};
+  const workflowStatuses = Array.isArray(workflow.status_values) ? workflow.status_values : [];
+  const activeStatuses = boardCards.map(card => card.dataset.status || card.dataset.originalStatus || "unread");
+  const orderedStatuses = uniqueValues([...workflowStatuses, ...activeStatuses]);
+  if (!orderedStatuses.length) return;
+  const cards = boardCards.slice();
+  boardWrap.textContent = "";
+  dropzones = [];
+  orderedStatuses.forEach(status => {{
+    const {{ section, zone }} = createBoardColumn(status);
+    boardWrap.appendChild(section);
+    dropzones.push(zone);
+  }});
+  cards.forEach(card => {{
+    const status = card.dataset.status || card.dataset.originalStatus || "unread";
+    const zone = dropzones.find(item => item.dataset.status === status) || dropzones[0];
+    zone.appendChild(card);
+  }});
   renderBoard();
 }}
 
@@ -3822,6 +3923,7 @@ newStatusName.addEventListener("keydown", event => {{
 }});
 
 [boardSearch, boardLine, boardTrack, boardImportance].forEach(el => el.addEventListener("input", renderBoard));
+boardWorkflow.addEventListener("change", () => applyWorkflow(boardWorkflow.value));
 downloadBoardPatch.addEventListener("click", () => {{
   const changed = changedCards();
   if (!changed.length) return;

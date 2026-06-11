@@ -456,6 +456,7 @@
 <div class="toolbar">
   <div class="shell controls">
     <input id="boardSearch" type="search" placeholder="搜索标题、作者、研究线、分类、状态">
+    <select id="boardWorkflow" aria-label="状态工作流"><option value="personal" selected>personal</option><option value="research">research</option></select>
     <select id="boardLine"><option value="">全部研究线</option><option value="Parallel Decoding with Diffusion Models">Parallel Decoding with Diffusion Models (3)</option><option value="Efficient Attention Kernels">Efficient Attention Kernels (2)</option></select>
     <select id="boardTrack"><option value="">全部方向</option><option value="Inference Acceleration">Inference Acceleration (3)</option><option value="Parallel Decoding">Parallel Decoding (3)</option><option value="Attention Kernels">Attention Kernels (2)</option><option value="Inference Serving Systems">Inference Serving Systems (1)</option></select>
     <select id="boardImportance"><option value="">重要性</option><option value="5">5 星</option><option value="4">4 星及以上</option><option value="3">3 星及以上</option></select>
@@ -565,7 +566,9 @@
 const boardCards = Array.from(document.querySelectorAll(".board-card"));
 const boardWrap = document.querySelector("#boardWrap");
 let dropzones = Array.from(document.querySelectorAll(".board-dropzone"));
+const boardWorkflows = {"personal": {"status_values": ["unread", "skimmed", "reading", "read", "archived"], "reading_stage_values": ["skim", "normal_read", "deep_read", "code_checked"], "review_stage_values": ["fresh", "due", "reviewed"]}, "research": {"status_values": ["inbox", "triaged", "reading", "implemented", "cited", "archived"], "reading_stage_values": ["skim", "normal_read", "deep_read", "code_checked", "reproduced"], "review_stage_values": ["fresh", "due", "reviewed", "evergreen"]}};
 const boardSearch = document.querySelector("#boardSearch");
+const boardWorkflow = document.querySelector("#boardWorkflow");
 const boardLine = document.querySelector("#boardLine");
 const boardTrack = document.querySelector("#boardTrack");
 const boardImportance = document.querySelector("#boardImportance");
@@ -650,13 +653,8 @@ function attachDropzone(zone) {
   });
 }
 
-function addBoardColumn(status) {
+function createBoardColumn(status) {
   const normalized = String(status || "").trim();
-  if (!normalized) return;
-  if (dropzones.some(zone => zone.dataset.status === normalized)) {
-    window.alert("这个状态列已经存在。");
-    return;
-  }
   const section = document.createElement("section");
   section.className = "board-column";
   section.dataset.status = normalized;
@@ -671,9 +669,53 @@ function addBoardColumn(status) {
   zone.className = "board-dropzone";
   zone.dataset.status = normalized;
   section.append(header, zone);
+  attachDropzone(zone);
+  return { section, zone };
+}
+
+function addBoardColumn(status) {
+  const normalized = String(status || "").trim();
+  if (!normalized) return;
+  if (dropzones.some(zone => zone.dataset.status === normalized)) {
+    window.alert("这个状态列已经存在。");
+    return;
+  }
+  const { section, zone } = createBoardColumn(normalized);
   boardWrap.appendChild(section);
   dropzones.push(zone);
-  attachDropzone(zone);
+  renderBoard();
+}
+
+function uniqueValues(values) {
+  const seen = new Set();
+  return values
+    .map(value => String(value || "").trim())
+    .filter(value => {
+      if (!value || seen.has(value)) return false;
+      seen.add(value);
+      return true;
+    });
+}
+
+function applyWorkflow(name) {
+  const workflow = boardWorkflows[name] || {};
+  const workflowStatuses = Array.isArray(workflow.status_values) ? workflow.status_values : [];
+  const activeStatuses = boardCards.map(card => card.dataset.status || card.dataset.originalStatus || "unread");
+  const orderedStatuses = uniqueValues([...workflowStatuses, ...activeStatuses]);
+  if (!orderedStatuses.length) return;
+  const cards = boardCards.slice();
+  boardWrap.textContent = "";
+  dropzones = [];
+  orderedStatuses.forEach(status => {
+    const { section, zone } = createBoardColumn(status);
+    boardWrap.appendChild(section);
+    dropzones.push(zone);
+  });
+  cards.forEach(card => {
+    const status = card.dataset.status || card.dataset.originalStatus || "unread";
+    const zone = dropzones.find(item => item.dataset.status === status) || dropzones[0];
+    zone.appendChild(card);
+  });
   renderBoard();
 }
 
@@ -703,6 +745,7 @@ newStatusName.addEventListener("keydown", event => {
 });
 
 [boardSearch, boardLine, boardTrack, boardImportance].forEach(el => el.addEventListener("input", renderBoard));
+boardWorkflow.addEventListener("change", () => applyWorkflow(boardWorkflow.value));
 downloadBoardPatch.addEventListener("click", () => {
   const changed = changedCards();
   if (!changed.length) return;

@@ -22,6 +22,51 @@
       "due",
       "reviewed"
     ],
+    "status_workflows": {
+      "personal": {
+        "status_values": [
+          "unread",
+          "skimmed",
+          "reading",
+          "read",
+          "archived"
+        ],
+        "reading_stage_values": [
+          "skim",
+          "normal_read",
+          "deep_read",
+          "code_checked"
+        ],
+        "review_stage_values": [
+          "fresh",
+          "due",
+          "reviewed"
+        ]
+      },
+      "research": {
+        "status_values": [
+          "inbox",
+          "triaged",
+          "reading",
+          "implemented",
+          "cited",
+          "archived"
+        ],
+        "reading_stage_values": [
+          "skim",
+          "normal_read",
+          "deep_read",
+          "code_checked",
+          "reproduced"
+        ],
+        "review_stage_values": [
+          "fresh",
+          "due",
+          "reviewed",
+          "evergreen"
+        ]
+      }
+    },
     "line_role": [
       "foundation",
       "baseline",
