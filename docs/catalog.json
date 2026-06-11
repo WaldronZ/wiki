@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T07:24:56",
+  "generated_at": "2026-06-12T07:30:09",
   "count": 5,
   "inbox_count": 0,
   "page_count": 40,
@@ -284,7 +284,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "frontend",
         "desktop",
@@ -311,7 +311,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "search",
         "desktop"
@@ -374,7 +374,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "dashboard",
         "ops",
@@ -443,7 +443,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "quality-gate",
         "ops",
@@ -475,7 +475,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "review",
         "scheduler",
@@ -520,7 +520,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "freshness",
         "maintenance"
@@ -558,7 +558,7 @@
         }
       ],
       "declared_count": 55,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "taxonomy",
         "project-management",
@@ -590,7 +590,7 @@
         }
       ],
       "declared_count": 62,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "tasks",
         "project-management",
@@ -639,7 +639,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "command-center",
         "desktop",
@@ -692,7 +692,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "workflow",
         "desktop",
@@ -744,7 +744,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "workflow",
         "runtime-selector",
@@ -756,7 +756,7 @@
       "href": "views.json",
       "description": "共享视图、系统队列、研究线和状态工作流视图目录",
       "exists": true,
-      "size_bytes": 41982,
+      "size_bytes": 42350,
       "top_level_keys": [
         "commands",
         "configured_count",
@@ -796,7 +796,7 @@
         {
           "key": "commands",
           "type": "list",
-          "count": 3
+          "count": 6
         },
         {
           "key": "links",
@@ -805,7 +805,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "saved-views",
         "shared-views",
@@ -859,7 +859,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "batch-planning",
         "classification",
@@ -907,7 +907,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "collections",
         "shared-views",
@@ -957,7 +957,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "coverage",
         "taxonomy",
@@ -1016,7 +1016,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "research-gaps",
         "planning",
@@ -1055,7 +1055,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "analytics",
         "classification",
@@ -1099,7 +1099,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "comparison",
         "curation",
@@ -1167,7 +1167,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "taxonomy",
         "graph",
@@ -1207,7 +1207,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "taxonomy",
         "clusters",
@@ -1258,7 +1258,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "research-lines",
         "planning",
@@ -1327,7 +1327,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "ops",
         "capacity-planning",
@@ -1367,7 +1367,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "ops",
         "owners",
@@ -1432,7 +1432,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "taxonomy",
         "intake",
@@ -1504,7 +1504,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "open-source",
         "contributors",
@@ -1583,7 +1583,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "release",
         "audit",
@@ -1658,7 +1658,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "intake",
         "dedupe",
@@ -1702,7 +1702,7 @@
         }
       ],
       "declared_count": 0,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "intake",
         "dedupe"
@@ -1761,7 +1761,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "dedupe",
         "quality",
@@ -1827,7 +1827,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "taxonomy",
         "registry",
@@ -1929,7 +1929,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:24:56",
+      "generated_at": "2026-06-12T07:30:09",
       "consumers": [
         "release",
         "audit",

@@ -374,8 +374,38 @@
       font-size: 12px;
     }
     .view-table .button {
-      min-width: 58px;
+      min-width: 82px;
       justify-content: center;
+      margin: 2px;
+      padding-inline: 9px;
+    }
+    .view-patch-panel {
+      display: grid;
+      grid-template-columns: minmax(150px, 210px) minmax(180px, 1fr) minmax(130px, 180px);
+      gap: 10px;
+      align-items: end;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 12px;
+      margin: 10px 0 16px;
+    }
+    .view-patch-panel label {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .view-patch-panel input,
+    .view-patch-panel select {
+      width: 100%;
+      min-height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fffdf8;
+      color: var(--ink);
+      padding: 8px 10px;
+      font: inherit;
     }
     .command-strip {
       display: flex;
@@ -385,6 +415,7 @@
     }
     @media (max-width: 820px) {
       .view-toolbar { grid-template-columns: 1fr; }
+      .view-patch-panel { grid-template-columns: 1fr; }
       .view-table { min-width: 980px; }
     }
   </style>
@@ -429,10 +460,38 @@ window.PAPER_WIKI = {"views": [{"id": "configured-all-untitled-ca4e9b6e", "name"
       <select id="viewKind"><option value="">全部类型</option><option value="queue">queue</option><option value="research_line">research_line</option><option value="shared">shared</option><option value="workflow_status">workflow_status</option></select>
       <select id="viewEmpty"><option value="">全部命中</option><option value="false">有命中</option><option value="true">空视图</option></select>
     </div>
+    <div class="view-patch-panel">
+      <label>
+        <span>Patch 字段</span>
+        <select id="viewPatchField">
+          <option value="status">status</option>
+          <option value="reading_stage">reading_stage</option>
+          <option value="review_stage">review_stage</option>
+          <option value="next_review">next_review</option>
+          <option value="importance">importance</option>
+          <option value="research_line">research_line</option>
+          <option value="line_role">line_role</option>
+          <option value="domains">domains</option>
+          <option value="tracks">tracks</option>
+          <option value="problems">problems</option>
+          <option value="topics">topics</option>
+          <option value="methods">methods</option>
+        </select>
+      </label>
+      <label><span>Patch 值</span><input id="viewPatchValue" type="text" value="reading" placeholder="例如 reading / due / Attention Kernels"></label>
+      <label>
+        <span>列表模式</span>
+        <select id="viewPatchListMode">
+          <option value="replace">replace</option>
+          <option value="append">append</option>
+          <option value="remove">remove</option>
+        </select>
+      </label>
+    </div>
     <div class="table-wrap">
       <table class="data-table view-table">
-        <thead><tr><th>视图</th><th>来源</th><th>类型</th><th>页面</th><th>命中</th><th>状态</th><th>样例</th><th>JSON</th></tr></thead>
-        <tbody id="viewRows"><tr data-source="configured" data-kind="shared" data-empty="false">
+        <thead><tr><th>视图</th><th>来源</th><th>类型</th><th>页面</th><th>命中</th><th>状态</th><th>样例</th><th>操作</th></tr></thead>
+        <tbody id="viewRows"><tr data-source="configured" data-kind="shared" data-empty="false" data-view-id="configured-all-untitled-ca4e9b6e" data-view-name="重点论文" data-slugs="[&quot;2604.11035-introspective-dlm&quot;, &quot;2307.08691-flashattention-2&quot;]">
   <td><a href="library.html?importance=5&amp;sort=importance">重点论文</a><div class="meta">来自 docs/guides/taxonomy.json 的 shared_views。</div></td>
   <td>configured</td>
   <td>shared</td>
@@ -440,8 +499,13 @@ window.PAPER_WIKI = {"views": [{"id": "configured-all-untitled-ca4e9b6e", "name"
   <td>2</td>
   <td><code>{&quot;importance&quot;: &quot;5&quot;, &quot;sort&quot;: &quot;importance&quot;}</code></td>
   <td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> · <a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></td>
-  <td><button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;重点论文&quot;, &quot;page&quot;: &quot;all&quot;, &quot;state&quot;: {&quot;importance&quot;: &quot;5&quot;, &quot;sort&quot;: &quot;importance&quot;}}">复制</button></td>
-</tr><tr data-source="configured" data-kind="shared" data-empty="false">
+  <td>
+    <button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;重点论文&quot;, &quot;page&quot;: &quot;all&quot;, &quot;state&quot;: {&quot;importance&quot;: &quot;5&quot;, &quot;sort&quot;: &quot;importance&quot;}}">复制 JSON</button>
+    <button class="button copy-view-patch" type="button">复制 patch</button>
+    <button class="button download-view-patch" type="button">下载 patch</button>
+    <button class="button copy-view-patch-command" type="button">复制命令</button>
+  </td>
+</tr><tr data-source="configured" data-kind="shared" data-empty="false" data-view-id="configured-index-untitled-c59f32d7" data-view-name="未设置复习" data-slugs="[&quot;2602.06036-dflash&quot;, &quot;2604.11035-introspective-dlm&quot;, &quot;2605.12825-orthrus&quot;, &quot;2501.01005-flashinfer&quot;, &quot;2307.08691-flashattention-2&quot;]">
   <td><a href="index.html?review=none&amp;sort=importance">未设置复习</a><div class="meta">来自 docs/guides/taxonomy.json 的 shared_views。</div></td>
   <td>configured</td>
   <td>shared</td>
@@ -449,8 +513,13 @@ window.PAPER_WIKI = {"views": [{"id": "configured-all-untitled-ca4e9b6e", "name"
   <td>5</td>
   <td><code>{&quot;review&quot;: &quot;none&quot;, &quot;sort&quot;: &quot;importance&quot;}</code></td>
   <td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a> · <a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> · <a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a> <span class="meta">+2</span></td>
-  <td><button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;未设置复习&quot;, &quot;page&quot;: &quot;index&quot;, &quot;state&quot;: {&quot;review&quot;: &quot;none&quot;, &quot;sort&quot;: &quot;importance&quot;}}">复制</button></td>
-</tr><tr data-source="configured" data-kind="shared" data-empty="false">
+  <td>
+    <button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;未设置复习&quot;, &quot;page&quot;: &quot;index&quot;, &quot;state&quot;: {&quot;review&quot;: &quot;none&quot;, &quot;sort&quot;: &quot;importance&quot;}}">复制 JSON</button>
+    <button class="button copy-view-patch" type="button">复制 patch</button>
+    <button class="button download-view-patch" type="button">下载 patch</button>
+    <button class="button copy-view-patch-command" type="button">复制命令</button>
+  </td>
+</tr><tr data-source="configured" data-kind="shared" data-empty="false" data-view-id="configured-library-attention-kernels-6441db5b" data-view-name="Attention Kernels" data-slugs="[&quot;2501.01005-flashinfer&quot;, &quot;2307.08691-flashattention-2&quot;]">
   <td><a href="library.html?track=Attention+Kernels&amp;sort=year">Attention Kernels</a><div class="meta">来自 docs/guides/taxonomy.json 的 shared_views。</div></td>
   <td>configured</td>
   <td>shared</td>
@@ -458,8 +527,13 @@ window.PAPER_WIKI = {"views": [{"id": "configured-all-untitled-ca4e9b6e", "name"
   <td>2</td>
   <td><code>{&quot;sort&quot;: &quot;year&quot;, &quot;track&quot;: &quot;Attention Kernels&quot;}</code></td>
   <td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a> · <a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></td>
-  <td><button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;Attention Kernels&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;sort&quot;: &quot;year&quot;, &quot;track&quot;: &quot;Attention Kernels&quot;}}">复制</button></td>
-</tr><tr data-source="system" data-kind="queue" data-empty="false">
+  <td>
+    <button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;Attention Kernels&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;sort&quot;: &quot;year&quot;, &quot;track&quot;: &quot;Attention Kernels&quot;}}">复制 JSON</button>
+    <button class="button copy-view-patch" type="button">复制 patch</button>
+    <button class="button download-view-patch" type="button">下载 patch</button>
+    <button class="button copy-view-patch-command" type="button">复制命令</button>
+  </td>
+</tr><tr data-source="system" data-kind="queue" data-empty="false" data-view-id="system-library-untitled-56a4cab1" data-view-name="重点论文" data-slugs="[&quot;2604.11035-introspective-dlm&quot;, &quot;2307.08691-flashattention-2&quot;]">
   <td><a href="library.html?importance=5&amp;sort=importance">重点论文</a><div class="meta">高重要性论文，适合周会或路线图优先复盘。</div></td>
   <td>system</td>
   <td>queue</td>
@@ -467,8 +541,13 @@ window.PAPER_WIKI = {"views": [{"id": "configured-all-untitled-ca4e9b6e", "name"
   <td>2</td>
   <td><code>{&quot;importance&quot;: &quot;5&quot;, &quot;sort&quot;: &quot;importance&quot;}</code></td>
   <td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> · <a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></td>
-  <td><button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;重点论文&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;importance&quot;: &quot;5&quot;, &quot;sort&quot;: &quot;importance&quot;}}">复制</button></td>
-</tr><tr data-source="system" data-kind="queue" data-empty="true">
+  <td>
+    <button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;重点论文&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;importance&quot;: &quot;5&quot;, &quot;sort&quot;: &quot;importance&quot;}}">复制 JSON</button>
+    <button class="button copy-view-patch" type="button">复制 patch</button>
+    <button class="button download-view-patch" type="button">下载 patch</button>
+    <button class="button copy-view-patch-command" type="button">复制命令</button>
+  </td>
+</tr><tr data-source="system" data-kind="queue" data-empty="true" data-view-id="system-library-untitled-80698c96" data-view-name="待复习" data-slugs="[]">
   <td><a href="library.html?review=due&amp;sort=importance">待复习</a><div class="meta">next_review &lt;= 2026-06-12 的复习视图。</div></td>
   <td>system</td>
   <td>queue</td>
@@ -476,8 +555,13 @@ window.PAPER_WIKI = {"views": [{"id": "configured-all-untitled-ca4e9b6e", "name"
   <td>0</td>
   <td><code>{&quot;review&quot;: &quot;due&quot;, &quot;sort&quot;: &quot;importance&quot;}</code></td>
   <td><span class="meta">暂无样例</span></td>
-  <td><button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;待复习&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;review&quot;: &quot;due&quot;, &quot;sort&quot;: &quot;importance&quot;}}">复制</button></td>
-</tr><tr data-source="system" data-kind="queue" data-empty="false">
+  <td>
+    <button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;待复习&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;review&quot;: &quot;due&quot;, &quot;sort&quot;: &quot;importance&quot;}}">复制 JSON</button>
+    <button class="button copy-view-patch" type="button">复制 patch</button>
+    <button class="button download-view-patch" type="button">下载 patch</button>
+    <button class="button copy-view-patch-command" type="button">复制命令</button>
+  </td>
+</tr><tr data-source="system" data-kind="queue" data-empty="false" data-view-id="system-library-untitled-34a4e2f1" data-view-name="未设置复习" data-slugs="[&quot;2602.06036-dflash&quot;, &quot;2604.11035-introspective-dlm&quot;, &quot;2605.12825-orthrus&quot;, &quot;2501.01005-flashinfer&quot;, &quot;2307.08691-flashattention-2&quot;]">
   <td><a href="library.html?review=none&amp;sort=importance">未设置复习</a><div class="meta">缺少 next_review 的论文，适合批量补复习计划。</div></td>
   <td>system</td>
   <td>queue</td>
@@ -485,8 +569,13 @@ window.PAPER_WIKI = {"views": [{"id": "configured-all-untitled-ca4e9b6e", "name"
   <td>5</td>
   <td><code>{&quot;review&quot;: &quot;none&quot;, &quot;sort&quot;: &quot;importance&quot;}</code></td>
   <td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a> · <a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> · <a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a> <span class="meta">+2</span></td>
-  <td><button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;未设置复习&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;review&quot;: &quot;none&quot;, &quot;sort&quot;: &quot;importance&quot;}}">复制</button></td>
-</tr><tr data-source="system" data-kind="queue" data-empty="false">
+  <td>
+    <button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;未设置复习&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;review&quot;: &quot;none&quot;, &quot;sort&quot;: &quot;importance&quot;}}">复制 JSON</button>
+    <button class="button copy-view-patch" type="button">复制 patch</button>
+    <button class="button download-view-patch" type="button">下载 patch</button>
+    <button class="button copy-view-patch-command" type="button">复制命令</button>
+  </td>
+</tr><tr data-source="system" data-kind="queue" data-empty="false" data-view-id="system-library-untitled-db1156cc" data-view-name="有代码" data-slugs="[&quot;2602.06036-dflash&quot;, &quot;2604.11035-introspective-dlm&quot;, &quot;2605.12825-orthrus&quot;, &quot;2501.01005-flashinfer&quot;, &quot;2307.08691-flashattention-2&quot;]">
   <td><a href="library.html?code=yes&amp;sort=year">有代码</a><div class="meta">带代码或实现观察的论文。</div></td>
   <td>system</td>
   <td>queue</td>
@@ -494,8 +583,13 @@ window.PAPER_WIKI = {"views": [{"id": "configured-all-untitled-ca4e9b6e", "name"
   <td>5</td>
   <td><code>{&quot;code&quot;: &quot;yes&quot;, &quot;sort&quot;: &quot;year&quot;}</code></td>
   <td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a> · <a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> · <a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a> <span class="meta">+2</span></td>
-  <td><button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;有代码&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;code&quot;: &quot;yes&quot;, &quot;sort&quot;: &quot;year&quot;}}">复制</button></td>
-</tr><tr data-source="system" data-kind="queue" data-empty="true">
+  <td>
+    <button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;有代码&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;code&quot;: &quot;yes&quot;, &quot;sort&quot;: &quot;year&quot;}}">复制 JSON</button>
+    <button class="button copy-view-patch" type="button">复制 patch</button>
+    <button class="button download-view-patch" type="button">下载 patch</button>
+    <button class="button copy-view-patch-command" type="button">复制命令</button>
+  </td>
+</tr><tr data-source="system" data-kind="queue" data-empty="true" data-view-id="system-library-untitled-543af010" data-view-name="缺代码观察" data-slugs="[]">
   <td><a href="library.html?code=no&amp;sort=importance">缺代码观察</a><div class="meta">尚未记录代码仓库或代码实现观察的论文。</div></td>
   <td>system</td>
   <td>queue</td>
@@ -503,8 +597,13 @@ window.PAPER_WIKI = {"views": [{"id": "configured-all-untitled-ca4e9b6e", "name"
   <td>0</td>
   <td><code>{&quot;code&quot;: &quot;no&quot;, &quot;sort&quot;: &quot;importance&quot;}</code></td>
   <td><span class="meta">暂无样例</span></td>
-  <td><button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;缺代码观察&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;code&quot;: &quot;no&quot;, &quot;sort&quot;: &quot;importance&quot;}}">复制</button></td>
-</tr><tr data-source="system" data-kind="queue" data-empty="true">
+  <td>
+    <button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;缺代码观察&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;code&quot;: &quot;no&quot;, &quot;sort&quot;: &quot;importance&quot;}}">复制 JSON</button>
+    <button class="button copy-view-patch" type="button">复制 patch</button>
+    <button class="button download-view-patch" type="button">下载 patch</button>
+    <button class="button copy-view-patch-command" type="button">复制命令</button>
+  </td>
+</tr><tr data-source="system" data-kind="queue" data-empty="true" data-view-id="system-library-untitled-7f369021" data-view-name="待补分类" data-slugs="[]">
   <td><a href="quality.html">待补分类</a><div class="meta">缺必要分类字段的论文，入口指向质量治理。</div></td>
   <td>system</td>
   <td>queue</td>
@@ -512,8 +611,13 @@ window.PAPER_WIKI = {"views": [{"id": "configured-all-untitled-ca4e9b6e", "name"
   <td>0</td>
   <td><code>{&quot;sort&quot;: &quot;importance&quot;}</code></td>
   <td><span class="meta">暂无样例</span></td>
-  <td><button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;待补分类&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;sort&quot;: &quot;importance&quot;}}">复制</button></td>
-</tr><tr data-source="system" data-kind="queue" data-empty="true">
+  <td>
+    <button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;待补分类&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;sort&quot;: &quot;importance&quot;}}">复制 JSON</button>
+    <button class="button copy-view-patch" type="button">复制 patch</button>
+    <button class="button download-view-patch" type="button">下载 patch</button>
+    <button class="button copy-view-patch-command" type="button">复制命令</button>
+  </td>
+</tr><tr data-source="system" data-kind="queue" data-empty="true" data-view-id="system-library-untitled-940bd966" data-view-name="分类偏薄" data-slugs="[]">
   <td><a href="quality.html">分类偏薄</a><div class="meta">标签粒度不足，影响后续检索和聚类。</div></td>
   <td>system</td>
   <td>queue</td>
@@ -521,8 +625,13 @@ window.PAPER_WIKI = {"views": [{"id": "configured-all-untitled-ca4e9b6e", "name"
   <td>0</td>
   <td><code>{&quot;sort&quot;: &quot;importance&quot;}</code></td>
   <td><span class="meta">暂无样例</span></td>
-  <td><button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;分类偏薄&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;sort&quot;: &quot;importance&quot;}}">复制</button></td>
-</tr><tr data-source="system" data-kind="queue" data-empty="false">
+  <td>
+    <button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;分类偏薄&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;sort&quot;: &quot;importance&quot;}}">复制 JSON</button>
+    <button class="button copy-view-patch" type="button">复制 patch</button>
+    <button class="button download-view-patch" type="button">下载 patch</button>
+    <button class="button copy-view-patch-command" type="button">复制命令</button>
+  </td>
+</tr><tr data-source="system" data-kind="queue" data-empty="false" data-view-id="system-library-untitled-949fb5c2" data-view-name="复习计划缺口" data-slugs="[&quot;2604.11035-introspective-dlm&quot;, &quot;2307.08691-flashattention-2&quot;, &quot;2602.06036-dflash&quot;, &quot;2605.12825-orthrus&quot;, &quot;2501.01005-flashinfer&quot;]">
   <td><a href="review.html">复习计划缺口</a><div class="meta">缺少 next_review 的论文，入口指向复习计划。</div></td>
   <td>system</td>
   <td>queue</td>
@@ -530,8 +639,13 @@ window.PAPER_WIKI = {"views": [{"id": "configured-all-untitled-ca4e9b6e", "name"
   <td>5</td>
   <td><code>{&quot;review&quot;: &quot;none&quot;, &quot;sort&quot;: &quot;importance&quot;}</code></td>
   <td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> · <a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a> · <a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a> <span class="meta">+2</span></td>
-  <td><button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;复习计划缺口&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;review&quot;: &quot;none&quot;, &quot;sort&quot;: &quot;importance&quot;}}">复制</button></td>
-</tr><tr data-source="system" data-kind="queue" data-empty="true">
+  <td>
+    <button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;复习计划缺口&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;review&quot;: &quot;none&quot;, &quot;sort&quot;: &quot;importance&quot;}}">复制 JSON</button>
+    <button class="button copy-view-patch" type="button">复制 patch</button>
+    <button class="button download-view-patch" type="button">下载 patch</button>
+    <button class="button copy-view-patch-command" type="button">复制命令</button>
+  </td>
+</tr><tr data-source="system" data-kind="queue" data-empty="true" data-view-id="system-library-untitled-686fd3c8" data-view-name="已到复习日" data-slugs="[]">
   <td><a href="review.html">已到复习日</a><div class="meta">已到复习日的论文。</div></td>
   <td>system</td>
   <td>queue</td>
@@ -539,8 +653,13 @@ window.PAPER_WIKI = {"views": [{"id": "configured-all-untitled-ca4e9b6e", "name"
   <td>0</td>
   <td><code>{&quot;review&quot;: &quot;due&quot;, &quot;sort&quot;: &quot;importance&quot;}</code></td>
   <td><span class="meta">暂无样例</span></td>
-  <td><button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;已到复习日&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;review&quot;: &quot;due&quot;, &quot;sort&quot;: &quot;importance&quot;}}">复制</button></td>
-</tr><tr data-source="system" data-kind="queue" data-empty="true">
+  <td>
+    <button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;已到复习日&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;review&quot;: &quot;due&quot;, &quot;sort&quot;: &quot;importance&quot;}}">复制 JSON</button>
+    <button class="button copy-view-patch" type="button">复制 patch</button>
+    <button class="button download-view-patch" type="button">下载 patch</button>
+    <button class="button copy-view-patch-command" type="button">复制命令</button>
+  </td>
+</tr><tr data-source="system" data-kind="queue" data-empty="true" data-view-id="system-library-untitled-962e52e0" data-view-name="代码观察缺口" data-slugs="[]">
   <td><a href="gaps.html">代码观察缺口</a><div class="meta">缺代码实现观察的论文，入口指向研究缺口。</div></td>
   <td>system</td>
   <td>queue</td>
@@ -548,8 +667,13 @@ window.PAPER_WIKI = {"views": [{"id": "configured-all-untitled-ca4e9b6e", "name"
   <td>0</td>
   <td><code>{&quot;code&quot;: &quot;no&quot;, &quot;sort&quot;: &quot;importance&quot;}</code></td>
   <td><span class="meta">暂无样例</span></td>
-  <td><button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;代码观察缺口&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;code&quot;: &quot;no&quot;, &quot;sort&quot;: &quot;importance&quot;}}">复制</button></td>
-</tr><tr data-source="generated" data-kind="research_line" data-empty="false">
+  <td>
+    <button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;代码观察缺口&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;code&quot;: &quot;no&quot;, &quot;sort&quot;: &quot;importance&quot;}}">复制 JSON</button>
+    <button class="button copy-view-patch" type="button">复制 patch</button>
+    <button class="button download-view-patch" type="button">下载 patch</button>
+    <button class="button copy-view-patch-command" type="button">复制命令</button>
+  </td>
+</tr><tr data-source="generated" data-kind="research_line" data-empty="false" data-view-id="generated-library-parallel-decoding-with-diffusion-models-148b0805" data-view-name="研究线：Parallel Decoding with Diffusion Models" data-slugs="[&quot;2602.06036-dflash&quot;, &quot;2604.11035-introspective-dlm&quot;, &quot;2605.12825-orthrus&quot;]">
   <td><a href="library.html?line=Parallel+Decoding+with+Diffusion+Models&amp;sort=importance">研究线：Parallel Decoding with Diffusion Models</a><div class="meta">按研究线固定入口生成的视图。</div></td>
   <td>generated</td>
   <td>research_line</td>
@@ -557,8 +681,13 @@ window.PAPER_WIKI = {"views": [{"id": "configured-all-untitled-ca4e9b6e", "name"
   <td>3</td>
   <td><code>{&quot;line&quot;: &quot;Parallel Decoding with Diffusion Models&quot;, &quot;sort&quot;: &quot;importance&quot;}</code></td>
   <td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a> · <a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> · <a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td>
-  <td><button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;研究线：Parallel Decoding with Diffusion Models&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;line&quot;: &quot;Parallel Decoding with Diffusion Models&quot;, &quot;sort&quot;: &quot;importance&quot;}}">复制</button></td>
-</tr><tr data-source="generated" data-kind="research_line" data-empty="false">
+  <td>
+    <button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;研究线：Parallel Decoding with Diffusion Models&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;line&quot;: &quot;Parallel Decoding with Diffusion Models&quot;, &quot;sort&quot;: &quot;importance&quot;}}">复制 JSON</button>
+    <button class="button copy-view-patch" type="button">复制 patch</button>
+    <button class="button download-view-patch" type="button">下载 patch</button>
+    <button class="button copy-view-patch-command" type="button">复制命令</button>
+  </td>
+</tr><tr data-source="generated" data-kind="research_line" data-empty="false" data-view-id="generated-library-efficient-attention-kernels-813ea810" data-view-name="研究线：Efficient Attention Kernels" data-slugs="[&quot;2501.01005-flashinfer&quot;, &quot;2307.08691-flashattention-2&quot;]">
   <td><a href="library.html?line=Efficient+Attention+Kernels&amp;sort=importance">研究线：Efficient Attention Kernels</a><div class="meta">按研究线固定入口生成的视图。</div></td>
   <td>generated</td>
   <td>research_line</td>
@@ -566,8 +695,13 @@ window.PAPER_WIKI = {"views": [{"id": "configured-all-untitled-ca4e9b6e", "name"
   <td>2</td>
   <td><code>{&quot;line&quot;: &quot;Efficient Attention Kernels&quot;, &quot;sort&quot;: &quot;importance&quot;}</code></td>
   <td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a> · <a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></td>
-  <td><button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;研究线：Efficient Attention Kernels&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;line&quot;: &quot;Efficient Attention Kernels&quot;, &quot;sort&quot;: &quot;importance&quot;}}">复制</button></td>
-</tr><tr data-source="generated" data-kind="workflow_status" data-empty="true">
+  <td>
+    <button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;研究线：Efficient Attention Kernels&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;line&quot;: &quot;Efficient Attention Kernels&quot;, &quot;sort&quot;: &quot;importance&quot;}}">复制 JSON</button>
+    <button class="button copy-view-patch" type="button">复制 patch</button>
+    <button class="button download-view-patch" type="button">下载 patch</button>
+    <button class="button copy-view-patch-command" type="button">复制命令</button>
+  </td>
+</tr><tr data-source="generated" data-kind="workflow_status" data-empty="true" data-view-id="generated-library-personal-unread-a722eab8" data-view-name="personal / unread" data-slugs="[]">
   <td><a href="library.html?workflow=personal&amp;status=unread&amp;sort=year">personal / unread</a><div class="meta">按状态 workflow 和 status 自动生成的视图。</div></td>
   <td>generated</td>
   <td>workflow_status</td>
@@ -575,8 +709,13 @@ window.PAPER_WIKI = {"views": [{"id": "configured-all-untitled-ca4e9b6e", "name"
   <td>0</td>
   <td><code>{&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;unread&quot;, &quot;workflow&quot;: &quot;personal&quot;}</code></td>
   <td><span class="meta">暂无样例</span></td>
-  <td><button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;personal / unread&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;unread&quot;, &quot;workflow&quot;: &quot;personal&quot;}}">复制</button></td>
-</tr><tr data-source="generated" data-kind="workflow_status" data-empty="true">
+  <td>
+    <button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;personal / unread&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;unread&quot;, &quot;workflow&quot;: &quot;personal&quot;}}">复制 JSON</button>
+    <button class="button copy-view-patch" type="button">复制 patch</button>
+    <button class="button download-view-patch" type="button">下载 patch</button>
+    <button class="button copy-view-patch-command" type="button">复制命令</button>
+  </td>
+</tr><tr data-source="generated" data-kind="workflow_status" data-empty="true" data-view-id="generated-library-personal-skimmed-fa6a2230" data-view-name="personal / skimmed" data-slugs="[]">
   <td><a href="library.html?workflow=personal&amp;status=skimmed&amp;sort=year">personal / skimmed</a><div class="meta">按状态 workflow 和 status 自动生成的视图。</div></td>
   <td>generated</td>
   <td>workflow_status</td>
@@ -584,8 +723,13 @@ window.PAPER_WIKI = {"views": [{"id": "configured-all-untitled-ca4e9b6e", "name"
   <td>0</td>
   <td><code>{&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;skimmed&quot;, &quot;workflow&quot;: &quot;personal&quot;}</code></td>
   <td><span class="meta">暂无样例</span></td>
-  <td><button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;personal / skimmed&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;skimmed&quot;, &quot;workflow&quot;: &quot;personal&quot;}}">复制</button></td>
-</tr><tr data-source="generated" data-kind="workflow_status" data-empty="true">
+  <td>
+    <button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;personal / skimmed&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;skimmed&quot;, &quot;workflow&quot;: &quot;personal&quot;}}">复制 JSON</button>
+    <button class="button copy-view-patch" type="button">复制 patch</button>
+    <button class="button download-view-patch" type="button">下载 patch</button>
+    <button class="button copy-view-patch-command" type="button">复制命令</button>
+  </td>
+</tr><tr data-source="generated" data-kind="workflow_status" data-empty="true" data-view-id="generated-library-personal-reading-55c0c96a" data-view-name="personal / reading" data-slugs="[]">
   <td><a href="library.html?workflow=personal&amp;status=reading&amp;sort=year">personal / reading</a><div class="meta">按状态 workflow 和 status 自动生成的视图。</div></td>
   <td>generated</td>
   <td>workflow_status</td>
@@ -593,8 +737,13 @@ window.PAPER_WIKI = {"views": [{"id": "configured-all-untitled-ca4e9b6e", "name"
   <td>0</td>
   <td><code>{&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;reading&quot;, &quot;workflow&quot;: &quot;personal&quot;}</code></td>
   <td><span class="meta">暂无样例</span></td>
-  <td><button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;personal / reading&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;reading&quot;, &quot;workflow&quot;: &quot;personal&quot;}}">复制</button></td>
-</tr><tr data-source="generated" data-kind="workflow_status" data-empty="false">
+  <td>
+    <button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;personal / reading&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;reading&quot;, &quot;workflow&quot;: &quot;personal&quot;}}">复制 JSON</button>
+    <button class="button copy-view-patch" type="button">复制 patch</button>
+    <button class="button download-view-patch" type="button">下载 patch</button>
+    <button class="button copy-view-patch-command" type="button">复制命令</button>
+  </td>
+</tr><tr data-source="generated" data-kind="workflow_status" data-empty="false" data-view-id="generated-library-personal-read-701cc8cf" data-view-name="personal / read" data-slugs="[&quot;2602.06036-dflash&quot;, &quot;2604.11035-introspective-dlm&quot;, &quot;2605.12825-orthrus&quot;, &quot;2501.01005-flashinfer&quot;, &quot;2307.08691-flashattention-2&quot;]">
   <td><a href="library.html?workflow=personal&amp;status=read&amp;sort=year">personal / read</a><div class="meta">按状态 workflow 和 status 自动生成的视图。</div></td>
   <td>generated</td>
   <td>workflow_status</td>
@@ -602,8 +751,13 @@ window.PAPER_WIKI = {"views": [{"id": "configured-all-untitled-ca4e9b6e", "name"
   <td>5</td>
   <td><code>{&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;read&quot;, &quot;workflow&quot;: &quot;personal&quot;}</code></td>
   <td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a> · <a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> · <a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a> <span class="meta">+2</span></td>
-  <td><button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;personal / read&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;read&quot;, &quot;workflow&quot;: &quot;personal&quot;}}">复制</button></td>
-</tr><tr data-source="generated" data-kind="workflow_status" data-empty="true">
+  <td>
+    <button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;personal / read&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;read&quot;, &quot;workflow&quot;: &quot;personal&quot;}}">复制 JSON</button>
+    <button class="button copy-view-patch" type="button">复制 patch</button>
+    <button class="button download-view-patch" type="button">下载 patch</button>
+    <button class="button copy-view-patch-command" type="button">复制命令</button>
+  </td>
+</tr><tr data-source="generated" data-kind="workflow_status" data-empty="true" data-view-id="generated-library-personal-archived-31aeb31e" data-view-name="personal / archived" data-slugs="[]">
   <td><a href="library.html?workflow=personal&amp;status=archived&amp;sort=year">personal / archived</a><div class="meta">按状态 workflow 和 status 自动生成的视图。</div></td>
   <td>generated</td>
   <td>workflow_status</td>
@@ -611,8 +765,13 @@ window.PAPER_WIKI = {"views": [{"id": "configured-all-untitled-ca4e9b6e", "name"
   <td>0</td>
   <td><code>{&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;archived&quot;, &quot;workflow&quot;: &quot;personal&quot;}</code></td>
   <td><span class="meta">暂无样例</span></td>
-  <td><button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;personal / archived&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;archived&quot;, &quot;workflow&quot;: &quot;personal&quot;}}">复制</button></td>
-</tr><tr data-source="generated" data-kind="workflow_status" data-empty="true">
+  <td>
+    <button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;personal / archived&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;archived&quot;, &quot;workflow&quot;: &quot;personal&quot;}}">复制 JSON</button>
+    <button class="button copy-view-patch" type="button">复制 patch</button>
+    <button class="button download-view-patch" type="button">下载 patch</button>
+    <button class="button copy-view-patch-command" type="button">复制命令</button>
+  </td>
+</tr><tr data-source="generated" data-kind="workflow_status" data-empty="true" data-view-id="generated-library-research-inbox-17136bee" data-view-name="research / inbox" data-slugs="[]">
   <td><a href="library.html?workflow=research&amp;status=inbox&amp;sort=year">research / inbox</a><div class="meta">按状态 workflow 和 status 自动生成的视图。</div></td>
   <td>generated</td>
   <td>workflow_status</td>
@@ -620,8 +779,13 @@ window.PAPER_WIKI = {"views": [{"id": "configured-all-untitled-ca4e9b6e", "name"
   <td>0</td>
   <td><code>{&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;inbox&quot;, &quot;workflow&quot;: &quot;research&quot;}</code></td>
   <td><span class="meta">暂无样例</span></td>
-  <td><button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;research / inbox&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;inbox&quot;, &quot;workflow&quot;: &quot;research&quot;}}">复制</button></td>
-</tr><tr data-source="generated" data-kind="workflow_status" data-empty="true">
+  <td>
+    <button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;research / inbox&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;inbox&quot;, &quot;workflow&quot;: &quot;research&quot;}}">复制 JSON</button>
+    <button class="button copy-view-patch" type="button">复制 patch</button>
+    <button class="button download-view-patch" type="button">下载 patch</button>
+    <button class="button copy-view-patch-command" type="button">复制命令</button>
+  </td>
+</tr><tr data-source="generated" data-kind="workflow_status" data-empty="true" data-view-id="generated-library-research-triaged-99020ec9" data-view-name="research / triaged" data-slugs="[]">
   <td><a href="library.html?workflow=research&amp;status=triaged&amp;sort=year">research / triaged</a><div class="meta">按状态 workflow 和 status 自动生成的视图。</div></td>
   <td>generated</td>
   <td>workflow_status</td>
@@ -629,8 +793,13 @@ window.PAPER_WIKI = {"views": [{"id": "configured-all-untitled-ca4e9b6e", "name"
   <td>0</td>
   <td><code>{&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;triaged&quot;, &quot;workflow&quot;: &quot;research&quot;}</code></td>
   <td><span class="meta">暂无样例</span></td>
-  <td><button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;research / triaged&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;triaged&quot;, &quot;workflow&quot;: &quot;research&quot;}}">复制</button></td>
-</tr><tr data-source="generated" data-kind="workflow_status" data-empty="true">
+  <td>
+    <button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;research / triaged&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;triaged&quot;, &quot;workflow&quot;: &quot;research&quot;}}">复制 JSON</button>
+    <button class="button copy-view-patch" type="button">复制 patch</button>
+    <button class="button download-view-patch" type="button">下载 patch</button>
+    <button class="button copy-view-patch-command" type="button">复制命令</button>
+  </td>
+</tr><tr data-source="generated" data-kind="workflow_status" data-empty="true" data-view-id="generated-library-research-reading-c08012d8" data-view-name="research / reading" data-slugs="[]">
   <td><a href="library.html?workflow=research&amp;status=reading&amp;sort=year">research / reading</a><div class="meta">按状态 workflow 和 status 自动生成的视图。</div></td>
   <td>generated</td>
   <td>workflow_status</td>
@@ -638,8 +807,13 @@ window.PAPER_WIKI = {"views": [{"id": "configured-all-untitled-ca4e9b6e", "name"
   <td>0</td>
   <td><code>{&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;reading&quot;, &quot;workflow&quot;: &quot;research&quot;}</code></td>
   <td><span class="meta">暂无样例</span></td>
-  <td><button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;research / reading&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;reading&quot;, &quot;workflow&quot;: &quot;research&quot;}}">复制</button></td>
-</tr><tr data-source="generated" data-kind="workflow_status" data-empty="true">
+  <td>
+    <button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;research / reading&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;reading&quot;, &quot;workflow&quot;: &quot;research&quot;}}">复制 JSON</button>
+    <button class="button copy-view-patch" type="button">复制 patch</button>
+    <button class="button download-view-patch" type="button">下载 patch</button>
+    <button class="button copy-view-patch-command" type="button">复制命令</button>
+  </td>
+</tr><tr data-source="generated" data-kind="workflow_status" data-empty="true" data-view-id="generated-library-research-implemented-54418442" data-view-name="research / implemented" data-slugs="[]">
   <td><a href="library.html?workflow=research&amp;status=implemented&amp;sort=year">research / implemented</a><div class="meta">按状态 workflow 和 status 自动生成的视图。</div></td>
   <td>generated</td>
   <td>workflow_status</td>
@@ -647,8 +821,13 @@ window.PAPER_WIKI = {"views": [{"id": "configured-all-untitled-ca4e9b6e", "name"
   <td>0</td>
   <td><code>{&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;implemented&quot;, &quot;workflow&quot;: &quot;research&quot;}</code></td>
   <td><span class="meta">暂无样例</span></td>
-  <td><button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;research / implemented&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;implemented&quot;, &quot;workflow&quot;: &quot;research&quot;}}">复制</button></td>
-</tr><tr data-source="generated" data-kind="workflow_status" data-empty="true">
+  <td>
+    <button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;research / implemented&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;implemented&quot;, &quot;workflow&quot;: &quot;research&quot;}}">复制 JSON</button>
+    <button class="button copy-view-patch" type="button">复制 patch</button>
+    <button class="button download-view-patch" type="button">下载 patch</button>
+    <button class="button copy-view-patch-command" type="button">复制命令</button>
+  </td>
+</tr><tr data-source="generated" data-kind="workflow_status" data-empty="true" data-view-id="generated-library-research-cited-45bad061" data-view-name="research / cited" data-slugs="[]">
   <td><a href="library.html?workflow=research&amp;status=cited&amp;sort=year">research / cited</a><div class="meta">按状态 workflow 和 status 自动生成的视图。</div></td>
   <td>generated</td>
   <td>workflow_status</td>
@@ -656,8 +835,13 @@ window.PAPER_WIKI = {"views": [{"id": "configured-all-untitled-ca4e9b6e", "name"
   <td>0</td>
   <td><code>{&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;cited&quot;, &quot;workflow&quot;: &quot;research&quot;}</code></td>
   <td><span class="meta">暂无样例</span></td>
-  <td><button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;research / cited&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;cited&quot;, &quot;workflow&quot;: &quot;research&quot;}}">复制</button></td>
-</tr><tr data-source="generated" data-kind="workflow_status" data-empty="true">
+  <td>
+    <button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;research / cited&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;cited&quot;, &quot;workflow&quot;: &quot;research&quot;}}">复制 JSON</button>
+    <button class="button copy-view-patch" type="button">复制 patch</button>
+    <button class="button download-view-patch" type="button">下载 patch</button>
+    <button class="button copy-view-patch-command" type="button">复制命令</button>
+  </td>
+</tr><tr data-source="generated" data-kind="workflow_status" data-empty="true" data-view-id="generated-library-research-archived-205a6204" data-view-name="research / archived" data-slugs="[]">
   <td><a href="library.html?workflow=research&amp;status=archived&amp;sort=year">research / archived</a><div class="meta">按状态 workflow 和 status 自动生成的视图。</div></td>
   <td>generated</td>
   <td>workflow_status</td>
@@ -665,7 +849,12 @@ window.PAPER_WIKI = {"views": [{"id": "configured-all-untitled-ca4e9b6e", "name"
   <td>0</td>
   <td><code>{&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;archived&quot;, &quot;workflow&quot;: &quot;research&quot;}</code></td>
   <td><span class="meta">暂无样例</span></td>
-  <td><button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;research / archived&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;archived&quot;, &quot;workflow&quot;: &quot;research&quot;}}">复制</button></td>
+  <td>
+    <button class="button copy-view-json" type="button" data-view="{&quot;name&quot;: &quot;research / archived&quot;, &quot;page&quot;: &quot;library&quot;, &quot;state&quot;: {&quot;sort&quot;: &quot;year&quot;, &quot;status&quot;: &quot;archived&quot;, &quot;workflow&quot;: &quot;research&quot;}}">复制 JSON</button>
+    <button class="button copy-view-patch" type="button">复制 patch</button>
+    <button class="button download-view-patch" type="button">下载 patch</button>
+    <button class="button copy-view-patch-command" type="button">复制命令</button>
+  </td>
 </tr></tbody>
       </table>
     </div>
@@ -673,7 +862,7 @@ window.PAPER_WIKI = {"views": [{"id": "configured-all-untitled-ca4e9b6e", "name"
   <section>
     <h2 class="section-title">写回命令</h2>
     <p class="meta">复制某个视图 JSON 后，可保存成文件并用 dry-run 检查，再写回 docs/guides/taxonomy.json。</p>
-    <div class="command-strip"><button class="button copy-view-command" type="button" data-command="python3 scripts/apply_shared_views.py docs --input &lt;shared_views.json&gt;">python3 scripts/apply_shared_views.py docs --input &lt;shared_views.json&gt;</button><button class="button copy-view-command" type="button" data-command="python3 scripts/apply_shared_views.py docs --input &lt;shared_views.json&gt; --write">python3 scripts/apply_shared_views.py docs --input &lt;shared_views.json&gt; --write</button><button class="button copy-view-command" type="button" data-command="python3 scripts/build_wiki.py docs">python3 scripts/build_wiki.py docs</button></div>
+    <div class="command-strip"><button class="button copy-view-command" type="button" data-command="python3 scripts/apply_shared_views.py docs --input &lt;shared_views.json&gt;">python3 scripts/apply_shared_views.py docs --input &lt;shared_views.json&gt;</button><button class="button copy-view-command" type="button" data-command="python3 scripts/apply_shared_views.py docs --input &lt;shared_views.json&gt; --write">python3 scripts/apply_shared_views.py docs --input &lt;shared_views.json&gt; --write</button><button class="button copy-view-command" type="button" data-command="python3 scripts/export_views.py docs --format patch --view &lt;view_id_or_name&gt; --field status --set-value reading --output docs/exports/views-status-patch.csv">python3 scripts/export_views.py docs --format patch --view &lt;view_id_or_name&gt; --field status --set-value reading --output docs/exports/views-status-patch.csv</button><button class="button copy-view-command" type="button" data-command="python3 scripts/apply_library_metadata.py docs --input docs/exports/views-status-patch.csv">python3 scripts/apply_library_metadata.py docs --input docs/exports/views-status-patch.csv</button><button class="button copy-view-command" type="button" data-command="python3 scripts/apply_library_metadata.py docs --input docs/exports/views-status-patch.csv --write">python3 scripts/apply_library_metadata.py docs --input docs/exports/views-status-patch.csv --write</button><button class="button copy-view-command" type="button" data-command="python3 scripts/build_wiki.py docs">python3 scripts/build_wiki.py docs</button></div>
   </section>
 </main>
 <script>
@@ -683,6 +872,56 @@ window.PAPER_WIKI = {"views": [{"id": "configured-all-untitled-ca4e9b6e", "name"
   const source = document.querySelector("#viewSource");
   const kind = document.querySelector("#viewKind");
   const empty = document.querySelector("#viewEmpty");
+  const patchField = document.querySelector("#viewPatchField");
+  const patchValue = document.querySelector("#viewPatchValue");
+  const patchListMode = document.querySelector("#viewPatchListMode");
+  const listPatchFields = new Set(["authors", "domains", "tracks", "problems", "topics", "methods"]);
+  function csvCell(value) {
+    const text = String(value ?? "");
+    return (text.includes(",") || text.includes('"') || text.includes("\n"))
+      ? `"${text.replaceAll('"', '""')}"`
+      : text;
+  }
+  function rowSlugs(row) {
+    try {
+      return JSON.parse(row.dataset.slugs || "[]").map(value => String(value || "").trim()).filter(Boolean);
+    } catch {
+      return [];
+    }
+  }
+  function patchCsvFor(row) {
+    const field = patchField.value || "status";
+    const value = patchValue.value || "";
+    const listField = listPatchFields.has(field);
+    const header = listField ? ["slug", field, "_list_mode"] : ["slug", field];
+    const body = rowSlugs(row).map(slug => listField ? [slug, value, patchListMode.value || "replace"] : [slug, value]);
+    return [header, ...body].map(items => items.map(csvCell).join(",")).join("\n") + "\n";
+  }
+  function patchCommandFor(row) {
+    const viewId = row.dataset.viewId || row.dataset.viewName || "";
+    const field = patchField.value || "status";
+    const value = patchValue.value || "";
+    const extra = listPatchFields.has(field) ? ` --list-mode ${patchListMode.value || "replace"}` : "";
+    return `python3 scripts/export_views.py docs --format patch --view "${viewId.replaceAll('"', '\\"')}" --field ${field} --set-value "${value.replaceAll('"', '\\"')}"${extra} --output docs/exports/views-${field}-patch.csv`;
+  }
+  function downloadText(filename, text, type = "text/csv;charset=utf-8") {
+    const blob = new Blob([text], { type });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  }
+  async function copyText(value, title) {
+    try {
+      await navigator.clipboard.writeText(value);
+    } catch {
+      window.prompt(title, value);
+    }
+  }
   function applyFilters() {
     const term = (search.value || "").toLowerCase();
     rows.forEach(row => {
@@ -697,14 +936,36 @@ window.PAPER_WIKI = {"views": [{"id": "configured-all-untitled-ca4e9b6e", "name"
   document.querySelectorAll(".copy-view-json").forEach(button => {
     button.addEventListener("click", async () => {
       const text = JSON.stringify({ shared_views: [JSON.parse(button.dataset.view || "{}")] }, null, 2);
-      await navigator.clipboard.writeText(text);
+      await copyText(text, "复制共享视图 JSON");
       button.textContent = "已复制";
-      setTimeout(() => button.textContent = "复制", 1200);
+      setTimeout(() => button.textContent = "复制 JSON", 1200);
+    });
+  });
+  document.querySelectorAll(".copy-view-patch").forEach(button => {
+    button.addEventListener("click", async () => {
+      await copyText(patchCsvFor(button.closest("tr")), "复制 view patch CSV");
+      button.textContent = "已复制";
+      setTimeout(() => button.textContent = "复制 patch", 1200);
+    });
+  });
+  document.querySelectorAll(".download-view-patch").forEach(button => {
+    button.addEventListener("click", () => {
+      const row = button.closest("tr");
+      const field = patchField.value || "status";
+      const viewId = row.dataset.viewId || "view";
+      downloadText(`${viewId}-${field}-patch.csv`, patchCsvFor(row));
+    });
+  });
+  document.querySelectorAll(".copy-view-patch-command").forEach(button => {
+    button.addEventListener("click", async () => {
+      await copyText(patchCommandFor(button.closest("tr")), "复制 view patch 命令");
+      button.textContent = "已复制";
+      setTimeout(() => button.textContent = "复制命令", 1200);
     });
   });
   document.querySelectorAll(".copy-view-command").forEach(button => {
     button.addEventListener("click", async () => {
-      await navigator.clipboard.writeText(button.dataset.command || "");
+      await copyText(button.dataset.command || "", "复制命令");
       button.textContent = "已复制";
       setTimeout(() => button.textContent = button.dataset.command || "复制", 1200);
     });

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T07:24:56",
+  "generated_at": "2026-06-12T07:30:09",
   "count": 5,
   "view_count": 26,
   "configured_count": 3,
@@ -1281,6 +1281,9 @@
   "commands": [
     "python3 scripts/apply_shared_views.py docs --input <shared_views.json>",
     "python3 scripts/apply_shared_views.py docs --input <shared_views.json> --write",
+    "python3 scripts/export_views.py docs --format patch --view <view_id_or_name> --field status --set-value reading --output docs/exports/views-status-patch.csv",
+    "python3 scripts/apply_library_metadata.py docs --input docs/exports/views-status-patch.csv",
+    "python3 scripts/apply_library_metadata.py docs --input docs/exports/views-status-patch.csv --write",
     "python3 scripts/build_wiki.py docs"
   ],
   "links": {

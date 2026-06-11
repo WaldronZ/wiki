@@ -15005,6 +15005,9 @@ def build_views_payload(papers: list[dict[str, Any]]) -> dict[str, Any]:
         "commands": [
             "python3 scripts/apply_shared_views.py docs --input <shared_views.json>",
             "python3 scripts/apply_shared_views.py docs --input <shared_views.json> --write",
+            "python3 scripts/export_views.py docs --format patch --view <view_id_or_name> --field status --set-value reading --output docs/exports/views-status-patch.csv",
+            "python3 scripts/apply_library_metadata.py docs --input docs/exports/views-status-patch.csv",
+            "python3 scripts/apply_library_metadata.py docs --input docs/exports/views-status-patch.csv --write",
             "python3 scripts/build_wiki.py docs",
         ],
         "links": {
@@ -15043,9 +15046,10 @@ def render_views(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     rows = []
     for view in payload["views"]:
         shared = html.escape(json.dumps(view["shared_view"], ensure_ascii=False, sort_keys=True), quote=True)
+        slugs = html.escape(json.dumps(view.get("slugs", []), ensure_ascii=False), quote=True)
         state = html.escape(json.dumps(view["state"], ensure_ascii=False, sort_keys=True))
         rows.append(
-            f"""<tr data-source="{html.escape(str(view['source']), quote=True)}" data-kind="{html.escape(str(view['kind']), quote=True)}" data-empty="{str(bool(view['empty'])).lower()}">
+            f"""<tr data-source="{html.escape(str(view['source']), quote=True)}" data-kind="{html.escape(str(view['kind']), quote=True)}" data-empty="{str(bool(view['empty'])).lower()}" data-view-id="{html.escape(str(view['id']), quote=True)}" data-view-name="{html.escape(str(view['name']), quote=True)}" data-slugs="{slugs}">
   <td><a href="{html.escape(str(view['href']))}">{html.escape(str(view['name']))}</a><div class="meta">{html.escape(str(view['note']))}</div></td>
   <td>{html.escape(str(view['source']))}</td>
   <td>{html.escape(str(view['kind']))}</td>
@@ -15053,7 +15057,12 @@ def render_views(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <td>{int(view['count'])}</td>
   <td><code>{state}</code></td>
   <td>{sample_list(view.get('sample_papers', []))}</td>
-  <td><button class="button copy-view-json" type="button" data-view="{shared}">复制</button></td>
+  <td>
+    <button class="button copy-view-json" type="button" data-view="{shared}">复制 JSON</button>
+    <button class="button copy-view-patch" type="button">复制 patch</button>
+    <button class="button download-view-patch" type="button">下载 patch</button>
+    <button class="button copy-view-patch-command" type="button">复制命令</button>
+  </td>
 </tr>"""
         )
 
@@ -15089,8 +15098,38 @@ def render_views(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       font-size: 12px;
     }
     .view-table .button {
-      min-width: 58px;
+      min-width: 82px;
       justify-content: center;
+      margin: 2px;
+      padding-inline: 9px;
+    }
+    .view-patch-panel {
+      display: grid;
+      grid-template-columns: minmax(150px, 210px) minmax(180px, 1fr) minmax(130px, 180px);
+      gap: 10px;
+      align-items: end;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 12px;
+      margin: 10px 0 16px;
+    }
+    .view-patch-panel label {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .view-patch-panel input,
+    .view-patch-panel select {
+      width: 100%;
+      min-height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fffdf8;
+      color: var(--ink);
+      padding: 8px 10px;
+      font: inherit;
     }
     .command-strip {
       display: flex;
@@ -15100,6 +15139,7 @@ def render_views(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     }
     @media (max-width: 820px) {
       .view-toolbar { grid-template-columns: 1fr; }
+      .view-patch-panel { grid-template-columns: 1fr; }
       .view-table { min-width: 980px; }
     }
     """
@@ -15128,9 +15168,37 @@ def render_views(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       <select id="viewKind"><option value="">全部类型</option>{kind_options}</select>
       <select id="viewEmpty"><option value="">全部命中</option><option value="false">有命中</option><option value="true">空视图</option></select>
     </div>
+    <div class="view-patch-panel">
+      <label>
+        <span>Patch 字段</span>
+        <select id="viewPatchField">
+          <option value="status">status</option>
+          <option value="reading_stage">reading_stage</option>
+          <option value="review_stage">review_stage</option>
+          <option value="next_review">next_review</option>
+          <option value="importance">importance</option>
+          <option value="research_line">research_line</option>
+          <option value="line_role">line_role</option>
+          <option value="domains">domains</option>
+          <option value="tracks">tracks</option>
+          <option value="problems">problems</option>
+          <option value="topics">topics</option>
+          <option value="methods">methods</option>
+        </select>
+      </label>
+      <label><span>Patch 值</span><input id="viewPatchValue" type="text" value="reading" placeholder="例如 reading / due / Attention Kernels"></label>
+      <label>
+        <span>列表模式</span>
+        <select id="viewPatchListMode">
+          <option value="replace">replace</option>
+          <option value="append">append</option>
+          <option value="remove">remove</option>
+        </select>
+      </label>
+    </div>
     <div class="table-wrap">
       <table class="data-table view-table">
-        <thead><tr><th>视图</th><th>来源</th><th>类型</th><th>页面</th><th>命中</th><th>状态</th><th>样例</th><th>JSON</th></tr></thead>
+        <thead><tr><th>视图</th><th>来源</th><th>类型</th><th>页面</th><th>命中</th><th>状态</th><th>样例</th><th>操作</th></tr></thead>
         <tbody id="viewRows">{''.join(rows)}</tbody>
       </table>
     </div>
@@ -15148,6 +15216,56 @@ def render_views(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   const source = document.querySelector("#viewSource");
   const kind = document.querySelector("#viewKind");
   const empty = document.querySelector("#viewEmpty");
+  const patchField = document.querySelector("#viewPatchField");
+  const patchValue = document.querySelector("#viewPatchValue");
+  const patchListMode = document.querySelector("#viewPatchListMode");
+  const listPatchFields = new Set(["authors", "domains", "tracks", "problems", "topics", "methods"]);
+  function csvCell(value) {{
+    const text = String(value ?? "");
+    return (text.includes(",") || text.includes('"') || text.includes("\\n"))
+      ? `"${{text.replaceAll('"', '""')}}"`
+      : text;
+  }}
+  function rowSlugs(row) {{
+    try {{
+      return JSON.parse(row.dataset.slugs || "[]").map(value => String(value || "").trim()).filter(Boolean);
+    }} catch {{
+      return [];
+    }}
+  }}
+  function patchCsvFor(row) {{
+    const field = patchField.value || "status";
+    const value = patchValue.value || "";
+    const listField = listPatchFields.has(field);
+    const header = listField ? ["slug", field, "_list_mode"] : ["slug", field];
+    const body = rowSlugs(row).map(slug => listField ? [slug, value, patchListMode.value || "replace"] : [slug, value]);
+    return [header, ...body].map(items => items.map(csvCell).join(",")).join("\\n") + "\\n";
+  }}
+  function patchCommandFor(row) {{
+    const viewId = row.dataset.viewId || row.dataset.viewName || "";
+    const field = patchField.value || "status";
+    const value = patchValue.value || "";
+    const extra = listPatchFields.has(field) ? ` --list-mode ${{patchListMode.value || "replace"}}` : "";
+    return `python3 scripts/export_views.py docs --format patch --view "${{viewId.replaceAll('"', '\\\\"')}}" --field ${{field}} --set-value "${{value.replaceAll('"', '\\\\"')}}"${{extra}} --output docs/exports/views-${{field}}-patch.csv`;
+  }}
+  function downloadText(filename, text, type = "text/csv;charset=utf-8") {{
+    const blob = new Blob([text], {{ type }});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  }}
+  async function copyText(value, title) {{
+    try {{
+      await navigator.clipboard.writeText(value);
+    }} catch {{
+      window.prompt(title, value);
+    }}
+  }}
   function applyFilters() {{
     const term = (search.value || "").toLowerCase();
     rows.forEach(row => {{
@@ -15162,14 +15280,36 @@ def render_views(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   document.querySelectorAll(".copy-view-json").forEach(button => {{
     button.addEventListener("click", async () => {{
       const text = JSON.stringify({{ shared_views: [JSON.parse(button.dataset.view || "{{}}")] }}, null, 2);
-      await navigator.clipboard.writeText(text);
+      await copyText(text, "复制共享视图 JSON");
       button.textContent = "已复制";
-      setTimeout(() => button.textContent = "复制", 1200);
+      setTimeout(() => button.textContent = "复制 JSON", 1200);
+    }});
+  }});
+  document.querySelectorAll(".copy-view-patch").forEach(button => {{
+    button.addEventListener("click", async () => {{
+      await copyText(patchCsvFor(button.closest("tr")), "复制 view patch CSV");
+      button.textContent = "已复制";
+      setTimeout(() => button.textContent = "复制 patch", 1200);
+    }});
+  }});
+  document.querySelectorAll(".download-view-patch").forEach(button => {{
+    button.addEventListener("click", () => {{
+      const row = button.closest("tr");
+      const field = patchField.value || "status";
+      const viewId = row.dataset.viewId || "view";
+      downloadText(`${{viewId}}-${{field}}-patch.csv`, patchCsvFor(row));
+    }});
+  }});
+  document.querySelectorAll(".copy-view-patch-command").forEach(button => {{
+    button.addEventListener("click", async () => {{
+      await copyText(patchCommandFor(button.closest("tr")), "复制 view patch 命令");
+      button.textContent = "已复制";
+      setTimeout(() => button.textContent = "复制命令", 1200);
     }});
   }});
   document.querySelectorAll(".copy-view-command").forEach(button => {{
     button.addEventListener("click", async () => {{
-      await navigator.clipboard.writeText(button.dataset.command || "");
+      await copyText(button.dataset.command || "", "复制命令");
       button.textContent = "已复制";
       setTimeout(() => button.textContent = button.dataset.command || "复制", 1200);
     }});
