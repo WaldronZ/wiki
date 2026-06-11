@@ -27,6 +27,27 @@ FIELDS = [
     "recommendation",
 ]
 
+PATCH_METADATA_FIELDS = [
+    "domains",
+    "tracks",
+    "problems",
+    "topics",
+    "methods",
+    "research_line",
+    "line_role",
+    "status",
+    "reading_stage",
+    "review_stage",
+]
+
+PATCH_AUDIT_FIELDS = [
+    "source_value",
+    "action",
+    "severity",
+    "recommendation",
+    "href",
+]
+
 PROJECT_FIELDS = [
     "task_id",
     "title",
@@ -57,14 +78,19 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--format",
         "-f",
-        choices=["markdown", "csv", "project"],
+        choices=["markdown", "csv", "project", "patch"],
         default="markdown",
-        help="Output format. Use 'project' for a task CSV suitable for project trackers.",
+        help="Output format. Use 'project' for task trackers and 'patch' for metadata writeback templates.",
     )
     parser.add_argument("--output", "-o", help="Output path. Defaults to stdout.")
     parser.add_argument("--assignee", default="", help="Default assignee for --format project rows.")
     parser.add_argument("--due-date", default="", help="Default due date for --format project rows.")
     parser.add_argument("--task-status", default="todo", help="Default task status for --format project rows.")
+    parser.add_argument(
+        "--target-value",
+        default="<target_value>",
+        help="Replacement value used by --format patch. Edit this column in the CSV before applying if needed.",
+    )
     parser.add_argument(
         "--severity",
         choices=["high", "medium", "low"],
@@ -96,6 +122,17 @@ def load_actions(report_dir: Path) -> dict[str, Any]:
     if not isinstance(actions, list):
         raise ValueError("taxonomy_actions.json has invalid 'actions' payload")
     return payload
+
+
+def load_papers(report_dir: Path) -> list[dict[str, Any]]:
+    path = report_dir / "papers.json"
+    if not path.exists():
+        raise FileNotFoundError(f"{path} does not exist; run scripts/build_wiki.py first")
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    papers = payload.get("papers", [])
+    if not isinstance(papers, list):
+        raise ValueError("papers.json has invalid 'papers' payload")
+    return papers
 
 
 def filter_actions(actions: list[dict[str, Any]], args: argparse.Namespace) -> list[dict[str, Any]]:
@@ -243,6 +280,58 @@ def render_project_csv(actions: list[dict[str, Any]], args: argparse.Namespace) 
     return buffer.getvalue()
 
 
+def paper_values(paper: dict[str, Any], field: str) -> list[str]:
+    value = paper.get(field)
+    if isinstance(value, list):
+        return [str(item).strip() for item in value if str(item).strip()]
+    text = str(value or "").strip()
+    return [text] if text and text != "Unassigned" else []
+
+
+def replacement_value(paper: dict[str, Any], field: str, source: str, target: str) -> str:
+    values = paper_values(paper, field)
+    if field in {"domains", "tracks", "problems", "topics", "methods"}:
+        replaced: list[str] = []
+        for value in values:
+            next_value = target if value == source else value
+            if next_value and next_value not in replaced:
+                replaced.append(next_value)
+        return "; ".join(replaced)
+    return target
+
+
+def render_patch_csv(actions: list[dict[str, Any]], papers: list[dict[str, Any]], args: argparse.Namespace) -> str:
+    from io import StringIO
+
+    buffer = StringIO()
+    fieldnames = ["slug", *PATCH_METADATA_FIELDS, *PATCH_AUDIT_FIELDS]
+    writer = csv.DictWriter(buffer, fieldnames=fieldnames)
+    writer.writeheader()
+    target = str(args.target_value or "<target_value>").strip() or "<target_value>"
+    for item in actions:
+        field = str(item.get("field") or "")
+        source = str(item.get("value") or "")
+        if field not in PATCH_METADATA_FIELDS or not source:
+            continue
+        for paper in papers:
+            if source not in paper_values(paper, field):
+                continue
+            row = {name: "" for name in fieldnames}
+            row.update(
+                {
+                    "slug": str(paper.get("slug") or ""),
+                    field: replacement_value(paper, field, source, target),
+                    "source_value": source,
+                    "action": join_value(item.get("action")),
+                    "severity": join_value(item.get("severity")),
+                    "recommendation": join_value(item.get("recommendation")),
+                    "href": join_value(item.get("href")),
+                }
+            )
+            writer.writerow(row)
+    return buffer.getvalue()
+
+
 def write_output(text: str, output_path: str | None, report_dir: Path, stream: TextIO) -> None:
     if not output_path:
         stream.write(text)
@@ -270,6 +359,8 @@ def main() -> int:
             text = render_csv(actions)
         elif args.format == "project":
             text = render_project_csv(actions, args)
+        elif args.format == "patch":
+            text = render_patch_csv(actions, load_papers(report_dir), args)
         else:
             text = render_markdown(payload, actions)
         write_output(text, args.output, report_dir, sys.stdout)

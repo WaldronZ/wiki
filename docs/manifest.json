@@ -572,6 +572,14 @@
       "mutates": false
     },
     {
+      "id": "taxonomy_actions_patch",
+      "kind": "export",
+      "label": "Export taxonomy action patch template",
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format patch --action merge_candidate --output docs/exports/taxonomy-action-patch.csv",
+      "output": "docs/exports/taxonomy-action-patch.csv",
+      "mutates": false
+    },
+    {
       "id": "taxonomy_balance_project",
       "kind": "export",
       "label": "Export taxonomy balance project tasks",
@@ -604,6 +612,7 @@
     "python3 scripts/apply_taxonomy_aliases.py docs --write",
     "python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md",
     "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
+    "python3 scripts/export_taxonomy_actions.py docs --format patch --action merge_candidate --output docs/exports/taxonomy-action-patch.csv",
     "python3 scripts/export_taxonomy_balance.py docs --format project --max-score 50 --output docs/exports/taxonomy-balance-project.csv",
     "python3 scripts/export_taxonomy_load.py docs --format csv --output docs/exports/taxonomy-load.csv",
     "python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv"

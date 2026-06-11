@@ -270,12 +270,13 @@ python3 scripts/export_reading_list.py docs --format links --status read
 python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md
 python3 scripts/export_taxonomy_actions.py docs --format csv --severity high --output docs/exports/taxonomy-actions.csv
 python3 scripts/export_taxonomy_actions.py docs --format project --assignee taxonomy-owner --task-status ready --output docs/exports/taxonomy-project.csv
+python3 scripts/export_taxonomy_actions.py docs --format patch --action merge_candidate --target-value "Unified Label" --output docs/exports/taxonomy-action-patch.csv
 python3 scripts/export_taxonomy_balance.py docs --format project --max-score 50 --assignee taxonomy-owner --output docs/exports/taxonomy-balance-project.csv
 python3 scripts/export_taxonomy_load.py docs --format csv --signal dense_tags --output docs/exports/taxonomy-load.csv
 python3 scripts/export_taxonomy_load.py docs --format patch --signal sparse_tags --output docs/exports/taxonomy-load-patch.csv
 ```
 
-把表格里编辑过的分类和状态字段写回报告 frontmatter：
+`taxonomy-action-patch.csv` 会保留 `source_value` / `action` / `severity` 等审计列，同时把目标字段填成可写回的列；正式应用前建议先人工确认目标值并 dry-run。把表格里编辑过的分类和状态字段写回报告 frontmatter：
 
 ```bash
 python3 scripts/apply_library_metadata.py docs --input docs/library.csv

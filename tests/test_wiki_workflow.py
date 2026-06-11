@@ -362,12 +362,14 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(recipe_by_id["quality_gate"]["kind"], "check")
             self.assertFalse(recipe_by_id["quality_gate"]["mutates"])
             self.assertEqual(recipe_by_id["taxonomy_balance_project"]["output"], "docs/exports/taxonomy-balance-project.csv")
+            self.assertEqual(recipe_by_id["taxonomy_actions_patch"]["output"], "docs/exports/taxonomy-action-patch.csv")
             release_html = (report_dir / "release.html").read_text(encoding="utf-8")
             self.assertIn("知识库发布摘要", release_html)
             self.assertIn("Manifest JSON", release_html)
             self.assertIn("推荐命令", release_html)
             self.assertIn("命令 Recipes", release_html)
             self.assertIn("taxonomy_balance_project", release_html)
+            self.assertIn("taxonomy_actions_patch", release_html)
             self.assertIn("copy-release-command", release_html)
             self.assertIn("copyReleaseCommand", release_html)
             dashboard_html = (report_dir / "dashboard.html").read_text(encoding="utf-8")
@@ -510,6 +512,33 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("taxonomy", taxonomy_project_rows[0]["labels"])
             self.assertIn("taxonomy value", taxonomy_project_rows[0]["title"])
             self.assertIn("Count:", taxonomy_project_rows[0]["body"])
+
+            taxonomy_patch_path = report_dir / "exports" / "taxonomy-action-patch.csv"
+            self.run_cmd(
+                "scripts/export_taxonomy_actions.py",
+                str(report_dir),
+                "--format",
+                "patch",
+                "--action",
+                "merge_candidate",
+                "--target-value",
+                "Unified Label",
+                "--output",
+                str(taxonomy_patch_path),
+            )
+            taxonomy_patch_rows = list(csv.DictReader(taxonomy_patch_path.read_text(encoding="utf-8").splitlines()))
+            self.assertTrue(taxonomy_patch_rows)
+            self.assertIn("slug", taxonomy_patch_rows[0])
+            self.assertIn("source_value", taxonomy_patch_rows[0])
+            self.assertIn("action", taxonomy_patch_rows[0])
+            self.assertIn("Unified Label", "; ".join(taxonomy_patch_rows[0].values()))
+            taxonomy_patch_apply = self.run_cmd(
+                "scripts/apply_library_metadata.py",
+                str(report_dir),
+                "--input",
+                str(taxonomy_patch_path),
+            )
+            self.assertIn("DRY", taxonomy_patch_apply.stdout)
 
             taxonomy_balance_path = report_dir / "exports" / "taxonomy-balance.md"
             self.run_cmd(
