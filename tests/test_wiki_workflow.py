@@ -234,6 +234,10 @@ class WikiWorkflowTest(unittest.TestCase):
             (ROOT / "docs" / "guides" / "taxonomy.schema.json").read_text(encoding="utf-8"),
             encoding="utf-8",
         )
+        (guides_dir / "views.schema.json").write_text(
+            (ROOT / "docs" / "guides" / "views.schema.json").read_text(encoding="utf-8"),
+            encoding="utf-8",
+        )
         for slug, text in {
             "2601.00001-alpha-paper": REPORT_A,
             "2501.00002-beta-paper": REPORT_B,
@@ -1499,6 +1503,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("guides/metadata.schema.json", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/inbox.schema.json", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/taxonomy.schema.json", {item["href"] for item in manifest["contract_files"]})
+            self.assertIn("guides/views.schema.json", {item["href"] for item in manifest["contract_files"]})
             artifact_by_href = {item["href"]: item for item in manifest["artifact_inventory"]}
             self.assertEqual(artifact_by_href["index.html"]["status"], "ok")
             self.assertEqual(artifact_by_href["command.html"]["status"], "ok")
@@ -1509,6 +1514,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(artifact_by_href["guides/metadata.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/inbox.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/taxonomy.schema.json"]["kind"], "contract")
+            self.assertEqual(artifact_by_href["guides/views.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["workflow.html"]["status"], "ok")
             self.assertRegex(artifact_by_href["workflow.html"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["workflow.json"]["status"], "ok")
@@ -2654,6 +2660,21 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("guides/taxonomy.schema.json: type must be object", result.stderr)
             self.assertIn("properties.status_workflows is required", result.stderr)
             self.assertIn("properties.shared_views is required", result.stderr)
+
+    def test_invalid_views_schema_fails_validation(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_name:
+            report_dir = self.make_report_dir(Path(tmp_name))
+            self.run_cmd("scripts/build_wiki.py", str(report_dir))
+
+            (report_dir / "guides" / "views.schema.json").write_text(
+                json.dumps({"$schema": "https://json-schema.org/draft/2020-12/schema", "type": "object", "properties": {}}),
+                encoding="utf-8",
+            )
+            result = self.run_cmd("scripts/validate_wiki.py", str(report_dir), check=False)
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("guides/views.schema.json: properties.views is required", result.stderr)
+            self.assertIn("guides/views.schema.json: $defs must be an object", result.stderr)
 
     def test_invalid_inbox_csv_fails_validation(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_name:

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T07:30:09",
+  "generated_at": "2026-06-12T07:34:14",
   "name": "AutoPaperReader Wiki",
   "count": 5,
   "publish_ready": false,
@@ -961,6 +961,10 @@
       "description": "taxonomy.json 配置字段契约"
     },
     {
+      "href": "guides/views.schema.json",
+      "description": "views.json 视图目录和批量队列契约"
+    },
+    {
       "href": "guides/taxonomy.json",
       "description": "分类别名、状态工作流和共享视图配置"
     }
@@ -1012,8 +1016,8 @@
       "description": "页面入口、数据文件、质量状态",
       "exists": true,
       "status": "ok",
-      "size_bytes": 103528,
-      "sha256": "8a72972b93bc98dfd09c1825204fcdde0d45336150a018f044ea3c1ccc717a0f",
+      "size_bytes": 103964,
+      "sha256": "45de80a5ef56dc235f9a95bc247af94f690a313b6fd0f754529c4758dfc4e07b",
       "hash_mode": "raw"
     },
     {
@@ -1022,8 +1026,8 @@
       "description": "当前发布基线、队列和治理策略快照",
       "exists": true,
       "status": "ok",
-      "size_bytes": 56419,
-      "sha256": "b1fd6fa186530bd6a92637528a61612fe9e3eea4f1002200db99abb338d9c57d",
+      "size_bytes": 56640,
+      "sha256": "e3770d3d1cc6269600f8e2c38f36ba7b076d4bea94e7feccc9534560595fe4ee",
       "hash_mode": "raw"
     },
     {
@@ -1232,8 +1236,8 @@
       "description": "贡献路径、质量门和数据契约",
       "exists": true,
       "status": "ok",
-      "size_bytes": 54574,
-      "sha256": "a68e1beeab790554883494b24ebd9e954b668d40256779323319a1353535cff1",
+      "size_bytes": 54865,
+      "sha256": "d20dcce059945061d976092b067fd77638b22283de6e6b8ab764877e2f0442d0",
       "hash_mode": "raw"
     },
     {
@@ -1242,8 +1246,8 @@
       "description": "机器数据、页面和契约的接入目录",
       "exists": true,
       "status": "ok",
-      "size_bytes": 59888,
-      "sha256": "dd77d45f1242f9065cea1d6010ca20fe553f53f61519434e0b5a25d29995596d",
+      "size_bytes": 60022,
+      "sha256": "a23a0f04c850d05d4f616426c40e25ee65594007599d2c230945e73b5f9e06ff",
       "hash_mode": "raw"
     },
     {
@@ -1612,8 +1616,8 @@
       "description": "开源贡献路径、质量门和数据契约清单",
       "exists": true,
       "status": "ok",
-      "size_bytes": 9333,
-      "sha256": "20a6652b920fb1f89ef016202aff7d418bf5bba3ba8fc1952fdca0520573549e",
+      "size_bytes": 9610,
+      "sha256": "bddc9ba0737ed3fea891790c8b455f15a04218fdc3386315ed4088b0e113676a",
       "hash_mode": "normalized"
     },
     {
@@ -1622,8 +1626,8 @@
       "description": "机器数据、页面入口和契约字段目录",
       "exists": true,
       "status": "ok",
-      "size_bytes": 46328,
-      "sha256": "874926ec3328d020fe97e98c77e3d1b84ca89bdc282105ba26ad46af05ff4bb1",
+      "size_bytes": 46451,
+      "sha256": "f240ed7ed50069107637ffaea483582896edbb9b132e2dfbdfa3ffb1b9243bfd",
       "hash_mode": "normalized"
     },
     {
@@ -1632,8 +1636,8 @@
       "description": "当前知识库治理快照和发布基线",
       "exists": true,
       "status": "ok",
-      "size_bytes": 16467,
-      "sha256": "646ef0df5e7bb431dae0c5c511585564c0c787c5ef53b62623643b33dc2cd6b2",
+      "size_bytes": 16665,
+      "sha256": "f99e95c8ca36b42f41c6ace582ac336882f029005adb6d03a3daffd3a8469de9",
       "hash_mode": "normalized"
     },
     {
@@ -1721,6 +1725,16 @@
       "status": "ok",
       "size_bytes": 7943,
       "sha256": "2d1b626cb70b713f6a63c9cc5bbcee95e9d57881a4b0c4b15f5c4937a4c11de4",
+      "hash_mode": "raw"
+    },
+    {
+      "href": "guides/views.schema.json",
+      "kind": "contract",
+      "description": "views.json 视图目录和批量队列契约",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 5409,
+      "sha256": "8fe654726250cf183de71e5e897bbcd3cd27db099c4db7567d605e2b7ae9517d",
       "hash_mode": "raw"
     },
     {

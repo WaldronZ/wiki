@@ -1,0 +1,234 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/autopaperreader/views.schema.json",
+  "title": "AutoPaperReader View Directory",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "generated_at",
+    "count",
+    "view_count",
+    "configured_count",
+    "system_count",
+    "generated_count",
+    "source_counts",
+    "kind_counts",
+    "empty_view_count",
+    "views",
+    "recommendations",
+    "commands",
+    "links"
+  ],
+  "properties": {
+    "generated_at": {
+      "type": "string",
+      "description": "ISO timestamp when the view directory was generated."
+    },
+    "count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of reports represented by the wiki."
+    },
+    "view_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "configured_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "system_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "generated_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "source_counts": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "kind_counts": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "empty_view_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "views": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/view"
+      }
+    },
+    "recommendations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "commands": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "links": {
+      "type": "object",
+      "required": [
+        "html",
+        "index",
+        "library",
+        "collections",
+        "status",
+        "workflow",
+        "quality"
+      ],
+      "properties": {
+        "html": { "type": "string" },
+        "index": { "type": "string" },
+        "library": { "type": "string" },
+        "collections": { "type": "string" },
+        "status": { "type": "string" },
+        "workflow": { "type": "string" },
+        "quality": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "state": {
+      "type": "object",
+      "description": "URL query-state object used by index.html or library.html.",
+      "additionalProperties": {
+        "type": [
+          "string",
+          "number",
+          "boolean"
+        ]
+      }
+    },
+    "shared_view": {
+      "type": "object",
+      "required": [
+        "name",
+        "page",
+        "state"
+      ],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "page": {
+          "type": "string",
+          "enum": [
+            "all",
+            "index",
+            "library"
+          ]
+        },
+        "state": { "$ref": "#/$defs/state" }
+      },
+      "additionalProperties": true
+    },
+    "sample_paper": {
+      "type": "object",
+      "required": [
+        "slug",
+        "title",
+        "href"
+      ],
+      "properties": {
+        "slug": { "type": "string", "minLength": 1 },
+        "title": { "type": "string" },
+        "title_zh": { "type": "string" },
+        "href": { "type": "string" },
+        "research_line": { "type": "string" },
+        "line_role": { "type": "string" },
+        "year": { "type": "integer" },
+        "importance": { "type": ["integer", "string", "null"] },
+        "status": { "type": "string" },
+        "reading_stage": { "type": "string" },
+        "review_stage": { "type": "string" },
+        "next_review": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "view": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "source",
+        "kind",
+        "page",
+        "target_page",
+        "href",
+        "state",
+        "count",
+        "slugs",
+        "sample_papers",
+        "note",
+        "shared_view",
+        "empty"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "source": {
+          "type": "string",
+          "enum": [
+            "configured",
+            "system",
+            "generated"
+          ]
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "shared",
+            "queue",
+            "research_line",
+            "workflow_status"
+          ]
+        },
+        "page": {
+          "type": "string",
+          "enum": [
+            "all",
+            "index",
+            "library"
+          ]
+        },
+        "target_page": {
+          "type": "string",
+          "enum": [
+            "index.html",
+            "library.html"
+          ]
+        },
+        "href": { "type": "string" },
+        "state": { "$ref": "#/$defs/state" },
+        "count": { "type": "integer", "minimum": 0 },
+        "slugs": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "sample_papers": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/sample_paper" }
+        },
+        "note": { "type": "string" },
+        "shared_view": { "$ref": "#/$defs/shared_view" },
+        "empty": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    }
+  }
+}

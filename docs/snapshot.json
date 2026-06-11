@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T07:30:09",
+  "generated_at": "2026-06-12T07:34:14",
   "snapshot_id": "89f0dcec1638050c",
   "name": "AutoPaperReader Wiki",
   "count": 5,
@@ -121,7 +121,7 @@
     }
   ],
   "artifact_summary": {
-    "count": 73,
+    "count": 74,
     "missing": [],
     "hashes": [
       {
@@ -271,13 +271,13 @@
       {
         "href": "onboarding.html",
         "kind": "page",
-        "sha256": "a68e1beeab790554883494b24ebd9e954b668d40256779323319a1353535cff1",
+        "sha256": "d20dcce059945061d976092b067fd77638b22283de6e6b8ab764877e2f0442d0",
         "status": "ok"
       },
       {
         "href": "catalog.html",
         "kind": "page",
-        "sha256": "dd77d45f1242f9065cea1d6010ca20fe553f53f61519434e0b5a25d29995596d",
+        "sha256": "a23a0f04c850d05d4f616426c40e25ee65594007599d2c230945e73b5f9e06ff",
         "status": "ok"
       },
       {
@@ -499,13 +499,13 @@
       {
         "href": "onboarding.json",
         "kind": "data",
-        "sha256": "20a6652b920fb1f89ef016202aff7d418bf5bba3ba8fc1952fdca0520573549e",
+        "sha256": "bddc9ba0737ed3fea891790c8b455f15a04218fdc3386315ed4088b0e113676a",
         "status": "ok"
       },
       {
         "href": "catalog.json",
         "kind": "data",
-        "sha256": "874926ec3328d020fe97e98c77e3d1b84ca89bdc282105ba26ad46af05ff4bb1",
+        "sha256": "f240ed7ed50069107637ffaea483582896edbb9b132e2dfbdfa3ffb1b9243bfd",
         "status": "ok"
       },
       {
@@ -554,6 +554,12 @@
         "href": "guides/taxonomy.schema.json",
         "kind": "contract",
         "sha256": "2d1b626cb70b713f6a63c9cc5bbcee95e9d57881a4b0c4b15f5c4937a4c11de4",
+        "status": "ok"
+      },
+      {
+        "href": "guides/views.schema.json",
+        "kind": "contract",
+        "sha256": "8fe654726250cf183de71e5e897bbcd3cd27db099c4db7567d605e2b7ae9517d",
         "status": "ok"
       },
       {
