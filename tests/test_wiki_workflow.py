@@ -988,6 +988,23 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("shared_views[0].state has unknown keys", result.stderr)
             self.assertIn("shared_views[1].name", result.stderr)
 
+    def test_invalid_taxonomy_schema_fails_validation(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_name:
+            report_dir = self.make_report_dir(Path(tmp_name))
+            self.run_cmd("scripts/build_wiki.py", str(report_dir))
+
+            (report_dir / "guides" / "taxonomy.schema.json").write_text(
+                json.dumps({"type": "array", "properties": {}}),
+                encoding="utf-8",
+            )
+            result = self.run_cmd("scripts/validate_wiki.py", str(report_dir), check=False)
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("guides/taxonomy.schema.json: $schema must be a non-empty string", result.stderr)
+            self.assertIn("guides/taxonomy.schema.json: type must be object", result.stderr)
+            self.assertIn("properties.status_workflows is required", result.stderr)
+            self.assertIn("properties.shared_views is required", result.stderr)
+
     def test_invalid_inbox_csv_fails_validation(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_name:
             report_dir = self.make_report_dir(Path(tmp_name))

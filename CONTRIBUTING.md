@@ -57,8 +57,8 @@ python3 scripts/check_quality.py docs
 ```
 
 The same gate runs in GitHub Actions on push and pull request. It checks Python
-syntax, generated wiki freshness, strict taxonomy and metadata validation,
-inline JavaScript parsing, and the unit test suite.
+syntax, generated wiki freshness, metadata/inbox/taxonomy contract files,
+strict taxonomy validation, inline JavaScript parsing, and the unit test suite.
 
 ## Review Checklist
 

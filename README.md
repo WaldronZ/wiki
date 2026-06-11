@@ -232,7 +232,7 @@ paper-1,Example Paper,https://arxiv.org/abs/2601.00001,queued,high,LLM Serving;B
 python3 scripts/check_quality.py docs
 ```
 
-这会依次检查脚本语法、已提交 wiki 生成物是否最新、严格验证 metadata / taxonomy / 内部链接、解析 wiki 页面内联 JavaScript，并运行单元测试。开源协作时，`.github/workflows/wiki-quality.yml` 会在 push / pull request 中自动运行同一组门禁。
+这会依次检查脚本语法、已提交 wiki 生成物是否最新、验证 metadata / inbox / taxonomy 配置契约、严格验证 taxonomy drift 和内部链接、解析 wiki 页面内联 JavaScript，并运行单元测试。开源协作时，`.github/workflows/wiki-quality.yml` 会在 push / pull request 中自动运行同一组门禁。
 
 `docs/quality.html` 的「治理命令」区域可以直接复制常用修复命令，例如质量门禁、严格校验、标签别名写入预览、taxonomy action / balance / load 导出和可写回 patch 模板，适合发布前逐项处理队列。
 

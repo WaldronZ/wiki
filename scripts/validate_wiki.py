@@ -786,6 +786,20 @@ def validate_taxonomy_config(report_dir: Path, errors: list[str], warnings: list
     if unknown_fields:
         warnings.append(f"guides/taxonomy.json: unknown fields ignored: {', '.join(unknown_fields)}")
 
+    schema_ref = config.get("$schema")
+    if schema_ref is not None:
+        if not isinstance(schema_ref, str) or not schema_ref.strip():
+            errors.append("guides/taxonomy.json: $schema must be a non-empty string")
+        elif "://" not in schema_ref:
+            schema_path = (config_path.parent / schema_ref).resolve()
+            try:
+                schema_path.relative_to(config_path.parent.resolve())
+            except ValueError:
+                errors.append("guides/taxonomy.json: $schema must stay inside guides/")
+            else:
+                if not schema_path.exists():
+                    errors.append(f"guides/taxonomy.json: $schema target does not exist: {schema_ref}")
+
     aliases = config.get("label_aliases", {})
     if aliases is not None and not isinstance(aliases, dict):
         errors.append("guides/taxonomy.json: label_aliases must be an object")
@@ -863,6 +877,33 @@ def validate_taxonomy_config(report_dir: Path, errors: list[str], warnings: list
                     f"guides/taxonomy.json: shared_views[{index}].state has unknown keys: {', '.join(unknown_state)}"
                 )
     return config
+
+
+def validate_taxonomy_schema_contract(report_dir: Path, errors: list[str], warnings: list[str]) -> None:
+    schema_path = report_dir / "guides" / "taxonomy.schema.json"
+    if not schema_path.exists():
+        warnings.append("guides/taxonomy.schema.json missing; editor schema hints are unavailable")
+        return
+
+    try:
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        errors.append(f"guides/taxonomy.schema.json: invalid JSON: {exc}")
+        return
+
+    if not isinstance(schema, dict):
+        errors.append("guides/taxonomy.schema.json: root must be an object")
+        return
+    if not isinstance(schema.get("$schema"), str) or not schema.get("$schema", "").strip():
+        errors.append("guides/taxonomy.schema.json: $schema must be a non-empty string")
+    if schema.get("type") != "object":
+        errors.append("guides/taxonomy.schema.json: type must be object")
+    if not isinstance(schema.get("properties"), dict):
+        errors.append("guides/taxonomy.schema.json: properties must be an object")
+    if "status_workflows" not in (schema.get("properties") or {}):
+        errors.append("guides/taxonomy.schema.json: properties.status_workflows is required")
+    if "shared_views" not in (schema.get("properties") or {}):
+        errors.append("guides/taxonomy.schema.json: properties.shared_views is required")
 
 
 def validate_string_list(value: Any, label: str, errors: list[str], allow_none: bool) -> None:
@@ -991,6 +1032,7 @@ def main() -> int:
         schema = load_metadata_schema(report_dir, errors, warnings)
         inbox_schema = load_inbox_schema(report_dir, errors, warnings)
         reports = validate_reports(report_dir, schema, errors, warnings)
+        validate_taxonomy_schema_contract(report_dir, errors, warnings)
         config = validate_taxonomy_config(report_dir, errors, warnings)
         validate_controlled_taxonomy(reports, config, errors, warnings, args.strict_taxonomy)
         validate_inbox_csv(report_dir, inbox_schema, errors, warnings)
