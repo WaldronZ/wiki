@@ -1,0 +1,332 @@
+{
+  "generated_at": "2026-06-12T03:09:52",
+  "snapshot_id": "89f0dcec1638050c",
+  "name": "AutoPaperReader Wiki",
+  "count": 5,
+  "publish_ready": false,
+  "publish_checks": {
+    "metadata_complete": true,
+    "taxonomy_clean": true,
+    "no_duplicate_reports": true,
+    "has_review_plan": false,
+    "has_generated_pages": true,
+    "artifacts_present": true
+  },
+  "quality_score": 92.0,
+  "coverage": {
+    "taxonomy": "100%",
+    "review_plan": "0%",
+    "code_observation": "100%",
+    "research_lines": 2
+  },
+  "queue_sizes": {
+    "quality": {
+      "missing_required_metadata": 0,
+      "needs_review_plan": 5,
+      "due_review": 0,
+      "no_code_observation": 0,
+      "taxonomy_drift": 0,
+      "duplicate_reports": 0,
+      "taxonomy_sparse": 0,
+      "taxonomy_dense": 2,
+      "high_importance": 2
+    },
+    "review": {
+      "due": 0,
+      "needs_plan": 5,
+      "scheduled": 0,
+      "high_priority": 2
+    },
+    "inbox": {
+      "count": 0,
+      "duplicates": 0
+    }
+  },
+  "risk_queue_sizes": {
+    "missing_required_metadata": 0,
+    "taxonomy_drift": 0,
+    "duplicate_reports": 0,
+    "needs_review_plan": 5,
+    "due_review": 0,
+    "freshness_due": 0,
+    "freshness_stale": 0,
+    "inbox_duplicates": 0
+  },
+  "action_groups": [
+    {
+      "group": "taxonomy",
+      "count": 57
+    },
+    {
+      "group": "review",
+      "count": 5
+    }
+  ],
+  "governance_policy": {
+    "taxonomy_load": {
+      "min_structure_labels": 3,
+      "min_tags": 3,
+      "max_tags": 10,
+      "max_methods": 8
+    },
+    "taxonomy_actions": {
+      "singleton_max_count": 1,
+      "watch_share": 0.4,
+      "watch_min_count": 4,
+      "split_share": 0.6,
+      "split_min_count": 5
+    },
+    "taxonomy_balance": {
+      "high_score_below": 45,
+      "medium_score_below": 70,
+      "singleton_medium_count": 3,
+      "unused_medium_count": 3
+    },
+    "coverage": {
+      "high_score_below": 70,
+      "medium_score_below": 90,
+      "missing_high_min": 2
+    }
+  },
+  "active_status_workflow": "personal",
+  "research_lines": [
+    {
+      "name": "Parallel Decoding with Diffusion Models",
+      "count": 3,
+      "roles": {
+        "followup": 1,
+        "foundation": 1,
+        "variant": 1
+      },
+      "code_coverage": "100%",
+      "avg_importance": 4.3
+    },
+    {
+      "name": "Efficient Attention Kernels",
+      "count": 2,
+      "roles": {
+        "foundation": 1,
+        "system": 1
+      },
+      "code_coverage": "100%",
+      "avg_importance": 4.5
+    }
+  ],
+  "artifact_summary": {
+    "count": 34,
+    "missing": [],
+    "hashes": [
+      {
+        "href": "index.html",
+        "kind": "page",
+        "sha256": "e1e044d54726a4c117ef1ac3e6614b24d00e4f5485ed49ac8834063a749808d0",
+        "status": "ok"
+      },
+      {
+        "href": "library.html",
+        "kind": "page",
+        "sha256": "56317b531effd87316b5c6075952ed09d426cdf7a5e8ba0bc5bd76c797398876",
+        "status": "ok"
+      },
+      {
+        "href": "dashboard.html",
+        "kind": "page",
+        "sha256": "2a1226bcf9ddc416f22751c8ab0b5b968eee5d6e6352bdba708255113dceb60b",
+        "status": "ok"
+      },
+      {
+        "href": "actions.html",
+        "kind": "page",
+        "sha256": "30a66adcf87e063d712b8d115076d59d1a28fd3d791221a678264e18ab6c3dfe",
+        "status": "ok"
+      },
+      {
+        "href": "collections.html",
+        "kind": "page",
+        "sha256": "2bdab8235c05434b28f224e98b3cd48d0e2f1fd4fe461cc52b29079fe1cde1b5",
+        "status": "ok"
+      },
+      {
+        "href": "balance.html",
+        "kind": "page",
+        "sha256": "07be3721a5030d132ffb8c00923590498a5d842c1ab9df9651f300c58194453a",
+        "status": "ok"
+      },
+      {
+        "href": "coverage.html",
+        "kind": "page",
+        "sha256": "a7b9f889304bf28cf96d63323c493ad9e4447bd0d8f644e2ce56ce6d71ca43ae",
+        "status": "ok"
+      },
+      {
+        "href": "facets.html",
+        "kind": "page",
+        "sha256": "6140ccb9e58a9275e0dfb87c02895f25384ff8645d61e2b6d0fece47b28ec142",
+        "status": "ok"
+      },
+      {
+        "href": "related.html",
+        "kind": "page",
+        "sha256": "13aab2639ff25bba4cb3a6c6099e5383d73a74772d724a5a23e7bf651ae0f614",
+        "status": "ok"
+      },
+      {
+        "href": "gaps.html",
+        "kind": "page",
+        "sha256": "15e048e9acf6bc818c88be6e4d69ad8494ee566424b026a5c67ee58c38f7cacb",
+        "status": "ok"
+      },
+      {
+        "href": "board.html",
+        "kind": "page",
+        "sha256": "c6b6ba4ac05f8aa5054b368def84cac44b54c335db882522ce691c7e5725f2fc",
+        "status": "ok"
+      },
+      {
+        "href": "inbox.html",
+        "kind": "page",
+        "sha256": "1ea8ff2142bf6ef574a9570046d3d4f3050d7645da0595817ba374ca0129347e",
+        "status": "ok"
+      },
+      {
+        "href": "review.html",
+        "kind": "page",
+        "sha256": "de1c0a2fdee642b87192a3d58d6455041073b6d51797a3a263d446605003e67c",
+        "status": "ok"
+      },
+      {
+        "href": "freshness.html",
+        "kind": "page",
+        "sha256": "3cff6a0676996bdd3423151d42dd8b9e04aecc5d90b1c39137ba72db9415792f",
+        "status": "ok"
+      },
+      {
+        "href": "quality.html",
+        "kind": "page",
+        "sha256": "d61a2c7e5b85e3a6b638a7e41ed8001851acb0ea6c8e3245f7f47a34c323083c",
+        "status": "ok"
+      },
+      {
+        "href": "taxonomy.html",
+        "kind": "page",
+        "sha256": "59fb0bf36fdc7017d591b3a2611f8c57c7f9e5463ee4b6d27af517763b17ca32",
+        "status": "ok"
+      },
+      {
+        "href": "timeline.html",
+        "kind": "page",
+        "sha256": "1e0bb56d56e9126c1d05bc7ba506e702614abb6e033d4c01921195169d1aeca8",
+        "status": "ok"
+      },
+      {
+        "href": "matrix.html",
+        "kind": "page",
+        "sha256": "ac5c9ede4c1f577957d76e611f99ec9c5a45ddcb6bbe07b0d70ba4f1e0a5e206",
+        "status": "ok"
+      },
+      {
+        "href": "lines/index.html",
+        "kind": "page",
+        "sha256": "04814424a494d719565b19728a12b56bc5d864b83c3cd06ceb3c371506e1fbd8",
+        "status": "ok"
+      },
+      {
+        "href": "tags.html",
+        "kind": "page",
+        "sha256": "1a10b27d161ee197d42796baa29df760bb865c0ab2aed2671683e5244e5f3499",
+        "status": "ok"
+      },
+      {
+        "href": "papers.json",
+        "kind": "data",
+        "sha256": "a0b083def0eb9ce616249340627a8e42c9b966e2d6e5b3e0f4ad703c64b4ebb7",
+        "status": "ok"
+      },
+      {
+        "href": "search_index.json",
+        "kind": "data",
+        "sha256": "579be3e758459426baee7f1b525eba92ace91310fe5b69cce13cd0064b9f532e",
+        "status": "ok"
+      },
+      {
+        "href": "stats.json",
+        "kind": "data",
+        "sha256": "ea610a580ac2e8670157e53821a5e7f5a34828b79e3f8229be6dcea707c821fe",
+        "status": "ok"
+      },
+      {
+        "href": "quality.json",
+        "kind": "data",
+        "sha256": "1b9ef209a98861649d825759648da40a4bb39f6281665910d42017e76d58d872",
+        "status": "ok"
+      },
+      {
+        "href": "review.json",
+        "kind": "data",
+        "sha256": "628556f7388d1db6d9fd3119773ef05848b27744dcd1545e58cd7e1e1a335bb4",
+        "status": "ok"
+      },
+      {
+        "href": "freshness.json",
+        "kind": "data",
+        "sha256": "c74e41eb53a9234cc2289c59abe5ee4f716dd1c7ea1ff6715cedebdb78913969",
+        "status": "ok"
+      },
+      {
+        "href": "taxonomy_actions.json",
+        "kind": "data",
+        "sha256": "c5f49a851a57224d02190e09a5379d31c58c7b90f6e2d71d063daea87bba05a7",
+        "status": "ok"
+      },
+      {
+        "href": "actions.json",
+        "kind": "data",
+        "sha256": "95b99f4ef6b2b50da38a5d03afdc519d380cd484ac522be1b3fe0cfc355d50a4",
+        "status": "ok"
+      },
+      {
+        "href": "inbox.json",
+        "kind": "data",
+        "sha256": "16088a733262361546376c706fdad3a3676e45a635dcee5fc3d953ee66e1bf50",
+        "status": "ok"
+      },
+      {
+        "href": "guides/report.template.md",
+        "kind": "contract",
+        "sha256": "698233eb11b0d1f212ef9f1dad719735f337031c5a8ba4c4e142370c5deb3254",
+        "status": "ok"
+      },
+      {
+        "href": "guides/metadata.schema.json",
+        "kind": "contract",
+        "sha256": "246d8f345ead3ced56403a313d89bae2042820432274758166e557c39c04716b",
+        "status": "ok"
+      },
+      {
+        "href": "guides/inbox.schema.json",
+        "kind": "contract",
+        "sha256": "074a6f551809f6d2e301e2d4a3769125a8c7159fc2f1d35f0aff8e3bc9f963b7",
+        "status": "ok"
+      },
+      {
+        "href": "guides/taxonomy.schema.json",
+        "kind": "contract",
+        "sha256": "b5b5a1d4fb00bb7868c1af15e220bf1840e5de94f8d58e03e2e4bf9519673327",
+        "status": "ok"
+      },
+      {
+        "href": "guides/taxonomy.json",
+        "kind": "contract",
+        "sha256": "b77b948511aab16834c50b2602c05b8aed338dd2087d4276c501ea3ca76105d5",
+        "status": "ok"
+      }
+    ]
+  },
+  "links": {
+    "release": "release.html",
+    "manifest": "manifest.json",
+    "quality": "quality.json",
+    "actions": "actions.json",
+    "stats": "stats.json"
+  }
+}

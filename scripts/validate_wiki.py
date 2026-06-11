@@ -107,6 +107,7 @@ REQUIRED_PAGES = {
     "freshness.html",
     "dashboard.html",
     "release.html",
+    "snapshot.html",
     "collections.html",
     "facets.html",
     "related.html",
@@ -123,6 +124,7 @@ REQUIRED_PAGES = {
     "review.json",
     "freshness.json",
     "taxonomy_actions.json",
+    "snapshot.json",
     "manifest.json",
     "lines/index.html",
 }
@@ -540,6 +542,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     taxonomy_actions_path = report_dir / "taxonomy_actions.json"
     stats_path = report_dir / "stats.json"
     inbox_path = report_dir / "inbox.json"
+    snapshot_path = report_dir / "snapshot.json"
     manifest_path = report_dir / "manifest.json"
     if not papers_path.exists():
         errors.append("missing papers.json")
@@ -562,6 +565,9 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     if not inbox_path.exists():
         errors.append("missing inbox.json")
         return
+    if not snapshot_path.exists():
+        errors.append("missing snapshot.json")
+        return
     if not manifest_path.exists():
         errors.append("missing manifest.json")
         return
@@ -573,6 +579,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     taxonomy_actions_data = json.loads(taxonomy_actions_path.read_text(encoding="utf-8"))
     stats_data = json.loads(stats_path.read_text(encoding="utf-8"))
     inbox_data = json.loads(inbox_path.read_text(encoding="utf-8"))
+    snapshot_data = json.loads(snapshot_path.read_text(encoding="utf-8"))
     manifest_data = json.loads(manifest_path.read_text(encoding="utf-8"))
     paper_slugs = {paper.get("slug") for paper in papers_data.get("papers", [])}
     report_slugs = set(reports)
@@ -786,6 +793,39 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         errors.append(f"inbox.json missing keys: {', '.join(missing_inbox)}")
     if not isinstance(inbox_data.get("items"), list):
         errors.append("inbox.json items must be a list")
+
+    if snapshot_data.get("count") != len(report_slugs):
+        errors.append(f"snapshot.json count {snapshot_data.get('count')} != markdown report count {len(report_slugs)}")
+    required_snapshot = {
+        "snapshot_id",
+        "publish_ready",
+        "publish_checks",
+        "quality_score",
+        "coverage",
+        "queue_sizes",
+        "risk_queue_sizes",
+        "action_groups",
+        "governance_policy",
+        "research_lines",
+        "artifact_summary",
+        "links",
+    }
+    missing_snapshot = sorted(required_snapshot - set(snapshot_data))
+    if missing_snapshot:
+        errors.append(f"snapshot.json missing keys: {', '.join(missing_snapshot)}")
+    if not re.fullmatch(r"[0-9a-f]{16}", str(snapshot_data.get("snapshot_id") or "")):
+        errors.append("snapshot.json snapshot_id must be 16 lowercase hex characters")
+    if not isinstance(snapshot_data.get("risk_queue_sizes"), dict):
+        errors.append("snapshot.json risk_queue_sizes must be an object")
+    if not isinstance(snapshot_data.get("action_groups"), list):
+        errors.append("snapshot.json action_groups must be a list")
+    if not isinstance(snapshot_data.get("research_lines"), list):
+        errors.append("snapshot.json research_lines must be a list")
+    artifact_summary = snapshot_data.get("artifact_summary") or {}
+    if not isinstance(artifact_summary, dict):
+        errors.append("snapshot.json artifact_summary must be an object")
+    elif not isinstance(artifact_summary.get("hashes"), list):
+        errors.append("snapshot.json artifact_summary.hashes must be a list")
 
 
 def validate_taxonomy_config(report_dir: Path, errors: list[str], warnings: list[str]) -> dict[str, Any]:

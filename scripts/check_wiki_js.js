@@ -21,6 +21,7 @@ function htmlFiles() {
     "freshness.html",
     "dashboard.html",
     "release.html",
+    "snapshot.html",
     "actions.html",
     "collections.html",
     "balance.html",

@@ -35,6 +35,7 @@ GENERATED_FIXED_PATHS = (
     "freshness.json",
     "taxonomy_actions.json",
     "actions.json",
+    "snapshot.json",
     "manifest.json",
     "index.html",
     "library.html",
@@ -46,6 +47,7 @@ GENERATED_FIXED_PATHS = (
     "dashboard.html",
     "release.html",
     "actions.html",
+    "snapshot.html",
     "collections.html",
     "balance.html",
     "coverage.html",
@@ -1340,6 +1342,7 @@ def wiki_pages_manifest() -> list[dict[str, str]]:
         {"title": "论文库表格", "href": "library.html", "kind": "view", "description": "密集筛选、列管理、批量更新"},
         {"title": "管理控制台", "href": "dashboard.html", "kind": "ops", "description": "覆盖率、队列和运营指标"},
         {"title": "发布摘要", "href": "release.html", "kind": "ops", "description": "页面入口、数据文件、质量状态"},
+        {"title": "治理快照", "href": "snapshot.html", "kind": "ops", "description": "当前发布基线、队列和治理策略快照"},
         {"title": "行动中心", "href": "actions.html", "kind": "ops", "description": "统一运营队列和可分派任务"},
         {"title": "集合视图", "href": "collections.html", "kind": "view", "description": "共享视图、智能集合、研究线入口"},
         {"title": "分类均衡", "href": "balance.html", "kind": "ops", "description": "分类维度健康度、长尾和过载复盘"},
@@ -1370,6 +1373,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "freshness.json", "description": "报告新鲜度、过期分析和研究线维护队列"},
         {"href": "taxonomy_actions.json", "description": "分类长尾、过载和空候选治理任务"},
         {"href": "actions.json", "description": "统一行动队列，汇总质量、复习、分类和 inbox 任务"},
+        {"href": "snapshot.json", "description": "当前知识库治理快照和发布基线"},
         {"href": "inbox.json", "description": "候选论文队列和重复项"},
         {"href": "manifest.json", "description": "发布摘要和页面入口清单"},
     ]
@@ -1752,6 +1756,103 @@ def build_manifest(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
 def write_manifest_json(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
     payload = build_manifest(report_dir, papers, inbox_items, finalized=True)
     (report_dir / "manifest.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
+def build_snapshot_payload(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> dict[str, Any]:
+    manifest = build_manifest(report_dir, papers, inbox_items, finalized=False)
+    quality = build_quality_report(papers)
+    review = build_review_plan(papers)
+    freshness = build_freshness_report(papers)
+    actions = build_action_center(papers, inbox_items)
+    stats = build_stats_report(papers)
+    snapshot_hrefs = {"manifest.json", "release.html", "snapshot.html", "snapshot.json"}
+    artifacts = [
+        artifact
+        for artifact in manifest.get("artifact_inventory", [])
+        if str(artifact.get("href") or "") not in snapshot_hrefs
+    ]
+    missing_artifacts = [artifact for artifact in artifacts if artifact.get("status") == "missing"]
+    action_groups = actions.get("summary", {}).get("groups", {})
+    risk_queue_sizes = {
+        "missing_required_metadata": len(quality["queues"].get("missing_required_metadata", [])),
+        "taxonomy_drift": len(quality["queues"].get("taxonomy_drift", [])),
+        "duplicate_reports": len(quality["queues"].get("duplicate_reports", [])),
+        "needs_review_plan": len(review["queues"].get("needs_plan", [])),
+        "due_review": len(review["queues"].get("due", [])),
+        "freshness_due": len(freshness["queues"].get("due", [])),
+        "freshness_stale": len(freshness["queues"].get("stale", [])),
+        "inbox_duplicates": sum(1 for item in inbox_items if item.get("duplicate")),
+    }
+    snapshot_checks = dict(manifest["publish_checks"])
+    snapshot_checks["has_generated_pages"] = all(
+        (report_dir / str(page.get("href") or "")).exists()
+        for page in manifest.get("pages", [])
+        if str(page.get("href") or "") not in snapshot_hrefs
+    )
+    snapshot_checks["artifacts_present"] = not missing_artifacts
+    snapshot_publish_ready = all(snapshot_checks.values())
+    release_state = {
+        "count": manifest["count"],
+        "publish_ready": snapshot_publish_ready,
+        "publish_checks": snapshot_checks,
+        "quality_score": manifest["quality_score"],
+        "coverage": manifest["coverage"],
+        "queue_sizes": manifest["queue_sizes"],
+        "risk_queue_sizes": risk_queue_sizes,
+        "governance_policy": manifest["controls"].get("governance_policy", {}),
+    }
+    snapshot_id = hashlib.sha256(json.dumps(release_state, ensure_ascii=False, sort_keys=True).encode("utf-8")).hexdigest()[:16]
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "snapshot_id": snapshot_id,
+        "name": manifest["name"],
+        "count": manifest["count"],
+        "publish_ready": snapshot_publish_ready,
+        "publish_checks": snapshot_checks,
+        "quality_score": manifest["quality_score"],
+        "coverage": manifest["coverage"],
+        "queue_sizes": manifest["queue_sizes"],
+        "risk_queue_sizes": risk_queue_sizes,
+        "action_groups": [
+            {"group": group, "count": count}
+            for group, count in sorted(action_groups.items(), key=lambda item: (-int(item[1]), item[0]))
+        ],
+        "governance_policy": manifest["controls"].get("governance_policy", {}),
+        "active_status_workflow": manifest["controls"].get("active_status_workflow", ""),
+        "research_lines": sorted(
+            stats.get("research_lines", []),
+            key=lambda item: (-(int(item.get("count") or 0)), str(item.get("name") or "").lower()),
+        ),
+        "artifact_summary": {
+            "count": len(artifacts),
+            "missing": [artifact.get("href") for artifact in missing_artifacts],
+            "hashes": [
+                {
+                    "href": artifact.get("href"),
+                    "kind": artifact.get("kind"),
+                    "sha256": artifact.get("sha256"),
+                    "status": artifact.get("status"),
+                }
+                for artifact in artifacts
+                if artifact.get("sha256")
+            ],
+        },
+        "links": {
+            "release": "release.html",
+            "manifest": "manifest.json",
+            "quality": "quality.json",
+            "actions": "actions.json",
+            "stats": "stats.json",
+        },
+    }
+
+
+def write_snapshot_json(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
+    payload = build_snapshot_payload(report_dir, papers, inbox_items)
+    (report_dir / "snapshot.json").write_text(
         json.dumps(payload, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
@@ -6696,6 +6797,110 @@ document.querySelectorAll(".copy-release-command").forEach(button => {{
     (report_dir / "release.html").write_text(page_shell("知识库发布摘要", body, extra_css=release_css), encoding="utf-8")
 
 
+def render_snapshot(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
+    snapshot = build_snapshot_payload(report_dir, papers, inbox_items)
+    check_rows = "".join(
+        "<tr>"
+        f"<td>{html.escape(name)}</td>"
+        f"<td><span class=\"flag\">{'通过' if passed else '待处理'}</span></td>"
+        "</tr>"
+        for name, passed in snapshot["publish_checks"].items()
+    )
+    risk_rows = "".join(
+        "<tr>"
+        f"<td>{html.escape(name)}</td>"
+        f"<td>{count}</td>"
+        "</tr>"
+        for name, count in snapshot["risk_queue_sizes"].items()
+    )
+    action_rows = "".join(
+        "<tr>"
+        f"<td>{html.escape(str(item['group']))}</td>"
+        f"<td>{item['count']}</td>"
+        "</tr>"
+        for item in snapshot["action_groups"]
+    )
+    line_rows = "".join(
+        "<tr>"
+        f'<td><a href="{html.escape(page_query_href("library.html", line=str(line.get("name") or "")))}">{html.escape(str(line.get("name") or ""))}</a></td>'
+        f"<td>{line.get('count')}</td>"
+        f"<td>{html.escape(str(line.get('code_coverage') or ''))}</td>"
+        f"<td>{html.escape(str(line.get('avg_importance') or ''))}</td>"
+        "</tr>"
+        for line in snapshot["research_lines"]
+    )
+    policy_rows = "".join(
+        "<tr>"
+        f"<td>{html.escape(section)}</td>"
+        f"<td><code>{html.escape(json.dumps(values, ensure_ascii=False, sort_keys=True))}</code></td>"
+        "</tr>"
+        for section, values in snapshot["governance_policy"].items()
+    )
+    artifact_rows = "".join(
+        "<tr>"
+        f'<td><a href="{html.escape(str(item["href"]))}">{html.escape(str(item["href"]))}</a></td>'
+        f"<td>{html.escape(str(item.get('kind') or ''))}</td>"
+        f"<td><span class=\"flag\">{html.escape(str(item.get('status') or ''))}</span></td>"
+        f"<td><code>{html.escape(str(item.get('sha256') or ''))}</code></td>"
+        "</tr>"
+        for item in snapshot["artifact_summary"]["hashes"][:80]
+    )
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Governance Snapshot</div>
+  <h1>治理快照</h1>
+  <p class="lead">当前知识库的可审计基线：发布状态、治理队列、策略阈值、研究线摘要和关键产物哈希。适合开源协作、桌面软件同步和周期性复盘。</p>
+  <div class="stats">
+    <a class="stat" href="release.html">发布摘要</a>
+    <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="quality.html">质量治理</a>
+    <a class="stat" href="actions.html">行动中心</a>
+    <a class="stat" href="snapshot.json">Snapshot JSON</a>
+    <a class="stat" href="manifest.json">Manifest JSON</a>
+    <span class="stat">ID {html.escape(snapshot["snapshot_id"])}</span>
+    <span class="stat">论文 {snapshot["count"]}</span>
+    <span class="stat">状态 {'可发布' if snapshot["publish_ready"] else '需治理'}</span>
+  </div>
+</header>
+<main class="shell">
+  <section>
+    <h2 class="section-title">基线指标</h2>
+    <div class="metric-grid">
+      <section class="metric-card"><span>质量分</span><strong>{snapshot["quality_score"]}</strong><span>metadata / review / code</span></section>
+      <section class="metric-card"><span>分类覆盖</span><strong>{html.escape(str(snapshot["coverage"]["taxonomy"]))}</strong><span>必要 taxonomy 字段</span></section>
+      <section class="metric-card"><span>复习计划</span><strong>{html.escape(str(snapshot["coverage"]["review_plan"]))}</strong><span>next_review 覆盖</span></section>
+      <section class="metric-card"><span>Artifact</span><strong>{snapshot["artifact_summary"]["count"]}</strong><span>缺失 {len(snapshot["artifact_summary"]["missing"])}</span></section>
+    </div>
+  </section>
+  <section>
+    <h2 class="section-title">发布检查</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>检查项</th><th>状态</th></tr></thead><tbody>{check_rows}</tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">风险队列</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>队列</th><th>数量</th></tr></thead><tbody>{risk_rows}</tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">行动分布</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>分组</th><th>数量</th></tr></thead><tbody>{action_rows}</tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">研究线摘要</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>研究线</th><th>论文</th><th>代码覆盖</th><th>平均重要性</th></tr></thead><tbody>{line_rows}</tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">治理策略</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>策略组</th><th>阈值</th></tr></thead><tbody>{policy_rows}</tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">Artifact Hashes</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>产物</th><th>类型</th><th>状态</th><th>SHA-256</th></tr></thead><tbody>{artifact_rows}</tbody></table></div>
+  </section>
+</main>
+"""
+    (report_dir / "snapshot.html").write_text(page_shell("治理快照", body), encoding="utf-8")
+
+
 def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     quality = build_quality_report(papers)
     review_plan = build_review_plan(papers)
@@ -10629,6 +10834,8 @@ def build_wiki(report_dir: Path) -> int:
     render_gaps(report_dir, papers)
     render_line_pages(report_dir, papers)
     render_tags(report_dir, papers)
+    write_snapshot_json(report_dir, papers, inbox_items)
+    render_snapshot(report_dir, papers, inbox_items)
     render_release(report_dir, papers, inbox_items)
     write_manifest_json(report_dir, papers, inbox_items)
     return len(papers)

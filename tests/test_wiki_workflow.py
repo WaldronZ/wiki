@@ -226,6 +226,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "freshness.html",
                 "dashboard.html",
                 "release.html",
+                "snapshot.html",
                 "actions.html",
                 "collections.html",
                 "balance.html",
@@ -246,6 +247,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "freshness.json",
                 "taxonomy_actions.json",
                 "actions.json",
+                "snapshot.json",
                 "manifest.json",
                 "lines/index.html",
             }
@@ -296,6 +298,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn('"href": "balance.html"', index_html)
             self.assertIn('"href": "coverage.html"', index_html)
             self.assertIn("Data: manifest.json", index_html)
+            self.assertIn("Data: snapshot.json", index_html)
+            self.assertIn('"href": "snapshot.html"', index_html)
             self.assertIn("Command: Export taxonomy balance project tasks", index_html)
             self.assertIn("export_taxonomy_balance.py", index_html)
             library_html = (report_dir / "library.html").read_text(encoding="utf-8")
@@ -456,6 +460,27 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertTrue(any(item["source"] == "taxonomy_actions.json" for item in actions["actions"]))
             self.assertTrue(any(item["source"] == "review.json" for item in actions["actions"]))
 
+            snapshot = json.loads((report_dir / "snapshot.json").read_text(encoding="utf-8"))
+            self.assertEqual(snapshot["count"], 2)
+            self.assertRegex(snapshot["snapshot_id"], r"^[0-9a-f]{16}$")
+            self.assertIn("publish_checks", snapshot)
+            self.assertIn("queue_sizes", snapshot)
+            self.assertIn("risk_queue_sizes", snapshot)
+            self.assertIn("action_groups", snapshot)
+            self.assertIn("research_lines", snapshot)
+            self.assertEqual(snapshot["risk_queue_sizes"]["needs_review_plan"], 1)
+            self.assertEqual(snapshot["risk_queue_sizes"]["inbox_duplicates"], 1)
+            self.assertEqual(snapshot["governance_policy"]["taxonomy_load"]["min_tags"], 5)
+            self.assertEqual(snapshot["active_status_workflow"], "research")
+            self.assertEqual(snapshot["artifact_summary"]["missing"], [])
+            self.assertTrue(snapshot["artifact_summary"]["hashes"])
+            snapshot_html = (report_dir / "snapshot.html").read_text(encoding="utf-8")
+            self.assertIn("治理快照", snapshot_html)
+            self.assertIn("Snapshot JSON", snapshot_html)
+            self.assertIn("风险队列", snapshot_html)
+            self.assertIn("治理策略", snapshot_html)
+            self.assertIn("Artifact Hashes", snapshot_html)
+
             actions_export_path = report_dir / "exports" / "actions.md"
             self.run_cmd(
                 "scripts/export_actions.py",
@@ -523,6 +548,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(manifest["controls"]["governance_policy"]["taxonomy_load"]["min_tags"], 5)
             self.assertTrue(manifest["publish_checks"]["no_duplicate_reports"])
             self.assertIn("release.html", {item["href"] for item in manifest["pages"]})
+            self.assertIn("snapshot.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("actions.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("freshness.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("balance.html", {item["href"] for item in manifest["pages"]})
@@ -530,6 +556,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("facets.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("taxonomy_actions.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("actions.json", {item["href"] for item in manifest["data_files"]})
+            self.assertIn("snapshot.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("freshness.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("manifest.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("guides/report.template.md", {item["href"] for item in manifest["contract_files"]})
@@ -544,6 +571,10 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(artifact_by_href["guides/metadata.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/inbox.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/taxonomy.schema.json"]["kind"], "contract")
+            self.assertEqual(artifact_by_href["snapshot.html"]["status"], "ok")
+            self.assertRegex(artifact_by_href["snapshot.html"]["sha256"], r"^[0-9a-f]{64}$")
+            self.assertEqual(artifact_by_href["snapshot.json"]["status"], "ok")
+            self.assertRegex(artifact_by_href["snapshot.json"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["manifest.json"]["status"], "generated_after_inventory")
             self.assertTrue(manifest["publish_checks"]["artifacts_present"])
             self.assertIn("python3 scripts/check_quality.py docs", manifest["commands"])
@@ -594,6 +625,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("guides/report.template.md", release_html)
             self.assertIn("freshness.html", release_html)
             self.assertIn("freshness.json", release_html)
+            self.assertIn("snapshot.html", release_html)
+            self.assertIn("snapshot.json", release_html)
             self.assertIn("guides/metadata.schema.json", release_html)
             self.assertIn("guides/inbox.schema.json", release_html)
             self.assertIn("guides/taxonomy.schema.json", release_html)
