@@ -134,6 +134,7 @@ paper_reader/
 - `scripts/export_reading_list.py` 用于按研究线、状态、方向、主题、方法或重要性导出 Markdown 阅读清单、BibTeX 或链接列表
 - `scripts/export_actions.py` 用于把 `actions.json` 导出成统一 checklist、审计 CSV 或可自定义任务状态的项目任务 CSV
 - `scripts/export_collections.py` 用于把 `collections.json` 中的共享视图、智能队列和研究线集合导出成 checklist、审计 CSV 或项目任务 CSV
+- `scripts/export_roadmap.py` 用于把 `roadmap.json` 中的研究线风险、角色缺口和下一步行动导出成路线 checklist、审计 CSV 或项目任务 CSV
 - `scripts/export_taxonomy_actions.py` 用于把 `taxonomy_actions.json` 导出成 Markdown checklist、审计 CSV 或项目任务 CSV，便于分派分类治理任务
 - `scripts/export_taxonomy_balance.py` 用于把 `stats.json` 中的分类均衡度导出成复盘 checklist、CSV 或项目任务 CSV
 - `scripts/export_taxonomy_load.py` 用于把 `quality.json` 中的分类粒度审计导出成 Markdown checklist、审计 CSV 或可写回的分类 patch CSV
@@ -372,6 +373,8 @@ python3 scripts/export_actions.py docs --output docs/exports/actions.md
 python3 scripts/export_actions.py docs --format project --group review --severity high --assignee wiki-owner --task-status ready --output docs/exports/actions-project.csv
 python3 scripts/export_collections.py docs --output docs/exports/collections.md
 python3 scripts/export_collections.py docs --format project --type smart --min-count 1 --assignee wiki-owner --output docs/exports/collections-project.csv
+python3 scripts/export_roadmap.py docs --output docs/exports/roadmap.md
+python3 scripts/export_roadmap.py docs --format project --risk medium --role-gap yes --assignee roadmap-owner --output docs/exports/roadmap-project.csv
 python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md
 python3 scripts/export_taxonomy_actions.py docs --format csv --severity high --output docs/exports/taxonomy-actions.csv
 python3 scripts/export_taxonomy_actions.py docs --format csv --field topics --severity high --output docs/exports/topic-actions.csv
