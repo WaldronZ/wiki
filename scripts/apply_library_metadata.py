@@ -27,6 +27,7 @@ LIST_FIELDS = {
     "topics",
     "methods",
 }
+LIST_MODES = {"replace", "append", "remove"}
 INT_FIELDS = {"year", "importance", "confidence", "reproducibility"}
 BOOL_FIELDS = {"has_code"}
 SCALAR_FIELDS = {
@@ -92,6 +93,12 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--write", action="store_true", help="Write changes instead of printing a dry-run preview.")
     parser.add_argument("--clear-empty", action="store_true", help="Treat empty cells as intentional clears.")
+    parser.add_argument(
+        "--list-mode",
+        choices=sorted(LIST_MODES),
+        default="replace",
+        help="How list fields from the CSV affect existing frontmatter values.",
+    )
     parser.add_argument("--slug", action="append", default=[], help="Limit updates to one slug. May be repeated.")
     parser.add_argument(
         "--field",
@@ -214,6 +221,35 @@ def normalized(value: Any) -> Any:
     return str(value).strip()
 
 
+def list_mode_for(row: dict[str, str], default: str) -> str:
+    mode = str(row.get("_list_mode") or row.get("list_mode") or default).strip().lower()
+    if mode not in LIST_MODES:
+        raise ValueError(f"list mode must be one of {', '.join(sorted(LIST_MODES))}, got {mode!r}")
+    return mode
+
+
+def merge_list_values(existing: Any, incoming: Any, mode: str) -> list[str]:
+    current_value = normalized(existing)
+    incoming_value = normalized(incoming)
+    current = current_value if isinstance(current_value, list) else ([current_value] if current_value else [])
+    values = incoming_value if isinstance(incoming_value, list) else ([incoming_value] if incoming_value else [])
+    if mode == "replace":
+        return values
+
+    seen = {item.casefold() for item in current}
+    if mode == "append":
+        merged = list(current)
+        for item in values:
+            key = item.casefold()
+            if key not in seen:
+                merged.append(item)
+                seen.add(key)
+        return merged
+
+    remove = {item.casefold() for item in values}
+    return [item for item in current if item.casefold() not in remove]
+
+
 def format_scalar(value: Any) -> str:
     if isinstance(value, bool):
         return "true" if value else "false"
@@ -295,25 +331,30 @@ def update_report(
     row: dict[str, str],
     selected_fields: set[str],
     clear_empty: bool,
+    default_list_mode: str,
 ) -> tuple[str, list[str]]:
     text = md_path.read_text(encoding="utf-8")
     frontmatter, body = split_frontmatter(text)
     current = parse_frontmatter(frontmatter)
     changes: list[str] = []
     next_frontmatter = frontmatter
+    list_mode = list_mode_for(row, default_list_mode)
 
     for field in editable_fields(row, selected_fields):
         raw = str(row.get(field) or "")
         if not raw.strip() and not clear_empty:
             continue
         value = parse_cell(field, raw)
+        if field in LIST_FIELDS:
+            value = merge_list_values(current.get(field, []), value, list_mode)
         before = normalized(current.get(field, [] if field in LIST_FIELDS else ""))
         after = normalized(value)
         if before == after:
             continue
         next_frontmatter = set_field(next_frontmatter, field, value)
         current[field] = value
-        changes.append(f"{field}: {before!r} -> {after!r}")
+        mode_note = f" ({list_mode})" if field in LIST_FIELDS and list_mode != "replace" else ""
+        changes.append(f"{field}{mode_note}: {before!r} -> {after!r}")
 
     return f"---\n{next_frontmatter}\n---{body}", changes
 
@@ -343,7 +384,7 @@ def main() -> int:
             print(f"SKIP {slug}: missing {md_path}")
             continue
         try:
-            next_text, changes = update_report(md_path, row, selected_fields, args.clear_empty)
+            next_text, changes = update_report(md_path, row, selected_fields, args.clear_empty, args.list_mode)
         except (ValueError, OSError) as exc:
             skipped += 1
             print(f"SKIP {slug}: {exc}")

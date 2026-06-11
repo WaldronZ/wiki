@@ -648,6 +648,7 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
     <details class="bulk-taxonomy">
       <summary>批量分类字段</summary>
       <div class="bulk-taxonomy-grid">
+        <label><span>分类写入方式</span><select id="bulkListMode"><option value="replace">替换原分类</option><option value="append">追加到原分类</option><option value="remove">从原分类移除</option></select></label>
         <label><span>研究线</span><input id="bulkResearchLine" list="researchLineOptions" type="text" placeholder="Research line"></label>
         <label><span>研究线角色</span><select id="bulkLineRole"><option value="">角色</option><option value="foundation">foundation</option><option value="baseline">baseline</option><option value="main">main</option><option value="system">system</option><option value="variant">variant</option><option value="followup">followup</option><option value="survey">survey</option></select></label>
         <label><span>Domain</span><input id="bulkDomains" list="domainOptions" type="text" placeholder="多个值用 ; 分隔"></label>
@@ -655,7 +656,7 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
         <label><span>Problem</span><input id="bulkProblems" list="problemOptions" type="text" placeholder="多个值用 ; 分隔"></label>
         <label><span>Topics</span><input id="bulkTopics" list="topicOptions" type="text" placeholder="多个值用 ; 分隔"></label>
         <label><span>Methods</span><input id="bulkMethods" list="methodOptions" type="text" placeholder="多个值用 ; 分隔"></label>
-        <div class="bulk-hint">这些字段会替换所选论文 frontmatter 中的对应值；下载后先 dry-run，再用 --write 写回。</div>
+        <div class="bulk-hint">分类写入方式只影响 domains / tracks / problems / topics / methods；状态、日期、重要性和研究线字段仍按输入值写入。下载后先 dry-run，再用 --write 写回。</div>
       </div>
     </details>
     <div id="bulkPreview" class="bulk-preview" aria-live="polite">选择论文和字段后显示 patch 摘要。</div>
@@ -947,6 +948,7 @@ const bulkStage = document.querySelector("#bulkStage");
 const bulkReviewStage = document.querySelector("#bulkReviewStage");
 const bulkNextReview = document.querySelector("#bulkNextReview");
 const bulkImportance = document.querySelector("#bulkImportance");
+const bulkListMode = document.querySelector("#bulkListMode");
 const bulkResearchLine = document.querySelector("#bulkResearchLine");
 const bulkLineRole = document.querySelector("#bulkLineRole");
 const bulkDomains = document.querySelector("#bulkDomains");
@@ -978,6 +980,7 @@ const densityMode = document.querySelector("#densityMode");
 const sharedViews = window.PAPER_WIKI.shared_views || [];
 const wikiControls = window.PAPER_WIKI.controls || {};
 const statusWorkflows = wikiControls.status_workflows || {};
+const listPatchFields = new Set(["domains", "tracks", "problems", "topics", "methods"]);
 const activeStatusWorkflow = wikiControls.active_status_workflow || Object.keys(statusWorkflows)[0] || "default";
 const fallbackStatusValues = Array.isArray(wikiControls.status) ? wikiControls.status : [];
 const fallbackStageValues = Array.isArray(wikiControls.reading_stage) ? wikiControls.reading_stage : [];
@@ -1624,7 +1627,9 @@ function copySelectedRows(format) {
 }
 
 function patchCommand(write = false) {
-  return `python3 scripts/apply_library_metadata.py docs --input ~/Downloads/metadata_patch.csv${write ? " --write" : ""}`;
+  const mode = bulkListMode.value || "replace";
+  const modeArg = mode !== "replace" ? ` --list-mode ${mode}` : "";
+  return `python3 scripts/apply_library_metadata.py docs --input ~/Downloads/metadata_patch.csv${modeArg}${write ? " --write" : ""}`;
 }
 
 async function copyText(text, fallbackLabel) {
@@ -1664,6 +1669,8 @@ function patchFieldValues() {
 function buildPatchSpec(showAlerts = false) {
   const { fields, values } = patchFieldValues();
   const selected = selectedRows();
+  const listMode = bulkListMode.value || "replace";
+  const includeListMode = listMode !== "replace" && fields.some(field => listPatchFields.has(field));
   if (!selected.length) {
     if (showAlerts) window.alert("请先选择论文。");
     return null;
@@ -1675,8 +1682,13 @@ function buildPatchSpec(showAlerts = false) {
   return {
     fields,
     values,
+    listMode,
+    includeListMode,
     selected,
-    rows: [["slug", ...fields], ...selected.map(row => [row.dataset.slug, ...fields.map(field => values[field])])],
+    rows: [
+      ["slug", ...(includeListMode ? ["_list_mode"] : []), ...fields],
+      ...selected.map(row => [row.dataset.slug, ...(includeListMode ? [listMode] : []), ...fields.map(field => values[field])]),
+    ],
   };
 }
 
@@ -1689,10 +1701,14 @@ function updateBulkPreview() {
     bulkPreview.textContent = "选择论文和字段后显示 patch 摘要。";
     return;
   }
+  const listFields = fields.filter(field => listPatchFields.has(field));
+  const listModeLabel = listFields.length
+    ? `；分类字段以 ${bulkListMode.options[bulkListMode.selectedIndex].textContent} 写入`
+    : "";
   const sample = selected.slice(0, 8).map(row => `<span>${row.dataset.slug}</span>`).join("");
   const more = selected.length > 8 ? `<span>+${selected.length - 8}</span>` : "";
   bulkPreview.innerHTML = `
-    <div><strong>${selected.length}</strong> 篇论文，字段 <strong>${fields.join(", ")}</strong></div>
+    <div><strong>${selected.length}</strong> 篇论文，字段 <strong>${fields.join(", ")}</strong>${listModeLabel}</div>
     <div class="bulk-preview-list">${sample}${more}</div>
     <code>${patchCommand(false)}</code>
   `;
@@ -1874,6 +1890,7 @@ copyPatchWrite.addEventListener("click", () => copyText(patchCommand(true), "复
   bulkReviewStage,
   bulkNextReview,
   bulkImportance,
+  bulkListMode,
   bulkResearchLine,
   bulkLineRole,
   bulkDomains,

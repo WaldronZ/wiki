@@ -266,6 +266,9 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn('id="bulkStage"', library_html)
             self.assertIn('id="bulkReviewStage"', library_html)
             self.assertIn('id="bulkImportance"', library_html)
+            self.assertIn('id="bulkListMode"', library_html)
+            self.assertIn("_list_mode", library_html)
+            self.assertIn("listPatchFields", library_html)
             self.assertIn('id="activeFilters"', library_html)
             self.assertIn("renderActiveFilters", library_html)
             self.assertIn("clearActiveFilter", library_html)
@@ -783,6 +786,66 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("status: triaged", metadata_updated)
             self.assertIn("  - Request Scheduling", metadata_updated)
             self.assertIn("  - queueing", metadata_updated)
+
+            append_patch_path = report_dir / "metadata_append_patch.csv"
+            with append_patch_path.open("w", encoding="utf-8", newline="") as handle:
+                writer = csv.DictWriter(handle, fieldnames=["slug", "_list_mode", "topics", "methods"])
+                writer.writeheader()
+                writer.writerow(
+                    {
+                        "slug": "2601.00001-alpha-paper",
+                        "_list_mode": "append",
+                        "topics": "Long Context; Request Scheduling",
+                        "methods": "Speculative Decoding",
+                    }
+                )
+
+            append_dry = self.run_cmd(
+                "scripts/apply_library_metadata.py",
+                str(report_dir),
+                "--input",
+                str(append_patch_path),
+            )
+            self.assertIn("topics (append)", append_dry.stdout)
+            self.run_cmd(
+                "scripts/apply_library_metadata.py",
+                str(report_dir),
+                "--input",
+                str(append_patch_path),
+                "--write",
+            )
+            metadata_appended = (report_dir / "2601.00001-alpha-paper.md").read_text(encoding="utf-8")
+            self.assertIn("  - Request Scheduling", metadata_appended)
+            self.assertIn("  - Long Context", metadata_appended)
+            self.assertIn("  - Speculative Decoding", metadata_appended)
+
+            remove_patch_path = report_dir / "metadata_remove_patch.csv"
+            with remove_patch_path.open("w", encoding="utf-8", newline="") as handle:
+                writer = csv.DictWriter(handle, fieldnames=["slug", "topics"])
+                writer.writeheader()
+                writer.writerow({"slug": "2601.00001-alpha-paper", "topics": "Request Scheduling"})
+
+            remove_dry = self.run_cmd(
+                "scripts/apply_library_metadata.py",
+                str(report_dir),
+                "--input",
+                str(remove_patch_path),
+                "--list-mode",
+                "remove",
+            )
+            self.assertIn("topics (remove)", remove_dry.stdout)
+            self.run_cmd(
+                "scripts/apply_library_metadata.py",
+                str(report_dir),
+                "--input",
+                str(remove_patch_path),
+                "--list-mode",
+                "remove",
+                "--write",
+            )
+            metadata_removed = (report_dir / "2601.00001-alpha-paper.md").read_text(encoding="utf-8")
+            self.assertNotIn("  - Request Scheduling", metadata_removed)
+            self.assertIn("  - Long Context", metadata_removed)
 
             dry = self.run_cmd("scripts/apply_review_plan.py", str(report_dir))
             self.assertIn("DRY  2601.00001-alpha-paper", dry.stdout)
