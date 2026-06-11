@@ -179,6 +179,7 @@ python3 scripts/validate_wiki.py docs --strict-taxonomy
 运行脚本工作流测试：
 
 ```bash
+node scripts/check_wiki_js.js docs
 python3 -m unittest discover -s tests
 ```
 
@@ -214,7 +215,7 @@ python3 scripts/apply_review_plan.py docs --write
 python3 scripts/build_wiki.py docs
 ```
 
-仓库也提供 GitHub Actions workflow：每次 push / pull request 会检查脚本语法、确认 wiki 生成物已更新并运行验证脚本。
+仓库也提供 GitHub Actions workflow：每次 push / pull request 会检查脚本语法、确认 wiki 生成物已更新、验证分类/链接、解析 wiki 页面内联 JavaScript，并运行工作流测试。
 
 手动重建某篇报告 HTML：
 
