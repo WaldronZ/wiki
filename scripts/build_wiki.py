@@ -2552,6 +2552,14 @@ def command_recipes_manifest() -> list[dict[str, Any]]:
             "mutates": False,
         },
         {
+            "id": "apply_metadata_audit",
+            "kind": "check",
+            "label": "Audit edited metadata CSV",
+            "command": "python3 scripts/apply_library_metadata.py docs --input <csv> --audit-output docs/exports/metadata-audit.json",
+            "output": "docs/exports/metadata-audit.json",
+            "mutates": False,
+        },
+        {
             "id": "apply_inbox_dry_run",
             "kind": "check",
             "label": "Preview candidate inbox CSV",
@@ -2707,6 +2715,7 @@ def governance_playbooks_manifest() -> list[dict[str, Any]]:
             "steps": [
                 "taxonomy_actions_markdown",
                 "taxonomy_actions_patch",
+                "apply_metadata_audit",
                 "apply_metadata_dry_run",
                 "quality_gate",
             ],

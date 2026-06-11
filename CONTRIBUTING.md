@@ -28,6 +28,17 @@ Use the issue forms to keep a large paper library manageable:
 4. Run `python3 scripts/build_wiki.py docs`.
 5. Run `python3 scripts/check_quality.py docs`.
 
+For spreadsheet or browser-exported metadata patches, attach an audit JSON to
+the pull request before writing changes:
+
+```bash
+python3 scripts/apply_library_metadata.py docs --input <csv> --audit-output docs/exports/metadata-audit.json
+```
+
+The audit records changed slugs, changed fields, before/after values, skipped
+rows, and field-level counts. Use it as the review artifact for large taxonomy,
+status, or review-stage updates.
+
 ### Change Taxonomy Or Metadata Rules
 
 1. Update `docs/guides/taxonomy.json` for label aliases, state values, role order,
@@ -69,6 +80,8 @@ strict taxonomy validation, inline JavaScript parsing, and the unit test suite.
   taxonomy drift. For alternate processes, add a named `status_workflows` entry
   and switch it through `active_status_workflow`.
 - `docs/quality.html` has no surprising unresolved queues for the change.
+- Large metadata or taxonomy patches include an `apply_library_metadata.py`
+  audit JSON showing the impacted slugs and changed fields.
 - Generated artifacts are current: `python3 scripts/build_wiki.py docs --check`
   passes.
 - `python3 scripts/check_quality.py docs` passes locally.

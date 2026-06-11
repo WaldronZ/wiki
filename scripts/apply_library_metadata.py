@@ -10,6 +10,8 @@ from __future__ import annotations
 
 import argparse
 import csv
+import datetime as dt
+import json
 import re
 import sys
 from pathlib import Path
@@ -106,6 +108,10 @@ def parse_args() -> argparse.Namespace:
         default=[],
         help="Limit updates to one metadata field. May be repeated. Defaults to all editable columns.",
     )
+    parser.add_argument(
+        "--audit-output",
+        help="Write a machine-readable JSON audit of the planned or applied metadata changes.",
+    )
     return parser.parse_args()
 
 
@@ -117,6 +123,13 @@ def resolve_report_dir(value: str) -> Path:
 
 
 def resolve_input_path(value: str) -> Path:
+    path = Path(value).expanduser()
+    if not path.is_absolute():
+        path = ROOT / path
+    return path.resolve()
+
+
+def resolve_output_path(value: str) -> Path:
     path = Path(value).expanduser()
     if not path.is_absolute():
         path = ROOT / path
@@ -332,11 +345,11 @@ def update_report(
     selected_fields: set[str],
     clear_empty: bool,
     default_list_mode: str,
-) -> tuple[str, list[str]]:
+) -> tuple[str, list[dict[str, Any]]]:
     text = md_path.read_text(encoding="utf-8")
     frontmatter, body = split_frontmatter(text)
     current = parse_frontmatter(frontmatter)
-    changes: list[str] = []
+    changes: list[dict[str, Any]] = []
     next_frontmatter = frontmatter
     list_mode = list_mode_for(row, default_list_mode)
 
@@ -354,9 +367,53 @@ def update_report(
         next_frontmatter = set_field(next_frontmatter, field, value)
         current[field] = value
         mode_note = f" ({list_mode})" if field in LIST_FIELDS and list_mode != "replace" else ""
-        changes.append(f"{field}{mode_note}: {before!r} -> {after!r}")
+        changes.append(
+            {
+                "field": field,
+                "mode": list_mode if field in LIST_FIELDS else "replace",
+                "before": before,
+                "after": after,
+                "display": f"{field}{mode_note}: {before!r} -> {after!r}",
+            }
+        )
 
     return f"---\n{next_frontmatter}\n---{body}", changes
+
+
+def write_audit(
+    output_path: Path,
+    report_dir: Path,
+    input_path: Path,
+    args: argparse.Namespace,
+    reports: list[dict[str, Any]],
+    skipped: list[dict[str, str]],
+) -> None:
+    field_counts: dict[str, int] = {}
+    for report in reports:
+        for change in report["changes"]:
+            field = str(change["field"])
+            field_counts[field] = field_counts.get(field, 0) + 1
+    payload = {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "mode": "write" if args.write else "dry_run",
+        "write": bool(args.write),
+        "report_dir": report_dir.as_posix(),
+        "input": input_path.as_posix(),
+        "clear_empty": bool(args.clear_empty),
+        "list_mode": args.list_mode,
+        "selected_slugs": sorted(args.slug),
+        "selected_fields": sorted(args.field),
+        "summary": {
+            "changed_reports": len(reports),
+            "skipped_reports": len(skipped),
+            "total_changes": sum(len(report["changes"]) for report in reports),
+            "changed_fields": dict(sorted(field_counts.items())),
+        },
+        "reports": reports,
+        "skipped": skipped,
+    }
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
 def main() -> int:
@@ -373,6 +430,8 @@ def main() -> int:
     rows = load_rows(input_path)
     changed = 0
     skipped = 0
+    audit_reports: list[dict[str, Any]] = []
+    audit_skipped: list[dict[str, str]] = []
 
     for row in rows:
         slug = str(row.get("slug") or "").strip()
@@ -382,25 +441,38 @@ def main() -> int:
         if not md_path.exists():
             skipped += 1
             print(f"SKIP {slug}: missing {md_path}")
+            audit_skipped.append({"slug": slug, "reason": f"missing {md_path}"})
             continue
         try:
             next_text, changes = update_report(md_path, row, selected_fields, args.clear_empty, args.list_mode)
         except (ValueError, OSError) as exc:
             skipped += 1
             print(f"SKIP {slug}: {exc}")
+            audit_skipped.append({"slug": slug, "reason": str(exc)})
             continue
         if not changes:
             print(f"OK   {slug}: no metadata changes")
             continue
         changed += 1
+        audit_reports.append(
+            {
+                "slug": slug,
+                "path": md_path.as_posix(),
+                "changes": changes,
+            }
+        )
         print(f"{'WRITE' if args.write else 'DRY'}  {slug}:")
         for change in changes:
-            print(f"  - {change}")
+            print(f"  - {change['display']}")
         if args.write:
             md_path.write_text(next_text, encoding="utf-8")
 
     action = "updated" if args.write else "would update"
     print(f"{action} {changed} report(s); skipped {skipped}.")
+    if args.audit_output:
+        audit_path = resolve_output_path(args.audit_output)
+        write_audit(audit_path, report_dir, input_path, args, audit_reports, audit_skipped)
+        print(f"audit written to {audit_path}")
     if not args.write:
         print("Run again with --write to apply these changes.")
     return 0

@@ -747,6 +747,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertFalse(recipe_by_id["quality_gate"]["mutates"])
             self.assertFalse(recipe_by_id["apply_metadata_dry_run"]["mutates"])
             self.assertEqual(recipe_by_id["apply_metadata_dry_run"]["command"], "python3 scripts/apply_library_metadata.py docs --input <csv>")
+            self.assertFalse(recipe_by_id["apply_metadata_audit"]["mutates"])
+            self.assertEqual(recipe_by_id["apply_metadata_audit"]["output"], "docs/exports/metadata-audit.json")
             self.assertEqual(recipe_by_id["apply_inbox"]["output"], "docs/inbox.csv")
             self.assertEqual(recipe_by_id["apply_shared_views"]["output"], "docs/guides/taxonomy.json")
             self.assertEqual(recipe_by_id["apply_status_workflow"]["output"], "docs/guides/taxonomy.json")
@@ -758,7 +760,7 @@ class WikiWorkflowTest(unittest.TestCase):
             playbook_by_id = {item["id"]: item for item in manifest["governance_playbooks"]}
             self.assertEqual(
                 playbook_by_id["taxonomy_merge_batch"]["steps"],
-                ["taxonomy_actions_markdown", "taxonomy_actions_patch", "apply_metadata_dry_run", "quality_gate"],
+                ["taxonomy_actions_markdown", "taxonomy_actions_patch", "apply_metadata_audit", "apply_metadata_dry_run", "quality_gate"],
             )
             self.assertEqual(playbook_by_id["weekly_action_review"]["steps"], ["actions_markdown", "actions_project", "quality_gate"])
             self.assertEqual(
@@ -1232,6 +1234,24 @@ class WikiWorkflowTest(unittest.TestCase):
             )
             self.assertIn("DRY  2601.00001-alpha-paper", dry_metadata.stdout)
             self.assertNotIn("status: triaged", (report_dir / "2601.00001-alpha-paper.md").read_text(encoding="utf-8"))
+            audit_path = report_dir / "exports" / "metadata-audit.json"
+            audited_metadata = self.run_cmd(
+                "scripts/apply_library_metadata.py",
+                str(report_dir),
+                "--input",
+                str(patch_path),
+                "--audit-output",
+                str(audit_path),
+            )
+            self.assertIn("audit written", audited_metadata.stdout)
+            audit = json.loads(audit_path.read_text(encoding="utf-8"))
+            self.assertEqual(audit["mode"], "dry_run")
+            self.assertFalse(audit["write"])
+            self.assertEqual(audit["summary"]["changed_reports"], 1)
+            self.assertEqual(audit["summary"]["changed_fields"]["status"], 1)
+            self.assertEqual(audit["reports"][0]["slug"], "2601.00001-alpha-paper")
+            self.assertEqual(audit["reports"][0]["changes"][0]["field"], "status")
+            self.assertEqual(audit["reports"][0]["changes"][0]["after"], "triaged")
 
             self.run_cmd(
                 "scripts/apply_library_metadata.py",

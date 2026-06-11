@@ -334,6 +334,12 @@ python3 scripts/export_taxonomy_load.py docs --format csv --signal dense_tags --
 python3 scripts/export_taxonomy_load.py docs --format patch --signal sparse_tags --output docs/exports/taxonomy-load-patch.csv
 ```
 
+为批量元数据或分类 CSV 生成审计 JSON，方便在 PR 中复核受影响 slug、字段和 before/after：
+
+```bash
+python3 scripts/apply_library_metadata.py docs --input ~/Downloads/metadata_patch.csv --audit-output docs/exports/metadata-audit.json
+```
+
 应用状态工作流设计器导出的配置：
 
 ```bash
