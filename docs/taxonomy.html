@@ -278,6 +278,16 @@
       .data-table { display: block; overflow-x: auto; }
       header { padding-top: 28px; }
     }
+    .config-snippet {
+      margin: 0;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f8fafc;
+      overflow-x: auto;
+      font-size: 13px;
+      line-height: 1.55;
+    }
   </style>
 </head>
 <body>
@@ -319,6 +329,35 @@
     <div class="taxonomy-board">
       <section class="taxonomy-panel"><h2>Status x Reading stage</h2><table class="data-table"><thead><tr><th>Status</th><th>论文</th><th>deep_read</th><th>code_checked</th><th>normal_read</th><th>skim</th></tr></thead><tbody><tr><td><a href="library.html?status=read">read</a></td><td>5</td><td><a class="matrix-link" href="library.html?status=read&amp;stage=deep_read">5</a></td><td><span class="meta">0</span></td><td><span class="meta">0</span></td><td><span class="meta">0</span></td></tr><tr><td><a href="library.html?status=archived">archived</a></td><td>0</td><td><span class="meta">0</span></td><td><span class="meta">0</span></td><td><span class="meta">0</span></td><td><span class="meta">0</span></td></tr><tr><td><a href="library.html?status=reading">reading</a></td><td>0</td><td><span class="meta">0</span></td><td><span class="meta">0</span></td><td><span class="meta">0</span></td><td><span class="meta">0</span></td></tr><tr><td><a href="library.html?status=skimmed">skimmed</a></td><td>0</td><td><span class="meta">0</span></td><td><span class="meta">0</span></td><td><span class="meta">0</span></td><td><span class="meta">0</span></td></tr><tr><td><a href="library.html?status=unread">unread</a></td><td>0</td><td><span class="meta">0</span></td><td><span class="meta">0</span></td><td><span class="meta">0</span></td><td><span class="meta">0</span></td></tr></tbody></table></section>
       <section class="taxonomy-panel"><h2>Review stage</h2><table class="data-table"><thead><tr><th>Review stage</th><th>论文</th></tr></thead><tbody><tr><td><a href="library.html?reviewStage=due">due</a></td><td>0</td></tr><tr><td><a href="library.html?reviewStage=fresh">fresh</a></td><td>0</td></tr><tr><td><a href="library.html?reviewStage=reviewed">reviewed</a></td><td>0</td></tr></tbody></table></section>
+    </div>
+  </section>
+  <section>
+    <h2 class="section-title">状态工作流配置</h2>
+    <div class="taxonomy-board">
+      <section class="taxonomy-panel"><h2>当前动态选项</h2><table class="data-table"><thead><tr><th>字段</th><th>用途</th><th>当前可选值</th><th>影响页面</th></tr></thead><tbody><tr><td>status</td><td>论文生命周期</td><td><div class="chips"><span class="chip">unread</span><span class="chip">skimmed</span><span class="chip">reading</span><span class="chip">read</span><span class="chip">archived</span></div></td><td>控制首页、论文库筛选和状态看板列</td></tr><tr><td>reading_stage</td><td>阅读深度</td><td><div class="chips"><span class="chip">skim</span><span class="chip">normal_read</span><span class="chip">deep_read</span><span class="chip">code_checked</span></div></td><td>控制批量更新和阅读深度筛选</td></tr><tr><td>review_stage</td><td>复习阶段</td><td><div class="chips"><span class="chip">fresh</span><span class="chip">due</span><span class="chip">reviewed</span></div></td><td>控制复习队列和复习阶段筛选</td></tr></tbody></table></section>
+      <section class="taxonomy-panel">
+        <h2>taxonomy.json 片段</h2>
+        <pre class="config-snippet"><code>{
+  &quot;status_values&quot;: [
+    &quot;unread&quot;,
+    &quot;skimmed&quot;,
+    &quot;reading&quot;,
+    &quot;read&quot;,
+    &quot;archived&quot;
+  ],
+  &quot;reading_stage_values&quot;: [
+    &quot;skim&quot;,
+    &quot;normal_read&quot;,
+    &quot;deep_read&quot;,
+    &quot;code_checked&quot;
+  ],
+  &quot;review_stage_values&quot;: [
+    &quot;fresh&quot;,
+    &quot;due&quot;,
+    &quot;reviewed&quot;
+  ]
+}</code></pre>
+      </section>
     </div>
   </section>
   <section>

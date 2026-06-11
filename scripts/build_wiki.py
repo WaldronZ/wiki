@@ -2403,6 +2403,21 @@ def render_board(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       gap: 8px;
       align-items: center;
     }
+    .status-composer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      padding: 12px;
+      margin: 10px 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+    .status-composer input {
+      flex: 1 1 220px;
+      min-width: 0;
+    }
     .board-wrap {
       display: grid;
       grid-auto-flow: column;
@@ -2499,12 +2514,17 @@ def render_board(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       <button id="resetBoardChanges" class="button" type="button">撤销改动</button>
     </div>
   </div>
+  <div class="status-composer">
+    <input id="newStatusName" type="text" placeholder="新增临时状态列，例如 queued_for_deep_read" aria-label="新增状态名称">
+    <button id="addStatusColumn" class="button" type="button">新增状态列</button>
+  </div>
   <div class="board-help">导出后运行：python3 scripts/apply_library_metadata.py docs --input ~/Downloads/status_board_patch.csv --write</div>
   <div class="board-wrap" id="boardWrap">{''.join(status_columns)}</div>
 </main>
 <script>
 const boardCards = Array.from(document.querySelectorAll(".board-card"));
-const dropzones = Array.from(document.querySelectorAll(".board-dropzone"));
+const boardWrap = document.querySelector("#boardWrap");
+let dropzones = Array.from(document.querySelectorAll(".board-dropzone"));
 const boardSearch = document.querySelector("#boardSearch");
 const boardLine = document.querySelector("#boardLine");
 const boardTrack = document.querySelector("#boardTrack");
@@ -2513,6 +2533,8 @@ const boardCount = document.querySelector("#boardCount");
 const changedCount = document.querySelector("#changedCount");
 const downloadBoardPatch = document.querySelector("#downloadBoardPatch");
 const resetBoardChanges = document.querySelector("#resetBoardChanges");
+const newStatusName = document.querySelector("#newStatusName");
+const addStatusColumn = document.querySelector("#addStatusColumn");
 let draggedCard = null;
 
 function boardTokens(value) {{
@@ -2575,6 +2597,46 @@ function renderBoard() {{
   resetBoardChanges.disabled = changed === 0;
 }}
 
+function attachDropzone(zone) {{
+  zone.addEventListener("dragover", event => {{
+    event.preventDefault();
+    zone.classList.add("drag-over");
+  }});
+  zone.addEventListener("dragleave", () => zone.classList.remove("drag-over"));
+  zone.addEventListener("drop", event => {{
+    event.preventDefault();
+    zone.classList.remove("drag-over");
+    if (draggedCard) placeCard(draggedCard, zone.dataset.status);
+  }});
+}}
+
+function addBoardColumn(status) {{
+  const normalized = String(status || "").trim();
+  if (!normalized) return;
+  if (dropzones.some(zone => zone.dataset.status === normalized)) {{
+    window.alert("这个状态列已经存在。");
+    return;
+  }}
+  const section = document.createElement("section");
+  section.className = "board-column";
+  section.dataset.status = normalized;
+  const header = document.createElement("header");
+  const title = document.createElement("h2");
+  title.textContent = normalized;
+  const count = document.createElement("span");
+  count.className = "board-count";
+  count.textContent = "0";
+  header.append(title, count);
+  const zone = document.createElement("div");
+  zone.className = "board-dropzone";
+  zone.dataset.status = normalized;
+  section.append(header, zone);
+  boardWrap.appendChild(section);
+  dropzones.push(zone);
+  attachDropzone(zone);
+  renderBoard();
+}}
+
 boardCards.forEach(card => {{
   card.addEventListener("dragstart", event => {{
     draggedCard = card;
@@ -2587,17 +2649,17 @@ boardCards.forEach(card => {{
   }});
 }});
 
-dropzones.forEach(zone => {{
-  zone.addEventListener("dragover", event => {{
+dropzones.forEach(attachDropzone);
+addStatusColumn.addEventListener("click", () => {{
+  addBoardColumn(newStatusName.value);
+  newStatusName.value = "";
+  newStatusName.focus();
+}});
+newStatusName.addEventListener("keydown", event => {{
+  if (event.key === "Enter") {{
     event.preventDefault();
-    zone.classList.add("drag-over");
-  }});
-  zone.addEventListener("dragleave", () => zone.classList.remove("drag-over"));
-  zone.addEventListener("drop", event => {{
-    event.preventDefault();
-    zone.classList.remove("drag-over");
-    if (draggedCard) placeCard(draggedCard, zone.dataset.status);
-  }});
+    addStatusColumn.click();
+  }}
 }});
 
 [boardSearch, boardLine, boardTrack, boardImportance].forEach(el => el.addEventListener("input", renderBoard));
@@ -3074,6 +3136,7 @@ def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
 
 def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     taxonomy = taxonomy_counts(papers)
+    controls = control_options()
     guide_link = (
         '<a class="stat" href="guides/taxonomy.md">分类指南</a>'
         if (report_dir / "guides" / "taxonomy.md").exists()
@@ -3215,6 +3278,49 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         f"<tbody>{''.join(review_rows)}</tbody></table>"
     )
 
+    def workflow_value_chips(values: list[str]) -> str:
+        return "".join(f'<span class="chip">{html.escape(value)}</span>' for value in values)
+
+    workflow_rows = [
+        (
+            "status",
+            "论文生命周期",
+            controls["status"],
+            "控制首页、论文库筛选和状态看板列",
+        ),
+        (
+            "reading_stage",
+            "阅读深度",
+            controls["reading_stage"],
+            "控制批量更新和阅读深度筛选",
+        ),
+        (
+            "review_stage",
+            "复习阶段",
+            controls["review_stage"],
+            "控制复习队列和复习阶段筛选",
+        ),
+    ]
+    workflow_table_rows = "".join(
+        "<tr>"
+        f"<td>{html.escape(field)}</td>"
+        f"<td>{html.escape(purpose)}</td>"
+        f'<td><div class="chips">{workflow_value_chips(values)}</div></td>'
+        f"<td>{html.escape(effect)}</td>"
+        "</tr>"
+        for field, purpose, values, effect in workflow_rows
+    )
+    workflow_table = (
+        '<table class="data-table"><thead><tr><th>字段</th><th>用途</th><th>当前可选值</th><th>影响页面</th></tr></thead>'
+        f"<tbody>{workflow_table_rows}</tbody></table>"
+    )
+    workflow_config = {
+        "status_values": controls["status"],
+        "reading_stage_values": controls["reading_stage"],
+        "review_stage_values": controls["review_stage"],
+    }
+    workflow_config_json = html.escape(json.dumps(workflow_config, ensure_ascii=False, indent=2))
+
     long_tail = Counter(
         tag
         for paper in papers
@@ -3291,6 +3397,16 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     </div>
   </section>
   <section>
+    <h2 class="section-title">状态工作流配置</h2>
+    <div class="taxonomy-board">
+      <section class="taxonomy-panel"><h2>当前动态选项</h2>{workflow_table}</section>
+      <section class="taxonomy-panel">
+        <h2>taxonomy.json 片段</h2>
+        <pre class="config-snippet"><code>{workflow_config_json}</code></pre>
+      </section>
+    </div>
+  </section>
+  <section>
     <h2 class="section-title">治理队列</h2>
     <div class="queue-grid">{queue_cards}</div>
   </section>
@@ -3300,7 +3416,21 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   </section>
 </main>
 """
-    (report_dir / "taxonomy.html").write_text(page_shell("分类治理", body), encoding="utf-8")
+    taxonomy_css = "\n".join(
+        [
+            "    .config-snippet {",
+            "      margin: 0;",
+            "      padding: 12px;",
+            "      border: 1px solid var(--line);",
+            "      border-radius: 8px;",
+            "      background: #f8fafc;",
+            "      overflow-x: auto;",
+            "      font-size: 13px;",
+            "      line-height: 1.55;",
+            "    }",
+        ]
+    )
+    (report_dir / "taxonomy.html").write_text(page_shell("分类治理", body, extra_css=taxonomy_css), encoding="utf-8")
 
 
 def render_line_pages(report_dir: Path, papers: list[dict[str, Any]]) -> None:

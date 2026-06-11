@@ -285,6 +285,21 @@
       gap: 8px;
       align-items: center;
     }
+    .status-composer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      padding: 12px;
+      margin: 10px 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+    .status-composer input {
+      flex: 1 1 220px;
+      min-width: 0;
+    }
     .board-wrap {
       display: grid;
       grid-auto-flow: column;
@@ -385,6 +400,10 @@
       <button id="resetBoardChanges" class="button" type="button">撤销改动</button>
     </div>
   </div>
+  <div class="status-composer">
+    <input id="newStatusName" type="text" placeholder="新增临时状态列，例如 queued_for_deep_read" aria-label="新增状态名称">
+    <button id="addStatusColumn" class="button" type="button">新增状态列</button>
+  </div>
   <div class="board-help">导出后运行：python3 scripts/apply_library_metadata.py docs --input ~/Downloads/status_board_patch.csv --write</div>
   <div class="board-wrap" id="boardWrap"><section class="board-column" data-status="read">
   <header><h2>read</h2><span class="board-count">0</span></header>
@@ -474,7 +493,8 @@
 </main>
 <script>
 const boardCards = Array.from(document.querySelectorAll(".board-card"));
-const dropzones = Array.from(document.querySelectorAll(".board-dropzone"));
+const boardWrap = document.querySelector("#boardWrap");
+let dropzones = Array.from(document.querySelectorAll(".board-dropzone"));
 const boardSearch = document.querySelector("#boardSearch");
 const boardLine = document.querySelector("#boardLine");
 const boardTrack = document.querySelector("#boardTrack");
@@ -483,6 +503,8 @@ const boardCount = document.querySelector("#boardCount");
 const changedCount = document.querySelector("#changedCount");
 const downloadBoardPatch = document.querySelector("#downloadBoardPatch");
 const resetBoardChanges = document.querySelector("#resetBoardChanges");
+const newStatusName = document.querySelector("#newStatusName");
+const addStatusColumn = document.querySelector("#addStatusColumn");
 let draggedCard = null;
 
 function boardTokens(value) {
@@ -545,6 +567,46 @@ function renderBoard() {
   resetBoardChanges.disabled = changed === 0;
 }
 
+function attachDropzone(zone) {
+  zone.addEventListener("dragover", event => {
+    event.preventDefault();
+    zone.classList.add("drag-over");
+  });
+  zone.addEventListener("dragleave", () => zone.classList.remove("drag-over"));
+  zone.addEventListener("drop", event => {
+    event.preventDefault();
+    zone.classList.remove("drag-over");
+    if (draggedCard) placeCard(draggedCard, zone.dataset.status);
+  });
+}
+
+function addBoardColumn(status) {
+  const normalized = String(status || "").trim();
+  if (!normalized) return;
+  if (dropzones.some(zone => zone.dataset.status === normalized)) {
+    window.alert("这个状态列已经存在。");
+    return;
+  }
+  const section = document.createElement("section");
+  section.className = "board-column";
+  section.dataset.status = normalized;
+  const header = document.createElement("header");
+  const title = document.createElement("h2");
+  title.textContent = normalized;
+  const count = document.createElement("span");
+  count.className = "board-count";
+  count.textContent = "0";
+  header.append(title, count);
+  const zone = document.createElement("div");
+  zone.className = "board-dropzone";
+  zone.dataset.status = normalized;
+  section.append(header, zone);
+  boardWrap.appendChild(section);
+  dropzones.push(zone);
+  attachDropzone(zone);
+  renderBoard();
+}
+
 boardCards.forEach(card => {
   card.addEventListener("dragstart", event => {
     draggedCard = card;
@@ -557,17 +619,17 @@ boardCards.forEach(card => {
   });
 });
 
-dropzones.forEach(zone => {
-  zone.addEventListener("dragover", event => {
+dropzones.forEach(attachDropzone);
+addStatusColumn.addEventListener("click", () => {
+  addBoardColumn(newStatusName.value);
+  newStatusName.value = "";
+  newStatusName.focus();
+});
+newStatusName.addEventListener("keydown", event => {
+  if (event.key === "Enter") {
     event.preventDefault();
-    zone.classList.add("drag-over");
-  });
-  zone.addEventListener("dragleave", () => zone.classList.remove("drag-over"));
-  zone.addEventListener("drop", event => {
-    event.preventDefault();
-    zone.classList.remove("drag-over");
-    if (draggedCard) placeCard(draggedCard, zone.dataset.status);
-  });
+    addStatusColumn.click();
+  }
 });
 
 [boardSearch, boardLine, boardTrack, boardImportance].forEach(el => el.addEventListener("input", renderBoard));

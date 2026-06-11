@@ -111,7 +111,7 @@ paper_reader/
 - `docs/<slug>.html`：单篇阅读报告 HTML
 - `docs/index.html`：wiki 首页
 - `docs/library.html`：论文库表格，适合大量论文的密集筛选、排序和批量管理
-- `docs/board.html`：状态看板，按自定义 `status` 分列，可拖拽后导出 `status_board_patch.csv`
+- `docs/board.html`：状态看板，按自定义 `status` 分列，也可临时新增状态列，拖拽后导出 `status_board_patch.csv`
 - `docs/inbox.csv`：候选论文待处理池源数据，可手动追加 title/link/status/priority/tags/note
 - `docs/inbox.html`：候选论文待处理池，支持筛选、去重提示和复制阅读任务
 - `docs/quality.html`：质量治理页，集中展示弱元数据、taxonomy drift 和候选重复项
@@ -168,7 +168,7 @@ has_code: true
 
 分类建议见 [`docs/guides/taxonomy.md`](docs/guides/taxonomy.md)。核心原则是：`domains/tracks/problems` 管结构层级，`topics/methods` 管交叉筛选，`research_line/line_role` 管研究脉络，`status/reading_stage/review_stage` 管个人阅读状态。
 
-标签别名、研究线角色排序、阅读状态、阅读阶段和复习阶段可在 [`docs/guides/taxonomy.json`](docs/guides/taxonomy.json) 里自定义；修改后运行 `python3 scripts/build_wiki.py docs` 即可刷新筛选项。构建后的 `docs/papers.json` 和 `docs/stats.json` 会把这些可选状态写入 `controls`，方便后续页面或桌面软件动态读取。
+标签别名、研究线角色排序、阅读状态、阅读阶段和复习阶段可在 [`docs/guides/taxonomy.json`](docs/guides/taxonomy.json) 里自定义；修改后运行 `python3 scripts/build_wiki.py docs` 即可刷新筛选项、论文库批量下拉框和状态看板列。`docs/taxonomy.html` 会展示当前状态工作流配置和可复制的 JSON 片段；`docs/board.html` 还支持先新增临时状态列并导出 CSV，用来试跑一套新流程。构建后的 `docs/papers.json` 和 `docs/stats.json` 会把这些可选状态写入 `controls`，方便后续页面或桌面软件动态读取。
 
 报告 frontmatter 的字段类型、必填项、评分范围和日期格式由 [`docs/guides/metadata.schema.json`](docs/guides/metadata.schema.json) 描述。`python3 scripts/validate_wiki.py docs --strict-taxonomy` 会同时校验 schema、报告元数据、分类漂移和生成页面，适合作为发布或开源协作前的质量门禁。
 

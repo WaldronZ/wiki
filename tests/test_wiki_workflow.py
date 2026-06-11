@@ -213,6 +213,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn('data-status="triaged"', board_html)
             self.assertIn("status_board_patch.csv", board_html)
             self.assertIn('draggable="true"', board_html)
+            self.assertIn('id="newStatusName"', board_html)
+            self.assertIn("新增状态列", board_html)
             inbox = json.loads((report_dir / "inbox.json").read_text(encoding="utf-8"))
             self.assertEqual(inbox["count"], 2)
             self.assertEqual(inbox["statuses"]["queued"], 2)
@@ -240,6 +242,10 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertTrue(stats["research_lines"])
             self.assertEqual(stats["shared_views"], 2)
             self.assertEqual(stats["controls"]["review_stage"], ["fresh", "due", "reviewed"])
+            taxonomy_html = (report_dir / "taxonomy.html").read_text(encoding="utf-8")
+            self.assertIn("状态工作流配置", taxonomy_html)
+            self.assertIn("&quot;status_values&quot;: [", taxonomy_html)
+            self.assertIn("triaged", taxonomy_html)
 
             csv_path = report_dir / "library.csv"
             self.run_cmd("scripts/export_library_csv.py", str(report_dir), "--output", str(csv_path))
