@@ -8,6 +8,7 @@ fresh clones before publishing a large paper library.
 from __future__ import annotations
 
 import argparse
+import datetime as dt
 import json
 import re
 import sys
@@ -40,6 +41,38 @@ REQUIRED_META = {
     "confidence",
     "reproducibility",
     "has_code",
+}
+
+DEFAULT_METADATA_SCHEMA: dict[str, Any] = {
+    "required": sorted(REQUIRED_META),
+    "fields": {
+        "slug": {"type": "string", "pattern": r"^[a-z0-9][a-z0-9.-]*-[a-z0-9][a-z0-9-]*$"},
+        "title": {"type": "string"},
+        "title_zh": {"type": "string"},
+        "title_en": {"type": "string"},
+        "arxiv_id": {
+            "type": "string",
+            "pattern": r"^(\d{4}\.\d{4,5}(v\d+)?|noarxiv-[a-z0-9][a-z0-9-]*)$",
+        },
+        "year": {"type": "integer", "min": 1900, "max": 2100},
+        "authors": {"type": "list", "items": "string", "min_items": 1},
+        "domains": {"type": "list", "items": "string", "min_items": 1},
+        "tracks": {"type": "list", "items": "string", "min_items": 1},
+        "problems": {"type": "list", "items": "string", "min_items": 1},
+        "topics": {"type": "list", "items": "string", "min_items": 1},
+        "methods": {"type": "list", "items": "string", "min_items": 1},
+        "research_line": {"type": "string"},
+        "line_role": {"type": "string"},
+        "status": {"type": "string"},
+        "reading_stage": {"type": "string"},
+        "review_stage": {"type": "string", "required": False},
+        "last_reviewed": {"type": "date", "required": False},
+        "next_review": {"type": "date", "required": False},
+        "importance": {"type": "integer", "min": 1, "max": 5},
+        "confidence": {"type": "integer", "min": 1, "max": 5},
+        "reproducibility": {"type": "integer", "min": 1, "max": 5},
+        "has_code": {"type": "boolean"},
+    },
 }
 
 REQUIRED_PAGES = {
@@ -209,7 +242,121 @@ def paper_markdown_paths(report_dir: Path) -> list[Path]:
     ]
 
 
-def validate_reports(report_dir: Path, errors: list[str], warnings: list[str]) -> dict[str, dict[str, Any]]:
+def load_metadata_schema(report_dir: Path, errors: list[str], warnings: list[str]) -> dict[str, Any]:
+    schema_path = report_dir / "guides" / "metadata.schema.json"
+    if not schema_path.exists():
+        warnings.append("guides/metadata.schema.json missing; using built-in metadata schema")
+        return DEFAULT_METADATA_SCHEMA
+
+    try:
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        errors.append(f"guides/metadata.schema.json: invalid JSON: {exc}")
+        return DEFAULT_METADATA_SCHEMA
+
+    if not isinstance(schema, dict):
+        errors.append("guides/metadata.schema.json: root must be an object")
+        return DEFAULT_METADATA_SCHEMA
+
+    required = schema.get("required")
+    fields = schema.get("fields")
+    if not isinstance(required, list) or not all(isinstance(item, str) and item.strip() for item in required):
+        errors.append("guides/metadata.schema.json: required must be a list of non-empty strings")
+    if not isinstance(fields, dict):
+        errors.append("guides/metadata.schema.json: fields must be an object")
+        return DEFAULT_METADATA_SCHEMA
+    elif isinstance(required, list):
+        unknown_required = sorted(set(required) - set(fields))
+        if unknown_required:
+            errors.append(f"guides/metadata.schema.json: required fields are not defined: {', '.join(unknown_required)}")
+
+    allowed_types = {"string", "integer", "boolean", "list", "date"}
+    for name, spec in fields.items():
+        if not isinstance(name, str) or not name.strip():
+            errors.append("guides/metadata.schema.json: field names must be non-empty strings")
+            continue
+        if not isinstance(spec, dict):
+            errors.append(f"guides/metadata.schema.json: fields.{name} must be an object")
+            continue
+        field_type = spec.get("type")
+        if field_type not in allowed_types:
+            allowed_text = ", ".join(sorted(allowed_types))
+            errors.append(f"guides/metadata.schema.json: fields.{name}.type must be one of {allowed_text}")
+        if field_type == "list" and spec.get("items", "string") != "string":
+            errors.append(f"guides/metadata.schema.json: fields.{name}.items must be string")
+        for bound in ("min", "max", "min_items"):
+            if bound in spec and not isinstance(spec[bound], int):
+                errors.append(f"guides/metadata.schema.json: fields.{name}.{bound} must be an integer")
+        if "pattern" in spec:
+            if not isinstance(spec["pattern"], str):
+                errors.append(f"guides/metadata.schema.json: fields.{name}.pattern must be a string")
+            else:
+                try:
+                    re.compile(spec["pattern"])
+                except re.error as exc:
+                    errors.append(f"guides/metadata.schema.json: fields.{name}.pattern is invalid: {exc}")
+
+    return schema
+
+
+def validate_schema_value(md_name: str, field: str, value: Any, spec: dict[str, Any], errors: list[str]) -> None:
+    if is_empty(value):
+        return
+    field_type = spec.get("type")
+
+    if field_type == "string":
+        if not isinstance(value, str) or not value.strip():
+            errors.append(f"{md_name}: metadata '{field}' must be a non-empty string")
+            return
+        pattern = spec.get("pattern")
+        if pattern and not re.fullmatch(str(pattern), value):
+            errors.append(f"{md_name}: metadata '{field}' does not match required pattern")
+    elif field_type == "integer":
+        if not isinstance(value, int) or isinstance(value, bool):
+            errors.append(f"{md_name}: metadata '{field}' must be an integer")
+            return
+        if "min" in spec and value < int(spec["min"]):
+            errors.append(f"{md_name}: metadata '{field}' must be >= {spec['min']}")
+        if "max" in spec and value > int(spec["max"]):
+            errors.append(f"{md_name}: metadata '{field}' must be <= {spec['max']}")
+    elif field_type == "boolean":
+        if not isinstance(value, bool):
+            errors.append(f"{md_name}: metadata '{field}' must be true or false")
+    elif field_type == "list":
+        values = as_list(value)
+        if not isinstance(value, list):
+            errors.append(f"{md_name}: metadata '{field}' must be a list")
+            return
+        if len(values) < int(spec.get("min_items", 0)):
+            errors.append(f"{md_name}: metadata '{field}' must contain at least {spec['min_items']} item(s)")
+        if spec.get("items", "string") == "string":
+            bad = [item for item in values if not isinstance(item, str) or not item.strip()]
+            if bad:
+                errors.append(f"{md_name}: metadata '{field}' list items must be non-empty strings")
+    elif field_type == "date":
+        if not isinstance(value, str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", value):
+            errors.append(f"{md_name}: metadata '{field}' must be a YYYY-MM-DD date")
+            return
+        try:
+            dt.date.fromisoformat(value)
+        except ValueError:
+            errors.append(f"{md_name}: metadata '{field}' must be a valid calendar date")
+
+
+def validate_report_schema(md_name: str, meta: dict[str, Any], schema: dict[str, Any], errors: list[str]) -> None:
+    required = schema.get("required") if isinstance(schema.get("required"), list) else sorted(REQUIRED_META)
+    fields = schema.get("fields") if isinstance(schema.get("fields"), dict) else DEFAULT_METADATA_SCHEMA["fields"]
+
+    missing = sorted(key for key in required if key not in meta or is_empty(meta.get(key)))
+    if missing:
+        errors.append(f"{md_name}: missing required metadata: {', '.join(missing)}")
+
+    for field, spec in fields.items():
+        if field in meta and isinstance(spec, dict):
+            validate_schema_value(md_name, field, meta[field], spec, errors)
+
+
+def validate_reports(report_dir: Path, schema: dict[str, Any], errors: list[str], warnings: list[str]) -> dict[str, dict[str, Any]]:
     reports: dict[str, dict[str, Any]] = {}
     for md_path in paper_markdown_paths(report_dir):
         meta, body = strip_frontmatter(md_path.read_text(encoding="utf-8"))
@@ -222,13 +369,7 @@ def validate_reports(report_dir: Path, errors: list[str], warnings: list[str]) -
         if slug != md_path.stem:
             errors.append(f"{md_path.name}: slug '{slug}' does not match filename")
 
-        missing = sorted(key for key in REQUIRED_META if key not in meta or is_empty(meta.get(key)))
-        if missing:
-            errors.append(f"{md_path.name}: missing required metadata: {', '.join(missing)}")
-
-        for key in ("authors", "domains", "tracks", "problems", "topics", "methods"):
-            if key in meta and not as_list(meta.get(key)):
-                errors.append(f"{md_path.name}: metadata '{key}' must be a non-empty list")
+        validate_report_schema(md_path.name, meta, schema, errors)
 
         if "## 10. 代码实现观察" in body and not bool(meta.get("has_code")):
             warnings.append(f"{md_path.name}: has code section but has_code is not true")
@@ -554,7 +695,8 @@ def main() -> int:
     if not report_dir.exists():
         errors.append(f"report directory does not exist: {report_dir}")
     else:
-        reports = validate_reports(report_dir, errors, warnings)
+        schema = load_metadata_schema(report_dir, errors, warnings)
+        reports = validate_reports(report_dir, schema, errors, warnings)
         config = validate_taxonomy_config(report_dir, errors, warnings)
         validate_controlled_taxonomy(reports, config, errors, warnings, args.strict_taxonomy)
         validate_json(report_dir, reports, errors)

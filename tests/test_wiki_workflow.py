@@ -136,6 +136,10 @@ class WikiWorkflowTest(unittest.TestCase):
             ),
             encoding="utf-8",
         )
+        (guides_dir / "metadata.schema.json").write_text(
+            (ROOT / "docs" / "guides" / "metadata.schema.json").read_text(encoding="utf-8"),
+            encoding="utf-8",
+        )
         for slug, text in {
             "2601.00001-alpha-paper": REPORT_A,
             "2501.00002-beta-paper": REPORT_B,
@@ -355,6 +359,30 @@ class WikiWorkflowTest(unittest.TestCase):
             )
             self.assertNotEqual(strict.returncode, 0)
             self.assertIn("status 'half_read' is not in guides/taxonomy.json", strict.stderr)
+
+    def test_metadata_schema_detects_invalid_frontmatter(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_name:
+            report_dir = self.make_report_dir(Path(tmp_name))
+            alpha_path = report_dir / "2601.00001-alpha-paper.md"
+            alpha_path.write_text(
+                alpha_path.read_text(encoding="utf-8")
+                .replace("importance: 5", "importance: 9")
+                .replace("has_code: true", "has_code: yes")
+                .replace(
+                    "reading_stage: deep_read",
+                    "reading_stage: deep_read\nlast_reviewed: 2026-99-30\nnext_review: 2026/06/30",
+                ),
+                encoding="utf-8",
+            )
+
+            self.run_cmd("scripts/build_wiki.py", str(report_dir))
+            result = self.run_cmd("scripts/validate_wiki.py", str(report_dir), check=False)
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("metadata 'importance' must be <= 5", result.stderr)
+            self.assertIn("metadata 'has_code' must be true or false", result.stderr)
+            self.assertIn("metadata 'last_reviewed' must be a valid calendar date", result.stderr)
+            self.assertIn("metadata 'next_review' must be a YYYY-MM-DD date", result.stderr)
 
 
 if __name__ == "__main__":

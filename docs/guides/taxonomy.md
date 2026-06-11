@@ -121,6 +121,8 @@ has_code: true
 - 列表里不能有重复值或空值。
 - `shared_views` 必须是对象列表，每个视图都要有非空 `name` 和非空 `state`。
 
+报告 frontmatter 的字段契约写在 `docs/guides/metadata.schema.json`，用于约束必填字段、字符串 / 列表 / 布尔 / 整数类型、`importance` / `confidence` / `reproducibility` 的 1-5 范围，以及 `last_reviewed` / `next_review` 的 `YYYY-MM-DD` 日期格式。这个 schema 是给校验器和后续桌面软件共用的机器可读契约。
+
 报告里的 `status`、`reading_stage`、`review_stage` 和 `line_role` 如果不在 `taxonomy.json` 对应列表中，会被记录到 `docs/quality.json` 的 `taxonomy_drift`，并展示在 `docs/quality.html`。普通校验会给 warning，方便你逐步治理旧报告；发布或团队协作前可以使用严格模式把它升级为 error：
 
 ```bash

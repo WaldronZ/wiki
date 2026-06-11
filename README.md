@@ -48,7 +48,8 @@ paper_reader/
 │   ├── review.json
 │   ├── guides/
 │   │   ├── taxonomy.md
-│   │   └── taxonomy.json
+│   │   ├── taxonomy.json
+│   │   └── metadata.schema.json
 │   └── .gitkeep
 ├── scripts/
 │   ├── apply_library_metadata.py
@@ -122,6 +123,7 @@ paper_reader/
 - `docs/inbox.json`：机器可读候选论文队列
 - `docs/quality.json`：元数据质量报告，列出缺分类、taxonomy drift、缺复习计划、待复习、缺代码观察等队列
 - `docs/review.json`：机器可读复习计划，给出 suggested_next_review 和优先级
+- `docs/guides/metadata.schema.json`：报告 frontmatter 字段契约，用于校验类型、日期格式和评分范围
 
 ## Wiki 分类
 
@@ -163,6 +165,8 @@ has_code: true
 分类建议见 [`docs/guides/taxonomy.md`](docs/guides/taxonomy.md)。核心原则是：`domains/tracks/problems` 管结构层级，`topics/methods` 管交叉筛选，`research_line/line_role` 管研究脉络，`status/reading_stage/review_stage` 管个人阅读状态。
 
 标签别名、研究线角色排序、阅读状态、阅读阶段和复习阶段可在 [`docs/guides/taxonomy.json`](docs/guides/taxonomy.json) 里自定义；修改后运行 `python3 scripts/build_wiki.py docs` 即可刷新筛选项。构建后的 `docs/papers.json` 和 `docs/stats.json` 会把这些可选状态写入 `controls`，方便后续页面或桌面软件动态读取。
+
+报告 frontmatter 的字段类型、必填项、评分范围和日期格式由 [`docs/guides/metadata.schema.json`](docs/guides/metadata.schema.json) 描述。`python3 scripts/validate_wiki.py docs --strict-taxonomy` 会同时校验 schema、报告元数据、分类漂移和生成页面，适合作为发布或开源协作前的质量门禁。
 
 首页和论文库表格的筛选、排序、分页状态会写入 URL query string。比如按研究线、重要性排序后复制浏览器地址，即可分享同一个论文列表视图。常用状态组合也可以保存为浏览器本地视图；团队共用队列可以写进 `docs/guides/taxonomy.json` 的 `shared_views`，随仓库同步到所有人的 wiki 下拉框里。
 
