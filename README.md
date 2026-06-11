@@ -4,7 +4,7 @@ AutoPaperReader 是一个自动化「找论文 -> 读论文 -> 写报告」的 a
 
 它的目标是把一篇论文从检索、下载源码、分析论文、分析配套代码，到最终输出结构化中文阅读报告的流程串起来，并把产物（包括 Markdown 报告和 HTML 展示网页）统一组织到固定目录中。
 
-项目还会把这些逐篇报告汇总成一个轻量动态 wiki：`docs/index.html` 提供全文搜索、研究线、分类/状态/代码/重要性/复习筛选、排序、分页和可分享 URL 状态；`docs/library.html` 提供适合大量论文批量管理的密集表格视图；`docs/board.html` 提供可拖拽状态看板；`docs/inbox.html` 提供候选论文待处理池；`docs/quality.html` 提供质量治理和 taxonomy drift 门禁；`docs/review.html` 提供复习队列和建议复习日期；`docs/dashboard.html` 提供分类覆盖、研究线健康度和待处理队列；`docs/taxonomy.html` 提供分类治理、状态矩阵和研究线角色矩阵；`docs/lines/index.html` 提供研究线入口；`docs/tags.html` 提供分类总览；`docs/papers.json` 提供机器可读索引；`docs/search_index.json` 提供正文检索索引；`docs/stats.json` 提供机器可读运营指标；`docs/quality.json` 提供元数据质量与运营队列报告；`docs/review.json` 提供机器可读复习计划。
+项目还会把这些逐篇报告汇总成一个轻量动态 wiki：`docs/index.html` 提供全文搜索、研究线、分类/状态/代码/重要性/复习筛选、排序、分页和可分享 URL 状态；`docs/library.html` 提供适合大量论文批量管理的密集表格视图；`docs/board.html` 提供可拖拽状态看板；`docs/inbox.html` 提供候选论文待处理池；`docs/quality.html` 提供质量治理和 taxonomy drift 门禁；`docs/review.html` 提供复习队列和建议复习日期；`docs/dashboard.html` 提供分类覆盖、研究线健康度和待处理队列；`docs/taxonomy.html` 提供分类治理、状态矩阵和研究线角色矩阵；`docs/timeline.html` 提供按年份和研究线浏览的路线时间轴；`docs/lines/index.html` 提供研究线入口；`docs/tags.html` 提供分类总览；`docs/papers.json` 提供机器可读索引；`docs/search_index.json` 提供正文检索索引；`docs/stats.json` 提供机器可读运营指标；`docs/quality.json` 提供元数据质量与运营队列报告；`docs/review.json` 提供机器可读复习计划。
 
 **注：建议开启 Agent Teams 特性 `export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`**
 
@@ -38,6 +38,7 @@ paper_reader/
 │   ├── review.html
 │   ├── dashboard.html
 │   ├── taxonomy.html
+│   ├── timeline.html
 │   ├── lines/
 │   │   └── index.html
 │   ├── tags.html
@@ -118,6 +119,7 @@ paper_reader/
 - `docs/review.html`：复习计划页，展示待复习、需建计划、已计划和高优先级队列
 - `docs/dashboard.html`：管理控制台，展示分类覆盖、研究线健康度、待复习和待补分类队列
 - `docs/taxonomy.html`：分类治理页，展示 domain/track/problem 层级、状态矩阵、研究线角色矩阵和治理队列
+- `docs/timeline.html`：研究路线时间轴，按年份、研究线、方向、角色、状态和重要性筛选论文演进
 - `docs/lines/index.html`：研究线总览
 - `docs/lines/<research-line>.html`：单条研究线详情页
 - `docs/tags.html`：分类总览

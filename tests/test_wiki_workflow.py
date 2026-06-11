@@ -174,6 +174,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "review.html",
                 "dashboard.html",
                 "taxonomy.html",
+                "timeline.html",
                 "tags.html",
                 "papers.json",
                 "search_index.json",
@@ -246,6 +247,11 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("状态工作流配置", taxonomy_html)
             self.assertIn("&quot;status_values&quot;: [", taxonomy_html)
             self.assertIn("triaged", taxonomy_html)
+            timeline_html = (report_dir / "timeline.html").read_text(encoding="utf-8")
+            self.assertIn("研究路线时间轴", timeline_html)
+            self.assertIn('id="timelineLine"', timeline_html)
+            self.assertIn('data-year="2026"', timeline_html)
+            self.assertIn("LLM Serving", timeline_html)
 
             csv_path = report_dir / "library.csv"
             self.run_cmd("scripts/export_library_csv.py", str(report_dir), "--output", str(csv_path))

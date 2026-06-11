@@ -37,6 +37,7 @@ GENERATED_FIXED_PATHS = (
     "review.html",
     "dashboard.html",
     "taxonomy.html",
+    "timeline.html",
     "tags.html",
     "lines/index.html",
 )
@@ -1418,6 +1419,7 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
+    <a class="stat" href="timeline.html">时间轴</a>
     <a class="stat" href="lines/index.html">研究线</a>
     <a class="stat" href="tags.html">分类总览</a>
     <a class="stat" href="quality.json">质量 JSON</a>
@@ -1927,6 +1929,7 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
+    <a class="stat" href="timeline.html">时间轴</a>
     <a class="stat" href="lines/index.html">研究线</a>
     <a class="stat" href="tags.html">分类总览</a>
     <a class="stat" href="quality.json">质量 JSON</a>
@@ -2493,6 +2496,7 @@ def render_board(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
+    <a class="stat" href="timeline.html">时间轴</a>
     <span class="stat">论文 {len(papers)}</span>
     <span class="stat">状态 {len(statuses)}</span>
   </div>
@@ -3106,6 +3110,7 @@ def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="lines/index.html">研究线</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
+    <a class="stat" href="timeline.html">时间轴</a>
     <a class="stat" href="tags.html">分类总览</a>
     <a class="stat" href="quality.json">质量 JSON</a>
     <a class="stat" href="stats.json">统计 JSON</a>
@@ -3368,6 +3373,7 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="quality.html">质量治理</a>
+    <a class="stat" href="timeline.html">时间轴</a>
     <a class="stat" href="tags.html">分类总览</a>
     {guide_link}
     <a class="stat" href="stats.json">统计 JSON</a>
@@ -3431,6 +3437,290 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         ]
     )
     (report_dir / "taxonomy.html").write_text(page_shell("分类治理", body, extra_css=taxonomy_css), encoding="utf-8")
+
+
+def render_timeline_item(paper: dict[str, Any]) -> str:
+    link = paper["html_path"] or paper["md_path"]
+    labels = [
+        str(paper.get("line_role") or ""),
+        str(paper.get("status") or ""),
+        f'I {paper.get("importance")}' if paper.get("importance") else "",
+        "code" if paper.get("has_code") else "",
+    ]
+    flags = "".join(f'<span class="flag">{html.escape(label)}</span>' for label in labels if label)
+    taxonomy = [*paper.get("domains", []), *paper.get("tracks", []), *paper.get("problems", [])]
+    tags = [*paper.get("topics", []), *paper.get("methods", [])]
+    search_text = " ".join(
+        str(part)
+        for part in [
+            paper.get("slug"),
+            paper.get("title"),
+            paper.get("title_zh"),
+            paper.get("title_en"),
+            paper.get("arxiv_id"),
+            paper.get("research_line"),
+            paper.get("line_role"),
+            paper.get("status"),
+            paper.get("reading_stage"),
+            paper.get("review_stage"),
+            paper.get("excerpt"),
+            *paper.get("authors", []),
+            *taxonomy,
+            *tags,
+        ]
+        if part
+    ).lower()
+    line = str(paper.get("research_line") or "Unassigned")
+    line_href = f'lines/{slugify_label(line)}.html' if line != "Unassigned" else ""
+    line_html = (
+        f'<a href="{html.escape(line_href)}">{html.escape(line)}</a>'
+        if line_href
+        else html.escape(line)
+    )
+    return f"""<article class="timeline-item"
+  data-search="{html.escape(search_text, quote=True)}"
+  data-line="{html.escape(line, quote=True)}"
+  data-role="{html.escape(str(paper.get("line_role") or ""), quote=True)}"
+  data-status="{html.escape(str(paper.get("status") or ""), quote=True)}"
+  data-stage="{html.escape(str(paper.get("reading_stage") or ""), quote=True)}"
+  data-review-stage="{html.escape(str(paper.get("review_stage") or ""), quote=True)}"
+  data-tracks="{html.escape(attr_tokens(paper.get("tracks", [])), quote=True)}"
+  data-code="{"yes" if paper.get("has_code") else "no"}"
+  data-importance="{html.escape(str(paper.get("importance") or 0), quote=True)}"
+  data-year="{html.escape(str(paper.get("year") or "unknown"), quote=True)}">
+  <div class="timeline-dot" aria-hidden="true"></div>
+  <div class="timeline-content">
+    <h3><a href="{html.escape(link)}">{html.escape(paper["title_zh"] or paper["title"])}</a></h3>
+    <div class="meta">{html.escape(str(paper.get("title_en") or ""))}</div>
+    <div class="timeline-meta">{line_html}<span>{html.escape(str(paper.get("arxiv_id") or ""))}</span></div>
+    <div class="card-flags">{flags}</div>
+    <div class="chips">{render_inline_chips([*taxonomy, *tags], 6)}</div>
+  </div>
+</article>"""
+
+
+def render_timeline(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    taxonomy = taxonomy_counts(papers)
+    years = sorted(
+        {str(paper.get("year") or "unknown") for paper in papers},
+        key=lambda value: int(value) if value.isdigit() else -1,
+        reverse=True,
+    )
+    year_sections = []
+    for year in years:
+        items = [
+            paper
+            for paper in papers
+            if str(paper.get("year") or "unknown") == year
+        ]
+        items.sort(
+            key=lambda paper: (
+                str(paper.get("research_line") or "Unassigned").lower(),
+                role_rank(str(paper.get("line_role") or "")),
+                -(paper.get("importance") or 0),
+                paper["title"],
+            )
+        )
+        year_sections.append(
+            f"""<section class="timeline-year" data-year="{html.escape(year, quote=True)}">
+  <header class="timeline-year-head"><h2>{html.escape(year)}</h2><span class="timeline-year-count">{len(items)}</span></header>
+  <div class="timeline-list">{"".join(render_timeline_item(paper) for paper in items)}</div>
+</section>"""
+        )
+
+    timeline_css = """
+    .timeline-board {
+      display: grid;
+      gap: 18px;
+    }
+    .timeline-year {
+      display: grid;
+      grid-template-columns: 120px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+    .timeline-year[hidden], .timeline-item[hidden] { display: none; }
+    .timeline-year-head {
+      position: sticky;
+      top: 86px;
+      display: grid;
+      gap: 8px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+    .timeline-year-head h2 {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.1;
+    }
+    .timeline-year-count {
+      color: var(--muted);
+      font-weight: 750;
+    }
+    .timeline-list {
+      position: relative;
+      display: grid;
+      gap: 12px;
+      padding-left: 18px;
+    }
+    .timeline-list::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 4px;
+      width: 2px;
+      background: var(--line);
+    }
+    .timeline-item {
+      position: relative;
+      display: grid;
+      grid-template-columns: 18px minmax(0, 1fr);
+      gap: 8px;
+      min-width: 0;
+    }
+    .timeline-dot {
+      width: 10px;
+      height: 10px;
+      margin-top: 17px;
+      border: 2px solid var(--accent);
+      border-radius: 999px;
+      background: var(--bg);
+      z-index: 1;
+    }
+    .timeline-content {
+      display: grid;
+      gap: 7px;
+      min-width: 0;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+    .timeline-content h3 {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.35;
+    }
+    .timeline-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .timeline-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .timeline-summary .metric-card strong { font-size: 24px; }
+    @media (max-width: 760px) {
+      .timeline-year { grid-template-columns: 1fr; }
+      .timeline-year-head { position: static; }
+      .timeline-list { padding-left: 0; }
+      .timeline-list::before { display: none; }
+      .timeline-item { grid-template-columns: 1fr; }
+      .timeline-dot { display: none; }
+    }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Research Roadmap</div>
+  <h1>研究路线时间轴</h1>
+  <p class="lead">按年份浏览论文在不同研究线中的演进，适合在论文数量变多后快速判断一条方向的起点、系统化工作、变体和后续推进。</p>
+  <div class="stats">
+    <a class="stat" href="index.html">卡片首页</a>
+    <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="board.html">状态看板</a>
+    <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="taxonomy.html">分类治理</a>
+    <a class="stat" href="lines/index.html">研究线</a>
+    <a class="stat" href="tags.html">分类总览</a>
+    <span class="stat">论文 {len(papers)}</span>
+    <span class="stat">年份 {len(years)}</span>
+    <span class="stat">研究线 {len(taxonomy["research_lines"])}</span>
+  </div>
+</header>
+<div class="toolbar">
+  <div class="shell controls">
+    <input id="timelineSearch" type="search" placeholder="搜索标题、作者、研究线、分类、状态">
+    <select id="timelineLine"><option value="">全部研究线</option>{render_topic_options(taxonomy["research_lines"])}</select>
+    <select id="timelineTrack"><option value="">全部方向</option>{render_topic_options(taxonomy["tracks"])}</select>
+    <select id="timelineRole"><option value="">全部角色</option>{render_topic_options(taxonomy["line_roles"])}</select>
+    <select id="timelineStatus"><option value="">全部状态</option>{render_topic_options(taxonomy["statuses"])}</select>
+    <select id="timelineStage"><option value="">阅读阶段</option>{render_topic_options(taxonomy["reading_stages"])}</select>
+    <select id="timelineCode"><option value="">代码状态</option><option value="yes">有代码</option><option value="no">无代码</option></select>
+    <select id="timelineImportance"><option value="">重要性</option><option value="5">5 星</option><option value="4">4 星及以上</option><option value="3">3 星及以上</option></select>
+  </div>
+</div>
+<main class="shell">
+  <div class="results-bar">
+    <strong id="timelineCount">显示 {len(papers)} / {len(papers)} 篇</strong>
+    <button id="timelineReset" class="button" type="button">重置筛选</button>
+  </div>
+  <div class="timeline-summary">
+    <div class="metric-card"><strong>{len(years)}</strong><span>覆盖年份</span></div>
+    <div class="metric-card"><strong>{len(taxonomy["research_lines"])}</strong><span>研究线</span></div>
+    <div class="metric-card"><strong>{sum(1 for paper in papers if paper.get("has_code"))}</strong><span>有代码论文</span></div>
+  </div>
+  <div class="timeline-board">{"".join(year_sections) if year_sections else '<div class="empty">还没有论文。</div>'}</div>
+</main>
+<script>
+const timelineItems = Array.from(document.querySelectorAll(".timeline-item"));
+const timelineYears = Array.from(document.querySelectorAll(".timeline-year"));
+const timelineSearch = document.querySelector("#timelineSearch");
+const timelineLine = document.querySelector("#timelineLine");
+const timelineTrack = document.querySelector("#timelineTrack");
+const timelineRole = document.querySelector("#timelineRole");
+const timelineStatus = document.querySelector("#timelineStatus");
+const timelineStage = document.querySelector("#timelineStage");
+const timelineCode = document.querySelector("#timelineCode");
+const timelineImportance = document.querySelector("#timelineImportance");
+const timelineCount = document.querySelector("#timelineCount");
+const timelineReset = document.querySelector("#timelineReset");
+const timelineControls = [timelineSearch, timelineLine, timelineTrack, timelineRole, timelineStatus, timelineStage, timelineCode, timelineImportance];
+
+function timelineTokens(value) {{
+  return String(value || "").split("|").filter(Boolean);
+}}
+
+function renderTimeline() {{
+  const q = timelineSearch.value.trim().toLowerCase();
+  const minImportance = Number(timelineImportance.value || 0);
+  let visible = 0;
+  timelineItems.forEach(item => {{
+    const hit = (!q || item.dataset.search.includes(q))
+      && (!timelineLine.value || item.dataset.line === timelineLine.value)
+      && (!timelineTrack.value || timelineTokens(item.dataset.tracks).includes(timelineTrack.value))
+      && (!timelineRole.value || item.dataset.role === timelineRole.value)
+      && (!timelineStatus.value || item.dataset.status === timelineStatus.value)
+      && (!timelineStage.value || item.dataset.stage === timelineStage.value)
+      && (!timelineCode.value || item.dataset.code === timelineCode.value)
+      && (!minImportance || Number(item.dataset.importance || 0) >= minImportance);
+    item.hidden = !hit;
+    if (hit) visible += 1;
+  }});
+  timelineYears.forEach(section => {{
+    const count = Array.from(section.querySelectorAll(".timeline-item")).filter(item => !item.hidden).length;
+    section.hidden = count === 0;
+    section.querySelector(".timeline-year-count").textContent = count;
+  }});
+  timelineCount.textContent = `显示 ${{visible}} / ${{timelineItems.length}} 篇`;
+}}
+
+timelineControls.forEach(control => control.addEventListener("input", renderTimeline));
+timelineReset.addEventListener("click", () => {{
+  timelineControls.forEach(control => {{
+    control.value = "";
+  }});
+  renderTimeline();
+}});
+renderTimeline();
+</script>
+"""
+    (report_dir / "timeline.html").write_text(page_shell("研究路线时间轴", body, extra_css=timeline_css), encoding="utf-8")
 
 
 def render_line_pages(report_dir: Path, papers: list[dict[str, Any]]) -> None:
@@ -3506,6 +3796,7 @@ def render_line_pages(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="../review.html">复习计划</a>
     <a class="stat" href="../dashboard.html">管理控制台</a>
     <a class="stat" href="../taxonomy.html">分类治理</a>
+    <a class="stat" href="../timeline.html">时间轴</a>
     <a class="stat" href="index.html">全部研究线</a>
     <span class="stat">论文 {len(items)}</span>
     <span class="stat">角色 {len(role_groups)}</span>
@@ -3528,6 +3819,7 @@ def render_line_pages(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="../review.html">复习计划</a>
     <a class="stat" href="../dashboard.html">管理控制台</a>
     <a class="stat" href="../taxonomy.html">分类治理</a>
+    <a class="stat" href="../timeline.html">时间轴</a>
     <a class="stat" href="../tags.html">分类总览</a>
     <span class="stat">研究线 {len(grouped)}</span>
     <span class="stat">论文 {sum(len(items) for items in grouped.values())}</span>
@@ -3598,6 +3890,7 @@ def render_tags(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <div class="stats">
     <a class="stat" href="index.html">返回首页</a>
     <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="timeline.html">时间轴</a>
     <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
@@ -3628,6 +3921,7 @@ def build_wiki(report_dir: Path) -> int:
     render_quality(report_dir, papers, inbox_items)
     render_dashboard(report_dir, papers)
     render_taxonomy(report_dir, papers)
+    render_timeline(report_dir, papers)
     render_line_pages(report_dir, papers)
     render_tags(report_dir, papers)
     return len(papers)

@@ -20,6 +20,7 @@ function htmlFiles() {
     "review.html",
     "dashboard.html",
     "taxonomy.html",
+    "timeline.html",
     "tags.html",
     "lines/index.html",
   ].map((relative) => path.join(reportDir, relative));

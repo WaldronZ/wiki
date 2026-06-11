@@ -84,6 +84,7 @@ REQUIRED_PAGES = {
     "review.html",
     "dashboard.html",
     "taxonomy.html",
+    "timeline.html",
     "tags.html",
     "papers.json",
     "search_index.json",
