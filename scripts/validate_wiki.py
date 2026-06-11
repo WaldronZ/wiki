@@ -116,6 +116,7 @@ REQUIRED_PAGES = {
     "intake.html",
     "inbox.html",
     "dedupe.html",
+    "registry.html",
     "quality.html",
     "review.html",
     "freshness.html",
@@ -135,6 +136,7 @@ REQUIRED_PAGES = {
     "stats.json",
     "inbox.json",
     "dedupe.json",
+    "registry.json",
     "quality.json",
     "review.json",
     "freshness.json",
@@ -584,6 +586,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     intake_path = report_dir / "intake.json"
     inbox_path = report_dir / "inbox.json"
     dedupe_path = report_dir / "dedupe.json"
+    registry_path = report_dir / "registry.json"
     snapshot_path = report_dir / "snapshot.json"
     manifest_path = report_dir / "manifest.json"
     if not papers_path.exists():
@@ -649,6 +652,9 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     if not dedupe_path.exists():
         errors.append("missing dedupe.json")
         return
+    if not registry_path.exists():
+        errors.append("missing registry.json")
+        return
     if not snapshot_path.exists():
         errors.append("missing snapshot.json")
         return
@@ -677,6 +683,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     intake_data = json.loads(intake_path.read_text(encoding="utf-8"))
     inbox_data = json.loads(inbox_path.read_text(encoding="utf-8"))
     dedupe_data = json.loads(dedupe_path.read_text(encoding="utf-8"))
+    registry_data = json.loads(registry_path.read_text(encoding="utf-8"))
     snapshot_data = json.loads(snapshot_path.read_text(encoding="utf-8"))
     manifest_data = json.loads(manifest_path.read_text(encoding="utf-8"))
     paper_slugs = {paper.get("slug") for paper in papers_data.get("papers", [])}
@@ -1515,6 +1522,44 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     dedupe_links = dedupe_data.get("links")
     if not isinstance(dedupe_links, dict) or not {"quality", "inbox", "actions", "library"}.issubset(dedupe_links):
         errors.append("dedupe.json links must include quality, inbox, actions, and library")
+
+    if registry_data.get("count") != len(report_slugs):
+        errors.append(f"registry.json count {registry_data.get('count')} != markdown report count {len(report_slugs)}")
+    required_registry = {"label_count", "labels", "summary", "field_counts", "csv_columns", "commands", "links"}
+    missing_registry = sorted(required_registry - set(registry_data))
+    if missing_registry:
+        errors.append(f"registry.json missing keys: {', '.join(missing_registry)}")
+    registry_labels = registry_data.get("labels")
+    if not isinstance(registry_labels, list):
+        errors.append("registry.json labels must be a list")
+        registry_labels = []
+    if registry_data.get("label_count") != len(registry_labels):
+        errors.append("registry.json label_count must match labels length")
+    valid_registry_severities = {"high", "medium", "low", "ok"}
+    for index, item in enumerate(registry_labels):
+        if not isinstance(item, dict):
+            errors.append(f"registry.json labels[{index}] must be an object")
+            continue
+        for key in ("id", "label", "fields", "field_names", "severity", "signals", "slugs", "recommended_action"):
+            if key not in item:
+                errors.append(f"registry.json labels[{index}] missing {key}")
+        if item.get("severity") not in valid_registry_severities:
+            errors.append(f"registry.json labels[{index}] has invalid severity")
+        if not isinstance(item.get("fields"), list):
+            errors.append(f"registry.json labels[{index}].fields must be a list")
+        if not isinstance(item.get("field_names"), list):
+            errors.append(f"registry.json labels[{index}].field_names must be a list")
+        unknown_slugs = sorted(str(slug) for slug in item.get("slugs", []) if str(slug) not in report_slugs)
+        if unknown_slugs:
+            errors.append(f"registry.json labels[{index}] references unknown slugs: {unknown_slugs}")
+    registry_columns = registry_data.get("csv_columns")
+    if not isinstance(registry_columns, list) or not {"label", "severity", "fields", "recommended_action"}.issubset(set(registry_columns)):
+        errors.append("registry.json csv_columns must include label, severity, fields, and recommended_action")
+    if not isinstance(registry_data.get("commands"), list) or not any("export_taxonomy_actions.py" in str(command) for command in registry_data.get("commands", [])):
+        errors.append("registry.json commands must include export_taxonomy_actions.py")
+    registry_links = registry_data.get("links")
+    if not isinstance(registry_links, dict) or not {"taxonomy", "facets", "quality", "library"}.issubset(registry_links):
+        errors.append("registry.json links must include taxonomy, facets, quality, and library")
 
     if manifest_data.get("count") != len(report_slugs):
         errors.append(f"manifest.json count {manifest_data.get('count')} != markdown report count {len(report_slugs)}")

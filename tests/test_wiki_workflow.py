@@ -248,6 +248,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "intake.html",
                 "inbox.html",
                 "dedupe.html",
+                "registry.html",
                 "quality.html",
                 "review.html",
                 "freshness.html",
@@ -288,6 +289,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "catalog.json",
                 "intake.json",
                 "dedupe.json",
+                "registry.json",
                 "snapshot.json",
                 "manifest.json",
                 "lines/index.html",
@@ -350,6 +352,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn('"href": "catalog.html"', index_html)
             self.assertIn('"href": "intake.html"', index_html)
             self.assertIn('"href": "dedupe.html"', index_html)
+            self.assertIn('"href": "registry.html"', index_html)
             self.assertIn('"href": "balance.html"', index_html)
             self.assertIn('"href": "coverage.html"', index_html)
             self.assertIn("Data: manifest.json", index_html)
@@ -367,6 +370,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("Data: catalog.json", index_html)
             self.assertIn("Data: intake.json", index_html)
             self.assertIn("Data: dedupe.json", index_html)
+            self.assertIn("Data: registry.json", index_html)
             self.assertIn("Data: snapshot.json", index_html)
             self.assertIn('"href": "snapshot.html"', index_html)
             self.assertIn("Command: Export taxonomy balance project tasks", index_html)
@@ -663,9 +667,11 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("status.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("intake.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("dedupe.json", {item["href"] for item in catalog["data_resources"]})
+            self.assertIn("registry.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("status.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("intake.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("dedupe.html", {item["href"] for item in catalog["pages"]})
+            self.assertIn("registry.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("roadmap.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("index.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("guides/taxonomy.json", {item["href"] for item in catalog["contracts"]})
@@ -710,6 +716,23 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn('id="copyDedupeMarkdown"', dedupe_html)
             self.assertIn("dedupe_review.csv", dedupe_html)
             self.assertIn("function renderDedupe", dedupe_html)
+            registry = json.loads((report_dir / "registry.json").read_text(encoding="utf-8"))
+            self.assertEqual(registry["count"], 2)
+            self.assertGreater(registry["label_count"], 0)
+            self.assertIn("labels", registry)
+            self.assertIn("domains", registry["field_counts"])
+            self.assertIn("label", registry["csv_columns"])
+            self.assertIn("recommended_action", registry["csv_columns"])
+            self.assertTrue(any("KV Cache" == item["label"] and item["aliases"] for item in registry["labels"]))
+            self.assertTrue(any("singleton" in item["signals"] for item in registry["labels"]))
+            self.assertTrue(any("export_taxonomy_actions.py" in command for command in registry["commands"]))
+            registry_html = (report_dir / "registry.html").read_text(encoding="utf-8")
+            self.assertIn("标签注册表", registry_html)
+            self.assertIn("Registry JSON", registry_html)
+            self.assertIn('id="registrySearch"', registry_html)
+            self.assertIn('id="downloadRegistryCsv"', registry_html)
+            self.assertIn("taxonomy_registry.csv", registry_html)
+            self.assertIn("function renderRegistry", registry_html)
             quality = json.loads((report_dir / "quality.json").read_text(encoding="utf-8"))
             self.assertIn("taxonomy_drift", quality)
             self.assertEqual(quality["taxonomy_drift"], [])
@@ -880,6 +903,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("catalog.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("intake.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("dedupe.html", {item["href"] for item in manifest["pages"]})
+            self.assertIn("registry.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("actions.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("freshness.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("balance.html", {item["href"] for item in manifest["pages"]})
@@ -902,6 +926,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("snapshot.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("intake.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("dedupe.json", {item["href"] for item in manifest["data_files"]})
+            self.assertIn("registry.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("freshness.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("manifest.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("guides/report.template.md", {item["href"] for item in manifest["contract_files"]})
@@ -932,6 +957,10 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertRegex(artifact_by_href["dedupe.html"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["dedupe.json"]["status"], "ok")
             self.assertRegex(artifact_by_href["dedupe.json"]["sha256"], r"^[0-9a-f]{64}$")
+            self.assertEqual(artifact_by_href["registry.html"]["status"], "ok")
+            self.assertRegex(artifact_by_href["registry.html"]["sha256"], r"^[0-9a-f]{64}$")
+            self.assertEqual(artifact_by_href["registry.json"]["status"], "ok")
+            self.assertRegex(artifact_by_href["registry.json"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["pivot.html"]["status"], "ok")
             self.assertRegex(artifact_by_href["pivot.html"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["pivot.json"]["status"], "ok")

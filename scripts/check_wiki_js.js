@@ -30,6 +30,7 @@ function htmlFiles() {
     "intake.html",
     "inbox.html",
     "dedupe.html",
+    "registry.html",
     "quality.html",
     "review.html",
     "freshness.html",

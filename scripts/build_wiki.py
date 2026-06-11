@@ -32,6 +32,7 @@ GENERATED_FIXED_PATHS = (
     "intake.json",
     "inbox.json",
     "dedupe.json",
+    "registry.json",
     "quality.json",
     "review.json",
     "freshness.json",
@@ -69,6 +70,7 @@ GENERATED_FIXED_PATHS = (
     "intake.html",
     "inbox.html",
     "dedupe.html",
+    "registry.html",
     "quality.html",
     "review.html",
     "freshness.html",
@@ -3328,6 +3330,7 @@ DATA_CONSUMER_HINTS = {
     "intake.json": ["intake", "dedupe", "bulk-import"],
     "inbox.json": ["intake", "dedupe"],
     "dedupe.json": ["dedupe", "quality", "curation", "desktop"],
+    "registry.json": ["taxonomy", "registry", "curation", "desktop"],
     "manifest.json": ["release", "audit", "ci"],
 }
 
@@ -3664,6 +3667,7 @@ def wiki_pages_manifest() -> list[dict[str, str]]:
         {"title": "批量导入", "href": "intake.html", "kind": "workflow", "description": "批量粘贴论文链接、去重并导出 inbox CSV"},
         {"title": "待处理池", "href": "inbox.html", "kind": "workflow", "description": "候选论文队列和去重提示"},
         {"title": "去重工作台", "href": "dedupe.html", "kind": "ops", "description": "库内报告、候选论文和导入队列重复项治理"},
+        {"title": "标签注册表", "href": "registry.html", "kind": "ops", "description": "分类标签字典、alias 和跨字段治理"},
         {"title": "复习计划", "href": "review.html", "kind": "workflow", "description": "待复习、需建计划、建议日期"},
         {"title": "时效治理", "href": "freshness.html", "kind": "ops", "description": "报告新鲜度、过期分析和研究线维护"},
         {"title": "质量治理", "href": "quality.html", "kind": "ops", "description": "弱元数据、别名建议、taxonomy drift"},
@@ -3701,6 +3705,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "intake.json", "description": "批量导入去重索引、默认字段和 inbox CSV 契约"},
         {"href": "inbox.json", "description": "候选论文队列和重复项"},
         {"href": "dedupe.json", "description": "重复报告、候选重复项和去重建议"},
+        {"href": "registry.json", "description": "分类标签注册表、alias、字段复用和治理信号"},
         {"href": "manifest.json", "description": "发布摘要和页面入口清单"},
     ]
 
@@ -13124,6 +13129,479 @@ FACET_SPECS = (
 )
 
 
+def registry_configured_values(field: str) -> set[str]:
+    if field == "research_line":
+        return set(RESEARCH_LINE_OWNERS)
+    if field == "line_role":
+        return set(ROLE_ORDER)
+    if field == "status":
+        return set(STATUS_VALUES)
+    if field == "reading_stage":
+        return set(READING_STAGE_VALUES)
+    if field == "review_stage":
+        return set(REVIEW_STAGE_VALUES)
+    return set()
+
+
+def registry_label_id(label: str) -> str:
+    slug = slugify_label(label)
+    if slug != "untitled":
+        return slug
+    return "label-" + hashlib.sha1(label.encode("utf-8")).hexdigest()[:10]
+
+
+def registry_field_papers(papers: list[dict[str, Any]], field: str, is_list: bool) -> dict[str, list[dict[str, Any]]]:
+    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for paper in papers:
+        for value in facet_values_for_paper(paper, field, is_list):
+            grouped[value].append(paper)
+    return grouped
+
+
+def registry_paper_payload(paper: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "slug": paper["slug"],
+        "title": paper.get("title") or "",
+        "title_zh": paper.get("title_zh") or paper.get("title") or "",
+        "href": paper.get("html_path") or paper.get("md_path") or f"{paper['slug']}.html",
+        "year": paper.get("year") or "",
+        "research_line": paper.get("research_line") or "Unassigned",
+        "importance": paper.get("importance") or "",
+    }
+
+
+def registry_recommendation(signals: list[str]) -> str:
+    if "unconfigured_value" in signals:
+        return "确认这是新流程值还是拼写漂移：前者写入 taxonomy.json，后者批量修正报告 frontmatter。"
+    if "unowned_research_line" in signals:
+        return "给这条 research_line 在 taxonomy.json 的 research_line_owners 中补 owner/team/cadence。"
+    if "overloaded" in signals:
+        return "检查该标签是否过宽，必要时拆成更具体的 topic/method/problem。"
+    if "cross_field" in signals:
+        return "确认同名标签跨字段语义是否一致；若语义不同，改名让字段职责更清楚。"
+    if "singleton" in signals:
+        return "单例标签适合观察或合并，除非它代表明确的新研究方向。"
+    if "unused_configured" in signals:
+        return "配置中存在但当前未使用；可保留为预设，也可移除以降低选择噪音。"
+    if "has_aliases" in signals:
+        return "保留 alias 映射，新增报告继续使用 canonical label。"
+    return "当前标签状态稳定。"
+
+
+def build_registry_report(papers: list[dict[str, Any]]) -> dict[str, Any]:
+    taxonomy = taxonomy_counts(papers)
+    policy = GOVERNANCE_POLICY["taxonomy_actions"]
+    total = len(papers)
+    records: dict[str, dict[str, Any]] = {}
+    slugs_by_label: dict[str, set[str]] = defaultdict(set)
+    papers_by_slug = {paper["slug"]: paper for paper in papers}
+
+    aliases_by_canonical: dict[str, list[str]] = defaultdict(list)
+    for alias, canonical in LABEL_ALIASES.items():
+        canonical_label = str(canonical or "").strip()
+        alias_label = str(alias or "").strip()
+        if canonical_label and alias_label and alias_label.lower() != canonical_label.lower():
+            aliases_by_canonical[canonical_label].append(alias_label)
+    for suggestion in label_alias_suggestions(papers):
+        canonical_label = str(suggestion.get("canonical") or "").strip()
+        aliases = suggestion.get("aliases") or {}
+        if not canonical_label or not isinstance(aliases, dict):
+            continue
+        for alias in aliases:
+            alias_label = str(alias or "").strip()
+            if alias_label and alias_label.lower() != canonical_label.lower():
+                aliases_by_canonical[canonical_label].append(alias_label)
+
+    def ensure_record(label: str) -> dict[str, Any]:
+        normalized = normalize_label(label)
+        key = normalized_duplicate_key(normalized) or normalized.lower()
+        if key not in records:
+            records[key] = {
+                "id": registry_label_id(normalized),
+                "label": normalized,
+                "key": key,
+                "fields": {},
+                "field_names": [],
+                "total_count": 0,
+                "paper_count": 0,
+                "slugs": [],
+                "papers": [],
+                "aliases": sorted(set(aliases_by_canonical.get(normalized, [])), key=str.lower),
+                "alias_count": len(set(aliases_by_canonical.get(normalized, []))),
+                "configured": False,
+                "configured_fields": [],
+                "owner": research_line_owner(normalized),
+                "signals": [],
+                "severity": "ok",
+                "recommended_action": "当前标签状态稳定。",
+                "query_href": "library.html",
+            }
+        return records[key]
+
+    for canonical in aliases_by_canonical:
+        ensure_record(canonical)
+
+    for field, english, query_key, label, is_list in FACET_SPECS:
+        counts = dict(facet_count_for_field(papers, taxonomy, field, is_list))
+        configured = registry_configured_values(field)
+        for value in configured:
+            counts.setdefault(value, 0)
+        grouped_papers = registry_field_papers(papers, field, is_list)
+        for value, count in counts.items():
+            if not str(value).strip():
+                continue
+            record = ensure_record(str(value))
+            value_papers = grouped_papers.get(str(value), [])
+            field_configured = str(value) in configured
+            if field_configured:
+                record["configured"] = True
+                record["configured_fields"].append(field)
+            record["fields"][field] = {
+                "field": field,
+                "label": label,
+                "english": english,
+                "query_key": query_key,
+                "count": int(count),
+                "configured": field_configured,
+                "href": f"library.html?{urlencode({query_key: str(value)})}",
+            }
+            for paper in value_papers:
+                slugs_by_label[record["key"]].add(paper["slug"])
+
+    for record in records.values():
+        field_items = list(record["fields"].values())
+        field_names = sorted(record["fields"])
+        slugs = sorted(slugs_by_label.get(record["key"], set()))
+        papers_payload = [registry_paper_payload(papers_by_slug[slug]) for slug in slugs[:8] if slug in papers_by_slug]
+        total_count = sum(int(item["count"]) for item in field_items)
+        configured_fields = sorted(set(record["configured_fields"]))
+        signals: list[str] = []
+        if record["aliases"]:
+            signals.append("has_aliases")
+        if not field_items and record["aliases"]:
+            signals.append("alias_only")
+        if len(field_names) > 1:
+            signals.append("cross_field")
+        if configured_fields and total_count == 0:
+            signals.append("unused_configured")
+        if slugs and len(slugs) == 1 and not configured_fields:
+            signals.append("singleton")
+        overload_fields = {"domains", "tracks", "problems", "topics", "methods", "research_line"}
+        for item in field_items:
+            if item["field"] in overload_fields and total and int(item["count"]) >= int(policy["split_min_count"]) and int(item["count"]) / total >= float(policy["split_share"]):
+                signals.append("overloaded")
+            if item["field"] in {"status", "reading_stage", "review_stage", "line_role"} and int(item["count"]) > 0 and not item["configured"]:
+                signals.append("unconfigured_value")
+        if "research_line" in record["fields"] and int(record["fields"]["research_line"]["count"]) > 0 and not record["owner"]:
+            signals.append("unowned_research_line")
+
+        signals = sorted(set(signals))
+        severity = "ok"
+        if any(signal in signals for signal in ("overloaded", "unconfigured_value", "unowned_research_line")):
+            severity = "high"
+        elif any(signal in signals for signal in ("cross_field", "singleton", "unused_configured", "alias_only")):
+            severity = "medium"
+        elif signals:
+            severity = "low"
+
+        primary = max(field_items, key=lambda item: (int(item["count"]), item["field"]), default=None)
+        record.update(
+            {
+                "fields": sorted(field_items, key=lambda item: (item["field"], item["label"])),
+                "field_names": field_names,
+                "total_count": total_count,
+                "paper_count": len(slugs),
+                "slugs": slugs,
+                "papers": papers_payload,
+                "configured": bool(configured_fields),
+                "configured_fields": configured_fields,
+                "signals": signals,
+                "severity": severity,
+                "recommended_action": registry_recommendation(signals),
+                "query_href": primary["href"] if primary else "taxonomy.html",
+            }
+        )
+
+    labels = sorted(
+        records.values(),
+        key=lambda item: (
+            {"high": 0, "medium": 1, "low": 2, "ok": 3}.get(str(item["severity"]), 4),
+            -int(item["total_count"]),
+            str(item["label"]).lower(),
+        ),
+    )
+    severity_counts = Counter(str(item["severity"]) for item in labels)
+    signal_counts = Counter(signal for item in labels for signal in item["signals"])
+    field_counts = Counter(field for item in labels for field in item["field_names"])
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": len(papers),
+        "label_count": len(labels),
+        "configured_label_count": sum(1 for item in labels if item["configured"]),
+        "alias_count": sum(len(item["aliases"]) for item in labels),
+        "labels": labels,
+        "summary": {
+            "high": severity_counts.get("high", 0),
+            "medium": severity_counts.get("medium", 0),
+            "low": severity_counts.get("low", 0),
+            "ok": severity_counts.get("ok", 0),
+            "cross_field": signal_counts.get("cross_field", 0),
+            "singleton": signal_counts.get("singleton", 0),
+            "unused_configured": signal_counts.get("unused_configured", 0),
+            "unowned_research_line": signal_counts.get("unowned_research_line", 0),
+        },
+        "field_counts": dict(sorted(field_counts.items())),
+        "signals": dict(sorted(signal_counts.items())),
+        "csv_columns": ["label", "severity", "fields", "total_count", "paper_count", "aliases", "signals", "recommended_action"],
+        "commands": [
+            "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
+            "python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv",
+            "python3 scripts/apply_library_metadata.py docs --input <taxonomy_registry_patch.csv>",
+            "python3 scripts/apply_taxonomy_aliases.py docs --write",
+        ],
+        "links": {
+            "taxonomy": "taxonomy.html",
+            "facets": "facets.html",
+            "quality": "quality.html",
+            "library": "library.html",
+        },
+    }
+
+
+def write_registry_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_registry_report(papers)
+    (report_dir / "registry.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
+def render_registry_label_row(item: dict[str, Any]) -> str:
+    field_names = ", ".join(str(field) for field in item.get("field_names", []))
+    aliases = ", ".join(str(alias) for alias in item.get("aliases", []))
+    signals = "".join(f'<span class="flag">{html.escape(str(signal))}</span>' for signal in item.get("signals", []))
+    paper_links = []
+    for paper in item.get("papers", []):
+        title = paper.get("title_zh") or paper.get("title") or paper.get("slug")
+        href = str(paper.get("href") or f"{paper.get('slug')}.html")
+        paper_links.append(f'<a href="{html.escape(href)}">{html.escape(str(title))}</a>')
+    owner = item.get("owner") or {}
+    owner_text = " / ".join(str(owner.get(key) or "") for key in ("owner", "team", "cadence") if owner.get(key))
+    search = " ".join(
+        [
+            str(item.get("label") or ""),
+            field_names,
+            aliases,
+            " ".join(str(signal) for signal in item.get("signals", [])),
+            " ".join(str(slug) for slug in item.get("slugs", [])),
+            owner_text,
+        ]
+    ).lower()
+    checklist = f"- [ ] {item.get('label')} ({item.get('severity')}): {item.get('recommended_action')}"
+    return (
+        f'<tr data-severity="{html.escape(str(item.get("severity") or ""), quote=True)}"'
+        f' data-fields="{html.escape(" ".join(str(field) for field in item.get("field_names", [])), quote=True)}"'
+        f' data-configured="{"yes" if item.get("configured") else "no"}"'
+        f' data-search="{html.escape(search, quote=True)}">'
+        f'<td><a href="{html.escape(str(item.get("query_href") or "library.html"))}">{html.escape(str(item.get("label") or ""))}</a>'
+        f'<div class="meta">{html.escape(owner_text or "no owner")}</div></td>'
+        f"<td>{html.escape(field_names or 'alias')}</td>"
+        f"<td><span class=\"flag\">{html.escape(str(item.get('severity') or 'ok'))}</span><div class=\"meta\">{html.escape(str(item.get('total_count') or 0))} uses / {html.escape(str(item.get('paper_count') or 0))} papers</div></td>"
+        f"<td>{html.escape(aliases or '-')}</td>"
+        f"<td>{signals or '<span class=\"meta\">stable</span>'}</td>"
+        f"<td>{', '.join(paper_links) if paper_links else '<span class=\"meta\">No papers</span>'}</td>"
+        f"<td>{html.escape(str(item.get('recommended_action') or ''))}</td>"
+        f'<td><button class="button copy-registry-row" type="button" data-checklist="{html.escape(checklist, quote=True)}">复制</button></td>'
+        "</tr>"
+    )
+
+
+def render_registry(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_registry_report(papers)
+    rows = "".join(render_registry_label_row(item) for item in payload["labels"])
+    table = (
+        '<table class="data-table"><thead><tr><th>标签</th><th>字段</th><th>状态</th><th>Alias</th><th>信号</th><th>代表论文</th><th>建议</th><th>复制</th></tr></thead>'
+        f"<tbody>{rows}</tbody></table>"
+        if rows
+        else '<div class="empty">暂无分类标签。</div>'
+    )
+    field_options = "".join(
+        f'<option value="{html.escape(field, quote=True)}">{html.escape(field)} ({count})</option>'
+        for field, count in payload["field_counts"].items()
+    )
+    metrics = [
+        ("标签总数", str(payload["label_count"]), "registry labels"),
+        ("高风险", str(payload["summary"]["high"]), "need action"),
+        ("跨字段", str(payload["summary"]["cross_field"]), "semantic check"),
+        ("单例", str(payload["summary"]["singleton"]), "merge/watch"),
+        ("Alias", str(payload["alias_count"]), "canonicalization"),
+    ]
+    metric_html = "".join(
+        f'<section class="metric-card"><span>{html.escape(label)}</span><strong>{html.escape(value)}</strong><span>{html.escape(note)}</span></section>'
+        for label, value, note in metrics
+    )
+    command_buttons = "".join(
+        f'<button class="button copy-registry-command" type="button" data-command="{html.escape(command, quote=True)}">{html.escape(command)}</button>'
+        for command in payload["commands"]
+    )
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Taxonomy Registry</div>
+  <h1>标签注册表</h1>
+  <p class="lead">把 domain、track、problem、topic、method、研究线和状态值整理成可治理的标签字典，帮助多人维护时统一命名、发现跨字段复用和单例长尾。</p>
+  <div class="stats">
+    <a class="stat" href="index.html">返回首页</a>
+    <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="taxonomy.html">分类治理</a>
+    <a class="stat" href="facets.html">分类工作台</a>
+    <a class="stat" href="quality.html">质量治理</a>
+    <a class="stat" href="registry.json">Registry JSON</a>
+    <span class="stat">论文 {payload["count"]}</span>
+    <span class="stat">标签 {payload["label_count"]}</span>
+    <span class="stat">生成时间 {html.escape(payload["generated_at"])}</span>
+  </div>
+</header>
+<main class="shell">
+  <section>
+    <h2 class="section-title">注册表摘要</h2>
+    <div class="metric-grid">{metric_html}</div>
+  </section>
+  <section>
+    <h2 class="section-title">筛选</h2>
+    <div class="filter-grid">
+      <input id="registrySearch" type="search" placeholder="搜索标签、alias、slug、owner、治理信号">
+      <select id="registryField"><option value="">全部字段</option>{field_options}</select>
+      <select id="registrySeverity">
+        <option value="">全部风险</option>
+        <option value="high">high</option>
+        <option value="medium">medium</option>
+        <option value="low">low</option>
+        <option value="ok">ok</option>
+      </select>
+      <select id="registryConfigured">
+        <option value="">全部来源</option>
+        <option value="yes">配置中出现</option>
+        <option value="no">仅报告/alias</option>
+      </select>
+    </div>
+    <div class="results-bar">
+      <strong><span id="registryVisibleCount">{len(payload["labels"])}</span> 个标签可见</strong>
+      <div class="results-actions">
+        <button id="downloadRegistryCsv" class="button" type="button">下载 CSV</button>
+        <button id="copyRegistryMarkdown" class="button" type="button">复制清单</button>
+        <button id="copyRegistryCommands" class="button" type="button">复制命令</button>
+      </div>
+    </div>
+  </section>
+  <section>
+    <h2 class="section-title">标签字典</h2>
+    <div class="table-wrap">{table}</div>
+  </section>
+  <section>
+    <h2 class="section-title">治理命令</h2>
+    <div class="command-panel"><div class="bulk-actions">{command_buttons}</div></div>
+  </section>
+</main>
+<script>
+const registryPayload = window.PAPER_WIKI || {{}};
+const registryLabels = registryPayload.labels || [];
+const registryRows = Array.from(document.querySelectorAll("[data-severity]"));
+const registrySearch = document.querySelector("#registrySearch");
+const registryField = document.querySelector("#registryField");
+const registrySeverity = document.querySelector("#registrySeverity");
+const registryConfigured = document.querySelector("#registryConfigured");
+const registryVisibleCount = document.querySelector("#registryVisibleCount");
+
+function registryCsvCell(value) {{
+  const text = Array.isArray(value) ? value.join("; ") : String(value ?? "");
+  return (text.includes(",") || text.includes('"') || text.includes("\\n"))
+    ? '"' + text.replaceAll('"', '""') + '"'
+    : text;
+}}
+
+function visibleRegistryLabels() {{
+  const visible = new Set(registryRows.filter(row => !row.hidden).map(row => row.querySelector("a")?.textContent || ""));
+  return registryLabels.filter(label => visible.has(label.label));
+}}
+
+function renderRegistry() {{
+  const query = (registrySearch.value || "").trim().toLowerCase();
+  const field = registryField.value;
+  const severity = registrySeverity.value;
+  const configured = registryConfigured.value;
+  let count = 0;
+  registryRows.forEach(row => {{
+    const fields = (row.dataset.fields || "").split(/\\s+/).filter(Boolean);
+    const match = (!query || (row.dataset.search || "").includes(query))
+      && (!field || fields.includes(field))
+      && (!severity || row.dataset.severity === severity)
+      && (!configured || row.dataset.configured === configured);
+    row.hidden = !match;
+    if (match) count += 1;
+  }});
+  registryVisibleCount.textContent = String(count);
+}}
+
+function downloadRegistryCsv() {{
+  const columns = registryPayload.csv_columns || [];
+  const lines = [columns.join(",")];
+  visibleRegistryLabels().forEach(label => {{
+    const row = {{
+      label: label.label,
+      severity: label.severity,
+      fields: label.field_names,
+      total_count: label.total_count,
+      paper_count: label.paper_count,
+      aliases: label.aliases,
+      signals: label.signals,
+      recommended_action: label.recommended_action,
+    }};
+    lines.push(columns.map(column => registryCsvCell(row[column])).join(","));
+  }});
+  const blob = new Blob([lines.join("\\n")], {{ type: "text/csv;charset=utf-8" }});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "taxonomy_registry.csv";
+  link.click();
+  URL.revokeObjectURL(url);
+}}
+
+function registryMarkdown(labels) {{
+  if (!labels.length) return "- [x] 当前筛选没有标签";
+  return labels.map(label => `- [ ] ${{label.label}} (${{label.severity}}): ${{label.recommended_action}}`).join("\\n");
+}}
+
+async function copyRegistryText(text, label, button) {{
+  try {{
+    await navigator.clipboard.writeText(text);
+    const original = button.textContent;
+    button.textContent = label;
+    setTimeout(() => button.textContent = original, 1200);
+  }} catch {{
+    window.prompt("复制内容", text);
+  }}
+}}
+
+[registrySearch, registryField, registrySeverity, registryConfigured].forEach(control => {{
+  control.addEventListener("input", renderRegistry);
+  control.addEventListener("change", renderRegistry);
+}});
+document.querySelector("#downloadRegistryCsv").addEventListener("click", downloadRegistryCsv);
+document.querySelector("#copyRegistryMarkdown").addEventListener("click", event => copyRegistryText(registryMarkdown(visibleRegistryLabels()), "已复制", event.currentTarget));
+document.querySelector("#copyRegistryCommands").addEventListener("click", event => copyRegistryText((registryPayload.commands || []).join("\\n"), "已复制", event.currentTarget));
+document.querySelectorAll(".copy-registry-row").forEach(button => {{
+  button.addEventListener("click", () => copyRegistryText(button.dataset.checklist || "", "已复制", button));
+}});
+document.querySelectorAll(".copy-registry-command").forEach(button => {{
+  button.addEventListener("click", () => copyRegistryText(button.dataset.command || "", "已复制", button));
+}});
+renderRegistry();
+</script>
+"""
+    (report_dir / "registry.html").write_text(page_shell("标签注册表", body, data=payload), encoding="utf-8")
+
+
 def facet_values_for_paper(paper: dict[str, Any], field: str, is_list: bool) -> list[str]:
     if is_list:
         return [str(value).strip() for value in paper.get(field, []) if str(value).strip()]
@@ -16691,6 +17169,7 @@ def build_wiki(report_dir: Path) -> int:
     write_roadmap_json(report_dir, papers)
     write_inbox_json(report_dir, inbox_items)
     write_dedupe_json(report_dir, papers, inbox_items)
+    write_registry_json(report_dir, papers)
     write_intake_json(report_dir, papers, inbox_items)
     write_search_index(report_dir, papers)
     write_scale_json(report_dir, papers, inbox_items)
@@ -16714,6 +17193,7 @@ def build_wiki(report_dir: Path) -> int:
     render_intake(report_dir, papers, inbox_items)
     render_inbox(report_dir, inbox_items)
     render_dedupe(report_dir, papers, inbox_items)
+    render_registry(report_dir, papers)
     render_review(report_dir, papers)
     render_freshness(report_dir, papers)
     render_quality(report_dir, papers, inbox_items)
