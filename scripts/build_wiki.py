@@ -36,6 +36,7 @@ GENERATED_FIXED_PATHS = (
     "quality.html",
     "review.html",
     "dashboard.html",
+    "collections.html",
     "taxonomy.html",
     "timeline.html",
     "matrix.html",
@@ -583,6 +584,101 @@ def page_query_href(page: str, **params: str) -> str:
     clean = {key: value for key, value in params.items() if value}
     query = urlencode(clean)
     return f"{page}?{query}" if query else page
+
+
+def list_has(values: Any, expected: str) -> bool:
+    return expected in [str(value) for value in (values or [])]
+
+
+def matches_view_state(paper: dict[str, Any], state: dict[str, Any], today: str | None = None) -> bool:
+    today = today or dt.date.today().isoformat()
+    for key, raw_value in state.items():
+        value = str(raw_value or "").strip()
+        if not value or key in {"sort", "size", "page"}:
+            continue
+        if key == "q":
+            haystack = " ".join(
+                str(part)
+                for part in [
+                    paper.get("slug"),
+                    paper.get("title"),
+                    paper.get("title_zh"),
+                    paper.get("title_en"),
+                    paper.get("arxiv_id"),
+                    paper.get("excerpt"),
+                    paper.get("essence"),
+                    paper.get("research_line"),
+                    paper.get("line_role"),
+                    paper.get("status"),
+                    paper.get("reading_stage"),
+                    paper.get("review_stage"),
+                    paper.get("_search_text"),
+                    *paper.get("authors", []),
+                    *paper.get("domains", []),
+                    *paper.get("tracks", []),
+                    *paper.get("problems", []),
+                    *paper.get("topics", []),
+                    *paper.get("methods", []),
+                ]
+                if part
+            ).lower()
+            if value.lower() not in haystack:
+                return False
+        elif key == "domain" and not list_has(paper.get("domains"), value):
+            return False
+        elif key == "track" and not list_has(paper.get("tracks"), value):
+            return False
+        elif key == "problem" and not list_has(paper.get("problems"), value):
+            return False
+        elif key == "topic" and not list_has(paper.get("topics"), value):
+            return False
+        elif key == "method" and not list_has(paper.get("methods"), value):
+            return False
+        elif key == "line" and str(paper.get("research_line") or "") != value:
+            return False
+        elif key == "role" and str(paper.get("line_role") or "") != value:
+            return False
+        elif key == "status" and str(paper.get("status") or "") != value:
+            return False
+        elif key == "stage" and str(paper.get("reading_stage") or "") != value:
+            return False
+        elif key == "reviewStage" and str(paper.get("review_stage") or "") != value:
+            return False
+        elif key == "review":
+            has_next_review = bool(paper.get("next_review"))
+            is_due = bool(has_next_review and str(paper.get("next_review")) <= today)
+            if value == "none" and has_next_review:
+                return False
+            if value != "none" and not is_due:
+                return False
+        elif key == "code":
+            has_code = bool(paper.get("has_code"))
+            if value == "yes" and not has_code:
+                return False
+            if value == "no" and has_code:
+                return False
+        elif key == "importance":
+            try:
+                min_importance = int(value or 0)
+            except ValueError:
+                return False
+            if int(paper.get("importance") or 0) < min_importance:
+                return False
+    return True
+
+
+def view_target_page(view: dict[str, Any]) -> str:
+    page = str(view.get("page") or "library")
+    return "index.html" if page == "index" else "library.html"
+
+
+def view_href(view: dict[str, Any]) -> str:
+    state = {
+        str(key): str(value)
+        for key, value in (view.get("state") or {}).items()
+        if str(value).strip()
+    }
+    return page_query_href(view_target_page(view), **state)
 
 
 def role_rank(role: str) -> int:
@@ -1419,6 +1515,7 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="inbox.html">待处理池</a>
     <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="collections.html">集合视图</a>
     <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
@@ -1934,6 +2031,7 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <div class="stats">
     <a class="stat" href="index.html">卡片首页</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="collections.html">集合视图</a>
     <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="inbox.html">待处理池</a>
@@ -2582,6 +2680,7 @@ def render_board(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="collections.html">集合视图</a>
     <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
@@ -2816,6 +2915,7 @@ def render_inbox(report_dir: Path, items: list[dict[str, Any]]) -> None:
     <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="collections.html">集合视图</a>
     <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="inbox.json">Inbox JSON</a>
     <span class="stat">候选 {len(items)}</span>
@@ -2918,6 +3018,7 @@ def render_review(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="collections.html">集合视图</a>
     <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="review.json">复习 JSON</a>
@@ -3044,6 +3145,7 @@ def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
   <p class="lead">把分类漂移、弱元数据、复习计划和候选论文去重集中到一个发布前检查视图。适合论文库变大后做持续治理。</p>
   <div class="stats">
     <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="collections.html">集合视图</a>
     <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="library.html">论文库表格</a>
@@ -3199,6 +3301,7 @@ def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="inbox.html">待处理池</a>
+    <a class="stat" href="collections.html">集合视图</a>
     <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="lines/index.html">研究线</a>
@@ -3231,6 +3334,172 @@ def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
 </main>
 """
     (report_dir / "dashboard.html").write_text(page_shell("管理控制台", body), encoding="utf-8")
+
+
+def render_collections(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    quality = build_quality_report(papers)
+    review_plan = build_review_plan(papers)
+    today = dt.date.today().isoformat()
+    paper_by_slug = {paper["slug"]: paper for paper in papers}
+
+    def items_from_slugs(slugs: list[str]) -> list[dict[str, Any]]:
+        return [paper_by_slug[slug] for slug in slugs if slug in paper_by_slug]
+
+    def sample_list(items: list[dict[str, Any]]) -> str:
+        if not items:
+            return '<div class="empty">暂无论文。</div>'
+        rows = "".join(
+            f'<li><a href="{html.escape(paper_href(paper))}">{html.escape(paper["title_zh"] or paper["title"])}</a>'
+            f' <span class="meta">{html.escape(str(paper.get("research_line") or "Unassigned"))}</span></li>'
+            for paper in items[:5]
+        )
+        more = f'<div class="meta">另有 {len(items) - 5} 篇未显示。</div>' if len(items) > 5 else ""
+        return f'<ol class="queue-list">{rows}</ol>{more}'
+
+    def smart_card(title: str, href: str, note: str, items: list[dict[str, Any]]) -> str:
+        return f"""<section class="collection-card">
+  <header><h2><a href="{html.escape(href)}">{html.escape(title)}</a></h2><strong>{len(items)}</strong></header>
+  <p class="meta">{html.escape(note)}</p>
+  {sample_list(items)}
+</section>"""
+
+    shared_rows = []
+    for view in SHARED_VIEWS:
+        state = view.get("state") or {}
+        count = sum(1 for paper in papers if matches_view_state(paper, state, today))
+        shared_rows.append(
+            "<tr>"
+            f'<td><a href="{html.escape(view_href(view))}">{html.escape(str(view["name"]))}</a></td>'
+            f"<td>{html.escape(str(view.get('page') or 'all'))}</td>"
+            f"<td>{count}</td>"
+            f"<td><code>{html.escape(json.dumps(state, ensure_ascii=False, sort_keys=True))}</code></td>"
+            "</tr>"
+        )
+    shared_table = (
+        '<table class="data-table"><thead><tr><th>视图</th><th>页面</th><th>命中</th><th>筛选状态</th></tr></thead>'
+        f"<tbody>{''.join(shared_rows)}</tbody></table>"
+        if shared_rows
+        else '<div class="empty">还没有共享视图。可以在 guides/taxonomy.json 的 shared_views 中添加。</div>'
+    )
+
+    due_review = [
+        paper
+        for paper in papers
+        if paper.get("next_review") and str(paper.get("next_review")) <= today
+    ]
+    high_importance = sorted(
+        [paper for paper in papers if int(paper.get("importance") or 0) >= 5],
+        key=lambda paper: (-(paper.get("importance") or 0), -(paper.get("year") or 0), paper["title"]),
+    )
+    missing_taxonomy = items_from_slugs(quality["queues"].get("missing_required_metadata", []))
+    taxonomy_drift = items_from_slugs(quality["queues"].get("taxonomy_drift", []))
+    no_review_plan = items_from_slugs(review_plan["queues"].get("needs_plan", []))
+    no_code_observation = items_from_slugs(quality["queues"].get("no_code_observation", []))
+
+    smart_cards = [
+        smart_card("重点论文", page_query_href("library.html", importance="5", sort="importance"), "importance >= 5 的核心阅读对象。", high_importance),
+        smart_card("待复习", page_query_href("review.html"), f"next_review <= {today} 的复习队列。", due_review),
+        smart_card("需建复习计划", page_query_href("review.html"), "缺少 next_review 的论文。", no_review_plan),
+        smart_card("待补分类", page_query_href("quality.html"), "缺少必要 taxonomy 或研究线角色的论文。", missing_taxonomy),
+        smart_card("Taxonomy Drift", page_query_href("quality.html"), "状态、阶段或角色不在 taxonomy.json 允许值中的论文。", taxonomy_drift),
+        smart_card("缺代码观察", page_query_href("gaps.html"), "尚未记录代码仓库或代码实现观察的论文。", no_code_observation),
+    ]
+
+    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for paper in papers:
+        grouped[str(paper.get("research_line") or "Unassigned")].append(paper)
+    line_rows = []
+    for line in sorted(grouped, key=lambda name: (-len(grouped[name]), name.lower())):
+        items = grouped[line]
+        href = f"lines/{slugify_label(line)}.html" if line != "Unassigned" else page_query_href("library.html", line=line)
+        five_star = sum(1 for paper in items if int(paper.get("importance") or 0) >= 5)
+        needs_plan = sum(1 for paper in items if not paper.get("next_review"))
+        line_rows.append(
+            "<tr>"
+            f'<td><a href="{html.escape(href)}">{html.escape(line)}</a></td>'
+            f"<td>{len(items)}</td>"
+            f"<td>{five_star}</td>"
+            f"<td>{needs_plan}</td>"
+            f'<td><a href="{html.escape(page_query_href("library.html", line=line, sort="importance"))}">打开集合</a></td>'
+            "</tr>"
+        )
+    line_table = (
+        '<table class="data-table"><thead><tr><th>研究线集合</th><th>论文</th><th>重点</th><th>缺复习计划</th><th>入口</th></tr></thead>'
+        f"<tbody>{''.join(line_rows)}</tbody></table>"
+        if line_rows
+        else '<div class="empty">还没有研究线集合。</div>'
+    )
+
+    collections_css = """
+    .collection-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+    }
+    .collection-card {
+      display: grid;
+      gap: 10px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+    .collection-card header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0;
+    }
+    .collection-card h2 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.3;
+    }
+    .collection-card strong {
+      min-width: 42px;
+      text-align: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #edf3f1;
+      color: var(--accent);
+      padding: 4px 8px;
+    }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Collections</div>
+  <h1>集合视图</h1>
+  <p class="lead">把共享筛选视图、研究线入口和系统自动队列集中到一个目录里。适合论文库变大后作为团队协作、周复盘和选题规划的入口。</p>
+  <div class="stats">
+    <a class="stat" href="index.html">卡片首页</a>
+    <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="collections.html">集合视图</a>
+    <a class="stat" href="gaps.html">研究缺口</a>
+    <a class="stat" href="review.html">复习计划</a>
+    <a class="stat" href="quality.html">质量治理</a>
+    <a class="stat" href="taxonomy.html">分类治理</a>
+    <span class="stat">共享视图 {len(SHARED_VIEWS)}</span>
+    <span class="stat">论文 {len(papers)}</span>
+  </div>
+</header>
+<main class="shell">
+  <section>
+    <h2 class="section-title">共享视图</h2>
+    <div class="table-wrap">{shared_table}</div>
+  </section>
+  <section>
+    <h2 class="section-title">智能集合</h2>
+    <div class="collection-grid">{"".join(smart_cards)}</div>
+  </section>
+  <section>
+    <h2 class="section-title">研究线集合</h2>
+    <div class="table-wrap">{line_table}</div>
+  </section>
+</main>
+"""
+    (report_dir / "collections.html").write_text(page_shell("集合视图", body, extra_css=collections_css), encoding="utf-8")
 
 
 def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
@@ -3466,6 +3735,7 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="collections.html">集合视图</a>
     <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="timeline.html">时间轴</a>
@@ -3731,6 +4001,7 @@ def render_timeline(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="collections.html">集合视图</a>
     <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="lines/index.html">研究线</a>
@@ -4039,6 +4310,7 @@ def render_matrix(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="timeline.html">时间轴</a>
     <a class="stat" href="matrix.html">研究矩阵</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="collections.html">集合视图</a>
     <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="lines/index.html">研究线</a>
@@ -4350,6 +4622,7 @@ def render_gaps(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <p class="lead">从研究线角度自动诊断缺角色、缺分类、缺复习计划、缺代码观察和时间覆盖空档，把大量论文库变成可持续维护的行动队列。</p>
   <div class="stats">
     <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="collections.html">集合视图</a>
     <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="matrix.html">研究矩阵</a>
@@ -4455,6 +4728,7 @@ def render_line_pages(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="../library.html">论文库表格</a>
     <a class="stat" href="../review.html">复习计划</a>
     <a class="stat" href="../dashboard.html">管理控制台</a>
+    <a class="stat" href="../collections.html">集合视图</a>
     <a class="stat" href="../gaps.html">研究缺口</a>
     <a class="stat" href="../taxonomy.html">分类治理</a>
     <a class="stat" href="../timeline.html">时间轴</a>
@@ -4480,6 +4754,7 @@ def render_line_pages(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="../library.html">论文库表格</a>
     <a class="stat" href="../review.html">复习计划</a>
     <a class="stat" href="../dashboard.html">管理控制台</a>
+    <a class="stat" href="../collections.html">集合视图</a>
     <a class="stat" href="../gaps.html">研究缺口</a>
     <a class="stat" href="../taxonomy.html">分类治理</a>
     <a class="stat" href="../timeline.html">时间轴</a>
@@ -4558,6 +4833,7 @@ def render_tags(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="matrix.html">研究矩阵</a>
     <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="collections.html">集合视图</a>
     <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
     <span class="stat">分类 {len(grouped)}</span>
@@ -4586,6 +4862,7 @@ def build_wiki(report_dir: Path) -> int:
     render_review(report_dir, papers)
     render_quality(report_dir, papers, inbox_items)
     render_dashboard(report_dir, papers)
+    render_collections(report_dir, papers)
     render_taxonomy(report_dir, papers)
     render_timeline(report_dir, papers)
     render_matrix(report_dir, papers)

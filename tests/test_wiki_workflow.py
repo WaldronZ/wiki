@@ -173,6 +173,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "quality.html",
                 "review.html",
                 "dashboard.html",
+                "collections.html",
                 "taxonomy.html",
                 "timeline.html",
                 "matrix.html",
@@ -249,6 +250,12 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertTrue(stats["research_lines"])
             self.assertEqual(stats["shared_views"], 2)
             self.assertEqual(stats["controls"]["review_stage"], ["fresh", "due", "reviewed"])
+            collections_html = (report_dir / "collections.html").read_text(encoding="utf-8")
+            self.assertIn("集合视图", collections_html)
+            self.assertIn("共享视图", collections_html)
+            self.assertIn("重点队列", collections_html)
+            self.assertIn("智能集合", collections_html)
+            self.assertIn("需建复习计划", collections_html)
             taxonomy_html = (report_dir / "taxonomy.html").read_text(encoding="utf-8")
             self.assertIn("状态工作流配置", taxonomy_html)
             self.assertIn("&quot;status_values&quot;: [", taxonomy_html)

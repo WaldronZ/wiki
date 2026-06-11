@@ -19,6 +19,7 @@ function htmlFiles() {
     "quality.html",
     "review.html",
     "dashboard.html",
+    "collections.html",
     "taxonomy.html",
     "timeline.html",
     "matrix.html",
