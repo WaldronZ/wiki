@@ -442,6 +442,54 @@
     .library-table[data-density="compact"] .chip { padding: 2px 6px; }
     .library-table[data-density="comfortable"] th,
     .library-table[data-density="comfortable"] td { padding: 14px 12px; }
+    .library-insights {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 12px;
+      margin: 0 0 16px;
+    }
+    .insight-card {
+      min-height: 116px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 14px;
+    }
+    .insight-card > span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .insight-card strong {
+      display: block;
+      margin-top: 4px;
+      font-size: 26px;
+      line-height: 1.1;
+    }
+    .insight-card .meta { margin-top: 6px; }
+    .insight-list {
+      margin: 8px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 5px;
+    }
+    .insight-list li {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .insight-list b {
+      color: var(--ink);
+      font-weight: 750;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
     
   </style>
 </head>
@@ -569,6 +617,26 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
     </details>
     <div id="bulkPreview" class="bulk-preview" aria-live="polite">选择论文和字段后显示 patch 摘要。</div>
   </div>
+  <section class="library-insights" id="libraryInsights" aria-live="polite">
+    <div class="insight-card">
+      <span>当前队列</span>
+      <strong id="insightTotal">0</strong>
+      <div class="meta" id="insightCoverage">-</div>
+    </div>
+    <div class="insight-card">
+      <span>Status 分布</span>
+      <ul class="insight-list" id="insightStatuses"></ul>
+    </div>
+    <div class="insight-card">
+      <span>研究线分布</span>
+      <ul class="insight-list" id="insightLines"></ul>
+    </div>
+    <div class="insight-card">
+      <span>复习与优先级</span>
+      <strong id="insightReviewGap">0</strong>
+      <div class="meta" id="insightPriority">-</div>
+    </div>
+  </section>
   <datalist id="researchLineOptions"><option value="Parallel Decoding with Diffusion Models"></option><option value="Efficient Attention Kernels"></option></datalist>
   <datalist id="domainOptions"><option value="LLM Systems"></option></datalist>
   <datalist id="trackOptions"><option value="Inference Acceleration"></option><option value="Parallel Decoding"></option><option value="Attention Kernels"></option><option value="Inference Serving Systems"></option></datalist>
@@ -596,6 +664,7 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
   data-importance="4"
   data-year="2026"
   data-updated="2026-06-11T15:42:03"
+  data-next-review=""
   data-slug="2602.06036-dflash"
   data-title="DFlash: Block Diffusion for Flash Speculative Decoding"
   data-title-zh="DFlash：用于快速 speculative decoding 的块扩散方法"
@@ -634,6 +703,7 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
   data-importance="5"
   data-year="2026"
   data-updated="2026-06-11T15:42:03"
+  data-next-review=""
   data-slug="2604.11035-introspective-dlm"
   data-title="Introspective Diffusion Language Models"
   data-title-zh="内省式扩散语言模型"
@@ -672,6 +742,7 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
   data-importance="4"
   data-year="2026"
   data-updated="2026-06-11T15:42:03"
+  data-next-review=""
   data-slug="2605.12825-orthrus"
   data-title="Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion"
   data-title-zh="Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
@@ -710,6 +781,7 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
   data-importance="4"
   data-year="2025"
   data-updated="2026-06-11T15:42:03"
+  data-next-review=""
   data-slug="2501.01005-flashinfer"
   data-title="FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving"
   data-title-zh="FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
@@ -748,6 +820,7 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
   data-importance="5"
   data-year="2023"
   data-updated="2026-06-11T15:42:03"
+  data-next-review=""
   data-slug="2307.08691-flashattention-2"
   data-title="FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning"
   data-title-zh="FlashAttention-2：用更好的并行性与工作划分加速 Attention"
@@ -836,6 +909,12 @@ const copyPatchDryRun = document.querySelector("#copyPatchDryRun");
 const copyPatchWrite = document.querySelector("#copyPatchWrite");
 const bulkPreview = document.querySelector("#bulkPreview");
 const libraryTable = document.querySelector(".library-table");
+const insightTotal = document.querySelector("#insightTotal");
+const insightCoverage = document.querySelector("#insightCoverage");
+const insightStatuses = document.querySelector("#insightStatuses");
+const insightLines = document.querySelector("#insightLines");
+const insightReviewGap = document.querySelector("#insightReviewGap");
+const insightPriority = document.querySelector("#insightPriority");
 const columnToggles = Array.from(document.querySelectorAll("[data-column-toggle]"));
 const densityMode = document.querySelector("#densityMode");
 const sharedViews = window.PAPER_WIKI.shared_views || [];
@@ -1141,6 +1220,67 @@ function selectedRows() {
   return allRows.filter(row => row.querySelector(".row-check").checked);
 }
 
+function percentLabel(count, total) {
+  return total ? `${Math.round((count / total) * 100)}%` : "0%";
+}
+
+function localDateString(date = new Date()) {
+  const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+  return local.toISOString().slice(0, 10);
+}
+
+function countBy(rows, getter) {
+  const counts = new Map();
+  rows.forEach(row => {
+    const value = String(getter(row) || "").trim() || "未设置";
+    counts.set(value, (counts.get(value) || 0) + 1);
+  });
+  return Array.from(counts.entries()).sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0]));
+}
+
+function renderInsightList(list, entries, total, emptyLabel = "无结果") {
+  list.replaceChildren();
+  if (!entries.length) {
+    const item = document.createElement("li");
+    const label = document.createElement("b");
+    label.textContent = emptyLabel;
+    const count = document.createElement("span");
+    count.textContent = "0";
+    item.append(label, count);
+    list.appendChild(item);
+    return;
+  }
+  entries.slice(0, 5).forEach(([name, count]) => {
+    const item = document.createElement("li");
+    const label = document.createElement("b");
+    label.textContent = name;
+    const value = document.createElement("span");
+    value.textContent = `${count} · ${percentLabel(count, total)}`;
+    item.append(label, value);
+    list.appendChild(item);
+  });
+}
+
+function updateLibraryInsights(rows) {
+  const total = rows.length;
+  const codeCount = rows.filter(row => row.dataset.code === "yes").length;
+  const missingReview = rows.filter(row => !row.dataset.nextReview).length;
+  const today = localDateString();
+  const dueReview = rows.filter(row => row.dataset.nextReview && row.dataset.nextReview <= today).length;
+  const importanceValues = rows
+    .map(row => Number(row.dataset.importance || 0))
+    .filter(value => Number.isFinite(value) && value > 0);
+  const averageImportance = importanceValues.length
+    ? (importanceValues.reduce((sum, value) => sum + value, 0) / importanceValues.length).toFixed(1)
+    : "-";
+  insightTotal.textContent = String(total);
+  insightCoverage.textContent = `${codeCount}/${total} 有代码 · ${percentLabel(codeCount, total)} 覆盖`;
+  insightReviewGap.textContent = String(missingReview);
+  insightPriority.textContent = `缺复习计划 · 到期 ${dueReview} · 平均重要性 ${averageImportance}`;
+  renderInsightList(insightStatuses, countBy(rows, row => row.dataset.status), total);
+  renderInsightList(insightLines, countBy(rows, row => row.dataset.line), total);
+}
+
 function updateBulkState() {
   const selected = selectedRows().length;
   const visible = visibleRows();
@@ -1393,6 +1533,7 @@ function render() {
   });
   const ranked = sortRows(filtered);
   currentRankedRows = ranked;
+  updateLibraryInsights(ranked);
   const limit = pageLimit();
   const totalPages = limit === Infinity ? 1 : Math.max(1, Math.ceil(ranked.length / limit));
   currentPage = Math.min(Math.max(currentPage, 1), totalPages);

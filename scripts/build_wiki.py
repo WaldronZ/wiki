@@ -2889,6 +2889,7 @@ def render_library_row(paper: dict[str, Any]) -> str:
   data-importance="{html.escape(str(paper.get("importance") or 0), quote=True)}"
   data-year="{html.escape(str(paper.get("year") or 0), quote=True)}"
   data-updated="{html.escape(str(paper.get("updated_at") or ""), quote=True)}"
+  data-next-review="{html.escape(str(paper.get("next_review") or ""), quote=True)}"
   data-slug="{html.escape(str(paper.get("slug") or ""), quote=True)}"
   data-title="{html.escape(str(paper.get("title_en") or paper.get("title") or paper.get("slug") or ""), quote=True)}"
   data-title-zh="{html.escape(str(paper.get("title_zh") or ""), quote=True)}"
@@ -3027,6 +3028,54 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     .library-table[data-density="compact"] .chip { padding: 2px 6px; }
     .library-table[data-density="comfortable"] th,
     .library-table[data-density="comfortable"] td { padding: 14px 12px; }
+    .library-insights {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 12px;
+      margin: 0 0 16px;
+    }
+    .insight-card {
+      min-height: 116px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 14px;
+    }
+    .insight-card > span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .insight-card strong {
+      display: block;
+      margin-top: 4px;
+      font-size: 26px;
+      line-height: 1.1;
+    }
+    .insight-card .meta { margin-top: 6px; }
+    .insight-list {
+      margin: 8px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 5px;
+    }
+    .insight-list li {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .insight-list b {
+      color: var(--ink);
+      font-weight: 750;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
     """
     body = f"""
 <header class="shell">
@@ -3137,6 +3186,26 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     </details>
     <div id="bulkPreview" class="bulk-preview" aria-live="polite">选择论文和字段后显示 patch 摘要。</div>
   </div>
+  <section class="library-insights" id="libraryInsights" aria-live="polite">
+    <div class="insight-card">
+      <span>当前队列</span>
+      <strong id="insightTotal">0</strong>
+      <div class="meta" id="insightCoverage">-</div>
+    </div>
+    <div class="insight-card">
+      <span>Status 分布</span>
+      <ul class="insight-list" id="insightStatuses"></ul>
+    </div>
+    <div class="insight-card">
+      <span>研究线分布</span>
+      <ul class="insight-list" id="insightLines"></ul>
+    </div>
+    <div class="insight-card">
+      <span>复习与优先级</span>
+      <strong id="insightReviewGap">0</strong>
+      <div class="meta" id="insightPriority">-</div>
+    </div>
+  </section>
   <datalist id="researchLineOptions">{render_datalist_options(taxonomy["research_lines"])}</datalist>
   <datalist id="domainOptions">{render_datalist_options(taxonomy["domains"])}</datalist>
   <datalist id="trackOptions">{render_datalist_options(taxonomy["tracks"])}</datalist>
@@ -3215,6 +3284,12 @@ const copyPatchDryRun = document.querySelector("#copyPatchDryRun");
 const copyPatchWrite = document.querySelector("#copyPatchWrite");
 const bulkPreview = document.querySelector("#bulkPreview");
 const libraryTable = document.querySelector(".library-table");
+const insightTotal = document.querySelector("#insightTotal");
+const insightCoverage = document.querySelector("#insightCoverage");
+const insightStatuses = document.querySelector("#insightStatuses");
+const insightLines = document.querySelector("#insightLines");
+const insightReviewGap = document.querySelector("#insightReviewGap");
+const insightPriority = document.querySelector("#insightPriority");
 const columnToggles = Array.from(document.querySelectorAll("[data-column-toggle]"));
 const densityMode = document.querySelector("#densityMode");
 const sharedViews = window.PAPER_WIKI.shared_views || [];
@@ -3520,6 +3595,67 @@ function selectedRows() {{
   return allRows.filter(row => row.querySelector(".row-check").checked);
 }}
 
+function percentLabel(count, total) {{
+  return total ? `${{Math.round((count / total) * 100)}}%` : "0%";
+}}
+
+function localDateString(date = new Date()) {{
+  const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+  return local.toISOString().slice(0, 10);
+}}
+
+function countBy(rows, getter) {{
+  const counts = new Map();
+  rows.forEach(row => {{
+    const value = String(getter(row) || "").trim() || "未设置";
+    counts.set(value, (counts.get(value) || 0) + 1);
+  }});
+  return Array.from(counts.entries()).sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0]));
+}}
+
+function renderInsightList(list, entries, total, emptyLabel = "无结果") {{
+  list.replaceChildren();
+  if (!entries.length) {{
+    const item = document.createElement("li");
+    const label = document.createElement("b");
+    label.textContent = emptyLabel;
+    const count = document.createElement("span");
+    count.textContent = "0";
+    item.append(label, count);
+    list.appendChild(item);
+    return;
+  }}
+  entries.slice(0, 5).forEach(([name, count]) => {{
+    const item = document.createElement("li");
+    const label = document.createElement("b");
+    label.textContent = name;
+    const value = document.createElement("span");
+    value.textContent = `${{count}} · ${{percentLabel(count, total)}}`;
+    item.append(label, value);
+    list.appendChild(item);
+  }});
+}}
+
+function updateLibraryInsights(rows) {{
+  const total = rows.length;
+  const codeCount = rows.filter(row => row.dataset.code === "yes").length;
+  const missingReview = rows.filter(row => !row.dataset.nextReview).length;
+  const today = localDateString();
+  const dueReview = rows.filter(row => row.dataset.nextReview && row.dataset.nextReview <= today).length;
+  const importanceValues = rows
+    .map(row => Number(row.dataset.importance || 0))
+    .filter(value => Number.isFinite(value) && value > 0);
+  const averageImportance = importanceValues.length
+    ? (importanceValues.reduce((sum, value) => sum + value, 0) / importanceValues.length).toFixed(1)
+    : "-";
+  insightTotal.textContent = String(total);
+  insightCoverage.textContent = `${{codeCount}}/${{total}} 有代码 · ${{percentLabel(codeCount, total)}} 覆盖`;
+  insightReviewGap.textContent = String(missingReview);
+  insightPriority.textContent = `缺复习计划 · 到期 ${{dueReview}} · 平均重要性 ${{averageImportance}}`;
+  renderInsightList(insightStatuses, countBy(rows, row => row.dataset.status), total);
+  renderInsightList(insightLines, countBy(rows, row => row.dataset.line), total);
+}}
+
 function updateBulkState() {{
   const selected = selectedRows().length;
   const visible = visibleRows();
@@ -3772,6 +3908,7 @@ function render() {{
   }});
   const ranked = sortRows(filtered);
   currentRankedRows = ranked;
+  updateLibraryInsights(ranked);
   const limit = pageLimit();
   const totalPages = limit === Infinity ? 1 : Math.max(1, Math.ceil(ranked.length / limit));
   currentPage = Math.min(Math.max(currentPage, 1), totalPages);
