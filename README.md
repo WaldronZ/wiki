@@ -64,6 +64,7 @@ paper_reader/
 │   │   └── taxonomy.schema.json
 │   └── .gitkeep
 ├── scripts/
+│   ├── apply_inbox_items.py
 │   ├── apply_library_metadata.py
 │   ├── apply_review_plan.py
 │   ├── apply_shared_views.py
@@ -91,6 +92,7 @@ paper_reader/
 - `docs/` 用于存放论文阅读报告和静态 wiki
 - `scripts/build_wiki.py` 用于扫描报告并生成 wiki 汇总页
 - `scripts/render_report_html.py` 是稳定 HTML 渲染兜底脚本，用于修复公式裸露、图片破图等展示问题
+- `scripts/apply_inbox_items.py` 用于把外部候选论文 CSV 安全合并进 `docs/inbox.csv`，默认只 dry-run
 - `scripts/apply_review_plan.py` 用于把 `docs/review.json` 的建议复习日期安全写回报告 frontmatter，默认只 dry-run
 - `scripts/apply_shared_views.py` 用于把首页/论文库导出的 saved views 或复制的 shared view JSON 安全合并到 `guides/taxonomy.json`，默认只 dry-run
 - `scripts/apply_status_workflow.py` 用于把 `docs/taxonomy.html` 下载的 `taxonomy_status_workflow.json` 安全合并到 `guides/taxonomy.json`，默认只 dry-run
@@ -230,6 +232,14 @@ python3 scripts/build_wiki.py docs
 ```csv
 id,title,link,status,priority,tags,note,added_at
 paper-1,Example Paper,https://arxiv.org/abs/2601.00001,queued,high,LLM Serving;Batching,先读方法,
+```
+
+也可以从外部表格批量导入，输入 CSV 支持 `name/url/topics/notes/created_at` 这些别名列；脚本会规范化字段，并按 id/link/title 更新已有候选，避免重复追加：
+
+```bash
+python3 scripts/apply_inbox_items.py docs --input ~/Downloads/candidate_papers.csv
+python3 scripts/apply_inbox_items.py docs --input ~/Downloads/candidate_papers.csv --write
+python3 scripts/build_wiki.py docs
 ```
 
 刷新后打开 `docs/inbox.html`，可以筛选候选论文、查看疑似重复项，复制单篇论文或当前筛选结果的阅读任务给 agent 流程，也可以下载当前筛选 CSV 或复制标准 `inbox.csv` 模板。

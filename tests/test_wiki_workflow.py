@@ -387,6 +387,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("治理命令", quality_html)
             self.assertIn("copy-quality-command", quality_html)
             self.assertIn("python3 scripts/check_quality.py docs", quality_html)
+            self.assertIn("python3 scripts/apply_inbox_items.py docs --input &lt;candidate_csv&gt; --write", quality_html)
             self.assertIn("python3 scripts/apply_shared_views.py docs --input &lt;shared_views.json&gt; --write", quality_html)
             self.assertIn("python3 scripts/apply_status_workflow.py docs --input &lt;taxonomy_status_workflow.json&gt; --write", quality_html)
             self.assertIn("python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv", quality_html)
@@ -501,6 +502,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(artifact_by_href["manifest.json"]["status"], "generated_after_inventory")
             self.assertTrue(manifest["publish_checks"]["artifacts_present"])
             self.assertIn("python3 scripts/check_quality.py docs", manifest["commands"])
+            self.assertIn("python3 scripts/apply_inbox_items.py docs --input <candidate_csv> --write", manifest["commands"])
             self.assertIn("python3 scripts/apply_shared_views.py docs --input <shared_views.json> --write", manifest["commands"])
             self.assertIn("python3 scripts/apply_status_workflow.py docs --input <taxonomy_status_workflow.json> --write", manifest["commands"])
             self.assertIn("python3 scripts/export_actions.py docs --output docs/exports/actions.md", manifest["commands"])
@@ -510,6 +512,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertFalse(recipe_by_id["quality_gate"]["mutates"])
             self.assertFalse(recipe_by_id["apply_metadata_dry_run"]["mutates"])
             self.assertEqual(recipe_by_id["apply_metadata_dry_run"]["command"], "python3 scripts/apply_library_metadata.py docs --input <csv>")
+            self.assertEqual(recipe_by_id["apply_inbox"]["output"], "docs/inbox.csv")
             self.assertEqual(recipe_by_id["apply_shared_views"]["output"], "docs/guides/taxonomy.json")
             self.assertEqual(recipe_by_id["apply_status_workflow"]["output"], "docs/guides/taxonomy.json")
             self.assertEqual(recipe_by_id["actions_project"]["output"], "docs/exports/actions-project.csv")
@@ -528,6 +531,10 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(
                 playbook_by_id["shared_view_rollout"]["steps"],
                 ["apply_shared_views_dry_run", "apply_shared_views", "build_wiki", "strict_validate"],
+            )
+            self.assertEqual(
+                playbook_by_id["paper_intake_batch"]["steps"],
+                ["apply_inbox_dry_run", "apply_inbox", "build_wiki", "strict_validate"],
             )
             release_html = (report_dir / "release.html").read_text(encoding="utf-8")
             self.assertIn("知识库发布摘要", release_html)
@@ -548,6 +555,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("taxonomy_actions_patch", release_html)
             self.assertIn("shared_view_rollout", release_html)
             self.assertIn("status_workflow_rollout", release_html)
+            self.assertIn("paper_intake_batch", release_html)
             self.assertIn("copy-release-command", release_html)
             self.assertIn("copyReleaseCommand", release_html)
             self.assertIn("Alpha 论文", release_html)
@@ -1047,6 +1055,60 @@ class WikiWorkflowTest(unittest.TestCase):
             self.run_cmd("scripts/validate_wiki.py", str(report_dir))
             review_after = json.loads((report_dir / "review.json").read_text(encoding="utf-8"))
             self.assertEqual(review_after["queues"]["needs_plan"], [])
+
+    def test_apply_inbox_items_merges_candidate_csv(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_name:
+            report_dir = self.make_report_dir(Path(tmp_name))
+            self.run_cmd("scripts/build_wiki.py", str(report_dir))
+
+            candidate_path = Path(tmp_name) / "candidate_papers.csv"
+            candidate_path.write_text(
+                "name,url,status,priority,topics,notes,created_at\n"
+                "Delta Paper,https://arxiv.org/abs/2603.00004,,high,LLM Serving|Planning,新候选,2026-07-02\n"
+                "Gamma Paper,https://arxiv.org/abs/2602.00003,triaged,medium,LLM Serving;Batching,更新备注,2026-07-03\n",
+                encoding="utf-8",
+            )
+
+            dry = self.run_cmd("scripts/apply_inbox_items.py", str(report_dir), "--input", str(candidate_path))
+            self.assertIn("DRY  ADD inbox item Delta Paper", dry.stdout)
+            self.assertIn("DRY  UPDATE inbox item Gamma Paper", dry.stdout)
+            inbox_before = list(csv.DictReader((report_dir / "inbox.csv").read_text(encoding="utf-8").splitlines()))
+            self.assertEqual(len(inbox_before), 2)
+
+            write = self.run_cmd(
+                "scripts/apply_inbox_items.py",
+                str(report_dir),
+                "--input",
+                str(candidate_path),
+                "--write",
+            )
+            self.assertIn("WRITE  ADD inbox item Delta Paper", write.stdout)
+            inbox_after = list(csv.DictReader((report_dir / "inbox.csv").read_text(encoding="utf-8").splitlines()))
+            self.assertEqual(len(inbox_after), 3)
+            rows_by_title = {row["title"]: row for row in inbox_after}
+            self.assertEqual(rows_by_title["Delta Paper"]["tags"], "LLM Serving; Planning")
+            self.assertEqual(rows_by_title["Gamma Paper"]["status"], "triaged")
+            self.assertEqual(rows_by_title["Gamma Paper"]["note"], "更新备注")
+
+            self.run_cmd("scripts/build_wiki.py", str(report_dir))
+            self.run_cmd("scripts/validate_wiki.py", str(report_dir), "--strict-taxonomy")
+            inbox_json = json.loads((report_dir / "inbox.json").read_text(encoding="utf-8"))
+            self.assertEqual(inbox_json["count"], 3)
+            self.assertTrue(any(item["title"] == "Delta Paper" for item in inbox_json["items"]))
+            actions = json.loads((report_dir / "actions.json").read_text(encoding="utf-8"))
+            self.assertTrue(any(item["source"] == "inbox.json" and "Delta Paper" in item["title"] for item in actions["actions"]))
+
+            broken_path = Path(tmp_name) / "broken_candidates.csv"
+            broken_path.write_text("title,link,status\nBad,https://example.com,unknown\n", encoding="utf-8")
+            broken = self.run_cmd(
+                "scripts/apply_inbox_items.py",
+                str(report_dir),
+                "--input",
+                str(broken_path),
+                check=False,
+            )
+            self.assertNotEqual(broken.returncode, 0)
+            self.assertIn("status must be one of", broken.stderr)
 
     def test_quality_detects_duplicate_reports(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_name:

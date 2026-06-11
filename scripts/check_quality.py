@@ -20,6 +20,7 @@ PYTHON_SCRIPTS = [
     "scripts/render_report_html.py",
     "scripts/validate_wiki.py",
     "scripts/apply_review_plan.py",
+    "scripts/apply_inbox_items.py",
     "scripts/apply_library_metadata.py",
     "scripts/apply_taxonomy_aliases.py",
     "scripts/apply_status_workflow.py",

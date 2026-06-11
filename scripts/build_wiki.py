@@ -1419,6 +1419,22 @@ def command_recipes_manifest() -> list[dict[str, Any]]:
             "mutates": False,
         },
         {
+            "id": "apply_inbox_dry_run",
+            "kind": "check",
+            "label": "Preview candidate inbox CSV",
+            "command": "python3 scripts/apply_inbox_items.py docs --input <candidate_csv>",
+            "output": "",
+            "mutates": False,
+        },
+        {
+            "id": "apply_inbox",
+            "kind": "writeback",
+            "label": "Apply candidate inbox CSV",
+            "command": "python3 scripts/apply_inbox_items.py docs --input <candidate_csv> --write",
+            "output": "docs/inbox.csv",
+            "mutates": True,
+        },
+        {
             "id": "apply_metadata",
             "kind": "writeback",
             "label": "Apply edited metadata CSV",
@@ -1564,6 +1580,17 @@ def governance_playbooks_manifest() -> list[dict[str, Any]]:
                 "actions_markdown",
                 "actions_project",
                 "quality_gate",
+            ],
+        },
+        {
+            "id": "paper_intake_batch",
+            "label": "Paper intake batch",
+            "description": "Preview a candidate CSV, merge it into inbox.csv, rebuild, then validate the incoming queue.",
+            "steps": [
+                "apply_inbox_dry_run",
+                "apply_inbox",
+                "build_wiki",
+                "strict_validate",
             ],
         },
         {
@@ -5662,6 +5689,8 @@ def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
     quality_commands = [
         ("质量门禁", "python3 scripts/check_quality.py docs"),
         ("严格校验", "python3 scripts/validate_wiki.py docs --strict-taxonomy"),
+        ("预览候选论文导入", "python3 scripts/apply_inbox_items.py docs --input <candidate_csv>"),
+        ("写入候选论文导入", "python3 scripts/apply_inbox_items.py docs --input <candidate_csv> --write"),
         ("预览元数据写入", "python3 scripts/apply_library_metadata.py docs --input <csv>"),
         ("预览别名写入", "python3 scripts/apply_taxonomy_aliases.py docs"),
         ("写入别名建议", "python3 scripts/apply_taxonomy_aliases.py docs --write"),
