@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Efficient Attention Kernels</title>
+  <title>复习计划</title>
   <style>
     :root {
       color-scheme: light;
@@ -273,21 +273,85 @@
 
 
 <header class="shell">
-  <div class="eyebrow">Research Line</div>
-  <h1>Efficient Attention Kernels</h1>
-  <p class="lead">按论文在该研究线中的角色组织：foundation、baseline、main、system、variant、followup 等角色来自 frontmatter，可按你的分类习惯自由扩展。</p>
+  <div class="eyebrow">Review Planner</div>
+  <h1>复习计划</h1>
+  <p class="lead">根据 importance、confidence、reproducibility、last_reviewed 与 next_review 生成复习队列。没有写入报告的项目会给出建议日期，便于后续批量补 frontmatter。</p>
   <div class="stats">
-    <a class="stat" href="../index.html">返回首页</a>
-    <a class="stat" href="../library.html">论文库表格</a>
-    <a class="stat" href="../review.html">复习计划</a>
-    <a class="stat" href="../dashboard.html">管理控制台</a>
-    <a class="stat" href="index.html">全部研究线</a>
-    <span class="stat">论文 2</span>
-    <span class="stat">角色 2</span>
+    <a class="stat" href="index.html">返回首页</a>
+    <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="review.json">复习 JSON</a>
+    <span class="stat">论文 5</span>
   </div>
 </header>
 <main class="shell">
-  <div class="line-detail"><section class="role-section"><h2>foundation <span class="meta">1</span></h2><article class="paper-row"><div><h3><a href="../2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></h3><div class="meta">FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning</div><div class="chips"><span class="chip">Efficient Attention</span><span class="chip">GPU Kernel Optimization</span><span class="chip">Long Context</span><span class="chip">CUDA / GPU parallelism</span><span class="chip">FlashAttention</span><span class="chip">online softmax</span></div></div><div class="card-flags"><span class="flag">2023</span><span class="flag">重要性 5</span><span class="flag">状态 read</span><span class="flag">有代码</span></div></article></section><section class="role-section"><h2>system <span class="meta">1</span></h2><article class="paper-row"><div><h3><a href="../2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></h3><div class="meta">FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving</div><div class="chips"><span class="chip">Attention Kernels</span><span class="chip">GPU Systems</span><span class="chip">Inference Optimization</span><span class="chip">block-sparse attention</span><span class="chip">composable KV-cache format</span><span class="chip">CUDA Graph</span></div></div><div class="card-flags"><span class="flag">2025</span><span class="flag">重要性 4</span><span class="flag">状态 read</span><span class="flag">有代码</span></div></article></section></div>
+  <section>
+    <h2 class="section-title">队列</h2>
+    <div class="metric-grid"><section class="metric-card"><span>due</span><strong>0</strong><span></span></section><section class="metric-card"><span>needs_plan</span><strong>5</strong><span>2604.11035-introspective-dlm, 2307.08691-flashattention-2, 2602.06036-dflash</span></section><section class="metric-card"><span>scheduled</span><strong>0</strong><span></span></section><section class="metric-card"><span>high_priority</span><strong>2</strong><span>2604.11035-introspective-dlm, 2307.08691-flashattention-2</span></section></div>
+  </section>
+  <section>
+    <h2 class="section-title">复习条目</h2>
+    <div class="table-wrap">
+      <table class="library-table">
+        <thead><tr><th>论文</th><th>研究线</th><th>状态</th><th>下次复习</th><th>评分</th><th>优先级</th></tr></thead>
+        <tbody><tr>
+  <td class="library-title">
+    <strong><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a></strong>
+    <div class="meta">2604.11035-introspective-dlm</div>
+  </td>
+  <td>Parallel Decoding with Diffusion Models<div class="meta">foundation</div></td>
+  <td><span class="flag">需建计划</span><div class="meta">未设置阶段</div></td>
+  <td>建议 2026-06-18<div class="meta">间隔 7 天</div></td>
+  <td><div class="score-grid"><span>I 5</span><span>C 4</span><span>R 3</span></div></td>
+  <td>58</td>
+</tr>
+<tr>
+  <td class="library-title">
+    <strong><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></strong>
+    <div class="meta">2307.08691-flashattention-2</div>
+  </td>
+  <td>Efficient Attention Kernels<div class="meta">foundation</div></td>
+  <td><span class="flag">需建计划</span><div class="meta">未设置阶段</div></td>
+  <td>建议 2026-06-25<div class="meta">间隔 14 天</div></td>
+  <td><div class="score-grid"><span>I 5</span><span>C 4</span><span>R 4</span></div></td>
+  <td>58</td>
+</tr>
+<tr>
+  <td class="library-title">
+    <strong><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a></strong>
+    <div class="meta">2602.06036-dflash</div>
+  </td>
+  <td>Parallel Decoding with Diffusion Models<div class="meta">followup</div></td>
+  <td><span class="flag">需建计划</span><div class="meta">未设置阶段</div></td>
+  <td>建议 2026-07-04<div class="meta">间隔 23 天</div></td>
+  <td><div class="score-grid"><span>I 4</span><span>C 4</span><span>R 3</span></div></td>
+  <td>48</td>
+</tr>
+<tr>
+  <td class="library-title">
+    <strong><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></strong>
+    <div class="meta">2605.12825-orthrus</div>
+  </td>
+  <td>Parallel Decoding with Diffusion Models<div class="meta">variant</div></td>
+  <td><span class="flag">需建计划</span><div class="meta">未设置阶段</div></td>
+  <td>建议 2026-07-04<div class="meta">间隔 23 天</div></td>
+  <td><div class="score-grid"><span>I 4</span><span>C 4</span><span>R 3</span></div></td>
+  <td>48</td>
+</tr>
+<tr>
+  <td class="library-title">
+    <strong><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></strong>
+    <div class="meta">2501.01005-flashinfer</div>
+  </td>
+  <td>Efficient Attention Kernels<div class="meta">system</div></td>
+  <td><span class="flag">需建计划</span><div class="meta">未设置阶段</div></td>
+  <td>建议 2026-07-11<div class="meta">间隔 30 天</div></td>
+  <td><div class="score-grid"><span>I 4</span><span>C 4</span><span>R 4</span></div></td>
+  <td>48</td>
+</tr></tbody>
+      </table>
+    </div>
+  </section>
 </main>
 
 </body>

@@ -45,11 +45,13 @@ REQUIRED_META = {
 REQUIRED_PAGES = {
     "index.html",
     "library.html",
+    "review.html",
     "dashboard.html",
     "tags.html",
     "papers.json",
     "search_index.json",
     "quality.json",
+    "review.json",
     "lines/index.html",
 }
 
@@ -204,6 +206,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     papers_path = report_dir / "papers.json"
     search_path = report_dir / "search_index.json"
     quality_path = report_dir / "quality.json"
+    review_path = report_dir / "review.json"
     if not papers_path.exists():
         errors.append("missing papers.json")
         return
@@ -213,10 +216,14 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     if not quality_path.exists():
         errors.append("missing quality.json")
         return
+    if not review_path.exists():
+        errors.append("missing review.json")
+        return
 
     papers_data = json.loads(papers_path.read_text(encoding="utf-8"))
     search_data = json.loads(search_path.read_text(encoding="utf-8"))
     quality_data = json.loads(quality_path.read_text(encoding="utf-8"))
+    review_data = json.loads(review_path.read_text(encoding="utf-8"))
     paper_slugs = {paper.get("slug") for paper in papers_data.get("papers", [])}
     report_slugs = set(reports)
 
@@ -250,6 +257,27 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     missing_quality = sorted(required_quality - set(quality_data))
     if missing_quality:
         errors.append(f"quality.json missing keys: {', '.join(missing_quality)}")
+
+    review_item_slugs = {item.get("slug") for item in review_data.get("items", [])}
+    review_queues = review_data.get("queues") or {}
+    review_queue_slugs = set()
+    for value in review_queues.values():
+        if isinstance(value, list):
+            review_queue_slugs.update(value)
+    if review_data.get("count") != len(report_slugs):
+        errors.append(f"review.json count {review_data.get('count')} != markdown report count {len(report_slugs)}")
+    if review_item_slugs != report_slugs:
+        errors.append(
+            "review.json item slugs do not match markdown reports: "
+            f"missing={sorted(report_slugs - review_item_slugs)}, extra={sorted(review_item_slugs - report_slugs)}"
+        )
+    unknown_review_slugs = sorted(review_queue_slugs - report_slugs)
+    if unknown_review_slugs:
+        errors.append(f"review.json queues reference unknown slugs: {unknown_review_slugs}")
+    required_review = {"queues", "items"}
+    missing_review = sorted(required_review - set(review_data))
+    if missing_review:
+        errors.append(f"review.json missing keys: {', '.join(missing_review)}")
 
     taxonomy = papers_data.get("taxonomy") or {}
     required_taxonomy = {

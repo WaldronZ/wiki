@@ -24,8 +24,10 @@ GENERATED_FIXED_PATHS = (
     "papers.json",
     "search_index.json",
     "quality.json",
+    "review.json",
     "index.html",
     "library.html",
+    "review.html",
     "dashboard.html",
     "tags.html",
     "lines/index.html",
@@ -553,6 +555,116 @@ def write_quality_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     )
 
 
+def parse_date(value: Any) -> dt.date | None:
+    text = str(value or "").strip()
+    if not text:
+        return None
+    try:
+        return dt.date.fromisoformat(text[:10])
+    except ValueError:
+        return None
+
+
+def review_interval_days(paper: dict[str, Any]) -> int:
+    importance = int(paper.get("importance") or 0)
+    confidence = int(paper.get("confidence") or 0)
+    reproducibility = int(paper.get("reproducibility") or 0)
+    if importance >= 5:
+        days = 14
+    elif importance >= 4:
+        days = 30
+    elif importance >= 3:
+        days = 60
+    else:
+        days = 90
+    if confidence and confidence <= 3:
+        days = max(7, days // 2)
+    if reproducibility and reproducibility <= 3:
+        days = max(7, days - 7)
+    return days
+
+
+def review_base_date(paper: dict[str, Any]) -> dt.date:
+    for field in ("last_reviewed", "updated_at", "created_at"):
+        value = parse_date(paper.get(field))
+        if value:
+            return value
+    return dt.date.today()
+
+
+def review_item(paper: dict[str, Any], today: str) -> dict[str, Any]:
+    interval = review_interval_days(paper)
+    existing_next = str(paper.get("next_review") or "").strip()
+    base = review_base_date(paper)
+    suggested_next = (base + dt.timedelta(days=interval)).isoformat()
+    effective_next = existing_next or suggested_next
+    due = bool(effective_next and effective_next <= today)
+    if existing_next:
+        state = "due" if due else "scheduled"
+    else:
+        state = "needs_plan"
+    priority = int(paper.get("importance") or 0) * 10
+    if state == "needs_plan":
+        priority += 8
+    if due:
+        priority += 12
+    if int(paper.get("confidence") or 0) <= 3:
+        priority += 3
+
+    return {
+        "slug": paper["slug"],
+        "title": paper["title"],
+        "title_zh": paper["title_zh"],
+        "research_line": paper.get("research_line") or "Unassigned",
+        "line_role": paper.get("line_role") or "",
+        "importance": paper.get("importance"),
+        "confidence": paper.get("confidence"),
+        "reproducibility": paper.get("reproducibility"),
+        "review_stage": paper.get("review_stage") or "",
+        "last_reviewed": paper.get("last_reviewed") or "",
+        "next_review": existing_next,
+        "suggested_next_review": suggested_next,
+        "interval_days": interval,
+        "state": state,
+        "priority": priority,
+        "html_path": paper.get("html_path") or paper.get("md_path"),
+    }
+
+
+def build_review_plan(papers: list[dict[str, Any]]) -> dict[str, Any]:
+    today = dt.date.today().isoformat()
+    items = [review_item(paper, today) for paper in papers]
+    items.sort(
+        key=lambda item: (
+            item["state"] != "due",
+            item["state"] != "needs_plan",
+            -int(item.get("priority") or 0),
+            item.get("suggested_next_review") or item.get("next_review") or "",
+            item["title"],
+        )
+    )
+    queues = {
+        "due": [item["slug"] for item in items if item["state"] == "due"],
+        "needs_plan": [item["slug"] for item in items if item["state"] == "needs_plan"],
+        "scheduled": [item["slug"] for item in items if item["state"] == "scheduled"],
+        "high_priority": [item["slug"] for item in items if int(item.get("importance") or 0) >= 5],
+    }
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": len(papers),
+        "queues": queues,
+        "items": items,
+    }
+
+
+def write_review_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_review_plan(papers)
+    (report_dir / "review.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
 def write_search_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     payload = {
         "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
@@ -935,6 +1047,7 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <span class="stat">分类 {len(data["tags"])}</span>
     <span class="stat">最近更新 {html.escape(data["generated_at"])}</span>
     <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="lines/index.html">研究线</a>
     <a class="stat" href="tags.html">分类总览</a>
@@ -1322,6 +1435,7 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <div class="stats">
     <a class="stat" href="index.html">卡片首页</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="lines/index.html">研究线</a>
     <a class="stat" href="tags.html">分类总览</a>
     <a class="stat" href="quality.json">质量 JSON</a>
@@ -1517,8 +1631,69 @@ render();
     (report_dir / "library.html").write_text(page_shell("论文库表格", body), encoding="utf-8")
 
 
+def render_review_row(item: dict[str, Any]) -> str:
+    state_label = {
+        "due": "待复习",
+        "needs_plan": "需建计划",
+        "scheduled": "已计划",
+    }.get(str(item.get("state") or ""), str(item.get("state") or "unknown"))
+    next_text = item.get("next_review") or f'建议 {item.get("suggested_next_review")}'
+    return f"""<tr>
+  <td class="library-title">
+    <strong><a href="{html.escape(str(item.get("html_path") or ""))}">{html.escape(str(item.get("title_zh") or item.get("title") or item.get("slug")))}</a></strong>
+    <div class="meta">{html.escape(str(item.get("slug") or ""))}</div>
+  </td>
+  <td>{html.escape(str(item.get("research_line") or "Unassigned"))}<div class="meta">{html.escape(str(item.get("line_role") or ""))}</div></td>
+  <td><span class="flag">{html.escape(state_label)}</span><div class="meta">{html.escape(str(item.get("review_stage") or "未设置阶段"))}</div></td>
+  <td>{html.escape(str(next_text))}<div class="meta">间隔 {html.escape(str(item.get("interval_days") or "-"))} 天</div></td>
+  <td><div class="score-grid"><span>I {html.escape(str(item.get("importance") or "-"))}</span><span>C {html.escape(str(item.get("confidence") or "-"))}</span><span>R {html.escape(str(item.get("reproducibility") or "-"))}</span></div></td>
+  <td>{html.escape(str(item.get("priority") or 0))}</td>
+</tr>"""
+
+
+def render_review(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    plan = build_review_plan(papers)
+    items = plan["items"]
+    rows = "\n".join(render_review_row(item) for item in items)
+    queue_cards = "".join(
+        f'<section class="metric-card"><span>{html.escape(name)}</span><strong>{len(slugs)}</strong><span>{html.escape(", ".join(slugs[:3]))}</span></section>'
+        for name, slugs in plan["queues"].items()
+    )
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Review Planner</div>
+  <h1>复习计划</h1>
+  <p class="lead">根据 importance、confidence、reproducibility、last_reviewed 与 next_review 生成复习队列。没有写入报告的项目会给出建议日期，便于后续批量补 frontmatter。</p>
+  <div class="stats">
+    <a class="stat" href="index.html">返回首页</a>
+    <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="review.json">复习 JSON</a>
+    <span class="stat">论文 {len(items)}</span>
+  </div>
+</header>
+<main class="shell">
+  <section>
+    <h2 class="section-title">队列</h2>
+    <div class="metric-grid">{queue_cards}</div>
+  </section>
+  <section>
+    <h2 class="section-title">复习条目</h2>
+    <div class="table-wrap">
+      <table class="library-table">
+        <thead><tr><th>论文</th><th>研究线</th><th>状态</th><th>下次复习</th><th>评分</th><th>优先级</th></tr></thead>
+        <tbody>{rows if rows else '<tr><td colspan="6">暂无论文。</td></tr>'}</tbody>
+      </table>
+    </div>
+  </section>
+</main>
+"""
+    (report_dir / "review.html").write_text(page_shell("复习计划", body), encoding="utf-8")
+
+
 def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     quality = build_quality_report(papers)
+    review_plan = build_review_plan(papers)
     today = dt.date.today().isoformat()
     total = len(papers)
     with_code = sum(1 for paper in papers if paper.get("has_code"))
@@ -1549,6 +1724,7 @@ def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         ("分类覆盖", quality["coverage"]["taxonomy"], "必要 taxonomy 字段完整"),
         ("高优先级", str(len(high_importance)), "importance >= 5"),
         ("待复习", str(len(due_review)), f"next_review <= {today}"),
+        ("需建复习计划", str(len(review_plan["queues"]["needs_plan"])), "缺 next_review 的建议队列"),
         ("待补分类", str(len(missing_taxonomy)), "缺 taxonomy 或 line role"),
     ]
     metric_html = "".join(
@@ -1632,6 +1808,7 @@ def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <div class="stats">
     <a class="stat" href="index.html">返回首页</a>
     <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="lines/index.html">研究线</a>
     <a class="stat" href="tags.html">分类总览</a>
     <a class="stat" href="quality.json">质量 JSON</a>
@@ -1730,6 +1907,7 @@ def render_line_pages(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <div class="stats">
     <a class="stat" href="../index.html">返回首页</a>
     <a class="stat" href="../library.html">论文库表格</a>
+    <a class="stat" href="../review.html">复习计划</a>
     <a class="stat" href="../dashboard.html">管理控制台</a>
     <a class="stat" href="index.html">全部研究线</a>
     <span class="stat">论文 {len(items)}</span>
@@ -1750,6 +1928,7 @@ def render_line_pages(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <div class="stats">
     <a class="stat" href="../index.html">返回首页</a>
     <a class="stat" href="../library.html">论文库表格</a>
+    <a class="stat" href="../review.html">复习计划</a>
     <a class="stat" href="../dashboard.html">管理控制台</a>
     <a class="stat" href="../tags.html">分类总览</a>
     <span class="stat">研究线 {len(grouped)}</span>
@@ -1821,6 +2000,7 @@ def render_tags(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <div class="stats">
     <a class="stat" href="index.html">返回首页</a>
     <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
     <span class="stat">分类 {len(grouped)}</span>
     <span class="stat">论文 {len(papers)}</span>
@@ -1835,9 +2015,11 @@ def build_wiki(report_dir: Path) -> int:
     papers = collect_papers(report_dir)
     write_json(report_dir, papers)
     write_quality_json(report_dir, papers)
+    write_review_json(report_dir, papers)
     write_search_index(report_dir, papers)
     render_index(report_dir, papers)
     render_library(report_dir, papers)
+    render_review(report_dir, papers)
     render_dashboard(report_dir, papers)
     render_line_pages(report_dir, papers)
     render_tags(report_dir, papers)
