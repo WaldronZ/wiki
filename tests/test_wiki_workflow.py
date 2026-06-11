@@ -344,6 +344,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn('id="facetField"', facets_html)
             self.assertIn('id="facetAction"', facets_html)
             self.assertIn('id="facetResultCount"', facets_html)
+            self.assertIn('id="downloadFacetCsv"', facets_html)
+            self.assertIn("facet_actions_filtered.csv", facets_html)
             self.assertIn("long-tail", facets_html)
             self.assertIn("unused", facets_html)
             self.assertIn("taxonomy_actions.json", facets_html)

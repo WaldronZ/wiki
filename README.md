@@ -133,7 +133,7 @@ paper_reader/
 - `docs/dashboard.html`：管理控制台，展示分类覆盖、研究线健康度、待复习和待补分类队列
 - `docs/release.html`：发布摘要页，集中展示发布状态、页面入口、数据文件、队列规模和推荐命令
 - `docs/collections.html`：集合视图页，集中展示共享筛选视图、智能队列和研究线集合入口
-- `docs/facets.html`：分类工作台，按字段审计标签规模、搜索筛选长尾标签、过载标签和动态状态候选值
+- `docs/facets.html`：分类工作台，按字段审计标签规模、搜索筛选并导出长尾标签、过载标签和动态状态候选值
 - `docs/related.html`：关联网络页，展示标签共现、相似论文对和孤岛论文，帮助发现潜在研究簇
 - `docs/gaps.html`：研究缺口页，自动诊断研究线缺角色、缺分类、缺复习、缺代码观察和后续工作空档
 - `docs/taxonomy.html`：分类治理页，展示 domain/track/problem 层级、状态矩阵、研究线角色矩阵、状态工作流设计器和治理队列

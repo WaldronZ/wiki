@@ -4888,16 +4888,17 @@ def render_facets(report_dir: Path, papers: list[dict[str, Any]]) -> None:
             flag_html = "".join(f'<span class="flag">{html.escape(flag)}</span>' for flag in flags) or '<span class="flag">stable</span>'
             href = page_query_href("library.html", **{query_key: value})
             value_cell = f'<a href="{html.escape(href)}">{html.escape(value)}</a>'
-            search_text = " ".join([label, english, value, action, taxonomy_action_recommendation(action, label)]).lower()
+            recommendation = taxonomy_action_recommendation(action, label)
+            search_text = " ".join([label, english, value, action, recommendation]).lower()
             table_rows.append(
-                f'<tr data-field="{html.escape(label, quote=True)}" data-action="{html.escape(action, quote=True)}" data-search="{html.escape(search_text, quote=True)}">'
+                f'<tr data-field="{html.escape(label, quote=True)}" data-action="{html.escape(action, quote=True)}" data-value="{html.escape(value, quote=True)}" data-count="{count}" data-share="{round(share, 4)}" data-href="{html.escape(href, quote=True)}" data-recommendation="{html.escape(recommendation, quote=True)}" data-search="{html.escape(search_text, quote=True)}">'
                 f"<td>{html.escape(label)}</td>"
                 f"<td>{value_cell}</td>"
                 f"<td>{count}</td>"
                 f"<td>{round(share * 100)}%</td>"
                 f"<td>{flag_html}</td>"
                 f"<td>{sample_links(field, value, is_list)}</td>"
-                f"<td>{html.escape(taxonomy_action_recommendation(action, label))}</td>"
+                f"<td>{html.escape(recommendation)}</td>"
                 "</tr>"
             )
 
@@ -5005,6 +5006,7 @@ def render_facets(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       <select id="facetField"><option value="">全部字段</option>{"".join(field_options)}</select>
       <select id="facetAction"><option value="">全部状态</option><option value="merge_candidate">长尾待合并</option><option value="split_candidate">过载待拆分</option><option value="unused_config">候选空值</option><option value="watch">观察中</option><option value="stable">稳定</option></select>
       <strong id="facetResultCount">{len(table_rows)} 项</strong>
+      <button id="downloadFacetCsv" class="button" type="button">下载当前 CSV</button>
     </div>
     <div class="table-wrap">{table_html}</div>
   </section>
@@ -5014,7 +5016,43 @@ const facetSearch = document.querySelector("#facetSearch");
 const facetField = document.querySelector("#facetField");
 const facetAction = document.querySelector("#facetAction");
 const facetResultCount = document.querySelector("#facetResultCount");
+const downloadFacetCsv = document.querySelector("#downloadFacetCsv");
 const facetRows = Array.from(document.querySelectorAll("tr[data-field]"));
+
+function facetCsvCell(value) {{
+  const text = String(value ?? "");
+  return (text.includes(",") || text.includes('"') || text.includes("\\n"))
+    ? `"${{text.replaceAll('"', '""')}}"`
+    : text;
+}}
+
+function downloadFacetRows() {{
+  const rows = facetRows.filter(row => !row.hidden);
+  if (!rows.length) {{
+    window.alert("当前筛选结果为空。");
+    return;
+  }}
+  const header = ["field", "value", "count", "share", "action", "recommendation", "href"];
+  const body = rows.map(row => [
+    row.dataset.field,
+    row.dataset.value,
+    row.dataset.count,
+    row.dataset.share,
+    row.dataset.action,
+    row.dataset.recommendation,
+    row.dataset.href,
+  ]);
+  const csv = [header, ...body].map(row => row.map(facetCsvCell).join(",")).join("\\n") + "\\n";
+  const blob = new Blob([csv], {{ type: "text/csv;charset=utf-8" }});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "facet_actions_filtered.csv";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}}
 
 function renderFacetRows() {{
   const q = facetSearch.value.trim().toLowerCase();
@@ -5032,6 +5070,7 @@ function renderFacetRows() {{
 }}
 
 [facetSearch, facetField, facetAction].forEach((control) => control.addEventListener("input", renderFacetRows));
+downloadFacetCsv.addEventListener("click", downloadFacetRows);
 renderFacetRows();
 </script>
 """
