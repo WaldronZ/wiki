@@ -674,7 +674,15 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
       <ul class="insight-list" id="insightLines"></ul>
     </div>
     <div class="insight-card">
-      <span>复习与优先级</span>
+      <span>Topic 热点</span>
+      <ul class="insight-list" id="insightTopics"></ul>
+    </div>
+    <div class="insight-card">
+      <span>Method 热点</span>
+      <ul class="insight-list" id="insightMethods"></ul>
+    </div>
+    <div class="insight-card">
+      <span>覆盖与优先级</span>
       <strong id="insightReviewGap">0</strong>
       <div class="meta" id="insightPriority">-</div>
     </div>
@@ -959,6 +967,8 @@ const insightTotal = document.querySelector("#insightTotal");
 const insightCoverage = document.querySelector("#insightCoverage");
 const insightStatuses = document.querySelector("#insightStatuses");
 const insightLines = document.querySelector("#insightLines");
+const insightTopics = document.querySelector("#insightTopics");
+const insightMethods = document.querySelector("#insightMethods");
 const insightReviewGap = document.querySelector("#insightReviewGap");
 const insightPriority = document.querySelector("#insightPriority");
 const columnToggles = Array.from(document.querySelectorAll("[data-column-toggle]"));
@@ -1357,6 +1367,14 @@ function countBy(rows, getter) {
   return Array.from(counts.entries()).sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0]));
 }
 
+function countTokens(rows, key) {
+  const counts = new Map();
+  rows.forEach(row => {
+    tokens(row.dataset[key]).forEach(value => counts.set(value, (counts.get(value) || 0) + 1));
+  });
+  return Array.from(counts.entries()).sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0]));
+}
+
 function renderInsightList(list, entries, total, emptyLabel = "无结果") {
   list.replaceChildren();
   if (!entries.length) {
@@ -1384,6 +1402,7 @@ function updateLibraryInsights(rows) {
   const total = rows.length;
   const codeCount = rows.filter(row => row.dataset.code === "yes").length;
   const missingReview = rows.filter(row => !row.dataset.nextReview).length;
+  const missingTaxonomy = rows.filter(row => !row.dataset.domains || !row.dataset.topics || !row.dataset.methods).length;
   const today = localDateString();
   const dueReview = rows.filter(row => row.dataset.nextReview && row.dataset.nextReview <= today).length;
   const importanceValues = rows
@@ -1394,10 +1413,12 @@ function updateLibraryInsights(rows) {
     : "-";
   insightTotal.textContent = String(total);
   insightCoverage.textContent = `${codeCount}/${total} 有代码 · ${percentLabel(codeCount, total)} 覆盖`;
-  insightReviewGap.textContent = String(missingReview);
-  insightPriority.textContent = `缺复习计划 · 到期 ${dueReview} · 平均重要性 ${averageImportance}`;
+  insightReviewGap.textContent = String(missingTaxonomy);
+  insightPriority.textContent = `缺 taxonomy · 缺复习 ${missingReview} · 到期 ${dueReview} · 平均重要性 ${averageImportance}`;
   renderInsightList(insightStatuses, countBy(rows, row => row.dataset.status), total);
   renderInsightList(insightLines, countBy(rows, row => row.dataset.line), total);
+  renderInsightList(insightTopics, countTokens(rows, "topics"), total, "未设置 topic");
+  renderInsightList(insightMethods, countTokens(rows, "methods"), total, "未设置 method");
 }
 
 function updateBulkState() {
