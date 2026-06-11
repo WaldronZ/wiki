@@ -540,6 +540,14 @@
       "mutates": false
     },
     {
+      "id": "apply_metadata_dry_run",
+      "kind": "check",
+      "label": "Preview edited metadata CSV",
+      "command": "python3 scripts/apply_library_metadata.py docs --input <csv>",
+      "output": "",
+      "mutates": false
+    },
+    {
       "id": "apply_metadata",
       "kind": "writeback",
       "label": "Apply edited metadata CSV",
@@ -612,7 +620,7 @@
       "steps": [
         "taxonomy_actions_markdown",
         "taxonomy_actions_patch",
-        "apply_metadata",
+        "apply_metadata_dry_run",
         "quality_gate"
       ]
     },
@@ -641,6 +649,7 @@
     "python3 scripts/build_wiki.py docs",
     "python3 scripts/check_quality.py docs",
     "python3 scripts/validate_wiki.py docs --strict-taxonomy",
+    "python3 scripts/apply_library_metadata.py docs --input <csv>",
     "python3 scripts/apply_library_metadata.py docs --input <csv> --write",
     "python3 scripts/apply_taxonomy_aliases.py docs --write",
     "python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md",

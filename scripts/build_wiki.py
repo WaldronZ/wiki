@@ -1336,6 +1336,14 @@ def command_recipes_manifest() -> list[dict[str, Any]]:
             "mutates": False,
         },
         {
+            "id": "apply_metadata_dry_run",
+            "kind": "check",
+            "label": "Preview edited metadata CSV",
+            "command": "python3 scripts/apply_library_metadata.py docs --input <csv>",
+            "output": "",
+            "mutates": False,
+        },
+        {
             "id": "apply_metadata",
             "kind": "writeback",
             "label": "Apply edited metadata CSV",
@@ -1411,7 +1419,7 @@ def governance_playbooks_manifest() -> list[dict[str, Any]]:
             "steps": [
                 "taxonomy_actions_markdown",
                 "taxonomy_actions_patch",
-                "apply_metadata",
+                "apply_metadata_dry_run",
                 "quality_gate",
             ],
         },
@@ -2042,6 +2050,7 @@ def page_shell(
     ["Command: Build wiki", "release.html", "python3 scripts/build_wiki.py docs"],
     ["Command: Quality gate", "release.html", "python3 scripts/check_quality.py docs"],
     ["Command: Strict validation", "release.html", "python3 scripts/validate_wiki.py docs --strict-taxonomy"],
+    ["Command: Preview metadata CSV", "release.html", "python3 scripts/apply_library_metadata.py docs --input <csv>"],
     ["Command: Apply metadata CSV", "release.html", "python3 scripts/apply_library_metadata.py docs --input <csv> --write"],
     ["Command: Apply taxonomy aliases", "release.html", "python3 scripts/apply_taxonomy_aliases.py docs --write"],
     ["Command: taxonomy_actions_markdown", "release.html", "python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md"],
@@ -4577,6 +4586,7 @@ def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
     quality_commands = [
         ("质量门禁", "python3 scripts/check_quality.py docs"),
         ("严格校验", "python3 scripts/validate_wiki.py docs --strict-taxonomy"),
+        ("预览元数据写入", "python3 scripts/apply_library_metadata.py docs --input <csv>"),
         ("预览别名写入", "python3 scripts/apply_taxonomy_aliases.py docs"),
         ("写入别名建议", "python3 scripts/apply_taxonomy_aliases.py docs --write"),
         ("导出治理清单", "python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md"),
@@ -4792,6 +4802,7 @@ def render_release(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
         f"<td>{html.escape(str(playbook['label']))}<div class=\"meta\">{html.escape(str(playbook['id']))}</div></td>"
         f"<td>{html.escape(str(playbook['description']))}</td>"
         f"<td>{'<br>'.join(html.escape(str(recipe_by_id.get(step, {}).get('label', step))) for step in playbook.get('steps', []))}</td>"
+        f'<td><button class="button copy-release-command" type="button" data-command="{html.escape(chr(10).join(str(recipe_by_id.get(step, {}).get("command", step)) for step in playbook.get("steps", [])), quote=True)}">复制命令组</button></td>'
         "</tr>"
         for playbook in manifest.get("governance_playbooks", [])
     )
@@ -4860,7 +4871,7 @@ def render_release(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
   </section>
   <section>
     <h2 class="section-title">治理 Playbooks</h2>
-    <div class="table-wrap"><table class="data-table"><thead><tr><th>批次</th><th>用途</th><th>步骤</th></tr></thead><tbody>{playbook_rows}</tbody></table></div>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>批次</th><th>用途</th><th>步骤</th><th>操作</th></tr></thead><tbody>{playbook_rows}</tbody></table></div>
   </section>
 </main>
 <script>
