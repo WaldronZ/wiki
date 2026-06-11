@@ -2363,6 +2363,7 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <div class="results-actions">
       <select id="savedView" class="saved-view" aria-label="选择保存视图"><option value="">选择视图</option></select>
       <button id="saveView" class="button" type="button">保存视图</button>
+      <button id="copyCurrentLink" class="button" type="button">复制当前链接</button>
       <button id="copySharedView" class="button" type="button">复制共享视图</button>
       <button id="deleteView" class="button" type="button">删除视图</button>
       <button id="exportSavedViews" class="button" type="button">导出视图</button>
@@ -2402,6 +2403,7 @@ const prevPage = document.querySelector("#prevPage");
 const nextPage = document.querySelector("#nextPage");
 const savedView = document.querySelector("#savedView");
 const saveView = document.querySelector("#saveView");
+const copyCurrentLink = document.querySelector("#copyCurrentLink");
 const copySharedView = document.querySelector("#copySharedView");
 const deleteView = document.querySelector("#deleteView");
 const exportSavedViews = document.querySelector("#exportSavedViews");
@@ -2476,6 +2478,14 @@ function writeStateToUrl() {{
   window.history.replaceState(null, "", nextUrl);
 }}
 
+function currentViewUrl() {{
+  const params = new URLSearchParams(currentState());
+  const url = new URL(window.location.href);
+  url.search = params.toString();
+  url.hash = "";
+  return url.toString();
+}}
+
 function readSavedViews() {{
   try {{
     const views = JSON.parse(localStorage.getItem(savedViewsKey) || "[]");
@@ -2539,6 +2549,15 @@ async function copyJsonSnippet(payload) {{
     window.alert("已复制 shared view JSON。");
   }} catch {{
     window.prompt("复制 shared view JSON", text);
+  }}
+}}
+
+async function copyText(text, fallbackLabel) {{
+  try {{
+    await navigator.clipboard.writeText(text);
+    window.alert("已复制。");
+  }} catch {{
+    window.prompt(fallbackLabel, text);
   }}
 }}
 
@@ -2693,6 +2712,7 @@ saveView.addEventListener("click", () => {{
   refreshSavedViews();
   savedView.value = "local:0";
 }});
+copyCurrentLink.addEventListener("click", () => copyText(currentViewUrl(), "复制当前视图链接"));
 copySharedView.addEventListener("click", () => copyJsonSnippet(sharedViewPayload("index")));
 exportSavedViews.addEventListener("click", () => {{
   const views = readSavedViews();
@@ -3166,6 +3186,7 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <div class="results-actions">
       <select id="savedView" class="saved-view" aria-label="选择保存视图"><option value="">选择视图</option></select>
       <button id="saveView" class="button" type="button">保存视图</button>
+      <button id="copyCurrentLink" class="button" type="button">复制当前链接</button>
       <button id="copySharedView" class="button" type="button">复制共享视图</button>
       <button id="deleteView" class="button" type="button">删除视图</button>
       <button id="exportSavedViews" class="button" type="button">导出视图</button>
@@ -3292,6 +3313,7 @@ const prevPage = document.querySelector("#prevPage");
 const nextPage = document.querySelector("#nextPage");
 const savedView = document.querySelector("#savedView");
 const saveView = document.querySelector("#saveView");
+const copyCurrentLink = document.querySelector("#copyCurrentLink");
 const copySharedView = document.querySelector("#copySharedView");
 const deleteView = document.querySelector("#deleteView");
 const exportSavedViews = document.querySelector("#exportSavedViews");
@@ -3537,6 +3559,14 @@ function writeStateToUrl() {{
   const params = new URLSearchParams(currentState());
   const query = params.toString();
   window.history.replaceState(null, "", query ? `${{location.pathname}}?${{query}}` : location.pathname);
+}}
+
+function currentViewUrl() {{
+  const params = new URLSearchParams(currentState());
+  const url = new URL(window.location.href);
+  url.search = params.toString();
+  url.hash = "";
+  return url.toString();
 }}
 
 function readSavedViews() {{
@@ -4065,6 +4095,7 @@ saveView.addEventListener("click", () => {{
   refreshSavedViews();
   savedView.value = "local:0";
 }});
+copyCurrentLink.addEventListener("click", () => copyText(currentViewUrl(), "复制当前视图链接"));
 copySharedView.addEventListener("click", () => copyJsonSnippet(sharedViewPayload("library")));
 exportSavedViews.addEventListener("click", () => {{
   const views = readSavedViews();
