@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>关联网络</title>
+  <title>工作流中心</title>
   <style>
     :root {
       color-scheme: light;
@@ -351,13 +351,28 @@
       header { padding-top: 28px; }
     }
 
-    .relation-summary {
+    .workflow-summary {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 12px;
+      gap: 14px;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, .8fr);
+      align-items: start;
     }
-    .relation-summary .metric-card strong { font-size: 28px; }
-    .data-table td:nth-child(4) .chips { padding-top: 0; }
+    .workflow-command-panel {
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+    .workflow-command-panel .bulk-actions { margin: 0; }
+    .workflow-recommendations {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    @media (max-width: 860px) { .workflow-summary { grid-template-columns: 1fr; } }
     
   </style>
 </head>
@@ -375,45 +390,74 @@
 </div>
 
 <header class="shell">
-  <div class="eyebrow">Relation Network</div>
-  <h1>关联网络</h1>
-  <p class="lead">按 frontmatter 中的研究线、结构分类、主题和方法计算标签共现与论文相似度，帮助发现研究簇、重复分类、孤岛论文和潜在的阅读路径。</p>
+  <div class="eyebrow">Workflow Center</div>
+  <h1>工作流中心</h1>
+  <p class="lead">集中查看当前启用的状态体系、不同 workflow 的覆盖情况、未配置状态漂移和共享视图绑定。适合在论文库变大后持续调整阅读状态语义。</p>
   <div class="stats">
-    <a class="stat" href="index.html">卡片首页</a>
+    <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="library.html">论文库表格</a>
-    <a class="stat" href="collections.html">集合视图</a>
-    <a class="stat" href="related.html">关联网络</a>
-    <a class="stat" href="matrix.html">研究矩阵</a>
-    <a class="stat" href="timeline.html">时间轴</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
-    <a class="stat" href="gaps.html">研究缺口</a>
+    <a class="stat" href="quality.html">质量治理</a>
+    <a class="stat" href="workflow.json">Workflow JSON</a>
+    <a class="stat" href="snapshot.html">治理快照</a>
+    <span class="stat">active personal</span>
+    <span class="stat">workflow 2</span>
     <span class="stat">论文 5</span>
-    <span class="stat">共现 531</span>
-    <span class="stat">相似对 10</span>
   </div>
 </header>
 <main class="shell">
-  <section>
-    <h2 class="section-title">关系摘要</h2>
-    <div class="relation-summary">
-      <div class="metric-card"><strong>531</strong><span>标签共现边</span></div>
-      <div class="metric-card"><strong>10</strong><span>相似论文对</span></div>
-      <div class="metric-card"><strong>0</strong><span>孤岛论文</span></div>
+  <section class="workflow-summary">
+    <div>
+      <h2 class="section-title">当前 Status 分布</h2>
+      <div class="table-wrap"><table class="data-table"><thead><tr><th>Status</th><th>论文</th><th>入口</th></tr></thead><tbody><tr><td><a href="library.html?workflow=personal&amp;status=unread">unread</a></td><td>0</td><td><a href="board.html?workflow=personal&amp;status=unread">看板</a></td></tr><tr><td><a href="library.html?workflow=personal&amp;status=skimmed">skimmed</a></td><td>0</td><td><a href="board.html?workflow=personal&amp;status=skimmed">看板</a></td></tr><tr><td><a href="library.html?workflow=personal&amp;status=reading">reading</a></td><td>0</td><td><a href="board.html?workflow=personal&amp;status=reading">看板</a></td></tr><tr><td><a href="library.html?workflow=personal&amp;status=read">read</a></td><td>5</td><td><a href="board.html?workflow=personal&amp;status=read">看板</a></td></tr><tr><td><a href="library.html?workflow=personal&amp;status=archived">archived</a></td><td>0</td><td><a href="board.html?workflow=personal&amp;status=archived">看板</a></td></tr></tbody></table></div>
+    </div>
+    <div class="workflow-command-panel">
+      <strong>推荐动作</strong>
+      <ol class="workflow-recommendations"><li>有 5 篇论文缺 review_stage，可在 library.html 批量补齐复习阶段。</li><li>当前 workflow 有 4 个空 status，可保留为候选列，或在 workflow 中移除。</li></ol>
+      <div class="bulk-actions"><button class="button copy-workflow-command" type="button" data-command="python3 scripts/apply_status_workflow.py docs --input &lt;taxonomy_status_workflow.json&gt;">scripts/apply_status_workflow.py</button><button class="button copy-workflow-command" type="button" data-command="python3 scripts/apply_status_workflow.py docs --input &lt;taxonomy_status_workflow.json&gt; --write">scripts/apply_status_workflow.py</button><button class="button copy-workflow-command" type="button" data-command="python3 scripts/apply_library_metadata.py docs --input &lt;status_patch.csv&gt;">scripts/apply_library_metadata.py</button><button class="button copy-workflow-command" type="button" data-command="python3 scripts/validate_wiki.py docs --strict-taxonomy">scripts/validate_wiki.py</button></div>
+      <p class="meta">复制后在仓库根目录执行；带 --write 的命令会修改 taxonomy.json 或报告 frontmatter。</p>
     </div>
   </section>
   <section>
-    <h2 class="section-title">标签共现</h2>
-    <div class="table-wrap"><table class="data-table"><thead><tr><th>标签 A</th><th>标签 B</th><th>共现</th><th>样例论文</th></tr></thead><tbody><tr><td>Domain / LLM Systems</td><td>Line / Parallel Decoding with Diffusion Models</td><td>3</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a>、<a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a>、<a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td></tr><tr><td>Domain / LLM Systems</td><td>Topic / Diffusion Language Models</td><td>3</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a>、<a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a>、<a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td></tr><tr><td>Domain / LLM Systems</td><td>Topic / LLM Serving</td><td>3</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a>、<a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a>、<a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></td></tr><tr><td>Domain / LLM Systems</td><td>Topic / Speculative Decoding</td><td>3</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a>、<a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a>、<a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td></tr><tr><td>Domain / LLM Systems</td><td>Track / Inference Acceleration</td><td>3</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a>、<a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a>、<a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td></tr><tr><td>Domain / LLM Systems</td><td>Track / Parallel Decoding</td><td>3</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a>、<a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a>、<a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td></tr><tr><td>Line / Parallel Decoding with Diffusion Models</td><td>Topic / Diffusion Language Models</td><td>3</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a>、<a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a>、<a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td></tr><tr><td>Line / Parallel Decoding with Diffusion Models</td><td>Topic / Speculative Decoding</td><td>3</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a>、<a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a>、<a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td></tr><tr><td>Line / Parallel Decoding with Diffusion Models</td><td>Track / Inference Acceleration</td><td>3</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a>、<a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a>、<a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td></tr><tr><td>Line / Parallel Decoding with Diffusion Models</td><td>Track / Parallel Decoding</td><td>3</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a>、<a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a>、<a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td></tr><tr><td>Topic / Diffusion Language Models</td><td>Topic / Speculative Decoding</td><td>3</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a>、<a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a>、<a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td></tr><tr><td>Topic / Diffusion Language Models</td><td>Track / Inference Acceleration</td><td>3</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a>、<a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a>、<a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td></tr><tr><td>Topic / Diffusion Language Models</td><td>Track / Parallel Decoding</td><td>3</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a>、<a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a>、<a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td></tr><tr><td>Topic / Speculative Decoding</td><td>Track / Inference Acceleration</td><td>3</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a>、<a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a>、<a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td></tr><tr><td>Topic / Speculative Decoding</td><td>Track / Parallel Decoding</td><td>3</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a>、<a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a>、<a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td></tr><tr><td>Track / Inference Acceleration</td><td>Track / Parallel Decoding</td><td>3</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a>、<a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a>、<a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td></tr><tr><td>Domain / LLM Systems</td><td>Line / Efficient Attention Kernels</td><td>2</td><td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a>、<a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></td></tr><tr><td>Domain / LLM Systems</td><td>Method / FlashAttention</td><td>2</td><td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a>、<a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></td></tr><tr><td>Domain / LLM Systems</td><td>Role / foundation</td><td>2</td><td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a>、<a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></td></tr><tr><td>Domain / LLM Systems</td><td>Topic / KV Cache</td><td>2</td><td><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a>、<a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></td></tr><tr><td>Domain / LLM Systems</td><td>Topic / LLM Inference</td><td>2</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a>、<a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td></tr><tr><td>Domain / LLM Systems</td><td>Topic / Parallel Decoding</td><td>2</td><td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a>、<a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td></tr><tr><td>Domain / LLM Systems</td><td>Track / Attention Kernels</td><td>2</td><td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a>、<a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></td></tr><tr><td>Line / Efficient Attention Kernels</td><td>Method / FlashAttention</td><td>2</td><td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a>、<a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></td></tr><tr><td>Line / Efficient Attention Kernels</td><td>Track / Attention Kernels</td><td>2</td><td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a>、<a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></td></tr><tr><td>Line / Parallel Decoding with Diffusion Models</td><td>Topic / LLM Inference</td><td>2</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a>、<a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td></tr><tr><td>Line / Parallel Decoding with Diffusion Models</td><td>Topic / LLM Serving</td><td>2</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a>、<a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a></td></tr><tr><td>Line / Parallel Decoding with Diffusion Models</td><td>Topic / Parallel Decoding</td><td>2</td><td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a>、<a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td></tr><tr><td>Method / FlashAttention</td><td>Track / Attention Kernels</td><td>2</td><td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a>、<a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></td></tr><tr><td>Topic / Diffusion Language Models</td><td>Topic / LLM Inference</td><td>2</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a>、<a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td></tr><tr><td>Topic / Diffusion Language Models</td><td>Topic / LLM Serving</td><td>2</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a>、<a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a></td></tr><tr><td>Topic / Diffusion Language Models</td><td>Topic / Parallel Decoding</td><td>2</td><td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a>、<a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td></tr><tr><td>Topic / LLM Inference</td><td>Topic / Speculative Decoding</td><td>2</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a>、<a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td></tr><tr><td>Topic / LLM Inference</td><td>Track / Inference Acceleration</td><td>2</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a>、<a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td></tr><tr><td>Topic / LLM Inference</td><td>Track / Parallel Decoding</td><td>2</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a>、<a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td></tr><tr><td>Topic / LLM Serving</td><td>Topic / Speculative Decoding</td><td>2</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a>、<a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a></td></tr><tr><td>Topic / LLM Serving</td><td>Track / Inference Acceleration</td><td>2</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a>、<a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a></td></tr><tr><td>Topic / LLM Serving</td><td>Track / Parallel Decoding</td><td>2</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a>、<a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a></td></tr><tr><td>Topic / Parallel Decoding</td><td>Topic / Speculative Decoding</td><td>2</td><td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a>、<a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td></tr><tr><td>Topic / Parallel Decoding</td><td>Track / Inference Acceleration</td><td>2</td><td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a>、<a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td></tr></tbody></table></div>
+    <h2 class="section-title">Workflow 对比</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>Workflow</th><th>Status</th><th>Reading</th><th>Review</th><th>未配置值</th><th>空字段</th><th>入口</th></tr></thead><tbody><tr><td><a href="library.html?workflow=personal">personal</a> <span class="flag">active</span></td><td>5</td><td>4</td><td>3</td><td>0</td><td>5</td><td><a href="board.html?workflow=personal">打开看板</a></td></tr><tr><td><a href="library.html?workflow=research">research</a></td><td>6</td><td>5</td><td>4</td><td>1</td><td>5</td><td><a href="board.html?workflow=research">打开看板</a></td></tr></tbody></table></div>
   </section>
   <section>
-    <h2 class="section-title">相似论文</h2>
-    <div class="table-wrap"><table class="data-table"><thead><tr><th>相似度</th><th>论文 A</th><th>论文 B</th><th>共享特征</th></tr></thead><tbody><tr><td>29</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a></td><td><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td><td><div class="chips"><span class="chip">Domain / LLM Systems</span><span class="chip">Line / Parallel Decoding with Diffusion Models</span><span class="chip">Topic / Diffusion Language Models</span><span class="chip">Topic / LLM Inference</span><span class="chip">Topic / Speculative Decoding</span><span class="chip">Track / Inference Acceleration</span><span class="chip">Track / Parallel Decoding</span></div></td></tr><tr><td>28</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a></td><td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a></td><td><div class="chips"><span class="chip">Domain / LLM Systems</span><span class="chip">Line / Parallel Decoding with Diffusion Models</span><span class="chip">Topic / Diffusion Language Models</span><span class="chip">Topic / LLM Serving</span><span class="chip">Topic / Speculative Decoding</span><span class="chip">Track / Inference Acceleration</span><span class="chip">Track / Parallel Decoding</span></div></td></tr><tr><td>27</td><td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a></td><td><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td><td><div class="chips"><span class="chip">Domain / LLM Systems</span><span class="chip">Line / Parallel Decoding with Diffusion Models</span><span class="chip">Topic / Diffusion Language Models</span><span class="chip">Topic / Parallel Decoding</span><span class="chip">Topic / Speculative Decoding</span><span class="chip">Track / Inference Acceleration</span><span class="chip">Track / Parallel Decoding</span></div></td></tr><tr><td>15</td><td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></td><td><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></td><td><div class="chips"><span class="chip">Domain / LLM Systems</span><span class="chip">Line / Efficient Attention Kernels</span><span class="chip">Method / FlashAttention</span><span class="chip">Track / Attention Kernels</span></div></td></tr><tr><td>7</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a></td><td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></td><td><div class="chips"><span class="chip">Domain / LLM Systems</span><span class="chip">Topic / LLM Serving</span></div></td></tr><tr><td>7</td><td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a></td><td><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></td><td><div class="chips"><span class="chip">Domain / LLM Systems</span><span class="chip">Role / foundation</span></div></td></tr><tr><td>6</td><td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a></td><td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></td><td><div class="chips"><span class="chip">Domain / LLM Systems</span><span class="chip">Topic / LLM Serving</span></div></td></tr><tr><td>6</td><td><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td><td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></td><td><div class="chips"><span class="chip">Domain / LLM Systems</span><span class="chip">Topic / KV Cache</span></div></td></tr><tr><td>4</td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a></td><td><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></td><td><div class="chips"><span class="chip">Domain / LLM Systems</span></div></td></tr><tr><td>3</td><td><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td><td><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></td><td><div class="chips"><span class="chip">Domain / LLM Systems</span></div></td></tr></tbody></table></div>
+    <h2 class="section-title">当前 Drift</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>字段</th><th>值</th><th>论文</th><th>样例</th></tr></thead><tbody><tr><td colspan="4" class="empty">当前激活 workflow 没有未配置状态值。</td></tr></tbody></table></div>
+  </section>
+  
+  <section>
+    <h2 class="section-title">阅读状态</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>值</th><th>论文</th><th>状态</th></tr></thead><tbody><tr><td><a href="library.html?workflow=personal&amp;status=unread">unread</a></td><td>0</td><td>empty</td></tr><tr><td><a href="library.html?workflow=personal&amp;status=skimmed">skimmed</a></td><td>0</td><td>empty</td></tr><tr><td><a href="library.html?workflow=personal&amp;status=reading">reading</a></td><td>0</td><td>empty</td></tr><tr><td><a href="library.html?workflow=personal&amp;status=read">read</a></td><td>5</td><td>used</td></tr><tr><td><a href="library.html?workflow=personal&amp;status=archived">archived</a></td><td>0</td><td>empty</td></tr></tbody></table></div>
   </section>
   <section>
-    <h2 class="section-title">孤岛论文</h2>
-    <div class="empty">没有孤岛论文。</div>
+    <h2 class="section-title">阅读阶段</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>值</th><th>论文</th><th>状态</th></tr></thead><tbody><tr><td><a href="library.html?workflow=personal&amp;stage=skim">skim</a></td><td>0</td><td>empty</td></tr><tr><td><a href="library.html?workflow=personal&amp;stage=normal_read">normal_read</a></td><td>0</td><td>empty</td></tr><tr><td><a href="library.html?workflow=personal&amp;stage=deep_read">deep_read</a></td><td>5</td><td>used</td></tr><tr><td><a href="library.html?workflow=personal&amp;stage=code_checked">code_checked</a></td><td>0</td><td>empty</td></tr></tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">复习阶段</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>值</th><th>论文</th><th>状态</th></tr></thead><tbody><tr><td><a href="library.html?workflow=personal&amp;reviewStage=fresh">fresh</a></td><td>0</td><td>empty</td></tr><tr><td><a href="library.html?workflow=personal&amp;reviewStage=due">due</a></td><td>0</td><td>empty</td></tr><tr><td><a href="library.html?workflow=personal&amp;reviewStage=reviewed">reviewed</a></td><td>0</td><td>empty</td></tr></tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">绑定 Workflow 的共享视图</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>视图</th><th>页面</th><th>Workflow</th><th>State</th></tr></thead><tbody><tr><td colspan="4" class="empty">暂无绑定 workflow 的共享视图。</td></tr></tbody></table></div>
   </section>
 </main>
+<script>
+document.querySelectorAll(".copy-workflow-command").forEach(button => {
+  button.dataset.label = button.textContent;
+  button.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(button.dataset.command || "");
+      button.textContent = "已复制";
+      setTimeout(() => button.textContent = button.dataset.label, 1200);
+    } catch (error) {
+      window.prompt("复制命令", button.dataset.command || "");
+    }
+  });
+});
+</script>
 
 <script>
 (() => {

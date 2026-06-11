@@ -101,6 +101,7 @@ REQUIRED_PAGES = {
     "index.html",
     "library.html",
     "board.html",
+    "workflow.html",
     "inbox.html",
     "quality.html",
     "review.html",
@@ -124,6 +125,7 @@ REQUIRED_PAGES = {
     "review.json",
     "freshness.json",
     "taxonomy_actions.json",
+    "workflow.json",
     "snapshot.json",
     "manifest.json",
     "lines/index.html",
@@ -540,6 +542,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     quality_path = report_dir / "quality.json"
     review_path = report_dir / "review.json"
     taxonomy_actions_path = report_dir / "taxonomy_actions.json"
+    workflow_path = report_dir / "workflow.json"
     stats_path = report_dir / "stats.json"
     inbox_path = report_dir / "inbox.json"
     snapshot_path = report_dir / "snapshot.json"
@@ -559,6 +562,9 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     if not taxonomy_actions_path.exists():
         errors.append("missing taxonomy_actions.json")
         return
+    if not workflow_path.exists():
+        errors.append("missing workflow.json")
+        return
     if not stats_path.exists():
         errors.append("missing stats.json")
         return
@@ -577,6 +583,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     quality_data = json.loads(quality_path.read_text(encoding="utf-8"))
     review_data = json.loads(review_path.read_text(encoding="utf-8"))
     taxonomy_actions_data = json.loads(taxonomy_actions_path.read_text(encoding="utf-8"))
+    workflow_data = json.loads(workflow_path.read_text(encoding="utf-8"))
     stats_data = json.loads(stats_path.read_text(encoding="utf-8"))
     inbox_data = json.loads(inbox_path.read_text(encoding="utf-8"))
     snapshot_data = json.loads(snapshot_path.read_text(encoding="utf-8"))
@@ -705,6 +712,53 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     missing_taxonomy_actions = sorted(required_taxonomy_actions - set(taxonomy_actions_data))
     if missing_taxonomy_actions:
         errors.append(f"taxonomy_actions.json missing keys: {', '.join(missing_taxonomy_actions)}")
+
+    if workflow_data.get("count") != len(report_slugs):
+        errors.append(f"workflow.json count {workflow_data.get('count')} != markdown report count {len(report_slugs)}")
+    required_workflow = {
+        "active_status_workflow",
+        "workflow_count",
+        "workflows",
+        "active_unconfigured",
+        "shared_workflow_views",
+        "recommendations",
+        "commands",
+    }
+    missing_workflow = sorted(required_workflow - set(workflow_data))
+    if missing_workflow:
+        errors.append(f"workflow.json missing keys: {', '.join(missing_workflow)}")
+    workflow_items = workflow_data.get("workflows")
+    if not isinstance(workflow_items, list):
+        errors.append("workflow.json workflows must be a list")
+        workflow_items = []
+    elif workflow_data.get("workflow_count") != len(workflow_items):
+        errors.append("workflow.json workflow_count must match workflows length")
+    if workflow_items and not any(isinstance(item, dict) and item.get("active") is True for item in workflow_items):
+        errors.append("workflow.json workflows must include one active workflow")
+    for index, workflow in enumerate(workflow_items):
+        if not isinstance(workflow, dict):
+            errors.append(f"workflow.json workflows[{index}] must be an object")
+            continue
+        for key in ("name", "status_values", "reading_stage_values", "review_stage_values", "fields"):
+            if key not in workflow:
+                errors.append(f"workflow.json workflows[{index}] missing {key}")
+        fields = workflow.get("fields") or {}
+        if not isinstance(fields, dict):
+            errors.append(f"workflow.json workflows[{index}].fields must be an object")
+            continue
+        for field in ("status", "reading_stage", "review_stage"):
+            field_data = fields.get(field)
+            if not isinstance(field_data, dict):
+                errors.append(f"workflow.json workflows[{index}].fields.{field} must be an object")
+                continue
+            if not isinstance(field_data.get("values"), list):
+                errors.append(f"workflow.json workflows[{index}].fields.{field}.values must be a list")
+            if not isinstance(field_data.get("unconfigured"), list):
+                errors.append(f"workflow.json workflows[{index}].fields.{field}.unconfigured must be a list")
+    if not isinstance(workflow_data.get("active_unconfigured"), list):
+        errors.append("workflow.json active_unconfigured must be a list")
+    if not isinstance(workflow_data.get("shared_workflow_views"), list):
+        errors.append("workflow.json shared_workflow_views must be a list")
 
     if stats_data.get("count") != len(report_slugs):
         errors.append(f"stats.json count {stats_data.get('count')} != markdown report count {len(report_slugs)}")

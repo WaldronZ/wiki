@@ -35,11 +35,13 @@ GENERATED_FIXED_PATHS = (
     "freshness.json",
     "taxonomy_actions.json",
     "actions.json",
+    "workflow.json",
     "snapshot.json",
     "manifest.json",
     "index.html",
     "library.html",
     "board.html",
+    "workflow.html",
     "inbox.html",
     "quality.html",
     "review.html",
@@ -1336,6 +1338,185 @@ def write_stats_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     )
 
 
+WORKFLOW_FIELD_SPECS = {
+    "status": {
+        "label": "阅读状态",
+        "config_key": "status_values",
+        "paper_key": "status",
+        "query_key": "status",
+    },
+    "reading_stage": {
+        "label": "阅读阶段",
+        "config_key": "reading_stage_values",
+        "paper_key": "reading_stage",
+        "query_key": "stage",
+    },
+    "review_stage": {
+        "label": "复习阶段",
+        "config_key": "review_stage_values",
+        "paper_key": "review_stage",
+        "query_key": "reviewStage",
+    },
+}
+
+
+def workflow_field_distribution(
+    papers: list[dict[str, Any]],
+    workflow_name: str,
+    field_name: str,
+    configured_values: list[str],
+) -> dict[str, Any]:
+    spec = WORKFLOW_FIELD_SPECS[field_name]
+    paper_key = str(spec["paper_key"])
+    query_key = str(spec["query_key"])
+    configured = [str(value).strip() for value in configured_values if str(value).strip()]
+    configured_set = set(configured)
+    counts: Counter[str] = Counter()
+    slugs_by_value: dict[str, list[str]] = defaultdict(list)
+    empty_slugs: list[str] = []
+
+    for paper in papers:
+        value = str(paper.get(paper_key) or "").strip()
+        if not value:
+            empty_slugs.append(str(paper["slug"]))
+            continue
+        counts[value] += 1
+        slugs_by_value[value].append(str(paper["slug"]))
+
+    values = [
+        {
+            "value": value,
+            "count": int(counts.get(value, 0)),
+            "configured": True,
+            "href": page_query_href("library.html", workflow=workflow_name, **{query_key: value}),
+        }
+        for value in configured
+    ]
+    unconfigured = [
+        {
+            "value": value,
+            "count": int(counts[value]),
+            "configured": False,
+            "slugs": sorted(slugs_by_value[value]),
+            "href": page_query_href("library.html", workflow=workflow_name, **{query_key: value}),
+        }
+        for value in sorted(counts, key=lambda item: (-counts[item], item.lower()))
+        if value not in configured_set
+    ]
+    return {
+        "field": field_name,
+        "label": spec["label"],
+        "configured_count": len(configured),
+        "used_configured_count": sum(1 for value in configured if counts.get(value, 0)),
+        "empty_count": len(empty_slugs),
+        "empty_slugs": sorted(empty_slugs),
+        "values": values,
+        "unconfigured": unconfigured,
+    }
+
+
+def build_workflow_payload(papers: list[dict[str, Any]]) -> dict[str, Any]:
+    controls = control_options()
+    workflows = controls.get("status_workflows") or {}
+    active = str(controls.get("active_status_workflow") or next(iter(workflows), "default"))
+    workflow_items: list[dict[str, Any]] = []
+
+    for name, workflow in workflows.items():
+        name_text = str(name)
+        fields = {
+            field_name: workflow_field_distribution(
+                papers,
+                name_text,
+                field_name,
+                list(workflow.get(str(spec["config_key"]), []) or []),
+            )
+            for field_name, spec in WORKFLOW_FIELD_SPECS.items()
+        }
+        unconfigured_total = sum(len(field["unconfigured"]) for field in fields.values())
+        empty_total = sum(int(field["empty_count"]) for field in fields.values())
+        workflow_items.append(
+            {
+                "name": name_text,
+                "active": name_text == active,
+                "status_values": list(workflow.get("status_values", []) or []),
+                "reading_stage_values": list(workflow.get("reading_stage_values", []) or []),
+                "review_stage_values": list(workflow.get("review_stage_values", []) or []),
+                "fields": fields,
+                "unconfigured_total": unconfigured_total,
+                "empty_total": empty_total,
+                "board_href": page_query_href("board.html", workflow=name_text),
+                "library_href": page_query_href("library.html", workflow=name_text),
+            }
+        )
+
+    active_item = next((item for item in workflow_items if item["active"]), workflow_items[0] if workflow_items else {})
+    active_unconfigured = []
+    for field in (active_item.get("fields") or {}).values():
+        for item in field.get("unconfigured", []):
+            active_unconfigured.append(
+                {
+                    "field": field["field"],
+                    "label": field["label"],
+                    **item,
+                }
+            )
+
+    shared_workflow_views = [
+        {
+            "name": view["name"],
+            "page": view.get("page") or "all",
+            "workflow": (view.get("state") or {}).get("workflow", ""),
+            "href": view_href(view),
+            "state": view.get("state") or {},
+        }
+        for view in SHARED_VIEWS
+        if (view.get("state") or {}).get("workflow")
+    ]
+
+    recommendations: list[str] = []
+    if not workflow_items:
+        recommendations.append("在 docs/guides/taxonomy.json 增加 status_workflows，给不同阅读模式保存命名状态体系。")
+    if active_unconfigured:
+        recommendations.append("当前激活 workflow 存在未配置状态值，建议在 taxonomy.html 调整 workflow 或批量迁移旧状态。")
+    missing_review = int((active_item.get("fields") or {}).get("review_stage", {}).get("empty_count") or 0)
+    if missing_review:
+        recommendations.append(f"有 {missing_review} 篇论文缺 review_stage，可在 library.html 批量补齐复习阶段。")
+    empty_statuses = [
+        value["value"]
+        for value in (active_item.get("fields") or {}).get("status", {}).get("values", [])
+        if int(value["count"]) == 0
+    ]
+    if empty_statuses:
+        recommendations.append(f"当前 workflow 有 {len(empty_statuses)} 个空 status，可保留为候选列，或在 workflow 中移除。")
+    if not recommendations:
+        recommendations.append("当前状态工作流和论文 frontmatter 对齐良好。")
+
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": len(papers),
+        "active_status_workflow": active,
+        "workflow_count": len(workflow_items),
+        "workflows": workflow_items,
+        "active_unconfigured": active_unconfigured,
+        "shared_workflow_views": shared_workflow_views,
+        "recommendations": recommendations,
+        "commands": [
+            "python3 scripts/apply_status_workflow.py docs --input <taxonomy_status_workflow.json>",
+            "python3 scripts/apply_status_workflow.py docs --input <taxonomy_status_workflow.json> --write",
+            "python3 scripts/apply_library_metadata.py docs --input <status_patch.csv>",
+            "python3 scripts/validate_wiki.py docs --strict-taxonomy",
+        ],
+    }
+
+
+def write_workflow_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_workflow_payload(papers)
+    (report_dir / "workflow.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
 def wiki_pages_manifest() -> list[dict[str, str]]:
     return [
         {"title": "首页", "href": "index.html", "kind": "view", "description": "卡片检索、筛选、研究线概览"},
@@ -1351,6 +1532,7 @@ def wiki_pages_manifest() -> list[dict[str, str]]:
         {"title": "关联网络", "href": "related.html", "kind": "analysis", "description": "标签共现、相似论文、孤岛论文"},
         {"title": "研究缺口", "href": "gaps.html", "kind": "ops", "description": "下一步行动和研究线缺口"},
         {"title": "状态看板", "href": "board.html", "kind": "workflow", "description": "拖拽式状态流和 CSV patch"},
+        {"title": "工作流中心", "href": "workflow.html", "kind": "workflow", "description": "状态体系对比、分布和漂移审计"},
         {"title": "待处理池", "href": "inbox.html", "kind": "workflow", "description": "候选论文队列和去重提示"},
         {"title": "复习计划", "href": "review.html", "kind": "workflow", "description": "待复习、需建计划、建议日期"},
         {"title": "时效治理", "href": "freshness.html", "kind": "ops", "description": "报告新鲜度、过期分析和研究线维护"},
@@ -1373,6 +1555,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "freshness.json", "description": "报告新鲜度、过期分析和研究线维护队列"},
         {"href": "taxonomy_actions.json", "description": "分类长尾、过载和空候选治理任务"},
         {"href": "actions.json", "description": "统一行动队列，汇总质量、复习、分类和 inbox 任务"},
+        {"href": "workflow.json", "description": "状态工作流配置、分布和漂移审计"},
         {"href": "snapshot.json", "description": "当前知识库治理快照和发布基线"},
         {"href": "inbox.json", "description": "候选论文队列和重复项"},
         {"href": "manifest.json", "description": "发布摘要和页面入口清单"},
@@ -5530,6 +5713,183 @@ renderBoard();
 </script>
 """
     (report_dir / "board.html").write_text(page_shell("状态看板", body, extra_css=board_css), encoding="utf-8")
+
+
+def render_workflow(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_workflow_payload(papers)
+    active = next((workflow for workflow in payload["workflows"] if workflow["active"]), payload["workflows"][0] if payload["workflows"] else {})
+    active_fields = active.get("fields") or {}
+    active_statuses = active_fields.get("status", {}).get("values", [])
+
+    status_rows = "".join(
+        "<tr>"
+        f'<td><a href="{html.escape(str(item["href"]))}">{html.escape(str(item["value"]))}</a></td>'
+        f"<td>{int(item['count'])}</td>"
+        f'<td><a href="{html.escape(page_query_href("board.html", workflow=str(active.get("name") or ""), status=str(item["value"])))}">看板</a></td>'
+        "</tr>"
+        for item in active_statuses
+    )
+    if not status_rows:
+        status_rows = '<tr><td colspan="3" class="empty">当前 workflow 没有 status 配置。</td></tr>'
+
+    workflow_rows = "".join(
+        "<tr>"
+        f'<td><a href="{html.escape(str(workflow["library_href"]))}">{html.escape(str(workflow["name"]))}</a>{" <span class=\"flag\">active</span>" if workflow["active"] else ""}</td>'
+        f"<td>{len(workflow['status_values'])}</td>"
+        f"<td>{len(workflow['reading_stage_values'])}</td>"
+        f"<td>{len(workflow['review_stage_values'])}</td>"
+        f"<td>{workflow['unconfigured_total']}</td>"
+        f"<td>{workflow['empty_total']}</td>"
+        f'<td><a href="{html.escape(str(workflow["board_href"]))}">打开看板</a></td>'
+        "</tr>"
+        for workflow in payload["workflows"]
+    )
+    if not workflow_rows:
+        workflow_rows = '<tr><td colspan="7" class="empty">还没有命名 workflow。</td></tr>'
+
+    drift_rows = "".join(
+        "<tr>"
+        f"<td>{html.escape(str(item['label']))}<div class=\"meta\">{html.escape(str(item['field']))}</div></td>"
+        f'<td><a href="{html.escape(str(item["href"]))}">{html.escape(str(item["value"]))}</a></td>'
+        f"<td>{int(item['count'])}</td>"
+        f"<td>{html.escape(', '.join(item.get('slugs', [])[:6]))}{' ...' if len(item.get('slugs', [])) > 6 else ''}</td>"
+        "</tr>"
+        for item in payload["active_unconfigured"]
+    )
+    if not drift_rows:
+        drift_rows = '<tr><td colspan="4" class="empty">当前激活 workflow 没有未配置状态值。</td></tr>'
+
+    field_sections = []
+    for field_name in ("status", "reading_stage", "review_stage"):
+        field = active_fields.get(field_name, {})
+        values = field.get("values", [])
+        rows = "".join(
+            "<tr>"
+            f'<td><a href="{html.escape(str(item["href"]))}">{html.escape(str(item["value"]))}</a></td>'
+            f"<td>{int(item['count'])}</td>"
+            f"<td>{'used' if int(item['count']) else 'empty'}</td>"
+            "</tr>"
+            for item in values
+        )
+        extras = "".join(
+            "<tr>"
+            f'<td><a href="{html.escape(str(item["href"]))}">{html.escape(str(item["value"]))}</a></td>'
+            f"<td>{int(item['count'])}</td>"
+            "<td>unconfigured</td>"
+            "</tr>"
+            for item in field.get("unconfigured", [])
+        )
+        table_rows = rows + extras or '<tr><td colspan="3" class="empty">没有可展示的值。</td></tr>'
+        field_sections.append(
+            f"""
+  <section>
+    <h2 class="section-title">{html.escape(str(field.get("label") or field_name))}</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>值</th><th>论文</th><th>状态</th></tr></thead><tbody>{table_rows}</tbody></table></div>
+  </section>"""
+        )
+
+    shared_rows = "".join(
+        "<tr>"
+        f'<td><a href="{html.escape(str(view["href"]))}">{html.escape(str(view["name"]))}</a></td>'
+        f"<td>{html.escape(str(view.get('page') or 'all'))}</td>"
+        f"<td>{html.escape(str(view.get('workflow') or ''))}</td>"
+        f"<td><code>{html.escape(json.dumps(view.get('state') or {}, ensure_ascii=False, sort_keys=True))}</code></td>"
+        "</tr>"
+        for view in payload["shared_workflow_views"]
+    )
+    if not shared_rows:
+        shared_rows = '<tr><td colspan="4" class="empty">暂无绑定 workflow 的共享视图。</td></tr>'
+
+    recommendation_html = "".join(f"<li>{html.escape(text)}</li>" for text in payload["recommendations"])
+    command_buttons = "".join(
+        f'<button class="button copy-workflow-command" type="button" data-command="{html.escape(command, quote=True)}">{html.escape(command.split()[1] if len(command.split()) > 1 else command)}</button>'
+        for command in payload["commands"]
+    )
+
+    workflow_css = """
+    .workflow-summary {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, .8fr);
+      align-items: start;
+    }
+    .workflow-command-panel {
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+    .workflow-command-panel .bulk-actions { margin: 0; }
+    .workflow-recommendations {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    @media (max-width: 860px) { .workflow-summary { grid-template-columns: 1fr; } }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Workflow Center</div>
+  <h1>工作流中心</h1>
+  <p class="lead">集中查看当前启用的状态体系、不同 workflow 的覆盖情况、未配置状态漂移和共享视图绑定。适合在论文库变大后持续调整阅读状态语义。</p>
+  <div class="stats">
+    <a class="stat" href="board.html">状态看板</a>
+    <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="taxonomy.html">分类治理</a>
+    <a class="stat" href="quality.html">质量治理</a>
+    <a class="stat" href="workflow.json">Workflow JSON</a>
+    <a class="stat" href="snapshot.html">治理快照</a>
+    <span class="stat">active {html.escape(str(payload["active_status_workflow"]))}</span>
+    <span class="stat">workflow {payload["workflow_count"]}</span>
+    <span class="stat">论文 {payload["count"]}</span>
+  </div>
+</header>
+<main class="shell">
+  <section class="workflow-summary">
+    <div>
+      <h2 class="section-title">当前 Status 分布</h2>
+      <div class="table-wrap"><table class="data-table"><thead><tr><th>Status</th><th>论文</th><th>入口</th></tr></thead><tbody>{status_rows}</tbody></table></div>
+    </div>
+    <div class="workflow-command-panel">
+      <strong>推荐动作</strong>
+      <ol class="workflow-recommendations">{recommendation_html}</ol>
+      <div class="bulk-actions">{command_buttons}</div>
+      <p class="meta">复制后在仓库根目录执行；带 --write 的命令会修改 taxonomy.json 或报告 frontmatter。</p>
+    </div>
+  </section>
+  <section>
+    <h2 class="section-title">Workflow 对比</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>Workflow</th><th>Status</th><th>Reading</th><th>Review</th><th>未配置值</th><th>空字段</th><th>入口</th></tr></thead><tbody>{workflow_rows}</tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">当前 Drift</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>字段</th><th>值</th><th>论文</th><th>样例</th></tr></thead><tbody>{drift_rows}</tbody></table></div>
+  </section>
+  {''.join(field_sections)}
+  <section>
+    <h2 class="section-title">绑定 Workflow 的共享视图</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>视图</th><th>页面</th><th>Workflow</th><th>State</th></tr></thead><tbody>{shared_rows}</tbody></table></div>
+  </section>
+</main>
+<script>
+document.querySelectorAll(".copy-workflow-command").forEach(button => {{
+  button.dataset.label = button.textContent;
+  button.addEventListener("click", async () => {{
+    try {{
+      await navigator.clipboard.writeText(button.dataset.command || "");
+      button.textContent = "已复制";
+      setTimeout(() => button.textContent = button.dataset.label, 1200);
+    }} catch (error) {{
+      window.prompt("复制命令", button.dataset.command || "");
+    }}
+  }});
+}});
+</script>
+"""
+    (report_dir / "workflow.html").write_text(page_shell("工作流中心", body, extra_css=workflow_css), encoding="utf-8")
 
 
 def render_inbox_row(item: dict[str, Any]) -> str:
@@ -10812,11 +11172,13 @@ def build_wiki(report_dir: Path) -> int:
     write_taxonomy_actions_json(report_dir, papers)
     write_actions_json(report_dir, papers, inbox_items)
     write_stats_json(report_dir, papers)
+    write_workflow_json(report_dir, papers)
     write_inbox_json(report_dir, inbox_items)
     write_search_index(report_dir, papers)
     render_index(report_dir, papers)
     render_library(report_dir, papers)
     render_board(report_dir, papers)
+    render_workflow(report_dir, papers)
     render_inbox(report_dir, inbox_items)
     render_review(report_dir, papers)
     render_freshness(report_dir, papers)

@@ -220,6 +220,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "index.html",
                 "library.html",
                 "board.html",
+                "workflow.html",
                 "inbox.html",
                 "quality.html",
                 "review.html",
@@ -247,6 +248,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "freshness.json",
                 "taxonomy_actions.json",
                 "actions.json",
+                "workflow.json",
                 "snapshot.json",
                 "manifest.json",
                 "lines/index.html",
@@ -295,9 +297,11 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("View: Kernel 方向", index_html)
             self.assertIn("Playbook: Release readiness", index_html)
             self.assertIn('"href": "actions.html"', index_html)
+            self.assertIn('"href": "workflow.html"', index_html)
             self.assertIn('"href": "balance.html"', index_html)
             self.assertIn('"href": "coverage.html"', index_html)
             self.assertIn("Data: manifest.json", index_html)
+            self.assertIn("Data: workflow.json", index_html)
             self.assertIn("Data: snapshot.json", index_html)
             self.assertIn('"href": "snapshot.html"', index_html)
             self.assertIn("Command: Export taxonomy balance project tasks", index_html)
@@ -383,6 +387,26 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("applyWorkflow(boardWorkflow.value)", board_html)
             self.assertIn('id="newStatusName"', board_html)
             self.assertIn("新增状态列", board_html)
+            workflow = json.loads((report_dir / "workflow.json").read_text(encoding="utf-8"))
+            self.assertEqual(workflow["count"], 2)
+            self.assertEqual(workflow["active_status_workflow"], "research")
+            self.assertEqual(workflow["workflow_count"], 2)
+            self.assertEqual({item["name"] for item in workflow["workflows"]}, {"simple", "research"})
+            active_workflow = next(item for item in workflow["workflows"] if item["active"])
+            self.assertEqual(active_workflow["name"], "research")
+            self.assertEqual(len(active_workflow["status_values"]), 5)
+            self.assertEqual(active_workflow["fields"]["status"]["values"][3]["value"], "read")
+            self.assertEqual(active_workflow["fields"]["status"]["values"][3]["count"], 2)
+            self.assertEqual(active_workflow["fields"]["review_stage"]["empty_count"], 1)
+            self.assertEqual(workflow["active_unconfigured"], [])
+            self.assertTrue(workflow["recommendations"])
+            workflow_html = (report_dir / "workflow.html").read_text(encoding="utf-8")
+            self.assertIn("工作流中心", workflow_html)
+            self.assertIn("Workflow JSON", workflow_html)
+            self.assertIn("当前 Status 分布", workflow_html)
+            self.assertIn("Workflow 对比", workflow_html)
+            self.assertIn("当前 Drift", workflow_html)
+            self.assertIn("状态工作流配置、分布和漂移审计", workflow_html)
             inbox = json.loads((report_dir / "inbox.json").read_text(encoding="utf-8"))
             self.assertEqual(inbox["count"], 2)
             self.assertEqual(inbox["statuses"]["queued"], 2)
@@ -549,6 +573,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertTrue(manifest["publish_checks"]["no_duplicate_reports"])
             self.assertIn("release.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("snapshot.html", {item["href"] for item in manifest["pages"]})
+            self.assertIn("workflow.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("actions.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("freshness.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("balance.html", {item["href"] for item in manifest["pages"]})
@@ -556,6 +581,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("facets.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("taxonomy_actions.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("actions.json", {item["href"] for item in manifest["data_files"]})
+            self.assertIn("workflow.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("snapshot.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("freshness.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("manifest.json", {item["href"] for item in manifest["data_files"]})
@@ -571,6 +597,10 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(artifact_by_href["guides/metadata.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/inbox.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/taxonomy.schema.json"]["kind"], "contract")
+            self.assertEqual(artifact_by_href["workflow.html"]["status"], "ok")
+            self.assertRegex(artifact_by_href["workflow.html"]["sha256"], r"^[0-9a-f]{64}$")
+            self.assertEqual(artifact_by_href["workflow.json"]["status"], "ok")
+            self.assertRegex(artifact_by_href["workflow.json"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["snapshot.html"]["status"], "ok")
             self.assertRegex(artifact_by_href["snapshot.html"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["snapshot.json"]["status"], "ok")
@@ -625,6 +655,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("guides/report.template.md", release_html)
             self.assertIn("freshness.html", release_html)
             self.assertIn("freshness.json", release_html)
+            self.assertIn("workflow.html", release_html)
+            self.assertIn("workflow.json", release_html)
             self.assertIn("snapshot.html", release_html)
             self.assertIn("snapshot.json", release_html)
             self.assertIn("guides/metadata.schema.json", release_html)

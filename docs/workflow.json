@@ -1,0 +1,333 @@
+{
+  "generated_at": "2026-06-12T03:16:30",
+  "count": 5,
+  "active_status_workflow": "personal",
+  "workflow_count": 2,
+  "workflows": [
+    {
+      "name": "personal",
+      "active": true,
+      "status_values": [
+        "unread",
+        "skimmed",
+        "reading",
+        "read",
+        "archived"
+      ],
+      "reading_stage_values": [
+        "skim",
+        "normal_read",
+        "deep_read",
+        "code_checked"
+      ],
+      "review_stage_values": [
+        "fresh",
+        "due",
+        "reviewed"
+      ],
+      "fields": {
+        "status": {
+          "field": "status",
+          "label": "阅读状态",
+          "configured_count": 5,
+          "used_configured_count": 1,
+          "empty_count": 0,
+          "empty_slugs": [],
+          "values": [
+            {
+              "value": "unread",
+              "count": 0,
+              "configured": true,
+              "href": "library.html?workflow=personal&status=unread"
+            },
+            {
+              "value": "skimmed",
+              "count": 0,
+              "configured": true,
+              "href": "library.html?workflow=personal&status=skimmed"
+            },
+            {
+              "value": "reading",
+              "count": 0,
+              "configured": true,
+              "href": "library.html?workflow=personal&status=reading"
+            },
+            {
+              "value": "read",
+              "count": 5,
+              "configured": true,
+              "href": "library.html?workflow=personal&status=read"
+            },
+            {
+              "value": "archived",
+              "count": 0,
+              "configured": true,
+              "href": "library.html?workflow=personal&status=archived"
+            }
+          ],
+          "unconfigured": []
+        },
+        "reading_stage": {
+          "field": "reading_stage",
+          "label": "阅读阶段",
+          "configured_count": 4,
+          "used_configured_count": 1,
+          "empty_count": 0,
+          "empty_slugs": [],
+          "values": [
+            {
+              "value": "skim",
+              "count": 0,
+              "configured": true,
+              "href": "library.html?workflow=personal&stage=skim"
+            },
+            {
+              "value": "normal_read",
+              "count": 0,
+              "configured": true,
+              "href": "library.html?workflow=personal&stage=normal_read"
+            },
+            {
+              "value": "deep_read",
+              "count": 5,
+              "configured": true,
+              "href": "library.html?workflow=personal&stage=deep_read"
+            },
+            {
+              "value": "code_checked",
+              "count": 0,
+              "configured": true,
+              "href": "library.html?workflow=personal&stage=code_checked"
+            }
+          ],
+          "unconfigured": []
+        },
+        "review_stage": {
+          "field": "review_stage",
+          "label": "复习阶段",
+          "configured_count": 3,
+          "used_configured_count": 0,
+          "empty_count": 5,
+          "empty_slugs": [
+            "2307.08691-flashattention-2",
+            "2501.01005-flashinfer",
+            "2602.06036-dflash",
+            "2604.11035-introspective-dlm",
+            "2605.12825-orthrus"
+          ],
+          "values": [
+            {
+              "value": "fresh",
+              "count": 0,
+              "configured": true,
+              "href": "library.html?workflow=personal&reviewStage=fresh"
+            },
+            {
+              "value": "due",
+              "count": 0,
+              "configured": true,
+              "href": "library.html?workflow=personal&reviewStage=due"
+            },
+            {
+              "value": "reviewed",
+              "count": 0,
+              "configured": true,
+              "href": "library.html?workflow=personal&reviewStage=reviewed"
+            }
+          ],
+          "unconfigured": []
+        }
+      },
+      "unconfigured_total": 0,
+      "empty_total": 5,
+      "board_href": "board.html?workflow=personal",
+      "library_href": "library.html?workflow=personal"
+    },
+    {
+      "name": "research",
+      "active": false,
+      "status_values": [
+        "inbox",
+        "triaged",
+        "reading",
+        "implemented",
+        "cited",
+        "archived"
+      ],
+      "reading_stage_values": [
+        "skim",
+        "normal_read",
+        "deep_read",
+        "code_checked",
+        "reproduced"
+      ],
+      "review_stage_values": [
+        "fresh",
+        "due",
+        "reviewed",
+        "evergreen"
+      ],
+      "fields": {
+        "status": {
+          "field": "status",
+          "label": "阅读状态",
+          "configured_count": 6,
+          "used_configured_count": 0,
+          "empty_count": 0,
+          "empty_slugs": [],
+          "values": [
+            {
+              "value": "inbox",
+              "count": 0,
+              "configured": true,
+              "href": "library.html?workflow=research&status=inbox"
+            },
+            {
+              "value": "triaged",
+              "count": 0,
+              "configured": true,
+              "href": "library.html?workflow=research&status=triaged"
+            },
+            {
+              "value": "reading",
+              "count": 0,
+              "configured": true,
+              "href": "library.html?workflow=research&status=reading"
+            },
+            {
+              "value": "implemented",
+              "count": 0,
+              "configured": true,
+              "href": "library.html?workflow=research&status=implemented"
+            },
+            {
+              "value": "cited",
+              "count": 0,
+              "configured": true,
+              "href": "library.html?workflow=research&status=cited"
+            },
+            {
+              "value": "archived",
+              "count": 0,
+              "configured": true,
+              "href": "library.html?workflow=research&status=archived"
+            }
+          ],
+          "unconfigured": [
+            {
+              "value": "read",
+              "count": 5,
+              "configured": false,
+              "slugs": [
+                "2307.08691-flashattention-2",
+                "2501.01005-flashinfer",
+                "2602.06036-dflash",
+                "2604.11035-introspective-dlm",
+                "2605.12825-orthrus"
+              ],
+              "href": "library.html?workflow=research&status=read"
+            }
+          ]
+        },
+        "reading_stage": {
+          "field": "reading_stage",
+          "label": "阅读阶段",
+          "configured_count": 5,
+          "used_configured_count": 1,
+          "empty_count": 0,
+          "empty_slugs": [],
+          "values": [
+            {
+              "value": "skim",
+              "count": 0,
+              "configured": true,
+              "href": "library.html?workflow=research&stage=skim"
+            },
+            {
+              "value": "normal_read",
+              "count": 0,
+              "configured": true,
+              "href": "library.html?workflow=research&stage=normal_read"
+            },
+            {
+              "value": "deep_read",
+              "count": 5,
+              "configured": true,
+              "href": "library.html?workflow=research&stage=deep_read"
+            },
+            {
+              "value": "code_checked",
+              "count": 0,
+              "configured": true,
+              "href": "library.html?workflow=research&stage=code_checked"
+            },
+            {
+              "value": "reproduced",
+              "count": 0,
+              "configured": true,
+              "href": "library.html?workflow=research&stage=reproduced"
+            }
+          ],
+          "unconfigured": []
+        },
+        "review_stage": {
+          "field": "review_stage",
+          "label": "复习阶段",
+          "configured_count": 4,
+          "used_configured_count": 0,
+          "empty_count": 5,
+          "empty_slugs": [
+            "2307.08691-flashattention-2",
+            "2501.01005-flashinfer",
+            "2602.06036-dflash",
+            "2604.11035-introspective-dlm",
+            "2605.12825-orthrus"
+          ],
+          "values": [
+            {
+              "value": "fresh",
+              "count": 0,
+              "configured": true,
+              "href": "library.html?workflow=research&reviewStage=fresh"
+            },
+            {
+              "value": "due",
+              "count": 0,
+              "configured": true,
+              "href": "library.html?workflow=research&reviewStage=due"
+            },
+            {
+              "value": "reviewed",
+              "count": 0,
+              "configured": true,
+              "href": "library.html?workflow=research&reviewStage=reviewed"
+            },
+            {
+              "value": "evergreen",
+              "count": 0,
+              "configured": true,
+              "href": "library.html?workflow=research&reviewStage=evergreen"
+            }
+          ],
+          "unconfigured": []
+        }
+      },
+      "unconfigured_total": 1,
+      "empty_total": 5,
+      "board_href": "board.html?workflow=research",
+      "library_href": "library.html?workflow=research"
+    }
+  ],
+  "active_unconfigured": [],
+  "shared_workflow_views": [],
+  "recommendations": [
+    "有 5 篇论文缺 review_stage，可在 library.html 批量补齐复习阶段。",
+    "当前 workflow 有 4 个空 status，可保留为候选列，或在 workflow 中移除。"
+  ],
+  "commands": [
+    "python3 scripts/apply_status_workflow.py docs --input <taxonomy_status_workflow.json>",
+    "python3 scripts/apply_status_workflow.py docs --input <taxonomy_status_workflow.json> --write",
+    "python3 scripts/apply_library_metadata.py docs --input <status_patch.csv>",
+    "python3 scripts/validate_wiki.py docs --strict-taxonomy"
+  ]
+}
