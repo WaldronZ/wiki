@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>管理控制台</title>
+  <title>去重工作台</title>
   <style>
     :root {
       color-scheme: light;
@@ -353,6 +353,9 @@
   </style>
 </head>
 <body>
+<script>
+window.PAPER_WIKI = {"generated_at": "2026-06-12T05:13:09", "count": 5, "inbox_count": 0, "duplicate_report_count": 0, "inbox_duplicate_count": 0, "group_count": 0, "report_groups": [], "inbox_groups": [], "summary": {"high": 0, "medium": 0, "low": 0, "clean_reports": true, "clean_inbox": true}, "csv_columns": ["scope", "kind", "key", "severity", "count", "slugs", "item_ids", "recommended_action"], "commands": ["python3 scripts/check_quality.py docs", "python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv", "python3 scripts/apply_library_metadata.py docs --input <dedupe_patch.csv>", "python3 scripts/apply_inbox_items.py docs --input <candidate_csv> --write"], "links": {"quality": "quality.html", "inbox": "inbox.html", "actions": "actions.html", "library": "library.html"}};
+</script>
 
 <button class="button quick-open" type="button" id="quickOpen">快速跳转</button>
 <div class="quick-panel" id="quickPanel" hidden>
@@ -366,50 +369,155 @@
 </div>
 
 <header class="shell">
-  <div class="eyebrow">Knowledge Base Operations</div>
-  <h1>管理控制台</h1>
-  <p class="lead">面向大量论文的运营视图：看分类覆盖、研究线健康度、复习队列和需要补元数据的报告。所有数据来自 markdown frontmatter 与 wiki 索引。</p>
+  <div class="eyebrow">Dedupe Governance</div>
+  <h1>去重工作台</h1>
+  <p class="lead">把库内重复报告、候选池撞车和 inbox 内部重复集中到一个治理视图，适合在批量导入论文前后做清理。</p>
   <div class="stats">
     <a class="stat" href="index.html">返回首页</a>
     <a class="stat" href="library.html">论文库表格</a>
-    <a class="stat" href="board.html">状态看板</a>
+    <a class="stat" href="intake.html">批量导入</a>
     <a class="stat" href="inbox.html">待处理池</a>
-    <a class="stat" href="collections.html">集合视图</a>
-    <a class="stat" href="related.html">关联网络</a>
-    <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="quality.html">质量治理</a>
-    <a class="stat" href="lines/index.html">研究线</a>
-    <a class="stat" href="taxonomy.html">分类治理</a>
-    <a class="stat" href="timeline.html">时间轴</a>
-    <a class="stat" href="matrix.html">研究矩阵</a>
-    <a class="stat" href="tags.html">分类总览</a>
-    <a class="stat" href="quality.json">质量 JSON</a>
-    <a class="stat" href="stats.json">统计 JSON</a>
+    <a class="stat" href="actions.html">行动中心</a>
+    <a class="stat" href="dedupe.json">Dedupe JSON</a>
+    <span class="stat">论文 5</span>
+    <span class="stat">候选 0</span>
     <span class="stat">生成时间 2026-06-12T05:13:09</span>
   </div>
 </header>
 <main class="shell">
   <section>
-    <h2 class="section-title">总览</h2>
-    <div class="metric-grid"><section class="metric-card"><span>论文</span><strong>5</strong><span>已纳入 wiki 的报告数</span></section><section class="metric-card"><span>质量分</span><strong>92.0</strong><span>元数据、复习计划和代码观察综合分</span></section><section class="metric-card"><span>研究线</span><strong>2</strong><span>有明确 research_line 的脉络</span></section><section class="metric-card"><span>代码覆盖</span><strong>100%</strong><span>包含代码观察或代码仓库线索</span></section><section class="metric-card"><span>分类覆盖</span><strong>100%</strong><span>必要 taxonomy 字段完整</span></section><section class="metric-card"><span>高优先级</span><strong>2</strong><span>importance &gt;= 5</span></section><section class="metric-card"><span>待复习</span><strong>0</strong><span>next_review &lt;= 2026-06-12</span></section><section class="metric-card"><span>需建复习计划</span><strong>5</strong><span>缺 next_review 的建议队列</span></section><section class="metric-card"><span>待补分类</span><strong>0</strong><span>缺 taxonomy 或 line role</span></section></div>
+    <h2 class="section-title">去重摘要</h2>
+    <div class="metric-grid"><section class="metric-card"><span>重复组</span><strong>0</strong><span>library + inbox</span></section><section class="metric-card"><span>库内重复</span><strong>0</strong><span>report groups</span></section><section class="metric-card"><span>候选重复</span><strong>0</strong><span>inbox groups</span></section><section class="metric-card"><span>高优先级</span><strong>0</strong><span>merge first</span></section><section class="metric-card"><span>中优先级</span><strong>0</strong><span>triage</span></section></div>
   </section>
   <section>
-    <h2 class="section-title">研究线健康度</h2>
-    <table class="data-table"><thead><tr><th>研究线</th><th>Owner</th><th>论文</th><th>角色</th><th>平均重要性</th><th>代码覆盖</th></tr></thead><tbody><tr><td><a href="lines/parallel-decoding-with-diffusion-models.html">Parallel Decoding with Diffusion Models</a></td><td>decoding-owner<div class="meta">generation / biweekly</div></td><td>3</td><td>foundation, variant, followup</td><td>4.3</td><td>100%</td></tr><tr><td><a href="lines/efficient-attention-kernels.html">Efficient Attention Kernels</a></td><td>kernel-owner<div class="meta">systems / monthly</div></td><td>2</td><td>foundation, system</td><td>4.5</td><td>100%</td></tr></tbody></table>
+    <h2 class="section-title">筛选</h2>
+    <div class="filter-grid">
+      <input id="dedupeSearch" type="search" placeholder="搜索标题、slug、arXiv、候选 id">
+      <select id="dedupeScope">
+        <option value="">全部范围</option>
+        <option value="library">库内报告</option>
+        <option value="inbox">候选池</option>
+      </select>
+      <select id="dedupeSeverity">
+        <option value="">全部优先级</option>
+        <option value="high">high</option>
+        <option value="medium">medium</option>
+        <option value="low">low</option>
+      </select>
+      <select id="dedupeKind">
+        <option value="">全部依据</option>
+      </select>
+    </div>
+    <div class="results-bar">
+      <strong><span id="dedupeVisibleCount">0</span> 组可见</strong>
+      <div class="results-actions">
+        <button id="downloadDedupeCsv" class="button" type="button">下载 CSV</button>
+        <button id="copyDedupeMarkdown" class="button" type="button">复制清单</button>
+        <button id="copyDedupeCommands" class="button" type="button">复制命令</button>
+      </div>
+    </div>
   </section>
   <section>
-    <h2 class="section-title">分类均衡度</h2>
-    <table class="data-table"><thead><tr><th>字段</th><th>均衡分</th><th>已用/配置</th><th>长尾</th><th>过载</th><th>最大值</th></tr></thead><tbody><tr><td>复习阶段<div class="meta">Review stage</div></td><td>0</td><td>0 / 3</td><td>0</td><td>0</td><td><a href="library.html">-</a> <span class="meta">0%</span></td></tr><tr><td>结构域<div class="meta">Domain</div></td><td>0</td><td>1 / 1</td><td>0</td><td>1</td><td><a href="library.html?domain=LLM+Systems">LLM Systems</a> <span class="meta">100%</span></td></tr><tr><td>阅读状态<div class="meta">Status</div></td><td>0</td><td>1 / 5</td><td>0</td><td>1</td><td><a href="library.html?status=read">read</a> <span class="meta">100%</span></td></tr><tr><td>阅读阶段<div class="meta">Reading stage</div></td><td>0</td><td>1 / 4</td><td>0</td><td>1</td><td><a href="library.html?stage=deep_read">deep_read</a> <span class="meta">100%</span></td></tr><tr><td>主题<div class="meta">Topic</div></td><td>29</td><td>14 / 14</td><td>8</td><td>0</td><td><a href="library.html?topic=Speculative+Decoding">Speculative Decoding</a> <span class="meta">60%</span></td></tr><tr><td>方法<div class="meta">Method</div></td><td>31</td><td>26 / 26</td><td>25</td><td>0</td><td><a href="library.html?method=FlashAttention">FlashAttention</a> <span class="meta">40%</span></td></tr><tr><td>方向<div class="meta">Track</div></td><td>35</td><td>4 / 4</td><td>1</td><td>0</td><td><a href="library.html?track=Parallel+Decoding">Parallel Decoding</a> <span class="meta">60%</span></td></tr><tr><td>研究线角色<div class="meta">Line role</div></td><td>38</td><td>4 / 4</td><td>3</td><td>0</td><td><a href="library.html?role=foundation">foundation</a> <span class="meta">40%</span></td></tr><tr><td>问题<div class="meta">Problem</div></td><td>40</td><td>5 / 5</td><td>5</td><td>0</td><td><a href="library.html?problem=Parallel+Diffusion+Decoding">Parallel Diffusion Decoding</a> <span class="meta">20%</span></td></tr><tr><td>研究线<div class="meta">Research line</div></td><td>40</td><td>2 / 2</td><td>0</td><td>0</td><td><a href="library.html?line=Parallel+Decoding+with+Diffusion+Models">Parallel Decoding with Diffusion Models</a> <span class="meta">60%</span></td></tr></tbody></table>
+    <h2 class="section-title">重复项</h2>
+    <div class="table-wrap"><div class="empty">当前没有发现重复报告或重复候选。</div></div>
   </section>
   <section>
-    <h2 class="section-title">管理队列</h2>
-    <div class="queue-grid"><section class="role-section"><h2>高优先级 <span class="meta">2</span></h2><ol class="queue-list"><li><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a> <span class="meta">Efficient Attention Kernels</span></li><li><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> <span class="meta">Parallel Decoding with Diffusion Models</span></li></ol></section><section class="role-section"><h2>待补分类 <span class="meta">0</span></h2><div class="empty">taxonomy 覆盖完整。</div></section><section class="role-section"><h2>待复习 <span class="meta">0</span></h2><div class="empty">没有到期复习项。</div></section><section class="role-section"><h2>未设置复习 <span class="meta">5</span></h2><ol class="queue-list"><li><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a> <span class="meta">Parallel Decoding with Diffusion Models</span></li><li><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> <span class="meta">Parallel Decoding with Diffusion Models</span></li><li><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a> <span class="meta">Parallel Decoding with Diffusion Models</span></li><li><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a> <span class="meta">Efficient Attention Kernels</span></li><li><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a> <span class="meta">Efficient Attention Kernels</span></li></ol></section><section class="role-section"><h2>无代码观察 <span class="meta">0</span></h2><div class="empty">所有论文都有代码观察或代码线索。</div></section></div>
-  </section>
-  <section>
-    <h2 class="section-title">质量队列</h2>
-    <table class="data-table"><thead><tr><th>队列</th><th>数量</th><th>样例 slug</th></tr></thead><tbody><tr><td>missing_required_metadata</td><td>0</td><td></td></tr><tr><td>needs_review_plan</td><td>5</td><td>2602.06036-dflash, 2604.11035-introspective-dlm, 2605.12825-orthrus, 2501.01005-flashinfer, 2307.08691-flashattention-2</td></tr><tr><td>due_review</td><td>0</td><td></td></tr><tr><td>no_code_observation</td><td>0</td><td></td></tr><tr><td>taxonomy_drift</td><td>0</td><td></td></tr><tr><td>duplicate_reports</td><td>0</td><td></td></tr><tr><td>taxonomy_sparse</td><td>0</td><td></td></tr><tr><td>taxonomy_dense</td><td>2</td><td>2501.01005-flashinfer, 2604.11035-introspective-dlm</td></tr><tr><td>high_importance</td><td>2</td><td>2307.08691-flashattention-2, 2604.11035-introspective-dlm</td></tr></tbody></table>
+    <h2 class="section-title">治理命令</h2>
+    <div class="command-panel"><div class="bulk-actions"><button class="button copy-dedupe-command" type="button" data-command="python3 scripts/check_quality.py docs">python3 scripts/check_quality.py docs</button><button class="button copy-dedupe-command" type="button" data-command="python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv">python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv</button><button class="button copy-dedupe-command" type="button" data-command="python3 scripts/apply_library_metadata.py docs --input &lt;dedupe_patch.csv&gt;">python3 scripts/apply_library_metadata.py docs --input &lt;dedupe_patch.csv&gt;</button><button class="button copy-dedupe-command" type="button" data-command="python3 scripts/apply_inbox_items.py docs --input &lt;candidate_csv&gt; --write">python3 scripts/apply_inbox_items.py docs --input &lt;candidate_csv&gt; --write</button></div></div>
   </section>
 </main>
+<script>
+const dedupeGroups = [...(window.PAPER_WIKI.report_groups || []), ...(window.PAPER_WIKI.inbox_groups || [])];
+const dedupeRows = Array.from(document.querySelectorAll("[data-scope]"));
+const dedupeSearch = document.querySelector("#dedupeSearch");
+const dedupeScope = document.querySelector("#dedupeScope");
+const dedupeSeverity = document.querySelector("#dedupeSeverity");
+const dedupeKind = document.querySelector("#dedupeKind");
+const dedupeVisibleCount = document.querySelector("#dedupeVisibleCount");
+
+function dedupeCsvCell(value) {
+  const text = Array.isArray(value) ? value.join("; ") : String(value ?? "");
+  return (text.includes(",") || text.includes('"') || text.includes("\n"))
+    ? '"' + text.replaceAll('"', '""') + '"'
+    : text;
+}
+
+function visibleDedupeGroups() {
+  const visibleIds = new Set(dedupeRows.filter(row => !row.hidden).map(row => row.querySelector(".meta")?.textContent || ""));
+  return dedupeGroups.filter(group => visibleIds.has(group.id));
+}
+
+function renderDedupe() {
+  const query = (dedupeSearch.value || "").trim().toLowerCase();
+  const scope = dedupeScope.value;
+  const severity = dedupeSeverity.value;
+  const kind = dedupeKind.value;
+  let count = 0;
+  dedupeRows.forEach(row => {
+    const match = (!query || (row.dataset.search || "").includes(query))
+      && (!scope || row.dataset.scope === scope)
+      && (!severity || row.dataset.severity === severity)
+      && (!kind || row.dataset.kind === kind);
+    row.hidden = !match;
+    if (match) count += 1;
+  });
+  dedupeVisibleCount.textContent = String(count);
+}
+
+function downloadDedupeCsv() {
+  const columns = window.PAPER_WIKI.csv_columns || [];
+  const lines = [columns.join(",")];
+  visibleDedupeGroups().forEach(group => {
+    lines.push(columns.map(column => dedupeCsvCell(group[column])).join(","));
+  });
+  const blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "dedupe_review.csv";
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function dedupeMarkdown(groups) {
+  if (!groups.length) return "- [x] 当前没有可见重复项";
+  return groups.map(group => `- [ ] ${group.scope} / ${group.kind} / ${group.key}: ${group.recommended_action}`).join("\n");
+}
+
+async function copyDedupeText(text, label, button) {
+  try {
+    await navigator.clipboard.writeText(text);
+    const original = button.textContent;
+    button.textContent = label;
+    setTimeout(() => button.textContent = original, 1200);
+  } catch {
+    window.prompt("复制内容", text);
+  }
+}
+
+new Set(dedupeGroups.map(group => group.kind).filter(Boolean)).forEach(kind => {
+  const option = document.createElement("option");
+  option.value = kind;
+  option.textContent = kind;
+  dedupeKind.appendChild(option);
+});
+
+[dedupeSearch, dedupeScope, dedupeSeverity, dedupeKind].forEach(control => {
+  control.addEventListener("input", renderDedupe);
+  control.addEventListener("change", renderDedupe);
+});
+document.querySelector("#downloadDedupeCsv").addEventListener("click", downloadDedupeCsv);
+document.querySelector("#copyDedupeMarkdown").addEventListener("click", event => copyDedupeText(dedupeMarkdown(visibleDedupeGroups()), "已复制", event.currentTarget));
+document.querySelector("#copyDedupeCommands").addEventListener("click", event => copyDedupeText((window.PAPER_WIKI.commands || []).join("\n"), "已复制", event.currentTarget));
+document.querySelectorAll(".copy-dedupe-row").forEach(button => {
+  button.addEventListener("click", () => copyDedupeText(button.dataset.checklist || "", "已复制", button));
+});
+document.querySelectorAll(".copy-dedupe-command").forEach(button => {
+  button.addEventListener("click", () => copyDedupeText(button.dataset.command || "", "已复制", button));
+});
+renderDedupe();
+</script>
 
 <script>
 (() => {

@@ -247,6 +247,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "catalog.html",
                 "intake.html",
                 "inbox.html",
+                "dedupe.html",
                 "quality.html",
                 "review.html",
                 "freshness.html",
@@ -286,6 +287,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "onboarding.json",
                 "catalog.json",
                 "intake.json",
+                "dedupe.json",
                 "snapshot.json",
                 "manifest.json",
                 "lines/index.html",
@@ -347,6 +349,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn('"href": "onboarding.html"', index_html)
             self.assertIn('"href": "catalog.html"', index_html)
             self.assertIn('"href": "intake.html"', index_html)
+            self.assertIn('"href": "dedupe.html"', index_html)
             self.assertIn('"href": "balance.html"', index_html)
             self.assertIn('"href": "coverage.html"', index_html)
             self.assertIn("Data: manifest.json", index_html)
@@ -363,6 +366,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("Data: onboarding.json", index_html)
             self.assertIn("Data: catalog.json", index_html)
             self.assertIn("Data: intake.json", index_html)
+            self.assertIn("Data: dedupe.json", index_html)
             self.assertIn("Data: snapshot.json", index_html)
             self.assertIn('"href": "snapshot.html"', index_html)
             self.assertIn("Command: Export taxonomy balance project tasks", index_html)
@@ -658,8 +662,10 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("onboarding.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("status.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("intake.json", {item["href"] for item in catalog["data_resources"]})
+            self.assertIn("dedupe.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("status.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("intake.html", {item["href"] for item in catalog["pages"]})
+            self.assertIn("dedupe.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("roadmap.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("index.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("guides/taxonomy.json", {item["href"] for item in catalog["contracts"]})
@@ -685,6 +691,25 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("inboxCsvHeader", inbox_html)
             self.assertIn('data-title="Gamma Paper"', inbox_html)
             self.assertIn("visibleInboxRows", inbox_html)
+            dedupe = json.loads((report_dir / "dedupe.json").read_text(encoding="utf-8"))
+            self.assertEqual(dedupe["count"], 2)
+            self.assertEqual(dedupe["inbox_count"], 2)
+            self.assertEqual(dedupe["duplicate_report_count"], 0)
+            self.assertEqual(dedupe["inbox_duplicate_count"], 1)
+            self.assertEqual(dedupe["group_count"], 1)
+            self.assertEqual(dedupe["inbox_groups"][0]["item_ids"], ["inbox-2"])
+            self.assertEqual(dedupe["inbox_groups"][0]["matched_slugs"], ["2601.00001-alpha-paper"])
+            self.assertIn("scope", dedupe["csv_columns"])
+            self.assertIn("severity", dedupe["csv_columns"])
+            self.assertTrue(any("check_quality.py" in command for command in dedupe["commands"]))
+            dedupe_html = (report_dir / "dedupe.html").read_text(encoding="utf-8")
+            self.assertIn("去重工作台", dedupe_html)
+            self.assertIn("Dedupe JSON", dedupe_html)
+            self.assertIn('id="dedupeSearch"', dedupe_html)
+            self.assertIn('id="downloadDedupeCsv"', dedupe_html)
+            self.assertIn('id="copyDedupeMarkdown"', dedupe_html)
+            self.assertIn("dedupe_review.csv", dedupe_html)
+            self.assertIn("function renderDedupe", dedupe_html)
             quality = json.loads((report_dir / "quality.json").read_text(encoding="utf-8"))
             self.assertIn("taxonomy_drift", quality)
             self.assertEqual(quality["taxonomy_drift"], [])
@@ -854,6 +879,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("onboarding.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("catalog.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("intake.html", {item["href"] for item in manifest["pages"]})
+            self.assertIn("dedupe.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("actions.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("freshness.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("balance.html", {item["href"] for item in manifest["pages"]})
@@ -875,6 +901,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("catalog.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("snapshot.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("intake.json", {item["href"] for item in manifest["data_files"]})
+            self.assertIn("dedupe.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("freshness.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("manifest.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("guides/report.template.md", {item["href"] for item in manifest["contract_files"]})
@@ -901,6 +928,10 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertRegex(artifact_by_href["intake.html"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["intake.json"]["status"], "ok")
             self.assertRegex(artifact_by_href["intake.json"]["sha256"], r"^[0-9a-f]{64}$")
+            self.assertEqual(artifact_by_href["dedupe.html"]["status"], "ok")
+            self.assertRegex(artifact_by_href["dedupe.html"]["sha256"], r"^[0-9a-f]{64}$")
+            self.assertEqual(artifact_by_href["dedupe.json"]["status"], "ok")
+            self.assertRegex(artifact_by_href["dedupe.json"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["pivot.html"]["status"], "ok")
             self.assertRegex(artifact_by_href["pivot.html"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["pivot.json"]["status"], "ok")
@@ -1617,9 +1648,19 @@ class WikiWorkflowTest(unittest.TestCase):
             )
             manifest = json.loads((report_dir / "manifest.json").read_text(encoding="utf-8"))
             self.assertFalse(manifest["publish_checks"]["no_duplicate_reports"])
+            dedupe = json.loads((report_dir / "dedupe.json").read_text(encoding="utf-8"))
+            self.assertEqual(dedupe["duplicate_report_count"], 1)
+            self.assertEqual(dedupe["report_groups"][0]["severity"], "high")
+            self.assertEqual(
+                dedupe["report_groups"][0]["slugs"],
+                ["2601.00001-alpha-paper", "2601.00001-alpha-paper-copy"],
+            )
             quality_html = (report_dir / "quality.html").read_text(encoding="utf-8")
             self.assertIn("库内重复报告", quality_html)
             self.assertIn("2601.00001-alpha-paper-copy", quality_html)
+            dedupe_html = (report_dir / "dedupe.html").read_text(encoding="utf-8")
+            self.assertIn("去重工作台", dedupe_html)
+            self.assertIn("2601.00001-alpha-paper-copy", dedupe_html)
 
     def test_apply_status_workflow_merges_dynamic_config(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_name:

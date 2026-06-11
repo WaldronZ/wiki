@@ -115,6 +115,7 @@ REQUIRED_PAGES = {
     "catalog.html",
     "intake.html",
     "inbox.html",
+    "dedupe.html",
     "quality.html",
     "review.html",
     "freshness.html",
@@ -133,6 +134,7 @@ REQUIRED_PAGES = {
     "search_index.json",
     "stats.json",
     "inbox.json",
+    "dedupe.json",
     "quality.json",
     "review.json",
     "freshness.json",
@@ -581,6 +583,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     stats_path = report_dir / "stats.json"
     intake_path = report_dir / "intake.json"
     inbox_path = report_dir / "inbox.json"
+    dedupe_path = report_dir / "dedupe.json"
     snapshot_path = report_dir / "snapshot.json"
     manifest_path = report_dir / "manifest.json"
     if not papers_path.exists():
@@ -643,6 +646,9 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     if not inbox_path.exists():
         errors.append("missing inbox.json")
         return
+    if not dedupe_path.exists():
+        errors.append("missing dedupe.json")
+        return
     if not snapshot_path.exists():
         errors.append("missing snapshot.json")
         return
@@ -670,6 +676,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     stats_data = json.loads(stats_path.read_text(encoding="utf-8"))
     intake_data = json.loads(intake_path.read_text(encoding="utf-8"))
     inbox_data = json.loads(inbox_path.read_text(encoding="utf-8"))
+    dedupe_data = json.loads(dedupe_path.read_text(encoding="utf-8"))
     snapshot_data = json.loads(snapshot_path.read_text(encoding="utf-8"))
     manifest_data = json.loads(manifest_path.read_text(encoding="utf-8"))
     paper_slugs = {paper.get("slug") for paper in papers_data.get("papers", [])}
@@ -1461,6 +1468,53 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
 
     if inbox_data.get("count") != len(inbox_data.get("items") or []):
         errors.append("inbox.json count must match items length")
+    inbox_items_for_dedupe = inbox_data.get("items") if isinstance(inbox_data.get("items"), list) else []
+    inbox_ids = {str(item.get("id") or "") for item in inbox_items_for_dedupe if isinstance(item, dict)}
+
+    if dedupe_data.get("count") != len(report_slugs):
+        errors.append(f"dedupe.json count {dedupe_data.get('count')} != markdown report count {len(report_slugs)}")
+    if dedupe_data.get("inbox_count") != len(inbox_items_for_dedupe):
+        errors.append("dedupe.json inbox_count must match inbox.json items length")
+    required_dedupe = {"report_groups", "inbox_groups", "summary", "csv_columns", "commands", "links"}
+    missing_dedupe = sorted(required_dedupe - set(dedupe_data))
+    if missing_dedupe:
+        errors.append(f"dedupe.json missing keys: {', '.join(missing_dedupe)}")
+    report_groups = dedupe_data.get("report_groups")
+    if not isinstance(report_groups, list):
+        errors.append("dedupe.json report_groups must be a list")
+        report_groups = []
+    inbox_groups = dedupe_data.get("inbox_groups")
+    if not isinstance(inbox_groups, list):
+        errors.append("dedupe.json inbox_groups must be a list")
+        inbox_groups = []
+    if dedupe_data.get("duplicate_report_count") != len(report_groups):
+        errors.append("dedupe.json duplicate_report_count must match report_groups length")
+    if dedupe_data.get("inbox_duplicate_count") != len(inbox_groups):
+        errors.append("dedupe.json inbox_duplicate_count must match inbox_groups length")
+    if dedupe_data.get("group_count") != len(report_groups) + len(inbox_groups):
+        errors.append("dedupe.json group_count must match report_groups + inbox_groups")
+    for label, groups in (("report_groups", report_groups), ("inbox_groups", inbox_groups)):
+        for index, group in enumerate(groups):
+            if not isinstance(group, dict):
+                errors.append(f"dedupe.json {label}[{index}] must be an object")
+                continue
+            for key in ("id", "scope", "kind", "key", "severity", "slugs", "item_ids", "recommended_action"):
+                if key not in group:
+                    errors.append(f"dedupe.json {label}[{index}] missing {key}")
+            unknown_slugs = sorted(str(slug) for slug in group.get("slugs", []) if str(slug) not in report_slugs)
+            if unknown_slugs:
+                errors.append(f"dedupe.json {label}[{index}] references unknown slugs: {unknown_slugs}")
+            unknown_items = sorted(str(item_id) for item_id in group.get("item_ids", []) if str(item_id) not in inbox_ids)
+            if unknown_items:
+                errors.append(f"dedupe.json {label}[{index}] references unknown inbox ids: {unknown_items}")
+    dedupe_columns = dedupe_data.get("csv_columns")
+    if not isinstance(dedupe_columns, list) or not {"scope", "kind", "key", "severity"}.issubset(set(dedupe_columns)):
+        errors.append("dedupe.json csv_columns must include scope, kind, key, and severity")
+    if not isinstance(dedupe_data.get("commands"), list) or not any("check_quality.py" in str(command) for command in dedupe_data.get("commands", [])):
+        errors.append("dedupe.json commands must include check_quality.py")
+    dedupe_links = dedupe_data.get("links")
+    if not isinstance(dedupe_links, dict) or not {"quality", "inbox", "actions", "library"}.issubset(dedupe_links):
+        errors.append("dedupe.json links must include quality, inbox, actions, and library")
 
     if manifest_data.get("count") != len(report_slugs):
         errors.append(f"manifest.json count {manifest_data.get('count')} != markdown report count {len(report_slugs)}")

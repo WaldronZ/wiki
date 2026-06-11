@@ -31,6 +31,7 @@ GENERATED_FIXED_PATHS = (
     "stats.json",
     "intake.json",
     "inbox.json",
+    "dedupe.json",
     "quality.json",
     "review.json",
     "freshness.json",
@@ -67,6 +68,7 @@ GENERATED_FIXED_PATHS = (
     "catalog.html",
     "intake.html",
     "inbox.html",
+    "dedupe.html",
     "quality.html",
     "review.html",
     "freshness.html",
@@ -501,6 +503,209 @@ def write_inbox_json(report_dir: Path, items: list[dict[str, Any]]) -> None:
         "items": items,
     }
     (report_dir / "inbox.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
+def dedupe_paper_payload(paper: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "slug": paper["slug"],
+        "title": paper.get("title") or "",
+        "title_zh": paper.get("title_zh") or paper.get("title") or "",
+        "arxiv_id": paper.get("arxiv_id") or "",
+        "href": paper.get("html_path") or paper.get("md_path") or f"{paper['slug']}.html",
+        "research_line": paper.get("research_line") or "Unassigned",
+        "status": paper.get("status") or "",
+        "year": paper.get("year") or "",
+        "importance": paper.get("importance") or "",
+        "has_code": bool(paper.get("has_code")),
+    }
+
+
+def dedupe_item_payload(item: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "id": item.get("id") or "",
+        "title": item.get("title") or item.get("arxiv_id") or item.get("link") or "Untitled",
+        "link": item.get("link") or "",
+        "arxiv_id": item.get("arxiv_id") or "",
+        "status": item.get("status") or "",
+        "priority": item.get("priority") or "",
+        "tags": item.get("tags") or [],
+        "note": item.get("note") or "",
+        "added_at": item.get("added_at") or "",
+        "duplicate": bool(item.get("duplicate")),
+    }
+
+
+def dedupe_indexes(papers: list[dict[str, Any]]) -> dict[str, dict[str, dict[str, Any]]]:
+    indexes: dict[str, dict[str, dict[str, Any]]] = {
+        "arxiv_id": {},
+        "link": {},
+        "title": {},
+    }
+    for paper in papers:
+        arxiv_id = str(paper.get("arxiv_id") or "").split("v")[0].strip().lower()
+        if arxiv_id:
+            indexes["arxiv_id"][arxiv_id] = paper
+        for key in ("arxiv_url", "html_path", "md_path", "code_url"):
+            link = str(paper.get(key) or "").strip().rstrip("/").lower()
+            if link:
+                indexes["link"][link] = paper
+        for key in ("title", "title_zh", "title_en"):
+            title_key = normalize_intake_key(str(paper.get(key) or ""))
+            if title_key:
+                indexes["title"][title_key] = paper
+    return indexes
+
+
+def dedupe_match_papers(item: dict[str, Any], indexes: dict[str, dict[str, dict[str, Any]]]) -> tuple[str, list[dict[str, Any]]]:
+    arxiv_id = str(item.get("arxiv_id") or "").split("v")[0].strip().lower()
+    link = str(item.get("link") or "").strip().rstrip("/").lower()
+    title_key = normalize_intake_key(str(item.get("title") or ""))
+    matches: dict[str, dict[str, Any]] = {}
+    reason = ""
+    for candidate_reason, candidate_key in (("arxiv_id", arxiv_id), ("link", link), ("title", title_key)):
+        if candidate_key and candidate_key in indexes[candidate_reason]:
+            paper = indexes[candidate_reason][candidate_key]
+            matches[paper["slug"]] = paper
+            reason = reason or candidate_reason
+    return reason, [matches[slug] for slug in sorted(matches)]
+
+
+def build_dedupe_report(papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> dict[str, Any]:
+    quality = build_quality_report(papers)
+    report_groups = []
+    seen_report_sets: set[tuple[str, ...]] = set()
+    for index, group in enumerate(quality["duplicate_reports"], start=1):
+        slugs = tuple(sorted(str(slug) for slug in group.get("slugs", [])))
+        if slugs in seen_report_sets:
+            continue
+        seen_report_sets.add(slugs)
+        report_groups.append(
+            {
+                "id": f"report-{len(report_groups) + 1}",
+                "scope": "library",
+                "kind": group.get("reason") or "unknown",
+                "key": group.get("value") or "",
+                "count": len(slugs),
+                "severity": "high",
+                "slugs": list(slugs),
+                "papers": [dedupe_paper_payload(paper) for paper in group.get("papers", [])],
+                "item_ids": [],
+                "items": [],
+                "matched_slugs": list(slugs),
+                "recommended_action": "保留主报告，合并补充内容后删除或重命名重复报告。",
+                "href": "quality.html",
+            }
+        )
+
+    indexes = dedupe_indexes(papers)
+    inbox_groups: list[dict[str, Any]] = []
+    seen_inbox_group_ids: set[str] = set()
+    for item in inbox_items:
+        reason, matched = dedupe_match_papers(item, indexes)
+        if not matched and not item.get("duplicate"):
+            continue
+        group_key = (
+            str(item.get("arxiv_id") or "").split("v")[0].strip().lower()
+            or str(item.get("link") or "").strip().rstrip("/").lower()
+            or normalize_intake_key(str(item.get("title") or ""))
+            or str(item.get("id") or "")
+        )
+        group_id = f"inbox-library-{reason or 'known'}-{normalized_duplicate_key(group_key)}"
+        if group_id in seen_inbox_group_ids:
+            continue
+        seen_inbox_group_ids.add(group_id)
+        inbox_groups.append(
+            {
+                "id": group_id,
+                "scope": "inbox",
+                "kind": f"library_{reason or 'duplicate'}",
+                "key": group_key,
+                "count": 1 + len(matched),
+                "severity": "medium",
+                "slugs": [paper["slug"] for paper in matched],
+                "papers": [dedupe_paper_payload(paper) for paper in matched],
+                "item_ids": [item.get("id") or ""],
+                "items": [dedupe_item_payload(item)],
+                "matched_slugs": [paper["slug"] for paper in matched],
+                "recommended_action": "若候选已在库中，标记为跳过；若只是同题不同版本，把备注合并到已有报告。",
+                "href": "inbox.html",
+            }
+        )
+
+    buckets: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+    for item in inbox_items:
+        candidates = {
+            "arxiv_id": str(item.get("arxiv_id") or "").split("v")[0].strip().lower(),
+            "link": str(item.get("link") or "").strip().rstrip("/").lower(),
+            "title": normalize_intake_key(str(item.get("title") or "")),
+        }
+        for kind, value in candidates.items():
+            if value:
+                buckets[(kind, value)].append(item)
+    for (kind, value), items in sorted(buckets.items(), key=lambda pair: (pair[0][0], pair[0][1])):
+        unique = {str(item.get("id") or ""): item for item in items}
+        if len(unique) <= 1:
+            continue
+        item_ids = sorted(unique)
+        group_id = f"inbox-self-{kind}-{normalized_duplicate_key(value)}"
+        inbox_groups.append(
+            {
+                "id": group_id,
+                "scope": "inbox",
+                "kind": f"inbox_{kind}",
+                "key": value,
+                "count": len(item_ids),
+                "severity": "medium",
+                "slugs": [],
+                "papers": [],
+                "item_ids": item_ids,
+                "items": [dedupe_item_payload(unique[item_id]) for item_id in item_ids],
+                "matched_slugs": [],
+                "recommended_action": "保留一个候选项，把其余备注合并后从 inbox.csv 移除。",
+                "href": "inbox.html",
+            }
+        )
+
+    all_groups = report_groups + inbox_groups
+    severity_counts = Counter(group["severity"] for group in all_groups)
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": len(papers),
+        "inbox_count": len(inbox_items),
+        "duplicate_report_count": len(report_groups),
+        "inbox_duplicate_count": len(inbox_groups),
+        "group_count": len(all_groups),
+        "report_groups": report_groups,
+        "inbox_groups": inbox_groups,
+        "summary": {
+            "high": severity_counts.get("high", 0),
+            "medium": severity_counts.get("medium", 0),
+            "low": severity_counts.get("low", 0),
+            "clean_reports": len(report_groups) == 0,
+            "clean_inbox": len(inbox_groups) == 0,
+        },
+        "csv_columns": ["scope", "kind", "key", "severity", "count", "slugs", "item_ids", "recommended_action"],
+        "commands": [
+            "python3 scripts/check_quality.py docs",
+            "python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv",
+            "python3 scripts/apply_library_metadata.py docs --input <dedupe_patch.csv>",
+            "python3 scripts/apply_inbox_items.py docs --input <candidate_csv> --write",
+        ],
+        "links": {
+            "quality": "quality.html",
+            "inbox": "inbox.html",
+            "actions": "actions.html",
+            "library": "library.html",
+        },
+    }
+
+
+def write_dedupe_json(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
+    payload = build_dedupe_report(papers, inbox_items)
+    (report_dir / "dedupe.json").write_text(
         json.dumps(payload, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
@@ -3122,6 +3327,7 @@ DATA_CONSUMER_HINTS = {
     "snapshot.json": ["release", "audit", "desktop"],
     "intake.json": ["intake", "dedupe", "bulk-import"],
     "inbox.json": ["intake", "dedupe"],
+    "dedupe.json": ["dedupe", "quality", "curation", "desktop"],
     "manifest.json": ["release", "audit", "ci"],
 }
 
@@ -3457,6 +3663,7 @@ def wiki_pages_manifest() -> list[dict[str, str]]:
         {"title": "数据目录", "href": "catalog.html", "kind": "ops", "description": "机器数据、页面和契约的接入目录"},
         {"title": "批量导入", "href": "intake.html", "kind": "workflow", "description": "批量粘贴论文链接、去重并导出 inbox CSV"},
         {"title": "待处理池", "href": "inbox.html", "kind": "workflow", "description": "候选论文队列和去重提示"},
+        {"title": "去重工作台", "href": "dedupe.html", "kind": "ops", "description": "库内报告、候选论文和导入队列重复项治理"},
         {"title": "复习计划", "href": "review.html", "kind": "workflow", "description": "待复习、需建计划、建议日期"},
         {"title": "时效治理", "href": "freshness.html", "kind": "ops", "description": "报告新鲜度、过期分析和研究线维护"},
         {"title": "质量治理", "href": "quality.html", "kind": "ops", "description": "弱元数据、别名建议、taxonomy drift"},
@@ -3493,6 +3700,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "snapshot.json", "description": "当前知识库治理快照和发布基线"},
         {"href": "intake.json", "description": "批量导入去重索引、默认字段和 inbox CSV 契约"},
         {"href": "inbox.json", "description": "候选论文队列和重复项"},
+        {"href": "dedupe.json", "description": "重复报告、候选重复项和去重建议"},
         {"href": "manifest.json", "description": "发布摘要和页面入口清单"},
     ]
 
@@ -11524,6 +11732,231 @@ def render_quality_inbox_row(item: dict[str, Any]) -> str:
     )
 
 
+def render_dedupe_group_row(group: dict[str, Any]) -> str:
+    paper_links = []
+    for paper in group.get("papers", []):
+        title = paper.get("title_zh") or paper.get("title") or paper.get("slug")
+        href = str(paper.get("href") or f"{paper.get('slug')}.html")
+        paper_links.append(f'<a href="{html.escape(href)}">{html.escape(str(title))}</a>')
+    item_titles = [
+        f"{item.get('id')}: {item.get('title')}"
+        for item in group.get("items", [])
+    ]
+    slugs = ", ".join(str(slug) for slug in group.get("slugs", []))
+    item_ids = ", ".join(str(item_id) for item_id in group.get("item_ids", []))
+    search_text = " ".join(
+        str(value or "")
+        for value in [
+            group.get("scope"),
+            group.get("kind"),
+            group.get("key"),
+            slugs,
+            item_ids,
+            " ".join(paper_links),
+            " ".join(item_titles),
+        ]
+    ).lower()
+    checklist = (
+        f"- [ ] {group.get('scope')} / {group.get('kind')} / {group.get('key')}: "
+        f"{group.get('recommended_action')}"
+    )
+    return (
+        f'<tr data-scope="{html.escape(str(group.get("scope") or ""), quote=True)}"'
+        f' data-severity="{html.escape(str(group.get("severity") or ""), quote=True)}"'
+        f' data-kind="{html.escape(str(group.get("kind") or ""), quote=True)}"'
+        f' data-search="{html.escape(search_text, quote=True)}">'
+        f"<td><span class=\"flag\">{html.escape(str(group.get('scope') or ''))}</span>"
+        f"<div class=\"meta\">{html.escape(str(group.get('id') or ''))}</div></td>"
+        f"<td>{html.escape(str(group.get('kind') or ''))}<div class=\"meta\">{html.escape(str(group.get('key') or ''))}</div></td>"
+        f"<td><span class=\"flag\">{html.escape(str(group.get('severity') or ''))}</span><div class=\"meta\">{html.escape(str(group.get('count') or 0))} entries</div></td>"
+        f"<td>{', '.join(paper_links) if paper_links else html.escape(', '.join(item_titles))}</td>"
+        f"<td>{html.escape(slugs or item_ids)}</td>"
+        f"<td>{html.escape(str(group.get('recommended_action') or ''))}</td>"
+        f'<td><button class="button copy-dedupe-row" type="button" data-checklist="{html.escape(checklist, quote=True)}">复制</button></td>'
+        "</tr>"
+    )
+
+
+def render_dedupe(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
+    payload = build_dedupe_report(papers, inbox_items)
+    groups = payload["report_groups"] + payload["inbox_groups"]
+    rows = "".join(render_dedupe_group_row(group) for group in groups)
+    table = (
+        '<table class="data-table"><thead><tr><th>范围</th><th>依据</th><th>优先级</th><th>对象</th><th>ID</th><th>建议动作</th><th>复制</th></tr></thead>'
+        f"<tbody>{rows}</tbody></table>"
+        if rows
+        else '<div class="empty">当前没有发现重复报告或重复候选。</div>'
+    )
+    metrics = [
+        ("重复组", str(payload["group_count"]), "library + inbox"),
+        ("库内重复", str(payload["duplicate_report_count"]), "report groups"),
+        ("候选重复", str(payload["inbox_duplicate_count"]), "inbox groups"),
+        ("高优先级", str(payload["summary"]["high"]), "merge first"),
+        ("中优先级", str(payload["summary"]["medium"]), "triage"),
+    ]
+    metric_html = "".join(
+        f'<section class="metric-card"><span>{html.escape(label)}</span><strong>{html.escape(value)}</strong><span>{html.escape(note)}</span></section>'
+        for label, value, note in metrics
+    )
+    command_buttons = "".join(
+        f'<button class="button copy-dedupe-command" type="button" data-command="{html.escape(command, quote=True)}">{html.escape(command)}</button>'
+        for command in payload["commands"]
+    )
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Dedupe Governance</div>
+  <h1>去重工作台</h1>
+  <p class="lead">把库内重复报告、候选池撞车和 inbox 内部重复集中到一个治理视图，适合在批量导入论文前后做清理。</p>
+  <div class="stats">
+    <a class="stat" href="index.html">返回首页</a>
+    <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="intake.html">批量导入</a>
+    <a class="stat" href="inbox.html">待处理池</a>
+    <a class="stat" href="quality.html">质量治理</a>
+    <a class="stat" href="actions.html">行动中心</a>
+    <a class="stat" href="dedupe.json">Dedupe JSON</a>
+    <span class="stat">论文 {payload["count"]}</span>
+    <span class="stat">候选 {payload["inbox_count"]}</span>
+    <span class="stat">生成时间 {html.escape(payload["generated_at"])}</span>
+  </div>
+</header>
+<main class="shell">
+  <section>
+    <h2 class="section-title">去重摘要</h2>
+    <div class="metric-grid">{metric_html}</div>
+  </section>
+  <section>
+    <h2 class="section-title">筛选</h2>
+    <div class="filter-grid">
+      <input id="dedupeSearch" type="search" placeholder="搜索标题、slug、arXiv、候选 id">
+      <select id="dedupeScope">
+        <option value="">全部范围</option>
+        <option value="library">库内报告</option>
+        <option value="inbox">候选池</option>
+      </select>
+      <select id="dedupeSeverity">
+        <option value="">全部优先级</option>
+        <option value="high">high</option>
+        <option value="medium">medium</option>
+        <option value="low">low</option>
+      </select>
+      <select id="dedupeKind">
+        <option value="">全部依据</option>
+      </select>
+    </div>
+    <div class="results-bar">
+      <strong><span id="dedupeVisibleCount">{len(groups)}</span> 组可见</strong>
+      <div class="results-actions">
+        <button id="downloadDedupeCsv" class="button" type="button">下载 CSV</button>
+        <button id="copyDedupeMarkdown" class="button" type="button">复制清单</button>
+        <button id="copyDedupeCommands" class="button" type="button">复制命令</button>
+      </div>
+    </div>
+  </section>
+  <section>
+    <h2 class="section-title">重复项</h2>
+    <div class="table-wrap">{table}</div>
+  </section>
+  <section>
+    <h2 class="section-title">治理命令</h2>
+    <div class="command-panel"><div class="bulk-actions">{command_buttons}</div></div>
+  </section>
+</main>
+<script>
+const dedupeGroups = [...(window.PAPER_WIKI.report_groups || []), ...(window.PAPER_WIKI.inbox_groups || [])];
+const dedupeRows = Array.from(document.querySelectorAll("[data-scope]"));
+const dedupeSearch = document.querySelector("#dedupeSearch");
+const dedupeScope = document.querySelector("#dedupeScope");
+const dedupeSeverity = document.querySelector("#dedupeSeverity");
+const dedupeKind = document.querySelector("#dedupeKind");
+const dedupeVisibleCount = document.querySelector("#dedupeVisibleCount");
+
+function dedupeCsvCell(value) {{
+  const text = Array.isArray(value) ? value.join("; ") : String(value ?? "");
+  return (text.includes(",") || text.includes('"') || text.includes("\\n"))
+    ? '"' + text.replaceAll('"', '""') + '"'
+    : text;
+}}
+
+function visibleDedupeGroups() {{
+  const visibleIds = new Set(dedupeRows.filter(row => !row.hidden).map(row => row.querySelector(".meta")?.textContent || ""));
+  return dedupeGroups.filter(group => visibleIds.has(group.id));
+}}
+
+function renderDedupe() {{
+  const query = (dedupeSearch.value || "").trim().toLowerCase();
+  const scope = dedupeScope.value;
+  const severity = dedupeSeverity.value;
+  const kind = dedupeKind.value;
+  let count = 0;
+  dedupeRows.forEach(row => {{
+    const match = (!query || (row.dataset.search || "").includes(query))
+      && (!scope || row.dataset.scope === scope)
+      && (!severity || row.dataset.severity === severity)
+      && (!kind || row.dataset.kind === kind);
+    row.hidden = !match;
+    if (match) count += 1;
+  }});
+  dedupeVisibleCount.textContent = String(count);
+}}
+
+function downloadDedupeCsv() {{
+  const columns = window.PAPER_WIKI.csv_columns || [];
+  const lines = [columns.join(",")];
+  visibleDedupeGroups().forEach(group => {{
+    lines.push(columns.map(column => dedupeCsvCell(group[column])).join(","));
+  }});
+  const blob = new Blob([lines.join("\\n")], {{ type: "text/csv;charset=utf-8" }});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "dedupe_review.csv";
+  link.click();
+  URL.revokeObjectURL(url);
+}}
+
+function dedupeMarkdown(groups) {{
+  if (!groups.length) return "- [x] 当前没有可见重复项";
+  return groups.map(group => `- [ ] ${{group.scope}} / ${{group.kind}} / ${{group.key}}: ${{group.recommended_action}}`).join("\\n");
+}}
+
+async function copyDedupeText(text, label, button) {{
+  try {{
+    await navigator.clipboard.writeText(text);
+    const original = button.textContent;
+    button.textContent = label;
+    setTimeout(() => button.textContent = original, 1200);
+  }} catch {{
+    window.prompt("复制内容", text);
+  }}
+}}
+
+new Set(dedupeGroups.map(group => group.kind).filter(Boolean)).forEach(kind => {{
+  const option = document.createElement("option");
+  option.value = kind;
+  option.textContent = kind;
+  dedupeKind.appendChild(option);
+}});
+
+[dedupeSearch, dedupeScope, dedupeSeverity, dedupeKind].forEach(control => {{
+  control.addEventListener("input", renderDedupe);
+  control.addEventListener("change", renderDedupe);
+}});
+document.querySelector("#downloadDedupeCsv").addEventListener("click", downloadDedupeCsv);
+document.querySelector("#copyDedupeMarkdown").addEventListener("click", event => copyDedupeText(dedupeMarkdown(visibleDedupeGroups()), "已复制", event.currentTarget));
+document.querySelector("#copyDedupeCommands").addEventListener("click", event => copyDedupeText((window.PAPER_WIKI.commands || []).join("\\n"), "已复制", event.currentTarget));
+document.querySelectorAll(".copy-dedupe-row").forEach(button => {{
+  button.addEventListener("click", () => copyDedupeText(button.dataset.checklist || "", "已复制", button));
+}});
+document.querySelectorAll(".copy-dedupe-command").forEach(button => {{
+  button.addEventListener("click", () => copyDedupeText(button.dataset.command || "", "已复制", button));
+}});
+renderDedupe();
+</script>
+"""
+    (report_dir / "dedupe.html").write_text(page_shell("去重工作台", body, data=payload), encoding="utf-8")
+
+
 def render_alias_suggestion_row(item: dict[str, Any]) -> str:
     aliases = item.get("aliases") or {}
     alias_text = ", ".join(f"{alias} -> {canonical}" for alias, canonical in aliases.items())
@@ -16257,6 +16690,7 @@ def build_wiki(report_dir: Path) -> int:
     write_clusters_json(report_dir, papers)
     write_roadmap_json(report_dir, papers)
     write_inbox_json(report_dir, inbox_items)
+    write_dedupe_json(report_dir, papers, inbox_items)
     write_intake_json(report_dir, papers, inbox_items)
     write_search_index(report_dir, papers)
     write_scale_json(report_dir, papers, inbox_items)
@@ -16279,6 +16713,7 @@ def build_wiki(report_dir: Path) -> int:
     render_onboarding(report_dir, papers, inbox_items)
     render_intake(report_dir, papers, inbox_items)
     render_inbox(report_dir, inbox_items)
+    render_dedupe(report_dir, papers, inbox_items)
     render_review(report_dir, papers)
     render_freshness(report_dir, papers)
     render_quality(report_dir, papers, inbox_items)

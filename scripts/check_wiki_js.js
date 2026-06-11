@@ -29,6 +29,7 @@ function htmlFiles() {
     "catalog.html",
     "intake.html",
     "inbox.html",
+    "dedupe.html",
     "quality.html",
     "review.html",
     "freshness.html",
