@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>研究路线时间轴</title>
+  <title>Owner 工作台</title>
   <style>
     :root {
       color-scheme: light;
@@ -351,146 +351,58 @@
       header { padding-top: 28px; }
     }
 
-    .timeline-board {
-      display: grid;
-      gap: 18px;
-    }
-    .timeline-year {
-      display: grid;
-      grid-template-columns: 120px minmax(0, 1fr);
-      gap: 18px;
-      align-items: start;
-    }
-    .timeline-year[hidden], .timeline-item[hidden] { display: none; }
-    .timeline-year-head {
-      position: sticky;
-      top: 86px;
-      display: grid;
-      gap: 8px;
-      padding: 12px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-    }
-    .timeline-year-head h2 {
-      margin: 0;
-      font-size: 28px;
-      line-height: 1.1;
-    }
-    .timeline-year-count {
-      color: var(--muted);
-      font-weight: 750;
-    }
-    .timeline-list {
-      position: relative;
-      display: grid;
-      gap: 12px;
-      padding-left: 18px;
-    }
-    .timeline-list::before {
-      content: "";
-      position: absolute;
-      inset: 0 auto 0 4px;
-      width: 2px;
-      background: var(--line);
-    }
-    .timeline-item {
-      position: relative;
-      display: grid;
-      grid-template-columns: 18px minmax(0, 1fr);
-      gap: 8px;
-      min-width: 0;
-    }
-    .timeline-dot {
-      width: 10px;
-      height: 10px;
-      margin-top: 17px;
-      border: 2px solid var(--accent);
-      border-radius: 999px;
-      background: var(--bg);
-      z-index: 1;
-    }
-    .timeline-content {
-      display: grid;
-      gap: 7px;
-      min-width: 0;
-      padding: 13px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-    }
-    .timeline-content h3 {
-      margin: 0;
-      font-size: 16px;
-      line-height: 1.35;
-    }
-    .timeline-meta {
+    .ownership-toolbar {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px 14px;
-      color: var(--muted);
-      font-size: 13px;
+      gap: 10px;
+      margin-bottom: 12px;
     }
-    .timeline-summary {
+    .ownership-toolbar input,
+    .ownership-toolbar select {
+      max-width: 220px;
+    }
+    .ownership-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 12px;
       margin-bottom: 18px;
     }
-    .timeline-summary .metric-card strong { font-size: 24px; }
-    .active-filters {
+    .queue-stack {
       display: flex;
       flex-wrap: wrap;
-      align-items: center;
-      gap: 8px;
-      min-height: 34px;
-      margin: -4px 0 16px;
-      color: var(--muted);
-      font-size: 13px;
+      gap: 6px;
     }
-    .active-filter-chip {
+    .queue-pill {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      max-width: 280px;
-      min-height: 30px;
+      gap: 5px;
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: var(--chip);
-      color: var(--ink);
-      padding: 0 10px;
-      font: inherit;
-      cursor: pointer;
-    }
-    .active-filter-chip span {
-      overflow: hidden;
-      text-overflow: ellipsis;
+      padding: 3px 7px;
+      background: var(--panel);
+      font-size: 12px;
       white-space: nowrap;
     }
-    .active-filter-chip b {
-      color: var(--muted);
-      font-weight: 750;
+    .line-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
     }
-    .active-filter-chip::after {
-      content: "x";
-      color: var(--muted);
-      font-weight: 850;
+    .line-links a {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 3px 7px;
+      background: var(--panel);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 12px;
     }
-    @media (max-width: 760px) {
-      .timeline-year { grid-template-columns: 1fr; }
-      .timeline-year-head { position: static; }
-      .timeline-list { padding-left: 0; }
-      .timeline-list::before { display: none; }
-      .timeline-item { grid-template-columns: 1fr; }
-      .timeline-dot { display: none; }
-    }
+    .ownership-row[hidden],
+    .ownership-line-row[hidden] { display: none; }
     
   </style>
 </head>
 <body>
-<script>
-window.PAPER_WIKI = {"controls": {"active_status_workflow": "personal", "status": ["unread", "skimmed", "reading", "read", "archived"], "reading_stage": ["skim", "normal_read", "deep_read", "code_checked"], "review_stage": ["fresh", "due", "reviewed"], "status_workflows": {"personal": {"status_values": ["unread", "skimmed", "reading", "read", "archived"], "reading_stage_values": ["skim", "normal_read", "deep_read", "code_checked"], "review_stage_values": ["fresh", "due", "reviewed"]}, "research": {"status_values": ["inbox", "triaged", "reading", "implemented", "cited", "archived"], "reading_stage_values": ["skim", "normal_read", "deep_read", "code_checked", "reproduced"], "review_stage_values": ["fresh", "due", "reviewed", "evergreen"]}}, "line_role": ["foundation", "baseline", "main", "system", "variant", "followup", "survey"], "governance_policy": {"taxonomy_load": {"min_structure_labels": 3, "min_tags": 3, "max_tags": 10, "max_methods": 8}, "taxonomy_actions": {"singleton_max_count": 1, "watch_share": 0.4, "watch_min_count": 4, "split_share": 0.6, "split_min_count": 5}, "taxonomy_balance": {"high_score_below": 45, "medium_score_below": 70, "singleton_medium_count": 3, "unused_medium_count": 3}, "coverage": {"high_score_below": 70, "medium_score_below": 90, "missing_high_min": 2}}, "research_line_owners": {"Efficient Attention Kernels": {"owner": "kernel-owner", "team": "systems", "cadence": "monthly", "note": "Review new GPU kernel and serving papers."}, "Parallel Decoding with Diffusion Models": {"owner": "decoding-owner", "team": "generation", "cadence": "biweekly", "note": "Track diffusion language model and speculative decoding updates."}}}};
-</script>
 
 <button class="button quick-open" type="button" id="quickOpen">快速跳转</button>
 <div class="quick-panel" id="quickPanel" hidden>
@@ -504,399 +416,120 @@ window.PAPER_WIKI = {"controls": {"active_status_workflow": "personal", "status"
 </div>
 
 <header class="shell">
-  <div class="eyebrow">Research Roadmap</div>
-  <h1>研究路线时间轴</h1>
-  <p class="lead">按年份浏览论文在不同研究线中的演进，适合在论文数量变多后快速判断一条方向的起点、系统化工作、变体和后续推进。</p>
+  <div class="eyebrow">Ownership Operations</div>
+  <h1>Owner 工作台</h1>
+  <p class="lead">按研究线 owner 聚合论文数量、分类缺口、复习计划、报告时效和代码观察缺口。论文变多后可以直接按负责人分派治理队列。</p>
   <div class="stats">
-    <a class="stat" href="index.html">卡片首页</a>
-    <a class="stat" href="library.html">论文库表格</a>
-    <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
-    <a class="stat" href="collections.html">集合视图</a>
-    <a class="stat" href="related.html">关联网络</a>
-    <a class="stat" href="gaps.html">研究缺口</a>
+    <a class="stat" href="coverage.html">覆盖地图</a>
+    <a class="stat" href="actions.html">行动中心</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
-    <a class="stat" href="lines/index.html">研究线</a>
-    <a class="stat" href="tags.html">分类总览</a>
+    <a class="stat" href="ownership.json">Ownership JSON</a>
     <span class="stat">论文 5</span>
-    <span class="stat">年份 3</span>
-    <span class="stat">研究线 2</span>
+    <span class="stat">Owners 2</span>
   </div>
 </header>
-<div class="toolbar">
-  <div class="shell controls">
-    <input id="timelineSearch" type="search" placeholder="搜索标题、作者、研究线、分类、状态">
-    <select id="timelineLine"><option value="">全部研究线</option><option value="Parallel Decoding with Diffusion Models">Parallel Decoding with Diffusion Models (3)</option><option value="Efficient Attention Kernels">Efficient Attention Kernels (2)</option></select>
-    <select id="timelineTrack"><option value="">全部方向</option><option value="Inference Acceleration">Inference Acceleration (3)</option><option value="Parallel Decoding">Parallel Decoding (3)</option><option value="Attention Kernels">Attention Kernels (2)</option><option value="Inference Serving Systems">Inference Serving Systems (1)</option></select>
-    <select id="timelineRole"><option value="">全部角色</option><option value="foundation">foundation (2)</option><option value="followup">followup (1)</option><option value="system">system (1)</option><option value="variant">variant (1)</option></select>
-    <select id="timelineWorkflow" aria-label="状态体系"></select>
-    <select id="timelineStatus"><option value="">全部状态</option><option value="read">read (5)</option><option value="archived">archived (0)</option><option value="reading">reading (0)</option><option value="skimmed">skimmed (0)</option><option value="unread">unread (0)</option></select>
-    <select id="timelineStage"><option value="">阅读阶段</option><option value="deep_read">deep_read (5)</option><option value="code_checked">code_checked (0)</option><option value="normal_read">normal_read (0)</option><option value="skim">skim (0)</option></select>
-    <select id="timelineCode"><option value="">代码状态</option><option value="yes">有代码</option><option value="no">无代码</option></select>
-    <select id="timelineImportance"><option value="">重要性</option><option value="5">5 星</option><option value="4">4 星及以上</option><option value="3">3 星及以上</option></select>
-  </div>
-</div>
 <main class="shell">
-  <div class="results-bar">
-    <strong id="timelineCount">显示 5 / 5 篇</strong>
-    <div class="results-actions">
-      <button id="timelineCopyLink" class="button" type="button">复制当前链接</button>
-      <button id="timelineReset" class="button" type="button">重置筛选</button>
+  <section class="ownership-grid">
+    <section class="metric-card"><span>Owner 数</span><strong>2</strong><span>含未分派队列</span></section>
+    <section class="metric-card"><span>研究线</span><strong>2</strong><span>按风险排序</span></section>
+    <section class="metric-card"><span>未分派线</span><strong>0</strong><span>需要补 research_line_owners</span></section>
+    <section class="metric-card"><span>高风险 owner</span><strong>0</strong><span>优先处理</span></section>
+  </section>
+  <section>
+    <h2 class="section-title">Owner 队列</h2>
+    <div class="ownership-toolbar">
+      <input id="ownershipSearch" type="search" placeholder="搜索 owner、team、研究线">
+      <select id="ownershipRisk"><option value="">全部风险</option><option value="high">高</option><option value="medium">中</option><option value="low">低</option></select>
+      <select id="ownershipTeam"><option value="">全部 team</option><option value="generation">generation</option><option value="systems">systems</option></select>
+      <button id="downloadOwnershipCsv" class="button" type="button">下载 CSV</button>
+      <button id="copyOwnershipChecklist" class="button" type="button">复制清单</button>
+      <span class="stat" id="ownershipCount">0 owner</span>
     </div>
-  </div>
-  <div class="active-filters" id="timelineActiveFilters" aria-live="polite"></div>
-  <div class="timeline-summary">
-    <div class="metric-card"><strong>3</strong><span>覆盖年份</span></div>
-    <div class="metric-card"><strong>2</strong><span>研究线</span></div>
-    <div class="metric-card"><strong>5</strong><span>有代码论文</span></div>
-  </div>
-  <div class="timeline-board"><section class="timeline-year" data-year="2026">
-  <header class="timeline-year-head"><h2>2026</h2><span class="timeline-year-count">3</span></header>
-  <div class="timeline-list"><article class="timeline-item"
-  data-search="2604.11035-introspective-dlm introspective diffusion language models 内省式扩散语言模型 introspective diffusion language models 2604.11035v1 parallel decoding with diffusion models foundation read deep_read 中文版：本文把 dlm 与 ar 模型的质量差距归因于缺少 introspective consistency，即模型不能稳定认可自己已经生成的 token；在此基础上提出 i-dlm，用 logit-shifted causal training 把预训练 ar 模型转成可并行解码的 dlm，再用 introspective strided decoding (isd) 在同一次 forward 中生成新 token 并验证旧 tok... yifan yu yuqing jian junxiong wang zhongzhu zhou donglin zhuang xinyu fang sri yanamandra xiaoxia wu qingyang wu shuaiwen leon song tri dao ben athiwaratkun james zou fan lai chenfeng xu llm systems inference acceleration parallel decoding parallel diffusion decoding diffusion language models llm llm serving parallel decoding speculative decoding gated lora introspective consistency introspective strided decoding logit-shifted causal training p/q acceptance sglang serving"
-  data-line="Parallel Decoding with Diffusion Models"
-  data-role="foundation"
-  data-status="read"
-  data-stage="deep_read"
-  data-review-stage=""
-  data-tracks="Inference Acceleration|Parallel Decoding"
-  data-code="yes"
-  data-importance="5"
-  data-year="2026">
-  <div class="timeline-dot" aria-hidden="true"></div>
-  <div class="timeline-content">
-    <h3><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a></h3>
-    <div class="meta">Introspective Diffusion Language Models</div>
-    <div class="timeline-meta"><a href="lines/parallel-decoding-with-diffusion-models.html">Parallel Decoding with Diffusion Models</a><span>2604.11035v1</span></div>
-    <div class="card-flags"><span class="flag">foundation</span><span class="flag">read</span><span class="flag">I 5</span><span class="flag">code</span></div>
-    <div class="chips"><span class="chip">LLM Systems</span><span class="chip">Inference Acceleration</span><span class="chip">Parallel Decoding</span><span class="chip">Parallel Diffusion Decoding</span><span class="chip">Diffusion Language Models</span><span class="chip">LLM</span><span class="chip">+9</span></div>
-  </div>
-</article><article class="timeline-item"
-  data-search="2605.12825-orthrus orthrus: memory-efficient parallel token generation via dual-view diffusion orthrus：通过双视角扩散实现内存高效的并行 token 生成 orthrus: memory-efficient parallel token generation via dual-view diffusion 2605.12825v2 parallel decoding with diffusion models variant read deep_read 中文版：orthrus 在冻结的 autoregressive llm 内部插入轻量 trainable diffusion attention module，让 ar view 负责高质量 context / kv cache 构建，让 diffusion view 一次并行预测多个 future tokens，再由同一个 frozen ar head 做 consensus verification，从而在不改变 base mode... chien van nguyen chaitra hegde van cuong pham ryan a. rossi franck dernoncourt thien huu nguyen llm systems inference acceleration parallel decoding memory-efficient parallel token generation diffusion language models kv cache llm inference parallel decoding speculative decoding dual-view attention forward kl distillation intra-model consensus masked diffusion shared kv cache"
-  data-line="Parallel Decoding with Diffusion Models"
-  data-role="variant"
-  data-status="read"
-  data-stage="deep_read"
-  data-review-stage=""
-  data-tracks="Inference Acceleration|Parallel Decoding"
-  data-code="yes"
-  data-importance="4"
-  data-year="2026">
-  <div class="timeline-dot" aria-hidden="true"></div>
-  <div class="timeline-content">
-    <h3><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></h3>
-    <div class="meta">Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion</div>
-    <div class="timeline-meta"><a href="lines/parallel-decoding-with-diffusion-models.html">Parallel Decoding with Diffusion Models</a><span>2605.12825v2</span></div>
-    <div class="card-flags"><span class="flag">variant</span><span class="flag">read</span><span class="flag">I 4</span><span class="flag">code</span></div>
-    <div class="chips"><span class="chip">LLM Systems</span><span class="chip">Inference Acceleration</span><span class="chip">Parallel Decoding</span><span class="chip">Memory-Efficient Parallel Token Generation</span><span class="chip">Diffusion Language Models</span><span class="chip">KV Cache</span><span class="chip">+8</span></div>
-  </div>
-</article><article class="timeline-item"
-  data-search="2602.06036-dflash dflash: block diffusion for flash speculative decoding dflash：用于快速 speculative decoding 的块扩散方法 dflash: block diffusion for flash speculative decoding 2602.06036v1 parallel decoding with diffusion models followup read deep_read 中文版：dflash 把 diffusion language model 的角色从“独立生成器”改为 speculative decoding 中的轻量 parallel drafter：draft model 一次前向生成一个 token block，再由 target llm 并行验证，从而保持 lossless 输出。它的关键设计是从 frozen target model 抽取多层 hidden features，经融合后注入... jian chen yesheng liang zhijian liu llm systems inference acceleration parallel decoding lossless speculative decoding diffusion language models llm inference llm serving speculative decoding block diffusion kv injection parallel drafting speculative decoding target hidden features"
-  data-line="Parallel Decoding with Diffusion Models"
-  data-role="followup"
-  data-status="read"
-  data-stage="deep_read"
-  data-review-stage=""
-  data-tracks="Inference Acceleration|Parallel Decoding"
-  data-code="yes"
-  data-importance="4"
-  data-year="2026">
-  <div class="timeline-dot" aria-hidden="true"></div>
-  <div class="timeline-content">
-    <h3><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a></h3>
-    <div class="meta">DFlash: Block Diffusion for Flash Speculative Decoding</div>
-    <div class="timeline-meta"><a href="lines/parallel-decoding-with-diffusion-models.html">Parallel Decoding with Diffusion Models</a><span>2602.06036v1</span></div>
-    <div class="card-flags"><span class="flag">followup</span><span class="flag">read</span><span class="flag">I 4</span><span class="flag">code</span></div>
-    <div class="chips"><span class="chip">LLM Systems</span><span class="chip">Inference Acceleration</span><span class="chip">Parallel Decoding</span><span class="chip">Lossless Speculative Decoding</span><span class="chip">Diffusion Language Models</span><span class="chip">LLM Inference</span><span class="chip">+7</span></div>
-  </div>
-</article></div>
-</section><section class="timeline-year" data-year="2025">
-  <header class="timeline-year-head"><h2>2025</h2><span class="timeline-year-count">1</span></header>
-  <div class="timeline-list"><article class="timeline-item"
-  data-search="2501.01005-flashinfer flashinfer: efficient and customizable attention engine for llm inference serving flashinfer：面向 llm 推理服务的高效可定制 attention 引擎 flashinfer: efficient and customizable attention engine for llm inference serving 2501.01005v2 efficient attention kernels system read deep_read 中文版：flashinfer 是一个面向 llm online serving 的 attention kernel engine。它把 pagedattention、radixattention、prefix sharing、tree attention、kv pruning 等多种 kv-cache 访问形态统一成 block-sparse / composable sparse formats，并用 cuda/cutlass 模板... zihao ye lequn chen ruihang lai wuwei lin yineng zhang stephanie wang tianqi chen baris kasikci vinod grover arvind krishnamurthy luis ceze llm systems attention kernels inference serving systems customizable attention serving attention kernels gpu systems inference optimization kv cache llm serving block-sparse attention composable kv-cache format cuda graph flashattention jit compilation load-balanced scheduling"
-  data-line="Efficient Attention Kernels"
-  data-role="system"
-  data-status="read"
-  data-stage="deep_read"
-  data-review-stage=""
-  data-tracks="Attention Kernels|Inference Serving Systems"
-  data-code="yes"
-  data-importance="4"
-  data-year="2025">
-  <div class="timeline-dot" aria-hidden="true"></div>
-  <div class="timeline-content">
-    <h3><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></h3>
-    <div class="meta">FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving</div>
-    <div class="timeline-meta"><a href="lines/efficient-attention-kernels.html">Efficient Attention Kernels</a><span>2501.01005v2</span></div>
-    <div class="card-flags"><span class="flag">system</span><span class="flag">read</span><span class="flag">I 4</span><span class="flag">code</span></div>
-    <div class="chips"><span class="chip">LLM Systems</span><span class="chip">Attention Kernels</span><span class="chip">Inference Serving Systems</span><span class="chip">Customizable Attention Serving</span><span class="chip">Attention Kernels</span><span class="chip">GPU Systems</span><span class="chip">+9</span></div>
-  </div>
-</article></div>
-</section><section class="timeline-year" data-year="2023">
-  <header class="timeline-year-head"><h2>2023</h2><span class="timeline-year-count">1</span></header>
-  <div class="timeline-list"><article class="timeline-item"
-  data-search="2307.08691-flashattention-2 flashattention-2: faster attention with better parallelism and work partitioning flashattention-2：用更好的并行性与工作划分加速 attention flashattention-2: faster attention with better parallelism and work partitioning 2307.08691v1 efficient attention kernels foundation read deep_read 中文版：flashattention-2 不是改变 attention 数学定义的近似方法，而是在 flashattention exact attention 的基础上重新设计 gpu 上的计算顺序、thread block 并行维度和 warp 内工作划分，减少 non-matmul flops 与 shared memory 通信，从而把 attention kernel 的利用率推近 gemm。 tri dao llm systems attention kernels efficient exact attention efficient attention gpu kernel optimization long context transformer cuda / gpu parallelism flashattention online softmax tiling work partitioning"
-  data-line="Efficient Attention Kernels"
-  data-role="foundation"
-  data-status="read"
-  data-stage="deep_read"
-  data-review-stage=""
-  data-tracks="Attention Kernels"
-  data-code="yes"
-  data-importance="5"
-  data-year="2023">
-  <div class="timeline-dot" aria-hidden="true"></div>
-  <div class="timeline-content">
-    <h3><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></h3>
-    <div class="meta">FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning</div>
-    <div class="timeline-meta"><a href="lines/efficient-attention-kernels.html">Efficient Attention Kernels</a><span>2307.08691v1</span></div>
-    <div class="card-flags"><span class="flag">foundation</span><span class="flag">read</span><span class="flag">I 5</span><span class="flag">code</span></div>
-    <div class="chips"><span class="chip">LLM Systems</span><span class="chip">Attention Kernels</span><span class="chip">Efficient Exact Attention</span><span class="chip">Efficient Attention</span><span class="chip">GPU Kernel Optimization</span><span class="chip">Long Context</span><span class="chip">+6</span></div>
-  </div>
-</article></div>
-</section></div>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>风险</th><th>Owner</th><th>线</th><th>论文</th><th>风险分</th><th>队列</th><th>研究线</th></tr></thead><tbody id="ownershipRows"><tr class="ownership-row" data-risk="medium" data-team="generation" data-search="decoding-owner generation parallel decoding with diffusion models"><td><span class="flag">中</span></td><td><strong>decoding-owner</strong><div class="meta">generation</div></td><td>1</td><td>3</td><td>6</td><td><div class="queue-stack"><span class="queue-pill">缺复习 <strong>3</strong></span></div></td><td><div class="line-links"><a href="lines/parallel-decoding-with-diffusion-models.html">Parallel Decoding with Diffusion Models · 3</a></div></td></tr><tr class="ownership-row" data-risk="medium" data-team="systems" data-search="kernel-owner systems efficient attention kernels"><td><span class="flag">中</span></td><td><strong>kernel-owner</strong><div class="meta">systems</div></td><td>1</td><td>2</td><td>4</td><td><div class="queue-stack"><span class="queue-pill">缺复习 <strong>2</strong></span></div></td><td><div class="line-links"><a href="lines/efficient-attention-kernels.html">Efficient Attention Kernels · 2</a></div></td></tr></tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">研究线明细</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>风险</th><th>研究线</th><th>Owner</th><th>论文</th><th>重要性</th><th>代码覆盖</th><th>队列</th></tr></thead><tbody id="ownershipLineRows"><tr class="ownership-line-row" data-risk="medium" data-team="generation" data-search="parallel decoding with diffusion models decoding-owner generation 2602.06036-dflash 2604.11035-introspective-dlm 2605.12825-orthrus"><td><span class="flag">中</span></td><td><a href="lines/parallel-decoding-with-diffusion-models.html">Parallel Decoding with Diffusion Models</a><div class="meta">biweekly</div></td><td>decoding-owner<div class="meta">generation</div></td><td>3</td><td>4.3</td><td>100%%</td><td><div class="queue-stack"><span class="queue-pill">缺复习 <strong>3</strong></span></div></td></tr><tr class="ownership-line-row" data-risk="medium" data-team="systems" data-search="efficient attention kernels kernel-owner systems 2501.01005-flashinfer 2307.08691-flashattention-2"><td><span class="flag">中</span></td><td><a href="lines/efficient-attention-kernels.html">Efficient Attention Kernels</a><div class="meta">monthly</div></td><td>kernel-owner<div class="meta">systems</div></td><td>2</td><td>4.5</td><td>100%%</td><td><div class="queue-stack"><span class="queue-pill">缺复习 <strong>2</strong></span></div></td></tr></tbody></table></div>
+  </section>
 </main>
 <script>
-const timelineItems = Array.from(document.querySelectorAll(".timeline-item"));
-const timelineYears = Array.from(document.querySelectorAll(".timeline-year"));
-const timelineSearch = document.querySelector("#timelineSearch");
-const timelineLine = document.querySelector("#timelineLine");
-const timelineTrack = document.querySelector("#timelineTrack");
-const timelineRole = document.querySelector("#timelineRole");
-const timelineWorkflow = document.querySelector("#timelineWorkflow");
-const timelineStatus = document.querySelector("#timelineStatus");
-const timelineStage = document.querySelector("#timelineStage");
-const timelineCode = document.querySelector("#timelineCode");
-const timelineImportance = document.querySelector("#timelineImportance");
-const timelineCount = document.querySelector("#timelineCount");
-const timelineReset = document.querySelector("#timelineReset");
-const timelineCopyLink = document.querySelector("#timelineCopyLink");
-const timelineActiveFilters = document.querySelector("#timelineActiveFilters");
-const wikiControls = window.PAPER_WIKI.controls || {};
-const statusWorkflows = wikiControls.status_workflows || {};
-const activeStatusWorkflow = wikiControls.active_status_workflow || Object.keys(statusWorkflows)[0] || "default";
-const fallbackStatusValues = Array.isArray(wikiControls.status) ? wikiControls.status : [];
-const fallbackStageValues = Array.isArray(wikiControls.reading_stage) ? wikiControls.reading_stage : [];
-const observedStatusValues = Array.from(new Set(timelineItems.map(item => item.dataset.status).filter(Boolean)));
-const observedStageValues = Array.from(new Set(timelineItems.map(item => item.dataset.stage).filter(Boolean)));
-const timelineControls = [timelineSearch, timelineLine, timelineTrack, timelineRole, timelineWorkflow, timelineStatus, timelineStage, timelineCode, timelineImportance];
-const timelineStateControls = [
-  ["q", timelineSearch],
-  ["line", timelineLine],
-  ["track", timelineTrack],
-  ["role", timelineRole],
-  ["workflow", timelineWorkflow],
-  ["status", timelineStatus],
-  ["stage", timelineStage],
-  ["code", timelineCode],
-  ["importance", timelineImportance],
-];
-const timelineControlsByKey = new Map(timelineStateControls);
-const timelineFilterLabels = {
-  q: "搜索",
-  line: "研究线",
-  track: "方向",
-  role: "角色",
-  workflow: "状态体系",
-  status: "状态",
-  stage: "阅读阶段",
-  code: "代码",
-  importance: "重要性",
-};
+const ownershipRows = Array.from(document.querySelectorAll("#ownershipRows tr"));
+const ownershipLineRows = Array.from(document.querySelectorAll("#ownershipLineRows tr"));
+const ownershipSearch = document.querySelector("#ownershipSearch");
+const ownershipRisk = document.querySelector("#ownershipRisk");
+const ownershipTeam = document.querySelector("#ownershipTeam");
+const ownershipCount = document.querySelector("#ownershipCount");
+const downloadOwnershipCsv = document.querySelector("#downloadOwnershipCsv");
+const copyOwnershipChecklist = document.querySelector("#copyOwnershipChecklist");
 
-function timelineTokens(value) {
-  return String(value || "").split("|").filter(Boolean);
+function csvCell(value) {
+  const text = String(value ?? "");
+  return (text.includes(",") || text.includes('"') || text.includes("\n"))
+    ? `"${text.replaceAll('"', '""')}"`
+    : text;
 }
 
-function orderedUnique(values) {
-  return Array.from(new Set(values.map(value => String(value || "").trim()).filter(Boolean)));
+function rowMatches(row, q, risk, team) {
+  const search = row.dataset.search || "";
+  return (!q || search.includes(q)) && (!risk || row.dataset.risk === risk) && (!team || row.dataset.team === team);
 }
 
-function workflowValuesFor(name, key, fallbackValues, observedValues) {
-  const workflow = statusWorkflows[name] || {};
-  const configured = Array.isArray(workflow[key]) ? workflow[key] : fallbackValues;
-  return orderedUnique([...configured, ...observedValues]);
+function visibleOwnerRows() {
+  return ownershipRows.filter(row => !row.hidden);
 }
 
-function timelineValueCount(datasetKey, value) {
-  return timelineItems.filter(item => item.dataset[datasetKey] === value).length;
+function renderOwnershipRows() {
+  const q = ownershipSearch.value.trim().toLowerCase();
+  const risk = ownershipRisk.value;
+  const team = ownershipTeam.value;
+  ownershipRows.forEach(row => row.hidden = !rowMatches(row, q, risk, team));
+  ownershipLineRows.forEach(row => row.hidden = !rowMatches(row, q, risk, team));
+  ownershipCount.textContent = `${visibleOwnerRows().length} owner`;
 }
 
-function replaceWorkflowOptions(select, placeholder, values, datasetKey) {
-  const current = select.value;
-  select.replaceChildren(new Option(placeholder, ""));
-  values.forEach(value => {
-    select.appendChild(new Option(`${value} (${timelineValueCount(datasetKey, value)})`, value));
-  });
-  select.value = values.includes(current) ? current : "";
-}
-
-function populateTimelineWorkflowOptions() {
-  const names = Object.keys(statusWorkflows);
-  const workflowNames = names.length ? names : [activeStatusWorkflow];
-  timelineWorkflow.replaceChildren(...workflowNames.map(name => {
-    const label = name === activeStatusWorkflow ? `${name} (默认)` : name;
-    return new Option(label, name);
-  }));
-  timelineWorkflow.value = workflowNames.includes(activeStatusWorkflow) ? activeStatusWorkflow : workflowNames[0] || "";
-}
-
-function applyTimelineWorkflow() {
-  const workflowName = timelineWorkflow.value || activeStatusWorkflow;
-  replaceWorkflowOptions(
-    timelineStatus,
-    "全部状态",
-    workflowValuesFor(workflowName, "status_values", fallbackStatusValues, observedStatusValues),
-    "status"
-  );
-  replaceWorkflowOptions(
-    timelineStage,
-    "阅读阶段",
-    workflowValuesFor(workflowName, "reading_stage_values", fallbackStageValues, observedStageValues),
-    "stage"
-  );
-}
-
-function timelineDefaultValue(key) {
-  return key === "workflow" ? activeStatusWorkflow : "";
-}
-
-function timelineState() {
-  const state = {};
-  timelineStateControls.forEach(([key, control]) => {
-    const defaultValue = timelineDefaultValue(key);
-    if (control.value && control.value !== defaultValue) state[key] = control.value;
-  });
-  return state;
-}
-
-function timelineCleanOptionLabel(label) {
-  return String(label || "").replace(/\s\(\d+\)$/, "").replace(/\s\(默认\)$/, "");
-}
-
-function timelineDisplayValue(key, control) {
-  if (key === "q") return control.value.trim();
-  const option = control.options && control.selectedIndex >= 0 ? control.options[control.selectedIndex] : null;
-  return timelineCleanOptionLabel(option ? option.textContent : control.value);
-}
-
-function renderTimelineActiveFilters() {
-  const state = timelineState();
-  const entries = Object.entries(state).filter(([key]) => timelineControlsByKey.has(key));
-  timelineActiveFilters.replaceChildren();
-  if (!entries.length) {
-    timelineActiveFilters.textContent = "未设置筛选条件";
+function downloadOwnership() {
+  const rows = visibleOwnerRows().map(row => Array.from(row.children).map(cell => cell.textContent.trim()));
+  if (!rows.length) {
+    window.alert("当前没有匹配 owner。");
     return;
   }
-  const prefix = document.createElement("span");
-  prefix.textContent = "当前筛选";
-  timelineActiveFilters.appendChild(prefix);
-  entries.forEach(([key]) => {
-    const control = timelineControlsByKey.get(key);
-    const chip = document.createElement("button");
-    chip.className = "active-filter-chip";
-    chip.type = "button";
-    chip.dataset.filterKey = key;
-    chip.title = `移除${timelineFilterLabels[key] || key}筛选`;
-    const name = document.createElement("b");
-    name.textContent = timelineFilterLabels[key] || key;
-    const value = document.createElement("span");
-    value.textContent = timelineDisplayValue(key, control);
-    chip.append(name, value);
-    timelineActiveFilters.appendChild(chip);
+  const header = ["risk", "owner", "line_count", "paper_count", "risk_points", "queues", "lines"];
+  const csv = [header, ...rows].map(row => row.map(csvCell).join(",")).join("\n") + "\n";
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "ownership_workload.csv";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+async function copyChecklist() {
+  const lines = visibleOwnerRows().map(row => {
+    const cells = Array.from(row.children).map(cell => cell.textContent.trim().replace(/\s+/g, " "));
+    return `- [ ] ${cells[1]}: risk=${cells[0]}, papers=${cells[3]}, queues=${cells[5]}`;
   });
-}
-
-function clearTimelineFilter(key) {
-  const control = timelineControlsByKey.get(key);
-  if (!control) return;
-  control.value = timelineDefaultValue(key);
-  if (key === "workflow") applyTimelineWorkflow();
-  renderTimeline();
-}
-
-function writeTimelineStateToUrl() {
-  const params = new URLSearchParams(timelineState());
-  const query = params.toString();
-  window.history.replaceState(null, "", query ? `${location.pathname}?${query}` : location.pathname);
-}
-
-function readTimelineStateFromUrl() {
-  const params = new URLSearchParams(window.location.search);
-  timelineStateControls.forEach(([key, control]) => {
-    if (["status", "stage"].includes(key)) return;
-    control.value = params.has(key) ? params.get(key) : timelineDefaultValue(key);
-  });
-  applyTimelineWorkflow();
-  timelineStatus.value = params.has("status") ? params.get("status") : "";
-  timelineStage.value = params.has("stage") ? params.get("stage") : "";
-}
-
-function timelineViewUrl() {
-  const url = new URL(window.location.href);
-  url.search = new URLSearchParams(timelineState()).toString();
-  url.hash = "";
-  return url.toString();
-}
-
-async function copyTimelineLink() {
-  const text = timelineViewUrl();
+  if (!lines.length) {
+    window.alert("当前没有匹配 owner。");
+    return;
+  }
+  const text = lines.join("\n");
   try {
     await navigator.clipboard.writeText(text);
-    timelineCopyLink.textContent = "已复制";
-    setTimeout(() => timelineCopyLink.textContent = "复制当前链接", 1400);
-  } catch {
-    window.prompt("复制当前链接", text);
+    copyOwnershipChecklist.textContent = "已复制";
+    setTimeout(() => copyOwnershipChecklist.textContent = "复制清单", 1200);
+  } catch (error) {
+    window.prompt("复制 owner 清单", text);
   }
 }
 
-function renderTimeline() {
-  const q = timelineSearch.value.trim().toLowerCase();
-  const minImportance = Number(timelineImportance.value || 0);
-  let visible = 0;
-  timelineItems.forEach(item => {
-    const hit = (!q || item.dataset.search.includes(q))
-      && (!timelineLine.value || item.dataset.line === timelineLine.value)
-      && (!timelineTrack.value || timelineTokens(item.dataset.tracks).includes(timelineTrack.value))
-      && (!timelineRole.value || item.dataset.role === timelineRole.value)
-      && (!timelineStatus.value || item.dataset.status === timelineStatus.value)
-      && (!timelineStage.value || item.dataset.stage === timelineStage.value)
-      && (!timelineCode.value || item.dataset.code === timelineCode.value)
-      && (!minImportance || Number(item.dataset.importance || 0) >= minImportance);
-    item.hidden = !hit;
-    if (hit) visible += 1;
-  });
-  timelineYears.forEach(section => {
-    const count = Array.from(section.querySelectorAll(".timeline-item")).filter(item => !item.hidden).length;
-    section.hidden = count === 0;
-    section.querySelector(".timeline-year-count").textContent = count;
-  });
-  timelineCount.textContent = `显示 ${visible} / ${timelineItems.length} 篇`;
-  renderTimelineActiveFilters();
-  writeTimelineStateToUrl();
-}
-
-timelineControls.forEach(control => control.addEventListener("input", () => {
-  if (control === timelineWorkflow) applyTimelineWorkflow();
-  renderTimeline();
-}));
-timelineReset.addEventListener("click", () => {
-  timelineControls.forEach(control => {
-    control.value = "";
-  });
-  timelineWorkflow.value = activeStatusWorkflow;
-  applyTimelineWorkflow();
-  renderTimeline();
-});
-timelineCopyLink.addEventListener("click", copyTimelineLink);
-timelineActiveFilters.addEventListener("click", event => {
-  const target = event.target instanceof Element ? event.target.closest("[data-filter-key]") : null;
-  if (!target) return;
-  clearTimelineFilter(target.dataset.filterKey);
-});
-populateTimelineWorkflowOptions();
-readTimelineStateFromUrl();
-renderTimeline();
+[ownershipSearch, ownershipRisk, ownershipTeam].forEach(control => control.addEventListener("input", renderOwnershipRows));
+downloadOwnershipCsv.addEventListener("click", downloadOwnership);
+copyOwnershipChecklist.addEventListener("click", copyChecklist);
+renderOwnershipRows();
 </script>
 
 <script>

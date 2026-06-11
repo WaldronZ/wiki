@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-06-12T04:08:48",
+  "generated_at": "2026-06-12T04:17:12",
   "count": 5,
   "inbox_count": 0,
-  "page_count": 28,
-  "data_file_count": 17,
+  "page_count": 29,
+  "data_file_count": 18,
   "contract_count": 5,
   "pages": [
     {
@@ -115,6 +115,12 @@
       "description": "大规模论文库容量、风险和扩展建议"
     },
     {
+      "title": "Owner 工作台",
+      "href": "ownership.html",
+      "kind": "ops",
+      "description": "研究线 owner、工作量和治理队列"
+    },
+    {
       "title": "数据目录",
       "href": "catalog.html",
       "kind": "ops",
@@ -212,7 +218,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:08:48",
+      "generated_at": "2026-06-12T04:17:12",
       "consumers": [
         "frontend",
         "desktop",
@@ -239,7 +245,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:08:48",
+      "generated_at": "2026-06-12T04:17:12",
       "consumers": [
         "search",
         "desktop"
@@ -302,7 +308,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:08:48",
+      "generated_at": "2026-06-12T04:17:12",
       "consumers": [
         "dashboard",
         "ops",
@@ -371,7 +377,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:08:48",
+      "generated_at": "2026-06-12T04:17:12",
       "consumers": [
         "quality-gate",
         "ops",
@@ -403,7 +409,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:08:48",
+      "generated_at": "2026-06-12T04:17:12",
       "consumers": [
         "review",
         "scheduler",
@@ -448,7 +454,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:08:48",
+      "generated_at": "2026-06-12T04:17:12",
       "consumers": [
         "freshness",
         "maintenance"
@@ -486,7 +492,7 @@
         }
       ],
       "declared_count": 55,
-      "generated_at": "2026-06-12T04:08:48",
+      "generated_at": "2026-06-12T04:17:12",
       "consumers": [
         "taxonomy",
         "project-management",
@@ -518,7 +524,7 @@
         }
       ],
       "declared_count": 62,
-      "generated_at": "2026-06-12T04:08:48",
+      "generated_at": "2026-06-12T04:17:12",
       "consumers": [
         "tasks",
         "project-management",
@@ -570,7 +576,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:08:48",
+      "generated_at": "2026-06-12T04:17:12",
       "consumers": [
         "workflow",
         "desktop",
@@ -608,7 +614,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:08:48",
+      "generated_at": "2026-06-12T04:17:12",
       "consumers": [
         "analytics",
         "classification",
@@ -652,7 +658,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:08:48",
+      "generated_at": "2026-06-12T04:17:12",
       "consumers": [
         "comparison",
         "curation",
@@ -720,7 +726,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:08:48",
+      "generated_at": "2026-06-12T04:17:12",
       "consumers": [
         "taxonomy",
         "graph",
@@ -789,7 +795,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:08:48",
+      "generated_at": "2026-06-12T04:17:12",
       "consumers": [
         "ops",
         "capacity-planning",
@@ -798,10 +804,50 @@
       "error": ""
     },
     {
+      "href": "ownership.json",
+      "description": "研究线 owner、工作量和治理队列",
+      "exists": true,
+      "size_bytes": 4183,
+      "top_level_keys": [
+        "count",
+        "generated_at",
+        "lines",
+        "links",
+        "owner_count",
+        "owners",
+        "unassigned_line_count"
+      ],
+      "collections": [
+        {
+          "key": "owners",
+          "type": "list",
+          "count": 2
+        },
+        {
+          "key": "lines",
+          "type": "list",
+          "count": 2
+        },
+        {
+          "key": "links",
+          "type": "object",
+          "count": 5
+        }
+      ],
+      "declared_count": 5,
+      "generated_at": "2026-06-12T04:17:12",
+      "consumers": [
+        "ops",
+        "owners",
+        "project-management"
+      ],
+      "error": ""
+    },
+    {
       "href": "snapshot.json",
       "description": "当前知识库治理快照和发布基线",
       "exists": true,
-      "size_bytes": 11551,
+      "size_bytes": 11919,
       "top_level_keys": [
         "action_groups",
         "active_status_workflow",
@@ -868,7 +914,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:08:48",
+      "generated_at": "2026-06-12T04:17:12",
       "consumers": [
         "release",
         "audit",
@@ -912,7 +958,7 @@
         }
       ],
       "declared_count": 0,
-      "generated_at": "2026-06-12T04:08:48",
+      "generated_at": "2026-06-12T04:17:12",
       "consumers": [
         "intake",
         "dedupe"
@@ -978,12 +1024,12 @@
         {
           "key": "pages",
           "type": "list",
-          "count": 28
+          "count": 29
         },
         {
           "key": "data_files",
           "type": "list",
-          "count": 17
+          "count": 18
         },
         {
           "key": "contract_files",
@@ -993,7 +1039,7 @@
         {
           "key": "artifact_inventory",
           "type": "list",
-          "count": 50
+          "count": 52
         },
         {
           "key": "command_recipes",
@@ -1012,7 +1058,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:08:48",
+      "generated_at": "2026-06-12T04:17:12",
       "consumers": [
         "release",
         "audit",

@@ -1,0 +1,155 @@
+{
+  "generated_at": "2026-06-12T04:17:12",
+  "count": 5,
+  "owner_count": 2,
+  "unassigned_line_count": 0,
+  "owners": [
+    {
+      "owner": "decoding-owner",
+      "team": "generation",
+      "line_count": 1,
+      "paper_count": 3,
+      "risk_points": 6,
+      "queues": {
+        "missing_taxonomy": 0,
+        "needs_review_plan": 3,
+        "due_review": 0,
+        "freshness_due": 0,
+        "stale": 0,
+        "no_code_observation": 0
+      },
+      "lines": [
+        {
+          "line": "Parallel Decoding with Diffusion Models",
+          "href": "lines/parallel-decoding-with-diffusion-models.html",
+          "owner": "decoding-owner",
+          "team": "generation",
+          "cadence": "biweekly",
+          "note": "Track diffusion language model and speculative decoding updates.",
+          "count": 3,
+          "avg_importance": 4.3,
+          "code_coverage": "100%",
+          "risk": "medium",
+          "risk_points": 6,
+          "queues": {
+            "missing_taxonomy": 0,
+            "needs_review_plan": 3,
+            "due_review": 0,
+            "freshness_due": 0,
+            "stale": 0,
+            "no_code_observation": 0
+          },
+          "sample_slugs": [
+            "2602.06036-dflash",
+            "2604.11035-introspective-dlm",
+            "2605.12825-orthrus"
+          ]
+        }
+      ],
+      "risk": "medium"
+    },
+    {
+      "owner": "kernel-owner",
+      "team": "systems",
+      "line_count": 1,
+      "paper_count": 2,
+      "risk_points": 4,
+      "queues": {
+        "missing_taxonomy": 0,
+        "needs_review_plan": 2,
+        "due_review": 0,
+        "freshness_due": 0,
+        "stale": 0,
+        "no_code_observation": 0
+      },
+      "lines": [
+        {
+          "line": "Efficient Attention Kernels",
+          "href": "lines/efficient-attention-kernels.html",
+          "owner": "kernel-owner",
+          "team": "systems",
+          "cadence": "monthly",
+          "note": "Review new GPU kernel and serving papers.",
+          "count": 2,
+          "avg_importance": 4.5,
+          "code_coverage": "100%",
+          "risk": "medium",
+          "risk_points": 4,
+          "queues": {
+            "missing_taxonomy": 0,
+            "needs_review_plan": 2,
+            "due_review": 0,
+            "freshness_due": 0,
+            "stale": 0,
+            "no_code_observation": 0
+          },
+          "sample_slugs": [
+            "2501.01005-flashinfer",
+            "2307.08691-flashattention-2"
+          ]
+        }
+      ],
+      "risk": "medium"
+    }
+  ],
+  "lines": [
+    {
+      "line": "Parallel Decoding with Diffusion Models",
+      "href": "lines/parallel-decoding-with-diffusion-models.html",
+      "owner": "decoding-owner",
+      "team": "generation",
+      "cadence": "biweekly",
+      "note": "Track diffusion language model and speculative decoding updates.",
+      "count": 3,
+      "avg_importance": 4.3,
+      "code_coverage": "100%",
+      "risk": "medium",
+      "risk_points": 6,
+      "queues": {
+        "missing_taxonomy": 0,
+        "needs_review_plan": 3,
+        "due_review": 0,
+        "freshness_due": 0,
+        "stale": 0,
+        "no_code_observation": 0
+      },
+      "sample_slugs": [
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus"
+      ]
+    },
+    {
+      "line": "Efficient Attention Kernels",
+      "href": "lines/efficient-attention-kernels.html",
+      "owner": "kernel-owner",
+      "team": "systems",
+      "cadence": "monthly",
+      "note": "Review new GPU kernel and serving papers.",
+      "count": 2,
+      "avg_importance": 4.5,
+      "code_coverage": "100%",
+      "risk": "medium",
+      "risk_points": 4,
+      "queues": {
+        "missing_taxonomy": 0,
+        "needs_review_plan": 2,
+        "due_review": 0,
+        "freshness_due": 0,
+        "stale": 0,
+        "no_code_observation": 0
+      },
+      "sample_slugs": [
+        "2501.01005-flashinfer",
+        "2307.08691-flashattention-2"
+      ]
+    }
+  ],
+  "links": {
+    "dashboard": "dashboard.html",
+    "coverage": "coverage.html",
+    "actions": "actions.html",
+    "taxonomy": "taxonomy.html",
+    "stats": "stats.json"
+  }
+}

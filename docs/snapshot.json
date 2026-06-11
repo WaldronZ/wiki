@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T04:08:48",
+  "generated_at": "2026-06-12T04:17:12",
   "snapshot_id": "89f0dcec1638050c",
   "name": "AutoPaperReader Wiki",
   "count": 5,
@@ -121,163 +121,169 @@
     }
   ],
   "artifact_summary": {
-    "count": 46,
+    "count": 48,
     "missing": [],
     "hashes": [
       {
         "href": "index.html",
         "kind": "page",
-        "sha256": "af2ae0db9b1f0458a3ecc480ebf5a3499b1542421e2bad4daf5a9851bc75e6c3",
+        "sha256": "07497d8e20ce59d87efb3caf6994aa661d1ff2bef54218a4deccf98d39d43def",
         "status": "ok"
       },
       {
         "href": "library.html",
         "kind": "page",
-        "sha256": "63c6fa90bf28e2156c2c82a1f8cc91676e45610d545fba6618b45a76062fe9bd",
+        "sha256": "3627939b62bb4b691baa47976b2858b7b76e11ad5bb56bde3feea61eeb1ce6af",
         "status": "ok"
       },
       {
         "href": "dashboard.html",
         "kind": "page",
-        "sha256": "a7db9ef5d20622698e177558f6c5d1bd39daa10ed2843d83c304d1ebc50c943d",
+        "sha256": "25b0445266610ecc9db0e417ec9ead1197b6fa6b98fa39a5069ae2d2f91c62dd",
         "status": "ok"
       },
       {
         "href": "actions.html",
         "kind": "page",
-        "sha256": "346b1181f92e1f721d2f688961170bbd17a5a0101e0e969a8ed3b959c1bc5a36",
+        "sha256": "a2fb7eaefd26eaebba8d42670ae1f058a7204a686fd4bf56aa56f933c73cab4a",
         "status": "ok"
       },
       {
         "href": "collections.html",
         "kind": "page",
-        "sha256": "1b0b50766953c39c0eec52bd75d14607b89c62c6a3998e5b92be839642ea08f8",
+        "sha256": "8e0926634c80d91dcb7b484699408d9015890fa1ada252306b1dcb2caf69a2d3",
         "status": "ok"
       },
       {
         "href": "balance.html",
         "kind": "page",
-        "sha256": "18a708c770ba71f9164e9e013cd04a8504e4b7c3b0792f5ec640669b1bf5301a",
+        "sha256": "332c46877a79499653acb267d04996101967c06dad5cd033ccfaabb3a2753c00",
         "status": "ok"
       },
       {
         "href": "coverage.html",
         "kind": "page",
-        "sha256": "18001b86c2e0d170e1ee96ab9e60103b5aec9bd61c3430e0a6d3f12592d25432",
+        "sha256": "1ac7ce8a821b2cda2653c19ea1ca6587667a78c8ddcb542f22ba50c5ae3568c6",
         "status": "ok"
       },
       {
         "href": "facets.html",
         "kind": "page",
-        "sha256": "e59068d36449e62bb8ebbd53bcb8e99afae0b9b65ca306ef1577b154209eb133",
+        "sha256": "2b96b67b11f6e6cb96e6f219e02c169ea527f733c103112562503680b8bdba8a",
         "status": "ok"
       },
       {
         "href": "related.html",
         "kind": "page",
-        "sha256": "a417223bf82333ca03c6ba03aa73ed2e87d70ab91770bcd50434485d639fee76",
+        "sha256": "93ee538bf754b725e5117e3c34ef3f6d336a502cc8f5f4aee30a4767dc55b196",
         "status": "ok"
       },
       {
         "href": "gaps.html",
         "kind": "page",
-        "sha256": "4aaa839e26abf605d189f184772a471da00f4f9f20a52bb33a5ea393bd7ed517",
+        "sha256": "92db430fe0fb62529703af8d0ab114c2aafde7145bcb7378c3ef3f9148578aa1",
         "status": "ok"
       },
       {
         "href": "board.html",
         "kind": "page",
-        "sha256": "4af92df00591526187f33c5f28d5564772fa11d06e22babc4960ca5615ec1f2c",
+        "sha256": "45e133269dc618e94749b3d25f097a47cb1b14c2795a60393238f27380a53170",
         "status": "ok"
       },
       {
         "href": "workflow.html",
         "kind": "page",
-        "sha256": "a5a8cdb59574f5efb1b67d4533c6b4f1ae64ca60119dc17e56d94dd0842fa9cc",
+        "sha256": "5d23c3073ee7dda97cf14d05d044d7b1064bd742f0ca621747fc9129a03ad16e",
         "status": "ok"
       },
       {
         "href": "pivot.html",
         "kind": "page",
-        "sha256": "cfccfa96ca4f9ebbda933042f1b10abed6c9463902e33546108ef0baf7965be2",
+        "sha256": "f312093a5de54aec85fe8199fe144fb54bba4e0b9816de18f5211f1925aef8c7",
         "status": "ok"
       },
       {
         "href": "compare.html",
         "kind": "page",
-        "sha256": "4ca446b1b879d5ae69839f0d5c2a3c5f79102587acf561555edef8a05c614ebc",
+        "sha256": "c0310af9c55ef7a38c7fae0fdc94da466b0e941c65a537b372ec034a97863c37",
         "status": "ok"
       },
       {
         "href": "taxonomy_map.html",
         "kind": "page",
-        "sha256": "abf39c2b71221af37658bc09552f37b035dc7d146459131b86329bb39e1f0e3f",
+        "sha256": "e953196fb4244bcf18fbbee36d902b89b19e4e0fdf4b8e7a715f0f6bc5af1fbe",
         "status": "ok"
       },
       {
         "href": "scale.html",
         "kind": "page",
-        "sha256": "020fe50fabd1a24aab5006bee05772dd34d64eedd6c64151af00e9c272f239f4",
+        "sha256": "26d1df8c5a3d027771fc5b000f21aecf9028eef4e906ec5de7cf0a1015e816f5",
+        "status": "ok"
+      },
+      {
+        "href": "ownership.html",
+        "kind": "page",
+        "sha256": "b62c999889b0f8c83419370624afa068badf7a4997aaa6edabf8dc58512b8cf3",
         "status": "ok"
       },
       {
         "href": "catalog.html",
         "kind": "page",
-        "sha256": "83739ea121d06f440ffedd7b04d2f08c0d4b12d1965da12a4bb747b7de620b64",
+        "sha256": "8160f63a5e9a1bf50b3d91ec0001c894f4cdceca13ac2ff944d5841a212d1848",
         "status": "ok"
       },
       {
         "href": "inbox.html",
         "kind": "page",
-        "sha256": "9f5fc4d6a84bac89175f5fddd2d58dc76568508bb61e2d4ff7e90ac70d767ef6",
+        "sha256": "e3b2a0e5f4b600692da9ec2347600a79c4c727c563b7e529c78ce45655f9ab69",
         "status": "ok"
       },
       {
         "href": "review.html",
         "kind": "page",
-        "sha256": "7744471d6551be5b7e367aeb5dfeb644822c0c80eb51ab86ba0d35ebd0b56d6a",
+        "sha256": "68e500f41406ee5430a23bdea99168eaa32ffcd2092713d6e70e96b5d3f3cf25",
         "status": "ok"
       },
       {
         "href": "freshness.html",
         "kind": "page",
-        "sha256": "df36250c65dceb86fb7d23a27258d1abc12741cd6c59f298383196a20abec77d",
+        "sha256": "121ffd60e8855c100522de7b084e9ad730d361267f32847ef4f83e9dd858cde3",
         "status": "ok"
       },
       {
         "href": "quality.html",
         "kind": "page",
-        "sha256": "da59818307a2706185f5be8f65366db091f7e2a2c21caa71417385a07a4eb4ed",
+        "sha256": "3c7288f05f35ab236b2ae0aaa7c61caabce8302012062fdb3f463525de29cc8c",
         "status": "ok"
       },
       {
         "href": "taxonomy.html",
         "kind": "page",
-        "sha256": "8c28901f02627b0bb640dc7431e315bd3a7edaba52c666d31bbf8bcefcf89518",
+        "sha256": "018b128adca6c22f4d65d68f8c12caade0fe86872c7d3363859cbc5d13c12a8c",
         "status": "ok"
       },
       {
         "href": "timeline.html",
         "kind": "page",
-        "sha256": "098da1a610dc24a15048d4b71fa44a2c2e3bcf8de3a841a7f535d40f54c1ec6a",
+        "sha256": "9bebee672033d6b389b92237346787c963bd3b4f3dbc7388596c5789dbee2560",
         "status": "ok"
       },
       {
         "href": "matrix.html",
         "kind": "page",
-        "sha256": "9934146749256718de2fba6b73ee6129f488e58ff77fa22474baa765f5cefa50",
+        "sha256": "51614d0f5c7e319071a75e5b5a26973bcc161ce92ccd825191786a8ae93b2fa1",
         "status": "ok"
       },
       {
         "href": "lines/index.html",
         "kind": "page",
-        "sha256": "1e6c88a8c7053a28815df4cd53bab6e60b3bc91d00e50143d85071143122f2bb",
+        "sha256": "6d1bae8e195acda2996254e63a1099c6eb2dd0b9c0bc60a5790b5c05e379bf3f",
         "status": "ok"
       },
       {
         "href": "tags.html",
         "kind": "page",
-        "sha256": "800259f983a6d1f375ba101d0aac9e538b5aada8e565ecf1342f42cb18bc7208",
+        "sha256": "9e3658af29b5deabbd45bac9468aaf8151a8804bc4469185c507c58ee7f6dae3",
         "status": "ok"
       },
       {
@@ -359,9 +365,15 @@
         "status": "ok"
       },
       {
+        "href": "ownership.json",
+        "kind": "data",
+        "sha256": "085030bcc6f0b24f9f3536453284fd6d76d050fca09ad5edcd7ed2643bbffc37",
+        "status": "ok"
+      },
+      {
         "href": "catalog.json",
         "kind": "data",
-        "sha256": "5027355251084108175e40a4a2759b4100f201bc4b67babb7f025fbf7e4ba6ac",
+        "sha256": "916cb84ff65faea0bb33fbbab8664f1acda1550bf72cf588e76732c8aa348695",
         "status": "ok"
       },
       {

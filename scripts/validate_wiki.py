@@ -106,6 +106,7 @@ REQUIRED_PAGES = {
     "compare.html",
     "taxonomy_map.html",
     "scale.html",
+    "ownership.html",
     "catalog.html",
     "inbox.html",
     "quality.html",
@@ -135,6 +136,7 @@ REQUIRED_PAGES = {
     "compare.json",
     "taxonomy_map.json",
     "scale.json",
+    "ownership.json",
     "catalog.json",
     "snapshot.json",
     "manifest.json",
@@ -557,6 +559,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     compare_path = report_dir / "compare.json"
     taxonomy_map_path = report_dir / "taxonomy_map.json"
     scale_path = report_dir / "scale.json"
+    ownership_path = report_dir / "ownership.json"
     catalog_path = report_dir / "catalog.json"
     stats_path = report_dir / "stats.json"
     inbox_path = report_dir / "inbox.json"
@@ -592,6 +595,9 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     if not scale_path.exists():
         errors.append("missing scale.json")
         return
+    if not ownership_path.exists():
+        errors.append("missing ownership.json")
+        return
     if not catalog_path.exists():
         errors.append("missing catalog.json")
         return
@@ -618,6 +624,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     compare_data = json.loads(compare_path.read_text(encoding="utf-8"))
     taxonomy_map_data = json.loads(taxonomy_map_path.read_text(encoding="utf-8"))
     scale_data = json.loads(scale_path.read_text(encoding="utf-8"))
+    ownership_data = json.loads(ownership_path.read_text(encoding="utf-8"))
     catalog_data = json.loads(catalog_path.read_text(encoding="utf-8"))
     stats_data = json.loads(stats_path.read_text(encoding="utf-8"))
     inbox_data = json.loads(inbox_path.read_text(encoding="utf-8"))
@@ -1002,6 +1009,54 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
                 errors.append(f"scale.json capacity_projection missing {target}")
     if not isinstance(scale_data.get("scale_tiers"), list) or not scale_data.get("scale_tiers"):
         errors.append("scale.json scale_tiers must be a non-empty list")
+
+    if ownership_data.get("count") != len(report_slugs):
+        errors.append(f"ownership.json count {ownership_data.get('count')} != markdown report count {len(report_slugs)}")
+    required_ownership = {"owner_count", "unassigned_line_count", "owners", "lines", "links"}
+    missing_ownership = sorted(required_ownership - set(ownership_data))
+    if missing_ownership:
+        errors.append(f"ownership.json missing keys: {', '.join(missing_ownership)}")
+    owners = ownership_data.get("owners")
+    if not isinstance(owners, list):
+        errors.append("ownership.json owners must be a list")
+        owners = []
+    lines = ownership_data.get("lines")
+    if not isinstance(lines, list):
+        errors.append("ownership.json lines must be a list")
+        lines = []
+    if ownership_data.get("owner_count") != len(owners):
+        errors.append("ownership.json owner_count must match owners length")
+    valid_risks = {"high", "medium", "low"}
+    for index, owner in enumerate(owners):
+        if not isinstance(owner, dict):
+            errors.append(f"ownership.json owners[{index}] must be an object")
+            continue
+        for key in ("owner", "line_count", "paper_count", "risk", "queues", "lines"):
+            if key not in owner:
+                errors.append(f"ownership.json owners[{index}] missing {key}")
+        if owner.get("risk") not in valid_risks:
+            errors.append(f"ownership.json owners[{index}].risk has invalid value")
+        if not isinstance(owner.get("queues"), dict):
+            errors.append(f"ownership.json owners[{index}].queues must be an object")
+        if not isinstance(owner.get("lines"), list):
+            errors.append(f"ownership.json owners[{index}].lines must be a list")
+    for index, line in enumerate(lines):
+        if not isinstance(line, dict):
+            errors.append(f"ownership.json lines[{index}] must be an object")
+            continue
+        for key in ("line", "owner", "count", "risk", "queues", "href"):
+            if key not in line:
+                errors.append(f"ownership.json lines[{index}] missing {key}")
+        if line.get("risk") not in valid_risks:
+            errors.append(f"ownership.json lines[{index}].risk has invalid value")
+        if not isinstance(line.get("queues"), dict):
+            errors.append(f"ownership.json lines[{index}].queues must be an object")
+        sample_slugs = line.get("sample_slugs", [])
+        if sample_slugs and not isinstance(sample_slugs, list):
+            errors.append(f"ownership.json lines[{index}].sample_slugs must be a list")
+        unknown_line_slugs = sorted(set(sample_slugs) - report_slugs) if isinstance(sample_slugs, list) else []
+        if unknown_line_slugs:
+            errors.append(f"ownership.json lines[{index}] references unknown slugs: {unknown_line_slugs}")
 
     if catalog_data.get("count") != len(report_slugs):
         errors.append(f"catalog.json count {catalog_data.get('count')} != markdown report count {len(report_slugs)}")

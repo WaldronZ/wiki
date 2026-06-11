@@ -40,6 +40,7 @@ GENERATED_FIXED_PATHS = (
     "compare.json",
     "taxonomy_map.json",
     "scale.json",
+    "ownership.json",
     "catalog.json",
     "snapshot.json",
     "manifest.json",
@@ -51,6 +52,7 @@ GENERATED_FIXED_PATHS = (
     "compare.html",
     "taxonomy_map.html",
     "scale.html",
+    "ownership.html",
     "catalog.html",
     "inbox.html",
     "quality.html",
@@ -2149,6 +2151,127 @@ def write_scale_json(report_dir: Path, papers: list[dict[str, Any]], inbox_items
     )
 
 
+def build_ownership_payload(papers: list[dict[str, Any]]) -> dict[str, Any]:
+    today = dt.date.today().isoformat()
+    freshness = build_freshness_report(papers)
+    stale_slugs = set(freshness.get("queues", {}).get("stale", []))
+    due_freshness_slugs = set(freshness.get("queues", {}).get("due", []))
+    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for paper in papers:
+        line = str(paper.get("research_line") or "Unassigned").strip() or "Unassigned"
+        grouped[line].append(paper)
+
+    line_rows: list[dict[str, Any]] = []
+    owner_rows: dict[str, dict[str, Any]] = {}
+    for line, items in sorted(grouped.items(), key=lambda item: (-len(item[1]), item[0].lower())):
+        owner = research_line_owner(line)
+        owner_name = owner.get("owner") or "Unassigned"
+        owner_key = owner_name if owner_name != "Unassigned" else f"Unassigned:{line}"
+        team = owner.get("team", "")
+        missing_taxonomy = [
+            paper
+            for paper in items
+            if not paper.get("domains")
+            or not paper.get("tracks")
+            or not paper.get("topics")
+            or not paper.get("methods")
+            or paper.get("research_line") == "Unassigned"
+            or not paper.get("line_role")
+        ]
+        needs_review_plan = [paper for paper in items if not paper.get("next_review")]
+        due_review = [paper for paper in items if paper.get("next_review") and str(paper.get("next_review")) <= today]
+        no_code = [paper for paper in items if not paper.get("has_code")]
+        stale = [paper for paper in items if paper.get("slug") in stale_slugs]
+        freshness_due = [paper for paper in items if paper.get("slug") in due_freshness_slugs]
+        queue_counts = {
+            "missing_taxonomy": len(missing_taxonomy),
+            "needs_review_plan": len(needs_review_plan),
+            "due_review": len(due_review),
+            "freshness_due": len(freshness_due),
+            "stale": len(stale),
+            "no_code_observation": len(no_code),
+        }
+        risk_points = (
+            queue_counts["missing_taxonomy"] * 3
+            + queue_counts["needs_review_plan"] * 2
+            + queue_counts["due_review"] * 2
+            + queue_counts["stale"] * 2
+            + queue_counts["no_code_observation"]
+        )
+        risk = "high" if risk_points >= max(4, len(items) * 3) else "medium" if risk_points else "low"
+        code_count = sum(1 for paper in items if paper.get("has_code"))
+        avg_importance = round(sum(int(paper.get("importance") or 0) for paper in items) / len(items), 1) if items else 0
+        line_row = {
+            "line": line,
+            "href": f"lines/{slugify_label(line)}.html" if line != "Unassigned" else page_query_href("library.html", line=line),
+            "owner": owner_name,
+            "team": team,
+            "cadence": owner.get("cadence", ""),
+            "note": owner.get("note", ""),
+            "count": len(items),
+            "avg_importance": avg_importance,
+            "code_coverage": percent(code_count, len(items)),
+            "risk": risk,
+            "risk_points": risk_points,
+            "queues": queue_counts,
+            "sample_slugs": [str(paper["slug"]) for paper in items[:6]],
+        }
+        line_rows.append(line_row)
+        owner_row = owner_rows.setdefault(
+            owner_key,
+            {
+                "owner": owner_name,
+                "team": team,
+                "line_count": 0,
+                "paper_count": 0,
+                "risk_points": 0,
+                "queues": Counter(),
+                "lines": [],
+            },
+        )
+        if not owner_row.get("team") and team:
+            owner_row["team"] = team
+        owner_row["line_count"] += 1
+        owner_row["paper_count"] += len(items)
+        owner_row["risk_points"] += risk_points
+        owner_row["queues"].update(queue_counts)
+        owner_row["lines"].append(line_row)
+
+    owners: list[dict[str, Any]] = []
+    for owner in owner_rows.values():
+        queue_counts = dict(owner["queues"])
+        risk_points = int(owner["risk_points"])
+        paper_count = int(owner["paper_count"])
+        owner["risk"] = "high" if risk_points >= max(6, paper_count * 3) else "medium" if risk_points else "low"
+        owner["queues"] = queue_counts
+        owner["lines"] = sorted(owner["lines"], key=lambda item: (-int(item["risk_points"]), item["line"].lower()))
+        owners.append(owner)
+    owners.sort(key=lambda item: (-int(item["risk_points"]), -int(item["paper_count"]), str(item["owner"]).lower()))
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": len(papers),
+        "owner_count": len(owners),
+        "unassigned_line_count": sum(1 for line in line_rows if line["owner"] == "Unassigned"),
+        "owners": owners,
+        "lines": sorted(line_rows, key=lambda item: (-int(item["risk_points"]), item["line"].lower())),
+        "links": {
+            "dashboard": "dashboard.html",
+            "coverage": "coverage.html",
+            "actions": "actions.html",
+            "taxonomy": "taxonomy.html",
+            "stats": "stats.json",
+        },
+    }
+
+
+def write_ownership_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_ownership_payload(papers)
+    (report_dir / "ownership.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
 COMPARE_FIELDS = [
     {"key": "title_zh", "label": "中文标题", "group": "identity"},
     {"key": "title_en", "label": "英文标题", "group": "identity"},
@@ -2283,6 +2406,7 @@ DATA_CONSUMER_HINTS = {
     "compare.json": ["comparison", "curation", "desktop"],
     "taxonomy_map.json": ["taxonomy", "graph", "desktop"],
     "scale.json": ["ops", "capacity-planning", "desktop"],
+    "ownership.json": ["ops", "owners", "project-management"],
     "snapshot.json": ["release", "audit", "desktop"],
     "inbox.json": ["intake", "dedupe"],
     "manifest.json": ["release", "audit", "ci"],
@@ -2450,6 +2574,7 @@ def wiki_pages_manifest() -> list[dict[str, str]]:
         {"title": "论文对比", "href": "compare.html", "kind": "analysis", "description": "并排比较候选论文的分类、状态和质量信号"},
         {"title": "分类图谱", "href": "taxonomy_map.html", "kind": "analysis", "description": "分类节点、共现边和研究线簇"},
         {"title": "规模就绪", "href": "scale.html", "kind": "ops", "description": "大规模论文库容量、风险和扩展建议"},
+        {"title": "Owner 工作台", "href": "ownership.html", "kind": "ops", "description": "研究线 owner、工作量和治理队列"},
         {"title": "数据目录", "href": "catalog.html", "kind": "ops", "description": "机器数据、页面和契约的接入目录"},
         {"title": "待处理池", "href": "inbox.html", "kind": "workflow", "description": "候选论文队列和去重提示"},
         {"title": "复习计划", "href": "review.html", "kind": "workflow", "description": "待复习、需建计划、建议日期"},
@@ -2478,6 +2603,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "compare.json", "description": "论文对比视图数据和推荐对比集合"},
         {"href": "taxonomy_map.json", "description": "分类节点、共现边、研究线簇和图谱治理建议"},
         {"href": "scale.json", "description": "规模就绪评分、容量投影和大库治理风险"},
+        {"href": "ownership.json", "description": "研究线 owner、工作量和治理队列"},
         {"href": "catalog.json", "description": "机器数据、页面入口和契约字段目录"},
         {"href": "snapshot.json", "description": "当前知识库治理快照和发布基线"},
         {"href": "inbox.json", "description": "候选论文队列和重复项"},
@@ -7959,6 +8085,250 @@ renderScaleRows();
     (report_dir / "scale.html").write_text(page_shell("规模就绪", body, extra_css=scale_css), encoding="utf-8")
 
 
+OWNERSHIP_QUEUE_LABELS = {
+    "missing_taxonomy": "缺分类",
+    "needs_review_plan": "缺复习",
+    "due_review": "复习到期",
+    "freshness_due": "时效到期",
+    "stale": "过期",
+    "no_code_observation": "缺代码",
+}
+
+
+def render_queue_summary(queues: Any) -> str:
+    if not isinstance(queues, dict):
+        return '<span class="meta">-</span>'
+    visible = [(key, int(value or 0)) for key, value in queues.items() if int(value or 0) > 0]
+    if not visible:
+        return '<span class="meta">无待办</span>'
+    return '<div class="queue-stack">' + "".join(
+        f'<span class="queue-pill">{html.escape(OWNERSHIP_QUEUE_LABELS.get(str(key), str(key)))} <strong>{value}</strong></span>'
+        for key, value in visible
+    ) + "</div>"
+
+
+def render_owner_line_links(lines: Any) -> str:
+    if not isinstance(lines, list) or not lines:
+        return '<span class="meta">-</span>'
+    links = []
+    for line in lines[:6]:
+        if not isinstance(line, dict):
+            continue
+        href = str(line.get("href") or "library.html")
+        label = str(line.get("line") or "Unassigned")
+        count = int(line.get("count") or 0)
+        links.append(f'<a href="{html.escape(href)}">{html.escape(label)} · {count}</a>')
+    if len(lines) > 6:
+        links.append(f'<span class="meta">+{len(lines) - 6}</span>')
+    return '<div class="line-links">' + "".join(links) + "</div>"
+
+
+def render_ownership(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_ownership_payload(papers)
+    risk_label = {"high": "高", "medium": "中", "low": "低"}
+    owner_rows = "".join(
+        "<tr class=\"ownership-row\" "
+        f"data-risk=\"{html.escape(str(owner.get('risk') or ''))}\" "
+        f"data-team=\"{html.escape(str(owner.get('team') or ''))}\" "
+        f"data-search=\"{html.escape(' '.join([str(owner.get('owner') or ''), str(owner.get('team') or ''), ' '.join(str(line.get('line') or '') for line in owner.get('lines', []))]).lower())}\">"
+        f"<td><span class=\"flag\">{html.escape(risk_label.get(str(owner.get('risk')), str(owner.get('risk') or '-')))}</span></td>"
+        f"<td><strong>{html.escape(str(owner.get('owner') or 'Unassigned'))}</strong><div class=\"meta\">{html.escape(str(owner.get('team') or '-'))}</div></td>"
+        f"<td>{owner.get('line_count', 0)}</td>"
+        f"<td>{owner.get('paper_count', 0)}</td>"
+        f"<td>{owner.get('risk_points', 0)}</td>"
+        f"<td>{render_queue_summary(owner.get('queues', {}))}</td>"
+        f"<td>{render_owner_line_links(owner.get('lines', []))}</td>"
+        "</tr>"
+        for owner in payload["owners"]
+    )
+    line_rows = "".join(
+        "<tr class=\"ownership-line-row\" "
+        f"data-risk=\"{html.escape(str(line.get('risk') or ''))}\" "
+        f"data-team=\"{html.escape(str(line.get('team') or ''))}\" "
+        f"data-search=\"{html.escape(' '.join([str(line.get('line') or ''), str(line.get('owner') or ''), str(line.get('team') or ''), ' '.join(str(slug) for slug in line.get('sample_slugs', []))]).lower())}\">"
+        f"<td><span class=\"flag\">{html.escape(risk_label.get(str(line.get('risk')), str(line.get('risk') or '-')))}</span></td>"
+        f"<td><a href=\"{html.escape(str(line.get('href') or 'library.html'))}\">{html.escape(str(line.get('line') or 'Unassigned'))}</a><div class=\"meta\">{html.escape(str(line.get('cadence') or '-'))}</div></td>"
+        f"<td>{html.escape(str(line.get('owner') or 'Unassigned'))}<div class=\"meta\">{html.escape(str(line.get('team') or '-'))}</div></td>"
+        f"<td>{line.get('count', 0)}</td>"
+        f"<td>{line.get('avg_importance', 0)}</td>"
+        f"<td>{line.get('code_coverage', 0)}%</td>"
+        f"<td>{render_queue_summary(line.get('queues', {}))}</td>"
+        "</tr>"
+        for line in payload["lines"]
+    )
+    team_values = sorted({str(owner.get("team") or "") for owner in payload["owners"] if owner.get("team")})
+    team_options = "".join(f'<option value="{html.escape(team)}">{html.escape(team)}</option>' for team in team_values)
+    ownership_css = """
+    .ownership-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .ownership-toolbar input,
+    .ownership-toolbar select {
+      max-width: 220px;
+    }
+    .ownership-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .queue-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .queue-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 3px 7px;
+      background: var(--panel);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .line-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .line-links a {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 3px 7px;
+      background: var(--panel);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 12px;
+    }
+    .ownership-row[hidden],
+    .ownership-line-row[hidden] { display: none; }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Ownership Operations</div>
+  <h1>Owner 工作台</h1>
+  <p class="lead">按研究线 owner 聚合论文数量、分类缺口、复习计划、报告时效和代码观察缺口。论文变多后可以直接按负责人分派治理队列。</p>
+  <div class="stats">
+    <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="coverage.html">覆盖地图</a>
+    <a class="stat" href="actions.html">行动中心</a>
+    <a class="stat" href="taxonomy.html">分类治理</a>
+    <a class="stat" href="ownership.json">Ownership JSON</a>
+    <span class="stat">论文 {payload["count"]}</span>
+    <span class="stat">Owners {payload["owner_count"]}</span>
+  </div>
+</header>
+<main class="shell">
+  <section class="ownership-grid">
+    <section class="metric-card"><span>Owner 数</span><strong>{payload["owner_count"]}</strong><span>含未分派队列</span></section>
+    <section class="metric-card"><span>研究线</span><strong>{len(payload["lines"])}</strong><span>按风险排序</span></section>
+    <section class="metric-card"><span>未分派线</span><strong>{payload["unassigned_line_count"]}</strong><span>需要补 research_line_owners</span></section>
+    <section class="metric-card"><span>高风险 owner</span><strong>{sum(1 for owner in payload["owners"] if owner.get("risk") == "high")}</strong><span>优先处理</span></section>
+  </section>
+  <section>
+    <h2 class="section-title">Owner 队列</h2>
+    <div class="ownership-toolbar">
+      <input id="ownershipSearch" type="search" placeholder="搜索 owner、team、研究线">
+      <select id="ownershipRisk"><option value="">全部风险</option><option value="high">高</option><option value="medium">中</option><option value="low">低</option></select>
+      <select id="ownershipTeam"><option value="">全部 team</option>{team_options}</select>
+      <button id="downloadOwnershipCsv" class="button" type="button">下载 CSV</button>
+      <button id="copyOwnershipChecklist" class="button" type="button">复制清单</button>
+      <span class="stat" id="ownershipCount">0 owner</span>
+    </div>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>风险</th><th>Owner</th><th>线</th><th>论文</th><th>风险分</th><th>队列</th><th>研究线</th></tr></thead><tbody id="ownershipRows">{owner_rows}</tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">研究线明细</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>风险</th><th>研究线</th><th>Owner</th><th>论文</th><th>重要性</th><th>代码覆盖</th><th>队列</th></tr></thead><tbody id="ownershipLineRows">{line_rows}</tbody></table></div>
+  </section>
+</main>
+<script>
+const ownershipRows = Array.from(document.querySelectorAll("#ownershipRows tr"));
+const ownershipLineRows = Array.from(document.querySelectorAll("#ownershipLineRows tr"));
+const ownershipSearch = document.querySelector("#ownershipSearch");
+const ownershipRisk = document.querySelector("#ownershipRisk");
+const ownershipTeam = document.querySelector("#ownershipTeam");
+const ownershipCount = document.querySelector("#ownershipCount");
+const downloadOwnershipCsv = document.querySelector("#downloadOwnershipCsv");
+const copyOwnershipChecklist = document.querySelector("#copyOwnershipChecklist");
+
+function csvCell(value) {{
+  const text = String(value ?? "");
+  return (text.includes(",") || text.includes('"') || text.includes("\\n"))
+    ? `"${{text.replaceAll('"', '""')}}"`
+    : text;
+}}
+
+function rowMatches(row, q, risk, team) {{
+  const search = row.dataset.search || "";
+  return (!q || search.includes(q)) && (!risk || row.dataset.risk === risk) && (!team || row.dataset.team === team);
+}}
+
+function visibleOwnerRows() {{
+  return ownershipRows.filter(row => !row.hidden);
+}}
+
+function renderOwnershipRows() {{
+  const q = ownershipSearch.value.trim().toLowerCase();
+  const risk = ownershipRisk.value;
+  const team = ownershipTeam.value;
+  ownershipRows.forEach(row => row.hidden = !rowMatches(row, q, risk, team));
+  ownershipLineRows.forEach(row => row.hidden = !rowMatches(row, q, risk, team));
+  ownershipCount.textContent = `${{visibleOwnerRows().length}} owner`;
+}}
+
+function downloadOwnership() {{
+  const rows = visibleOwnerRows().map(row => Array.from(row.children).map(cell => cell.textContent.trim()));
+  if (!rows.length) {{
+    window.alert("当前没有匹配 owner。");
+    return;
+  }}
+  const header = ["risk", "owner", "line_count", "paper_count", "risk_points", "queues", "lines"];
+  const csv = [header, ...rows].map(row => row.map(csvCell).join(",")).join("\\n") + "\\n";
+  const blob = new Blob([csv], {{ type: "text/csv;charset=utf-8" }});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "ownership_workload.csv";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}}
+
+async function copyChecklist() {{
+  const lines = visibleOwnerRows().map(row => {{
+    const cells = Array.from(row.children).map(cell => cell.textContent.trim().replace(/\\s+/g, " "));
+    return `- [ ] ${{cells[1]}}: risk=${{cells[0]}}, papers=${{cells[3]}}, queues=${{cells[5]}}`;
+  }});
+  if (!lines.length) {{
+    window.alert("当前没有匹配 owner。");
+    return;
+  }}
+  const text = lines.join("\\n");
+  try {{
+    await navigator.clipboard.writeText(text);
+    copyOwnershipChecklist.textContent = "已复制";
+    setTimeout(() => copyOwnershipChecklist.textContent = "复制清单", 1200);
+  }} catch (error) {{
+    window.prompt("复制 owner 清单", text);
+  }}
+}}
+
+[ownershipSearch, ownershipRisk, ownershipTeam].forEach(control => control.addEventListener("input", renderOwnershipRows));
+downloadOwnershipCsv.addEventListener("click", downloadOwnership);
+copyOwnershipChecklist.addEventListener("click", copyChecklist);
+renderOwnershipRows();
+</script>
+"""
+    (report_dir / "ownership.html").write_text(page_shell("Owner 工作台", body, extra_css=ownership_css), encoding="utf-8")
+
+
 def render_catalog(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
     payload = build_catalog_payload(report_dir, papers, inbox_items)
     resource_rows = []
@@ -13376,6 +13746,7 @@ def build_wiki(report_dir: Path) -> int:
     write_inbox_json(report_dir, inbox_items)
     write_search_index(report_dir, papers)
     write_scale_json(report_dir, papers, inbox_items)
+    write_ownership_json(report_dir, papers)
     render_index(report_dir, papers)
     render_library(report_dir, papers)
     render_board(report_dir, papers)
@@ -13384,6 +13755,7 @@ def build_wiki(report_dir: Path) -> int:
     render_compare(report_dir, papers)
     render_taxonomy_map(report_dir, papers)
     render_scale(report_dir, papers, inbox_items)
+    render_ownership(report_dir, papers)
     render_inbox(report_dir, inbox_items)
     render_review(report_dir, papers)
     render_freshness(report_dir, papers)
