@@ -1989,19 +1989,19 @@ def render_library_row(paper: dict[str, Any]) -> str:
   data-arxiv-url="{html.escape(str(paper.get("arxiv_url") or ""), quote=True)}"
   data-code-url="{html.escape(str(paper.get("code_url") or ""), quote=True)}"
   data-href="{html.escape(str(link), quote=True)}">
-  <td><input class="row-check" type="checkbox" aria-label="选择 {html.escape(str(paper.get("slug") or ""), quote=True)}"></td>
-  <td class="library-title">
+  <td data-col="select"><input class="row-check" type="checkbox" aria-label="选择 {html.escape(str(paper.get("slug") or ""), quote=True)}"></td>
+  <td class="library-title" data-col="title">
     <strong><a href="{html.escape(link)}">{html.escape(paper["title_zh"] or paper["title"])}</a></strong>
     <div class="meta">{html.escape(paper.get("title_en") or "")}</div>
     <div class="meta">{html.escape(" / ".join(str(part) for part in [paper.get("year"), authors, paper.get("arxiv_id")] if part))}</div>
   </td>
-  <td>{line_html}<div class="meta">{html.escape(str(paper.get("line_role") or ""))}</div></td>
-  <td class="library-taxonomy"><div class="chips">{render_inline_chips(domain_track_problem, 4)}</div></td>
-  <td class="library-taxonomy"><div class="chips">{render_inline_chips(topics_methods, 5)}</div></td>
-  <td><div class="status-stack"><span class="flag">{html.escape(str(paper.get("status") or "unknown"))}</span><span class="flag">{html.escape(str(paper.get("reading_stage") or "未分阶段"))}</span><span class="meta">{" · ".join(review_bits)}</span></div></td>
-  <td><div class="score-grid"><span>I {html.escape(str(paper.get("importance") or "-"))}</span><span>C {html.escape(str(paper.get("confidence") or "-"))}</span><span>R {html.escape(str(paper.get("reproducibility") or "-"))}</span></div></td>
-  <td>{"有" if paper.get("has_code") else "无"}</td>
-  <td><div class="library-actions">{"".join(links)}</div></td>
+  <td data-col="line">{line_html}<div class="meta">{html.escape(str(paper.get("line_role") or ""))}</div></td>
+  <td class="library-taxonomy" data-col="structure"><div class="chips">{render_inline_chips(domain_track_problem, 4)}</div></td>
+  <td class="library-taxonomy" data-col="tags"><div class="chips">{render_inline_chips(topics_methods, 5)}</div></td>
+  <td data-col="state"><div class="status-stack"><span class="flag">{html.escape(str(paper.get("status") or "unknown"))}</span><span class="flag">{html.escape(str(paper.get("reading_stage") or "未分阶段"))}</span><span class="meta">{" · ".join(review_bits)}</span></div></td>
+  <td data-col="scores"><div class="score-grid"><span>I {html.escape(str(paper.get("importance") or "-"))}</span><span>C {html.escape(str(paper.get("confidence") or "-"))}</span><span>R {html.escape(str(paper.get("reproducibility") or "-"))}</span></div></td>
+  <td data-col="code">{"有" if paper.get("has_code") else "无"}</td>
+  <td data-col="actions"><div class="library-actions">{"".join(links)}</div></td>
 </tr>"""
 
 
@@ -2025,6 +2025,41 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     .bulk-panel .bulk-count { color: var(--muted); font-weight: 700; white-space: nowrap; }
     .bulk-actions { display: flex; flex-wrap: wrap; gap: 8px; }
     .row-check, .header-check { width: 18px; min-height: 18px; padding: 0; }
+    .column-panel { position: relative; }
+    .column-panel summary { list-style: none; cursor: pointer; }
+    .column-panel summary::-webkit-details-marker { display: none; }
+    .column-menu {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 8px);
+      z-index: 30;
+      width: min(340px, calc(100vw - 32px));
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .column-menu h3 { margin: 0 0 8px; font-size: 14px; }
+    .column-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .column-options label, .density-control {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .density-control { margin-top: 12px; justify-content: space-between; }
+    .density-control select { min-width: 128px; }
+    .library-table [data-col].is-hidden-column { display: none; }
+    .library-table[data-density="compact"] th,
+    .library-table[data-density="compact"] td { padding: 6px 8px; font-size: 13px; }
+    .library-table[data-density="compact"] .chips { gap: 4px; }
+    .library-table[data-density="compact"] .flag,
+    .library-table[data-density="compact"] .chip { padding: 2px 6px; }
+    .library-table[data-density="comfortable"] th,
+    .library-table[data-density="comfortable"] td { padding: 14px 12px; }
     """
     body = f"""
 <header class="shell">
@@ -2075,6 +2110,23 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       <select id="savedView" class="saved-view" aria-label="选择保存视图"><option value="">选择视图</option></select>
       <button id="saveView" class="button" type="button">保存视图</button>
       <button id="deleteView" class="button" type="button">删除视图</button>
+      <details class="column-panel">
+        <summary class="button">列设置</summary>
+        <div class="column-menu" id="columnMenu">
+          <h3>显示列</h3>
+          <div class="column-options">
+            <label><input type="checkbox" data-column-toggle="title" checked disabled>论文</label>
+            <label><input type="checkbox" data-column-toggle="line" checked>研究线</label>
+            <label><input type="checkbox" data-column-toggle="structure" checked>结构分类</label>
+            <label><input type="checkbox" data-column-toggle="tags" checked>主题 / 方法</label>
+            <label><input type="checkbox" data-column-toggle="state" checked>状态</label>
+            <label><input type="checkbox" data-column-toggle="scores" checked>评分</label>
+            <label><input type="checkbox" data-column-toggle="code" checked>代码</label>
+            <label><input type="checkbox" data-column-toggle="actions" checked>操作</label>
+          </div>
+          <label class="density-control"><span>表格密度</span><select id="densityMode"><option value="compact">紧凑</option><option value="normal">标准</option><option value="comfortable">舒适</option></select></label>
+        </div>
+      </details>
       <button id="exportMarkdown" class="button" type="button">导出清单</button>
       <button id="exportBibtex" class="button" type="button">导出 BibTeX</button>
       <button id="resetFilters" class="button" type="button">重置筛选</button>
@@ -2093,9 +2145,9 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     </div>
   </div>
   <div class="table-wrap">
-    <table class="library-table">
+    <table class="library-table" data-density="normal">
       <thead>
-        <tr><th><input id="toggleVisible" class="header-check" type="checkbox" aria-label="切换当前页选择"></th><th>论文</th><th>研究线</th><th>结构分类</th><th>主题 / 方法</th><th>状态</th><th>评分</th><th>代码</th><th>操作</th></tr>
+        <tr><th data-col="select"><input id="toggleVisible" class="header-check" type="checkbox" aria-label="切换当前页选择"></th><th data-col="title">论文</th><th data-col="line">研究线</th><th data-col="structure">结构分类</th><th data-col="tags">主题 / 方法</th><th data-col="state">状态</th><th data-col="scores">评分</th><th data-col="code">代码</th><th data-col="actions">操作</th></tr>
       </thead>
       <tbody id="libraryRows">{rows}</tbody>
     </table>
@@ -2143,10 +2195,14 @@ const bulkNextReview = document.querySelector("#bulkNextReview");
 const selectVisible = document.querySelector("#selectVisible");
 const clearSelected = document.querySelector("#clearSelected");
 const downloadPatch = document.querySelector("#downloadPatch");
+const libraryTable = document.querySelector(".library-table");
+const columnToggles = Array.from(document.querySelectorAll("[data-column-toggle]"));
+const densityMode = document.querySelector("#densityMode");
 const sharedViews = window.PAPER_WIKI.shared_views || [];
 let currentPage = 1;
 let currentRankedRows = [...allRows];
 const savedViewsKey = "autopaperreader:library:savedViews";
+const libraryPrefsKey = "autopaperreader:library:prefs";
 const controls = [
   ["q", search],
   ["domain", domain],
@@ -2228,6 +2284,59 @@ function writeSavedViews(views) {{
     window.alert("浏览器本地存储不可用，无法保存视图。");
     return false;
   }}
+}}
+
+function defaultLibraryPrefs() {{
+  return {{
+    density: "normal",
+    columns: Object.fromEntries(columnToggles.map(toggle => [toggle.dataset.columnToggle, true])),
+  }};
+}}
+
+function readLibraryPrefs() {{
+  const defaults = defaultLibraryPrefs();
+  try {{
+    const stored = JSON.parse(localStorage.getItem(libraryPrefsKey) || "{{}}");
+    return {{
+      density: ["compact", "normal", "comfortable"].includes(stored.density) ? stored.density : defaults.density,
+      columns: {{ ...defaults.columns, ...(stored.columns || {{}}), title: true }},
+    }};
+  }} catch {{
+    return defaults;
+  }}
+}}
+
+function writeLibraryPrefs(prefs) {{
+  try {{
+    localStorage.setItem(libraryPrefsKey, JSON.stringify(prefs));
+  }} catch {{
+    // Preference persistence is optional; the table should still work without localStorage.
+  }}
+}}
+
+function collectLibraryPrefs() {{
+  return {{
+    density: densityMode.value || "normal",
+    columns: Object.fromEntries(columnToggles.map(toggle => [
+      toggle.dataset.columnToggle,
+      toggle.disabled ? true : toggle.checked,
+    ])),
+  }};
+}}
+
+function applyLibraryPrefs(prefs) {{
+  const density = ["compact", "normal", "comfortable"].includes(prefs.density) ? prefs.density : "normal";
+  densityMode.value = density;
+  libraryTable.dataset.density = density;
+  columnToggles.forEach(toggle => {{
+    const key = toggle.dataset.columnToggle;
+    toggle.checked = toggle.disabled || prefs.columns[key] !== false;
+  }});
+  document.querySelectorAll("[data-col]").forEach(cell => {{
+    const key = cell.dataset.col;
+    const alwaysVisible = key === "select" || key === "title";
+    cell.classList.toggle("is-hidden-column", !alwaysVisible && prefs.columns[key] === false);
+  }});
 }}
 
 function refreshSavedViews() {{
@@ -2508,9 +2617,20 @@ downloadPatch.addEventListener("click", () => {{
 }});
 exportMarkdown.addEventListener("click", () => exportRows("markdown"));
 exportBibtex.addEventListener("click", () => exportRows("bibtex"));
+columnToggles.forEach(toggle => toggle.addEventListener("change", () => {{
+  const prefs = collectLibraryPrefs();
+  applyLibraryPrefs(prefs);
+  writeLibraryPrefs(prefs);
+}}));
+densityMode.addEventListener("input", () => {{
+  const prefs = collectLibraryPrefs();
+  applyLibraryPrefs(prefs);
+  writeLibraryPrefs(prefs);
+}});
 
 readStateFromUrl();
 refreshSavedViews();
+applyLibraryPrefs(readLibraryPrefs());
 render();
 </script>
 """

@@ -293,6 +293,41 @@
     .bulk-panel .bulk-count { color: var(--muted); font-weight: 700; white-space: nowrap; }
     .bulk-actions { display: flex; flex-wrap: wrap; gap: 8px; }
     .row-check, .header-check { width: 18px; min-height: 18px; padding: 0; }
+    .column-panel { position: relative; }
+    .column-panel summary { list-style: none; cursor: pointer; }
+    .column-panel summary::-webkit-details-marker { display: none; }
+    .column-menu {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 8px);
+      z-index: 30;
+      width: min(340px, calc(100vw - 32px));
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .column-menu h3 { margin: 0 0 8px; font-size: 14px; }
+    .column-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .column-options label, .density-control {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .density-control { margin-top: 12px; justify-content: space-between; }
+    .density-control select { min-width: 128px; }
+    .library-table [data-col].is-hidden-column { display: none; }
+    .library-table[data-density="compact"] th,
+    .library-table[data-density="compact"] td { padding: 6px 8px; font-size: 13px; }
+    .library-table[data-density="compact"] .chips { gap: 4px; }
+    .library-table[data-density="compact"] .flag,
+    .library-table[data-density="compact"] .chip { padding: 2px 6px; }
+    .library-table[data-density="comfortable"] th,
+    .library-table[data-density="comfortable"] td { padding: 14px 12px; }
     
   </style>
 </head>
@@ -350,6 +385,23 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
       <select id="savedView" class="saved-view" aria-label="选择保存视图"><option value="">选择视图</option></select>
       <button id="saveView" class="button" type="button">保存视图</button>
       <button id="deleteView" class="button" type="button">删除视图</button>
+      <details class="column-panel">
+        <summary class="button">列设置</summary>
+        <div class="column-menu" id="columnMenu">
+          <h3>显示列</h3>
+          <div class="column-options">
+            <label><input type="checkbox" data-column-toggle="title" checked disabled>论文</label>
+            <label><input type="checkbox" data-column-toggle="line" checked>研究线</label>
+            <label><input type="checkbox" data-column-toggle="structure" checked>结构分类</label>
+            <label><input type="checkbox" data-column-toggle="tags" checked>主题 / 方法</label>
+            <label><input type="checkbox" data-column-toggle="state" checked>状态</label>
+            <label><input type="checkbox" data-column-toggle="scores" checked>评分</label>
+            <label><input type="checkbox" data-column-toggle="code" checked>代码</label>
+            <label><input type="checkbox" data-column-toggle="actions" checked>操作</label>
+          </div>
+          <label class="density-control"><span>表格密度</span><select id="densityMode"><option value="compact">紧凑</option><option value="normal">标准</option><option value="comfortable">舒适</option></select></label>
+        </div>
+      </details>
       <button id="exportMarkdown" class="button" type="button">导出清单</button>
       <button id="exportBibtex" class="button" type="button">导出 BibTeX</button>
       <button id="resetFilters" class="button" type="button">重置筛选</button>
@@ -368,9 +420,9 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
     </div>
   </div>
   <div class="table-wrap">
-    <table class="library-table">
+    <table class="library-table" data-density="normal">
       <thead>
-        <tr><th><input id="toggleVisible" class="header-check" type="checkbox" aria-label="切换当前页选择"></th><th>论文</th><th>研究线</th><th>结构分类</th><th>主题 / 方法</th><th>状态</th><th>评分</th><th>代码</th><th>操作</th></tr>
+        <tr><th data-col="select"><input id="toggleVisible" class="header-check" type="checkbox" aria-label="切换当前页选择"></th><th data-col="title">论文</th><th data-col="line">研究线</th><th data-col="structure">结构分类</th><th data-col="tags">主题 / 方法</th><th data-col="state">状态</th><th data-col="scores">评分</th><th data-col="code">代码</th><th data-col="actions">操作</th></tr>
       </thead>
       <tbody id="libraryRows"><tr
   data-search="2602.06036-dflash dflash: block diffusion for flash speculative decoding dflash：用于快速 speculative decoding 的块扩散方法 dflash: block diffusion for flash speculative decoding 2602.06036v1 parallel decoding with diffusion models followup read deep_read 中文版：dflash 把 diffusion language model 的角色从“独立生成器”改为 speculative decoding 中的轻量 parallel drafter：draft model 一次前向生成一个 token block，再由 target llm 并行验证，从而保持 lossless 输出。它的关键设计是从 frozen target model 抽取多层 hidden features，经融合后注入... jian chen yesheng liang zhijian liu llm systems inference acceleration parallel decoding lossless speculative decoding diffusion language models llm inference llm serving speculative decoding block diffusion kv injection parallel drafting speculative decoding target hidden features"
@@ -394,19 +446,19 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
   data-arxiv-url="https://arxiv.org/abs/2602.06036v1"
   data-code-url="https://github.com/z-lab/dflash"
   data-href="2602.06036-dflash.html">
-  <td><input class="row-check" type="checkbox" aria-label="选择 2602.06036-dflash"></td>
-  <td class="library-title">
+  <td data-col="select"><input class="row-check" type="checkbox" aria-label="选择 2602.06036-dflash"></td>
+  <td class="library-title" data-col="title">
     <strong><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a></strong>
     <div class="meta">DFlash: Block Diffusion for Flash Speculative Decoding</div>
     <div class="meta">2026 / Jian Chen, Yesheng Liang, Zhijian Liu / 2602.06036v1</div>
   </td>
-  <td><a href="lines/parallel-decoding-with-diffusion-models.html">Parallel Decoding with Diffusion Models</a><div class="meta">followup</div></td>
-  <td class="library-taxonomy"><div class="chips"><span class="chip">LLM Systems</span><span class="chip">Inference Acceleration</span><span class="chip">Parallel Decoding</span><span class="chip">Lossless Speculative Decoding</span></div></td>
-  <td class="library-taxonomy"><div class="chips"><span class="chip">Diffusion Language Models</span><span class="chip">LLM Inference</span><span class="chip">LLM Serving</span><span class="chip">Speculative Decoding</span><span class="chip">block diffusion</span><span class="chip">+4</span></div></td>
-  <td><div class="status-stack"><span class="flag">read</span><span class="flag">deep_read</span><span class="meta">未设置复习</span></div></td>
-  <td><div class="score-grid"><span>I 4</span><span>C 4</span><span>R 3</span></div></td>
-  <td>有</td>
-  <td><div class="library-actions"><a class="button" href="2602.06036-dflash.html">报告</a><a class="button" href="https://arxiv.org/abs/2602.06036v1">arxiv</a><a class="button" href="https://github.com/z-lab/dflash">code</a></div></td>
+  <td data-col="line"><a href="lines/parallel-decoding-with-diffusion-models.html">Parallel Decoding with Diffusion Models</a><div class="meta">followup</div></td>
+  <td class="library-taxonomy" data-col="structure"><div class="chips"><span class="chip">LLM Systems</span><span class="chip">Inference Acceleration</span><span class="chip">Parallel Decoding</span><span class="chip">Lossless Speculative Decoding</span></div></td>
+  <td class="library-taxonomy" data-col="tags"><div class="chips"><span class="chip">Diffusion Language Models</span><span class="chip">LLM Inference</span><span class="chip">LLM Serving</span><span class="chip">Speculative Decoding</span><span class="chip">block diffusion</span><span class="chip">+4</span></div></td>
+  <td data-col="state"><div class="status-stack"><span class="flag">read</span><span class="flag">deep_read</span><span class="meta">未设置复习</span></div></td>
+  <td data-col="scores"><div class="score-grid"><span>I 4</span><span>C 4</span><span>R 3</span></div></td>
+  <td data-col="code">有</td>
+  <td data-col="actions"><div class="library-actions"><a class="button" href="2602.06036-dflash.html">报告</a><a class="button" href="https://arxiv.org/abs/2602.06036v1">arxiv</a><a class="button" href="https://github.com/z-lab/dflash">code</a></div></td>
 </tr>
 <tr
   data-search="2604.11035-introspective-dlm introspective diffusion language models 内省式扩散语言模型 introspective diffusion language models 2604.11035v1 parallel decoding with diffusion models foundation read deep_read 中文版：本文把 dlm 与 ar 模型的质量差距归因于缺少 introspective consistency，即模型不能稳定认可自己已经生成的 token；在此基础上提出 i-dlm，用 logit-shifted causal training 把预训练 ar 模型转成可并行解码的 dlm，再用 introspective strided decoding (isd) 在同一次 forward 中生成新 token 并验证旧 tok... yifan yu yuqing jian junxiong wang zhongzhu zhou donglin zhuang xinyu fang sri yanamandra xiaoxia wu qingyang wu shuaiwen leon song tri dao ben athiwaratkun james zou fan lai chenfeng xu llm systems inference acceleration parallel decoding parallel diffusion decoding diffusion language models llm llm serving parallel decoding speculative decoding gated lora introspective consistency introspective strided decoding logit-shifted causal training p/q acceptance sglang serving"
@@ -430,19 +482,19 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
   data-arxiv-url="https://arxiv.org/abs/2604.11035v1"
   data-code-url="https://github.com/Introspective-Diffusion/I-DLM"
   data-href="2604.11035-introspective-dlm.html">
-  <td><input class="row-check" type="checkbox" aria-label="选择 2604.11035-introspective-dlm"></td>
-  <td class="library-title">
+  <td data-col="select"><input class="row-check" type="checkbox" aria-label="选择 2604.11035-introspective-dlm"></td>
+  <td class="library-title" data-col="title">
     <strong><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a></strong>
     <div class="meta">Introspective Diffusion Language Models</div>
     <div class="meta">2026 / Yifan Yu, Yuqing Jian, Junxiong Wang / 2604.11035v1</div>
   </td>
-  <td><a href="lines/parallel-decoding-with-diffusion-models.html">Parallel Decoding with Diffusion Models</a><div class="meta">foundation</div></td>
-  <td class="library-taxonomy"><div class="chips"><span class="chip">LLM Systems</span><span class="chip">Inference Acceleration</span><span class="chip">Parallel Decoding</span><span class="chip">Parallel Diffusion Decoding</span></div></td>
-  <td class="library-taxonomy"><div class="chips"><span class="chip">Diffusion Language Models</span><span class="chip">LLM</span><span class="chip">LLM Serving</span><span class="chip">Parallel Decoding</span><span class="chip">Speculative Decoding</span><span class="chip">+6</span></div></td>
-  <td><div class="status-stack"><span class="flag">read</span><span class="flag">deep_read</span><span class="meta">未设置复习</span></div></td>
-  <td><div class="score-grid"><span>I 5</span><span>C 4</span><span>R 3</span></div></td>
-  <td>有</td>
-  <td><div class="library-actions"><a class="button" href="2604.11035-introspective-dlm.html">报告</a><a class="button" href="https://arxiv.org/abs/2604.11035v1">arxiv</a><a class="button" href="https://github.com/Introspective-Diffusion/I-DLM">code</a></div></td>
+  <td data-col="line"><a href="lines/parallel-decoding-with-diffusion-models.html">Parallel Decoding with Diffusion Models</a><div class="meta">foundation</div></td>
+  <td class="library-taxonomy" data-col="structure"><div class="chips"><span class="chip">LLM Systems</span><span class="chip">Inference Acceleration</span><span class="chip">Parallel Decoding</span><span class="chip">Parallel Diffusion Decoding</span></div></td>
+  <td class="library-taxonomy" data-col="tags"><div class="chips"><span class="chip">Diffusion Language Models</span><span class="chip">LLM</span><span class="chip">LLM Serving</span><span class="chip">Parallel Decoding</span><span class="chip">Speculative Decoding</span><span class="chip">+6</span></div></td>
+  <td data-col="state"><div class="status-stack"><span class="flag">read</span><span class="flag">deep_read</span><span class="meta">未设置复习</span></div></td>
+  <td data-col="scores"><div class="score-grid"><span>I 5</span><span>C 4</span><span>R 3</span></div></td>
+  <td data-col="code">有</td>
+  <td data-col="actions"><div class="library-actions"><a class="button" href="2604.11035-introspective-dlm.html">报告</a><a class="button" href="https://arxiv.org/abs/2604.11035v1">arxiv</a><a class="button" href="https://github.com/Introspective-Diffusion/I-DLM">code</a></div></td>
 </tr>
 <tr
   data-search="2605.12825-orthrus orthrus: memory-efficient parallel token generation via dual-view diffusion orthrus：通过双视角扩散实现内存高效的并行 token 生成 orthrus: memory-efficient parallel token generation via dual-view diffusion 2605.12825v2 parallel decoding with diffusion models variant read deep_read 中文版：orthrus 在冻结的 autoregressive llm 内部插入轻量 trainable diffusion attention module，让 ar view 负责高质量 context / kv cache 构建，让 diffusion view 一次并行预测多个 future tokens，再由同一个 frozen ar head 做 consensus verification，从而在不改变 base mode... chien van nguyen chaitra hegde van cuong pham ryan a. rossi franck dernoncourt thien huu nguyen llm systems inference acceleration parallel decoding memory-efficient parallel token generation diffusion language models kv cache llm inference parallel decoding speculative decoding dual-view attention forward kl distillation intra-model consensus masked diffusion shared kv cache"
@@ -466,19 +518,19 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
   data-arxiv-url="https://arxiv.org/abs/2605.12825v2"
   data-code-url="https://github.com/chiennv2000/orthrus"
   data-href="2605.12825-orthrus.html">
-  <td><input class="row-check" type="checkbox" aria-label="选择 2605.12825-orthrus"></td>
-  <td class="library-title">
+  <td data-col="select"><input class="row-check" type="checkbox" aria-label="选择 2605.12825-orthrus"></td>
+  <td class="library-title" data-col="title">
     <strong><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></strong>
     <div class="meta">Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion</div>
     <div class="meta">2026 / Chien Van Nguyen, Chaitra Hegde, Van Cuong Pham / 2605.12825v2</div>
   </td>
-  <td><a href="lines/parallel-decoding-with-diffusion-models.html">Parallel Decoding with Diffusion Models</a><div class="meta">variant</div></td>
-  <td class="library-taxonomy"><div class="chips"><span class="chip">LLM Systems</span><span class="chip">Inference Acceleration</span><span class="chip">Parallel Decoding</span><span class="chip">Memory-Efficient Parallel Token Generation</span></div></td>
-  <td class="library-taxonomy"><div class="chips"><span class="chip">Diffusion Language Models</span><span class="chip">KV Cache</span><span class="chip">LLM Inference</span><span class="chip">Parallel Decoding</span><span class="chip">Speculative Decoding</span><span class="chip">+5</span></div></td>
-  <td><div class="status-stack"><span class="flag">read</span><span class="flag">deep_read</span><span class="meta">未设置复习</span></div></td>
-  <td><div class="score-grid"><span>I 4</span><span>C 4</span><span>R 3</span></div></td>
-  <td>有</td>
-  <td><div class="library-actions"><a class="button" href="2605.12825-orthrus.html">报告</a><a class="button" href="https://arxiv.org/abs/2605.12825v2">arxiv</a><a class="button" href="https://github.com/chiennv2000/orthrus">code</a></div></td>
+  <td data-col="line"><a href="lines/parallel-decoding-with-diffusion-models.html">Parallel Decoding with Diffusion Models</a><div class="meta">variant</div></td>
+  <td class="library-taxonomy" data-col="structure"><div class="chips"><span class="chip">LLM Systems</span><span class="chip">Inference Acceleration</span><span class="chip">Parallel Decoding</span><span class="chip">Memory-Efficient Parallel Token Generation</span></div></td>
+  <td class="library-taxonomy" data-col="tags"><div class="chips"><span class="chip">Diffusion Language Models</span><span class="chip">KV Cache</span><span class="chip">LLM Inference</span><span class="chip">Parallel Decoding</span><span class="chip">Speculative Decoding</span><span class="chip">+5</span></div></td>
+  <td data-col="state"><div class="status-stack"><span class="flag">read</span><span class="flag">deep_read</span><span class="meta">未设置复习</span></div></td>
+  <td data-col="scores"><div class="score-grid"><span>I 4</span><span>C 4</span><span>R 3</span></div></td>
+  <td data-col="code">有</td>
+  <td data-col="actions"><div class="library-actions"><a class="button" href="2605.12825-orthrus.html">报告</a><a class="button" href="https://arxiv.org/abs/2605.12825v2">arxiv</a><a class="button" href="https://github.com/chiennv2000/orthrus">code</a></div></td>
 </tr>
 <tr
   data-search="2501.01005-flashinfer flashinfer: efficient and customizable attention engine for llm inference serving flashinfer：面向 llm 推理服务的高效可定制 attention 引擎 flashinfer: efficient and customizable attention engine for llm inference serving 2501.01005v2 efficient attention kernels system read deep_read 中文版：flashinfer 是一个面向 llm online serving 的 attention kernel engine。它把 pagedattention、radixattention、prefix sharing、tree attention、kv pruning 等多种 kv-cache 访问形态统一成 block-sparse / composable sparse formats，并用 cuda/cutlass 模板... zihao ye lequn chen ruihang lai wuwei lin yineng zhang stephanie wang tianqi chen baris kasikci vinod grover arvind krishnamurthy luis ceze llm systems attention kernels inference serving systems customizable attention serving attention kernels gpu systems inference optimization kv cache llm serving block-sparse attention composable kv-cache format cuda graph flashattention jit compilation load-balanced scheduling"
@@ -502,19 +554,19 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
   data-arxiv-url="https://arxiv.org/abs/2501.01005v2"
   data-code-url="https://github.com/flashinfer-ai/flashinfer"
   data-href="2501.01005-flashinfer.html">
-  <td><input class="row-check" type="checkbox" aria-label="选择 2501.01005-flashinfer"></td>
-  <td class="library-title">
+  <td data-col="select"><input class="row-check" type="checkbox" aria-label="选择 2501.01005-flashinfer"></td>
+  <td class="library-title" data-col="title">
     <strong><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></strong>
     <div class="meta">FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving</div>
     <div class="meta">2025 / Zihao Ye, Lequn Chen, Ruihang Lai / 2501.01005v2</div>
   </td>
-  <td><a href="lines/efficient-attention-kernels.html">Efficient Attention Kernels</a><div class="meta">system</div></td>
-  <td class="library-taxonomy"><div class="chips"><span class="chip">LLM Systems</span><span class="chip">Attention Kernels</span><span class="chip">Inference Serving Systems</span><span class="chip">Customizable Attention Serving</span></div></td>
-  <td class="library-taxonomy"><div class="chips"><span class="chip">Attention Kernels</span><span class="chip">GPU Systems</span><span class="chip">Inference Optimization</span><span class="chip">KV Cache</span><span class="chip">LLM Serving</span><span class="chip">+6</span></div></td>
-  <td><div class="status-stack"><span class="flag">read</span><span class="flag">deep_read</span><span class="meta">未设置复习</span></div></td>
-  <td><div class="score-grid"><span>I 4</span><span>C 4</span><span>R 4</span></div></td>
-  <td>有</td>
-  <td><div class="library-actions"><a class="button" href="2501.01005-flashinfer.html">报告</a><a class="button" href="https://arxiv.org/abs/2501.01005v2">arxiv</a><a class="button" href="https://github.com/flashinfer-ai/flashinfer">code</a></div></td>
+  <td data-col="line"><a href="lines/efficient-attention-kernels.html">Efficient Attention Kernels</a><div class="meta">system</div></td>
+  <td class="library-taxonomy" data-col="structure"><div class="chips"><span class="chip">LLM Systems</span><span class="chip">Attention Kernels</span><span class="chip">Inference Serving Systems</span><span class="chip">Customizable Attention Serving</span></div></td>
+  <td class="library-taxonomy" data-col="tags"><div class="chips"><span class="chip">Attention Kernels</span><span class="chip">GPU Systems</span><span class="chip">Inference Optimization</span><span class="chip">KV Cache</span><span class="chip">LLM Serving</span><span class="chip">+6</span></div></td>
+  <td data-col="state"><div class="status-stack"><span class="flag">read</span><span class="flag">deep_read</span><span class="meta">未设置复习</span></div></td>
+  <td data-col="scores"><div class="score-grid"><span>I 4</span><span>C 4</span><span>R 4</span></div></td>
+  <td data-col="code">有</td>
+  <td data-col="actions"><div class="library-actions"><a class="button" href="2501.01005-flashinfer.html">报告</a><a class="button" href="https://arxiv.org/abs/2501.01005v2">arxiv</a><a class="button" href="https://github.com/flashinfer-ai/flashinfer">code</a></div></td>
 </tr>
 <tr
   data-search="2307.08691-flashattention-2 flashattention-2: faster attention with better parallelism and work partitioning flashattention-2：用更好的并行性与工作划分加速 attention flashattention-2: faster attention with better parallelism and work partitioning 2307.08691v1 efficient attention kernels foundation read deep_read 中文版：flashattention-2 不是改变 attention 数学定义的近似方法，而是在 flashattention exact attention 的基础上重新设计 gpu 上的计算顺序、thread block 并行维度和 warp 内工作划分，减少 non-matmul flops 与 shared memory 通信，从而把 attention kernel 的利用率推近 gemm。 tri dao llm systems attention kernels efficient exact attention efficient attention gpu kernel optimization long context transformer cuda / gpu parallelism flashattention online softmax tiling work partitioning"
@@ -538,19 +590,19 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
   data-arxiv-url="https://arxiv.org/abs/2307.08691v1"
   data-code-url="https://github.com/Dao-AILab/flash-attention"
   data-href="2307.08691-flashattention-2.html">
-  <td><input class="row-check" type="checkbox" aria-label="选择 2307.08691-flashattention-2"></td>
-  <td class="library-title">
+  <td data-col="select"><input class="row-check" type="checkbox" aria-label="选择 2307.08691-flashattention-2"></td>
+  <td class="library-title" data-col="title">
     <strong><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></strong>
     <div class="meta">FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning</div>
     <div class="meta">2023 / Tri Dao / 2307.08691v1</div>
   </td>
-  <td><a href="lines/efficient-attention-kernels.html">Efficient Attention Kernels</a><div class="meta">foundation</div></td>
-  <td class="library-taxonomy"><div class="chips"><span class="chip">LLM Systems</span><span class="chip">Attention Kernels</span><span class="chip">Efficient Exact Attention</span></div></td>
-  <td class="library-taxonomy"><div class="chips"><span class="chip">Efficient Attention</span><span class="chip">GPU Kernel Optimization</span><span class="chip">Long Context</span><span class="chip">Transformer</span><span class="chip">CUDA / GPU parallelism</span><span class="chip">+4</span></div></td>
-  <td><div class="status-stack"><span class="flag">read</span><span class="flag">deep_read</span><span class="meta">未设置复习</span></div></td>
-  <td><div class="score-grid"><span>I 5</span><span>C 4</span><span>R 4</span></div></td>
-  <td>有</td>
-  <td><div class="library-actions"><a class="button" href="2307.08691-flashattention-2.html">报告</a><a class="button" href="https://arxiv.org/abs/2307.08691v1">arxiv</a><a class="button" href="https://github.com/Dao-AILab/flash-attention">code</a></div></td>
+  <td data-col="line"><a href="lines/efficient-attention-kernels.html">Efficient Attention Kernels</a><div class="meta">foundation</div></td>
+  <td class="library-taxonomy" data-col="structure"><div class="chips"><span class="chip">LLM Systems</span><span class="chip">Attention Kernels</span><span class="chip">Efficient Exact Attention</span></div></td>
+  <td class="library-taxonomy" data-col="tags"><div class="chips"><span class="chip">Efficient Attention</span><span class="chip">GPU Kernel Optimization</span><span class="chip">Long Context</span><span class="chip">Transformer</span><span class="chip">CUDA / GPU parallelism</span><span class="chip">+4</span></div></td>
+  <td data-col="state"><div class="status-stack"><span class="flag">read</span><span class="flag">deep_read</span><span class="meta">未设置复习</span></div></td>
+  <td data-col="scores"><div class="score-grid"><span>I 5</span><span>C 4</span><span>R 4</span></div></td>
+  <td data-col="code">有</td>
+  <td data-col="actions"><div class="library-actions"><a class="button" href="2307.08691-flashattention-2.html">报告</a><a class="button" href="https://arxiv.org/abs/2307.08691v1">arxiv</a><a class="button" href="https://github.com/Dao-AILab/flash-attention">code</a></div></td>
 </tr></tbody>
     </table>
   </div>
@@ -597,10 +649,14 @@ const bulkNextReview = document.querySelector("#bulkNextReview");
 const selectVisible = document.querySelector("#selectVisible");
 const clearSelected = document.querySelector("#clearSelected");
 const downloadPatch = document.querySelector("#downloadPatch");
+const libraryTable = document.querySelector(".library-table");
+const columnToggles = Array.from(document.querySelectorAll("[data-column-toggle]"));
+const densityMode = document.querySelector("#densityMode");
 const sharedViews = window.PAPER_WIKI.shared_views || [];
 let currentPage = 1;
 let currentRankedRows = [...allRows];
 const savedViewsKey = "autopaperreader:library:savedViews";
+const libraryPrefsKey = "autopaperreader:library:prefs";
 const controls = [
   ["q", search],
   ["domain", domain],
@@ -682,6 +738,59 @@ function writeSavedViews(views) {
     window.alert("浏览器本地存储不可用，无法保存视图。");
     return false;
   }
+}
+
+function defaultLibraryPrefs() {
+  return {
+    density: "normal",
+    columns: Object.fromEntries(columnToggles.map(toggle => [toggle.dataset.columnToggle, true])),
+  };
+}
+
+function readLibraryPrefs() {
+  const defaults = defaultLibraryPrefs();
+  try {
+    const stored = JSON.parse(localStorage.getItem(libraryPrefsKey) || "{}");
+    return {
+      density: ["compact", "normal", "comfortable"].includes(stored.density) ? stored.density : defaults.density,
+      columns: { ...defaults.columns, ...(stored.columns || {}), title: true },
+    };
+  } catch {
+    return defaults;
+  }
+}
+
+function writeLibraryPrefs(prefs) {
+  try {
+    localStorage.setItem(libraryPrefsKey, JSON.stringify(prefs));
+  } catch {
+    // Preference persistence is optional; the table should still work without localStorage.
+  }
+}
+
+function collectLibraryPrefs() {
+  return {
+    density: densityMode.value || "normal",
+    columns: Object.fromEntries(columnToggles.map(toggle => [
+      toggle.dataset.columnToggle,
+      toggle.disabled ? true : toggle.checked,
+    ])),
+  };
+}
+
+function applyLibraryPrefs(prefs) {
+  const density = ["compact", "normal", "comfortable"].includes(prefs.density) ? prefs.density : "normal";
+  densityMode.value = density;
+  libraryTable.dataset.density = density;
+  columnToggles.forEach(toggle => {
+    const key = toggle.dataset.columnToggle;
+    toggle.checked = toggle.disabled || prefs.columns[key] !== false;
+  });
+  document.querySelectorAll("[data-col]").forEach(cell => {
+    const key = cell.dataset.col;
+    const alwaysVisible = key === "select" || key === "title";
+    cell.classList.toggle("is-hidden-column", !alwaysVisible && prefs.columns[key] === false);
+  });
 }
 
 function refreshSavedViews() {
@@ -962,9 +1071,20 @@ downloadPatch.addEventListener("click", () => {
 });
 exportMarkdown.addEventListener("click", () => exportRows("markdown"));
 exportBibtex.addEventListener("click", () => exportRows("bibtex"));
+columnToggles.forEach(toggle => toggle.addEventListener("change", () => {
+  const prefs = collectLibraryPrefs();
+  applyLibraryPrefs(prefs);
+  writeLibraryPrefs(prefs);
+}));
+densityMode.addEventListener("input", () => {
+  const prefs = collectLibraryPrefs();
+  applyLibraryPrefs(prefs);
+  writeLibraryPrefs(prefs);
+});
 
 readStateFromUrl();
 refreshSavedViews();
+applyLibraryPrefs(readLibraryPrefs());
 render();
 </script>
 
