@@ -190,6 +190,10 @@ class WikiWorkflowTest(unittest.TestCase):
             library_html = (report_dir / "library.html").read_text(encoding="utf-8")
             self.assertIn('"shared_views": [{"name": "重点队列"', library_html)
             self.assertIn("Kernel 方向", library_html)
+            self.assertIn('id="bulkStatus"', library_html)
+            self.assertIn('id="bulkReviewStage"', library_html)
+            self.assertIn("metadata_patch.csv", library_html)
+            self.assertIn('data-slug="2601.00001-alpha-paper"', library_html)
 
             review = json.loads((report_dir / "review.json").read_text(encoding="utf-8"))
             self.assertEqual(review["count"], 2)

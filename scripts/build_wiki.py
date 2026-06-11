@@ -906,8 +906,9 @@ def write_search_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     )
 
 
-def page_shell(title: str, body: str, data: dict[str, Any] | None = None) -> str:
+def page_shell(title: str, body: str, data: dict[str, Any] | None = None, extra_css: str = "") -> str:
     embedded = ""
+    css_extra = f"\n{extra_css}" if extra_css else ""
     if data is not None:
         embedded = (
             "<script>\n"
@@ -1193,7 +1194,7 @@ def page_shell(title: str, body: str, data: dict[str, Any] | None = None) -> str
       .paper-row {{ grid-template-columns: 1fr; }}
       .data-table {{ display: block; overflow-x: auto; }}
       header {{ padding-top: 28px; }}
-    }}
+    }}{css_extra}
   </style>
 </head>
 <body>
@@ -1612,6 +1613,13 @@ def render_topic_options(tags: dict[str, int]) -> str:
     )
 
 
+def render_value_options(values: list[str]) -> str:
+    return "".join(
+        f'<option value="{html.escape(value)}">{html.escape(value)}</option>'
+        for value in values
+    )
+
+
 def render_card(paper: dict[str, Any]) -> str:
     link = paper["html_path"] or paper["md_path"]
     authors = ", ".join(paper.get("authors", [])[:4])
@@ -1732,7 +1740,9 @@ def render_library_row(paper: dict[str, Any]) -> str:
   data-importance="{html.escape(str(paper.get("importance") or 0), quote=True)}"
   data-year="{html.escape(str(paper.get("year") or 0), quote=True)}"
   data-updated="{html.escape(str(paper.get("updated_at") or ""), quote=True)}"
+  data-slug="{html.escape(str(paper.get("slug") or ""), quote=True)}"
   data-title="{html.escape(str(paper.get("title_en") or paper.get("title") or paper.get("slug") or ""), quote=True)}">
+  <td><input class="row-check" type="checkbox" aria-label="选择 {html.escape(str(paper.get("slug") or ""), quote=True)}"></td>
   <td class="library-title">
     <strong><a href="{html.escape(link)}">{html.escape(paper["title_zh"] or paper["title"])}</a></strong>
     <div class="meta">{html.escape(paper.get("title_en") or "")}</div>
@@ -1751,7 +1761,24 @@ def render_library_row(paper: dict[str, Any]) -> str:
 def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     taxonomy = taxonomy_counts(papers)
     rows = "\n".join(render_library_row(paper) for paper in papers)
-    data = {"shared_views": shared_views_for("library")}
+    controls = control_options()
+    data = {"shared_views": shared_views_for("library"), "controls": controls}
+    bulk_css = """
+    .bulk-panel {
+      display: grid;
+      grid-template-columns: minmax(120px, auto) repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      align-items: center;
+      margin: 0 0 16px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+    .bulk-panel .bulk-count { color: var(--muted); font-weight: 700; white-space: nowrap; }
+    .bulk-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .row-check, .header-check { width: 18px; min-height: 18px; padding: 0; }
+    """
     body = f"""
 <header class="shell">
   <div class="eyebrow">Paper Library</div>
@@ -1796,10 +1823,22 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       <button id="resetFilters" class="button" type="button">重置筛选</button>
     </div>
   </div>
+  <div class="bulk-panel">
+    <span id="bulkCount" class="bulk-count">已选 0 篇</span>
+    <select id="bulkStatus"><option value="">状态</option>{render_value_options(controls["status"])}</select>
+    <select id="bulkStage"><option value="">阅读阶段</option>{render_value_options(controls["reading_stage"])}</select>
+    <select id="bulkReviewStage"><option value="">复习阶段</option>{render_value_options(controls["review_stage"])}</select>
+    <input id="bulkNextReview" type="date" aria-label="下次复习日期">
+    <div class="bulk-actions">
+      <button id="selectVisible" class="button" type="button">选中当前页</button>
+      <button id="clearSelected" class="button" type="button">清除选择</button>
+      <button id="downloadPatch" class="button" type="button">下载 CSV</button>
+    </div>
+  </div>
   <div class="table-wrap">
     <table class="library-table">
       <thead>
-        <tr><th>论文</th><th>研究线</th><th>结构分类</th><th>主题 / 方法</th><th>状态</th><th>评分</th><th>代码</th><th>操作</th></tr>
+        <tr><th><input id="toggleVisible" class="header-check" type="checkbox" aria-label="切换当前页选择"></th><th>论文</th><th>研究线</th><th>结构分类</th><th>主题 / 方法</th><th>状态</th><th>评分</th><th>代码</th><th>操作</th></tr>
       </thead>
       <tbody id="libraryRows">{rows}</tbody>
     </table>
@@ -1835,6 +1874,16 @@ const nextPage = document.querySelector("#nextPage");
 const savedView = document.querySelector("#savedView");
 const saveView = document.querySelector("#saveView");
 const deleteView = document.querySelector("#deleteView");
+const rowChecks = allRows.map(row => row.querySelector(".row-check"));
+const toggleVisible = document.querySelector("#toggleVisible");
+const bulkCount = document.querySelector("#bulkCount");
+const bulkStatus = document.querySelector("#bulkStatus");
+const bulkStage = document.querySelector("#bulkStage");
+const bulkReviewStage = document.querySelector("#bulkReviewStage");
+const bulkNextReview = document.querySelector("#bulkNextReview");
+const selectVisible = document.querySelector("#selectVisible");
+const clearSelected = document.querySelector("#clearSelected");
+const downloadPatch = document.querySelector("#downloadPatch");
 const sharedViews = window.PAPER_WIKI.shared_views || [];
 let currentPage = 1;
 const savedViewsKey = "autopaperreader:library:savedViews";
@@ -1955,6 +2004,69 @@ function sortRows(rows) {{
   }});
 }}
 
+function visibleRows() {{
+  return allRows.filter(row => !row.hidden);
+}}
+
+function selectedRows() {{
+  return allRows.filter(row => row.querySelector(".row-check").checked);
+}}
+
+function updateBulkState() {{
+  const selected = selectedRows().length;
+  const visible = visibleRows();
+  const visibleSelected = visible.filter(row => row.querySelector(".row-check").checked).length;
+  bulkCount.textContent = `已选 ${{selected}} 篇`;
+  toggleVisible.checked = visible.length > 0 && visibleSelected === visible.length;
+  toggleVisible.indeterminate = visibleSelected > 0 && visibleSelected < visible.length;
+}}
+
+function csvCell(value) {{
+  const text = String(value ?? "");
+  return (text.includes(",") || text.includes('"') || text.includes("\\n"))
+    ? `"${{text.replaceAll('"', '""')}}"`
+    : text;
+}}
+
+function downloadCsv(filename, rows) {{
+  const csv = rows.map(row => row.map(csvCell).join(",")).join("\\n") + "\\n";
+  const blob = new Blob([csv], {{ type: "text/csv;charset=utf-8" }});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}}
+
+function buildPatchRows() {{
+  const fields = [];
+  const values = {{}};
+  [
+    ["status", bulkStatus.value],
+    ["reading_stage", bulkStage.value],
+    ["review_stage", bulkReviewStage.value],
+    ["next_review", bulkNextReview.value],
+  ].forEach(([field, value]) => {{
+    if (value) {{
+      fields.push(field);
+      values[field] = value;
+    }}
+  }});
+  const selected = selectedRows();
+  if (!selected.length) {{
+    window.alert("请先选择论文。");
+    return [];
+  }}
+  if (!fields.length) {{
+    window.alert("请先选择要写入的状态或日期。");
+    return [];
+  }}
+  return [["slug", ...fields], ...selected.map(row => [row.dataset.slug, ...fields.map(field => values[field])])];
+}}
+
 function render() {{
   const q = search.value.trim().toLowerCase();
   const minImportance = Number(importance.value || 0);
@@ -1991,6 +2103,7 @@ function render() {{
   pager.hidden = ranked.length === 0 || limit === Infinity || totalPages <= 1;
   prevPage.disabled = currentPage <= 1;
   nextPage.disabled = currentPage >= totalPages;
+  updateBulkState();
   writeStateToUrl();
 }}
 
@@ -2041,13 +2154,36 @@ nextPage.addEventListener("click", () => {{
   currentPage += 1;
   render();
 }});
+rowChecks.forEach(check => check.addEventListener("change", updateBulkState));
+toggleVisible.addEventListener("change", () => {{
+  visibleRows().forEach(row => {{
+    row.querySelector(".row-check").checked = toggleVisible.checked;
+  }});
+  updateBulkState();
+}});
+selectVisible.addEventListener("click", () => {{
+  visibleRows().forEach(row => {{
+    row.querySelector(".row-check").checked = true;
+  }});
+  updateBulkState();
+}});
+clearSelected.addEventListener("click", () => {{
+  rowChecks.forEach(check => {{
+    check.checked = false;
+  }});
+  updateBulkState();
+}});
+downloadPatch.addEventListener("click", () => {{
+  const rows = buildPatchRows();
+  if (rows.length) downloadCsv("metadata_patch.csv", rows);
+}});
 
 readStateFromUrl();
 refreshSavedViews();
 render();
 </script>
 """
-    (report_dir / "library.html").write_text(page_shell("论文库表格", body, data), encoding="utf-8")
+    (report_dir / "library.html").write_text(page_shell("论文库表格", body, data, bulk_css), encoding="utf-8")
 
 
 def render_review_row(item: dict[str, Any]) -> str:

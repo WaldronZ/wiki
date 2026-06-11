@@ -278,11 +278,27 @@
       .data-table { display: block; overflow-x: auto; }
       header { padding-top: 28px; }
     }
+
+    .bulk-panel {
+      display: grid;
+      grid-template-columns: minmax(120px, auto) repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      align-items: center;
+      margin: 0 0 16px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+    .bulk-panel .bulk-count { color: var(--muted); font-weight: 700; white-space: nowrap; }
+    .bulk-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .row-check, .header-check { width: 18px; min-height: 18px; padding: 0; }
+    
   </style>
 </head>
 <body>
 <script>
-window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"importance": "5", "sort": "importance"}}, {"name": "Attention Kernels", "state": {"track": "Attention Kernels", "sort": "year"}}]};
+window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"importance": "5", "sort": "importance"}}, {"name": "Attention Kernels", "state": {"track": "Attention Kernels", "sort": "year"}}], "controls": {"status": ["unread", "skimmed", "reading", "read", "archived"], "reading_stage": ["skim", "normal_read", "deep_read", "code_checked"], "review_stage": ["fresh", "due", "reviewed"], "line_role": ["foundation", "baseline", "main", "system", "variant", "followup", "survey"], "shared_views": [{"name": "重点论文", "page": "all", "state": {"importance": "5", "sort": "importance"}}, {"name": "未设置复习", "page": "index", "state": {"review": "none", "sort": "importance"}}, {"name": "Attention Kernels", "page": "library", "state": {"track": "Attention Kernels", "sort": "year"}}]}};
 </script>
 
 
@@ -329,10 +345,22 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
       <button id="resetFilters" class="button" type="button">重置筛选</button>
     </div>
   </div>
+  <div class="bulk-panel">
+    <span id="bulkCount" class="bulk-count">已选 0 篇</span>
+    <select id="bulkStatus"><option value="">状态</option><option value="unread">unread</option><option value="skimmed">skimmed</option><option value="reading">reading</option><option value="read">read</option><option value="archived">archived</option></select>
+    <select id="bulkStage"><option value="">阅读阶段</option><option value="skim">skim</option><option value="normal_read">normal_read</option><option value="deep_read">deep_read</option><option value="code_checked">code_checked</option></select>
+    <select id="bulkReviewStage"><option value="">复习阶段</option><option value="fresh">fresh</option><option value="due">due</option><option value="reviewed">reviewed</option></select>
+    <input id="bulkNextReview" type="date" aria-label="下次复习日期">
+    <div class="bulk-actions">
+      <button id="selectVisible" class="button" type="button">选中当前页</button>
+      <button id="clearSelected" class="button" type="button">清除选择</button>
+      <button id="downloadPatch" class="button" type="button">下载 CSV</button>
+    </div>
+  </div>
   <div class="table-wrap">
     <table class="library-table">
       <thead>
-        <tr><th>论文</th><th>研究线</th><th>结构分类</th><th>主题 / 方法</th><th>状态</th><th>评分</th><th>代码</th><th>操作</th></tr>
+        <tr><th><input id="toggleVisible" class="header-check" type="checkbox" aria-label="切换当前页选择"></th><th>论文</th><th>研究线</th><th>结构分类</th><th>主题 / 方法</th><th>状态</th><th>评分</th><th>代码</th><th>操作</th></tr>
       </thead>
       <tbody id="libraryRows"><tr
   data-search="2602.06036-dflash dflash: block diffusion for flash speculative decoding dflash：用于快速 speculative decoding 的块扩散方法 dflash: block diffusion for flash speculative decoding 2602.06036v1 parallel decoding with diffusion models followup read deep_read 中文版：dflash 把 diffusion language model 的角色从“独立生成器”改为 speculative decoding 中的轻量 parallel drafter：draft model 一次前向生成一个 token block，再由 target llm 并行验证，从而保持 lossless 输出。它的关键设计是从 frozen target model 抽取多层 hidden features，经融合后注入... jian chen yesheng liang zhijian liu llm systems inference acceleration parallel decoding lossless speculative decoding diffusion language models llm inference llm serving speculative decoding block diffusion kv injection parallel drafting speculative decoding target hidden features"
@@ -348,7 +376,9 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
   data-importance="4"
   data-year="2026"
   data-updated="2026-06-11T15:42:03"
+  data-slug="2602.06036-dflash"
   data-title="DFlash: Block Diffusion for Flash Speculative Decoding">
+  <td><input class="row-check" type="checkbox" aria-label="选择 2602.06036-dflash"></td>
   <td class="library-title">
     <strong><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a></strong>
     <div class="meta">DFlash: Block Diffusion for Flash Speculative Decoding</div>
@@ -376,7 +406,9 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
   data-importance="5"
   data-year="2026"
   data-updated="2026-06-11T15:42:03"
+  data-slug="2604.11035-introspective-dlm"
   data-title="Introspective Diffusion Language Models">
+  <td><input class="row-check" type="checkbox" aria-label="选择 2604.11035-introspective-dlm"></td>
   <td class="library-title">
     <strong><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a></strong>
     <div class="meta">Introspective Diffusion Language Models</div>
@@ -404,7 +436,9 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
   data-importance="4"
   data-year="2026"
   data-updated="2026-06-11T15:42:03"
+  data-slug="2605.12825-orthrus"
   data-title="Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion">
+  <td><input class="row-check" type="checkbox" aria-label="选择 2605.12825-orthrus"></td>
   <td class="library-title">
     <strong><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></strong>
     <div class="meta">Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion</div>
@@ -432,7 +466,9 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
   data-importance="4"
   data-year="2025"
   data-updated="2026-06-11T15:42:03"
+  data-slug="2501.01005-flashinfer"
   data-title="FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving">
+  <td><input class="row-check" type="checkbox" aria-label="选择 2501.01005-flashinfer"></td>
   <td class="library-title">
     <strong><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></strong>
     <div class="meta">FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving</div>
@@ -460,7 +496,9 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
   data-importance="5"
   data-year="2023"
   data-updated="2026-06-11T15:42:03"
+  data-slug="2307.08691-flashattention-2"
   data-title="FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning">
+  <td><input class="row-check" type="checkbox" aria-label="选择 2307.08691-flashattention-2"></td>
   <td class="library-title">
     <strong><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></strong>
     <div class="meta">FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning</div>
@@ -507,6 +545,16 @@ const nextPage = document.querySelector("#nextPage");
 const savedView = document.querySelector("#savedView");
 const saveView = document.querySelector("#saveView");
 const deleteView = document.querySelector("#deleteView");
+const rowChecks = allRows.map(row => row.querySelector(".row-check"));
+const toggleVisible = document.querySelector("#toggleVisible");
+const bulkCount = document.querySelector("#bulkCount");
+const bulkStatus = document.querySelector("#bulkStatus");
+const bulkStage = document.querySelector("#bulkStage");
+const bulkReviewStage = document.querySelector("#bulkReviewStage");
+const bulkNextReview = document.querySelector("#bulkNextReview");
+const selectVisible = document.querySelector("#selectVisible");
+const clearSelected = document.querySelector("#clearSelected");
+const downloadPatch = document.querySelector("#downloadPatch");
 const sharedViews = window.PAPER_WIKI.shared_views || [];
 let currentPage = 1;
 const savedViewsKey = "autopaperreader:library:savedViews";
@@ -627,6 +675,69 @@ function sortRows(rows) {
   });
 }
 
+function visibleRows() {
+  return allRows.filter(row => !row.hidden);
+}
+
+function selectedRows() {
+  return allRows.filter(row => row.querySelector(".row-check").checked);
+}
+
+function updateBulkState() {
+  const selected = selectedRows().length;
+  const visible = visibleRows();
+  const visibleSelected = visible.filter(row => row.querySelector(".row-check").checked).length;
+  bulkCount.textContent = `已选 ${selected} 篇`;
+  toggleVisible.checked = visible.length > 0 && visibleSelected === visible.length;
+  toggleVisible.indeterminate = visibleSelected > 0 && visibleSelected < visible.length;
+}
+
+function csvCell(value) {
+  const text = String(value ?? "");
+  return (text.includes(",") || text.includes('"') || text.includes("\n"))
+    ? `"${text.replaceAll('"', '""')}"`
+    : text;
+}
+
+function downloadCsv(filename, rows) {
+  const csv = rows.map(row => row.map(csvCell).join(",")).join("\n") + "\n";
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+function buildPatchRows() {
+  const fields = [];
+  const values = {};
+  [
+    ["status", bulkStatus.value],
+    ["reading_stage", bulkStage.value],
+    ["review_stage", bulkReviewStage.value],
+    ["next_review", bulkNextReview.value],
+  ].forEach(([field, value]) => {
+    if (value) {
+      fields.push(field);
+      values[field] = value;
+    }
+  });
+  const selected = selectedRows();
+  if (!selected.length) {
+    window.alert("请先选择论文。");
+    return [];
+  }
+  if (!fields.length) {
+    window.alert("请先选择要写入的状态或日期。");
+    return [];
+  }
+  return [["slug", ...fields], ...selected.map(row => [row.dataset.slug, ...fields.map(field => values[field])])];
+}
+
 function render() {
   const q = search.value.trim().toLowerCase();
   const minImportance = Number(importance.value || 0);
@@ -663,6 +774,7 @@ function render() {
   pager.hidden = ranked.length === 0 || limit === Infinity || totalPages <= 1;
   prevPage.disabled = currentPage <= 1;
   nextPage.disabled = currentPage >= totalPages;
+  updateBulkState();
   writeStateToUrl();
 }
 
@@ -712,6 +824,29 @@ prevPage.addEventListener("click", () => {
 nextPage.addEventListener("click", () => {
   currentPage += 1;
   render();
+});
+rowChecks.forEach(check => check.addEventListener("change", updateBulkState));
+toggleVisible.addEventListener("change", () => {
+  visibleRows().forEach(row => {
+    row.querySelector(".row-check").checked = toggleVisible.checked;
+  });
+  updateBulkState();
+});
+selectVisible.addEventListener("click", () => {
+  visibleRows().forEach(row => {
+    row.querySelector(".row-check").checked = true;
+  });
+  updateBulkState();
+});
+clearSelected.addEventListener("click", () => {
+  rowChecks.forEach(check => {
+    check.checked = false;
+  });
+  updateBulkState();
+});
+downloadPatch.addEventListener("click", () => {
+  const rows = buildPatchRows();
+  if (rows.length) downloadCsv("metadata_patch.csv", rows);
 });
 
 readStateFromUrl();

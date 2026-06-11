@@ -196,6 +196,14 @@ python3 scripts/apply_library_metadata.py docs --input docs/library.csv --write
 python3 scripts/build_wiki.py docs
 ```
 
+`docs/library.html` 也支持先筛选论文、勾选当前页或指定行、批量选择 `status` / `reading_stage` / `review_stage` / `next_review`，再下载 `metadata_patch.csv`。下载后用同一个写回脚本预览和应用：
+
+```bash
+python3 scripts/apply_library_metadata.py docs --input ~/Downloads/metadata_patch.csv
+python3 scripts/apply_library_metadata.py docs --input ~/Downloads/metadata_patch.csv --write
+python3 scripts/build_wiki.py docs
+```
+
 支持 `--field status --field topics` 限定字段，支持 `--slug <slug>` 限定论文；空单元格默认不会清空原值，需要显式加 `--clear-empty`。
 
 预览并写入复习计划建议：
