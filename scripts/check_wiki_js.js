@@ -14,6 +14,7 @@ function htmlFiles() {
   const fixed = [
     "index.html",
     "library.html",
+    "inbox.html",
     "review.html",
     "dashboard.html",
     "taxonomy.html",

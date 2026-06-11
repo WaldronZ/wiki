@@ -4,7 +4,7 @@ AutoPaperReader 是一个自动化「找论文 -> 读论文 -> 写报告」的 a
 
 它的目标是把一篇论文从检索、下载源码、分析论文、分析配套代码，到最终输出结构化中文阅读报告的流程串起来，并把产物（包括 Markdown 报告和 HTML 展示网页）统一组织到固定目录中。
 
-项目还会把这些逐篇报告汇总成一个轻量动态 wiki：`docs/index.html` 提供全文搜索、研究线、分类/状态/代码/重要性/复习筛选、排序、分页和可分享 URL 状态；`docs/library.html` 提供适合大量论文批量管理的密集表格视图；`docs/review.html` 提供复习队列和建议复习日期；`docs/dashboard.html` 提供分类覆盖、研究线健康度和待处理队列；`docs/taxonomy.html` 提供分类治理、状态矩阵和研究线角色矩阵；`docs/lines/index.html` 提供研究线入口；`docs/tags.html` 提供分类总览；`docs/papers.json` 提供机器可读索引；`docs/search_index.json` 提供正文检索索引；`docs/stats.json` 提供机器可读运营指标；`docs/quality.json` 提供元数据质量与运营队列报告；`docs/review.json` 提供机器可读复习计划。
+项目还会把这些逐篇报告汇总成一个轻量动态 wiki：`docs/index.html` 提供全文搜索、研究线、分类/状态/代码/重要性/复习筛选、排序、分页和可分享 URL 状态；`docs/library.html` 提供适合大量论文批量管理的密集表格视图；`docs/inbox.html` 提供候选论文待处理池；`docs/review.html` 提供复习队列和建议复习日期；`docs/dashboard.html` 提供分类覆盖、研究线健康度和待处理队列；`docs/taxonomy.html` 提供分类治理、状态矩阵和研究线角色矩阵；`docs/lines/index.html` 提供研究线入口；`docs/tags.html` 提供分类总览；`docs/papers.json` 提供机器可读索引；`docs/search_index.json` 提供正文检索索引；`docs/stats.json` 提供机器可读运营指标；`docs/quality.json` 提供元数据质量与运营队列报告；`docs/review.json` 提供机器可读复习计划。
 
 **注：建议开启 Agent Teams 特性 `export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`**
 
@@ -31,6 +31,7 @@ paper_reader/
 ├── docs/
 │   ├── index.html
 │   ├── library.html
+│   ├── inbox.html
 │   ├── review.html
 │   ├── dashboard.html
 │   ├── taxonomy.html
@@ -40,6 +41,7 @@ paper_reader/
 │   ├── papers.json
 │   ├── search_index.json
 │   ├── stats.json
+│   ├── inbox.json
 │   ├── quality.json
 │   ├── review.json
 │   ├── guides/
@@ -102,6 +104,8 @@ paper_reader/
 - `docs/<slug>.html`：单篇阅读报告 HTML
 - `docs/index.html`：wiki 首页
 - `docs/library.html`：论文库表格，适合大量论文的密集筛选、排序和批量管理
+- `docs/inbox.csv`：候选论文待处理池源数据，可手动追加 title/link/status/priority/tags/note
+- `docs/inbox.html`：候选论文待处理池，支持筛选、去重提示和复制阅读任务
 - `docs/review.html`：复习计划页，展示待复习、需建计划、已计划和高优先级队列
 - `docs/dashboard.html`：管理控制台，展示分类覆盖、研究线健康度、待复习和待补分类队列
 - `docs/taxonomy.html`：分类治理页，展示 domain/track/problem 层级、状态矩阵、研究线角色矩阵和治理队列
@@ -111,6 +115,7 @@ paper_reader/
 - `docs/papers.json`：论文索引数据，包含可供前端动态渲染筛选器的 `controls`
 - `docs/search_index.json`：全文搜索索引
 - `docs/stats.json`：机器可读统计摘要，包含覆盖率、队列规模、研究线和分类分布
+- `docs/inbox.json`：机器可读候选论文队列
 - `docs/quality.json`：元数据质量报告，列出缺分类、缺复习计划、待复习、缺代码观察等队列
 - `docs/review.json`：机器可读复习计划，给出 suggested_next_review 和优先级
 
@@ -162,6 +167,15 @@ has_code: true
 ```bash
 python3 scripts/build_wiki.py docs
 ```
+
+批量收集候选论文时，可以先维护 `docs/inbox.csv`：
+
+```csv
+title,link,status,priority,tags,note
+Example Paper,https://arxiv.org/abs/2601.00001,queued,high,LLM Serving;Batching,先读方法
+```
+
+刷新后打开 `docs/inbox.html`，可以筛选候选论文、查看疑似重复项，并复制单篇论文的阅读任务给 agent 流程。
 
 检查已提交的 wiki 生成物是否为最新：
 

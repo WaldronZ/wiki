@@ -45,6 +45,7 @@ REQUIRED_META = {
 REQUIRED_PAGES = {
     "index.html",
     "library.html",
+    "inbox.html",
     "review.html",
     "dashboard.html",
     "taxonomy.html",
@@ -52,6 +53,7 @@ REQUIRED_PAGES = {
     "papers.json",
     "search_index.json",
     "stats.json",
+    "inbox.json",
     "quality.json",
     "review.json",
     "lines/index.html",
@@ -242,6 +244,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     quality_path = report_dir / "quality.json"
     review_path = report_dir / "review.json"
     stats_path = report_dir / "stats.json"
+    inbox_path = report_dir / "inbox.json"
     if not papers_path.exists():
         errors.append("missing papers.json")
         return
@@ -257,12 +260,16 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     if not stats_path.exists():
         errors.append("missing stats.json")
         return
+    if not inbox_path.exists():
+        errors.append("missing inbox.json")
+        return
 
     papers_data = json.loads(papers_path.read_text(encoding="utf-8"))
     search_data = json.loads(search_path.read_text(encoding="utf-8"))
     quality_data = json.loads(quality_path.read_text(encoding="utf-8"))
     review_data = json.loads(review_path.read_text(encoding="utf-8"))
     stats_data = json.loads(stats_path.read_text(encoding="utf-8"))
+    inbox_data = json.loads(inbox_path.read_text(encoding="utf-8"))
     paper_slugs = {paper.get("slug") for paper in papers_data.get("papers", [])}
     report_slugs = set(reports)
 
@@ -357,6 +364,15 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         errors.append("stats.json queue_sizes must contain quality and review")
     if not isinstance(stats_data.get("research_lines"), list):
         errors.append("stats.json research_lines must be a list")
+
+    if inbox_data.get("count") != len(inbox_data.get("items") or []):
+        errors.append("inbox.json count must match items length")
+    required_inbox = {"count", "statuses", "priorities", "duplicates", "items"}
+    missing_inbox = sorted(required_inbox - set(inbox_data))
+    if missing_inbox:
+        errors.append(f"inbox.json missing keys: {', '.join(missing_inbox)}")
+    if not isinstance(inbox_data.get("items"), list):
+        errors.append("inbox.json items must be a list")
 
 
 def validate_taxonomy_config(report_dir: Path, errors: list[str], warnings: list[str]) -> dict[str, Any]:

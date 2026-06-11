@@ -8,6 +8,7 @@ reader workflow can refresh the wiki after every newly generated report.
 from __future__ import annotations
 
 import argparse
+import csv
 import datetime as dt
 import html
 import json
@@ -25,10 +26,12 @@ GENERATED_FIXED_PATHS = (
     "papers.json",
     "search_index.json",
     "stats.json",
+    "inbox.json",
     "quality.json",
     "review.json",
     "index.html",
     "library.html",
+    "inbox.html",
     "review.html",
     "dashboard.html",
     "taxonomy.html",
@@ -38,7 +41,6 @@ GENERATED_FIXED_PATHS = (
 
 ARXIV_RE = re.compile(r"(?<!\d)(\d{4}\.\d{4,5})(?:v\d+)?(?!\d)")
 URL_RE = re.compile(r"https?://[^\s\]\)<>\"']+")
-
 KEYWORD_TOPICS = {
     "LLM": ["llm", "large language model", "大语言模型", "language model"],
     "Transformer": ["transformer", "self-attention", "attention"],
@@ -215,6 +217,104 @@ def control_options() -> dict[str, Any]:
         "line_role": list(ROLE_ORDER.keys()),
         "shared_views": SHARED_VIEWS.copy(),
     }
+
+
+def split_cell_list(value: str) -> list[str]:
+    text = str(value or "").strip()
+    if not text:
+        return []
+    delimiter = ";" if ";" in text else "|" if "|" in text else ","
+    return [item.strip() for item in text.split(delimiter) if item.strip()]
+
+
+def normalize_inbox_status(value: str) -> str:
+    status = str(value or "").strip().lower()
+    return status or "queued"
+
+
+def normalize_inbox_priority(value: str) -> str:
+    priority = str(value or "").strip().lower()
+    return priority or "normal"
+
+
+def load_inbox_items(report_dir: Path, papers: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    inbox_path = report_dir / "inbox.csv"
+    if not inbox_path.exists():
+        return []
+
+    known_arxiv_ids = {
+        str(paper.get("arxiv_id") or "").split("v")[0].strip()
+        for paper in papers
+        if paper.get("arxiv_id")
+    }
+    known_links = {
+        str(paper.get(key) or "").strip()
+        for paper in papers
+        for key in ("arxiv_url", "html_path", "md_path", "code_url")
+        if paper.get(key)
+    }
+    known_titles = {
+        str(paper.get(key) or "").strip().lower()
+        for paper in papers
+        for key in ("title", "title_zh", "title_en")
+        if paper.get(key)
+    }
+
+    rows: list[dict[str, Any]] = []
+    with inbox_path.open("r", encoding="utf-8-sig", newline="") as handle:
+        reader = csv.DictReader(handle)
+        for index, raw in enumerate(reader, start=1):
+            item = {str(key or "").strip(): str(value or "").strip() for key, value in raw.items()}
+            title = item.get("title") or item.get("name") or item.get("paper") or ""
+            link = item.get("link") or item.get("url") or item.get("arxiv_url") or ""
+            arxiv_id = item.get("arxiv_id") or ""
+            if not arxiv_id and link:
+                match = ARXIV_RE.search(link)
+                if match:
+                    arxiv_id = match.group(1)
+            if not title and not link and not arxiv_id:
+                continue
+            duplicate = bool(
+                (arxiv_id and arxiv_id.split("v")[0] in known_arxiv_ids)
+                or (link and link in known_links)
+                or (title and title.lower() in known_titles)
+            )
+            rows.append(
+                {
+                    "id": item.get("id") or f"inbox-{index}",
+                    "title": title or arxiv_id or link,
+                    "link": link,
+                    "arxiv_id": arxiv_id,
+                    "status": normalize_inbox_status(item.get("status") or ""),
+                    "priority": normalize_inbox_priority(item.get("priority") or ""),
+                    "tags": split_cell_list(item.get("tags") or item.get("topics") or ""),
+                    "note": item.get("note") or item.get("notes") or "",
+                    "added_at": item.get("added_at") or item.get("created_at") or "",
+                    "duplicate": duplicate,
+                }
+            )
+    return rows
+
+
+def inbox_counts(items: list[dict[str, Any]], field: str) -> dict[str, int]:
+    counter = Counter(str(item.get(field) or "").strip() for item in items)
+    counter.pop("", None)
+    return dict(sorted(counter.items(), key=lambda pair: (-pair[1], pair[0].lower())))
+
+
+def write_inbox_json(report_dir: Path, items: list[dict[str, Any]]) -> None:
+    payload = {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": len(items),
+        "statuses": inbox_counts(items, "status"),
+        "priorities": inbox_counts(items, "priority"),
+        "duplicates": [item["id"] for item in items if item.get("duplicate")],
+        "items": items,
+    }
+    (report_dir / "inbox.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
 
 
 def strip_frontmatter(text: str) -> tuple[dict[str, Any], str]:
@@ -1280,6 +1380,7 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <span class="stat">分类 {len(data["tags"])}</span>
     <span class="stat">最近更新 {html.escape(data["generated_at"])}</span>
     <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="inbox.html">待处理池</a>
     <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
@@ -1787,6 +1888,7 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <div class="stats">
     <a class="stat" href="index.html">卡片首页</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="inbox.html">待处理池</a>
     <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="lines/index.html">研究线</a>
@@ -2186,6 +2288,113 @@ render();
     (report_dir / "library.html").write_text(page_shell("论文库表格", body, data, bulk_css), encoding="utf-8")
 
 
+def render_inbox_row(item: dict[str, Any]) -> str:
+    tags = "".join(f'<span class="chip">{html.escape(tag)}</span>' for tag in item.get("tags", []))
+    link = str(item.get("link") or "")
+    link_html = f'<a href="{html.escape(link)}">{html.escape(link)}</a>' if link else ""
+    duplicate = '<span class="flag">已在库中</span>' if item.get("duplicate") else ""
+    prompt_bits = [
+        item.get("title") or "",
+        item.get("link") or "",
+        item.get("arxiv_id") or "",
+    ]
+    prompt = " ".join(str(bit) for bit in prompt_bits if bit).strip()
+    return f"""<tr
+  data-search="{html.escape(' '.join(str(value) for value in [item.get('title'), item.get('link'), item.get('arxiv_id'), item.get('note'), *item.get('tags', [])] if value).lower(), quote=True)}"
+  data-status="{html.escape(str(item.get("status") or ""), quote=True)}"
+  data-priority="{html.escape(str(item.get("priority") or ""), quote=True)}"
+  data-duplicate="{"yes" if item.get("duplicate") else "no"}">
+  <td class="library-title">
+    <strong>{html.escape(str(item.get("title") or "Untitled"))}</strong>
+    <div class="meta">{link_html}</div>
+    <div class="meta">{html.escape(str(item.get("arxiv_id") or ""))}</div>
+  </td>
+  <td><span class="flag">{html.escape(str(item.get("status") or "queued"))}</span><div class="meta">{html.escape(str(item.get("priority") or "normal"))}</div></td>
+  <td><div class="chips">{tags}</div></td>
+  <td>{html.escape(str(item.get("note") or ""))}</td>
+  <td>{duplicate}<div class="meta">{html.escape(str(item.get("added_at") or ""))}</div></td>
+  <td><button class="button copy-prompt" type="button" data-prompt="{html.escape(prompt, quote=True)}">复制任务</button></td>
+</tr>"""
+
+
+def render_inbox(report_dir: Path, items: list[dict[str, Any]]) -> None:
+    rows = "\n".join(render_inbox_row(item) for item in items)
+    statuses = inbox_counts(items, "status")
+    priorities = inbox_counts(items, "priority")
+    duplicate_count = sum(1 for item in items if item.get("duplicate"))
+    empty = "" if rows else '<tr><td colspan="6" class="empty">还没有 inbox.csv。可以在 docs/inbox.csv 中添加 title,link,status,priority,tags,note。</td></tr>'
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Paper Inbox</div>
+  <h1>论文待处理池</h1>
+  <p class="lead">把临时发现的论文链接先放进 inbox，集中筛选、去重和复制给阅读流程。适合一次性管理很多候选论文。</p>
+  <div class="stats">
+    <a class="stat" href="index.html">卡片首页</a>
+    <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="inbox.json">Inbox JSON</a>
+    <span class="stat">候选 {len(items)}</span>
+    <span class="stat">疑似重复 {duplicate_count}</span>
+  </div>
+</header>
+<div class="toolbar">
+  <div class="shell controls">
+    <input id="inboxSearch" type="search" placeholder="搜索标题、链接、arxiv、标签、备注">
+    <select id="inboxStatus"><option value="">全部状态</option>{render_topic_options(statuses)}</select>
+    <select id="inboxPriority"><option value="">全部优先级</option>{render_topic_options(priorities)}</select>
+    <select id="inboxDuplicate"><option value="">重复状态</option><option value="yes">疑似已在库中</option><option value="no">新候选</option></select>
+  </div>
+</div>
+<main class="shell">
+  <div class="results-bar"><strong id="inboxCount">显示 {len(items)} / {len(items)} 条</strong></div>
+  <div class="table-wrap">
+    <table class="library-table">
+      <thead><tr><th>论文</th><th>状态</th><th>标签</th><th>备注</th><th>去重</th><th>操作</th></tr></thead>
+      <tbody id="inboxRows">{rows or empty}</tbody>
+    </table>
+  </div>
+</main>
+<script>
+const inboxRows = Array.from(document.querySelectorAll("#inboxRows tr[data-search]"));
+const inboxSearch = document.querySelector("#inboxSearch");
+const inboxStatus = document.querySelector("#inboxStatus");
+const inboxPriority = document.querySelector("#inboxPriority");
+const inboxDuplicate = document.querySelector("#inboxDuplicate");
+const inboxCount = document.querySelector("#inboxCount");
+
+function renderInbox() {{
+  const q = inboxSearch.value.trim().toLowerCase();
+  let visible = 0;
+  inboxRows.forEach(row => {{
+    const hit = (!q || row.dataset.search.includes(q))
+      && (!inboxStatus.value || row.dataset.status === inboxStatus.value)
+      && (!inboxPriority.value || row.dataset.priority === inboxPriority.value)
+      && (!inboxDuplicate.value || row.dataset.duplicate === inboxDuplicate.value);
+    row.hidden = !hit;
+    if (hit) visible += 1;
+  }});
+  inboxCount.textContent = `显示 ${{visible}} / ${{inboxRows.length}} 条`;
+}}
+
+[inboxSearch, inboxStatus, inboxPriority, inboxDuplicate].forEach(el => el.addEventListener("input", renderInbox));
+document.querySelectorAll(".copy-prompt").forEach(button => {{
+  button.addEventListener("click", async () => {{
+    const prompt = `请按 AutoPaperReader 工作流阅读这篇论文：${{button.dataset.prompt}}`;
+    try {{
+      await navigator.clipboard.writeText(prompt);
+      button.textContent = "已复制";
+      setTimeout(() => button.textContent = "复制任务", 1200);
+    }} catch {{
+      window.prompt("复制任务", prompt);
+    }}
+  }});
+}});
+renderInbox();
+</script>
+"""
+    (report_dir / "inbox.html").write_text(page_shell("论文待处理池", body), encoding="utf-8")
+
+
 def render_review_row(item: dict[str, Any]) -> str:
     state_label = {
         "due": "待复习",
@@ -2364,6 +2573,7 @@ def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <div class="stats">
     <a class="stat" href="index.html">返回首页</a>
     <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="inbox.html">待处理池</a>
     <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="lines/index.html">研究线</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
@@ -2804,13 +3014,16 @@ def render_tags(report_dir: Path, papers: list[dict[str, Any]]) -> None:
 def build_wiki(report_dir: Path) -> int:
     load_taxonomy_config(report_dir)
     papers = collect_papers(report_dir)
+    inbox_items = load_inbox_items(report_dir, papers)
     write_json(report_dir, papers)
     write_quality_json(report_dir, papers)
     write_review_json(report_dir, papers)
     write_stats_json(report_dir, papers)
+    write_inbox_json(report_dir, inbox_items)
     write_search_index(report_dir, papers)
     render_index(report_dir, papers)
     render_library(report_dir, papers)
+    render_inbox(report_dir, inbox_items)
     render_review(report_dir, papers)
     render_dashboard(report_dir, papers)
     render_taxonomy(report_dir, papers)

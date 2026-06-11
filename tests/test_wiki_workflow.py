@@ -145,6 +145,12 @@ class WikiWorkflowTest(unittest.TestCase):
                 f"<!doctype html><title>{slug}</title><h1>{slug}</h1>",
                 encoding="utf-8",
             )
+        (report_dir / "inbox.csv").write_text(
+            "title,link,status,priority,tags,note\n"
+            "Gamma Paper,https://arxiv.org/abs/2602.00003,queued,high,LLM Serving;Batching,候选论文\n"
+            "Alpha Duplicate,https://arxiv.org/abs/2601.00001,queued,normal,Duplicate,已读论文\n",
+            encoding="utf-8",
+        )
         return report_dir
 
     def test_build_validate_and_apply_review_plan(self) -> None:
@@ -158,6 +164,7 @@ class WikiWorkflowTest(unittest.TestCase):
             generated = {
                 "index.html",
                 "library.html",
+                "inbox.html",
                 "review.html",
                 "dashboard.html",
                 "taxonomy.html",
@@ -165,6 +172,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "papers.json",
                 "search_index.json",
                 "stats.json",
+                "inbox.json",
                 "quality.json",
                 "review.json",
                 "lines/index.html",
@@ -194,6 +202,14 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn('id="bulkReviewStage"', library_html)
             self.assertIn("metadata_patch.csv", library_html)
             self.assertIn('data-slug="2601.00001-alpha-paper"', library_html)
+            inbox = json.loads((report_dir / "inbox.json").read_text(encoding="utf-8"))
+            self.assertEqual(inbox["count"], 2)
+            self.assertEqual(inbox["statuses"]["queued"], 2)
+            self.assertEqual(inbox["priorities"]["high"], 1)
+            self.assertEqual(inbox["duplicates"], ["inbox-2"])
+            inbox_html = (report_dir / "inbox.html").read_text(encoding="utf-8")
+            self.assertIn("Gamma Paper", inbox_html)
+            self.assertIn("复制任务", inbox_html)
 
             review = json.loads((report_dir / "review.json").read_text(encoding="utf-8"))
             self.assertEqual(review["count"], 2)
