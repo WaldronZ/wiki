@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>质量治理</title>
+  <title>研究缺口</title>
   <style>
     :root {
       color-scheme: light;
@@ -278,47 +278,90 @@
       .data-table { display: block; overflow-x: auto; }
       header { padding-top: 28px; }
     }
+
+    .gap-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+    }
+    .gap-card {
+      display: grid;
+      gap: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 16px;
+    }
+    .gap-card header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0;
+    }
+    .gap-card h2 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.3;
+    }
+    .gap-card header strong {
+      min-width: 44px;
+      text-align: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #edf3f1;
+      padding: 4px 8px;
+      color: var(--accent);
+    }
+    
   </style>
 </head>
 <body>
 
 
 <header class="shell">
-  <div class="eyebrow">Quality Gate</div>
-  <h1>质量治理</h1>
-  <p class="lead">把分类漂移、弱元数据、复习计划和候选论文去重集中到一个发布前检查视图。适合论文库变大后做持续治理。</p>
+  <div class="eyebrow">Research Gap Analysis</div>
+  <h1>研究缺口与下一步行动</h1>
+  <p class="lead">从研究线角度自动诊断缺角色、缺分类、缺复习计划、缺代码观察和时间覆盖空档，把大量论文库变成可持续维护的行动队列。</p>
   <div class="stats">
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="gaps.html">研究缺口</a>
-    <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="library.html">论文库表格</a>
-    <a class="stat" href="board.html">状态看板</a>
-    <a class="stat" href="inbox.html">待处理池</a>
-    <a class="stat" href="quality.json">质量 JSON</a>
+    <a class="stat" href="matrix.html">研究矩阵</a>
+    <a class="stat" href="timeline.html">时间轴</a>
+    <a class="stat" href="taxonomy.html">分类治理</a>
+    <a class="stat" href="review.html">复习计划</a>
     <span class="stat">论文 5</span>
-    <span class="stat">生成时间 2026-06-11T17:04:15</span>
+    <span class="stat">研究线 2</span>
+    <span class="stat">建议 4</span>
   </div>
 </header>
 <main class="shell">
   <section>
-    <h2 class="section-title">质量门禁</h2>
-    <div class="metric-grid"><section class="metric-card"><span>质量分</span><strong>92.0</strong><span>综合得分</span></section><section class="metric-card"><span>分类覆盖</span><strong>100%</strong><span>必要字段</span></section><section class="metric-card"><span>复习计划</span><strong>0%</strong><span>next_review</span></section><section class="metric-card"><span>漂移项</span><strong>0</strong><span>taxonomy drift</span></section><section class="metric-card"><span>重复候选</span><strong>0</strong><span>inbox</span></section></div>
+    <h2 class="section-title">下一步行动</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>优先级</th><th>研究线</th><th>建议动作</th><th>最新年份</th></tr></thead><tbody><tr><td>45</td><td><a href="library.html?line=Parallel+Decoding+with+Diffusion+Models">Parallel Decoding with Diffusion Models</a></td><td>补复习计划 3 篇</td><td>2026</td></tr><tr><td>45</td><td><a href="library.html?line=Parallel+Decoding+with+Diffusion+Models">Parallel Decoding with Diffusion Models</a></td><td>补角色：baseline, main, system</td><td>2026</td></tr><tr><td>30</td><td><a href="library.html?line=Efficient+Attention+Kernels">Efficient Attention Kernels</a></td><td>补复习计划 2 篇</td><td>2025</td></tr><tr><td>30</td><td><a href="library.html?line=Efficient+Attention+Kernels">Efficient Attention Kernels</a></td><td>补角色：baseline, main</td><td>2025</td></tr></tbody></table></div>
   </section>
   <section>
-    <h2 class="section-title">待处理问题</h2>
-    <div class="table-wrap"><table class="data-table"><thead><tr><th>论文</th><th>分数</th><th>缺失字段</th><th>弱字段</th><th>复习</th></tr></thead><tbody><tr><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a><div class="meta">Parallel Decoding with Diffusion Models</div></td><td>92</td><td>-</td><td>next_review, review_stage</td><td>-</td></tr><tr><td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a><div class="meta">Parallel Decoding with Diffusion Models</div></td><td>92</td><td>-</td><td>next_review, review_stage</td><td>-</td></tr><tr><td><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a><div class="meta">Parallel Decoding with Diffusion Models</div></td><td>92</td><td>-</td><td>next_review, review_stage</td><td>-</td></tr><tr><td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a><div class="meta">Efficient Attention Kernels</div></td><td>92</td><td>-</td><td>next_review, review_stage</td><td>-</td></tr><tr><td><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a><div class="meta">Efficient Attention Kernels</div></td><td>92</td><td>-</td><td>next_review, review_stage</td><td>-</td></tr></tbody></table></div>
+    <h2 class="section-title">研究线健康卡片</h2>
+    <div class="gap-grid"><section class="gap-card" data-score="55">
+  <header><h2><a href="lines/parallel-decoding-with-diffusion-models.html">Parallel Decoding with Diffusion Models</a></h2><strong>55</strong></header>
+  <div class="meta">论文 3 · 最新 2026</div>
+  <div class="chips"><span class="chip">补角色：baseline, main, system</span><span class="chip">补复习计划 3 篇</span></div>
+  <ol class="queue-list"><li><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a><div class="card-flags"><span class="flag">Parallel Decoding with Diffusion Models</span><span class="flag">read</span><span class="flag">I 5</span><span class="flag">重点</span></div></li></ol>
+</section><section class="gap-card" data-score="70">
+  <header><h2><a href="lines/efficient-attention-kernels.html">Efficient Attention Kernels</a></h2><strong>70</strong></header>
+  <div class="meta">论文 2 · 最新 2025</div>
+  <div class="chips"><span class="chip">补角色：baseline, main</span><span class="chip">补复习计划 2 篇</span></div>
+  <ol class="queue-list"><li><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a><div class="card-flags"><span class="flag">Efficient Attention Kernels</span><span class="flag">read</span><span class="flag">I 5</span><span class="flag">重点</span></div></li></ol>
+</section></div>
   </section>
   <section>
-    <h2 class="section-title">Taxonomy Drift</h2>
-    <div class="table-wrap"><div class="empty">暂无 taxonomy drift。</div></div>
+    <h2 class="section-title">研究线缺口明细</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>研究线</th><th>论文</th><th>健康分</th><th>最新年份</th><th>缺角色</th><th>缺分类</th><th>缺复习</th><th>缺代码</th><th>下一步</th></tr></thead><tbody><tr><td><a href="lines/parallel-decoding-with-diffusion-models.html">Parallel Decoding with Diffusion Models</a></td><td>3</td><td>55</td><td>2026</td><td>baseline, main, system</td><td>0</td><td>3</td><td>0</td><td>补角色：baseline, main, system; 补复习计划 3 篇</td></tr><tr><td><a href="lines/efficient-attention-kernels.html">Efficient Attention Kernels</a></td><td>2</td><td>70</td><td>2025</td><td>baseline, main</td><td>0</td><td>2</td><td>0</td><td>补角色：baseline, main; 补复习计划 2 篇</td></tr></tbody></table></div>
   </section>
   <section>
-    <h2 class="section-title">候选去重</h2>
-    <div class="table-wrap"><div class="empty">暂无疑似重复候选。</div></div>
-  </section>
-  <section>
-    <h2 class="section-title">队列摘要</h2>
-    <table class="data-table"><thead><tr><th>队列</th><th>数量</th><th>样例 slug</th></tr></thead><tbody><tr><td>missing_required_metadata</td><td>0</td><td></td></tr><tr><td>needs_review_plan</td><td>5</td><td>2602.06036-dflash, 2604.11035-introspective-dlm, 2605.12825-orthrus, 2501.01005-flashinfer, 2307.08691-flashattention-2</td></tr><tr><td>due_review</td><td>0</td><td></td></tr><tr><td>no_code_observation</td><td>0</td><td></td></tr><tr><td>taxonomy_drift</td><td>0</td><td></td></tr><tr><td>high_importance</td><td>2</td><td>2307.08691-flashattention-2, 2604.11035-introspective-dlm</td></tr></tbody></table>
+    <h2 class="section-title">运营队列</h2>
+    <div class="queue-grid"><section class="role-section"><h2>需建复习计划 <span class="meta">5</span></h2><ol class="queue-list"><li><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a><div class="card-flags"><span class="flag">Parallel Decoding with Diffusion Models</span><span class="flag">read</span><span class="flag">I 4</span><span class="flag">review</span></div></li><li><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a><div class="card-flags"><span class="flag">Parallel Decoding with Diffusion Models</span><span class="flag">read</span><span class="flag">I 5</span><span class="flag">review</span></div></li><li><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a><div class="card-flags"><span class="flag">Parallel Decoding with Diffusion Models</span><span class="flag">read</span><span class="flag">I 4</span><span class="flag">review</span></div></li><li><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a><div class="card-flags"><span class="flag">Efficient Attention Kernels</span><span class="flag">read</span><span class="flag">I 4</span><span class="flag">review</span></div></li><li><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a><div class="card-flags"><span class="flag">Efficient Attention Kernels</span><span class="flag">read</span><span class="flag">I 5</span><span class="flag">review</span></div></li></ol></section><section class="role-section"><h2>待补分类 <span class="meta">0</span></h2><ol class="queue-list"><li class="meta">暂无。</li></ol></section><section class="role-section"><h2>缺代码观察 <span class="meta">0</span></h2><ol class="queue-list"><li class="meta">暂无。</li></ol></section></div>
   </section>
 </main>
 

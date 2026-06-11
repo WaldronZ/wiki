@@ -86,6 +86,7 @@ REQUIRED_PAGES = {
     "taxonomy.html",
     "timeline.html",
     "matrix.html",
+    "gaps.html",
     "tags.html",
     "papers.json",
     "search_index.json",

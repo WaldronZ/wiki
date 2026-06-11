@@ -176,6 +176,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "taxonomy.html",
                 "timeline.html",
                 "matrix.html",
+                "gaps.html",
                 "tags.html",
                 "papers.json",
                 "search_index.json",
@@ -258,6 +259,11 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn('id="matrixTrack"', matrix_html)
             self.assertIn('class="research-matrix"', matrix_html)
             self.assertIn("LLM Serving", matrix_html)
+            gaps_html = (report_dir / "gaps.html").read_text(encoding="utf-8")
+            self.assertIn("研究缺口与下一步行动", gaps_html)
+            self.assertIn("研究线健康卡片", gaps_html)
+            self.assertIn("LLM Serving", gaps_html)
+            self.assertIn("需建复习计划", gaps_html)
 
             csv_path = report_dir / "library.csv"
             self.run_cmd("scripts/export_library_csv.py", str(report_dir), "--output", str(csv_path))

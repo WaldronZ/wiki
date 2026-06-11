@@ -39,6 +39,7 @@ GENERATED_FIXED_PATHS = (
     "taxonomy.html",
     "timeline.html",
     "matrix.html",
+    "gaps.html",
     "tags.html",
     "lines/index.html",
 )
@@ -1418,6 +1419,7 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="inbox.html">待处理池</a>
     <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="timeline.html">时间轴</a>
@@ -1926,6 +1928,7 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <div class="stats">
     <a class="stat" href="index.html">卡片首页</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="inbox.html">待处理池</a>
     <a class="stat" href="review.html">复习计划</a>
@@ -2497,6 +2500,7 @@ def render_board(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="timeline.html">时间轴</a>
@@ -2730,6 +2734,7 @@ def render_inbox(report_dir: Path, items: list[dict[str, Any]]) -> None:
     <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="inbox.json">Inbox JSON</a>
     <span class="stat">候选 {len(items)}</span>
     <span class="stat">疑似重复 {duplicate_count}</span>
@@ -2831,6 +2836,7 @@ def render_review(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="review.json">复习 JSON</a>
     <span class="stat">论文 {len(items)}</span>
@@ -2956,6 +2962,7 @@ def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
   <p class="lead">把分类漂移、弱元数据、复习计划和候选论文去重集中到一个发布前检查视图。适合论文库变大后做持续治理。</p>
   <div class="stats">
     <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="board.html">状态看板</a>
@@ -3377,6 +3384,7 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="timeline.html">时间轴</a>
     <a class="stat" href="matrix.html">研究矩阵</a>
@@ -3641,6 +3649,7 @@ def render_timeline(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="lines/index.html">研究线</a>
     <a class="stat" href="tags.html">分类总览</a>
@@ -3948,6 +3957,7 @@ def render_matrix(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="timeline.html">时间轴</a>
     <a class="stat" href="matrix.html">研究矩阵</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="lines/index.html">研究线</a>
     <span class="stat">论文 {len(papers)}</span>
@@ -4056,6 +4066,241 @@ if (firstNonEmpty) renderMatrixDetail(firstNonEmpty.dataset.line, firstNonEmpty.
     (report_dir / "matrix.html").write_text(page_shell("研究线年份矩阵", body, data, matrix_css), encoding="utf-8")
 
 
+def render_gaps(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    current_year = dt.date.today().year
+    recommended_roles = ["foundation", "baseline", "main", "system"]
+    quality = build_quality_report(papers)
+    review = build_review_plan(papers)
+    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for paper in papers:
+        grouped[str(paper.get("research_line") or "Unassigned")].append(paper)
+
+    def queue_item(paper: dict[str, Any], reason: str) -> str:
+        labels = [
+            str(paper.get("research_line") or "Unassigned"),
+            str(paper.get("status") or ""),
+            f'I {paper.get("importance")}' if paper.get("importance") else "",
+            reason,
+        ]
+        flags = "".join(f'<span class="flag">{html.escape(label)}</span>' for label in labels if label)
+        return (
+            f'<li><a href="{html.escape(paper_href(paper))}">{html.escape(paper["title_zh"] or paper["title"])}</a>'
+            f'<div class="card-flags">{flags}</div></li>'
+        )
+
+    line_rows = []
+    line_cards = []
+    all_actions: list[tuple[int, str, str, str]] = []
+    for line in sorted(grouped, key=lambda name: (-len(grouped[name]), name == "Unassigned", name.lower())):
+        items = grouped[line]
+        roles = {str(paper.get("line_role") or "") for paper in items if paper.get("line_role")}
+        missing_roles = [role for role in recommended_roles if role not in roles]
+        years = sorted({int(paper["year"]) for paper in items if isinstance(paper.get("year"), int)})
+        latest_year = max(years) if years else None
+        stale_years = current_year - latest_year if latest_year else None
+        missing_taxonomy = [
+            paper
+            for paper in items
+            if not paper.get("domains")
+            or not paper.get("tracks")
+            or not paper.get("problems")
+            or not paper.get("topics")
+            or not paper.get("methods")
+            or not paper.get("line_role")
+        ]
+        no_review = [paper for paper in items if not paper.get("next_review")]
+        no_code = [paper for paper in items if not paper.get("has_code")]
+        high_priority = sorted(
+            [paper for paper in items if int(paper.get("importance") or 0) >= 5],
+            key=lambda paper: (not paper.get("next_review"), paper["title"]),
+        )
+        score = 100
+        score -= len(missing_roles) * 10
+        score -= min(25, len(missing_taxonomy) * 8)
+        score -= min(20, len(no_review) * 5)
+        score -= min(15, len(no_code) * 4)
+        if stale_years is None:
+            score -= 12
+        elif stale_years >= 2:
+            score -= min(20, stale_years * 5)
+        score = max(0, score)
+
+        actions = []
+        if missing_roles:
+            actions.append(f"补角色：{', '.join(missing_roles)}")
+        if stale_years is None:
+            actions.append("补年份信息")
+        elif stale_years >= 2:
+            actions.append(f"检索 {latest_year + 1}-{current_year} 后续工作")
+        if no_review:
+            actions.append(f"补复习计划 {len(no_review)} 篇")
+        if missing_taxonomy:
+            actions.append(f"补 taxonomy {len(missing_taxonomy)} 篇")
+        if no_code:
+            actions.append(f"补代码观察 {len(no_code)} 篇")
+        if not actions:
+            actions.append("保持观察")
+        for action in actions[:4]:
+            priority = 100 - score
+            all_actions.append((priority, line, action, str(latest_year or "unknown")))
+
+        line_href = f"lines/{slugify_label(line)}.html" if line != "Unassigned" else "library.html?line=Unassigned"
+        line_rows.append(
+            "<tr>"
+            f'<td><a href="{html.escape(line_href)}">{html.escape(line)}</a></td>'
+            f"<td>{len(items)}</td>"
+            f"<td>{score}</td>"
+            f"<td>{html.escape(str(latest_year or 'unknown'))}</td>"
+            f"<td>{html.escape(', '.join(missing_roles) or '-')}</td>"
+            f"<td>{len(missing_taxonomy)}</td>"
+            f"<td>{len(no_review)}</td>"
+            f"<td>{len(no_code)}</td>"
+            f"<td>{html.escape('; '.join(actions[:3]))}</td>"
+            "</tr>"
+        )
+        chip_html = "".join(f'<span class="chip">{html.escape(action)}</span>' for action in actions[:4])
+        paper_links = "".join(queue_item(paper, "重点") for paper in high_priority[:3])
+        if not paper_links:
+            paper_links = '<li class="meta">暂无 5 星论文。</li>'
+        line_cards.append(
+            f"""<section class="gap-card" data-score="{score}">
+  <header><h2><a href="{html.escape(line_href)}">{html.escape(line)}</a></h2><strong>{score}</strong></header>
+  <div class="meta">论文 {len(items)} · 最新 {html.escape(str(latest_year or 'unknown'))}</div>
+  <div class="chips">{chip_html}</div>
+  <ol class="queue-list">{paper_links}</ol>
+</section>"""
+        )
+
+    action_rows = "".join(
+        "<tr>"
+        f"<td>{priority}</td>"
+        f'<td><a href="{html.escape(page_query_href("library.html", line=line))}">{html.escape(line)}</a></td>'
+        f"<td>{html.escape(action)}</td>"
+        f"<td>{html.escape(year)}</td>"
+        "</tr>"
+        for priority, line, action, year in sorted(all_actions, key=lambda item: (-item[0], item[1], item[2]))[:24]
+    )
+    action_table = (
+        '<table class="data-table"><thead><tr><th>优先级</th><th>研究线</th><th>建议动作</th><th>最新年份</th></tr></thead>'
+        f"<tbody>{action_rows}</tbody></table>"
+        if action_rows
+        else '<div class="empty">暂无建议动作。</div>'
+    )
+    line_table = (
+        '<table class="data-table"><thead><tr><th>研究线</th><th>论文</th><th>健康分</th><th>最新年份</th><th>缺角色</th><th>缺分类</th><th>缺复习</th><th>缺代码</th><th>下一步</th></tr></thead>'
+        f"<tbody>{''.join(line_rows)}</tbody></table>"
+        if line_rows
+        else '<div class="empty">还没有研究线。</div>'
+    )
+
+    need_plan = [
+        paper
+        for paper in papers
+        if paper["slug"] in set(review["queues"].get("needs_plan", []))
+    ]
+    taxonomy_queue = [
+        paper
+        for paper in papers
+        if paper["slug"] in set(quality["queues"].get("missing_required_metadata", []))
+    ]
+    code_queue = [
+        paper
+        for paper in papers
+        if paper["slug"] in set(quality["queues"].get("no_code_observation", []))
+    ]
+    queue_blocks = [
+        ("需建复习计划", need_plan, "review"),
+        ("待补分类", taxonomy_queue, "taxonomy"),
+        ("缺代码观察", code_queue, "code"),
+    ]
+
+    def render_queue(items: list[dict[str, Any]], reason: str) -> str:
+        if not items:
+            return '<li class="meta">暂无。</li>'
+        return "".join(queue_item(paper, reason) for paper in items[:8])
+
+    queue_html = "".join(
+        f'<section class="role-section"><h2>{html.escape(title)} <span class="meta">{len(items)}</span></h2>'
+        f'<ol class="queue-list">{render_queue(items, reason)}</ol></section>'
+        for title, items, reason in queue_blocks
+    )
+
+    gaps_css = """
+    .gap-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+    }
+    .gap-card {
+      display: grid;
+      gap: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 16px;
+    }
+    .gap-card header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0;
+    }
+    .gap-card h2 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.3;
+    }
+    .gap-card header strong {
+      min-width: 44px;
+      text-align: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #edf3f1;
+      padding: 4px 8px;
+      color: var(--accent);
+    }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Research Gap Analysis</div>
+  <h1>研究缺口与下一步行动</h1>
+  <p class="lead">从研究线角度自动诊断缺角色、缺分类、缺复习计划、缺代码观察和时间覆盖空档，把大量论文库变成可持续维护的行动队列。</p>
+  <div class="stats">
+    <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="gaps.html">研究缺口</a>
+    <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="matrix.html">研究矩阵</a>
+    <a class="stat" href="timeline.html">时间轴</a>
+    <a class="stat" href="taxonomy.html">分类治理</a>
+    <a class="stat" href="review.html">复习计划</a>
+    <span class="stat">论文 {len(papers)}</span>
+    <span class="stat">研究线 {len(grouped)}</span>
+    <span class="stat">建议 {len(all_actions)}</span>
+  </div>
+</header>
+<main class="shell">
+  <section>
+    <h2 class="section-title">下一步行动</h2>
+    <div class="table-wrap">{action_table}</div>
+  </section>
+  <section>
+    <h2 class="section-title">研究线健康卡片</h2>
+    <div class="gap-grid">{"".join(line_cards) if line_cards else '<div class="empty">还没有研究线。</div>'}</div>
+  </section>
+  <section>
+    <h2 class="section-title">研究线缺口明细</h2>
+    <div class="table-wrap">{line_table}</div>
+  </section>
+  <section>
+    <h2 class="section-title">运营队列</h2>
+    <div class="queue-grid">{queue_html}</div>
+  </section>
+</main>
+"""
+    (report_dir / "gaps.html").write_text(page_shell("研究缺口", body, extra_css=gaps_css), encoding="utf-8")
+
+
 def render_line_pages(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     lines_dir = report_dir / "lines"
     lines_dir.mkdir(parents=True, exist_ok=True)
@@ -4128,6 +4373,7 @@ def render_line_pages(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="../library.html">论文库表格</a>
     <a class="stat" href="../review.html">复习计划</a>
     <a class="stat" href="../dashboard.html">管理控制台</a>
+    <a class="stat" href="../gaps.html">研究缺口</a>
     <a class="stat" href="../taxonomy.html">分类治理</a>
     <a class="stat" href="../timeline.html">时间轴</a>
     <a class="stat" href="../matrix.html">研究矩阵</a>
@@ -4152,6 +4398,7 @@ def render_line_pages(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="../library.html">论文库表格</a>
     <a class="stat" href="../review.html">复习计划</a>
     <a class="stat" href="../dashboard.html">管理控制台</a>
+    <a class="stat" href="../gaps.html">研究缺口</a>
     <a class="stat" href="../taxonomy.html">分类治理</a>
     <a class="stat" href="../timeline.html">时间轴</a>
     <a class="stat" href="../matrix.html">研究矩阵</a>
@@ -4229,6 +4476,7 @@ def render_tags(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="matrix.html">研究矩阵</a>
     <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
     <span class="stat">分类 {len(grouped)}</span>
     <span class="stat">论文 {len(papers)}</span>
@@ -4259,6 +4507,7 @@ def build_wiki(report_dir: Path) -> int:
     render_taxonomy(report_dir, papers)
     render_timeline(report_dir, papers)
     render_matrix(report_dir, papers)
+    render_gaps(report_dir, papers)
     render_line_pages(report_dir, papers)
     render_tags(report_dir, papers)
     return len(papers)

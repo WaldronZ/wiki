@@ -22,6 +22,7 @@ function htmlFiles() {
     "taxonomy.html",
     "timeline.html",
     "matrix.html",
+    "gaps.html",
     "tags.html",
     "lines/index.html",
   ].map((relative) => path.join(reportDir, relative));
