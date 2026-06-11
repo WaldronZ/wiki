@@ -273,7 +273,7 @@ python3 scripts/apply_library_metadata.py docs --input docs/library.csv --write
 python3 scripts/build_wiki.py docs
 ```
 
-`docs/library.html` 也支持先筛选论文、按场景隐藏/显示列、切换紧凑/标准/舒适密度、勾选当前页或一键选中全部筛选结果，批量选择 `status` / `reading_stage` / `review_stage` / `next_review`，也可以展开「批量分类字段」为所选论文设置 `research_line` / `line_role` / `domains` / `tracks` / `problems` / `topics` / `methods`，再下载 `metadata_patch.csv`；列设置和密度偏好会保存在浏览器本地。也可以把当前筛选和排序结果直接导出为 `reading_list.md`、`library_filtered.csv` 或 `library.bib`。`docs/board.html` 支持把论文卡片拖到新的状态列，然后下载 `status_board_patch.csv`。下载后用同一个写回脚本预览和应用：
+`docs/library.html` 也支持先按 `domains` / `tracks` / `problems` / `topics` / `methods` 等分类维度筛选论文、按场景隐藏/显示列、切换紧凑/标准/舒适密度、勾选当前页或一键选中全部筛选结果，批量选择 `status` / `reading_stage` / `review_stage` / `next_review`，也可以展开「批量分类字段」为所选论文设置 `research_line` / `line_role` / `domains` / `tracks` / `problems` / `topics` / `methods`，再下载 `metadata_patch.csv`；列设置和密度偏好会保存在浏览器本地。也可以把当前筛选和排序结果直接导出为 `reading_list.md`、`library_filtered.csv` 或 `library.bib`。`docs/board.html` 支持把论文卡片拖到新的状态列，然后下载 `status_board_patch.csv`。下载后用同一个写回脚本预览和应用：
 
 ```bash
 python3 scripts/apply_library_metadata.py docs --input ~/Downloads/metadata_patch.csv

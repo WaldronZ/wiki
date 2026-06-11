@@ -463,6 +463,8 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
     <select id="domain"><option value="">全部领域</option><option value="LLM Systems">LLM Systems (5)</option></select>
     <select id="track"><option value="">全部方向</option><option value="Inference Acceleration">Inference Acceleration (3)</option><option value="Parallel Decoding">Parallel Decoding (3)</option><option value="Attention Kernels">Attention Kernels (2)</option><option value="Inference Serving Systems">Inference Serving Systems (1)</option></select>
     <select id="problem"><option value="">全部问题</option><option value="Customizable Attention Serving">Customizable Attention Serving (1)</option><option value="Efficient Exact Attention">Efficient Exact Attention (1)</option><option value="Lossless Speculative Decoding">Lossless Speculative Decoding (1)</option><option value="Memory-Efficient Parallel Token Generation">Memory-Efficient Parallel Token Generation (1)</option><option value="Parallel Diffusion Decoding">Parallel Diffusion Decoding (1)</option></select>
+    <select id="topic"><option value="">全部主题</option><option value="Diffusion Language Models">Diffusion Language Models (3)</option><option value="LLM Serving">LLM Serving (3)</option><option value="Speculative Decoding">Speculative Decoding (3)</option><option value="KV Cache">KV Cache (2)</option><option value="LLM Inference">LLM Inference (2)</option><option value="Parallel Decoding">Parallel Decoding (2)</option><option value="Attention Kernels">Attention Kernels (1)</option><option value="Efficient Attention">Efficient Attention (1)</option><option value="GPU Kernel Optimization">GPU Kernel Optimization (1)</option><option value="GPU Systems">GPU Systems (1)</option><option value="Inference Optimization">Inference Optimization (1)</option><option value="LLM">LLM (1)</option><option value="Long Context">Long Context (1)</option><option value="Transformer">Transformer (1)</option></select>
+    <select id="method"><option value="">全部方法</option><option value="FlashAttention">FlashAttention (2)</option><option value="block diffusion">block diffusion (1)</option><option value="block-sparse attention">block-sparse attention (1)</option><option value="composable KV-cache format">composable KV-cache format (1)</option><option value="CUDA / GPU parallelism">CUDA / GPU parallelism (1)</option><option value="CUDA Graph">CUDA Graph (1)</option><option value="dual-view attention">dual-view attention (1)</option><option value="forward KL distillation">forward KL distillation (1)</option><option value="gated LoRA">gated LoRA (1)</option><option value="intra-model consensus">intra-model consensus (1)</option><option value="introspective consistency">introspective consistency (1)</option><option value="introspective strided decoding">introspective strided decoding (1)</option><option value="JIT compilation">JIT compilation (1)</option><option value="KV injection">KV injection (1)</option><option value="load-balanced scheduling">load-balanced scheduling (1)</option><option value="logit-shifted causal training">logit-shifted causal training (1)</option><option value="masked diffusion">masked diffusion (1)</option><option value="online softmax">online softmax (1)</option><option value="p/q acceptance">p/q acceptance (1)</option><option value="parallel drafting">parallel drafting (1)</option><option value="SGLang serving">SGLang serving (1)</option><option value="shared KV cache">shared KV cache (1)</option><option value="Speculative Decoding">Speculative Decoding (1)</option><option value="target hidden features">target hidden features (1)</option><option value="tiling">tiling (1)</option><option value="work partitioning">work partitioning (1)</option></select>
     <select id="line"><option value="">全部研究线</option><option value="Parallel Decoding with Diffusion Models">Parallel Decoding with Diffusion Models (3)</option><option value="Efficient Attention Kernels">Efficient Attention Kernels (2)</option></select>
     <select id="role"><option value="">全部角色</option><option value="foundation">foundation (2)</option><option value="followup">followup (1)</option><option value="system">system (1)</option><option value="variant">variant (1)</option></select>
     <select id="status"><option value="">全部状态</option><option value="read">read (5)</option><option value="archived">archived (0)</option><option value="reading">reading (0)</option><option value="skimmed">skimmed (0)</option><option value="unread">unread (0)</option></select>
@@ -547,6 +549,8 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
   data-domains="LLM Systems"
   data-tracks="Inference Acceleration|Parallel Decoding"
   data-problems="Lossless Speculative Decoding"
+  data-topics="Diffusion Language Models|LLM Inference|LLM Serving|Speculative Decoding"
+  data-methods="block diffusion|KV injection|parallel drafting|Speculative Decoding|target hidden features"
   data-line="Parallel Decoding with Diffusion Models"
   data-role="followup"
   data-status="read"
@@ -583,6 +587,8 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
   data-domains="LLM Systems"
   data-tracks="Inference Acceleration|Parallel Decoding"
   data-problems="Parallel Diffusion Decoding"
+  data-topics="Diffusion Language Models|LLM|LLM Serving|Parallel Decoding|Speculative Decoding"
+  data-methods="gated LoRA|introspective consistency|introspective strided decoding|logit-shifted causal training|p/q acceptance|SGLang serving"
   data-line="Parallel Decoding with Diffusion Models"
   data-role="foundation"
   data-status="read"
@@ -619,6 +625,8 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
   data-domains="LLM Systems"
   data-tracks="Inference Acceleration|Parallel Decoding"
   data-problems="Memory-Efficient Parallel Token Generation"
+  data-topics="Diffusion Language Models|KV Cache|LLM Inference|Parallel Decoding|Speculative Decoding"
+  data-methods="dual-view attention|forward KL distillation|intra-model consensus|masked diffusion|shared KV cache"
   data-line="Parallel Decoding with Diffusion Models"
   data-role="variant"
   data-status="read"
@@ -655,6 +663,8 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
   data-domains="LLM Systems"
   data-tracks="Attention Kernels|Inference Serving Systems"
   data-problems="Customizable Attention Serving"
+  data-topics="Attention Kernels|GPU Systems|Inference Optimization|KV Cache|LLM Serving"
+  data-methods="block-sparse attention|composable KV-cache format|CUDA Graph|FlashAttention|JIT compilation|load-balanced scheduling"
   data-line="Efficient Attention Kernels"
   data-role="system"
   data-status="read"
@@ -691,6 +701,8 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
   data-domains="LLM Systems"
   data-tracks="Attention Kernels"
   data-problems="Efficient Exact Attention"
+  data-topics="Efficient Attention|GPU Kernel Optimization|Long Context|Transformer"
+  data-methods="CUDA / GPU parallelism|FlashAttention|online softmax|tiling|work partitioning"
   data-line="Efficient Attention Kernels"
   data-role="foundation"
   data-status="read"
@@ -737,6 +749,8 @@ const search = document.querySelector("#search");
 const domain = document.querySelector("#domain");
 const track = document.querySelector("#track");
 const problem = document.querySelector("#problem");
+const topic = document.querySelector("#topic");
+const method = document.querySelector("#method");
 const line = document.querySelector("#line");
 const role = document.querySelector("#role");
 const status = document.querySelector("#status");
@@ -790,6 +804,8 @@ const controls = [
   ["domain", domain],
   ["track", track],
   ["problem", problem],
+  ["topic", topic],
+  ["method", method],
   ["line", line],
   ["role", role],
   ["status", status],
@@ -1086,6 +1102,8 @@ function exportRows(format) {
       "domains",
       "tracks",
       "problems",
+      "topics",
+      "methods",
       "status",
       "reading_stage",
       "review_stage",
@@ -1107,6 +1125,8 @@ function exportRows(format) {
       tokenCsvValue(row, "domains"),
       tokenCsvValue(row, "tracks"),
       tokenCsvValue(row, "problems"),
+      tokenCsvValue(row, "topics"),
+      tokenCsvValue(row, "methods"),
       row.dataset.status,
       row.dataset.stage,
       row.dataset.reviewStage,
@@ -1174,6 +1194,8 @@ function render() {
       && hasToken(row, "domains", domain.value)
       && hasToken(row, "tracks", track.value)
       && hasToken(row, "problems", problem.value)
+      && hasToken(row, "topics", topic.value)
+      && hasToken(row, "methods", method.value)
       && (!line.value || row.dataset.line === line.value)
       && (!role.value || row.dataset.role === role.value)
       && (!status.value || row.dataset.status === status.value)

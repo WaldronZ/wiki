@@ -2467,6 +2467,8 @@ def render_library_row(paper: dict[str, Any]) -> str:
   data-domains="{html.escape(attr_tokens(paper.get("domains", [])), quote=True)}"
   data-tracks="{html.escape(attr_tokens(paper.get("tracks", [])), quote=True)}"
   data-problems="{html.escape(attr_tokens(paper.get("problems", [])), quote=True)}"
+  data-topics="{html.escape(attr_tokens(paper.get("topics", [])), quote=True)}"
+  data-methods="{html.escape(attr_tokens(paper.get("methods", [])), quote=True)}"
   data-line="{html.escape(str(paper.get("research_line") or ""), quote=True)}"
   data-role="{html.escape(str(paper.get("line_role") or ""), quote=True)}"
   data-status="{html.escape(str(paper.get("status") or ""), quote=True)}"
@@ -2618,6 +2620,8 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <select id="domain"><option value="">全部领域</option>{render_topic_options(taxonomy["domains"])}</select>
     <select id="track"><option value="">全部方向</option>{render_topic_options(taxonomy["tracks"])}</select>
     <select id="problem"><option value="">全部问题</option>{render_topic_options(taxonomy["problems"])}</select>
+    <select id="topic"><option value="">全部主题</option>{render_topic_options(taxonomy["topics"])}</select>
+    <select id="method"><option value="">全部方法</option>{render_topic_options(taxonomy["methods"])}</select>
     <select id="line"><option value="">全部研究线</option>{render_topic_options(taxonomy["research_lines"])}</select>
     <select id="role"><option value="">全部角色</option>{render_topic_options(taxonomy["line_roles"])}</select>
     <select id="status"><option value="">全部状态</option>{render_topic_options(taxonomy["statuses"])}</select>
@@ -2713,6 +2717,8 @@ const search = document.querySelector("#search");
 const domain = document.querySelector("#domain");
 const track = document.querySelector("#track");
 const problem = document.querySelector("#problem");
+const topic = document.querySelector("#topic");
+const method = document.querySelector("#method");
 const line = document.querySelector("#line");
 const role = document.querySelector("#role");
 const status = document.querySelector("#status");
@@ -2766,6 +2772,8 @@ const controls = [
   ["domain", domain],
   ["track", track],
   ["problem", problem],
+  ["topic", topic],
+  ["method", method],
   ["line", line],
   ["role", role],
   ["status", status],
@@ -3062,6 +3070,8 @@ function exportRows(format) {{
       "domains",
       "tracks",
       "problems",
+      "topics",
+      "methods",
       "status",
       "reading_stage",
       "review_stage",
@@ -3083,6 +3093,8 @@ function exportRows(format) {{
       tokenCsvValue(row, "domains"),
       tokenCsvValue(row, "tracks"),
       tokenCsvValue(row, "problems"),
+      tokenCsvValue(row, "topics"),
+      tokenCsvValue(row, "methods"),
       row.dataset.status,
       row.dataset.stage,
       row.dataset.reviewStage,
@@ -3150,6 +3162,8 @@ function render() {{
       && hasToken(row, "domains", domain.value)
       && hasToken(row, "tracks", track.value)
       && hasToken(row, "problems", problem.value)
+      && hasToken(row, "topics", topic.value)
+      && hasToken(row, "methods", method.value)
       && (!line.value || row.dataset.line === line.value)
       && (!role.value || row.dataset.role === role.value)
       && (!status.value || row.dataset.status === status.value)
