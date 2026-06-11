@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T04:03:51",
+  "generated_at": "2026-06-12T04:08:48",
   "snapshot_id": "89f0dcec1638050c",
   "name": "AutoPaperReader Wiki",
   "count": 5,
@@ -93,6 +93,10 @@
     {
       "name": "Parallel Decoding with Diffusion Models",
       "count": 3,
+      "owner": "decoding-owner",
+      "team": "generation",
+      "cadence": "biweekly",
+      "owner_note": "Track diffusion language model and speculative decoding updates.",
       "roles": {
         "followup": 1,
         "foundation": 1,
@@ -104,6 +108,10 @@
     {
       "name": "Efficient Attention Kernels",
       "count": 2,
+      "owner": "kernel-owner",
+      "team": "systems",
+      "cadence": "monthly",
+      "owner_note": "Review new GPU kernel and serving papers.",
       "roles": {
         "foundation": 1,
         "system": 1
@@ -119,19 +127,19 @@
       {
         "href": "index.html",
         "kind": "page",
-        "sha256": "33f83391680e015b6f9e9c1ce1c221befff45f2a3b6b15b2c2c48c55898401c9",
+        "sha256": "af2ae0db9b1f0458a3ecc480ebf5a3499b1542421e2bad4daf5a9851bc75e6c3",
         "status": "ok"
       },
       {
         "href": "library.html",
         "kind": "page",
-        "sha256": "e2f722e1156ba7b529cc2bc47468d49d4124814d89148b0682f14d13813e4c37",
+        "sha256": "63c6fa90bf28e2156c2c82a1f8cc91676e45610d545fba6618b45a76062fe9bd",
         "status": "ok"
       },
       {
         "href": "dashboard.html",
         "kind": "page",
-        "sha256": "c60a24eb1b7bddb392a4351e4d0c5c6e39c2e2b71798b1aeab0464f3409557e6",
+        "sha256": "a7db9ef5d20622698e177558f6c5d1bd39daa10ed2843d83c304d1ebc50c943d",
         "status": "ok"
       },
       {
@@ -155,7 +163,7 @@
       {
         "href": "coverage.html",
         "kind": "page",
-        "sha256": "22be3917f41bfad36f7a2b2d367f6c6a6f979b79b50f9d27dc7dd32c00a2dde8",
+        "sha256": "18001b86c2e0d170e1ee96ab9e60103b5aec9bd61c3430e0a6d3f12592d25432",
         "status": "ok"
       },
       {
@@ -197,7 +205,7 @@
       {
         "href": "compare.html",
         "kind": "page",
-        "sha256": "f9b9b905238795daa2777ade9317ec6522c2abe7188d41cb938d2decc33ee20d",
+        "sha256": "4ca446b1b879d5ae69839f0d5c2a3c5f79102587acf561555edef8a05c614ebc",
         "status": "ok"
       },
       {
@@ -209,13 +217,13 @@
       {
         "href": "scale.html",
         "kind": "page",
-        "sha256": "5553c9bd51a453546d8ce9714f2218fe49abe1a1d0e3cc928b87fac118dc13e0",
+        "sha256": "020fe50fabd1a24aab5006bee05772dd34d64eedd6c64151af00e9c272f239f4",
         "status": "ok"
       },
       {
         "href": "catalog.html",
         "kind": "page",
-        "sha256": "dbc5876050a1e33207d9717b70d81e6356aa32c797c9d4ad30db824c7d09c92b",
+        "sha256": "83739ea121d06f440ffedd7b04d2f08c0d4b12d1965da12a4bb747b7de620b64",
         "status": "ok"
       },
       {
@@ -251,13 +259,13 @@
       {
         "href": "timeline.html",
         "kind": "page",
-        "sha256": "9df77c3e770b4e5d796247120bbbc2ff40c4b95052c2470156a07e4709c3c185",
+        "sha256": "098da1a610dc24a15048d4b71fa44a2c2e3bcf8de3a841a7f535d40f54c1ec6a",
         "status": "ok"
       },
       {
         "href": "matrix.html",
         "kind": "page",
-        "sha256": "133ef791b7c75ae2e15da1bdbf6493f67e668e438863eb09d7d2ba836c9a54f0",
+        "sha256": "9934146749256718de2fba6b73ee6129f488e58ff77fa22474baa765f5cefa50",
         "status": "ok"
       },
       {
@@ -275,7 +283,7 @@
       {
         "href": "papers.json",
         "kind": "data",
-        "sha256": "a0b083def0eb9ce616249340627a8e42c9b966e2d6e5b3e0f4ad703c64b4ebb7",
+        "sha256": "b103a8fd9a0e8c342245b5f0822427c72976b51bc14157cdd933ff8a36993c3f",
         "status": "ok"
       },
       {
@@ -287,7 +295,7 @@
       {
         "href": "stats.json",
         "kind": "data",
-        "sha256": "ea610a580ac2e8670157e53821a5e7f5a34828b79e3f8229be6dcea707c821fe",
+        "sha256": "24d5f54e128a173795b2e85b16093fcd1eb0401e09ab8e4311c3e3a55a34b29a",
         "status": "ok"
       },
       {
@@ -335,7 +343,7 @@
       {
         "href": "compare.json",
         "kind": "data",
-        "sha256": "ff5e3628e7ed88a92e305e3706b175f190bbb89fd03b5151a88e41abe0a6a16e",
+        "sha256": "7a56be3782d6736b0509fbfe6035132c770a87ebe423d8a33bd5dbe700fe73b2",
         "status": "ok"
       },
       {
@@ -347,13 +355,13 @@
       {
         "href": "scale.json",
         "kind": "data",
-        "sha256": "875100cb98fe6267897d248ba36dbe57ed428a0d31b8c9a9679dba7a08a25c7a",
+        "sha256": "d0c382d4508eebaab373b685c9abcd99a4046da59ee848d708191ee65674a98a",
         "status": "ok"
       },
       {
         "href": "catalog.json",
         "kind": "data",
-        "sha256": "45746bbca05aa370350b5e3770a93bc9baf6ca4dcd0e71b4c7397f47f26beb5b",
+        "sha256": "5027355251084108175e40a4a2759b4100f201bc4b67babb7f025fbf7e4ba6ac",
         "status": "ok"
       },
       {
@@ -383,13 +391,13 @@
       {
         "href": "guides/taxonomy.schema.json",
         "kind": "contract",
-        "sha256": "b5b5a1d4fb00bb7868c1af15e220bf1840e5de94f8d58e03e2e4bf9519673327",
+        "sha256": "276570bb1323cdaae8164bb5a84ae460ed561a58125d0741aaa5d7c99ff23533",
         "status": "ok"
       },
       {
         "href": "guides/taxonomy.json",
         "kind": "contract",
-        "sha256": "b77b948511aab16834c50b2602c05b8aed338dd2087d4276c501ea3ca76105d5",
+        "sha256": "602deee0d4843e701fa86c0f599589ff298cb8436ca2d61e435e85076c80a347",
         "status": "ok"
       }
     ]

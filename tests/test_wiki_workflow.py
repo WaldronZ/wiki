@@ -145,6 +145,19 @@ class WikiWorkflowTest(unittest.TestCase):
                             "state": {"track": "Attention Kernels", "sort": "year"},
                         },
                     ],
+                    "research_line_owners": {
+                        "LLM Serving": {
+                            "owner": "serving-owner",
+                            "team": "systems",
+                            "cadence": "weekly",
+                            "note": "Review serving and scheduling reports.",
+                        },
+                        "Attention Kernels": {
+                            "owner": "kernel-owner",
+                            "team": "kernels",
+                            "cadence": "monthly",
+                        },
+                    },
                     "governance_policy": {
                         "taxonomy_load": {
                             "min_structure_labels": 3,
@@ -656,7 +669,12 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("quality", stats["queue_sizes"])
             self.assertIn("review", stats["queue_sizes"])
             self.assertTrue(stats["research_lines"])
+            line_by_name = {item["name"]: item for item in stats["research_lines"]}
+            self.assertEqual(line_by_name["LLM Serving"]["owner"], "serving-owner")
+            self.assertEqual(line_by_name["LLM Serving"]["team"], "systems")
+            self.assertEqual(line_by_name["Attention Kernels"]["cadence"], "monthly")
             self.assertEqual(stats["shared_views"], 2)
+            self.assertEqual(stats["controls"]["research_line_owners"]["LLM Serving"]["owner"], "serving-owner")
             self.assertEqual(stats["controls"]["review_stage"], ["fresh", "due", "reviewed"])
             self.assertIn("research", stats["controls"]["status_workflows"])
             self.assertEqual(stats["controls"]["governance_policy"]["taxonomy_load"]["min_tags"], 5)
@@ -846,6 +864,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("LLM Systems", balance_html)
             coverage_html = (report_dir / "coverage.html").read_text(encoding="utf-8")
             self.assertIn("研究线分类覆盖地图", coverage_html)
+            self.assertIn("Owner", coverage_html)
+            self.assertIn("serving-owner", coverage_html)
             self.assertIn('id="coverageRows"', coverage_html)
             self.assertIn('id="coverageSort"', coverage_html)
             self.assertIn("research_line_coverage.csv", coverage_html)
@@ -1632,6 +1652,10 @@ class WikiWorkflowTest(unittest.TestCase):
                             {"name": "bad", "page": "sidebar", "state": {"unknown": "x"}},
                             {"name": "", "page": "all", "state": {}},
                         ],
+                        "research_line_owners": {
+                            "": {"owner": "nobody"},
+                            "Broken Line": {"owner": "", "unknown": "x"},
+                        },
                         "governance_policy": {
                             "taxonomy_load": {"min_tags": -1},
                             "unknown": {"x": 1},
@@ -1652,6 +1676,9 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("shared_views[0].page", result.stderr)
             self.assertIn("shared_views[0].state has unknown keys", result.stderr)
             self.assertIn("shared_views[1].name", result.stderr)
+            self.assertIn("research_line_owners keys must be non-empty strings", result.stderr)
+            self.assertIn("research_line_owners.Broken Line has unknown keys", result.stderr)
+            self.assertIn("research_line_owners.Broken Line.owner", result.stderr)
             self.assertIn("governance_policy has unknown sections", result.stderr)
             self.assertIn("governance_policy.taxonomy_load.min_tags", result.stderr)
 

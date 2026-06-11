@@ -101,6 +101,21 @@ has_code: true
 
 `role_order` 会影响研究线详情页和首页研究线概览中的论文排序。`status_values`、`reading_stage_values` 和 `review_stage_values` 会进入首页和论文库表格的筛选项；其中 `status_values` 还会成为 `docs/board.html` 的状态看板列。即使某个状态当前还没有论文使用，也可以先作为可选管理状态出现。构建后的 `papers.json` 和 `stats.json` 会把这些选项输出到 `controls` 字段，供后续前端、脚本或桌面软件动态读取。
 
+`research_line_owners` 用来给研究线配置维护责任，不改变论文分类本身。每条线可以设置 `owner`、`team`、`cadence` 和 `note`；构建后会写入 `stats.json`、`manifest.json`、`snapshot.json`，并显示在 `docs/dashboard.html` 与 `docs/coverage.html` 中。论文多起来后，建议把高风险覆盖缺口按 owner 分派，而不是只按标签本身排队。
+
+```json
+{
+  "research_line_owners": {
+    "Efficient Attention Kernels": {
+      "owner": "kernel-owner",
+      "team": "systems",
+      "cadence": "monthly",
+      "note": "Review new GPU kernel and serving papers."
+    }
+  }
+}
+```
+
 如果你想在多套状态体系之间切换，可以在 `taxonomy.json` 里使用 `status_workflows` 保存多个命名 workflow，并用 `active_status_workflow` 选择当前启用的一套。构建脚本会优先读取激活 workflow 里的 `status_values`、`reading_stage_values` 和 `review_stage_values`；未配置时仍兼容根层同名字段。
 
 ```json

@@ -110,6 +110,25 @@
         "required": ["name", "state"]
       }
     },
+    "research_line_owners": {
+      "type": "object",
+      "description": "Optional ownership metadata for research lines, used by dashboards and coverage review queues.",
+      "propertyNames": {
+        "type": "string",
+        "minLength": 1
+      },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "owner": {"type": "string", "minLength": 1},
+          "team": {"type": "string", "minLength": 1},
+          "cadence": {"type": "string", "minLength": 1},
+          "note": {"type": "string", "minLength": 1}
+        },
+        "minProperties": 1
+      }
+    },
     "governance_policy": {
       "type": "object",
       "description": "Configurable governance thresholds for quality, taxonomy actions, balance, and coverage reports.",

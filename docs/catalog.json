@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T04:03:51",
+  "generated_at": "2026-06-12T04:08:48",
   "count": 5,
   "inbox_count": 0,
   "page_count": 28,
@@ -180,7 +180,7 @@
       "href": "papers.json",
       "description": "论文索引、taxonomy 聚合、前端 controls",
       "exists": true,
-      "size_bytes": 17655,
+      "size_bytes": 18128,
       "top_level_keys": [
         "controls",
         "count",
@@ -193,7 +193,7 @@
         {
           "key": "controls",
           "type": "object",
-          "count": 8
+          "count": 9
         },
         {
           "key": "tags",
@@ -212,7 +212,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:03:51",
+      "generated_at": "2026-06-12T04:08:48",
       "consumers": [
         "frontend",
         "desktop",
@@ -239,7 +239,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:03:51",
+      "generated_at": "2026-06-12T04:08:48",
       "consumers": [
         "search",
         "desktop"
@@ -250,7 +250,7 @@
       "href": "stats.json",
       "description": "运营统计、覆盖率和队列规模",
       "exists": true,
-      "size_bytes": 11682,
+      "size_bytes": 12482,
       "top_level_keys": [
         "controls",
         "count",
@@ -268,7 +268,7 @@
         {
           "key": "controls",
           "type": "object",
-          "count": 8
+          "count": 9
         },
         {
           "key": "coverage",
@@ -302,7 +302,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:03:51",
+      "generated_at": "2026-06-12T04:08:48",
       "consumers": [
         "dashboard",
         "ops",
@@ -371,7 +371,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:03:51",
+      "generated_at": "2026-06-12T04:08:48",
       "consumers": [
         "quality-gate",
         "ops",
@@ -403,7 +403,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:03:51",
+      "generated_at": "2026-06-12T04:08:48",
       "consumers": [
         "review",
         "scheduler",
@@ -448,7 +448,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:03:51",
+      "generated_at": "2026-06-12T04:08:48",
       "consumers": [
         "freshness",
         "maintenance"
@@ -486,7 +486,7 @@
         }
       ],
       "declared_count": 55,
-      "generated_at": "2026-06-12T04:03:51",
+      "generated_at": "2026-06-12T04:08:48",
       "consumers": [
         "taxonomy",
         "project-management",
@@ -518,7 +518,7 @@
         }
       ],
       "declared_count": 62,
-      "generated_at": "2026-06-12T04:03:51",
+      "generated_at": "2026-06-12T04:08:48",
       "consumers": [
         "tasks",
         "project-management",
@@ -570,7 +570,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:03:51",
+      "generated_at": "2026-06-12T04:08:48",
       "consumers": [
         "workflow",
         "desktop",
@@ -608,7 +608,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:03:51",
+      "generated_at": "2026-06-12T04:08:48",
       "consumers": [
         "analytics",
         "classification",
@@ -620,7 +620,7 @@
       "href": "compare.json",
       "description": "论文对比视图数据和推荐对比集合",
       "exists": true,
-      "size_bytes": 16848,
+      "size_bytes": 17321,
       "top_level_keys": [
         "controls",
         "count",
@@ -648,11 +648,11 @@
         {
           "key": "controls",
           "type": "object",
-          "count": 8
+          "count": 9
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:03:51",
+      "generated_at": "2026-06-12T04:08:48",
       "consumers": [
         "comparison",
         "curation",
@@ -720,7 +720,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:03:51",
+      "generated_at": "2026-06-12T04:08:48",
       "consumers": [
         "taxonomy",
         "graph",
@@ -789,7 +789,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:03:51",
+      "generated_at": "2026-06-12T04:08:48",
       "consumers": [
         "ops",
         "capacity-planning",
@@ -801,7 +801,7 @@
       "href": "snapshot.json",
       "description": "当前知识库治理快照和发布基线",
       "exists": true,
-      "size_bytes": 11224,
+      "size_bytes": 11551,
       "top_level_keys": [
         "action_groups",
         "active_status_workflow",
@@ -868,7 +868,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:03:51",
+      "generated_at": "2026-06-12T04:08:48",
       "consumers": [
         "release",
         "audit",
@@ -912,7 +912,7 @@
         }
       ],
       "declared_count": 0,
-      "generated_at": "2026-06-12T04:03:51",
+      "generated_at": "2026-06-12T04:08:48",
       "consumers": [
         "intake",
         "dedupe"
@@ -973,7 +973,7 @@
         {
           "key": "controls",
           "type": "object",
-          "count": 8
+          "count": 9
         },
         {
           "key": "pages",
@@ -1012,7 +1012,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:03:51",
+      "generated_at": "2026-06-12T04:08:48",
       "consumers": [
         "release",
         "audit",

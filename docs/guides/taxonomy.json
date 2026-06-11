@@ -113,6 +113,20 @@
       }
     }
   ],
+  "research_line_owners": {
+    "Efficient Attention Kernels": {
+      "owner": "kernel-owner",
+      "team": "systems",
+      "cadence": "monthly",
+      "note": "Review new GPU kernel and serving papers."
+    },
+    "Parallel Decoding with Diffusion Models": {
+      "owner": "decoding-owner",
+      "team": "generation",
+      "cadence": "biweekly",
+      "note": "Track diffusion language model and speculative decoding updates."
+    }
+  },
   "governance_policy": {
     "taxonomy_load": {
       "min_structure_labels": 3,

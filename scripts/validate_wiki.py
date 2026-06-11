@@ -1190,6 +1190,7 @@ def validate_taxonomy_config(report_dir: Path, errors: list[str], warnings: list
         "$schema",
         "label_aliases",
         "shared_views",
+        "research_line_owners",
         "governance_policy",
         "active_status_workflow",
         "status_workflows",
@@ -1259,6 +1260,30 @@ def validate_taxonomy_config(report_dir: Path, errors: list[str], warnings: list
                     errors,
                     allow_none=False,
                 )
+
+    owners = config.get("research_line_owners", {})
+    if owners is not None and owners != {} and not isinstance(owners, dict):
+        errors.append("guides/taxonomy.json: research_line_owners must be an object")
+    elif isinstance(owners, dict):
+        for line, owner_config in owners.items():
+            if not isinstance(line, str) or not line.strip():
+                errors.append("guides/taxonomy.json: research_line_owners keys must be non-empty strings")
+                continue
+            if not isinstance(owner_config, dict):
+                errors.append(f"guides/taxonomy.json: research_line_owners.{line} must be an object")
+                continue
+            unknown_owner_fields = sorted(set(owner_config) - {"owner", "team", "cadence", "note"})
+            if unknown_owner_fields:
+                errors.append(
+                    f"guides/taxonomy.json: research_line_owners.{line} has unknown keys: "
+                    f"{', '.join(unknown_owner_fields)}"
+                )
+            if not owner_config:
+                errors.append(f"guides/taxonomy.json: research_line_owners.{line} must not be empty")
+            for field in ("owner", "team", "cadence", "note"):
+                value = owner_config.get(field)
+                if value is not None and (not isinstance(value, str) or not value.strip()):
+                    errors.append(f"guides/taxonomy.json: research_line_owners.{line}.{field} must be a non-empty string")
 
     shared_views = config.get("shared_views", [])
     if shared_views is not None and not isinstance(shared_views, list):
@@ -1350,6 +1375,8 @@ def validate_taxonomy_schema_contract(report_dir: Path, errors: list[str], warni
         errors.append("guides/taxonomy.schema.json: properties.status_workflows is required")
     if "shared_views" not in (schema.get("properties") or {}):
         errors.append("guides/taxonomy.schema.json: properties.shared_views is required")
+    if "research_line_owners" not in (schema.get("properties") or {}):
+        errors.append("guides/taxonomy.schema.json: properties.research_line_owners is required")
     if "governance_policy" not in (schema.get("properties") or {}):
         errors.append("guides/taxonomy.schema.json: properties.governance_policy is required")
 

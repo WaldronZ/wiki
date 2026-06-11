@@ -172,6 +172,7 @@ STATUS_WORKFLOWS: dict[str, dict[str, list[str]]] = {}
 SHARED_VIEWS: list[dict[str, Any]] = []
 ACTIVE_STATUS_WORKFLOW = ""
 GOVERNANCE_POLICY: dict[str, Any] = json.loads(json.dumps(DEFAULT_GOVERNANCE_POLICY))
+RESEARCH_LINE_OWNERS: dict[str, dict[str, str]] = {}
 QUICK_OPEN_PAPERS: list[dict[str, str]] = []
 
 
@@ -193,7 +194,7 @@ def parse_args() -> argparse.Namespace:
 
 def load_taxonomy_config(report_dir: Path) -> None:
     """Load optional taxonomy normalization config for this report directory."""
-    global LABEL_ALIASES, ROLE_ORDER, STATUS_VALUES, READING_STAGE_VALUES, REVIEW_STAGE_VALUES, STATUS_WORKFLOWS, SHARED_VIEWS, ACTIVE_STATUS_WORKFLOW, GOVERNANCE_POLICY
+    global LABEL_ALIASES, ROLE_ORDER, STATUS_VALUES, READING_STAGE_VALUES, REVIEW_STAGE_VALUES, STATUS_WORKFLOWS, SHARED_VIEWS, ACTIVE_STATUS_WORKFLOW, GOVERNANCE_POLICY, RESEARCH_LINE_OWNERS
 
     LABEL_ALIASES = DEFAULT_LABEL_ALIASES.copy()
     ROLE_ORDER = {role: index for index, role in enumerate(DEFAULT_ROLE_ORDER)}
@@ -204,6 +205,7 @@ def load_taxonomy_config(report_dir: Path) -> None:
     SHARED_VIEWS = []
     ACTIVE_STATUS_WORKFLOW = ""
     GOVERNANCE_POLICY = json.loads(json.dumps(DEFAULT_GOVERNANCE_POLICY))
+    RESEARCH_LINE_OWNERS = {}
 
     config_path = report_dir / "guides" / "taxonomy.json"
     if not config_path.exists():
@@ -249,6 +251,7 @@ def load_taxonomy_config(report_dir: Path) -> None:
     )
     SHARED_VIEWS = configured_shared_views(config)
     GOVERNANCE_POLICY = configured_governance_policy(config)
+    RESEARCH_LINE_OWNERS = configured_research_line_owners(config)
 
 
 def configured_values(config: dict[str, Any], key: str, defaults: list[str]) -> list[str]:
@@ -331,6 +334,29 @@ def configured_governance_policy(config: dict[str, Any]) -> dict[str, Any]:
     return policy
 
 
+def configured_research_line_owners(config: dict[str, Any]) -> dict[str, dict[str, str]]:
+    owners = config.get("research_line_owners") or {}
+    if not isinstance(owners, dict):
+        return {}
+    cleaned: dict[str, dict[str, str]] = {}
+    for line, owner_config in owners.items():
+        line_name = str(line).strip()
+        if not line_name or not isinstance(owner_config, dict):
+            continue
+        item = {
+            key: str(owner_config.get(key) or "").strip()
+            for key in ("owner", "team", "cadence", "note")
+            if str(owner_config.get(key) or "").strip()
+        }
+        if item:
+            cleaned[line_name] = item
+    return cleaned
+
+
+def research_line_owner(line: str) -> dict[str, str]:
+    return RESEARCH_LINE_OWNERS.get(str(line or "").strip(), {})
+
+
 def shared_views_for(page: str) -> list[dict[str, Any]]:
     return [
         {"name": view["name"], "state": view["state"]}
@@ -364,6 +390,7 @@ def control_options() -> dict[str, Any]:
         "line_role": list(ROLE_ORDER.keys()),
         "shared_views": SHARED_VIEWS.copy(),
         "governance_policy": json.loads(json.dumps(GOVERNANCE_POLICY)),
+        "research_line_owners": json.loads(json.dumps(RESEARCH_LINE_OWNERS)),
     }
 
 
@@ -1303,10 +1330,15 @@ def build_stats_report(papers: list[dict[str, Any]]) -> dict[str, Any]:
         grouped[str(paper.get("research_line") or "Unassigned")].append(paper)
     for line, items in sorted(grouped.items(), key=lambda item: (-len(item[1]), item[0].lower())):
         code_items = sum(1 for paper in items if paper.get("has_code"))
+        owner = research_line_owner(line)
         line_items.append(
             {
                 "name": line,
                 "count": len(items),
+                "owner": owner.get("owner", ""),
+                "team": owner.get("team", ""),
+                "cadence": owner.get("cadence", ""),
+                "owner_note": owner.get("note", ""),
                 "roles": scalar_counts(items, "line_role"),
                 "code_coverage": percent(code_items, len(items)),
                 "avg_importance": round(
@@ -9468,6 +9500,9 @@ def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
             1,
         )
         code_count = sum(1 for paper in items if paper.get("has_code"))
+        owner = research_line_owner(line)
+        owner_label = owner.get("owner") or owner.get("team") or "Unassigned"
+        owner_detail = " / ".join(part for part in [owner.get("team", ""), owner.get("cadence", "")] if part)
         line_link = (
             f'<a href="lines/{html.escape(slugify_label(line))}.html">{html.escape(line)}</a>'
             if line != "Unassigned"
@@ -9476,6 +9511,7 @@ def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         line_rows.append(
             "<tr>"
             f"<td>{line_link}</td>"
+            f"<td>{html.escape(owner_label)}<div class=\"meta\">{html.escape(owner_detail)}</div></td>"
             f"<td>{len(items)}</td>"
             f"<td>{html.escape(', '.join(roles))}</td>"
             f"<td>{avg_importance}</td>"
@@ -9484,7 +9520,7 @@ def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         )
 
     line_table = (
-        '<table class="data-table"><thead><tr><th>研究线</th><th>论文</th><th>角色</th><th>平均重要性</th><th>代码覆盖</th></tr></thead>'
+        '<table class="data-table"><thead><tr><th>研究线</th><th>Owner</th><th>论文</th><th>角色</th><th>平均重要性</th><th>代码覆盖</th></tr></thead>'
         f"<tbody>{''.join(line_rows)}</tbody></table>"
         if line_rows
         else '<div class="empty">还没有研究线。</div>'
@@ -10124,6 +10160,7 @@ def render_coverage(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     coverage_rows: list[dict[str, Any]] = []
     for line, items in sorted(grouped.items(), key=lambda item: (-len(item[1]), item[0].lower())):
         total = len(items)
+        owner = research_line_owner(line)
         field_rows = []
         present_slots = 0
         missing_slots = 0
@@ -10159,6 +10196,9 @@ def render_coverage(report_dir: Path, papers: list[dict[str, Any]]) -> None:
                 "line": line,
                 "href": f"lines/{slugify_label(line)}.html" if line != "Unassigned" else page_query_href("library.html", line=line),
                 "count": total,
+                "owner": owner.get("owner", ""),
+                "team": owner.get("team", ""),
+                "cadence": owner.get("cadence", ""),
                 "score": score,
                 "risk": risk,
                 "missing_total": missing_slots,
@@ -10189,8 +10229,9 @@ def render_coverage(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         f'data-score="{row["score"]}" '
         f'data-missing="{row["missing_total"]}" '
         f'data-count="{row["count"]}" '
-        f'data-search="{html.escape(" ".join([row["line"], row["risk"], *[item["label"] for item in row["fields"]]]).lower(), quote=True)}">'
+        f'data-search="{html.escape(" ".join([row["line"], row["risk"], str(row.get("owner") or ""), str(row.get("team") or ""), *[item["label"] for item in row["fields"]]]).lower(), quote=True)}">'
         f'<td><a href="{html.escape(row["href"])}">{html.escape(row["line"])}</a><div class="meta">{row["count"]} 篇</div></td>'
+        f'<td>{html.escape(str(row.get("owner") or row.get("team") or "Unassigned"))}<div class="meta">{html.escape(str(row.get("team") or ""))}</div></td>'
         f'<td><strong>{row["score"]}</strong><div class="balance-meter"><span style="width:{row["score"]}%"></span></div></td>'
         f'<td><span class="flag">{row["risk"]}</span><div class="meta">缺口 {row["missing_total"]}</div></td>'
         + "".join(field_cell(str(row["line"]), field) for field in row["fields"])
@@ -10252,7 +10293,7 @@ def render_coverage(report_dir: Path, papers: list[dict[str, Any]]) -> None:
 <header class="shell">
   <div class="eyebrow">Coverage Map</div>
   <h1>研究线分类覆盖地图</h1>
-  <p class="lead">按研究线检查 domain、track、problem、topic、method 和角色是否覆盖完整。适合在论文数量变多后，把补分类任务分派到具体研究线。</p>
+  <p class="lead">按研究线检查 domain、track、problem、topic、method 和角色是否覆盖完整，并显示每条线的维护 owner。适合在论文数量变多后，把补分类任务分派到具体研究线。</p>
   <div class="stats">
     <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="balance.html">分类均衡</a>
@@ -10283,7 +10324,7 @@ def render_coverage(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       <button id="copyCoverageMarkdown" class="button" type="button">复制治理清单</button>
     </div>
     <div class="table-wrap">
-      <table class="data-table coverage-table"><thead><tr><th>研究线</th><th>覆盖分</th><th>风险</th>{field_headers}</tr></thead><tbody id="coverageRows">{table_rows}</tbody></table>
+      <table class="data-table coverage-table"><thead><tr><th>研究线</th><th>Owner</th><th>覆盖分</th><th>风险</th>{field_headers}</tr></thead><tbody id="coverageRows">{table_rows}</tbody></table>
     </div>
   </section>
 </main>
@@ -10349,12 +10390,15 @@ function downloadCoverageRows() {{
     window.alert("当前筛选结果为空。");
     return;
   }}
-  const header = ["research_line", "papers", "score", "risk", "missing_total", "field", "coverage", "missing", "unique", "top_values"];
+  const header = ["research_line", "owner", "team", "cadence", "papers", "score", "risk", "missing_total", "field", "coverage", "missing", "unique", "top_values"];
   const flat = [];
   rows.forEach(row => {{
     row.fields.forEach(field => {{
       flat.push([
         row.line,
+        row.owner || "",
+        row.team || "",
+        row.cadence || "",
         row.count,
         row.score,
         row.risk,
@@ -10389,6 +10433,7 @@ async function copyCoverageQueue() {{
   rows.forEach(row => {{
     const weak = row.fields.filter(field => field.missing > 0 || field.coverage < 100);
     lines.push(`- [ ] ${{row.risk}} / score ${{row.score}} / ${{row.line}}`);
+    if (row.owner || row.team) lines.push(`  - Owner: ${{row.owner || "Unassigned"}}${{row.team ? " / " + row.team : ""}}`);
     lines.push(`  - Papers: ${{row.count}}, missing slots: ${{row.missing_total}}`);
     weak.forEach(field => lines.push(`  - ${{field.label}}: ${{field.coverage}}%, missing ${{field.missing}}, unique ${{field.unique}}`));
   }});

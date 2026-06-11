@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T04:03:51",
+  "generated_at": "2026-06-12T04:08:48",
   "count": 5,
   "quality_score": 92.0,
   "controls": {
@@ -126,6 +126,20 @@
         "high_score_below": 70,
         "medium_score_below": 90,
         "missing_high_min": 2
+      }
+    },
+    "research_line_owners": {
+      "Efficient Attention Kernels": {
+        "owner": "kernel-owner",
+        "team": "systems",
+        "cadence": "monthly",
+        "note": "Review new GPU kernel and serving papers."
+      },
+      "Parallel Decoding with Diffusion Models": {
+        "owner": "decoding-owner",
+        "team": "generation",
+        "cadence": "biweekly",
+        "note": "Track diffusion language model and speculative decoding updates."
       }
     }
   },
@@ -544,6 +558,10 @@
     {
       "name": "Parallel Decoding with Diffusion Models",
       "count": 3,
+      "owner": "decoding-owner",
+      "team": "generation",
+      "cadence": "biweekly",
+      "owner_note": "Track diffusion language model and speculative decoding updates.",
       "roles": {
         "followup": 1,
         "foundation": 1,
@@ -555,6 +573,10 @@
     {
       "name": "Efficient Attention Kernels",
       "count": 2,
+      "owner": "kernel-owner",
+      "team": "systems",
+      "cadence": "monthly",
+      "owner_note": "Review new GPU kernel and serving papers.",
       "roles": {
         "foundation": 1,
         "system": 1
