@@ -290,6 +290,8 @@ python3 scripts/apply_review_plan.py docs --write
 python3 scripts/build_wiki.py docs
 ```
 
+也可以在 `docs/review.html` 直接下载 `review_plan_patch.csv`，只包含当前缺少 `next_review` 的论文建议日期；下载后用 `scripts/apply_library_metadata.py` 先 dry-run，再 `--write` 写回。
+
 预览并写入标签别名建议：
 
 ```bash

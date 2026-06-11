@@ -3787,6 +3787,12 @@ def render_review(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   </section>
   <section>
     <h2 class="section-title">复习条目</h2>
+    <div class="results-bar">
+      <strong>建议写回：{len(plan["queues"].get("needs_plan", []))} 篇需建计划</strong>
+      <div class="results-actions">
+        <button id="downloadReviewPatch" class="button" type="button">下载建议 CSV</button>
+      </div>
+    </div>
     <div class="table-wrap">
       <table class="library-table">
         <thead><tr><th>论文</th><th>研究线</th><th>状态</th><th>下次复习</th><th>评分</th><th>优先级</th></tr></thead>
@@ -3795,8 +3801,43 @@ def render_review(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     </div>
   </section>
 </main>
+<script>
+const reviewItems = window.PAPER_WIKI.review_items || [];
+const downloadReviewPatch = document.querySelector("#downloadReviewPatch");
+
+function reviewCsvCell(value) {{
+  const text = String(value ?? "");
+  return (text.includes(",") || text.includes('"') || text.includes("\\n"))
+    ? `"${{text.replaceAll('"', '""')}}"`
+    : text;
+}}
+
+function downloadReviewCsv(filename, rows) {{
+  const csv = rows.map(row => row.map(reviewCsvCell).join(",")).join("\\n") + "\\n";
+  const blob = new Blob([csv], {{ type: "text/csv;charset=utf-8" }});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}}
+
+downloadReviewPatch.addEventListener("click", () => {{
+  const rows = reviewItems
+    .filter(item => item.state === "needs_plan" && item.suggested_next_review)
+    .map(item => [item.slug, item.suggested_next_review, item.review_stage || "fresh"]);
+  if (!rows.length) {{
+    window.alert("当前没有需要写回的建议复习计划。");
+    return;
+  }}
+  downloadReviewCsv("review_plan_patch.csv", [["slug", "next_review", "review_stage"], ...rows]);
+}});
+</script>
 """
-    (report_dir / "review.html").write_text(page_shell("复习计划", body), encoding="utf-8")
+    (report_dir / "review.html").write_text(page_shell("复习计划", body, {"review_items": items}), encoding="utf-8")
 
 
 def render_quality_issue_row(issue: dict[str, Any]) -> str:
