@@ -8,7 +8,8 @@
     "taxonomy_clean": true,
     "no_duplicate_reports": true,
     "has_review_plan": false,
-    "has_generated_pages": true
+    "has_generated_pages": true,
+    "artifacts_present": true
   },
   "quality_score": 92.0,
   "coverage": {
@@ -512,6 +513,285 @@
     {
       "href": "manifest.json",
       "description": "发布摘要和页面入口清单"
+    }
+  ],
+  "contract_files": [
+    {
+      "href": "guides/metadata.schema.json",
+      "description": "报告 frontmatter 字段契约"
+    },
+    {
+      "href": "guides/taxonomy.json",
+      "description": "分类别名、状态工作流和共享视图配置"
+    }
+  ],
+  "artifact_inventory": [
+    {
+      "href": "index.html",
+      "kind": "page",
+      "description": "卡片检索、筛选、研究线概览",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 236109,
+      "sha256": "096fde6b07eb5d87213560a058f61c62b0fe0583034a960ff5b89ea02c1b07e4",
+      "hash_mode": "normalized"
+    },
+    {
+      "href": "library.html",
+      "kind": "page",
+      "description": "密集筛选、列管理、批量更新",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 88294,
+      "sha256": "b2096567ae664cb7590c2b99541abeef16b23f6684c3dca6305024d998eec418",
+      "hash_mode": "raw"
+    },
+    {
+      "href": "dashboard.html",
+      "kind": "page",
+      "description": "覆盖率、队列和运营指标",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 28038,
+      "sha256": "1f7f330100d41e2f3f797803161742458ca5b083fd1187f0762eb338bd9825cc",
+      "hash_mode": "normalized"
+    },
+    {
+      "href": "release.html",
+      "kind": "page",
+      "description": "页面入口、数据文件、质量状态",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 44546,
+      "sha256": "c3ff21ab5804e680af3592ed81e8b3c0616ab8d02a8e426c496bb84c978f7efd",
+      "hash_mode": "raw"
+    },
+    {
+      "href": "collections.html",
+      "kind": "page",
+      "description": "共享视图、智能集合、研究线入口",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 26749,
+      "sha256": "d60e5197af95cb7acd59ef7643221a6bf4a244e9a895af74e256b7b5da5bce2e",
+      "hash_mode": "normalized"
+    },
+    {
+      "href": "facets.html",
+      "kind": "page",
+      "description": "标签规模、长尾和过载分类",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 78508,
+      "sha256": "fd09881e22575b8a98d02436e11ee53a356ec8594a9ac88e47fc8534c1b11057",
+      "hash_mode": "raw"
+    },
+    {
+      "href": "related.html",
+      "kind": "page",
+      "description": "标签共现、相似论文、孤岛论文",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 39994,
+      "sha256": "2f1c7ef897e86d95ed567066018c34dd5d16a3be046bd0c663d68a3afd80e51c",
+      "hash_mode": "raw"
+    },
+    {
+      "href": "gaps.html",
+      "kind": "page",
+      "description": "下一步行动和研究线缺口",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 28182,
+      "sha256": "d17316ca1e1a84211c6f996c5dc99049e577be97e31ad250bd96ba51c4baed63",
+      "hash_mode": "raw"
+    },
+    {
+      "href": "board.html",
+      "kind": "page",
+      "description": "拖拽式状态流和 CSV patch",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 41412,
+      "sha256": "801e3cbf47ebaef602f41a82fae44610777d461df0b2842cc1e3086eba3eb680",
+      "hash_mode": "raw"
+    },
+    {
+      "href": "inbox.html",
+      "kind": "page",
+      "description": "候选论文队列和去重提示",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 24337,
+      "sha256": "6d7d88bd5f476e69d7f977e165295d1c865dc08f6044a1a58900b4b658ad1a38",
+      "hash_mode": "raw"
+    },
+    {
+      "href": "review.html",
+      "kind": "page",
+      "description": "待复习、需建计划、建议日期",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 28540,
+      "sha256": "7249880e36808a17c3f8ae8493a619b4888b0587f09626611dc7181fcf2a4832",
+      "hash_mode": "raw"
+    },
+    {
+      "href": "quality.html",
+      "kind": "page",
+      "description": "弱元数据、别名建议、taxonomy drift",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 31692,
+      "sha256": "302791a6f956c5104ba9dd99ebc8464eea0a61dd2110ef560166579bb1081c3d",
+      "hash_mode": "normalized"
+    },
+    {
+      "href": "taxonomy.html",
+      "kind": "page",
+      "description": "分类矩阵、状态工作流、治理队列",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 52593,
+      "sha256": "809d76e6f511c919fa0c7a294a4e201e8e1a82f3ca16237e39121e91106c5f7d",
+      "hash_mode": "raw"
+    },
+    {
+      "href": "timeline.html",
+      "kind": "page",
+      "description": "按年份和研究线浏览论文演进",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 39872,
+      "sha256": "f83a7ed8ba910998347f61318e06bd4b8d2c5ebf7965d41e3357199e0cbbd37b",
+      "hash_mode": "raw"
+    },
+    {
+      "href": "matrix.html",
+      "kind": "page",
+      "description": "research line x year 覆盖",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 35134,
+      "sha256": "fed8cd668d67a367f1038f72fabab05adbdc702a1943ee299e901b5b594e589a",
+      "hash_mode": "raw"
+    },
+    {
+      "href": "lines/index.html",
+      "kind": "page",
+      "description": "按研究脉络组织论文",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 21908,
+      "sha256": "5547b165c70a44a61055e60f409bae4791b18ccdf8370569257a7b1fa9a17585",
+      "hash_mode": "raw"
+    },
+    {
+      "href": "tags.html",
+      "kind": "page",
+      "description": "按标签聚合论文",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 37125,
+      "sha256": "5c46d24cd08d4f5a7fb9bb9c877366488d056b5f9fdf5a069dddb41e4f9f9fff",
+      "hash_mode": "raw"
+    },
+    {
+      "href": "papers.json",
+      "kind": "data",
+      "description": "论文索引、taxonomy 聚合、前端 controls",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 16997,
+      "sha256": "332390c223496cc5f05444e0f6285601f1436764738eae990417643c1b027a67",
+      "hash_mode": "normalized"
+    },
+    {
+      "href": "search_index.json",
+      "kind": "data",
+      "description": "正文全文检索索引",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 171390,
+      "sha256": "579be3e758459426baee7f1b525eba92ace91310fe5b69cce13cd0064b9f532e",
+      "hash_mode": "normalized"
+    },
+    {
+      "href": "stats.json",
+      "kind": "data",
+      "description": "运营统计、覆盖率和队列规模",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 11024,
+      "sha256": "00a9d0d5303867eaa7aaf3297cee5a6b56feaa2dbad9b9d2ba58b80ecee3f6a8",
+      "hash_mode": "normalized"
+    },
+    {
+      "href": "quality.json",
+      "kind": "data",
+      "description": "质量问题、taxonomy load、taxonomy drift、标签别名建议",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 4455,
+      "sha256": "70a7c0240157f205929e94cad757a105ecba4d4fd90550559723cfb9325cafe4",
+      "hash_mode": "normalized"
+    },
+    {
+      "href": "review.json",
+      "kind": "data",
+      "description": "复习计划和建议 next_review",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 3602,
+      "sha256": "628556f7388d1db6d9fd3119773ef05848b27744dcd1545e58cd7e1e1a335bb4",
+      "hash_mode": "normalized"
+    },
+    {
+      "href": "taxonomy_actions.json",
+      "kind": "data",
+      "description": "分类长尾、过载和空候选治理任务",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 23791,
+      "sha256": "f5a72a7e85d026a89f335cfe05d9bf58d7d76a232148f8dcc59bf3f5d5e1d4e2",
+      "hash_mode": "normalized"
+    },
+    {
+      "href": "inbox.json",
+      "kind": "data",
+      "description": "候选论文队列和重复项",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 130,
+      "sha256": "16088a733262361546376c706fdad3a3676e45a635dcee5fc3d953ee66e1bf50",
+      "hash_mode": "normalized"
+    },
+    {
+      "href": "manifest.json",
+      "kind": "data",
+      "description": "发布摘要和页面入口清单",
+      "exists": true,
+      "status": "generated_after_inventory"
+    },
+    {
+      "href": "guides/metadata.schema.json",
+      "kind": "contract",
+      "description": "报告 frontmatter 字段契约",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 1673,
+      "sha256": "246d8f345ead3ced56403a313d89bae2042820432274758166e557c39c04716b",
+      "hash_mode": "raw"
+    },
+    {
+      "href": "guides/taxonomy.json",
+      "kind": "contract",
+      "description": "分类别名、状态工作流和共享视图配置",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 2300,
+      "sha256": "fbe4a42b4c3513c510434ee70ede3e4649a360e5937fa5049288fbc866599154",
+      "hash_mode": "raw"
     }
   ],
   "command_recipes": [

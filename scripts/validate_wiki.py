@@ -577,7 +577,18 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
 
     if manifest_data.get("count") != len(report_slugs):
         errors.append(f"manifest.json count {manifest_data.get('count')} != markdown report count {len(report_slugs)}")
-    required_manifest = {"publish_ready", "publish_checks", "quality_score", "coverage", "queue_sizes", "pages", "data_files", "commands"}
+    required_manifest = {
+        "publish_ready",
+        "publish_checks",
+        "quality_score",
+        "coverage",
+        "queue_sizes",
+        "pages",
+        "data_files",
+        "contract_files",
+        "artifact_inventory",
+        "commands",
+    }
     missing_manifest = sorted(required_manifest - set(manifest_data))
     if missing_manifest:
         errors.append(f"manifest.json missing keys: {', '.join(missing_manifest)}")
@@ -591,6 +602,42 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     missing_manifest_files = sorted(expected_data_files - manifest_data_files)
     if missing_manifest_files:
         errors.append(f"manifest.json data_files missing entries: {', '.join(missing_manifest_files)}")
+    manifest_contract_files = {str(item.get("href") or "") for item in manifest_data.get("contract_files", []) if isinstance(item, dict)}
+    expected_contract_files = {"guides/metadata.schema.json", "guides/taxonomy.json"}
+    missing_contract_files = sorted(expected_contract_files - manifest_contract_files)
+    if missing_contract_files:
+        errors.append(f"manifest.json contract_files missing entries: {', '.join(missing_contract_files)}")
+    artifact_inventory = manifest_data.get("artifact_inventory")
+    if not isinstance(artifact_inventory, list):
+        errors.append("manifest.json artifact_inventory must be a list")
+    else:
+        artifact_hrefs = set()
+        for index, artifact in enumerate(artifact_inventory):
+            if not isinstance(artifact, dict):
+                errors.append(f"manifest.json artifact_inventory[{index}] must be an object")
+                continue
+            href = str(artifact.get("href") or "")
+            artifact_hrefs.add(href)
+            if not href:
+                errors.append(f"manifest.json artifact_inventory[{index}] missing href")
+            if artifact.get("kind") not in {"page", "data", "contract"}:
+                errors.append(f"manifest.json artifact_inventory[{index}] has invalid kind")
+            status = artifact.get("status")
+            if status not in {"ok", "missing", "generated_after_inventory"}:
+                errors.append(f"manifest.json artifact_inventory[{index}] has invalid status")
+            if artifact.get("exists") is not True and status != "missing":
+                errors.append(f"manifest.json artifact_inventory[{index}] exists must be true unless missing")
+            if status == "ok":
+                if not isinstance(artifact.get("size_bytes"), int) or artifact.get("size_bytes") <= 0:
+                    errors.append(f"manifest.json artifact_inventory[{index}] size_bytes must be a positive integer")
+                if not re.fullmatch(r"[0-9a-f]{64}", str(artifact.get("sha256") or "")):
+                    errors.append(f"manifest.json artifact_inventory[{index}] sha256 must be 64 lowercase hex characters")
+                if artifact.get("hash_mode") not in {"raw", "normalized"}:
+                    errors.append(f"manifest.json artifact_inventory[{index}] hash_mode must be raw or normalized")
+        expected_artifacts = manifest_pages | manifest_data_files | manifest_contract_files
+        missing_artifacts = sorted(expected_artifacts - artifact_hrefs)
+        if missing_artifacts:
+            errors.append(f"manifest.json artifact_inventory missing entries: {', '.join(missing_artifacts)}")
     required_inbox = {"count", "statuses", "priorities", "duplicates", "items"}
     missing_inbox = sorted(required_inbox - set(inbox_data))
     if missing_inbox:

@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import csv
 import datetime as dt
+import hashlib
 import html
 import itertools
 import json
@@ -1309,6 +1310,67 @@ def data_files_manifest() -> list[dict[str, str]]:
     ]
 
 
+def contract_files_manifest() -> list[dict[str, str]]:
+    return [
+        {"href": "guides/metadata.schema.json", "description": "报告 frontmatter 字段契约"},
+        {"href": "guides/taxonomy.json", "description": "分类别名、状态工作流和共享视图配置"},
+    ]
+
+
+def is_generated_artifact_href(href: str) -> bool:
+    return href in GENERATED_FIXED_PATHS or (href.startswith("lines/") and href.endswith(".html"))
+
+
+def canonical_artifact_bytes(report_dir: Path, href: str, path: Path, data: bytes) -> bytes:
+    if not is_generated_artifact_href(href):
+        return data
+    return normalize_generated_content(path, data).encode("utf-8")
+
+
+def artifact_record(report_dir: Path, href: str, kind: str, description: str, pending: bool = False) -> dict[str, Any]:
+    path = report_dir / href
+    record: dict[str, Any] = {
+        "href": href,
+        "kind": kind,
+        "description": description,
+        "exists": True if pending else path.exists(),
+    }
+    if pending:
+        record["status"] = "generated_after_inventory"
+        return record
+    if not path.exists() or not path.is_file():
+        record["status"] = "missing"
+        return record
+    data = path.read_bytes()
+    hash_source = canonical_artifact_bytes(report_dir, href, path, data)
+    record.update(
+        {
+            "status": "ok",
+            "size_bytes": len(data),
+            "sha256": hashlib.sha256(hash_source).hexdigest(),
+            "hash_mode": "normalized" if hash_source != data else "raw",
+        }
+    )
+    return record
+
+
+def artifact_inventory_manifest(report_dir: Path, pages: list[dict[str, str]], data_files: list[dict[str, str]], finalized: bool = False) -> list[dict[str, Any]]:
+    pending = {"manifest.json"}
+    if not finalized:
+        pending.add("release.html")
+    artifacts: list[dict[str, Any]] = []
+    for page in pages:
+        href = page["href"]
+        artifacts.append(artifact_record(report_dir, href, "page", page["description"], href in pending))
+    for file in data_files:
+        href = file["href"]
+        artifacts.append(artifact_record(report_dir, href, "data", file["description"], href in pending))
+    for file in contract_files_manifest():
+        href = file["href"]
+        artifacts.append(artifact_record(report_dir, href, "contract", file["description"], href in pending))
+    return artifacts
+
+
 def command_recipes_manifest() -> list[dict[str, Any]]:
     return [
         {
@@ -1446,22 +1508,26 @@ def governance_playbooks_manifest() -> list[dict[str, Any]]:
     ]
 
 
-def build_manifest(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> dict[str, Any]:
+def build_manifest(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]], finalized: bool = False) -> dict[str, Any]:
     quality = build_quality_report(papers)
     review = build_review_plan(papers)
     stats = build_stats_report(papers)
     pages = wiki_pages_manifest()
     data_files = data_files_manifest()
+    contract_files = contract_files_manifest()
+    artifacts = artifact_inventory_manifest(report_dir, pages, data_files, finalized=finalized)
     command_recipes = command_recipes_manifest()
     governance_playbooks = governance_playbooks_manifest()
     quality_queues = {name: len(slugs) for name, slugs in quality["queues"].items()}
     review_queues = {name: len(slugs) for name, slugs in review["queues"].items()}
+    missing_artifacts = [item for item in artifacts if item["status"] == "missing"]
     publish_checks = {
         "metadata_complete": quality_queues.get("missing_required_metadata", 0) == 0,
         "taxonomy_clean": quality_queues.get("taxonomy_drift", 0) == 0 and not quality["label_alias_suggestions"],
         "no_duplicate_reports": quality_queues.get("duplicate_reports", 0) == 0,
         "has_review_plan": review_queues.get("needs_plan", 0) == 0,
         "has_generated_pages": all((report_dir / page["href"]).exists() for page in pages if page["href"] != "release.html"),
+        "artifacts_present": not missing_artifacts,
     }
     return {
         "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
@@ -1484,6 +1550,8 @@ def build_manifest(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
         "controls": control_options(),
         "pages": pages,
         "data_files": data_files,
+        "contract_files": contract_files,
+        "artifact_inventory": artifacts,
         "command_recipes": command_recipes,
         "governance_playbooks": governance_playbooks,
         "commands": [recipe["command"] for recipe in command_recipes],
@@ -1491,7 +1559,7 @@ def build_manifest(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
 
 
 def write_manifest_json(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
-    payload = build_manifest(report_dir, papers, inbox_items)
+    payload = build_manifest(report_dir, papers, inbox_items, finalized=True)
     (report_dir / "manifest.json").write_text(
         json.dumps(payload, ensure_ascii=False, indent=2),
         encoding="utf-8",
@@ -4879,6 +4947,23 @@ def render_release(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
         "</tr>"
         for file in manifest["data_files"]
     )
+    contract_rows = "".join(
+        "<tr>"
+        f'<td><a href="{html.escape(file["href"])}">{html.escape(file["href"])}</a></td>'
+        f"<td>{html.escape(file['description'])}</td>"
+        "</tr>"
+        for file in manifest["contract_files"]
+    )
+    artifact_rows = "".join(
+        "<tr>"
+        f'<td><a href="{html.escape(str(item["href"]))}">{html.escape(str(item["href"]))}</a><div class="meta">{html.escape(str(item["description"]))}</div></td>'
+        f"<td>{html.escape(str(item['kind']))}</td>"
+        f"<td><span class=\"flag\">{html.escape(str(item['status']))}</span></td>"
+        f"<td>{html.escape(str(item.get('size_bytes') or '-'))}</td>"
+        f"<td><code>{html.escape(str(item.get('sha256') or '-'))}</code></td>"
+        "</tr>"
+        for item in manifest["artifact_inventory"]
+    )
     queue_rows = "".join(
         "<tr>"
         f"<td>{html.escape(group)}</td>"
@@ -4955,6 +5040,14 @@ def render_release(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
   <section>
     <h2 class="section-title">机器可读数据</h2>
     <div class="table-wrap"><table class="data-table"><thead><tr><th>文件</th><th>用途</th></tr></thead><tbody>{data_rows}</tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">数据契约</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>文件</th><th>用途</th></tr></thead><tbody>{contract_rows}</tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">Artifact Inventory</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>产物</th><th>类型</th><th>状态</th><th>Bytes</th><th>SHA-256</th></tr></thead><tbody>{artifact_rows}</tbody></table></div>
   </section>
   <section>
     <h2 class="section-title">队列规模</h2>
