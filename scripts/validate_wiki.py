@@ -1540,7 +1540,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         if not isinstance(item, dict):
             errors.append(f"registry.json labels[{index}] must be an object")
             continue
-        for key in ("id", "label", "fields", "field_names", "severity", "signals", "slugs", "recommended_action"):
+        for key in ("id", "label", "fields", "field_names", "severity", "signals", "slugs", "definitions", "definition_status", "description", "recommended_action"):
             if key not in item:
                 errors.append(f"registry.json labels[{index}] missing {key}")
         if item.get("severity") not in valid_registry_severities:
@@ -1549,6 +1549,8 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
             errors.append(f"registry.json labels[{index}].fields must be a list")
         if not isinstance(item.get("field_names"), list):
             errors.append(f"registry.json labels[{index}].field_names must be a list")
+        if not isinstance(item.get("definitions"), list):
+            errors.append(f"registry.json labels[{index}].definitions must be a list")
         unknown_slugs = sorted(str(slug) for slug in item.get("slugs", []) if str(slug) not in report_slugs)
         if unknown_slugs:
             errors.append(f"registry.json labels[{index}] references unknown slugs: {unknown_slugs}")
@@ -1685,6 +1687,7 @@ def validate_taxonomy_config(report_dir: Path, errors: list[str], warnings: list
         "label_aliases",
         "shared_views",
         "research_line_owners",
+        "label_definitions",
         "governance_policy",
         "active_status_workflow",
         "status_workflows",
@@ -1779,6 +1782,59 @@ def validate_taxonomy_config(report_dir: Path, errors: list[str], warnings: list
                 if value is not None and (not isinstance(value, str) or not value.strip()):
                     errors.append(f"guides/taxonomy.json: research_line_owners.{line}.{field} must be a non-empty string")
 
+    label_definitions = config.get("label_definitions", {})
+    allowed_definition_fields = {
+        "domains",
+        "tracks",
+        "problems",
+        "topics",
+        "methods",
+        "research_line",
+        "line_role",
+        "status",
+        "reading_stage",
+        "review_stage",
+    }
+    if label_definitions is not None and label_definitions != {} and not isinstance(label_definitions, dict):
+        errors.append("guides/taxonomy.json: label_definitions must be an object")
+    elif isinstance(label_definitions, dict):
+        unknown_definition_fields = sorted(set(label_definitions) - allowed_definition_fields)
+        if unknown_definition_fields:
+            errors.append(
+                "guides/taxonomy.json: label_definitions has unknown fields: "
+                f"{', '.join(unknown_definition_fields)}"
+            )
+        for field, values in label_definitions.items():
+            if field not in allowed_definition_fields:
+                continue
+            if not isinstance(values, dict):
+                errors.append(f"guides/taxonomy.json: label_definitions.{field} must be an object")
+                continue
+            for label, definition in values.items():
+                if not isinstance(label, str) or not label.strip():
+                    errors.append(f"guides/taxonomy.json: label_definitions.{field} keys must be non-empty strings")
+                    continue
+                if not isinstance(definition, dict):
+                    errors.append(f"guides/taxonomy.json: label_definitions.{field}.{label} must be an object")
+                    continue
+                unknown_keys = sorted(set(definition) - {"description", "owner", "status", "note"})
+                if unknown_keys:
+                    errors.append(
+                        f"guides/taxonomy.json: label_definitions.{field}.{label} has unknown keys: "
+                        f"{', '.join(unknown_keys)}"
+                    )
+                if not definition:
+                    errors.append(f"guides/taxonomy.json: label_definitions.{field}.{label} must not be empty")
+                status = definition.get("status")
+                if status is not None and status not in {"active", "watch", "deprecated"}:
+                    errors.append(
+                        f"guides/taxonomy.json: label_definitions.{field}.{label}.status must be one of active, watch, deprecated"
+                    )
+                for key in ("description", "owner", "note"):
+                    value = definition.get(key)
+                    if value is not None and (not isinstance(value, str) or not value.strip()):
+                        errors.append(f"guides/taxonomy.json: label_definitions.{field}.{label}.{key} must be a non-empty string")
+
     shared_views = config.get("shared_views", [])
     if shared_views is not None and not isinstance(shared_views, list):
         errors.append("guides/taxonomy.json: shared_views must be a list")
@@ -1871,6 +1927,8 @@ def validate_taxonomy_schema_contract(report_dir: Path, errors: list[str], warni
         errors.append("guides/taxonomy.schema.json: properties.shared_views is required")
     if "research_line_owners" not in (schema.get("properties") or {}):
         errors.append("guides/taxonomy.schema.json: properties.research_line_owners is required")
+    if "label_definitions" not in (schema.get("properties") or {}):
+        errors.append("guides/taxonomy.schema.json: properties.label_definitions is required")
     if "governance_policy" not in (schema.get("properties") or {}):
         errors.append("guides/taxonomy.schema.json: properties.governance_policy is required")
 

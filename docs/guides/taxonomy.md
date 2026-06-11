@@ -97,6 +97,33 @@ has_code: true
 
 `docs/quality.json` 会输出 `label_alias_suggestions`，`docs/quality.html` 和 `docs/taxonomy.html` 会展示“标签归一化建议”。这些建议只根据大小写、复数、连字符、斜杠等规范化后相同的标签生成，适合发现 `tiling` / `Tiling`、`KV-cache` / `KV Cache` 这类漂移；最终是否合并仍由你把建议片段写入 `label_aliases` 来确认。
 
+## 标签定义
+
+`label_definitions` 用来把标签变成可维护的受控词表。它按字段分组，每个标签可以写 `description`、`owner`、`status` 和 `note`。构建后这些定义会进入 `docs/registry.html` 和 `docs/registry.json`，供页面、导出脚本、桌面软件或 PR 审查读取。
+
+```json
+{
+  "label_definitions": {
+    "domains": {
+      "LLM Systems": {
+        "description": "Systems-oriented papers about serving, inference, kernels, memory, and scalability for language models.",
+        "owner": "systems",
+        "status": "active"
+      }
+    },
+    "topics": {
+      "Speculative Decoding": {
+        "description": "Draft-and-verify decoding methods that preserve target-model output distribution while improving latency.",
+        "owner": "decoding-owner",
+        "status": "active"
+      }
+    }
+  }
+}
+```
+
+支持的定义字段和 report frontmatter 一致：`domains`、`tracks`、`problems`、`topics`、`methods`、`research_line`、`line_role`、`status`、`reading_stage`、`review_stage`。`status` 可用 `active`、`watch`、`deprecated`；如果一个 deprecated 标签仍在报告中使用，registry 会把它标成高优先级治理项。
+
 `docs/facets.html` 是日常分类工作台：它会按字段展示每个标签命中的论文数、长尾标签、过载标签和动态状态候选值。论文数量变多后，优先从这里判断哪些标签需要合并、哪些大桶需要拆成更细的 track / problem。页面可以按字段、优先级和动作类型筛选治理项，并把当前筛选复制成 Markdown checklist 或对应的 `scripts/export_taxonomy_actions.py --format project` 命令，方便分派到 issue、项目看板或桌面软件。对应的机器可读任务会写入 `docs/taxonomy_actions.json`；`scripts/export_taxonomy_actions.py --format patch` 还能把合并候选导出成可人工确认目标值的写回模板。决定把某个标签或状态重命名之前，可以到 `docs/taxonomy.html` 的「分类变更预览」选择字段、旧值和新值，先查看受影响论文，再下载 `taxonomy_change_patch.csv`，用 `scripts/apply_library_metadata.py` dry-run 或写回。日常给一批论文补 `topics` / `methods` 时，`docs/library.html` 的批量分类字段支持替换、追加、移除三种写入方式；导出的 CSV 会用 `_list_mode` 记录模式，命令行也可以显式传 `--list-mode append` 或 `--list-mode remove`。
 
 `role_order` 会影响研究线详情页和首页研究线概览中的论文排序。`status_values`、`reading_stage_values` 和 `review_stage_values` 会进入首页和论文库表格的筛选项；其中 `status_values` 还会成为 `docs/board.html` 的状态看板列。即使某个状态当前还没有论文使用，也可以先作为可选管理状态出现。构建后的 `papers.json` 和 `stats.json` 会把这些选项输出到 `controls` 字段，供后续前端、脚本或桌面软件动态读取。新增论文时，`docs/routing.html` 会把现有研究线、标签和相似论文压缩成 `routing.json` 画像，用于给标题/摘要生成初始分类建议。

@@ -129,6 +129,23 @@
         "minProperties": 1
       }
     },
+    "label_definitions": {
+      "type": "object",
+      "description": "Optional controlled-vocabulary definitions for taxonomy labels, grouped by metadata field.",
+      "additionalProperties": false,
+      "properties": {
+        "domains": {"$ref": "#/$defs/label_definition_map"},
+        "tracks": {"$ref": "#/$defs/label_definition_map"},
+        "problems": {"$ref": "#/$defs/label_definition_map"},
+        "topics": {"$ref": "#/$defs/label_definition_map"},
+        "methods": {"$ref": "#/$defs/label_definition_map"},
+        "research_line": {"$ref": "#/$defs/label_definition_map"},
+        "line_role": {"$ref": "#/$defs/label_definition_map"},
+        "status": {"$ref": "#/$defs/label_definition_map"},
+        "reading_stage": {"$ref": "#/$defs/label_definition_map"},
+        "review_stage": {"$ref": "#/$defs/label_definition_map"}
+      }
+    },
     "governance_policy": {
       "type": "object",
       "description": "Configurable governance thresholds for quality, taxonomy actions, balance, and coverage reports.",
@@ -189,6 +206,24 @@
     "filter_value": {
       "type": ["string", "number", "boolean"],
       "description": "URL query state value; objects and arrays are not allowed."
+    },
+    "label_definition_map": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "minLength": 1
+      },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "description": {"type": "string", "minLength": 1},
+          "owner": {"type": "string", "minLength": 1},
+          "status": {"type": "string", "enum": ["active", "watch", "deprecated"]},
+          "note": {"type": "string", "minLength": 1}
+        },
+        "minProperties": 1
+      }
     }
   }
 }

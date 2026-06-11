@@ -18,6 +18,9 @@ FIELDS = [
     "label",
     "severity",
     "fields",
+    "definition_status",
+    "owner_name",
+    "description",
     "total_count",
     "paper_count",
     "configured",
@@ -39,6 +42,8 @@ PROJECT_FIELDS = [
     "severity",
     "taxonomy_label",
     "fields",
+    "definition_status",
+    "owner_name",
     "signals",
     "slugs",
     "href",
@@ -213,8 +218,14 @@ def render_markdown(payload: dict[str, Any], labels: list[dict[str, Any]]) -> st
         fields = join_value(item.get("field_names"))
         signals = join_value(item.get("signals"))
         slugs = join_value(item.get("slugs"))
+        description = str(item.get("description") or "")
+        owner = str(item.get("owner_name") or "")
         lines.append(f"- [ ] {display} ({item.get('total_count', 0)} uses, {item.get('paper_count', 0)} papers)")
         lines.append(f"  - Fields: {fields or 'alias'}")
+        if description:
+            lines.append(f"  - Definition: {description}")
+        if owner:
+            lines.append(f"  - Owner: {owner}")
         if signals:
             lines.append(f"  - Signals: {signals}")
         lines.append(f"  - Recommendation: {item.get('recommended_action', '')}")
@@ -235,6 +246,9 @@ def render_csv(labels: list[dict[str, Any]]) -> str:
             "label": join_value(item.get("label")),
             "severity": join_value(item.get("severity")),
             "fields": join_value(item.get("field_names")),
+            "definition_status": join_value(item.get("definition_status")),
+            "owner_name": join_value(item.get("owner_name")),
+            "description": join_value(item.get("description")),
             "total_count": join_value(item.get("total_count")),
             "paper_count": join_value(item.get("paper_count")),
             "configured": "yes" if item.get("configured") else "no",
@@ -262,6 +276,9 @@ def task_body(item: dict[str, Any]) -> str:
     aliases = join_value(item.get("aliases"))
     if aliases:
         parts.append(f"Aliases: {aliases}")
+    description = str(item.get("description") or "")
+    if description:
+        parts.append(f"Definition: {description}")
     signals = join_value(item.get("signals"))
     if signals:
         parts.append(f"Signals: {signals}")
@@ -293,6 +310,8 @@ def render_project_csv(labels: list[dict[str, Any]], args: argparse.Namespace) -
             "severity": severity,
             "taxonomy_label": label,
             "fields": field_names,
+            "definition_status": join_value(item.get("definition_status")),
+            "owner_name": join_value(item.get("owner_name")),
             "signals": signals,
             "slugs": join_value(item.get("slugs")),
             "href": join_value(item.get("query_href")),

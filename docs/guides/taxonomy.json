@@ -127,6 +127,56 @@
       "note": "Track diffusion language model and speculative decoding updates."
     }
   },
+  "label_definitions": {
+    "domains": {
+      "LLM Systems": {
+        "description": "Systems-oriented papers about serving, inference, kernels, memory, and scalability for language models.",
+        "owner": "systems",
+        "status": "active"
+      }
+    },
+    "research_line": {
+      "Efficient Attention Kernels": {
+        "description": "Papers about exact or approximate attention kernels, GPU execution, and serving-time attention engines.",
+        "owner": "kernel-owner",
+        "status": "active"
+      },
+      "Parallel Decoding with Diffusion Models": {
+        "description": "Papers that use diffusion-style or speculative mechanisms for parallel token generation.",
+        "owner": "decoding-owner",
+        "status": "active"
+      }
+    },
+    "topics": {
+      "Attention Kernels": {
+        "description": "Attention implementation, scheduling, and memory-layout techniques used by LLM inference systems.",
+        "owner": "kernel-owner",
+        "status": "active"
+      },
+      "Parallel Decoding": {
+        "description": "Methods that generate or verify multiple tokens per step rather than strictly left-to-right one-token decoding.",
+        "owner": "decoding-owner",
+        "status": "active"
+      },
+      "Speculative Decoding": {
+        "description": "Draft-and-verify decoding methods that preserve target-model output distribution while improving latency.",
+        "owner": "decoding-owner",
+        "status": "active"
+      }
+    },
+    "methods": {
+      "FlashAttention": {
+        "description": "IO-aware exact attention kernel family that reduces HBM traffic with tiling and online softmax.",
+        "owner": "kernel-owner",
+        "status": "active"
+      },
+      "Speculative Decoding": {
+        "description": "Use a draft process and acceptance rule to accelerate autoregressive generation.",
+        "owner": "decoding-owner",
+        "status": "active"
+      }
+    }
+  },
   "governance_policy": {
     "taxonomy_load": {
       "min_structure_labels": 3,

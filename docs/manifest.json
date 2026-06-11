@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T05:29:46",
+  "generated_at": "2026-06-12T05:38:22",
   "name": "AutoPaperReader Wiki",
   "count": 5,
   "publish_ready": false,
@@ -815,7 +815,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 84490,
-      "sha256": "9bf863c8b5da855ca3f74be82cc8b9379d840c0382c47d65bc9d754ec9c6da33",
+      "sha256": "ee3fc34c7182acceae5283474f163f025d0f99b65af26ea47e09b03ee420a03b",
       "hash_mode": "raw"
     },
     {
@@ -825,7 +825,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 49850,
-      "sha256": "d445884bf641458c4f990e3f69115255fa93715c6ce6cc120c18fdb4aae2391d",
+      "sha256": "92e396872c69384449fe371b1ef5ad638fa907565c91268506abc07c4f658930",
       "hash_mode": "raw"
     },
     {
@@ -1024,8 +1024,8 @@
       "description": "机器数据、页面和契约的接入目录",
       "exists": true,
       "status": "ok",
-      "size_bytes": 51791,
-      "sha256": "3ba98e7acda5c495ee6f22fc84d8bd325142cf80ae46f5d5a2ee70c6dc5515e8",
+      "size_bytes": 51793,
+      "sha256": "1f610766a8821386b623e30462bba3c1c76f568f9f40c425fff49b35387524d0",
       "hash_mode": "raw"
     },
     {
@@ -1064,8 +1064,8 @@
       "description": "分类标签字典、alias 和跨字段治理",
       "exists": true,
       "status": "ok",
-      "size_bytes": 175391,
-      "sha256": "97a863370a5d36d2542dafbf5b33c1f956011c62a9db70ac81d29eeddbf6cd70",
+      "size_bytes": 195616,
+      "sha256": "a9405b87a9f3f11e5c0eae880361c36a53d6d1af9de34f4c3d3d4339fbabd099",
       "hash_mode": "normalized"
     },
     {
@@ -1344,8 +1344,8 @@
       "description": "机器数据、页面入口和契约字段目录",
       "exists": true,
       "status": "ok",
-      "size_bytes": 38496,
-      "sha256": "64a9717fd9e23e45655be662dc0c3c97a959e33e7d10d46381faec8b0e139742",
+      "size_bytes": 38498,
+      "sha256": "1528a1e42dd2c589d8ee43dc57cb7cce5739efe1416260d638b87caa0db1d833",
       "hash_mode": "normalized"
     },
     {
@@ -1355,7 +1355,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 14835,
-      "sha256": "f9592b44234a886f87c78925ac123edb70ec1f53da04035c3f14f64dec88c983",
+      "sha256": "e9c8e58fe915cae6c235768106d9a6799cf5352cd78be1766a20ed1dcdbc9692",
       "hash_mode": "normalized"
     },
     {
@@ -1394,8 +1394,8 @@
       "description": "分类标签注册表、alias、字段复用和治理信号",
       "exists": true,
       "status": "ok",
-      "size_bytes": 102011,
-      "sha256": "ad331d18c98562c0d4c0c231a5316167afb84d2e920bd5ef0c1da928bc4e0ecd",
+      "size_bytes": 117796,
+      "sha256": "168cd5ee655d3f981205947d70b17bcbeb6629abd0ccec83e3b82bfa4e38bd7f",
       "hash_mode": "normalized"
     },
     {
@@ -1441,8 +1441,8 @@
       "description": "taxonomy.json 配置字段契约",
       "exists": true,
       "status": "ok",
-      "size_bytes": 6514,
-      "sha256": "276570bb1323cdaae8164bb5a84ae460ed561a58125d0741aaa5d7c99ff23533",
+      "size_bytes": 7943,
+      "sha256": "2d1b626cb70b713f6a63c9cc5bbcee95e9d57881a4b0c4b15f5c4937a4c11de4",
       "hash_mode": "raw"
     },
     {
@@ -1451,8 +1451,8 @@
       "description": "分类别名、状态工作流和共享视图配置",
       "exists": true,
       "status": "ok",
-      "size_bytes": 3388,
-      "sha256": "602deee0d4843e701fa86c0f599589ff298cb8436ca2d61e435e85076c80a347",
+      "size_bytes": 5328,
+      "sha256": "ef706874c7b4f7976824801d708b38e7eeef9690a6fa1a2c0d0dd16b86468a05",
       "hash_mode": "raw"
     }
   ],

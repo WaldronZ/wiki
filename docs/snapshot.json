@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T05:29:46",
+  "generated_at": "2026-06-12T05:38:22",
   "snapshot_id": "89f0dcec1638050c",
   "name": "AutoPaperReader Wiki",
   "count": 5,
@@ -259,7 +259,7 @@
       {
         "href": "catalog.html",
         "kind": "page",
-        "sha256": "3ba98e7acda5c495ee6f22fc84d8bd325142cf80ae46f5d5a2ee70c6dc5515e8",
+        "sha256": "1f610766a8821386b623e30462bba3c1c76f568f9f40c425fff49b35387524d0",
         "status": "ok"
       },
       {
@@ -283,7 +283,7 @@
       {
         "href": "registry.html",
         "kind": "page",
-        "sha256": "97a863370a5d36d2542dafbf5b33c1f956011c62a9db70ac81d29eeddbf6cd70",
+        "sha256": "a9405b87a9f3f11e5c0eae880361c36a53d6d1af9de34f4c3d3d4339fbabd099",
         "status": "ok"
       },
       {
@@ -451,7 +451,7 @@
       {
         "href": "catalog.json",
         "kind": "data",
-        "sha256": "64a9717fd9e23e45655be662dc0c3c97a959e33e7d10d46381faec8b0e139742",
+        "sha256": "1528a1e42dd2c589d8ee43dc57cb7cce5739efe1416260d638b87caa0db1d833",
         "status": "ok"
       },
       {
@@ -475,7 +475,7 @@
       {
         "href": "registry.json",
         "kind": "data",
-        "sha256": "ad331d18c98562c0d4c0c231a5316167afb84d2e920bd5ef0c1da928bc4e0ecd",
+        "sha256": "168cd5ee655d3f981205947d70b17bcbeb6629abd0ccec83e3b82bfa4e38bd7f",
         "status": "ok"
       },
       {
@@ -499,13 +499,13 @@
       {
         "href": "guides/taxonomy.schema.json",
         "kind": "contract",
-        "sha256": "276570bb1323cdaae8164bb5a84ae460ed561a58125d0741aaa5d7c99ff23533",
+        "sha256": "2d1b626cb70b713f6a63c9cc5bbcee95e9d57881a4b0c4b15f5c4937a4c11de4",
         "status": "ok"
       },
       {
         "href": "guides/taxonomy.json",
         "kind": "contract",
-        "sha256": "602deee0d4843e701fa86c0f599589ff298cb8436ca2d61e435e85076c80a347",
+        "sha256": "ef706874c7b4f7976824801d708b38e7eeef9690a6fa1a2c0d0dd16b86468a05",
         "status": "ok"
       }
     ]

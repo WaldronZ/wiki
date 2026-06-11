@@ -158,6 +158,22 @@ class WikiWorkflowTest(unittest.TestCase):
                             "cadence": "monthly",
                         },
                     },
+                    "label_definitions": {
+                        "domains": {
+                            "LLM Systems": {
+                                "description": "System papers about inference, serving, and kernels.",
+                                "owner": "systems-owner",
+                                "status": "active",
+                            }
+                        },
+                        "topics": {
+                            "KV Cache": {
+                                "description": "Key/value cache layout, reuse, and serving behavior.",
+                                "owner": "cache-owner",
+                                "status": "watch",
+                            }
+                        },
+                    },
                     "governance_policy": {
                         "taxonomy_load": {
                             "min_structure_labels": 3,
@@ -726,9 +742,14 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertTrue(any("KV Cache" == item["label"] and item["aliases"] for item in registry["labels"]))
             self.assertTrue(any("singleton" in item["signals"] for item in registry["labels"]))
             self.assertTrue(any("export_taxonomy_registry.py" in command for command in registry["commands"]))
+            llm_systems = next(item for item in registry["labels"] if item["label"] == "LLM Systems")
+            self.assertEqual(llm_systems["definition_status"], "active")
+            self.assertEqual(llm_systems["owner_name"], "systems-owner")
+            self.assertIn("System papers", llm_systems["description"])
             registry_html = (report_dir / "registry.html").read_text(encoding="utf-8")
             self.assertIn("标签注册表", registry_html)
             self.assertIn("Registry JSON", registry_html)
+            self.assertIn("System papers about inference", registry_html)
             self.assertIn('id="registrySearch"', registry_html)
             self.assertIn('id="downloadRegistryCsv"', registry_html)
             self.assertIn("taxonomy_registry.csv", registry_html)

@@ -191,7 +191,20 @@ SHARED_VIEWS: list[dict[str, Any]] = []
 ACTIVE_STATUS_WORKFLOW = ""
 GOVERNANCE_POLICY: dict[str, Any] = json.loads(json.dumps(DEFAULT_GOVERNANCE_POLICY))
 RESEARCH_LINE_OWNERS: dict[str, dict[str, str]] = {}
+LABEL_DEFINITIONS: dict[str, dict[str, dict[str, str]]] = {}
 QUICK_OPEN_PAPERS: list[dict[str, str]] = []
+TAXONOMY_LABEL_FIELDS = {
+    "domains",
+    "tracks",
+    "problems",
+    "topics",
+    "methods",
+    "research_line",
+    "line_role",
+    "status",
+    "reading_stage",
+    "review_stage",
+}
 
 
 def parse_args() -> argparse.Namespace:
@@ -212,7 +225,7 @@ def parse_args() -> argparse.Namespace:
 
 def load_taxonomy_config(report_dir: Path) -> None:
     """Load optional taxonomy normalization config for this report directory."""
-    global LABEL_ALIASES, ROLE_ORDER, STATUS_VALUES, READING_STAGE_VALUES, REVIEW_STAGE_VALUES, STATUS_WORKFLOWS, SHARED_VIEWS, ACTIVE_STATUS_WORKFLOW, GOVERNANCE_POLICY, RESEARCH_LINE_OWNERS
+    global LABEL_ALIASES, ROLE_ORDER, STATUS_VALUES, READING_STAGE_VALUES, REVIEW_STAGE_VALUES, STATUS_WORKFLOWS, SHARED_VIEWS, ACTIVE_STATUS_WORKFLOW, GOVERNANCE_POLICY, RESEARCH_LINE_OWNERS, LABEL_DEFINITIONS
 
     LABEL_ALIASES = DEFAULT_LABEL_ALIASES.copy()
     ROLE_ORDER = {role: index for index, role in enumerate(DEFAULT_ROLE_ORDER)}
@@ -224,6 +237,7 @@ def load_taxonomy_config(report_dir: Path) -> None:
     ACTIVE_STATUS_WORKFLOW = ""
     GOVERNANCE_POLICY = json.loads(json.dumps(DEFAULT_GOVERNANCE_POLICY))
     RESEARCH_LINE_OWNERS = {}
+    LABEL_DEFINITIONS = {}
 
     config_path = report_dir / "guides" / "taxonomy.json"
     if not config_path.exists():
@@ -270,6 +284,7 @@ def load_taxonomy_config(report_dir: Path) -> None:
     SHARED_VIEWS = configured_shared_views(config)
     GOVERNANCE_POLICY = configured_governance_policy(config)
     RESEARCH_LINE_OWNERS = configured_research_line_owners(config)
+    LABEL_DEFINITIONS = configured_label_definitions(config)
 
 
 def configured_values(config: dict[str, Any], key: str, defaults: list[str]) -> list[str]:
@@ -368,6 +383,32 @@ def configured_research_line_owners(config: dict[str, Any]) -> dict[str, dict[st
         }
         if item:
             cleaned[line_name] = item
+    return cleaned
+
+
+def configured_label_definitions(config: dict[str, Any]) -> dict[str, dict[str, dict[str, str]]]:
+    definitions = config.get("label_definitions") or {}
+    if not isinstance(definitions, dict):
+        return {}
+    cleaned: dict[str, dict[str, dict[str, str]]] = {}
+    for field, values in definitions.items():
+        field_name = str(field).strip()
+        if field_name not in TAXONOMY_LABEL_FIELDS or not isinstance(values, dict):
+            continue
+        field_items: dict[str, dict[str, str]] = {}
+        for label, definition in values.items():
+            label_name = normalize_label(str(label or "").strip())
+            if not label_name or not isinstance(definition, dict):
+                continue
+            item = {
+                key: str(definition.get(key) or "").strip()
+                for key in ("description", "owner", "status", "note")
+                if str(definition.get(key) or "").strip()
+            }
+            if item:
+                field_items[label_name] = item
+        if field_items:
+            cleaned[field_name] = field_items
     return cleaned
 
 
@@ -13155,17 +13196,23 @@ FACET_SPECS = (
 
 
 def registry_configured_values(field: str) -> set[str]:
+    values = set(LABEL_DEFINITIONS.get(field, {}))
     if field == "research_line":
-        return set(RESEARCH_LINE_OWNERS)
+        values.update(RESEARCH_LINE_OWNERS)
+        return values
     if field == "line_role":
-        return set(ROLE_ORDER)
+        values.update(ROLE_ORDER)
+        return values
     if field == "status":
-        return set(STATUS_VALUES)
+        values.update(STATUS_VALUES)
+        return values
     if field == "reading_stage":
-        return set(READING_STAGE_VALUES)
+        values.update(READING_STAGE_VALUES)
+        return values
     if field == "review_stage":
-        return set(REVIEW_STAGE_VALUES)
-    return set()
+        values.update(REVIEW_STAGE_VALUES)
+        return values
+    return values
 
 
 def registry_label_id(label: str) -> str:
@@ -13196,6 +13243,8 @@ def registry_paper_payload(paper: dict[str, Any]) -> dict[str, Any]:
 
 
 def registry_recommendation(signals: list[str]) -> str:
+    if "deprecated_in_use" in signals:
+        return "该标签已标记 deprecated 但仍在报告中使用；请导出 patch 迁移到替代标签。"
     if "unconfigured_value" in signals:
         return "确认这是新流程值还是拼写漂移：前者写入 taxonomy.json，后者批量修正报告 frontmatter。"
     if "unowned_research_line" in signals:
@@ -13208,6 +13257,8 @@ def registry_recommendation(signals: list[str]) -> str:
         return "单例标签适合观察或合并，除非它代表明确的新研究方向。"
     if "unused_configured" in signals:
         return "配置中存在但当前未使用；可保留为预设，也可移除以降低选择噪音。"
+    if "undefined_label" in signals:
+        return "给该标签补 label_definitions 说明，或确认它应合并到已有规范标签。"
     if "has_aliases" in signals:
         return "保留 alias 映射，新增报告继续使用 canonical label。"
     return "当前标签状态稳定。"
@@ -13255,7 +13306,12 @@ def build_registry_report(papers: list[dict[str, Any]]) -> dict[str, Any]:
                 "alias_count": len(set(aliases_by_canonical.get(normalized, []))),
                 "configured": False,
                 "configured_fields": [],
+                "definitions": [],
+                "definition_count": 0,
+                "definition_status": "",
+                "description": "",
                 "owner": research_line_owner(normalized),
+                "owner_name": (research_line_owner(normalized).get("owner") or ""),
                 "signals": [],
                 "severity": "ok",
                 "recommended_action": "当前标签状态稳定。",
@@ -13278,10 +13334,11 @@ def build_registry_report(papers: list[dict[str, Any]]) -> dict[str, Any]:
             record = ensure_record(str(value))
             value_papers = grouped_papers.get(str(value), [])
             field_configured = str(value) in configured
+            definition = LABEL_DEFINITIONS.get(field, {}).get(str(value), {})
             if field_configured:
                 record["configured"] = True
                 record["configured_fields"].append(field)
-            record["fields"][field] = {
+            field_payload = {
                 "field": field,
                 "label": label,
                 "english": english,
@@ -13290,6 +13347,14 @@ def build_registry_report(papers: list[dict[str, Any]]) -> dict[str, Any]:
                 "configured": field_configured,
                 "href": f"library.html?{urlencode({query_key: str(value)})}",
             }
+            if definition:
+                field_payload["definition"] = definition
+                record["definitions"].append({"field": field, **definition})
+                if definition.get("owner") and not record["owner"]:
+                    record["owner"] = {"owner": definition["owner"]}
+                if definition.get("owner") and not record.get("owner_name"):
+                    record["owner_name"] = definition["owner"]
+            record["fields"][field] = field_payload
             for paper in value_papers:
                 slugs_by_label[record["key"]].add(paper["slug"])
 
@@ -13300,6 +13365,9 @@ def build_registry_report(papers: list[dict[str, Any]]) -> dict[str, Any]:
         papers_payload = [registry_paper_payload(papers_by_slug[slug]) for slug in slugs[:8] if slug in papers_by_slug]
         total_count = sum(int(item["count"]) for item in field_items)
         configured_fields = sorted(set(record["configured_fields"]))
+        definitions = record.get("definitions", [])
+        definition_statuses = sorted({str(item.get("status") or "") for item in definitions if item.get("status")})
+        descriptions = [str(item.get("description") or "") for item in definitions if item.get("description")]
         signals: list[str] = []
         if record["aliases"]:
             signals.append("has_aliases")
@@ -13309,6 +13377,10 @@ def build_registry_report(papers: list[dict[str, Any]]) -> dict[str, Any]:
             signals.append("cross_field")
         if configured_fields and total_count == 0:
             signals.append("unused_configured")
+        if definitions and any(str(item.get("status") or "") == "deprecated" for item in definitions) and total_count > 0:
+            signals.append("deprecated_in_use")
+        if not definitions and total_count > 0 and any(field in {"domains", "tracks", "problems", "topics", "methods", "research_line"} for field in field_names):
+            signals.append("undefined_label")
         if slugs and len(slugs) == 1 and not configured_fields:
             signals.append("singleton")
         overload_fields = {"domains", "tracks", "problems", "topics", "methods", "research_line"}
@@ -13322,9 +13394,9 @@ def build_registry_report(papers: list[dict[str, Any]]) -> dict[str, Any]:
 
         signals = sorted(set(signals))
         severity = "ok"
-        if any(signal in signals for signal in ("overloaded", "unconfigured_value", "unowned_research_line")):
+        if any(signal in signals for signal in ("deprecated_in_use", "overloaded", "unconfigured_value", "unowned_research_line")):
             severity = "high"
-        elif any(signal in signals for signal in ("cross_field", "singleton", "unused_configured", "alias_only")):
+        elif any(signal in signals for signal in ("undefined_label", "cross_field", "singleton", "unused_configured", "alias_only")):
             severity = "medium"
         elif signals:
             severity = "low"
@@ -13340,6 +13412,12 @@ def build_registry_report(papers: list[dict[str, Any]]) -> dict[str, Any]:
                 "papers": papers_payload,
                 "configured": bool(configured_fields),
                 "configured_fields": configured_fields,
+                "definitions": definitions,
+                "definition_count": len(definitions),
+                "definition_status": "mixed" if len(definition_statuses) > 1 else (definition_statuses[0] if definition_statuses else ""),
+                "description": " / ".join(descriptions[:2]),
+                "owner": record.get("owner") or {},
+                "owner_name": record.get("owner_name") or "",
                 "signals": signals,
                 "severity": severity,
                 "recommended_action": registry_recommendation(signals),
@@ -13374,10 +13452,13 @@ def build_registry_report(papers: list[dict[str, Any]]) -> dict[str, Any]:
             "singleton": signal_counts.get("singleton", 0),
             "unused_configured": signal_counts.get("unused_configured", 0),
             "unowned_research_line": signal_counts.get("unowned_research_line", 0),
+            "defined": sum(1 for item in labels if item.get("definition_count")),
+            "deprecated_in_use": signal_counts.get("deprecated_in_use", 0),
+            "undefined_label": signal_counts.get("undefined_label", 0),
         },
         "field_counts": dict(sorted(field_counts.items())),
         "signals": dict(sorted(signal_counts.items())),
-        "csv_columns": ["label", "severity", "fields", "total_count", "paper_count", "aliases", "signals", "recommended_action"],
+        "csv_columns": ["label", "severity", "fields", "definition_status", "owner_name", "description", "total_count", "paper_count", "aliases", "signals", "recommended_action"],
         "commands": [
             "python3 scripts/export_taxonomy_registry.py docs --output docs/exports/taxonomy-registry.md",
             "python3 scripts/export_taxonomy_registry.py docs --format project --severity high --severity medium --output docs/exports/taxonomy-registry-project.csv",
@@ -13414,11 +13495,15 @@ def render_registry_label_row(item: dict[str, Any]) -> str:
         paper_links.append(f'<a href="{html.escape(href)}">{html.escape(str(title))}</a>')
     owner = item.get("owner") or {}
     owner_text = " / ".join(str(owner.get(key) or "") for key in ("owner", "team", "cadence") if owner.get(key))
+    description = str(item.get("description") or "")
+    definition_status = str(item.get("definition_status") or "")
     search = " ".join(
         [
             str(item.get("label") or ""),
             field_names,
             aliases,
+            description,
+            definition_status,
             " ".join(str(signal) for signal in item.get("signals", [])),
             " ".join(str(slug) for slug in item.get("slugs", [])),
             owner_text,
@@ -13434,6 +13519,8 @@ def render_registry_label_row(item: dict[str, Any]) -> str:
         f'<div class="meta">{html.escape(owner_text or "no owner")}</div></td>'
         f"<td>{html.escape(field_names or 'alias')}</td>"
         f"<td><span class=\"flag\">{html.escape(str(item.get('severity') or 'ok'))}</span><div class=\"meta\">{html.escape(str(item.get('total_count') or 0))} uses / {html.escape(str(item.get('paper_count') or 0))} papers</div></td>"
+        f"<td>{html.escape(definition_status or '-')}"
+        f"<div class=\"meta\">{html.escape(description or 'No definition')}</div></td>"
         f"<td>{html.escape(aliases or '-')}</td>"
         f"<td>{signals or '<span class=\"meta\">stable</span>'}</td>"
         f"<td>{', '.join(paper_links) if paper_links else '<span class=\"meta\">No papers</span>'}</td>"
@@ -13447,7 +13534,7 @@ def render_registry(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     payload = build_registry_report(papers)
     rows = "".join(render_registry_label_row(item) for item in payload["labels"])
     table = (
-        '<table class="data-table"><thead><tr><th>标签</th><th>字段</th><th>状态</th><th>Alias</th><th>信号</th><th>代表论文</th><th>建议</th><th>复制</th></tr></thead>'
+        '<table class="data-table"><thead><tr><th>标签</th><th>字段</th><th>状态</th><th>定义</th><th>Alias</th><th>信号</th><th>代表论文</th><th>建议</th><th>复制</th></tr></thead>'
         f"<tbody>{rows}</tbody></table>"
         if rows
         else '<div class="empty">暂无分类标签。</div>'
@@ -13461,6 +13548,7 @@ def render_registry(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         ("高风险", str(payload["summary"]["high"]), "need action"),
         ("跨字段", str(payload["summary"]["cross_field"]), "semantic check"),
         ("单例", str(payload["summary"]["singleton"]), "merge/watch"),
+        ("已定义", str(payload["summary"]["defined"]), "definitions"),
         ("Alias", str(payload["alias_count"]), "canonicalization"),
     ]
     metric_html = "".join(
@@ -13577,6 +13665,9 @@ function downloadRegistryCsv() {{
       label: label.label,
       severity: label.severity,
       fields: label.field_names,
+      definition_status: label.definition_status,
+      owner_name: label.owner_name,
+      description: label.description,
       total_count: label.total_count,
       paper_count: label.paper_count,
       aliases: label.aliases,
