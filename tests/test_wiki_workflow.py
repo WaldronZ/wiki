@@ -896,6 +896,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("python3 scripts/export_batches.py docs --format patch --gap review --field review_stage --set-value due --output docs/exports/batches-review-patch.csv", quality_html)
             self.assertIn("python3 scripts/export_coverage.py docs --format project --risk high --risk medium --output docs/exports/coverage-project.csv", quality_html)
             self.assertIn("python3 scripts/export_gaps.py docs --format project --min-priority 20 --output docs/exports/gaps-project.csv", quality_html)
+            self.assertIn("python3 scripts/export_views.py docs --format sidebar --min-count 1 --output docs/exports/views-sidebar.json", quality_html)
             self.assertIn("python3 scripts/export_collections.py docs --format project --output docs/exports/collections-project.csv", quality_html)
             self.assertIn("python3 scripts/export_ownership.py docs --format project --only-open-queues --output docs/exports/ownership-project.csv", quality_html)
             self.assertIn("python3 scripts/export_roadmap.py docs --format project --output docs/exports/roadmap-project.csv", quality_html)
@@ -1182,6 +1183,62 @@ class WikiWorkflowTest(unittest.TestCase):
             )
             self.assertNotEqual(unsafe_gaps_export.returncode, 0)
             self.assertIn("Refusing to write a Markdown export", unsafe_gaps_export.stderr)
+
+            views_export_path = report_dir / "exports" / "views.md"
+            self.run_cmd(
+                "scripts/export_views.py",
+                str(report_dir),
+                "--min-count",
+                "1",
+                "--output",
+                str(views_export_path),
+            )
+            views_export = views_export_path.read_text(encoding="utf-8")
+            self.assertIn("# AutoPaperReader View Directory", views_export)
+            self.assertIn("Kernel 方向", views_export)
+            self.assertIn("LLM Serving", views_export)
+
+            views_csv_path = report_dir / "exports" / "views.csv"
+            self.run_cmd(
+                "scripts/export_views.py",
+                str(report_dir),
+                "--format",
+                "csv",
+                "--source",
+                "configured",
+                "--output",
+                str(views_csv_path),
+            )
+            view_rows = list(csv.DictReader(views_csv_path.read_text(encoding="utf-8").splitlines()))
+            self.assertTrue(view_rows)
+            self.assertTrue(all(row["source"] == "configured" for row in view_rows))
+            self.assertIn("state", view_rows[0])
+
+            views_sidebar_path = report_dir / "exports" / "views-sidebar.json"
+            self.run_cmd(
+                "scripts/export_views.py",
+                str(report_dir),
+                "--format",
+                "sidebar",
+                "--min-count",
+                "1",
+                "--output",
+                str(views_sidebar_path),
+            )
+            sidebar = json.loads(views_sidebar_path.read_text(encoding="utf-8"))
+            self.assertEqual(sidebar["generated_from"], "views.json")
+            self.assertTrue(sidebar["groups"])
+            self.assertTrue(any(item["label"] == "Kernel 方向" for group in sidebar["groups"] for item in group["items"]))
+
+            unsafe_views_export = self.run_cmd(
+                "scripts/export_views.py",
+                str(report_dir),
+                "--output",
+                str(report_dir / "views.md"),
+                check=False,
+            )
+            self.assertNotEqual(unsafe_views_export.returncode, 0)
+            self.assertIn("Refusing to write a Markdown export", unsafe_views_export.stderr)
 
             collections_export_path = report_dir / "exports" / "collections.md"
             self.run_cmd(
@@ -1481,6 +1538,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("python3 scripts/export_batches.py docs --output docs/exports/batches.md", manifest["commands"])
             self.assertIn("python3 scripts/export_coverage.py docs --output docs/exports/coverage.md", manifest["commands"])
             self.assertIn("python3 scripts/export_gaps.py docs --output docs/exports/gaps.md", manifest["commands"])
+            self.assertIn("python3 scripts/export_views.py docs --output docs/exports/views.md", manifest["commands"])
             self.assertIn("python3 scripts/export_taxonomy_registry.py docs --output docs/exports/taxonomy-registry.md", manifest["commands"])
             self.assertIn("python3 scripts/export_taxonomy_load.py docs --format csv --output docs/exports/taxonomy-load.csv", manifest["commands"])
             self.assertIn("python3 scripts/export_collections.py docs --output docs/exports/collections.md", manifest["commands"])
@@ -1510,6 +1568,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(recipe_by_id["coverage_topic_patch"]["output"], "docs/exports/coverage-topic-patch.csv")
             self.assertEqual(recipe_by_id["gaps_markdown"]["output"], "docs/exports/gaps.md")
             self.assertEqual(recipe_by_id["gaps_project"]["output"], "docs/exports/gaps-project.csv")
+            self.assertEqual(recipe_by_id["views_markdown"]["output"], "docs/exports/views.md")
+            self.assertEqual(recipe_by_id["views_sidebar"]["output"], "docs/exports/views-sidebar.json")
             self.assertEqual(recipe_by_id["collections_markdown"]["output"], "docs/exports/collections.md")
             self.assertEqual(recipe_by_id["collections_project"]["kind"], "export")
             self.assertEqual(recipe_by_id["ownership_markdown"]["output"], "docs/exports/ownership.md")

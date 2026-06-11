@@ -35,6 +35,7 @@ PYTHON_SCRIPTS = [
     "scripts/export_gaps.py",
     "scripts/export_ownership.py",
     "scripts/export_roadmap.py",
+    "scripts/export_views.py",
     "scripts/export_taxonomy_actions.py",
     "scripts/export_taxonomy_balance.py",
     "scripts/export_taxonomy_load.py",
