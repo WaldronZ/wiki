@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T07:37:51",
+  "generated_at": "2026-06-12T07:41:20",
   "name": "AutoPaperReader Wiki",
   "count": 5,
   "publish_ready": false,
@@ -961,6 +961,10 @@
       "description": "taxonomy.json 配置字段契约"
     },
     {
+      "href": "guides/workflow.schema.json",
+      "description": "workflow.json 状态工作流审计契约"
+    },
+    {
       "href": "guides/status.schema.json",
       "description": "status.json 状态选择器和写回命令契约"
     },
@@ -1020,8 +1024,8 @@
       "description": "页面入口、数据文件、质量状态",
       "exists": true,
       "status": "ok",
-      "size_bytes": 104412,
-      "sha256": "21c5fafa3f8c8c287cc5f01f3d0edd9582d0ff1ebbd19116bd1ae7ee7a832e27",
+      "size_bytes": 104855,
+      "sha256": "15312c3b335c3627d57e213a95a94a373bbaa979d4dd684780599c656d52d1d3",
       "hash_mode": "raw"
     },
     {
@@ -1030,8 +1034,8 @@
       "description": "当前发布基线、队列和治理策略快照",
       "exists": true,
       "status": "ok",
-      "size_bytes": 56863,
-      "sha256": "2289395857e5bc6bcda357532e1998490cf8fa9e19da42b3764ebe7817ec9ead",
+      "size_bytes": 57090,
+      "sha256": "ceef2338501d3c62a4b12ce3b1bf70c771931a335b1a0855d4c7dbab8e9f3d4d",
       "hash_mode": "raw"
     },
     {
@@ -1240,8 +1244,8 @@
       "description": "贡献路径、质量门和数据契约",
       "exists": true,
       "status": "ok",
-      "size_bytes": 55165,
-      "sha256": "2cf1f4bb658eb81d11606e2433130084fc2c713778c1dacf978309f34263ae2a",
+      "size_bytes": 55468,
+      "sha256": "71be6d67497226e7ee5b5b592f5c35ec20721f59653c4dbeef61b2f61e2dff51",
       "hash_mode": "raw"
     },
     {
@@ -1250,8 +1254,8 @@
       "description": "机器数据、页面和契约的接入目录",
       "exists": true,
       "status": "ok",
-      "size_bytes": 60162,
-      "sha256": "2502ed053b36bb787bfdf33f4ba0e2da2ca6d50354c722d90c6445a095376b54",
+      "size_bytes": 60300,
+      "sha256": "f96793b0709b30bd9ddc3895437389a72f612a283dcae9948f0d5c8d527dbd03",
       "hash_mode": "raw"
     },
     {
@@ -1620,8 +1624,8 @@
       "description": "开源贡献路径、质量门和数据契约清单",
       "exists": true,
       "status": "ok",
-      "size_bytes": 9895,
-      "sha256": "a7b5731bd1df94931505ccadad6e87bc58c98064f18da070e0eb29d0d4bf8d6f",
+      "size_bytes": 10181,
+      "sha256": "2d37621618e925c2700478ef2a2467d5cca573e2278d9c730e837593ddce39f3",
       "hash_mode": "normalized"
     },
     {
@@ -1630,8 +1634,8 @@
       "description": "机器数据、页面入口和契约字段目录",
       "exists": true,
       "status": "ok",
-      "size_bytes": 46579,
-      "sha256": "abfe0d9509e86715fd9832bd88986fd03631f383ef33fac4c976522cd737c52b",
+      "size_bytes": 46703,
+      "sha256": "336ea6350a3bbf36046d9bf550b41af86730ada6b9090392fedafcfb979fcdef",
       "hash_mode": "normalized"
     },
     {
@@ -1640,8 +1644,8 @@
       "description": "当前知识库治理快照和发布基线",
       "exists": true,
       "status": "ok",
-      "size_bytes": 16864,
-      "sha256": "5fae5ed27c5d3db7767a15091ecc70329ca9861d718bc464964607fcb7778434",
+      "size_bytes": 17065,
+      "sha256": "558290d2c0183a6c8a4c8ddd8b08a4354c1d30bb31342855f977f940895a2ee4",
       "hash_mode": "normalized"
     },
     {
@@ -1729,6 +1733,16 @@
       "status": "ok",
       "size_bytes": 7943,
       "sha256": "2d1b626cb70b713f6a63c9cc5bbcee95e9d57881a4b0c4b15f5c4937a4c11de4",
+      "hash_mode": "raw"
+    },
+    {
+      "href": "guides/workflow.schema.json",
+      "kind": "contract",
+      "description": "workflow.json 状态工作流审计契约",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 6876,
+      "sha256": "4a7acbd5f49c3f9c4140d47376dce37aa956016bb14ed898951f3d7acfced912",
       "hash_mode": "raw"
     },
     {

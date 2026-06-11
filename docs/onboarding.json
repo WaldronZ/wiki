@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-06-12T07:37:51",
+  "generated_at": "2026-06-12T07:41:20",
   "count": 5,
   "inbox_count": 0,
   "readiness_score": "100%",
-  "readiness_passed": 15,
-  "readiness_total": 15,
+  "readiness_passed": 16,
+  "readiness_total": 16,
   "readiness_checks": [
     {
       "path": "README.md",
@@ -76,6 +76,12 @@
       "path": "docs/guides/taxonomy.schema.json",
       "label": "Taxonomy schema",
       "href": "guides/taxonomy.schema.json",
+      "exists": true
+    },
+    {
+      "path": "docs/guides/workflow.schema.json",
+      "label": "Workflow schema",
+      "href": "guides/workflow.schema.json",
       "exists": true
     },
     {
@@ -255,6 +261,10 @@
     {
       "href": "guides/taxonomy.schema.json",
       "description": "taxonomy.json 配置字段契约"
+    },
+    {
+      "href": "guides/workflow.schema.json",
+      "description": "workflow.json 状态工作流审计契约"
     },
     {
       "href": "guides/status.schema.json",

@@ -234,6 +234,10 @@ class WikiWorkflowTest(unittest.TestCase):
             (ROOT / "docs" / "guides" / "taxonomy.schema.json").read_text(encoding="utf-8"),
             encoding="utf-8",
         )
+        (guides_dir / "workflow.schema.json").write_text(
+            (ROOT / "docs" / "guides" / "workflow.schema.json").read_text(encoding="utf-8"),
+            encoding="utf-8",
+        )
         (guides_dir / "status.schema.json").write_text(
             (ROOT / "docs" / "guides" / "status.schema.json").read_text(encoding="utf-8"),
             encoding="utf-8",
@@ -1507,6 +1511,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("guides/metadata.schema.json", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/inbox.schema.json", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/taxonomy.schema.json", {item["href"] for item in manifest["contract_files"]})
+            self.assertIn("guides/workflow.schema.json", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/status.schema.json", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/views.schema.json", {item["href"] for item in manifest["contract_files"]})
             artifact_by_href = {item["href"]: item for item in manifest["artifact_inventory"]}
@@ -1519,6 +1524,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(artifact_by_href["guides/metadata.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/inbox.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/taxonomy.schema.json"]["kind"], "contract")
+            self.assertEqual(artifact_by_href["guides/workflow.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/status.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/views.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["workflow.html"]["status"], "ok")
@@ -2696,6 +2702,21 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("guides/status.schema.json: properties.workflows is required", result.stderr)
             self.assertIn("guides/status.schema.json: $defs must be an object", result.stderr)
+
+    def test_invalid_workflow_schema_fails_validation(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_name:
+            report_dir = self.make_report_dir(Path(tmp_name))
+            self.run_cmd("scripts/build_wiki.py", str(report_dir))
+
+            (report_dir / "guides" / "workflow.schema.json").write_text(
+                json.dumps({"$schema": "https://json-schema.org/draft/2020-12/schema", "type": "object", "properties": {}}),
+                encoding="utf-8",
+            )
+            result = self.run_cmd("scripts/validate_wiki.py", str(report_dir), check=False)
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("guides/workflow.schema.json: properties.workflows is required", result.stderr)
+            self.assertIn("guides/workflow.schema.json: $defs must be an object", result.stderr)
 
     def test_invalid_inbox_csv_fails_validation(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_name:
