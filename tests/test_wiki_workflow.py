@@ -489,6 +489,33 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertTrue(taxonomy_load_rows)
             self.assertIn("signals", taxonomy_load_rows[0])
 
+            taxonomy_load_patch_path = report_dir / "exports" / "taxonomy-load-patch.csv"
+            self.run_cmd(
+                "scripts/export_taxonomy_load.py",
+                str(report_dir),
+                "--format",
+                "patch",
+                "--signal",
+                "sparse_tags",
+                "--output",
+                str(taxonomy_load_patch_path),
+            )
+            taxonomy_load_patch_rows = list(csv.DictReader(taxonomy_load_patch_path.read_text(encoding="utf-8").splitlines()))
+            self.assertEqual(len(taxonomy_load_patch_rows), 1)
+            self.assertEqual(taxonomy_load_patch_rows[0]["slug"], "2601.00001-alpha-paper")
+            self.assertEqual(taxonomy_load_patch_rows[0]["topics"], "LLM Serving")
+            self.assertEqual(taxonomy_load_patch_rows[0]["methods"], "Speculative Decoding")
+            self.assertEqual(taxonomy_load_patch_rows[0]["research_line"], "LLM Serving")
+            patch_dry_run = self.run_cmd(
+                "scripts/apply_library_metadata.py",
+                str(report_dir),
+                "--input",
+                str(taxonomy_load_patch_path),
+                "--field",
+                "topics",
+            )
+            self.assertIn("no metadata changes", patch_dry_run.stdout)
+
             unsafe_taxonomy_load_export = self.run_cmd(
                 "scripts/export_taxonomy_load.py",
                 str(report_dir),

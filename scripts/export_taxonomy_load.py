@@ -27,6 +27,17 @@ FIELDS = [
     "html_path",
 ]
 
+PATCH_FIELDS = [
+    "slug",
+    "domains",
+    "tracks",
+    "problems",
+    "topics",
+    "methods",
+    "research_line",
+    "line_role",
+]
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Export AutoPaperReader taxonomy load audit items.")
@@ -39,9 +50,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--format",
         "-f",
-        choices=["markdown", "csv"],
+        choices=["markdown", "csv", "patch"],
         default="markdown",
-        help="Output format.",
+        help="Output format. Use 'patch' for a CSV template compatible with apply_library_metadata.py.",
     )
     parser.add_argument("--output", "-o", help="Output path. Defaults to stdout.")
     parser.add_argument(
@@ -69,6 +80,21 @@ def load_quality(report_dir: Path) -> dict[str, Any]:
     if not isinstance(items, list):
         raise ValueError("quality.json has invalid 'taxonomy_load' payload")
     return payload
+
+
+def load_papers(report_dir: Path) -> dict[str, dict[str, Any]]:
+    path = report_dir / "papers.json"
+    if not path.exists():
+        raise FileNotFoundError(f"{path} does not exist; run scripts/build_wiki.py first")
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    papers = payload.get("papers", [])
+    if not isinstance(papers, list):
+        raise ValueError("papers.json has invalid 'papers' payload")
+    return {
+        str(paper.get("slug") or ""): paper
+        for paper in papers
+        if isinstance(paper, dict) and str(paper.get("slug") or "").strip()
+    }
 
 
 def join_value(value: Any) -> str:
@@ -142,6 +168,21 @@ def render_csv(items: list[dict[str, Any]]) -> str:
     return buffer.getvalue()
 
 
+def render_patch_csv(items: list[dict[str, Any]], papers_by_slug: dict[str, dict[str, Any]]) -> str:
+    from io import StringIO
+
+    buffer = StringIO()
+    writer = csv.DictWriter(buffer, fieldnames=PATCH_FIELDS)
+    writer.writeheader()
+    for item in items:
+        slug = str(item.get("slug") or "")
+        paper = papers_by_slug.get(slug, {})
+        row = {field: join_value(paper.get(field)) for field in PATCH_FIELDS}
+        row["slug"] = slug
+        writer.writerow(row)
+    return buffer.getvalue()
+
+
 def write_output(text: str, output_path: str | None, report_dir: Path, stream: TextIO) -> None:
     if not output_path:
         stream.write(text)
@@ -165,7 +206,12 @@ def main() -> int:
     try:
         payload = load_quality(report_dir)
         items = filter_items(payload.get("taxonomy_load", []), args)
-        text = render_csv(items) if args.format == "csv" else render_markdown(items)
+        if args.format == "csv":
+            text = render_csv(items)
+        elif args.format == "patch":
+            text = render_patch_csv(items, load_papers(report_dir))
+        else:
+            text = render_markdown(items)
         write_output(text, args.output, report_dir, sys.stdout)
     except (FileNotFoundError, ValueError) as error:
         print(f"ERROR: {error}", file=sys.stderr)

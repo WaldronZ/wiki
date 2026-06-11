@@ -89,7 +89,7 @@ paper_reader/
 - `scripts/export_library_csv.py` 用于把 `papers.json`、`review.json` 和 `quality.json` 合并导出成 CSV，便于用表格工具批量管理
 - `scripts/export_reading_list.py` 用于按研究线、状态、方向、主题、方法或重要性导出 Markdown 阅读清单、BibTeX 或链接列表
 - `scripts/export_taxonomy_actions.py` 用于把 `taxonomy_actions.json` 导出成 Markdown checklist 或 CSV，便于分派分类治理任务
-- `scripts/export_taxonomy_load.py` 用于把 `quality.json` 中的分类粒度审计导出成 Markdown checklist 或 CSV
+- `scripts/export_taxonomy_load.py` 用于把 `quality.json` 中的分类粒度审计导出成 Markdown checklist、审计 CSV 或可写回的分类 patch CSV
 - `scripts/apply_library_metadata.py` 用于把编辑后的 CSV 分类/状态字段安全写回报告 frontmatter，默认只 dry-run
 - `scripts/apply_taxonomy_aliases.py` 用于把 `quality.json` 中的标签别名建议安全合并到 `guides/taxonomy.json`，默认只 dry-run
 - `scripts/check_quality.py` 是本地一键质量门禁，和 GitHub Actions 使用同一组检查
@@ -269,6 +269,7 @@ python3 scripts/export_reading_list.py docs --format links --status read
 python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md
 python3 scripts/export_taxonomy_actions.py docs --format csv --severity high --output docs/exports/taxonomy-actions.csv
 python3 scripts/export_taxonomy_load.py docs --format csv --signal dense_tags --output docs/exports/taxonomy-load.csv
+python3 scripts/export_taxonomy_load.py docs --format patch --signal sparse_tags --output docs/exports/taxonomy-load-patch.csv
 ```
 
 把表格里编辑过的分类和状态字段写回报告 frontmatter：
