@@ -130,7 +130,7 @@ paper_reader/
 - `docs/<slug>.html`：单篇阅读报告 HTML
 - `docs/index.html`：wiki 首页
 - 所有 wiki 汇总页：提供全局快速跳转，可搜索主要页面；在首页和论文库等带论文数据的页面可直接跳到单篇报告
-- `docs/library.html`：论文库表格，适合大量论文的密集筛选、排序、列管理、密度切换和批量管理
+- `docs/library.html`：论文库表格，适合大量论文的密集筛选、排序、列管理、密度切换、状态体系切换和批量管理
 - `docs/board.html`：状态看板，按自定义 `status` 分列，也可临时新增状态列，拖拽后导出 `status_board_patch.csv`
 - `docs/inbox.csv`：候选论文待处理池源数据，可手动追加 title/link/status/priority/tags/note
 - `docs/inbox.html`：候选论文待处理池，支持筛选、去重提示和复制阅读任务
@@ -283,7 +283,7 @@ python3 scripts/apply_library_metadata.py docs --input docs/library.csv --write
 python3 scripts/build_wiki.py docs
 ```
 
-`docs/library.html` 也支持先按 `domains` / `tracks` / `problems` / `topics` / `methods` 等分类维度筛选论文、按场景隐藏/显示列、切换紧凑/标准/舒适密度、保存并导入/导出常用队列、勾选当前页或一键选中全部筛选结果，批量选择 `status` / `reading_stage` / `review_stage` / `next_review`，也可以展开「批量分类字段」为所选论文设置 `research_line` / `line_role` / `domains` / `tracks` / `problems` / `topics` / `methods`，再下载 `metadata_patch.csv`；列设置和密度偏好会保存在浏览器本地。也可以把当前筛选和排序结果直接导出为 `reading_list.md`、`library_filtered.csv` 或 `library.bib`。`docs/board.html` 支持把论文卡片拖到新的状态列，然后下载 `status_board_patch.csv`。下载后用同一个写回脚本预览和应用：
+`docs/library.html` 也支持先按 `domains` / `tracks` / `problems` / `topics` / `methods` 等分类维度筛选论文、在多套 `status_workflows` 间动态切换状态候选、按场景隐藏/显示列、切换紧凑/标准/舒适密度、保存并导入/导出常用队列、勾选当前页或一键选中全部筛选结果，批量选择 `status` / `reading_stage` / `review_stage` / `next_review`，也可以展开「批量分类字段」为所选论文设置 `research_line` / `line_role` / `domains` / `tracks` / `problems` / `topics` / `methods`，再下载 `metadata_patch.csv`；列设置和密度偏好会保存在浏览器本地。也可以把当前筛选和排序结果直接导出为 `reading_list.md`、`library_filtered.csv` 或 `library.bib`。`docs/board.html` 支持把论文卡片拖到新的状态列，然后下载 `status_board_patch.csv`。下载后用同一个写回脚本预览和应用：
 
 ```bash
 python3 scripts/apply_library_metadata.py docs --input ~/Downloads/metadata_patch.csv

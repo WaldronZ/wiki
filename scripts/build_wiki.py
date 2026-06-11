@@ -2911,6 +2911,7 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <select id="method"><option value="">全部方法</option>{render_topic_options(taxonomy["methods"])}</select>
     <select id="line"><option value="">全部研究线</option>{render_topic_options(taxonomy["research_lines"])}</select>
     <select id="role"><option value="">全部角色</option>{render_topic_options(taxonomy["line_roles"])}</select>
+    <select id="statusWorkflow" aria-label="状态体系"></select>
     <select id="status"><option value="">全部状态</option>{render_topic_options(taxonomy["statuses"])}</select>
     <select id="stage"><option value="">阅读阶段</option>{render_topic_options(taxonomy["reading_stages"])}</select>
     <select id="reviewStage"><option value="">复习阶段</option>{render_topic_options(taxonomy["review_stages"])}</select>
@@ -3010,6 +3011,7 @@ const topic = document.querySelector("#topic");
 const method = document.querySelector("#method");
 const line = document.querySelector("#line");
 const role = document.querySelector("#role");
+const statusWorkflow = document.querySelector("#statusWorkflow");
 const status = document.querySelector("#status");
 const stage = document.querySelector("#stage");
 const reviewStage = document.querySelector("#reviewStage");
@@ -3054,6 +3056,11 @@ const libraryTable = document.querySelector(".library-table");
 const columnToggles = Array.from(document.querySelectorAll("[data-column-toggle]"));
 const densityMode = document.querySelector("#densityMode");
 const sharedViews = window.PAPER_WIKI.shared_views || [];
+const wikiControls = window.PAPER_WIKI.controls || {{}};
+const statusWorkflows = wikiControls.status_workflows || {{}};
+const activeStatusWorkflow = wikiControls.active_status_workflow || Object.keys(statusWorkflows)[0] || "default";
+const fallbackStatusValues = Array.isArray(wikiControls.status) ? wikiControls.status : [];
+const observedStatusValues = Array.from(new Set(allRows.map(row => row.dataset.status).filter(Boolean)));
 let currentPage = 1;
 let currentRankedRows = [...allRows];
 const savedViewsKey = "autopaperreader:library:savedViews";
@@ -3067,6 +3074,7 @@ const controls = [
   ["method", method],
   ["line", line],
   ["role", role],
+  ["workflow", statusWorkflow],
   ["status", status],
   ["stage", stage],
   ["reviewStage", reviewStage],
@@ -3084,12 +3092,52 @@ function hasToken(row, key, value) {{
   return !value || tokens(row.dataset[key]).includes(value);
 }}
 
+function orderedUnique(values) {{
+  return Array.from(new Set(values.map(value => String(value || "").trim()).filter(Boolean)));
+}}
+
+function statusValuesForWorkflow(name) {{
+  const workflow = statusWorkflows[name] || {{}};
+  const configured = Array.isArray(workflow.status_values) ? workflow.status_values : fallbackStatusValues;
+  return orderedUnique([...configured, ...observedStatusValues]);
+}}
+
+function statusCount(value) {{
+  return allRows.filter(row => row.dataset.status === value).length;
+}}
+
+function replaceStatusOptions(select, placeholder, values, withCounts = false) {{
+  const current = select.value;
+  select.replaceChildren(new Option(placeholder, ""));
+  values.forEach(value => {{
+    const label = withCounts ? `${{value}} (${{statusCount(value)}})` : value;
+    select.appendChild(new Option(label, value));
+  }});
+  select.value = values.includes(current) ? current : "";
+}}
+
+function populateStatusWorkflowOptions() {{
+  const names = Object.keys(statusWorkflows);
+  const workflowNames = names.length ? names : [activeStatusWorkflow];
+  statusWorkflow.replaceChildren(...workflowNames.map(name => {{
+    const label = name === activeStatusWorkflow ? `${{name}} (默认)` : name;
+    return new Option(label, name);
+  }}));
+  statusWorkflow.value = workflowNames.includes(activeStatusWorkflow) ? activeStatusWorkflow : workflowNames[0] || "";
+}}
+
+function applyStatusWorkflow() {{
+  const values = statusValuesForWorkflow(statusWorkflow.value);
+  replaceStatusOptions(status, "全部状态", values, true);
+  replaceStatusOptions(bulkStatus, "状态", values, false);
+}}
+
 function pageLimit() {{
   return pageSize.value === "all" ? Infinity : Number(pageSize.value || 50);
 }}
 
 function defaultValueFor(key) {{
-  return key === "sort" ? "default" : key === "size" ? "50" : "";
+  return key === "workflow" ? activeStatusWorkflow : key === "sort" ? "default" : key === "size" ? "50" : "";
 }}
 
 function currentState() {{
@@ -3104,8 +3152,11 @@ function currentState() {{
 
 function applyState(state) {{
   controls.forEach(([key, el]) => {{
+    if (key === "status") return;
     el.value = state[key] || defaultValueFor(key);
   }});
+  applyStatusWorkflow();
+  status.value = state.status || defaultValueFor("status");
   currentPage = Number(state.page || 1) || 1;
   render();
 }}
@@ -3113,8 +3164,11 @@ function applyState(state) {{
 function readStateFromUrl() {{
   const params = new URLSearchParams(window.location.search);
   controls.forEach(([key, el]) => {{
+    if (key === "status") return;
     el.value = params.has(key) ? params.get(key) : defaultValueFor(key);
   }});
+  applyStatusWorkflow();
+  status.value = params.has("status") ? params.get("status") : defaultValueFor("status");
   currentPage = Number(params.get("page") || 1) || 1;
 }}
 
@@ -3513,6 +3567,7 @@ function render() {{
 }}
 
 controls.forEach(([, el]) => el.addEventListener("input", () => {{
+  if (el === statusWorkflow) applyStatusWorkflow();
   currentPage = 1;
   render();
 }}));
@@ -3520,6 +3575,7 @@ resetFilters.addEventListener("click", () => {{
   controls.forEach(([key, el]) => {{
     el.value = defaultValueFor(key);
   }});
+  applyStatusWorkflow();
   currentPage = 1;
   render();
 }});
@@ -3631,6 +3687,7 @@ densityMode.addEventListener("input", () => {{
   writeLibraryPrefs(prefs);
 }});
 
+populateStatusWorkflowOptions();
 readStateFromUrl();
 refreshSavedViews();
 applyLibraryPrefs(readLibraryPrefs());
