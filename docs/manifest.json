@@ -454,6 +454,10 @@
       "description": "复习计划和建议 next_review"
     },
     {
+      "href": "taxonomy_actions.json",
+      "description": "分类长尾、过载和空候选治理任务"
+    },
+    {
       "href": "inbox.json",
       "description": "候选论文队列和重复项"
     },

@@ -30,6 +30,7 @@ GENERATED_FIXED_PATHS = (
     "inbox.json",
     "quality.json",
     "review.json",
+    "taxonomy_actions.json",
     "manifest.json",
     "index.html",
     "library.html",
@@ -1180,6 +1181,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "stats.json", "description": "运营统计、覆盖率和队列规模"},
         {"href": "quality.json", "description": "质量问题、taxonomy drift、标签别名建议"},
         {"href": "review.json", "description": "复习计划和建议 next_review"},
+        {"href": "taxonomy_actions.json", "description": "分类长尾、过载和空候选治理任务"},
         {"href": "inbox.json", "description": "候选论文队列和重复项"},
         {"href": "manifest.json", "description": "发布摘要和页面入口清单"},
     ]
@@ -4272,36 +4274,120 @@ FACET_SPECS = (
 )
 
 
+def facet_values_for_paper(paper: dict[str, Any], field: str, is_list: bool) -> list[str]:
+    if is_list:
+        return [str(value).strip() for value in paper.get(field, []) if str(value).strip()]
+    value = str(paper.get(field) or "").strip()
+    return [value] if value and value != "Unassigned" else []
+
+
+def facet_count_for_field(papers: list[dict[str, Any]], taxonomy: dict[str, dict[str, int]], field: str, is_list: bool) -> dict[str, int]:
+    if field == "research_line":
+        return taxonomy["research_lines"]
+    if field == "line_role":
+        return taxonomy["line_roles"]
+    if field == "status":
+        return taxonomy["statuses"]
+    if field == "reading_stage":
+        return taxonomy["reading_stages"]
+    if field == "review_stage":
+        return taxonomy["review_stages"]
+    if is_list:
+        return taxonomy[field]
+    return scalar_counts(papers, field)
+
+
+def taxonomy_action_status(count: int, share: float) -> tuple[str, str]:
+    if count == 0:
+        return "unused_config", "medium"
+    if count == 1:
+        return "merge_candidate", "medium"
+    if share >= 0.6 and count >= 5:
+        return "split_candidate", "high"
+    if share >= 0.4 and count >= 4:
+        return "watch", "low"
+    return "stable", "none"
+
+
+def taxonomy_action_recommendation(action: str, field_label: str) -> str:
+    if action == "unused_config":
+        return "保留为候选值，或从 taxonomy.json 中移除。"
+    if action == "merge_candidate":
+        return "检查是否应合并为更通用标签。"
+    if action == "split_candidate":
+        return f"{field_label} 过大，考虑拆成更细子类。"
+    if action == "watch":
+        return "关注是否正在变成默认桶。"
+    return "结构稳定，继续积累样本。"
+
+
+def build_taxonomy_actions(papers: list[dict[str, Any]]) -> dict[str, Any]:
+    total = len(papers)
+    taxonomy = taxonomy_counts(papers)
+    actions: list[dict[str, Any]] = []
+    summary = {
+        "merge_candidate": 0,
+        "split_candidate": 0,
+        "unused_config": 0,
+        "watch": 0,
+    }
+    for field, english, query_key, label, is_list in FACET_SPECS:
+        counts = facet_count_for_field(papers, taxonomy, field, is_list)
+        for value, count in counts.items():
+            share = (count / total) if total else 0
+            action, severity = taxonomy_action_status(count, share)
+            if action == "stable":
+                continue
+            summary[action] += 1
+            matches = [
+                paper
+                for paper in papers
+                if value in facet_values_for_paper(paper, field, is_list)
+            ][:5]
+            actions.append(
+                {
+                    "action": action,
+                    "severity": severity,
+                    "field": field,
+                    "field_label": label,
+                    "field_en": english,
+                    "value": value,
+                    "count": count,
+                    "share": round(share, 4),
+                    "href": page_query_href("library.html", **{query_key: value}),
+                    "sample_slugs": [paper["slug"] for paper in matches],
+                    "recommendation": taxonomy_action_recommendation(action, label),
+                }
+            )
+    severity_rank = {"high": 0, "medium": 1, "low": 2, "none": 3}
+    actions.sort(key=lambda item: (severity_rank.get(item["severity"], 9), item["action"], item["field"], -item["count"], item["value"].lower()))
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": len(actions),
+        "paper_count": total,
+        "summary": summary,
+        "actions": actions,
+    }
+
+
+def write_taxonomy_actions_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_taxonomy_actions(papers)
+    (report_dir / "taxonomy_actions.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
 def render_facets(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     total = len(papers)
     taxonomy = taxonomy_counts(papers)
-
-    def values_for_field(paper: dict[str, Any], field: str, is_list: bool) -> list[str]:
-        if is_list:
-            return [str(value).strip() for value in paper.get(field, []) if str(value).strip()]
-        value = str(paper.get(field) or "").strip()
-        return [value] if value and value != "Unassigned" else []
-
-    def facet_count(field: str, is_list: bool) -> dict[str, int]:
-        if field == "research_line":
-            return taxonomy["research_lines"]
-        if field == "line_role":
-            return taxonomy["line_roles"]
-        if field == "status":
-            return taxonomy["statuses"]
-        if field == "reading_stage":
-            return taxonomy["reading_stages"]
-        if field == "review_stage":
-            return taxonomy["review_stages"]
-        if is_list:
-            return taxonomy[field]
-        return scalar_counts(papers, field)
+    action_payload = build_taxonomy_actions(papers)
 
     def sample_links(field: str, value: str, is_list: bool) -> str:
         matches = [
             paper
             for paper in papers
-            if value in values_for_field(paper, field, is_list)
+            if value in facet_values_for_paper(paper, field, is_list)
         ][:3]
         if not matches:
             return '<span class="meta">暂无论文</span>'
@@ -4311,24 +4397,13 @@ def render_facets(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         ]
         return "<br>".join(links)
 
-    def action_for(count: int, share: float, field_label: str) -> str:
-        if count == 0:
-            return "保留为候选值，或从 taxonomy.json 中移除。"
-        if count == 1:
-            return "检查是否应合并为更通用标签。"
-        if share >= 0.6 and count >= 5:
-            return f"{field_label} 过大，考虑拆成更细子类。"
-        if share >= 0.4 and count >= 4:
-            return "关注是否正在变成默认桶。"
-        return "结构稳定，继续积累样本。"
-
     facet_cards = []
     table_rows = []
     long_tail_total = 0
     overloaded_total = 0
     unused_total = 0
     for field, english, query_key, label, is_list in FACET_SPECS:
-        counts = facet_count(field, is_list)
+        counts = facet_count_for_field(papers, taxonomy, field, is_list)
         used_items = [(value, count) for value, count in counts.items() if count > 0]
         long_tail = sum(1 for _, count in used_items if count == 1)
         overloaded = sum(1 for _, count in used_items if total and count / total >= 0.6 and count >= 5)
@@ -4344,15 +4419,14 @@ def render_facets(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         )
         for value, count in counts.items():
             share = (count / total) if total else 0
-            flags = []
-            if count == 0:
+            action, _severity = taxonomy_action_status(count, share)
+            flags = [action]
+            if action == "unused_config":
                 flags.append("unused")
-            if count == 1:
+            if action == "merge_candidate":
                 flags.append("long-tail")
-            if share >= 0.6 and count >= 5:
+            if action == "split_candidate":
                 flags.append("overloaded")
-            elif share >= 0.4 and count >= 4:
-                flags.append("watch")
             flag_html = "".join(f'<span class="flag">{html.escape(flag)}</span>' for flag in flags) or '<span class="flag">stable</span>'
             href = page_query_href("library.html", **{query_key: value})
             value_cell = f'<a href="{html.escape(href)}">{html.escape(value)}</a>'
@@ -4364,7 +4438,7 @@ def render_facets(report_dir: Path, papers: list[dict[str, Any]]) -> None:
                 f"<td>{round(share * 100)}%</td>"
                 f"<td>{flag_html}</td>"
                 f"<td>{sample_links(field, value, is_list)}</td>"
-                f"<td>{html.escape(action_for(count, share, label))}</td>"
+                f"<td>{html.escape(taxonomy_action_recommendation(action, label))}</td>"
                 "</tr>"
             )
 
@@ -4418,12 +4492,13 @@ def render_facets(report_dir: Path, papers: list[dict[str, Any]]) -> None:
 <header class="shell">
   <div class="eyebrow">Facet Workbench</div>
   <h1>分类工作台</h1>
-  <p class="lead">集中审计 domain、track、problem、topic、method、研究线和阅读状态的规模。长尾标签提示可能需要合并，过载标签提示需要拆分，空候选值来自动态 taxonomy 配置。</p>
+  <p class="lead">集中审计 domain、track、problem、topic、method、研究线和阅读状态的规模。长尾标签提示可能需要合并，过载标签提示需要拆分，空候选值来自动态 taxonomy 配置；治理任务同步写入 taxonomy_actions.json。</p>
   <div class="stats">
     <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="collections.html">集合视图</a>
+    <a class="stat" href="taxonomy_actions.json">治理任务 JSON</a>
     <a class="stat" href="gaps.html">研究缺口</a>
     <span class="stat">论文 {total}</span>
     <span class="stat">长尾 {long_tail_total}</span>
@@ -4441,6 +4516,7 @@ def render_facets(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       <section class="facet-action"><h3>长尾标签</h3><p class="meta">{long_tail_total} 个只命中 1 篇论文的标签。优先检查是否是大小写、复数、连字符或粒度不一致。</p></section>
       <section class="facet-action"><h3>过载标签</h3><p class="meta">{overloaded_total} 个标签覆盖过高。论文继续增加时，优先把它们拆成更可操作的子类。</p></section>
       <section class="facet-action"><h3>候选空值</h3><p class="meta">{unused_total} 个配置值当前没有论文使用。它们适合作为流程预留，也可能是过期状态。</p></section>
+      <section class="facet-action"><h3>机器任务</h3><p class="meta">当前 taxonomy_actions.json 里有 {action_payload["count"]} 条可分派治理任务，可接入 issue、看板或桌面软件。</p></section>
     </div>
   </section>
   <section>
@@ -6104,6 +6180,7 @@ def build_wiki(report_dir: Path) -> int:
     write_json(report_dir, papers)
     write_quality_json(report_dir, papers)
     write_review_json(report_dir, papers)
+    write_taxonomy_actions_json(report_dir, papers)
     write_stats_json(report_dir, papers)
     write_inbox_json(report_dir, inbox_items)
     write_search_index(report_dir, papers)

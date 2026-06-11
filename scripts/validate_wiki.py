@@ -98,6 +98,7 @@ REQUIRED_PAGES = {
     "inbox.json",
     "quality.json",
     "review.json",
+    "taxonomy_actions.json",
     "manifest.json",
     "lines/index.html",
 }
@@ -394,6 +395,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     search_path = report_dir / "search_index.json"
     quality_path = report_dir / "quality.json"
     review_path = report_dir / "review.json"
+    taxonomy_actions_path = report_dir / "taxonomy_actions.json"
     stats_path = report_dir / "stats.json"
     inbox_path = report_dir / "inbox.json"
     manifest_path = report_dir / "manifest.json"
@@ -409,6 +411,9 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     if not review_path.exists():
         errors.append("missing review.json")
         return
+    if not taxonomy_actions_path.exists():
+        errors.append("missing taxonomy_actions.json")
+        return
     if not stats_path.exists():
         errors.append("missing stats.json")
         return
@@ -423,6 +428,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     search_data = json.loads(search_path.read_text(encoding="utf-8"))
     quality_data = json.loads(quality_path.read_text(encoding="utf-8"))
     review_data = json.loads(review_path.read_text(encoding="utf-8"))
+    taxonomy_actions_data = json.loads(taxonomy_actions_path.read_text(encoding="utf-8"))
     stats_data = json.loads(stats_path.read_text(encoding="utf-8"))
     inbox_data = json.loads(inbox_path.read_text(encoding="utf-8"))
     manifest_data = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -528,6 +534,28 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         errors.append(f"papers.json controls missing keys: {', '.join(missing_controls)}")
     if not isinstance(papers_controls.get("shared_views"), list):
         errors.append("papers.json controls.shared_views must be a list")
+
+    taxonomy_actions = taxonomy_actions_data.get("actions", [])
+    if not isinstance(taxonomy_actions, list):
+        errors.append("taxonomy_actions.json actions must be a list")
+        taxonomy_actions = []
+    action_slugs = {
+        slug
+        for item in taxonomy_actions
+        if isinstance(item, dict)
+        for slug in item.get("sample_slugs", [])
+    }
+    unknown_action_slugs = sorted(action_slugs - report_slugs)
+    if taxonomy_actions_data.get("paper_count") != len(report_slugs):
+        errors.append(f"taxonomy_actions.json paper_count {taxonomy_actions_data.get('paper_count')} != markdown report count {len(report_slugs)}")
+    if taxonomy_actions_data.get("count") != len(taxonomy_actions):
+        errors.append("taxonomy_actions.json count must match actions length")
+    if unknown_action_slugs:
+        errors.append(f"taxonomy_actions.json references unknown sample slugs: {unknown_action_slugs}")
+    required_taxonomy_actions = {"count", "paper_count", "summary", "actions"}
+    missing_taxonomy_actions = sorted(required_taxonomy_actions - set(taxonomy_actions_data))
+    if missing_taxonomy_actions:
+        errors.append(f"taxonomy_actions.json missing keys: {', '.join(missing_taxonomy_actions)}")
 
     if stats_data.get("count") != len(report_slugs):
         errors.append(f"stats.json count {stats_data.get('count')} != markdown report count {len(report_slugs)}")

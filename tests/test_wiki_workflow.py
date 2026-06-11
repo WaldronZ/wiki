@@ -190,6 +190,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "inbox.json",
                 "quality.json",
                 "review.json",
+                "taxonomy_actions.json",
                 "manifest.json",
                 "lines/index.html",
             }
@@ -259,6 +260,12 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(review["count"], 2)
             self.assertEqual(review["queues"]["needs_plan"], ["2601.00001-alpha-paper"])
             self.assertEqual(review["queues"]["scheduled"], ["2501.00002-beta-paper"])
+            taxonomy_actions = json.loads((report_dir / "taxonomy_actions.json").read_text(encoding="utf-8"))
+            self.assertEqual(taxonomy_actions["paper_count"], 2)
+            self.assertGreater(taxonomy_actions["summary"]["unused_config"], 0)
+            triaged_action = next(item for item in taxonomy_actions["actions"] if item["field"] == "status" and item["value"] == "triaged")
+            self.assertEqual(triaged_action["action"], "unused_config")
+            self.assertEqual(triaged_action["href"], "library.html?status=triaged")
             stats = json.loads((report_dir / "stats.json").read_text(encoding="utf-8"))
             self.assertEqual(stats["count"], 2)
             self.assertIn("quality", stats["queue_sizes"])
@@ -271,6 +278,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertTrue(manifest["publish_checks"]["no_duplicate_reports"])
             self.assertIn("release.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("facets.html", {item["href"] for item in manifest["pages"]})
+            self.assertIn("taxonomy_actions.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("manifest.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("python3 scripts/check_quality.py docs", manifest["commands"])
             release_html = (report_dir / "release.html").read_text(encoding="utf-8")
@@ -288,6 +296,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("字段概览", facets_html)
             self.assertIn("long-tail", facets_html)
             self.assertIn("unused", facets_html)
+            self.assertIn("taxonomy_actions.json", facets_html)
             self.assertIn("triaged", facets_html)
             self.assertIn("library.html?status=triaged", facets_html)
             related_html = (report_dir / "related.html").read_text(encoding="utf-8")

@@ -1,0 +1,830 @@
+{
+  "generated_at": "2026-06-11T22:39:34",
+  "count": 55,
+  "paper_count": 5,
+  "summary": {
+    "merge_candidate": 42,
+    "split_candidate": 3,
+    "unused_config": 10,
+    "watch": 0
+  },
+  "actions": [
+    {
+      "action": "split_candidate",
+      "severity": "high",
+      "field": "domains",
+      "field_label": "结构域",
+      "field_en": "Domain",
+      "value": "LLM Systems",
+      "count": 5,
+      "share": 1.0,
+      "href": "library.html?domain=LLM+Systems",
+      "sample_slugs": [
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus",
+        "2501.01005-flashinfer",
+        "2307.08691-flashattention-2"
+      ],
+      "recommendation": "结构域 过大，考虑拆成更细子类。"
+    },
+    {
+      "action": "split_candidate",
+      "severity": "high",
+      "field": "reading_stage",
+      "field_label": "阅读阶段",
+      "field_en": "Reading stage",
+      "value": "deep_read",
+      "count": 5,
+      "share": 1.0,
+      "href": "library.html?stage=deep_read",
+      "sample_slugs": [
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus",
+        "2501.01005-flashinfer",
+        "2307.08691-flashattention-2"
+      ],
+      "recommendation": "阅读阶段 过大，考虑拆成更细子类。"
+    },
+    {
+      "action": "split_candidate",
+      "severity": "high",
+      "field": "status",
+      "field_label": "阅读状态",
+      "field_en": "Status",
+      "value": "read",
+      "count": 5,
+      "share": 1.0,
+      "href": "library.html?status=read",
+      "sample_slugs": [
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus",
+        "2501.01005-flashinfer",
+        "2307.08691-flashattention-2"
+      ],
+      "recommendation": "阅读状态 过大，考虑拆成更细子类。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "line_role",
+      "field_label": "研究线角色",
+      "field_en": "Line role",
+      "value": "followup",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?role=followup",
+      "sample_slugs": [
+        "2602.06036-dflash"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "line_role",
+      "field_label": "研究线角色",
+      "field_en": "Line role",
+      "value": "system",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?role=system",
+      "sample_slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "line_role",
+      "field_label": "研究线角色",
+      "field_en": "Line role",
+      "value": "variant",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?role=variant",
+      "sample_slugs": [
+        "2605.12825-orthrus"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "methods",
+      "field_label": "方法",
+      "field_en": "Method",
+      "value": "block diffusion",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?method=block+diffusion",
+      "sample_slugs": [
+        "2602.06036-dflash"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "methods",
+      "field_label": "方法",
+      "field_en": "Method",
+      "value": "block-sparse attention",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?method=block-sparse+attention",
+      "sample_slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "methods",
+      "field_label": "方法",
+      "field_en": "Method",
+      "value": "composable KV-cache format",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?method=composable+KV-cache+format",
+      "sample_slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "methods",
+      "field_label": "方法",
+      "field_en": "Method",
+      "value": "CUDA / GPU parallelism",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?method=CUDA+%2F+GPU+parallelism",
+      "sample_slugs": [
+        "2307.08691-flashattention-2"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "methods",
+      "field_label": "方法",
+      "field_en": "Method",
+      "value": "CUDA Graph",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?method=CUDA+Graph",
+      "sample_slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "methods",
+      "field_label": "方法",
+      "field_en": "Method",
+      "value": "dual-view attention",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?method=dual-view+attention",
+      "sample_slugs": [
+        "2605.12825-orthrus"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "methods",
+      "field_label": "方法",
+      "field_en": "Method",
+      "value": "forward KL distillation",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?method=forward+KL+distillation",
+      "sample_slugs": [
+        "2605.12825-orthrus"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "methods",
+      "field_label": "方法",
+      "field_en": "Method",
+      "value": "gated LoRA",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?method=gated+LoRA",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "methods",
+      "field_label": "方法",
+      "field_en": "Method",
+      "value": "intra-model consensus",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?method=intra-model+consensus",
+      "sample_slugs": [
+        "2605.12825-orthrus"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "methods",
+      "field_label": "方法",
+      "field_en": "Method",
+      "value": "introspective consistency",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?method=introspective+consistency",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "methods",
+      "field_label": "方法",
+      "field_en": "Method",
+      "value": "introspective strided decoding",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?method=introspective+strided+decoding",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "methods",
+      "field_label": "方法",
+      "field_en": "Method",
+      "value": "JIT compilation",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?method=JIT+compilation",
+      "sample_slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "methods",
+      "field_label": "方法",
+      "field_en": "Method",
+      "value": "KV injection",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?method=KV+injection",
+      "sample_slugs": [
+        "2602.06036-dflash"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "methods",
+      "field_label": "方法",
+      "field_en": "Method",
+      "value": "load-balanced scheduling",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?method=load-balanced+scheduling",
+      "sample_slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "methods",
+      "field_label": "方法",
+      "field_en": "Method",
+      "value": "logit-shifted causal training",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?method=logit-shifted+causal+training",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "methods",
+      "field_label": "方法",
+      "field_en": "Method",
+      "value": "masked diffusion",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?method=masked+diffusion",
+      "sample_slugs": [
+        "2605.12825-orthrus"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "methods",
+      "field_label": "方法",
+      "field_en": "Method",
+      "value": "online softmax",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?method=online+softmax",
+      "sample_slugs": [
+        "2307.08691-flashattention-2"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "methods",
+      "field_label": "方法",
+      "field_en": "Method",
+      "value": "p/q acceptance",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?method=p%2Fq+acceptance",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "methods",
+      "field_label": "方法",
+      "field_en": "Method",
+      "value": "parallel drafting",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?method=parallel+drafting",
+      "sample_slugs": [
+        "2602.06036-dflash"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "methods",
+      "field_label": "方法",
+      "field_en": "Method",
+      "value": "SGLang serving",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?method=SGLang+serving",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "methods",
+      "field_label": "方法",
+      "field_en": "Method",
+      "value": "shared KV cache",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?method=shared+KV+cache",
+      "sample_slugs": [
+        "2605.12825-orthrus"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "methods",
+      "field_label": "方法",
+      "field_en": "Method",
+      "value": "Speculative Decoding",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?method=Speculative+Decoding",
+      "sample_slugs": [
+        "2602.06036-dflash"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "methods",
+      "field_label": "方法",
+      "field_en": "Method",
+      "value": "target hidden features",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?method=target+hidden+features",
+      "sample_slugs": [
+        "2602.06036-dflash"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "methods",
+      "field_label": "方法",
+      "field_en": "Method",
+      "value": "tiling",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?method=tiling",
+      "sample_slugs": [
+        "2307.08691-flashattention-2"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "methods",
+      "field_label": "方法",
+      "field_en": "Method",
+      "value": "work partitioning",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?method=work+partitioning",
+      "sample_slugs": [
+        "2307.08691-flashattention-2"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "problems",
+      "field_label": "问题",
+      "field_en": "Problem",
+      "value": "Customizable Attention Serving",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?problem=Customizable+Attention+Serving",
+      "sample_slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "problems",
+      "field_label": "问题",
+      "field_en": "Problem",
+      "value": "Efficient Exact Attention",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?problem=Efficient+Exact+Attention",
+      "sample_slugs": [
+        "2307.08691-flashattention-2"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "problems",
+      "field_label": "问题",
+      "field_en": "Problem",
+      "value": "Lossless Speculative Decoding",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?problem=Lossless+Speculative+Decoding",
+      "sample_slugs": [
+        "2602.06036-dflash"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "problems",
+      "field_label": "问题",
+      "field_en": "Problem",
+      "value": "Memory-Efficient Parallel Token Generation",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?problem=Memory-Efficient+Parallel+Token+Generation",
+      "sample_slugs": [
+        "2605.12825-orthrus"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "problems",
+      "field_label": "问题",
+      "field_en": "Problem",
+      "value": "Parallel Diffusion Decoding",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?problem=Parallel+Diffusion+Decoding",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "topics",
+      "field_label": "主题",
+      "field_en": "Topic",
+      "value": "Attention Kernels",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?topic=Attention+Kernels",
+      "sample_slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "topics",
+      "field_label": "主题",
+      "field_en": "Topic",
+      "value": "Efficient Attention",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?topic=Efficient+Attention",
+      "sample_slugs": [
+        "2307.08691-flashattention-2"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "topics",
+      "field_label": "主题",
+      "field_en": "Topic",
+      "value": "GPU Kernel Optimization",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?topic=GPU+Kernel+Optimization",
+      "sample_slugs": [
+        "2307.08691-flashattention-2"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "topics",
+      "field_label": "主题",
+      "field_en": "Topic",
+      "value": "GPU Systems",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?topic=GPU+Systems",
+      "sample_slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "topics",
+      "field_label": "主题",
+      "field_en": "Topic",
+      "value": "Inference Optimization",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?topic=Inference+Optimization",
+      "sample_slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "topics",
+      "field_label": "主题",
+      "field_en": "Topic",
+      "value": "LLM",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?topic=LLM",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "topics",
+      "field_label": "主题",
+      "field_en": "Topic",
+      "value": "Long Context",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?topic=Long+Context",
+      "sample_slugs": [
+        "2307.08691-flashattention-2"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "topics",
+      "field_label": "主题",
+      "field_en": "Topic",
+      "value": "Transformer",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?topic=Transformer",
+      "sample_slugs": [
+        "2307.08691-flashattention-2"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "tracks",
+      "field_label": "方向",
+      "field_en": "Track",
+      "value": "Inference Serving Systems",
+      "count": 1,
+      "share": 0.2,
+      "href": "library.html?track=Inference+Serving+Systems",
+      "sample_slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "unused_config",
+      "severity": "medium",
+      "field": "reading_stage",
+      "field_label": "阅读阶段",
+      "field_en": "Reading stage",
+      "value": "code_checked",
+      "count": 0,
+      "share": 0.0,
+      "href": "library.html?stage=code_checked",
+      "sample_slugs": [],
+      "recommendation": "保留为候选值，或从 taxonomy.json 中移除。"
+    },
+    {
+      "action": "unused_config",
+      "severity": "medium",
+      "field": "reading_stage",
+      "field_label": "阅读阶段",
+      "field_en": "Reading stage",
+      "value": "normal_read",
+      "count": 0,
+      "share": 0.0,
+      "href": "library.html?stage=normal_read",
+      "sample_slugs": [],
+      "recommendation": "保留为候选值，或从 taxonomy.json 中移除。"
+    },
+    {
+      "action": "unused_config",
+      "severity": "medium",
+      "field": "reading_stage",
+      "field_label": "阅读阶段",
+      "field_en": "Reading stage",
+      "value": "skim",
+      "count": 0,
+      "share": 0.0,
+      "href": "library.html?stage=skim",
+      "sample_slugs": [],
+      "recommendation": "保留为候选值，或从 taxonomy.json 中移除。"
+    },
+    {
+      "action": "unused_config",
+      "severity": "medium",
+      "field": "review_stage",
+      "field_label": "复习阶段",
+      "field_en": "Review stage",
+      "value": "due",
+      "count": 0,
+      "share": 0.0,
+      "href": "library.html?reviewStage=due",
+      "sample_slugs": [],
+      "recommendation": "保留为候选值，或从 taxonomy.json 中移除。"
+    },
+    {
+      "action": "unused_config",
+      "severity": "medium",
+      "field": "review_stage",
+      "field_label": "复习阶段",
+      "field_en": "Review stage",
+      "value": "fresh",
+      "count": 0,
+      "share": 0.0,
+      "href": "library.html?reviewStage=fresh",
+      "sample_slugs": [],
+      "recommendation": "保留为候选值，或从 taxonomy.json 中移除。"
+    },
+    {
+      "action": "unused_config",
+      "severity": "medium",
+      "field": "review_stage",
+      "field_label": "复习阶段",
+      "field_en": "Review stage",
+      "value": "reviewed",
+      "count": 0,
+      "share": 0.0,
+      "href": "library.html?reviewStage=reviewed",
+      "sample_slugs": [],
+      "recommendation": "保留为候选值，或从 taxonomy.json 中移除。"
+    },
+    {
+      "action": "unused_config",
+      "severity": "medium",
+      "field": "status",
+      "field_label": "阅读状态",
+      "field_en": "Status",
+      "value": "archived",
+      "count": 0,
+      "share": 0.0,
+      "href": "library.html?status=archived",
+      "sample_slugs": [],
+      "recommendation": "保留为候选值，或从 taxonomy.json 中移除。"
+    },
+    {
+      "action": "unused_config",
+      "severity": "medium",
+      "field": "status",
+      "field_label": "阅读状态",
+      "field_en": "Status",
+      "value": "reading",
+      "count": 0,
+      "share": 0.0,
+      "href": "library.html?status=reading",
+      "sample_slugs": [],
+      "recommendation": "保留为候选值，或从 taxonomy.json 中移除。"
+    },
+    {
+      "action": "unused_config",
+      "severity": "medium",
+      "field": "status",
+      "field_label": "阅读状态",
+      "field_en": "Status",
+      "value": "skimmed",
+      "count": 0,
+      "share": 0.0,
+      "href": "library.html?status=skimmed",
+      "sample_slugs": [],
+      "recommendation": "保留为候选值，或从 taxonomy.json 中移除。"
+    },
+    {
+      "action": "unused_config",
+      "severity": "medium",
+      "field": "status",
+      "field_label": "阅读状态",
+      "field_en": "Status",
+      "value": "unread",
+      "count": 0,
+      "share": 0.0,
+      "href": "library.html?status=unread",
+      "sample_slugs": [],
+      "recommendation": "保留为候选值，或从 taxonomy.json 中移除。"
+    }
+  ]
+}
