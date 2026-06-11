@@ -44,6 +44,7 @@ REQUIRED_META = {
 
 REQUIRED_PAGES = {
     "index.html",
+    "library.html",
     "dashboard.html",
     "tags.html",
     "papers.json",

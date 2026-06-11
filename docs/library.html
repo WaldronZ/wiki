@@ -1,0 +1,613 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>论文库表格</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f3ee;
+      --panel: #fffdf8;
+      --ink: #222426;
+      --muted: #6b6f76;
+      --line: #ded8cd;
+      --accent: #2f6f73;
+      --accent-2: #8a5d3b;
+      --chip: #edf3f1;
+      --shadow: 0 14px 36px rgba(48, 44, 36, .08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "PingFang SC", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+      line-height: 1.65;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+    header { padding: 44px 0 22px; }
+    .eyebrow { color: var(--accent-2); font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    h1 { margin: 8px 0 10px; font-size: clamp(30px, 5vw, 56px); line-height: 1.08; letter-spacing: 0; }
+    .lead { max-width: 760px; margin: 0; color: var(--muted); font-size: 17px; }
+    .stats { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+    .stat, .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 999px;
+      padding: 7px 12px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      padding: 12px 0;
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+    }
+    .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(138px, 1fr)); gap: 10px; }
+    .controls input[type="search"] { grid-column: span 2; min-width: 260px; }
+    input, select {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--ink);
+      padding: 0 12px;
+      font: inherit;
+    }
+    main { padding: 28px 0 56px; }
+    .overview { margin-bottom: 30px; }
+    .line-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+    .line-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 15px;
+    }
+    .line-card h2 { margin: 0 0 8px; font-size: 18px; line-height: 1.25; }
+    .line-card ul { margin: 10px 0 0; padding-left: 18px; }
+    .taxonomy-kicker { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 10px; }
+    .results-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin: 0 0 16px;
+      color: var(--muted);
+    }
+    .results-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .pager {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 22px;
+      color: var(--muted);
+    }
+    .pager[hidden] { display: none; }
+    .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin: 24px 0; }
+    .metric-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .metric-card strong { display: block; font-size: 28px; line-height: 1.1; }
+    .metric-card span { color: var(--muted); font-size: 13px; }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    .data-table th, .data-table td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+    .data-table th { color: var(--muted); font-size: 13px; font-weight: 700; }
+    .data-table tr:last-child td { border-bottom: 0; }
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+    .library-table {
+      width: 100%;
+      min-width: 1080px;
+      border-collapse: collapse;
+    }
+    .library-table th, .library-table td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }
+    .library-table th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: #f0ebe1;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+      text-transform: uppercase;
+    }
+    .library-table tr:last-child td { border-bottom: 0; }
+    .library-table tr[hidden] { display: none; }
+    .library-title { min-width: 300px; }
+    .library-title strong { display: block; font-size: 15px; line-height: 1.3; }
+    .library-taxonomy { min-width: 210px; }
+    .library-actions { display: flex; flex-wrap: wrap; gap: 8px; min-width: 145px; }
+    .status-stack { display: grid; gap: 5px; }
+    .score-grid { display: grid; grid-template-columns: repeat(3, minmax(42px, 1fr)); gap: 6px; }
+    .score-grid span {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #faf7f0;
+      padding: 4px 6px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+    }
+    .queue-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .queue-list { margin: 0; padding-left: 18px; }
+    .queue-list li { margin: 8px 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+    }
+    .card h2 { margin: 0 0 8px; font-size: 20px; line-height: 1.25; letter-spacing: 0; }
+    .line-detail { display: grid; gap: 18px; }
+    .role-section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .role-section h2 { margin: 0 0 12px; font-size: 20px; }
+    .paper-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 14px;
+      padding: 12px 0;
+      border-top: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+    }
+    .paper-row:first-of-type { border-top: 0; }
+    .paper-row h3 { margin: 0 0 4px; font-size: 17px; line-height: 1.3; }
+    .paper-row .chips { margin-top: 8px; padding-top: 0; }
+    .meta { color: var(--muted); font-size: 13px; }
+    .essence {
+      margin: 12px 0 0;
+      padding: 10px 12px;
+      border-left: 3px solid var(--accent);
+      border-radius: 7px;
+      background: var(--chip);
+      color: #2f5054;
+      font-size: 14px;
+    }
+    .excerpt { color: #3f4448; margin: 12px 0; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 12px; }
+    .chip { background: var(--chip); padding: 4px 9px; font-size: 12px; }
+    .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 0 11px;
+      font-size: 14px;
+      font-weight: 650;
+      color: var(--accent);
+      cursor: pointer;
+    }
+    .button:disabled { cursor: not-allowed; opacity: .45; }
+    .section-title { margin: 28px 0 12px; font-size: 22px; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 10px; }
+    .tag-pill {
+      display: inline-flex;
+      justify-content: space-between;
+      gap: 20px;
+      min-width: 150px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 10px 12px;
+    }
+    .empty {
+      border: 1px dashed var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+      padding: 28px;
+      color: var(--muted);
+    }
+    .card-flags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .flag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      border-radius: 999px;
+      background: #f7f3eb;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      padding: 0 8px;
+      font-size: 12px;
+    }
+    @media (max-width: 760px) {
+      .controls { grid-template-columns: 1fr; }
+      .controls input[type="search"] { grid-column: auto; min-width: 0; }
+      .results-bar { align-items: flex-start; flex-direction: column; }
+      .pager { justify-content: flex-start; flex-wrap: wrap; }
+      .paper-row { grid-template-columns: 1fr; }
+      .data-table { display: block; overflow-x: auto; }
+      header { padding-top: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+
+<header class="shell">
+  <div class="eyebrow">Paper Library</div>
+  <h1>论文库表格</h1>
+  <p class="lead">面向大量论文的密集管理视图：快速扫状态、研究线、分类覆盖、重要性和代码情况。适合批量整理与查漏补缺。</p>
+  <div class="stats">
+    <a class="stat" href="index.html">卡片首页</a>
+    <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="lines/index.html">研究线</a>
+    <a class="stat" href="tags.html">分类总览</a>
+    <span class="stat">论文 5</span>
+  </div>
+</header>
+<div class="toolbar">
+  <div class="shell controls">
+    <input id="search" type="search" placeholder="搜索标题、作者、研究线、分类、状态">
+    <select id="domain"><option value="">全部领域</option><option value="LLM Systems">LLM Systems (5)</option></select>
+    <select id="track"><option value="">全部方向</option><option value="Inference Acceleration">Inference Acceleration (3)</option><option value="Parallel Decoding">Parallel Decoding (3)</option><option value="Attention Kernels">Attention Kernels (2)</option><option value="Inference Serving Systems">Inference Serving Systems (1)</option></select>
+    <select id="problem"><option value="">全部问题</option><option value="Customizable Attention Serving">Customizable Attention Serving (1)</option><option value="Efficient Exact Attention">Efficient Exact Attention (1)</option><option value="Lossless Speculative Decoding">Lossless Speculative Decoding (1)</option><option value="Memory-Efficient Parallel Token Generation">Memory-Efficient Parallel Token Generation (1)</option><option value="Parallel Diffusion Decoding">Parallel Diffusion Decoding (1)</option></select>
+    <select id="line"><option value="">全部研究线</option><option value="Parallel Decoding with Diffusion Models">Parallel Decoding with Diffusion Models (3)</option><option value="Efficient Attention Kernels">Efficient Attention Kernels (2)</option></select>
+    <select id="role"><option value="">全部角色</option><option value="foundation">foundation (2)</option><option value="followup">followup (1)</option><option value="system">system (1)</option><option value="variant">variant (1)</option></select>
+    <select id="status"><option value="">全部状态</option><option value="read">read (5)</option></select>
+    <select id="stage"><option value="">阅读阶段</option><option value="deep_read">deep_read (5)</option></select>
+    <select id="reviewStage"><option value="">复习阶段</option></select>
+    <select id="code"><option value="">代码状态</option><option value="yes">有代码</option><option value="no">无代码</option></select>
+    <select id="importance"><option value="">重要性</option><option value="5">5 星</option><option value="4">4 星及以上</option><option value="3">3 星及以上</option></select>
+    <select id="sort"><option value="default">默认排序</option><option value="importance">重要性优先</option><option value="updated">最近更新</option><option value="year">年份新到旧</option><option value="title">标题 A-Z</option></select>
+    <select id="pageSize"><option value="50">每页 50 篇</option><option value="100">每页 100 篇</option><option value="200">每页 200 篇</option><option value="all">显示全部</option></select>
+  </div>
+</div>
+<main class="shell">
+  <div class="results-bar">
+    <strong id="resultCount">显示 5 / 5 篇</strong>
+    <div class="results-actions"><button id="resetFilters" class="button" type="button">重置筛选</button></div>
+  </div>
+  <div class="table-wrap">
+    <table class="library-table">
+      <thead>
+        <tr><th>论文</th><th>研究线</th><th>结构分类</th><th>主题 / 方法</th><th>状态</th><th>评分</th><th>代码</th><th>操作</th></tr>
+      </thead>
+      <tbody id="libraryRows"><tr
+  data-search="2602.06036-dflash dflash: block diffusion for flash speculative decoding dflash：用于快速 speculative decoding 的块扩散方法 dflash: block diffusion for flash speculative decoding 2602.06036v1 parallel decoding with diffusion models followup read deep_read 中文版：dflash 把 diffusion language model 的角色从“独立生成器”改为 speculative decoding 中的轻量 parallel drafter：draft model 一次前向生成一个 token block，再由 target llm 并行验证，从而保持 lossless 输出。它的关键设计是从 frozen target model 抽取多层 hidden features，经融合后注入... jian chen yesheng liang zhijian liu llm systems inference acceleration parallel decoding lossless speculative decoding diffusion language models llm inference llm serving speculative decoding block diffusion kv injection parallel drafting speculative decoding target hidden features"
+  data-domains="LLM Systems"
+  data-tracks="Inference Acceleration|Parallel Decoding"
+  data-problems="Lossless Speculative Decoding"
+  data-line="Parallel Decoding with Diffusion Models"
+  data-role="followup"
+  data-status="read"
+  data-stage="deep_read"
+  data-review-stage=""
+  data-code="yes"
+  data-importance="4"
+  data-year="2026"
+  data-updated="2026-06-11T15:42:03"
+  data-title="DFlash: Block Diffusion for Flash Speculative Decoding">
+  <td class="library-title">
+    <strong><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a></strong>
+    <div class="meta">DFlash: Block Diffusion for Flash Speculative Decoding</div>
+    <div class="meta">2026 / Jian Chen, Yesheng Liang, Zhijian Liu / 2602.06036v1</div>
+  </td>
+  <td><a href="lines/parallel-decoding-with-diffusion-models.html">Parallel Decoding with Diffusion Models</a><div class="meta">followup</div></td>
+  <td class="library-taxonomy"><div class="chips"><span class="chip">LLM Systems</span><span class="chip">Inference Acceleration</span><span class="chip">Parallel Decoding</span><span class="chip">Lossless Speculative Decoding</span></div></td>
+  <td class="library-taxonomy"><div class="chips"><span class="chip">Diffusion Language Models</span><span class="chip">LLM Inference</span><span class="chip">LLM Serving</span><span class="chip">Speculative Decoding</span><span class="chip">block diffusion</span><span class="chip">+4</span></div></td>
+  <td><div class="status-stack"><span class="flag">read</span><span class="flag">deep_read</span><span class="meta">未设置复习</span></div></td>
+  <td><div class="score-grid"><span>I 4</span><span>C 4</span><span>R 3</span></div></td>
+  <td>有</td>
+  <td><div class="library-actions"><a class="button" href="2602.06036-dflash.html">报告</a><a class="button" href="https://arxiv.org/abs/2602.06036v1">arxiv</a><a class="button" href="https://github.com/z-lab/dflash">code</a></div></td>
+</tr>
+<tr
+  data-search="2604.11035-introspective-dlm introspective diffusion language models 内省式扩散语言模型 introspective diffusion language models 2604.11035v1 parallel decoding with diffusion models foundation read deep_read 中文版：本文把 dlm 与 ar 模型的质量差距归因于缺少 introspective consistency，即模型不能稳定认可自己已经生成的 token；在此基础上提出 i-dlm，用 logit-shifted causal training 把预训练 ar 模型转成可并行解码的 dlm，再用 introspective strided decoding (isd) 在同一次 forward 中生成新 token 并验证旧 tok... yifan yu yuqing jian junxiong wang zhongzhu zhou donglin zhuang xinyu fang sri yanamandra xiaoxia wu qingyang wu shuaiwen leon song tri dao ben athiwaratkun james zou fan lai chenfeng xu llm systems inference acceleration parallel decoding parallel diffusion decoding diffusion language models llm llm serving parallel decoding speculative decoding gated lora introspective consistency introspective strided decoding logit-shifted causal training p/q acceptance sglang serving"
+  data-domains="LLM Systems"
+  data-tracks="Inference Acceleration|Parallel Decoding"
+  data-problems="Parallel Diffusion Decoding"
+  data-line="Parallel Decoding with Diffusion Models"
+  data-role="foundation"
+  data-status="read"
+  data-stage="deep_read"
+  data-review-stage=""
+  data-code="yes"
+  data-importance="5"
+  data-year="2026"
+  data-updated="2026-06-11T15:42:03"
+  data-title="Introspective Diffusion Language Models">
+  <td class="library-title">
+    <strong><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a></strong>
+    <div class="meta">Introspective Diffusion Language Models</div>
+    <div class="meta">2026 / Yifan Yu, Yuqing Jian, Junxiong Wang / 2604.11035v1</div>
+  </td>
+  <td><a href="lines/parallel-decoding-with-diffusion-models.html">Parallel Decoding with Diffusion Models</a><div class="meta">foundation</div></td>
+  <td class="library-taxonomy"><div class="chips"><span class="chip">LLM Systems</span><span class="chip">Inference Acceleration</span><span class="chip">Parallel Decoding</span><span class="chip">Parallel Diffusion Decoding</span></div></td>
+  <td class="library-taxonomy"><div class="chips"><span class="chip">Diffusion Language Models</span><span class="chip">LLM</span><span class="chip">LLM Serving</span><span class="chip">Parallel Decoding</span><span class="chip">Speculative Decoding</span><span class="chip">+6</span></div></td>
+  <td><div class="status-stack"><span class="flag">read</span><span class="flag">deep_read</span><span class="meta">未设置复习</span></div></td>
+  <td><div class="score-grid"><span>I 5</span><span>C 4</span><span>R 3</span></div></td>
+  <td>有</td>
+  <td><div class="library-actions"><a class="button" href="2604.11035-introspective-dlm.html">报告</a><a class="button" href="https://arxiv.org/abs/2604.11035v1">arxiv</a><a class="button" href="https://github.com/Introspective-Diffusion/I-DLM">code</a></div></td>
+</tr>
+<tr
+  data-search="2605.12825-orthrus orthrus: memory-efficient parallel token generation via dual-view diffusion orthrus：通过双视角扩散实现内存高效的并行 token 生成 orthrus: memory-efficient parallel token generation via dual-view diffusion 2605.12825v2 parallel decoding with diffusion models variant read deep_read 中文版：orthrus 在冻结的 autoregressive llm 内部插入轻量 trainable diffusion attention module，让 ar view 负责高质量 context / kv cache 构建，让 diffusion view 一次并行预测多个 future tokens，再由同一个 frozen ar head 做 consensus verification，从而在不改变 base mode... chien van nguyen chaitra hegde van cuong pham ryan a. rossi franck dernoncourt thien huu nguyen llm systems inference acceleration parallel decoding memory-efficient parallel token generation diffusion language models kv cache llm inference parallel decoding speculative decoding dual-view attention forward kl distillation intra-model consensus masked diffusion shared kv cache"
+  data-domains="LLM Systems"
+  data-tracks="Inference Acceleration|Parallel Decoding"
+  data-problems="Memory-Efficient Parallel Token Generation"
+  data-line="Parallel Decoding with Diffusion Models"
+  data-role="variant"
+  data-status="read"
+  data-stage="deep_read"
+  data-review-stage=""
+  data-code="yes"
+  data-importance="4"
+  data-year="2026"
+  data-updated="2026-06-11T15:42:03"
+  data-title="Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion">
+  <td class="library-title">
+    <strong><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></strong>
+    <div class="meta">Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion</div>
+    <div class="meta">2026 / Chien Van Nguyen, Chaitra Hegde, Van Cuong Pham / 2605.12825v2</div>
+  </td>
+  <td><a href="lines/parallel-decoding-with-diffusion-models.html">Parallel Decoding with Diffusion Models</a><div class="meta">variant</div></td>
+  <td class="library-taxonomy"><div class="chips"><span class="chip">LLM Systems</span><span class="chip">Inference Acceleration</span><span class="chip">Parallel Decoding</span><span class="chip">Memory-Efficient Parallel Token Generation</span></div></td>
+  <td class="library-taxonomy"><div class="chips"><span class="chip">Diffusion Language Models</span><span class="chip">KV Cache</span><span class="chip">LLM Inference</span><span class="chip">Parallel Decoding</span><span class="chip">Speculative Decoding</span><span class="chip">+5</span></div></td>
+  <td><div class="status-stack"><span class="flag">read</span><span class="flag">deep_read</span><span class="meta">未设置复习</span></div></td>
+  <td><div class="score-grid"><span>I 4</span><span>C 4</span><span>R 3</span></div></td>
+  <td>有</td>
+  <td><div class="library-actions"><a class="button" href="2605.12825-orthrus.html">报告</a><a class="button" href="https://arxiv.org/abs/2605.12825v2">arxiv</a><a class="button" href="https://github.com/chiennv2000/orthrus">code</a></div></td>
+</tr>
+<tr
+  data-search="2501.01005-flashinfer flashinfer: efficient and customizable attention engine for llm inference serving flashinfer：面向 llm 推理服务的高效可定制 attention 引擎 flashinfer: efficient and customizable attention engine for llm inference serving 2501.01005v2 efficient attention kernels system read deep_read 中文版：flashinfer 是一个面向 llm online serving 的 attention kernel engine。它把 pagedattention、radixattention、prefix sharing、tree attention、kv pruning 等多种 kv-cache 访问形态统一成 block-sparse / composable sparse formats，并用 cuda/cutlass 模板... zihao ye lequn chen ruihang lai wuwei lin yineng zhang stephanie wang tianqi chen baris kasikci vinod grover arvind krishnamurthy luis ceze llm systems attention kernels inference serving systems customizable attention serving attention kernels gpu systems inference optimization kv cache llm serving block-sparse attention composable kv-cache format cuda graph flashattention jit compilation load-balanced scheduling"
+  data-domains="LLM Systems"
+  data-tracks="Attention Kernels|Inference Serving Systems"
+  data-problems="Customizable Attention Serving"
+  data-line="Efficient Attention Kernels"
+  data-role="system"
+  data-status="read"
+  data-stage="deep_read"
+  data-review-stage=""
+  data-code="yes"
+  data-importance="4"
+  data-year="2025"
+  data-updated="2026-06-11T15:42:03"
+  data-title="FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving">
+  <td class="library-title">
+    <strong><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></strong>
+    <div class="meta">FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving</div>
+    <div class="meta">2025 / Zihao Ye, Lequn Chen, Ruihang Lai / 2501.01005v2</div>
+  </td>
+  <td><a href="lines/efficient-attention-kernels.html">Efficient Attention Kernels</a><div class="meta">system</div></td>
+  <td class="library-taxonomy"><div class="chips"><span class="chip">LLM Systems</span><span class="chip">Attention Kernels</span><span class="chip">Inference Serving Systems</span><span class="chip">Customizable Attention Serving</span></div></td>
+  <td class="library-taxonomy"><div class="chips"><span class="chip">Attention Kernels</span><span class="chip">GPU Systems</span><span class="chip">Inference Optimization</span><span class="chip">KV Cache</span><span class="chip">LLM Serving</span><span class="chip">+6</span></div></td>
+  <td><div class="status-stack"><span class="flag">read</span><span class="flag">deep_read</span><span class="meta">未设置复习</span></div></td>
+  <td><div class="score-grid"><span>I 4</span><span>C 4</span><span>R 4</span></div></td>
+  <td>有</td>
+  <td><div class="library-actions"><a class="button" href="2501.01005-flashinfer.html">报告</a><a class="button" href="https://arxiv.org/abs/2501.01005v2">arxiv</a><a class="button" href="https://github.com/flashinfer-ai/flashinfer">code</a></div></td>
+</tr>
+<tr
+  data-search="2307.08691-flashattention-2 flashattention-2: faster attention with better parallelism and work partitioning flashattention-2：用更好的并行性与工作划分加速 attention flashattention-2: faster attention with better parallelism and work partitioning 2307.08691v1 efficient attention kernels foundation read deep_read 中文版：flashattention-2 不是改变 attention 数学定义的近似方法，而是在 flashattention exact attention 的基础上重新设计 gpu 上的计算顺序、thread block 并行维度和 warp 内工作划分，减少 non-matmul flops 与 shared memory 通信，从而把 attention kernel 的利用率推近 gemm。 tri dao llm systems attention kernels efficient exact attention efficient attention gpu kernel optimization long context transformer cuda / gpu parallelism flashattention online softmax tiling work partitioning"
+  data-domains="LLM Systems"
+  data-tracks="Attention Kernels"
+  data-problems="Efficient Exact Attention"
+  data-line="Efficient Attention Kernels"
+  data-role="foundation"
+  data-status="read"
+  data-stage="deep_read"
+  data-review-stage=""
+  data-code="yes"
+  data-importance="5"
+  data-year="2023"
+  data-updated="2026-06-11T15:42:03"
+  data-title="FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning">
+  <td class="library-title">
+    <strong><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></strong>
+    <div class="meta">FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning</div>
+    <div class="meta">2023 / Tri Dao / 2307.08691v1</div>
+  </td>
+  <td><a href="lines/efficient-attention-kernels.html">Efficient Attention Kernels</a><div class="meta">foundation</div></td>
+  <td class="library-taxonomy"><div class="chips"><span class="chip">LLM Systems</span><span class="chip">Attention Kernels</span><span class="chip">Efficient Exact Attention</span></div></td>
+  <td class="library-taxonomy"><div class="chips"><span class="chip">Efficient Attention</span><span class="chip">GPU Kernel Optimization</span><span class="chip">Long Context</span><span class="chip">Transformer</span><span class="chip">CUDA / GPU parallelism</span><span class="chip">+4</span></div></td>
+  <td><div class="status-stack"><span class="flag">read</span><span class="flag">deep_read</span><span class="meta">未设置复习</span></div></td>
+  <td><div class="score-grid"><span>I 5</span><span>C 4</span><span>R 4</span></div></td>
+  <td>有</td>
+  <td><div class="library-actions"><a class="button" href="2307.08691-flashattention-2.html">报告</a><a class="button" href="https://arxiv.org/abs/2307.08691v1">arxiv</a><a class="button" href="https://github.com/Dao-AILab/flash-attention">code</a></div></td>
+</tr></tbody>
+    </table>
+  </div>
+  <nav id="pager" class="pager" aria-label="分页">
+    <button id="prevPage" class="button" type="button">上一页</button>
+    <span id="pageInfo">第 1 / 1 页</span>
+    <button id="nextPage" class="button" type="button">下一页</button>
+  </nav>
+</main>
+<script>
+const tbody = document.querySelector("#libraryRows");
+const allRows = Array.from(tbody.querySelectorAll("tr"));
+const search = document.querySelector("#search");
+const domain = document.querySelector("#domain");
+const track = document.querySelector("#track");
+const problem = document.querySelector("#problem");
+const line = document.querySelector("#line");
+const role = document.querySelector("#role");
+const status = document.querySelector("#status");
+const stage = document.querySelector("#stage");
+const reviewStage = document.querySelector("#reviewStage");
+const code = document.querySelector("#code");
+const importance = document.querySelector("#importance");
+const sort = document.querySelector("#sort");
+const pageSize = document.querySelector("#pageSize");
+const resultCount = document.querySelector("#resultCount");
+const resetFilters = document.querySelector("#resetFilters");
+const pager = document.querySelector("#pager");
+const pageInfo = document.querySelector("#pageInfo");
+const prevPage = document.querySelector("#prevPage");
+const nextPage = document.querySelector("#nextPage");
+let currentPage = 1;
+const controls = [
+  ["q", search],
+  ["domain", domain],
+  ["track", track],
+  ["problem", problem],
+  ["line", line],
+  ["role", role],
+  ["status", status],
+  ["stage", stage],
+  ["reviewStage", reviewStage],
+  ["code", code],
+  ["importance", importance],
+  ["sort", sort],
+  ["size", pageSize],
+];
+
+function tokens(value) {
+  return String(value || "").split("|").filter(Boolean);
+}
+
+function hasToken(row, key, value) {
+  return !value || tokens(row.dataset[key]).includes(value);
+}
+
+function pageLimit() {
+  return pageSize.value === "all" ? Infinity : Number(pageSize.value || 50);
+}
+
+function readStateFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  controls.forEach(([key, el]) => {
+    if (params.has(key)) el.value = params.get(key);
+  });
+  currentPage = Number(params.get("page") || 1) || 1;
+}
+
+function writeStateToUrl() {
+  const params = new URLSearchParams();
+  controls.forEach(([key, el]) => {
+    const defaultValue = key === "sort" ? "default" : key === "size" ? "50" : "";
+    if (el.value && el.value !== defaultValue) params.set(key, el.value);
+  });
+  if (currentPage > 1) params.set("page", String(currentPage));
+  const query = params.toString();
+  window.history.replaceState(null, "", query ? `${location.pathname}?${query}` : location.pathname);
+}
+
+function sortRows(rows) {
+  const mode = sort.value;
+  return [...rows].sort((a, b) => {
+    if (mode === "importance") {
+      return Number(b.dataset.importance || 0) - Number(a.dataset.importance || 0)
+        || Number(b.dataset.year || 0) - Number(a.dataset.year || 0)
+        || a.dataset.title.localeCompare(b.dataset.title);
+    }
+    if (mode === "updated") return String(b.dataset.updated || "").localeCompare(String(a.dataset.updated || "")) || a.dataset.title.localeCompare(b.dataset.title);
+    if (mode === "year") return Number(b.dataset.year || 0) - Number(a.dataset.year || 0) || a.dataset.title.localeCompare(b.dataset.title);
+    if (mode === "title") return a.dataset.title.localeCompare(b.dataset.title);
+    return Number(b.dataset.year || 0) - Number(a.dataset.year || 0)
+      || String(b.dataset.updated || "").localeCompare(String(a.dataset.updated || ""))
+      || a.dataset.title.localeCompare(b.dataset.title);
+  });
+}
+
+function render() {
+  const q = search.value.trim().toLowerCase();
+  const minImportance = Number(importance.value || 0);
+  const filtered = allRows.filter(row => {
+    return (!q || row.dataset.search.includes(q))
+      && hasToken(row, "domains", domain.value)
+      && hasToken(row, "tracks", track.value)
+      && hasToken(row, "problems", problem.value)
+      && (!line.value || row.dataset.line === line.value)
+      && (!role.value || row.dataset.role === role.value)
+      && (!status.value || row.dataset.status === status.value)
+      && (!stage.value || row.dataset.stage === stage.value)
+      && (!reviewStage.value || row.dataset.reviewStage === reviewStage.value)
+      && (!code.value || row.dataset.code === code.value)
+      && (!minImportance || Number(row.dataset.importance || 0) >= minImportance);
+  });
+  const ranked = sortRows(filtered);
+  const limit = pageLimit();
+  const totalPages = limit === Infinity ? 1 : Math.max(1, Math.ceil(ranked.length / limit));
+  currentPage = Math.min(Math.max(currentPage, 1), totalPages);
+  const start = limit === Infinity ? 0 : (currentPage - 1) * limit;
+  const visible = new Set(ranked.slice(start, limit === Infinity ? ranked.length : start + limit));
+  const fragment = document.createDocumentFragment();
+  ranked.forEach(row => {
+    row.hidden = !visible.has(row);
+    fragment.appendChild(row);
+  });
+  tbody.appendChild(fragment);
+  allRows.forEach(row => {
+    if (!filtered.includes(row)) row.hidden = true;
+  });
+  resultCount.textContent = `显示 ${ranked.length} / ${allRows.length} 篇`;
+  pageInfo.textContent = `第 ${currentPage} / ${totalPages} 页`;
+  pager.hidden = ranked.length === 0 || limit === Infinity || totalPages <= 1;
+  prevPage.disabled = currentPage <= 1;
+  nextPage.disabled = currentPage >= totalPages;
+  writeStateToUrl();
+}
+
+controls.forEach(([, el]) => el.addEventListener("input", () => {
+  currentPage = 1;
+  render();
+}));
+resetFilters.addEventListener("click", () => {
+  controls.forEach(([key, el]) => {
+    el.value = key === "sort" ? "default" : key === "size" ? "50" : "";
+  });
+  currentPage = 1;
+  render();
+});
+prevPage.addEventListener("click", () => {
+  currentPage -= 1;
+  render();
+});
+nextPage.addEventListener("click", () => {
+  currentPage += 1;
+  render();
+});
+
+readStateFromUrl();
+render();
+</script>
+
+</body>
+</html>

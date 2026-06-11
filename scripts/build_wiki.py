@@ -24,6 +24,7 @@ GENERATED_FIXED_PATHS = (
     "papers.json",
     "search_index.json",
     "index.html",
+    "library.html",
     "dashboard.html",
     "tags.html",
     "lines/index.html",
@@ -610,6 +611,51 @@ def page_shell(title: str, body: str, data: dict[str, Any] | None = None) -> str
     }}
     .data-table th {{ color: var(--muted); font-size: 13px; font-weight: 700; }}
     .data-table tr:last-child td {{ border-bottom: 0; }}
+    .table-wrap {{
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }}
+    .library-table {{
+      width: 100%;
+      min-width: 1080px;
+      border-collapse: collapse;
+    }}
+    .library-table th, .library-table td {{
+      border-bottom: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }}
+    .library-table th {{
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: #f0ebe1;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+      text-transform: uppercase;
+    }}
+    .library-table tr:last-child td {{ border-bottom: 0; }}
+    .library-table tr[hidden] {{ display: none; }}
+    .library-title {{ min-width: 300px; }}
+    .library-title strong {{ display: block; font-size: 15px; line-height: 1.3; }}
+    .library-taxonomy {{ min-width: 210px; }}
+    .library-actions {{ display: flex; flex-wrap: wrap; gap: 8px; min-width: 145px; }}
+    .status-stack {{ display: grid; gap: 5px; }}
+    .score-grid {{ display: grid; grid-template-columns: repeat(3, minmax(42px, 1fr)); gap: 6px; }}
+    .score-grid span {{
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #faf7f0;
+      padding: 4px 6px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+    }}
     .queue-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }}
     .queue-list {{ margin: 0; padding-left: 18px; }}
     .queue-list li {{ margin: 8px 0; }}
@@ -795,6 +841,7 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <span class="stat">研究线 {len(taxonomy["research_lines"])}</span>
     <span class="stat">分类 {len(data["tags"])}</span>
     <span class="stat">最近更新 {html.escape(data["generated_at"])}</span>
+    <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="lines/index.html">研究线</a>
     <a class="stat" href="tags.html">分类总览</a>
@@ -1075,6 +1122,306 @@ def render_card(paper: dict[str, Any]) -> str:
 </article>"""
 
 
+def attr_tokens(values: list[str]) -> str:
+    return "|".join(values)
+
+
+def render_inline_chips(values: list[str], limit: int = 4) -> str:
+    shown = values[:limit]
+    extra = len(values) - len(shown)
+    chips = "".join(f'<span class="chip">{html.escape(value)}</span>' for value in shown)
+    if extra > 0:
+        chips += f'<span class="chip">+{extra}</span>'
+    return chips
+
+
+def render_library_row(paper: dict[str, Any]) -> str:
+    link = paper["html_path"] or paper["md_path"]
+    authors = ", ".join(paper.get("authors", [])[:3])
+    domain_track_problem = [
+        *paper.get("domains", []),
+        *paper.get("tracks", []),
+        *paper.get("problems", []),
+    ]
+    topics_methods = [*paper.get("topics", []), *paper.get("methods", [])]
+    search_text = " ".join(
+        str(part)
+        for part in [
+            paper.get("slug"),
+            paper.get("title"),
+            paper.get("title_zh"),
+            paper.get("title_en"),
+            paper.get("arxiv_id"),
+            paper.get("research_line"),
+            paper.get("line_role"),
+            paper.get("status"),
+            paper.get("reading_stage"),
+            paper.get("review_stage"),
+            paper.get("excerpt"),
+            *paper.get("authors", []),
+            *domain_track_problem,
+            *topics_methods,
+        ]
+        if part
+    ).lower()
+    links = [f'<a class="button" href="{html.escape(link)}">报告</a>']
+    if paper.get("arxiv_url"):
+        links.append(f'<a class="button" href="{html.escape(paper["arxiv_url"])}">arxiv</a>')
+    if paper.get("code_url"):
+        links.append(f'<a class="button" href="{html.escape(paper["code_url"])}">code</a>')
+
+    line_href = ""
+    if paper.get("research_line") and paper.get("research_line") != "Unassigned":
+        line_href = f'lines/{slugify_label(str(paper["research_line"]))}.html'
+    line_html = (
+        f'<a href="{html.escape(line_href)}">{html.escape(str(paper["research_line"]))}</a>'
+        if line_href
+        else html.escape(str(paper.get("research_line") or "Unassigned"))
+    )
+    next_review = str(paper.get("next_review") or "")
+    review_bits = []
+    if paper.get("review_stage"):
+        review_bits.append(f'复习 {html.escape(str(paper["review_stage"]))}')
+    if next_review:
+        review_bits.append(f'下次 {html.escape(next_review)}')
+    if not review_bits:
+        review_bits.append("未设置复习")
+
+    return f"""<tr
+  data-search="{html.escape(search_text, quote=True)}"
+  data-domains="{html.escape(attr_tokens(paper.get("domains", [])), quote=True)}"
+  data-tracks="{html.escape(attr_tokens(paper.get("tracks", [])), quote=True)}"
+  data-problems="{html.escape(attr_tokens(paper.get("problems", [])), quote=True)}"
+  data-line="{html.escape(str(paper.get("research_line") or ""), quote=True)}"
+  data-role="{html.escape(str(paper.get("line_role") or ""), quote=True)}"
+  data-status="{html.escape(str(paper.get("status") or ""), quote=True)}"
+  data-stage="{html.escape(str(paper.get("reading_stage") or ""), quote=True)}"
+  data-review-stage="{html.escape(str(paper.get("review_stage") or ""), quote=True)}"
+  data-code="{"yes" if paper.get("has_code") else "no"}"
+  data-importance="{html.escape(str(paper.get("importance") or 0), quote=True)}"
+  data-year="{html.escape(str(paper.get("year") or 0), quote=True)}"
+  data-updated="{html.escape(str(paper.get("updated_at") or ""), quote=True)}"
+  data-title="{html.escape(str(paper.get("title_en") or paper.get("title") or paper.get("slug") or ""), quote=True)}">
+  <td class="library-title">
+    <strong><a href="{html.escape(link)}">{html.escape(paper["title_zh"] or paper["title"])}</a></strong>
+    <div class="meta">{html.escape(paper.get("title_en") or "")}</div>
+    <div class="meta">{html.escape(" / ".join(str(part) for part in [paper.get("year"), authors, paper.get("arxiv_id")] if part))}</div>
+  </td>
+  <td>{line_html}<div class="meta">{html.escape(str(paper.get("line_role") or ""))}</div></td>
+  <td class="library-taxonomy"><div class="chips">{render_inline_chips(domain_track_problem, 4)}</div></td>
+  <td class="library-taxonomy"><div class="chips">{render_inline_chips(topics_methods, 5)}</div></td>
+  <td><div class="status-stack"><span class="flag">{html.escape(str(paper.get("status") or "unknown"))}</span><span class="flag">{html.escape(str(paper.get("reading_stage") or "未分阶段"))}</span><span class="meta">{" · ".join(review_bits)}</span></div></td>
+  <td><div class="score-grid"><span>I {html.escape(str(paper.get("importance") or "-"))}</span><span>C {html.escape(str(paper.get("confidence") or "-"))}</span><span>R {html.escape(str(paper.get("reproducibility") or "-"))}</span></div></td>
+  <td>{"有" if paper.get("has_code") else "无"}</td>
+  <td><div class="library-actions">{"".join(links)}</div></td>
+</tr>"""
+
+
+def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    taxonomy = taxonomy_counts(papers)
+    rows = "\n".join(render_library_row(paper) for paper in papers)
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Paper Library</div>
+  <h1>论文库表格</h1>
+  <p class="lead">面向大量论文的密集管理视图：快速扫状态、研究线、分类覆盖、重要性和代码情况。适合批量整理与查漏补缺。</p>
+  <div class="stats">
+    <a class="stat" href="index.html">卡片首页</a>
+    <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="lines/index.html">研究线</a>
+    <a class="stat" href="tags.html">分类总览</a>
+    <span class="stat">论文 {len(papers)}</span>
+  </div>
+</header>
+<div class="toolbar">
+  <div class="shell controls">
+    <input id="search" type="search" placeholder="搜索标题、作者、研究线、分类、状态">
+    <select id="domain"><option value="">全部领域</option>{render_topic_options(taxonomy["domains"])}</select>
+    <select id="track"><option value="">全部方向</option>{render_topic_options(taxonomy["tracks"])}</select>
+    <select id="problem"><option value="">全部问题</option>{render_topic_options(taxonomy["problems"])}</select>
+    <select id="line"><option value="">全部研究线</option>{render_topic_options(taxonomy["research_lines"])}</select>
+    <select id="role"><option value="">全部角色</option>{render_topic_options(taxonomy["line_roles"])}</select>
+    <select id="status"><option value="">全部状态</option>{render_topic_options(taxonomy["statuses"])}</select>
+    <select id="stage"><option value="">阅读阶段</option>{render_topic_options(taxonomy["reading_stages"])}</select>
+    <select id="reviewStage"><option value="">复习阶段</option>{render_topic_options(taxonomy["review_stages"])}</select>
+    <select id="code"><option value="">代码状态</option><option value="yes">有代码</option><option value="no">无代码</option></select>
+    <select id="importance"><option value="">重要性</option><option value="5">5 星</option><option value="4">4 星及以上</option><option value="3">3 星及以上</option></select>
+    <select id="sort"><option value="default">默认排序</option><option value="importance">重要性优先</option><option value="updated">最近更新</option><option value="year">年份新到旧</option><option value="title">标题 A-Z</option></select>
+    <select id="pageSize"><option value="50">每页 50 篇</option><option value="100">每页 100 篇</option><option value="200">每页 200 篇</option><option value="all">显示全部</option></select>
+  </div>
+</div>
+<main class="shell">
+  <div class="results-bar">
+    <strong id="resultCount">显示 {len(papers)} / {len(papers)} 篇</strong>
+    <div class="results-actions"><button id="resetFilters" class="button" type="button">重置筛选</button></div>
+  </div>
+  <div class="table-wrap">
+    <table class="library-table">
+      <thead>
+        <tr><th>论文</th><th>研究线</th><th>结构分类</th><th>主题 / 方法</th><th>状态</th><th>评分</th><th>代码</th><th>操作</th></tr>
+      </thead>
+      <tbody id="libraryRows">{rows}</tbody>
+    </table>
+  </div>
+  <nav id="pager" class="pager" aria-label="分页">
+    <button id="prevPage" class="button" type="button">上一页</button>
+    <span id="pageInfo">第 1 / 1 页</span>
+    <button id="nextPage" class="button" type="button">下一页</button>
+  </nav>
+</main>
+<script>
+const tbody = document.querySelector("#libraryRows");
+const allRows = Array.from(tbody.querySelectorAll("tr"));
+const search = document.querySelector("#search");
+const domain = document.querySelector("#domain");
+const track = document.querySelector("#track");
+const problem = document.querySelector("#problem");
+const line = document.querySelector("#line");
+const role = document.querySelector("#role");
+const status = document.querySelector("#status");
+const stage = document.querySelector("#stage");
+const reviewStage = document.querySelector("#reviewStage");
+const code = document.querySelector("#code");
+const importance = document.querySelector("#importance");
+const sort = document.querySelector("#sort");
+const pageSize = document.querySelector("#pageSize");
+const resultCount = document.querySelector("#resultCount");
+const resetFilters = document.querySelector("#resetFilters");
+const pager = document.querySelector("#pager");
+const pageInfo = document.querySelector("#pageInfo");
+const prevPage = document.querySelector("#prevPage");
+const nextPage = document.querySelector("#nextPage");
+let currentPage = 1;
+const controls = [
+  ["q", search],
+  ["domain", domain],
+  ["track", track],
+  ["problem", problem],
+  ["line", line],
+  ["role", role],
+  ["status", status],
+  ["stage", stage],
+  ["reviewStage", reviewStage],
+  ["code", code],
+  ["importance", importance],
+  ["sort", sort],
+  ["size", pageSize],
+];
+
+function tokens(value) {{
+  return String(value || "").split("|").filter(Boolean);
+}}
+
+function hasToken(row, key, value) {{
+  return !value || tokens(row.dataset[key]).includes(value);
+}}
+
+function pageLimit() {{
+  return pageSize.value === "all" ? Infinity : Number(pageSize.value || 50);
+}}
+
+function readStateFromUrl() {{
+  const params = new URLSearchParams(window.location.search);
+  controls.forEach(([key, el]) => {{
+    if (params.has(key)) el.value = params.get(key);
+  }});
+  currentPage = Number(params.get("page") || 1) || 1;
+}}
+
+function writeStateToUrl() {{
+  const params = new URLSearchParams();
+  controls.forEach(([key, el]) => {{
+    const defaultValue = key === "sort" ? "default" : key === "size" ? "50" : "";
+    if (el.value && el.value !== defaultValue) params.set(key, el.value);
+  }});
+  if (currentPage > 1) params.set("page", String(currentPage));
+  const query = params.toString();
+  window.history.replaceState(null, "", query ? `${{location.pathname}}?${{query}}` : location.pathname);
+}}
+
+function sortRows(rows) {{
+  const mode = sort.value;
+  return [...rows].sort((a, b) => {{
+    if (mode === "importance") {{
+      return Number(b.dataset.importance || 0) - Number(a.dataset.importance || 0)
+        || Number(b.dataset.year || 0) - Number(a.dataset.year || 0)
+        || a.dataset.title.localeCompare(b.dataset.title);
+    }}
+    if (mode === "updated") return String(b.dataset.updated || "").localeCompare(String(a.dataset.updated || "")) || a.dataset.title.localeCompare(b.dataset.title);
+    if (mode === "year") return Number(b.dataset.year || 0) - Number(a.dataset.year || 0) || a.dataset.title.localeCompare(b.dataset.title);
+    if (mode === "title") return a.dataset.title.localeCompare(b.dataset.title);
+    return Number(b.dataset.year || 0) - Number(a.dataset.year || 0)
+      || String(b.dataset.updated || "").localeCompare(String(a.dataset.updated || ""))
+      || a.dataset.title.localeCompare(b.dataset.title);
+  }});
+}}
+
+function render() {{
+  const q = search.value.trim().toLowerCase();
+  const minImportance = Number(importance.value || 0);
+  const filtered = allRows.filter(row => {{
+    return (!q || row.dataset.search.includes(q))
+      && hasToken(row, "domains", domain.value)
+      && hasToken(row, "tracks", track.value)
+      && hasToken(row, "problems", problem.value)
+      && (!line.value || row.dataset.line === line.value)
+      && (!role.value || row.dataset.role === role.value)
+      && (!status.value || row.dataset.status === status.value)
+      && (!stage.value || row.dataset.stage === stage.value)
+      && (!reviewStage.value || row.dataset.reviewStage === reviewStage.value)
+      && (!code.value || row.dataset.code === code.value)
+      && (!minImportance || Number(row.dataset.importance || 0) >= minImportance);
+  }});
+  const ranked = sortRows(filtered);
+  const limit = pageLimit();
+  const totalPages = limit === Infinity ? 1 : Math.max(1, Math.ceil(ranked.length / limit));
+  currentPage = Math.min(Math.max(currentPage, 1), totalPages);
+  const start = limit === Infinity ? 0 : (currentPage - 1) * limit;
+  const visible = new Set(ranked.slice(start, limit === Infinity ? ranked.length : start + limit));
+  const fragment = document.createDocumentFragment();
+  ranked.forEach(row => {{
+    row.hidden = !visible.has(row);
+    fragment.appendChild(row);
+  }});
+  tbody.appendChild(fragment);
+  allRows.forEach(row => {{
+    if (!filtered.includes(row)) row.hidden = true;
+  }});
+  resultCount.textContent = `显示 ${{ranked.length}} / ${{allRows.length}} 篇`;
+  pageInfo.textContent = `第 ${{currentPage}} / ${{totalPages}} 页`;
+  pager.hidden = ranked.length === 0 || limit === Infinity || totalPages <= 1;
+  prevPage.disabled = currentPage <= 1;
+  nextPage.disabled = currentPage >= totalPages;
+  writeStateToUrl();
+}}
+
+controls.forEach(([, el]) => el.addEventListener("input", () => {{
+  currentPage = 1;
+  render();
+}}));
+resetFilters.addEventListener("click", () => {{
+  controls.forEach(([key, el]) => {{
+    el.value = key === "sort" ? "default" : key === "size" ? "50" : "";
+  }});
+  currentPage = 1;
+  render();
+}});
+prevPage.addEventListener("click", () => {{
+  currentPage -= 1;
+  render();
+}});
+nextPage.addEventListener("click", () => {{
+  currentPage += 1;
+  render();
+}});
+
+readStateFromUrl();
+render();
+</script>
+"""
+    (report_dir / "library.html").write_text(page_shell("论文库表格", body), encoding="utf-8")
+
+
 def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     today = dt.date.today().isoformat()
     total = len(papers)
@@ -1174,6 +1521,7 @@ def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <p class="lead">面向大量论文的运营视图：看分类覆盖、研究线健康度、复习队列和需要补元数据的报告。所有数据来自 markdown frontmatter 与 wiki 索引。</p>
   <div class="stats">
     <a class="stat" href="index.html">返回首页</a>
+    <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="lines/index.html">研究线</a>
     <a class="stat" href="tags.html">分类总览</a>
     <span class="stat">生成时间 {html.escape(dt.datetime.now().isoformat(timespec="seconds"))}</span>
@@ -1266,6 +1614,7 @@ def render_line_pages(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <p class="lead">按论文在该研究线中的角色组织：foundation、baseline、main、system、variant、followup 等角色来自 frontmatter，可按你的分类习惯自由扩展。</p>
   <div class="stats">
     <a class="stat" href="../index.html">返回首页</a>
+    <a class="stat" href="../library.html">论文库表格</a>
     <a class="stat" href="../dashboard.html">管理控制台</a>
     <a class="stat" href="index.html">全部研究线</a>
     <span class="stat">论文 {len(items)}</span>
@@ -1285,6 +1634,7 @@ def render_line_pages(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <p class="lead">研究线把大量论文组织成脉络，而不是孤立标签。每条线都可以进入详情页，按论文角色和重要性浏览。</p>
   <div class="stats">
     <a class="stat" href="../index.html">返回首页</a>
+    <a class="stat" href="../library.html">论文库表格</a>
     <a class="stat" href="../dashboard.html">管理控制台</a>
     <a class="stat" href="../tags.html">分类总览</a>
     <span class="stat">研究线 {len(grouped)}</span>
@@ -1355,6 +1705,7 @@ def render_tags(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <p class="lead">按 research line、domain、track、problem、topic 与 method 汇总论文。分类来自报告 frontmatter，缺失时由构建脚本根据关键词做轻量推断。</p>
   <div class="stats">
     <a class="stat" href="index.html">返回首页</a>
+    <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
     <span class="stat">分类 {len(grouped)}</span>
     <span class="stat">论文 {len(papers)}</span>
@@ -1370,6 +1721,7 @@ def build_wiki(report_dir: Path) -> int:
     write_json(report_dir, papers)
     write_search_index(report_dir, papers)
     render_index(report_dir, papers)
+    render_library(report_dir, papers)
     render_dashboard(report_dir, papers)
     render_line_pages(report_dir, papers)
     render_tags(report_dir, papers)
