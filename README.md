@@ -108,7 +108,7 @@ paper_reader/
 - `docs/lines/index.html`：研究线总览
 - `docs/lines/<research-line>.html`：单条研究线详情页
 - `docs/tags.html`：分类总览
-- `docs/papers.json`：论文索引数据
+- `docs/papers.json`：论文索引数据，包含可供前端动态渲染筛选器的 `controls`
 - `docs/search_index.json`：全文搜索索引
 - `docs/stats.json`：机器可读统计摘要，包含覆盖率、队列规模、研究线和分类分布
 - `docs/quality.json`：元数据质量报告，列出缺分类、缺复习计划、待复习、缺代码观察等队列
@@ -153,7 +153,7 @@ has_code: true
 
 分类建议见 [`docs/guides/taxonomy.md`](docs/guides/taxonomy.md)。核心原则是：`domains/tracks/problems` 管结构层级，`topics/methods` 管交叉筛选，`research_line/line_role` 管研究脉络，`status/reading_stage/review_stage` 管个人阅读状态。
 
-标签别名、研究线角色排序、阅读状态、阅读阶段和复习阶段可在 [`docs/guides/taxonomy.json`](docs/guides/taxonomy.json) 里自定义；修改后运行 `python3 scripts/build_wiki.py docs` 即可刷新筛选项。
+标签别名、研究线角色排序、阅读状态、阅读阶段和复习阶段可在 [`docs/guides/taxonomy.json`](docs/guides/taxonomy.json) 里自定义；修改后运行 `python3 scripts/build_wiki.py docs` 即可刷新筛选项。构建后的 `docs/papers.json` 和 `docs/stats.json` 会把这些可选状态写入 `controls`，方便后续页面或桌面软件动态读取。
 
 首页和论文库表格的筛选、排序、分页状态会写入 URL query string。比如按研究线、重要性排序后复制浏览器地址，即可分享同一个论文列表视图。常用状态组合也可以保存为浏览器本地视图；团队共用队列可以写进 `docs/guides/taxonomy.json` 的 `shared_views`，随仓库同步到所有人的 wiki 下拉框里。
 

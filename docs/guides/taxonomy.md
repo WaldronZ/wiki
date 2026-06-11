@@ -95,7 +95,7 @@ has_code: true
 }
 ```
 
-`role_order` 会影响研究线详情页和首页研究线概览中的论文排序。`status_values`、`reading_stage_values` 和 `review_stage_values` 会进入首页和论文库表格的筛选项；即使某个状态当前还没有论文使用，也可以先作为可选管理状态出现。
+`role_order` 会影响研究线详情页和首页研究线概览中的论文排序。`status_values`、`reading_stage_values` 和 `review_stage_values` 会进入首页和论文库表格的筛选项；即使某个状态当前还没有论文使用，也可以先作为可选管理状态出现。构建后的 `papers.json` 和 `stats.json` 还会把这些选项输出到 `controls` 字段，供后续前端、脚本或桌面软件动态读取。
 
 `shared_views` 可以把常用筛选队列随仓库同步到首页和论文库表格。`page` 支持 `all`、`index`、`library`；`state` 使用 URL query 里的筛选键，例如 `importance`、`status`、`line`、`track`、`review`、`sort`：
 

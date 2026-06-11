@@ -335,12 +335,24 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     if missing_taxonomy:
         errors.append(f"papers.json taxonomy missing keys: {', '.join(missing_taxonomy)}")
 
+    required_controls = {"status", "reading_stage", "review_stage", "line_role", "shared_views"}
+    papers_controls = papers_data.get("controls") or {}
+    missing_controls = sorted(required_controls - set(papers_controls))
+    if missing_controls:
+        errors.append(f"papers.json controls missing keys: {', '.join(missing_controls)}")
+    if not isinstance(papers_controls.get("shared_views"), list):
+        errors.append("papers.json controls.shared_views must be a list")
+
     if stats_data.get("count") != len(report_slugs):
         errors.append(f"stats.json count {stats_data.get('count')} != markdown report count {len(report_slugs)}")
-    required_stats = {"quality_score", "coverage", "queue_sizes", "taxonomy", "distributions", "research_lines"}
+    required_stats = {"quality_score", "controls", "coverage", "queue_sizes", "taxonomy", "distributions", "research_lines"}
     missing_stats = sorted(required_stats - set(stats_data))
     if missing_stats:
         errors.append(f"stats.json missing keys: {', '.join(missing_stats)}")
+    stats_controls = stats_data.get("controls") or {}
+    missing_stats_controls = sorted(required_controls - set(stats_controls))
+    if missing_stats_controls:
+        errors.append(f"stats.json controls missing keys: {', '.join(missing_stats_controls)}")
     if set((stats_data.get("queue_sizes") or {}).keys()) != {"quality", "review"}:
         errors.append("stats.json queue_sizes must contain quality and review")
     if not isinstance(stats_data.get("research_lines"), list):

@@ -178,6 +178,11 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("Request Scheduling", papers["taxonomy"]["problems"])
             self.assertIn("triaged", papers["taxonomy"]["statuses"])
             self.assertEqual(papers["taxonomy"]["statuses"]["triaged"], 0)
+            self.assertEqual(
+                papers["controls"]["status"],
+                ["unread", "triaged", "reading", "read", "archived"],
+            )
+            self.assertEqual(papers["controls"]["reading_stage"], ["skimmed", "deep_read", "code_checked"])
             index_html = (report_dir / "index.html").read_text(encoding="utf-8")
             self.assertIn('<option value="triaged">triaged (0)</option>', index_html)
             self.assertIn('"shared_views": [{"name": "重点队列"', index_html)
@@ -196,6 +201,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("review", stats["queue_sizes"])
             self.assertTrue(stats["research_lines"])
             self.assertEqual(stats["shared_views"], 2)
+            self.assertEqual(stats["controls"]["review_stage"], ["fresh", "due", "reviewed"])
 
             csv_path = report_dir / "library.csv"
             self.run_cmd("scripts/export_library_csv.py", str(report_dir), "--output", str(csv_path))

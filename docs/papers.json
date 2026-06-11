@@ -1,6 +1,61 @@
 {
   "generated_at": "2026-06-11T16:48:29",
   "count": 5,
+  "controls": {
+    "status": [
+      "unread",
+      "skimmed",
+      "reading",
+      "read",
+      "archived"
+    ],
+    "reading_stage": [
+      "skim",
+      "normal_read",
+      "deep_read",
+      "code_checked"
+    ],
+    "review_stage": [
+      "fresh",
+      "due",
+      "reviewed"
+    ],
+    "line_role": [
+      "foundation",
+      "baseline",
+      "main",
+      "system",
+      "variant",
+      "followup",
+      "survey"
+    ],
+    "shared_views": [
+      {
+        "name": "重点论文",
+        "page": "all",
+        "state": {
+          "importance": "5",
+          "sort": "importance"
+        }
+      },
+      {
+        "name": "未设置复习",
+        "page": "index",
+        "state": {
+          "review": "none",
+          "sort": "importance"
+        }
+      },
+      {
+        "name": "Attention Kernels",
+        "page": "library",
+        "state": {
+          "track": "Attention Kernels",
+          "sort": "year"
+        }
+      }
+    ]
+  },
   "tags": {
     "Speculative Decoding": 4,
     "Diffusion Language Models": 3,

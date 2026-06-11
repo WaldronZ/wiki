@@ -207,6 +207,16 @@ def shared_views_for(page: str) -> list[dict[str, Any]]:
     ]
 
 
+def control_options() -> dict[str, Any]:
+    return {
+        "status": STATUS_VALUES.copy(),
+        "reading_stage": READING_STAGE_VALUES.copy(),
+        "review_stage": REVIEW_STAGE_VALUES.copy(),
+        "line_role": list(ROLE_ORDER.keys()),
+        "shared_views": SHARED_VIEWS.copy(),
+    }
+
+
 def strip_frontmatter(text: str) -> tuple[dict[str, Any], str]:
     if not text.startswith("---\n"):
         return {}, text
@@ -668,6 +678,7 @@ def write_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     payload = {
         "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
         "count": len(papers),
+        "controls": control_options(),
         "tags": tag_counts(papers),
         "taxonomy": taxonomy_counts(papers),
         "papers": [public_paper(paper) for paper in papers],
@@ -730,6 +741,7 @@ def build_stats_report(papers: list[dict[str, Any]]) -> dict[str, Any]:
         "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
         "count": total,
         "quality_score": quality["quality_score"],
+        "controls": control_options(),
         "coverage": {
             **quality["coverage"],
             "code": percent(code_count, total),

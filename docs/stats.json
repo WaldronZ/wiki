@@ -2,6 +2,61 @@
   "generated_at": "2026-06-11T17:47:20",
   "count": 5,
   "quality_score": 92.0,
+  "controls": {
+    "status": [
+      "unread",
+      "skimmed",
+      "reading",
+      "read",
+      "archived"
+    ],
+    "reading_stage": [
+      "skim",
+      "normal_read",
+      "deep_read",
+      "code_checked"
+    ],
+    "review_stage": [
+      "fresh",
+      "due",
+      "reviewed"
+    ],
+    "line_role": [
+      "foundation",
+      "baseline",
+      "main",
+      "system",
+      "variant",
+      "followup",
+      "survey"
+    ],
+    "shared_views": [
+      {
+        "name": "重点论文",
+        "page": "all",
+        "state": {
+          "importance": "5",
+          "sort": "importance"
+        }
+      },
+      {
+        "name": "未设置复习",
+        "page": "index",
+        "state": {
+          "review": "none",
+          "sort": "importance"
+        }
+      },
+      {
+        "name": "Attention Kernels",
+        "page": "library",
+        "state": {
+          "track": "Attention Kernels",
+          "sort": "year"
+        }
+      }
+    ]
+  },
   "coverage": {
     "taxonomy": "100%",
     "review_plan": "0%",
