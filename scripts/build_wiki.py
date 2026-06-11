@@ -4643,6 +4643,7 @@ def render_release(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
         f"<td>{html.escape(str(recipe.get('output') or '-'))}</td>"
         f"<td><span class=\"flag\">{'writes' if recipe.get('mutates') else 'read-only'}</span></td>"
         f"<td><code>{html.escape(str(recipe['command']))}</code></td>"
+        f'<td><button class="button copy-release-command" type="button" data-command="{html.escape(str(recipe["command"]), quote=True)}">复制</button></td>'
         "</tr>"
         for recipe in manifest["command_recipes"]
     )
@@ -4707,9 +4708,25 @@ def render_release(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
   </section>
   <section>
     <h2 class="section-title">命令 Recipes</h2>
-    <div class="table-wrap"><table class="data-table"><thead><tr><th>命令</th><th>类型</th><th>输出</th><th>写入</th><th>CLI</th></tr></thead><tbody>{recipe_rows}</tbody></table></div>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>命令</th><th>类型</th><th>输出</th><th>写入</th><th>CLI</th><th>操作</th></tr></thead><tbody>{recipe_rows}</tbody></table></div>
   </section>
 </main>
+<script>
+async function copyReleaseCommand(button) {{
+  const command = button.dataset.command || "";
+  try {{
+    await navigator.clipboard.writeText(command);
+    const oldText = button.textContent;
+    button.textContent = "已复制";
+    setTimeout(() => button.textContent = oldText, 1400);
+  }} catch (error) {{
+    window.prompt("复制命令", command);
+  }}
+}}
+document.querySelectorAll(".copy-release-command").forEach(button => {{
+  button.addEventListener("click", () => copyReleaseCommand(button));
+}});
+</script>
 """
     release_css = "\n".join(
         [

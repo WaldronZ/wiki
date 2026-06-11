@@ -362,6 +362,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("推荐命令", release_html)
             self.assertIn("命令 Recipes", release_html)
             self.assertIn("taxonomy_balance_project", release_html)
+            self.assertIn("copy-release-command", release_html)
+            self.assertIn("copyReleaseCommand", release_html)
             dashboard_html = (report_dir / "dashboard.html").read_text(encoding="utf-8")
             self.assertIn("分类均衡度", dashboard_html)
             self.assertIn("均衡分", dashboard_html)
