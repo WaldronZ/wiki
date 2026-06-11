@@ -1,53 +1,112 @@
 {
-  "generated_at": "2026-06-11T11:38:35",
+  "generated_at": "2026-06-11T15:43:11",
   "count": 5,
   "tags": {
-    "Diffusion Language Models": 2,
+    "Speculative Decoding": 4,
+    "Diffusion Language Models": 3,
+    "LLM Serving": 3,
     "FlashAttention": 2,
-    "KV cache": 2,
-    "Speculative Decoding": 2,
-    "Attention kernel": 1,
+    "KV Cache": 2,
+    "LLM Inference": 2,
+    "Parallel Decoding": 2,
+    "Attention Kernels": 1,
     "block diffusion": 1,
     "block-sparse attention": 1,
     "composable KV-cache format": 1,
     "CUDA / GPU parallelism": 1,
     "CUDA Graph": 1,
-    "Diffusion language models": 1,
     "dual-view attention": 1,
     "Efficient Attention": 1,
     "forward KL distillation": 1,
     "gated LoRA": 1,
     "GPU Kernel Optimization": 1,
-    "GPU systems": 1,
-    "Inference optimization": 1,
+    "GPU Systems": 1,
+    "Inference Optimization": 1,
     "intra-model consensus": 1,
     "introspective consistency": 1,
     "introspective strided decoding": 1,
     "JIT compilation": 1,
     "KV injection": 1,
     "LLM": 1,
-    "LLM Inference": 1,
-    "LLM inference acceleration": 1,
-    "LLM Serving": 1,
-    "LLM serving": 1,
     "load-balanced scheduling": 1,
     "logit-shifted causal training": 1,
     "Long Context": 1,
     "masked diffusion": 1,
     "online softmax": 1,
     "p/q acceptance": 1,
-    "Parallel Decoding": 1,
-    "Parallel decoding": 1,
     "parallel drafting": 1,
-    "Serving Systems": 1,
     "SGLang serving": 1,
     "shared KV cache": 1,
-    "speculative decoding": 1,
-    "Speculative decoding": 1,
     "target hidden features": 1,
     "tiling": 1,
     "Transformer": 1,
     "work partitioning": 1
+  },
+  "taxonomy": {
+    "domains": {
+      "LLM Systems": 5
+    },
+    "tracks": {
+      "Inference Acceleration": 3,
+      "Parallel Decoding": 3,
+      "Attention Kernels": 2,
+      "Inference Serving Systems": 1
+    },
+    "problems": {
+      "Customizable Attention Serving": 1,
+      "Efficient Exact Attention": 1,
+      "Lossless Speculative Decoding": 1,
+      "Memory-Efficient Parallel Token Generation": 1,
+      "Parallel Diffusion Decoding": 1
+    },
+    "topics": {
+      "Diffusion Language Models": 3,
+      "LLM Serving": 3,
+      "Speculative Decoding": 3,
+      "KV Cache": 2,
+      "LLM Inference": 2,
+      "Parallel Decoding": 2,
+      "Attention Kernels": 1,
+      "Efficient Attention": 1,
+      "GPU Kernel Optimization": 1,
+      "GPU Systems": 1,
+      "Inference Optimization": 1,
+      "LLM": 1,
+      "Long Context": 1,
+      "Transformer": 1
+    },
+    "methods": {
+      "FlashAttention": 2,
+      "block diffusion": 1,
+      "block-sparse attention": 1,
+      "composable KV-cache format": 1,
+      "CUDA / GPU parallelism": 1,
+      "CUDA Graph": 1,
+      "dual-view attention": 1,
+      "forward KL distillation": 1,
+      "gated LoRA": 1,
+      "intra-model consensus": 1,
+      "introspective consistency": 1,
+      "introspective strided decoding": 1,
+      "JIT compilation": 1,
+      "KV injection": 1,
+      "load-balanced scheduling": 1,
+      "logit-shifted causal training": 1,
+      "masked diffusion": 1,
+      "online softmax": 1,
+      "p/q acceptance": 1,
+      "parallel drafting": 1,
+      "SGLang serving": 1,
+      "shared KV cache": 1,
+      "Speculative Decoding": 1,
+      "target hidden features": 1,
+      "tiling": 1,
+      "work partitioning": 1
+    },
+    "research_lines": {
+      "Parallel Decoding with Diffusion Models": 3,
+      "Efficient Attention Kernels": 2
+    }
   },
   "papers": [
     {
@@ -64,32 +123,47 @@
       "arxiv_id": "2602.06036v1",
       "arxiv_url": "https://arxiv.org/abs/2602.06036v1",
       "code_url": "https://github.com/z-lab/dflash",
+      "domains": [
+        "LLM Systems"
+      ],
+      "tracks": [
+        "Inference Acceleration",
+        "Parallel Decoding"
+      ],
+      "problems": [
+        "Lossless Speculative Decoding"
+      ],
       "topics": [
         "Diffusion Language Models",
         "LLM Inference",
-        "Serving Systems",
+        "LLM Serving",
         "Speculative Decoding"
       ],
       "methods": [
-        "KV injection",
         "block diffusion",
+        "KV injection",
         "parallel drafting",
-        "speculative decoding",
+        "Speculative Decoding",
         "target hidden features"
       ],
+      "research_line": "Parallel Decoding with Diffusion Models",
+      "line_role": "followup",
       "status": "read",
+      "reading_stage": "deep_read",
       "review_stage": "",
       "last_reviewed": "",
       "next_review": "",
       "importance": 4,
+      "confidence": 4,
+      "reproducibility": 3,
       "has_code": true,
       "md_path": "2602.06036-dflash.md",
       "html_path": "2602.06036-dflash.html",
       "excerpt": "中文版：DFlash 把 diffusion language model 的角色从“独立生成器”改为 speculative decoding 中的轻量 parallel drafter：draft model 一次前向生成一个 token block，再由 target LLM 并行验证，从而保持 lossless 输出。它的关键设计是从 frozen target model 抽取多层 hidden features，经融合后注入...",
       "essence": "DFlash 像让一个动作很快的速记员先把下一小段草稿同时写出来，再让严谨的主笔一眼核对，既不改掉主笔的文风，又省下逐字落笔的等待。",
       "reading_time_min": 10,
-      "created_at": "2026-06-11T11:38:29",
-      "updated_at": "2026-06-11T11:38:29"
+      "created_at": "2026-06-11T15:42:03",
+      "updated_at": "2026-06-11T15:42:03"
     },
     {
       "slug": "2604.11035-introspective-dlm",
@@ -117,6 +191,16 @@
       "arxiv_id": "2604.11035v1",
       "arxiv_url": "https://arxiv.org/abs/2604.11035v1",
       "code_url": "https://github.com/Introspective-Diffusion/I-DLM",
+      "domains": [
+        "LLM Systems"
+      ],
+      "tracks": [
+        "Inference Acceleration",
+        "Parallel Decoding"
+      ],
+      "problems": [
+        "Parallel Diffusion Decoding"
+      ],
       "topics": [
         "Diffusion Language Models",
         "LLM",
@@ -125,26 +209,31 @@
         "Speculative Decoding"
       ],
       "methods": [
-        "SGLang serving",
         "gated LoRA",
         "introspective consistency",
         "introspective strided decoding",
         "logit-shifted causal training",
-        "p/q acceptance"
+        "p/q acceptance",
+        "SGLang serving"
       ],
+      "research_line": "Parallel Decoding with Diffusion Models",
+      "line_role": "foundation",
       "status": "read",
+      "reading_stage": "deep_read",
       "review_stage": "",
       "last_reviewed": "",
       "next_review": "",
       "importance": 5,
+      "confidence": 4,
+      "reproducibility": 3,
       "has_code": true,
       "md_path": "2604.11035-introspective-dlm.md",
       "html_path": "2604.11035-introspective-dlm.html",
       "excerpt": "中文版：本文把 DLM 与 AR 模型的质量差距归因于缺少 introspective consistency，即模型不能稳定认可自己已经生成的 token；在此基础上提出 I-DLM，用 logit-shifted causal training 把预训练 AR 模型转成可并行解码的 DLM，再用 Introspective Strided Decoding (ISD) 在同一次 forward 中生成新 token 并验证旧 tok...",
       "essence": "它让扩散语言模型一边往前写，一边回头问自己“刚才写的这几个字我还认不认”，认得就大步前进，认不准就当场修正。",
       "reading_time_min": 11,
-      "created_at": "2026-06-09T16:52:12",
-      "updated_at": "2026-06-09T16:52:12"
+      "created_at": "2026-06-11T15:42:03",
+      "updated_at": "2026-06-11T15:42:03"
     },
     {
       "slug": "2605.12825-orthrus",
@@ -163,12 +252,22 @@
       "arxiv_id": "2605.12825v2",
       "arxiv_url": "https://arxiv.org/abs/2605.12825v2",
       "code_url": "https://github.com/chiennv2000/orthrus",
+      "domains": [
+        "LLM Systems"
+      ],
+      "tracks": [
+        "Inference Acceleration",
+        "Parallel Decoding"
+      ],
+      "problems": [
+        "Memory-Efficient Parallel Token Generation"
+      ],
       "topics": [
-        "Diffusion language models",
-        "KV cache",
-        "LLM inference acceleration",
-        "Parallel decoding",
-        "Speculative decoding"
+        "Diffusion Language Models",
+        "KV Cache",
+        "LLM Inference",
+        "Parallel Decoding",
+        "Speculative Decoding"
       ],
       "methods": [
         "dual-view attention",
@@ -177,19 +276,24 @@
         "masked diffusion",
         "shared KV cache"
       ],
+      "research_line": "Parallel Decoding with Diffusion Models",
+      "line_role": "variant",
       "status": "read",
+      "reading_stage": "deep_read",
       "review_stage": "",
       "last_reviewed": "",
       "next_review": "",
       "importance": 4,
+      "confidence": 4,
+      "reproducibility": 3,
       "has_code": true,
       "md_path": "2605.12825-orthrus.md",
       "html_path": "2605.12825-orthrus.html",
       "excerpt": "中文版：Orthrus 在冻结的 autoregressive LLM 内部插入轻量 trainable diffusion attention module，让 AR view 负责高质量 context / KV cache 构建，让 diffusion view 一次并行预测多个 future tokens，再由同一个 frozen AR head 做 consensus verification，从而在不改变 base mode...",
       "essence": "Orthrus 像是在老练作家的脑子里装了一个会同时写好几句草稿的小助手，但每一句交稿前都由作家本人逐字点头，所以快了，却没有换掉原来的声音。",
       "reading_time_min": 9,
-      "created_at": "2026-06-09T14:36:15",
-      "updated_at": "2026-06-09T14:36:15"
+      "created_at": "2026-06-11T15:42:03",
+      "updated_at": "2026-06-11T15:42:03"
     },
     {
       "slug": "2501.01005-flashinfer",
@@ -213,34 +317,49 @@
       "arxiv_id": "2501.01005v2",
       "arxiv_url": "https://arxiv.org/abs/2501.01005v2",
       "code_url": "https://github.com/flashinfer-ai/flashinfer",
+      "domains": [
+        "LLM Systems"
+      ],
+      "tracks": [
+        "Attention Kernels",
+        "Inference Serving Systems"
+      ],
+      "problems": [
+        "Customizable Attention Serving"
+      ],
       "topics": [
-        "Attention kernel",
-        "GPU systems",
-        "Inference optimization",
-        "KV cache",
-        "LLM serving"
+        "Attention Kernels",
+        "GPU Systems",
+        "Inference Optimization",
+        "KV Cache",
+        "LLM Serving"
       ],
       "methods": [
+        "block-sparse attention",
+        "composable KV-cache format",
         "CUDA Graph",
         "FlashAttention",
         "JIT compilation",
-        "block-sparse attention",
-        "composable KV-cache format",
         "load-balanced scheduling"
       ],
+      "research_line": "Efficient Attention Kernels",
+      "line_role": "system",
       "status": "read",
+      "reading_stage": "deep_read",
       "review_stage": "",
       "last_reviewed": "",
       "next_review": "",
       "importance": 4,
+      "confidence": 4,
+      "reproducibility": 4,
       "has_code": true,
       "md_path": "2501.01005-flashinfer.md",
       "html_path": "2501.01005-flashinfer.html",
       "excerpt": "中文版：FlashInfer 是一个面向 LLM online serving 的 attention kernel engine。它把 PagedAttention、RadixAttention、prefix sharing、tree attention、KV pruning 等多种 KV-cache 访问形态统一成 block-sparse / composable sparse formats，并用 CUDA/CUTLASS 模板...",
       "essence": "FlashInfer 像给大模型服务端装了一套会认路、会排队、还会按菜谱现炒的厨房流水线：不同客人的历史上下文再杂乱，也尽量少搬、少等、少重复算。",
       "reading_time_min": 11,
-      "created_at": "2026-06-03T14:37:47",
-      "updated_at": "2026-06-03T14:37:47"
+      "created_at": "2026-06-11T15:42:03",
+      "updated_at": "2026-06-11T15:42:03"
     },
     {
       "slug": "2307.08691-flashattention-2",
@@ -254,6 +373,15 @@
       "arxiv_id": "2307.08691v1",
       "arxiv_url": "https://arxiv.org/abs/2307.08691v1",
       "code_url": "https://github.com/Dao-AILab/flash-attention",
+      "domains": [
+        "LLM Systems"
+      ],
+      "tracks": [
+        "Attention Kernels"
+      ],
+      "problems": [
+        "Efficient Exact Attention"
+      ],
       "topics": [
         "Efficient Attention",
         "GPU Kernel Optimization",
@@ -267,19 +395,24 @@
         "tiling",
         "work partitioning"
       ],
+      "research_line": "Efficient Attention Kernels",
+      "line_role": "foundation",
       "status": "read",
+      "reading_stage": "deep_read",
       "review_stage": "",
       "last_reviewed": "",
       "next_review": "",
       "importance": 5,
+      "confidence": 4,
+      "reproducibility": 4,
       "has_code": true,
       "md_path": "2307.08691-flashattention-2.md",
       "html_path": "2307.08691-flashattention-2.html",
       "excerpt": "中文版：FlashAttention-2 不是改变 attention 数学定义的近似方法，而是在 FlashAttention exact attention 的基础上重新设计 GPU 上的计算顺序、thread block 并行维度和 warp 内工作划分，减少 non-matmul FLOPs 与 shared memory 通信，从而把 attention kernel 的利用率推近 GEMM。",
       "essence": "FlashAttention-2 像是把一群搬砖工从“排队传砖”改成“分区同时铺墙”：砖没有少一块，墙也完全一样，但大家终于不再互相等。",
       "reading_time_min": 10,
-      "created_at": "2026-06-02T21:52:35",
-      "updated_at": "2026-06-02T21:52:35"
+      "created_at": "2026-06-11T15:42:03",
+      "updated_at": "2026-06-11T15:42:03"
     }
   ]
 }
