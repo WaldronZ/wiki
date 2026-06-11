@@ -4690,6 +4690,8 @@ def render_collections(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     )
     missing_taxonomy = items_from_slugs(quality["queues"].get("missing_required_metadata", []))
     taxonomy_drift = items_from_slugs(quality["queues"].get("taxonomy_drift", []))
+    taxonomy_sparse = items_from_slugs(quality["queues"].get("taxonomy_sparse", []))
+    taxonomy_dense = items_from_slugs(quality["queues"].get("taxonomy_dense", []))
     no_review_plan = items_from_slugs(review_plan["queues"].get("needs_plan", []))
     no_code_observation = items_from_slugs(quality["queues"].get("no_code_observation", []))
 
@@ -4698,6 +4700,8 @@ def render_collections(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         smart_card("待复习", page_query_href("review.html"), f"next_review <= {today} 的复习队列。", due_review),
         smart_card("需建复习计划", page_query_href("review.html"), "缺少 next_review 的论文。", no_review_plan),
         smart_card("待补分类", page_query_href("quality.html"), "缺少必要 taxonomy 或研究线角色的论文。", missing_taxonomy),
+        smart_card("分类偏薄", page_query_href("quality.html"), "结构分类或 topic/method 太少，检索入口不足。", taxonomy_sparse),
+        smart_card("分类过密", page_query_href("quality.html"), "topic/method 过多，可能需要收敛为核心标签。", taxonomy_dense),
         smart_card("Taxonomy Drift", page_query_href("quality.html"), "状态、阶段或角色不在 taxonomy.json 允许值中的论文。", taxonomy_drift),
         smart_card("缺代码观察", page_query_href("gaps.html"), "尚未记录代码仓库或代码实现观察的论文。", no_code_observation),
     ]
@@ -6406,6 +6410,7 @@ def render_gaps(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     recommended_roles = ["foundation", "baseline", "main", "system"]
     quality = build_quality_report(papers)
     review = build_review_plan(papers)
+    taxonomy_load_by_slug = {item["slug"]: item for item in quality.get("taxonomy_load", [])}
     grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for paper in papers:
         grouped[str(paper.get("research_line") or "Unassigned")].append(paper)
@@ -6445,6 +6450,7 @@ def render_gaps(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         ]
         no_review = [paper for paper in items if not paper.get("next_review")]
         no_code = [paper for paper in items if not paper.get("has_code")]
+        taxonomy_load = [paper for paper in items if paper["slug"] in taxonomy_load_by_slug]
         high_priority = sorted(
             [paper for paper in items if int(paper.get("importance") or 0) >= 5],
             key=lambda paper: (not paper.get("next_review"), paper["title"]),
@@ -6452,6 +6458,7 @@ def render_gaps(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         score = 100
         score -= len(missing_roles) * 10
         score -= min(25, len(missing_taxonomy) * 8)
+        score -= min(15, len(taxonomy_load) * 5)
         score -= min(20, len(no_review) * 5)
         score -= min(15, len(no_code) * 4)
         if stale_years is None:
@@ -6471,6 +6478,8 @@ def render_gaps(report_dir: Path, papers: list[dict[str, Any]]) -> None:
             actions.append(f"补复习计划 {len(no_review)} 篇")
         if missing_taxonomy:
             actions.append(f"补 taxonomy {len(missing_taxonomy)} 篇")
+        if taxonomy_load:
+            actions.append(f"审分类粒度 {len(taxonomy_load)} 篇")
         if no_code:
             actions.append(f"补代码观察 {len(no_code)} 篇")
         if not actions:
@@ -6488,6 +6497,7 @@ def render_gaps(report_dir: Path, papers: list[dict[str, Any]]) -> None:
             f"<td>{html.escape(str(latest_year or 'unknown'))}</td>"
             f"<td>{html.escape(', '.join(missing_roles) or '-')}</td>"
             f"<td>{len(missing_taxonomy)}</td>"
+            f"<td>{len(taxonomy_load)}</td>"
             f"<td>{len(no_review)}</td>"
             f"<td>{len(no_code)}</td>"
             f"<td>{html.escape('; '.join(actions[:3]))}</td>"
@@ -6522,7 +6532,7 @@ def render_gaps(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         else '<div class="empty">暂无建议动作。</div>'
     )
     line_table = (
-        '<table class="data-table"><thead><tr><th>研究线</th><th>论文</th><th>健康分</th><th>最新年份</th><th>缺角色</th><th>缺分类</th><th>缺复习</th><th>缺代码</th><th>下一步</th></tr></thead>'
+        '<table class="data-table"><thead><tr><th>研究线</th><th>论文</th><th>健康分</th><th>最新年份</th><th>缺角色</th><th>缺分类</th><th>粒度提示</th><th>缺复习</th><th>缺代码</th><th>下一步</th></tr></thead>'
         f"<tbody>{''.join(line_rows)}</tbody></table>"
         if line_rows
         else '<div class="empty">还没有研究线。</div>'
@@ -6543,9 +6553,21 @@ def render_gaps(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         for paper in papers
         if paper["slug"] in set(quality["queues"].get("no_code_observation", []))
     ]
+    taxonomy_sparse_queue = [
+        paper
+        for paper in papers
+        if paper["slug"] in set(quality["queues"].get("taxonomy_sparse", []))
+    ]
+    taxonomy_dense_queue = [
+        paper
+        for paper in papers
+        if paper["slug"] in set(quality["queues"].get("taxonomy_dense", []))
+    ]
     queue_blocks = [
         ("需建复习计划", need_plan, "review"),
         ("待补分类", taxonomy_queue, "taxonomy"),
+        ("分类偏薄", taxonomy_sparse_queue, "sparse"),
+        ("分类过密", taxonomy_dense_queue, "dense"),
         ("缺代码观察", code_queue, "code"),
     ]
 
@@ -6600,7 +6622,7 @@ def render_gaps(report_dir: Path, papers: list[dict[str, Any]]) -> None:
 <header class="shell">
   <div class="eyebrow">Research Gap Analysis</div>
   <h1>研究缺口与下一步行动</h1>
-  <p class="lead">从研究线角度自动诊断缺角色、缺分类、缺复习计划、缺代码观察和时间覆盖空档，把大量论文库变成可持续维护的行动队列。</p>
+  <p class="lead">从研究线角度自动诊断缺角色、缺分类、分类粒度、缺复习计划、缺代码观察和时间覆盖空档，把大量论文库变成可持续维护的行动队列。</p>
   <div class="stats">
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="collections.html">集合视图</a>

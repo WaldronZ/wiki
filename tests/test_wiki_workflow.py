@@ -342,6 +342,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("重点队列", collections_html)
             self.assertIn("智能集合", collections_html)
             self.assertIn("需建复习计划", collections_html)
+            self.assertIn("分类偏薄", collections_html)
+            self.assertIn("分类过密", collections_html)
             facets_html = (report_dir / "facets.html").read_text(encoding="utf-8")
             self.assertIn("分类工作台", facets_html)
             self.assertIn("字段概览", facets_html)
@@ -385,6 +387,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("研究线健康卡片", gaps_html)
             self.assertIn("LLM Serving", gaps_html)
             self.assertIn("需建复习计划", gaps_html)
+            self.assertIn("粒度提示", gaps_html)
+            self.assertIn("分类偏薄", gaps_html)
 
             csv_path = report_dir / "library.csv"
             self.run_cmd("scripts/export_library_csv.py", str(report_dir), "--output", str(csv_path))
