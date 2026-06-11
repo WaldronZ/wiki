@@ -4,7 +4,7 @@ AutoPaperReader 是一个自动化「找论文 -> 读论文 -> 写报告」的 a
 
 它的目标是把一篇论文从检索、下载源码、分析论文、分析配套代码，到最终输出结构化中文阅读报告的流程串起来，并把产物（包括 Markdown 报告和 HTML 展示网页）统一组织到固定目录中。
 
-项目还会把这些逐篇报告汇总成一个轻量动态 wiki：所有汇总页都提供全局快速跳转入口，方便在大量页面、论文、机器数据和治理命令之间切换；`docs/index.html` 提供全文搜索、研究线、分类、状态体系、代码/重要性/复习筛选、排序、分页和可分享 URL 状态；`docs/library.html` 提供适合大量论文批量管理的密集表格视图；`docs/board.html` 提供可拖拽状态看板，可按 workflow 动态切换状态列并保留 URL 状态；`docs/workflow.html` 提供状态工作流中心，集中对比 active workflow、状态分布和 drift；`docs/pivot.html` 提供任意两个分类维度的交叉透视表；`docs/compare.html` 提供多论文并排对比；`docs/taxonomy_map.html` 提供分类图谱，审计 domain/track/problem/topic/method 的节点和共现边；`docs/catalog.html` 提供面向桌面软件、DMG 封装和开源接入的数据/API 目录；`docs/inbox.html` 提供候选论文待处理池；`docs/quality.html` 提供质量治理、标签归一化建议和 taxonomy drift 门禁；`docs/review.html` 提供复习队列和建议复习日期；`docs/freshness.html` 提供报告时效治理、过期分析和研究线维护队列；`docs/dashboard.html` 提供分类覆盖、研究线健康度和待处理队列；`docs/release.html` 提供发布摘要、页面入口、机器可读数据清单、artifact inventory、SHA-256 和治理 playbooks；`docs/snapshot.html` 提供当前发布基线、风险队列、治理策略和 artifact hash 快照；`docs/actions.html` 提供统一行动中心，汇总复习、质量、分类、重复项和 inbox 待办；`docs/collections.html` 提供共享视图、智能队列和研究线集合入口；`docs/balance.html` 提供分类均衡复盘，集中查看分类维度健康度、长尾、过载和空候选；`docs/coverage.html` 提供研究线分类覆盖地图，按研究线定位 domain/track/problem/topic/method 缺口；`docs/facets.html` 提供分类工作台，集中审计标签规模、长尾和过载分类；`docs/related.html` 提供标签共现和相似论文关系发现；`docs/gaps.html` 提供研究缺口和下一步行动建议；`docs/taxonomy.html` 提供分类治理、状态矩阵、研究线角色矩阵和分类变更 patch 预览；`docs/timeline.html` 提供按年份和研究线浏览的路线时间轴；`docs/matrix.html` 提供研究线 x 年份覆盖矩阵；`docs/lines/index.html` 提供研究线入口；`docs/tags.html` 提供分类总览；`docs/papers.json` 提供机器可读索引；`docs/search_index.json` 提供正文检索索引；`docs/stats.json` 提供机器可读运营指标；`docs/quality.json` 提供元数据质量、标签别名建议与运营队列报告；`docs/review.json` 提供机器可读复习计划；`docs/freshness.json` 提供机器可读报告新鲜度和过期队列；`docs/taxonomy_actions.json` 提供可分派的分类治理任务；`docs/actions.json` 提供统一行动队列；`docs/workflow.json` 提供机器可读状态工作流配置、分布和漂移审计；`docs/pivot.json` 提供机器可读分类透视表维度、论文投影和交叉分布；`docs/compare.json` 提供机器可读论文对比数据和推荐集合；`docs/taxonomy_map.json` 提供分类节点、共现边、研究线簇和治理建议；`docs/catalog.json` 提供页面、机器数据、契约字段和集成 recipe 的机器可读目录；`docs/snapshot.json` 提供机器可读治理快照；`docs/manifest.json` 提供发布状态、入口清单、数据契约和可校验产物清单。
+项目还会把这些逐篇报告汇总成一个轻量动态 wiki：所有汇总页都提供全局快速跳转入口，方便在大量页面、论文、机器数据和治理命令之间切换；`docs/index.html` 提供全文搜索、研究线、分类、状态体系、代码/重要性/复习筛选、排序、分页和可分享 URL 状态；`docs/library.html` 提供适合大量论文批量管理的密集表格视图；`docs/board.html` 提供可拖拽状态看板，可按 workflow 动态切换状态列并保留 URL 状态；`docs/workflow.html` 提供状态工作流中心，集中对比 active workflow、状态分布和 drift；`docs/pivot.html` 提供任意两个分类维度的交叉透视表；`docs/compare.html` 提供多论文并排对比；`docs/taxonomy_map.html` 提供分类图谱，审计 domain/track/problem/topic/method 的节点和共现边；`docs/scale.html` 提供规模就绪视图，评估大库容量、索引体量和治理瓶颈；`docs/catalog.html` 提供面向桌面软件、DMG 封装和开源接入的数据/API 目录；`docs/inbox.html` 提供候选论文待处理池；`docs/quality.html` 提供质量治理、标签归一化建议和 taxonomy drift 门禁；`docs/review.html` 提供复习队列和建议复习日期；`docs/freshness.html` 提供报告时效治理、过期分析和研究线维护队列；`docs/dashboard.html` 提供分类覆盖、研究线健康度和待处理队列；`docs/release.html` 提供发布摘要、页面入口、机器可读数据清单、artifact inventory、SHA-256 和治理 playbooks；`docs/snapshot.html` 提供当前发布基线、风险队列、治理策略和 artifact hash 快照；`docs/actions.html` 提供统一行动中心，汇总复习、质量、分类、重复项和 inbox 待办；`docs/collections.html` 提供共享视图、智能队列和研究线集合入口；`docs/balance.html` 提供分类均衡复盘，集中查看分类维度健康度、长尾、过载和空候选；`docs/coverage.html` 提供研究线分类覆盖地图，按研究线定位 domain/track/problem/topic/method 缺口；`docs/facets.html` 提供分类工作台，集中审计标签规模、长尾和过载分类；`docs/related.html` 提供标签共现和相似论文关系发现；`docs/gaps.html` 提供研究缺口和下一步行动建议；`docs/taxonomy.html` 提供分类治理、状态矩阵、研究线角色矩阵和分类变更 patch 预览；`docs/timeline.html` 提供按年份和研究线浏览的路线时间轴；`docs/matrix.html` 提供研究线 x 年份覆盖矩阵；`docs/lines/index.html` 提供研究线入口；`docs/tags.html` 提供分类总览；`docs/papers.json` 提供机器可读索引；`docs/search_index.json` 提供正文检索索引；`docs/stats.json` 提供机器可读运营指标；`docs/quality.json` 提供元数据质量、标签别名建议与运营队列报告；`docs/review.json` 提供机器可读复习计划；`docs/freshness.json` 提供机器可读报告新鲜度和过期队列；`docs/taxonomy_actions.json` 提供可分派的分类治理任务；`docs/actions.json` 提供统一行动队列；`docs/workflow.json` 提供机器可读状态工作流配置、分布和漂移审计；`docs/pivot.json` 提供机器可读分类透视表维度、论文投影和交叉分布；`docs/compare.json` 提供机器可读论文对比数据和推荐集合；`docs/taxonomy_map.json` 提供分类节点、共现边、研究线簇和治理建议；`docs/scale.json` 提供规模就绪评分、容量投影和大库治理风险；`docs/catalog.json` 提供页面、机器数据、契约字段和集成 recipe 的机器可读目录；`docs/snapshot.json` 提供机器可读治理快照；`docs/manifest.json` 提供发布状态、入口清单、数据契约和可校验产物清单。
 
 **注：建议开启 Agent Teams 特性 `export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`**
 
@@ -37,6 +37,7 @@ paper_reader/
 │   ├── pivot.html
 │   ├── compare.html
 │   ├── taxonomy_map.html
+│   ├── scale.html
 │   ├── catalog.html
 │   ├── inbox.html
 │   ├── quality.html
@@ -63,6 +64,7 @@ paper_reader/
 │   ├── pivot.json
 │   ├── compare.json
 │   ├── taxonomy_map.json
+│   ├── scale.json
 │   ├── catalog.json
 │   ├── manifest.json
 │   ├── guides/
@@ -158,6 +160,7 @@ paper_reader/
 - `docs/pivot.html`：分类透视表，支持在 research line、domain、track、problem、topic、method、status、year 等维度之间动态交叉分析
 - `docs/compare.html`：论文对比页，按搜索、研究线、方向、状态或推荐集合选择论文，并排比较分类、状态、复习计划、评分和代码线索
 - `docs/taxonomy_map.html`：分类图谱页，按节点和共现边审计 research line、domain、track、problem、topic 和 method 的连接关系，可筛选并导出边 CSV
+- `docs/scale.html`：规模就绪页，评估搜索索引、分类图谱、动态状态体系、行动队列和治理风险在 100/500/1000/5000 篇规模下的增长压力
 - `docs/catalog.html`：数据/API 目录页，集中列出页面入口、JSON 数据资源、字段集合、消费者提示、数据契约和集成 recipes
 - `docs/inbox.csv`：候选论文待处理池源数据，可手动追加 id/title/link/status/priority/tags/note/added_at
 - `docs/inbox.html`：候选论文待处理池，支持筛选、去重提示、复制阅读任务、下载当前筛选 CSV 和复制 inbox 模板
@@ -193,6 +196,7 @@ paper_reader/
 - `docs/pivot.json`：机器可读分类透视表，包含可交叉的维度、每篇论文的维度投影和常用预设矩阵
 - `docs/compare.json`：机器可读论文对比数据，包含对比字段、论文元数据和高优先级/研究线/方向推荐集合
 - `docs/taxonomy_map.json`：机器可读分类图谱，包含分类节点、共现边、研究线簇、孤立节点和治理建议
+- `docs/scale.json`：机器可读规模就绪报告，包含 readiness score、资源体量、队列规模、瓶颈、容量投影和扩展阶段
 - `docs/catalog.json`：机器可读数据目录，包含页面、JSON 资源、顶层字段、集合规模、契约文件、推荐启动文件和集成 recipes
 - `docs/snapshot.json`：机器可读治理快照，包含 snapshot_id、发布检查、风险队列、治理策略、研究线和 artifact hash
 - `docs/manifest.json`：机器可读发布清单，包含页面入口、数据文件、质量状态、重复报告发布门禁、队列规模、常用命令、command recipes 和治理 playbooks
@@ -240,7 +244,7 @@ has_code: true
 
 分类建议见 [`docs/guides/taxonomy.md`](docs/guides/taxonomy.md)。核心原则是：`domains/tracks/problems` 管结构层级，`topics/methods` 管交叉筛选，`research_line/line_role` 管研究脉络，`status/reading_stage/review_stage` 管个人阅读状态。
 
-标签别名、研究线角色排序、阅读状态、阅读阶段、复习阶段和治理阈值可在 [`docs/guides/taxonomy.json`](docs/guides/taxonomy.json) 里自定义；修改后运行 `python3 scripts/build_wiki.py docs` 即可刷新筛选项、论文库批量下拉框、状态看板列和质量/分类治理队列。状态体系既支持根层 `status_values` 这种简单配置，也支持 `status_workflows` 保存多套命名流程，并用 `active_status_workflow` 选择当前默认启用的一套。`docs/workflow.html` 会把当前 active workflow、所有命名 workflow 的 status / reading_stage / review_stage 分布、未配置值、空字段和绑定 workflow 的共享视图集中展示出来；`docs/workflow.json` 则把同一份审计结果暴露给脚本或后续桌面软件。`docs/taxonomy.html` 会展示当前状态工作流配置，并提供浏览器内状态工作流设计器，可以载入已有 workflow、编辑候选状态、复制或下载保留全部 workflow 的 `taxonomy_status_workflow.json` 片段；下载后先运行 `python3 scripts/apply_status_workflow.py docs --input ~/Downloads/taxonomy_status_workflow.json` 预览，再加 `--write` 合并回 `taxonomy.json`。`governance_policy` 可调整什么算分类过稀、过密、标签过载、覆盖高风险或均衡风险。`docs/index.html`、`docs/library.html`、`docs/timeline.html`、`docs/matrix.html` 和 `docs/board.html` 会读取全部命名 workflow，允许在不同浏览视图里动态切换状态语义；看板也支持新增临时状态列并导出 CSV，用来试跑一套新流程。构建后的 `docs/papers.json`、`docs/stats.json`、`docs/workflow.json` 和 `docs/manifest.json` 会把当前启用状态、全部状态 workflow 与治理策略写入机器可读数据，方便后续页面或桌面软件动态读取。
+标签别名、研究线角色排序、阅读状态、阅读阶段、复习阶段和治理阈值可在 [`docs/guides/taxonomy.json`](docs/guides/taxonomy.json) 里自定义；修改后运行 `python3 scripts/build_wiki.py docs` 即可刷新筛选项、论文库批量下拉框、状态看板列和质量/分类治理队列。状态体系既支持根层 `status_values` 这种简单配置，也支持 `status_workflows` 保存多套命名流程，并用 `active_status_workflow` 选择当前默认启用的一套。`docs/workflow.html` 会把当前 active workflow、所有命名 workflow 的 status / reading_stage / review_stage 分布、未配置值、空字段和绑定 workflow 的共享视图集中展示出来；`docs/workflow.json` 则把同一份审计结果暴露给脚本或后续桌面软件。`docs/taxonomy.html` 会展示当前状态工作流配置，并提供浏览器内状态工作流设计器，可以载入已有 workflow、编辑候选状态、复制或下载保留全部 workflow 的 `taxonomy_status_workflow.json` 片段；下载后先运行 `python3 scripts/apply_status_workflow.py docs --input ~/Downloads/taxonomy_status_workflow.json` 预览，再加 `--write` 合并回 `taxonomy.json`。`governance_policy` 可调整什么算分类过稀、过密、标签过载、覆盖高风险或均衡风险。`docs/index.html`、`docs/library.html`、`docs/timeline.html`、`docs/matrix.html` 和 `docs/board.html` 会读取全部命名 workflow，允许在不同浏览视图里动态切换状态语义；看板也支持新增临时状态列并导出 CSV，用来试跑一套新流程。`docs/scale.html` 会把 active workflow、workflow 数量和状态候选数纳入规模治理视图，确保状态不是写死在页面里，而是可以随个人/研究/实现流程动态选择。构建后的 `docs/papers.json`、`docs/stats.json`、`docs/workflow.json`、`docs/scale.json` 和 `docs/manifest.json` 会把当前启用状态、全部状态 workflow 与治理策略写入机器可读数据，方便后续页面或桌面软件动态读取。
 
 新增报告时可以从 [`docs/guides/report.template.md`](docs/guides/report.template.md) 复制章节骨架；报告 frontmatter 的字段类型、必填项、评分范围和日期格式由 [`docs/guides/metadata.schema.json`](docs/guides/metadata.schema.json) 描述；候选论文 CSV 的字段契约由 [`docs/guides/inbox.schema.json`](docs/guides/inbox.schema.json) 描述；分类配置字段由 [`docs/guides/taxonomy.schema.json`](docs/guides/taxonomy.schema.json) 描述，当前 `taxonomy.json` 已带 `$schema` 引用，支持编辑器自动提示。`python3 scripts/validate_wiki.py docs --strict-taxonomy` 会同时校验 schema、报告元数据、inbox CSV、分类漂移和生成页面，适合作为发布或开源协作前的质量门禁。
 

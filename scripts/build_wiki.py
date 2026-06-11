@@ -39,6 +39,7 @@ GENERATED_FIXED_PATHS = (
     "pivot.json",
     "compare.json",
     "taxonomy_map.json",
+    "scale.json",
     "catalog.json",
     "snapshot.json",
     "manifest.json",
@@ -49,6 +50,7 @@ GENERATED_FIXED_PATHS = (
     "pivot.html",
     "compare.html",
     "taxonomy_map.html",
+    "scale.html",
     "catalog.html",
     "inbox.html",
     "quality.html",
@@ -829,6 +831,18 @@ def percent(part: int | float, total: int | float) -> str:
     if not total:
         return "0%"
     return f"{round(float(part) * 100 / float(total))}%"
+
+
+def format_bytes(size: int | float) -> str:
+    value = float(size or 0)
+    units = ["B", "KB", "MB", "GB"]
+    for unit in units:
+        if value < 1024 or unit == units[-1]:
+            if unit == "B":
+                return f"{int(value)} {unit}"
+            return f"{value:.1f} {unit}"
+        value /= 1024
+    return f"{value:.1f} GB"
 
 
 def build_paper(md_path: Path, report_dir: Path) -> dict[str, Any]:
@@ -1821,6 +1835,288 @@ def write_taxonomy_map_json(report_dir: Path, papers: list[dict[str, Any]]) -> N
     )
 
 
+SCALE_CORE_RESOURCES = [
+    "papers.json",
+    "search_index.json",
+    "stats.json",
+    "quality.json",
+    "review.json",
+    "freshness.json",
+    "taxonomy_actions.json",
+    "actions.json",
+    "workflow.json",
+    "pivot.json",
+    "compare.json",
+    "taxonomy_map.json",
+    "inbox.json",
+]
+
+
+def scale_resource_sizes(report_dir: Path) -> list[dict[str, Any]]:
+    resources = []
+    for href in SCALE_CORE_RESOURCES:
+        path = report_dir / href
+        resources.append(
+            {
+                "href": href,
+                "exists": path.exists(),
+                "size_bytes": path.stat().st_size if path.exists() else 0,
+            }
+        )
+    return resources
+
+
+def scale_project_bytes(current_bytes: int, current_count: int, target_count: int) -> int:
+    if current_count <= 0:
+        return 0
+    return int(round((current_bytes / current_count) * target_count))
+
+
+def scale_risk_item(
+    severity: str,
+    area: str,
+    signal: str,
+    recommendation: str,
+    href: str,
+    command: str = "",
+) -> dict[str, Any]:
+    rank = {"high": 90, "medium": 60, "low": 30, "none": 0}.get(severity, 0)
+    return {
+        "severity": severity,
+        "rank": rank,
+        "area": area,
+        "signal": signal,
+        "recommendation": recommendation,
+        "href": href,
+        "command": command,
+    }
+
+
+def build_scale_payload(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> dict[str, Any]:
+    count = len(papers)
+    quality = build_quality_report(papers)
+    review = build_review_plan(papers)
+    freshness = build_freshness_report(papers)
+    actions = build_action_center(papers, inbox_items)
+    taxonomy_map = build_taxonomy_map_payload(papers)
+    stats = build_stats_report(papers)
+    resources = scale_resource_sizes(report_dir)
+    controls = control_options()
+    status_workflows = controls.get("status_workflows") or {}
+    active_status_workflow = controls.get("active_status_workflow") or next(iter(status_workflows), "")
+    active_workflow = status_workflows.get(active_status_workflow, {}) if isinstance(status_workflows, dict) else {}
+    status_workflow = {
+        "active": active_status_workflow,
+        "workflow_count": len(status_workflows) if isinstance(status_workflows, dict) else 0,
+        "status_count": len(active_workflow.get("status_values") or controls.get("status") or []),
+        "reading_stage_count": len(active_workflow.get("reading_stage_values") or controls.get("reading_stage") or []),
+        "review_stage_count": len(active_workflow.get("review_stage_values") or controls.get("review_stage") or []),
+        "href": "workflow.html",
+    }
+    resource_by_href = {item["href"]: item for item in resources}
+    search_bytes = int(resource_by_href.get("search_index.json", {}).get("size_bytes") or 0)
+    papers_bytes = int(resource_by_href.get("papers.json", {}).get("size_bytes") or 0)
+    taxonomy_map_bytes = int(resource_by_href.get("taxonomy_map.json", {}).get("size_bytes") or 0)
+    action_count = int(actions.get("count") or 0)
+    line_count = len(stats.get("research_lines", []))
+    largest_line = max((int(line.get("count") or 0) for line in stats.get("research_lines", [])), default=0)
+    largest_line_share = round(largest_line / count, 3) if count else 0
+    taxonomy_node_count = len(taxonomy_map.get("nodes", []))
+    taxonomy_edge_count = len(taxonomy_map.get("edges", []))
+    taxonomy_edges_per_paper = round(taxonomy_edge_count / count, 1) if count else 0
+    queue_sizes = {
+        "quality": {name: len(slugs) for name, slugs in quality["queues"].items()},
+        "review": {name: len(slugs) for name, slugs in review["queues"].items()},
+        "freshness": {name: len(slugs) for name, slugs in freshness["queues"].items()},
+        "actions": action_count,
+        "inbox": len(inbox_items),
+    }
+
+    bottlenecks: list[dict[str, Any]] = []
+    review_gap = int(queue_sizes["review"].get("needs_plan", 0))
+    taxonomy_sparse = int(queue_sizes["quality"].get("taxonomy_sparse", 0))
+    taxonomy_dense = int(queue_sizes["quality"].get("taxonomy_dense", 0))
+    taxonomy_drift = int(queue_sizes["quality"].get("taxonomy_drift", 0))
+    duplicate_reports = int(queue_sizes["quality"].get("duplicate_reports", 0))
+    no_code = int(queue_sizes["quality"].get("no_code_observation", 0))
+    stale = int(queue_sizes["freshness"].get("stale", 0))
+
+    if review_gap:
+        severity = "high" if review_gap / max(count, 1) >= 0.35 else "medium"
+        bottlenecks.append(
+            scale_risk_item(
+                severity,
+                "review",
+                f"{review_gap} 篇论文缺 next_review",
+                "先用 review.html 或 apply_review_plan.py 建立复习节奏，避免大库里旧论文沉底。",
+                "review.html",
+                "python3 scripts/apply_review_plan.py docs --write",
+            )
+        )
+    if taxonomy_sparse or taxonomy_dense or taxonomy_drift:
+        severity = "high" if taxonomy_drift or taxonomy_dense else "medium"
+        bottlenecks.append(
+            scale_risk_item(
+                severity,
+                "taxonomy",
+                f"sparse={taxonomy_sparse}, dense={taxonomy_dense}, drift={taxonomy_drift}",
+                "优先处理 taxonomy drift，再用分类图谱和 facets 拆分过载节点、合并长尾标签。",
+                "facets.html",
+                "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
+            )
+        )
+    if duplicate_reports:
+        bottlenecks.append(
+            scale_risk_item(
+                "high",
+                "dedupe",
+                f"{duplicate_reports} 个重复报告相关条目",
+                "发布前先处理重复报告，避免开源协作里同一论文被多份报告分裂。",
+                "quality.html",
+            )
+        )
+    if action_count > max(24, count * 8):
+        bottlenecks.append(
+            scale_risk_item(
+                "medium",
+                "operations",
+                f"{action_count} 个统一行动项",
+                "行动队列已经偏长，建议导出项目任务并按 owner/status 分派。",
+                "actions.html",
+                "python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv",
+            )
+        )
+    if no_code / max(count, 1) >= 0.5:
+        bottlenecks.append(
+            scale_risk_item(
+                "medium",
+                "reproducibility",
+                f"{no_code} 篇论文缺代码观察或代码线索",
+                "对高重要性论文优先补代码观察，降低后续复现实验和桌面端检索的不确定性。",
+                "library.html?code=no&sort=importance",
+            )
+        )
+    if stale:
+        bottlenecks.append(
+            scale_risk_item(
+                "medium",
+                "freshness",
+                f"{stale} 篇报告已过期",
+                "用 freshness.html 处理过期报告，避免旧结论被当作当前事实。",
+                "freshness.html",
+            )
+        )
+    if largest_line_share >= 0.6 and count >= 5:
+        bottlenecks.append(
+            scale_risk_item(
+                "low",
+                "portfolio",
+                f"最大研究线占比 {largest_line_share:.0%}",
+                "研究线集中度较高；如果继续增长，可用 collections 和 matrix 拆出子线或阶段队列。",
+                "collections.html",
+            )
+        )
+    if taxonomy_edges_per_paper >= 35:
+        bottlenecks.append(
+            scale_risk_item(
+                "low",
+                "taxonomy_graph",
+                f"平均每篇 {taxonomy_edges_per_paper} 条分类边",
+                "分类图谱边密度偏高，后续可限制 topic/method 数或提高标签合并频率。",
+                "taxonomy_map.html",
+            )
+        )
+    if int(status_workflow["workflow_count"]) <= 1 and count >= 100:
+        bottlenecks.append(
+            scale_risk_item(
+                "low",
+                "workflow",
+                "当前只有 1 套状态体系",
+                "论文过百后建议保留 personal / research / implementation 等多套 status_workflows，并按场景动态切换。",
+                "workflow.html",
+                "python3 scripts/apply_status_workflow.py docs --input <taxonomy_status_workflow.json> --write",
+            )
+        )
+    if not bottlenecks:
+        bottlenecks.append(
+            scale_risk_item(
+                "none",
+                "readiness",
+                "当前没有明显规模瓶颈",
+                "保持质量门、分类图谱和复习计划的周期性检查即可。",
+                "dashboard.html",
+            )
+        )
+
+    penalty = 0
+    penalty += min(25, int(review_gap / max(count, 1) * 60))
+    penalty += min(20, taxonomy_sparse + taxonomy_dense * 2 + taxonomy_drift * 4)
+    penalty += min(20, int(action_count / max(count, 1)))
+    penalty += min(15, duplicate_reports * 5)
+    penalty += min(10, int(no_code / max(count, 1) * 20))
+    readiness_score = max(0, 100 - penalty)
+    if readiness_score >= 85:
+        readiness_label = "ready"
+    elif readiness_score >= 70:
+        readiness_label = "watch"
+    else:
+        readiness_label = "needs_governance"
+
+    capacity_projection = []
+    for target in (100, 500, 1000, 5000):
+        capacity_projection.append(
+            {
+                "paper_count": target,
+                "search_index_bytes": scale_project_bytes(search_bytes, count, target),
+                "papers_json_bytes": scale_project_bytes(papers_bytes, count, target),
+                "taxonomy_map_bytes": scale_project_bytes(taxonomy_map_bytes, count, target),
+                "estimated_actions": scale_project_bytes(action_count, count, target),
+                "recommended_mode": "static wiki" if target <= 500 else ("split indexes" if target <= 1000 else "desktop cache / paged indexes"),
+            }
+        )
+
+    scale_tiers = [
+        {"tier": "personal", "paper_range": "0-100", "mode": "单目录静态 wiki", "priority": "保持 frontmatter 完整和复习计划"},
+        {"tier": "serious_library", "paper_range": "100-500", "mode": "静态 wiki + 强制质量门", "priority": "拆分过载 taxonomy，固定共享视图"},
+        {"tier": "large_library", "paper_range": "500-1000", "mode": "分片索引 + 项目化治理", "priority": "按研究线 owner / 队列治理行动项"},
+        {"tier": "desktop_scale", "paper_range": "1000+", "mode": "桌面缓存或分页索引", "priority": "将 search/action/taxonomy graph 改为增量同步"},
+    ]
+
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": count,
+        "readiness_score": readiness_score,
+        "readiness_label": readiness_label,
+        "line_count": line_count,
+        "largest_line_share": largest_line_share,
+        "taxonomy_node_count": taxonomy_node_count,
+        "taxonomy_edge_count": taxonomy_edge_count,
+        "taxonomy_edges_per_paper": taxonomy_edges_per_paper,
+        "status_workflow": status_workflow,
+        "resource_sizes": resources,
+        "queue_sizes": queue_sizes,
+        "bottlenecks": sorted(bottlenecks, key=lambda item: (-int(item["rank"]), item["area"], item["signal"])),
+        "capacity_projection": capacity_projection,
+        "scale_tiers": scale_tiers,
+        "links": {
+            "dashboard": "dashboard.html",
+            "quality": "quality.html",
+            "taxonomy_map": "taxonomy_map.html",
+            "actions": "actions.html",
+            "release": "release.html",
+            "catalog": "catalog.html",
+        },
+    }
+
+
+def write_scale_json(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
+    payload = build_scale_payload(report_dir, papers, inbox_items)
+    (report_dir / "scale.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
 COMPARE_FIELDS = [
     {"key": "title_zh", "label": "中文标题", "group": "identity"},
     {"key": "title_en", "label": "英文标题", "group": "identity"},
@@ -1954,6 +2250,7 @@ DATA_CONSUMER_HINTS = {
     "pivot.json": ["analytics", "classification", "desktop"],
     "compare.json": ["comparison", "curation", "desktop"],
     "taxonomy_map.json": ["taxonomy", "graph", "desktop"],
+    "scale.json": ["ops", "capacity-planning", "desktop"],
     "snapshot.json": ["release", "audit", "desktop"],
     "inbox.json": ["intake", "dedupe"],
     "manifest.json": ["release", "audit", "ci"],
@@ -2120,6 +2417,7 @@ def wiki_pages_manifest() -> list[dict[str, str]]:
         {"title": "分类透视表", "href": "pivot.html", "kind": "analysis", "description": "任意两个分类维度交叉分析论文分布"},
         {"title": "论文对比", "href": "compare.html", "kind": "analysis", "description": "并排比较候选论文的分类、状态和质量信号"},
         {"title": "分类图谱", "href": "taxonomy_map.html", "kind": "analysis", "description": "分类节点、共现边和研究线簇"},
+        {"title": "规模就绪", "href": "scale.html", "kind": "ops", "description": "大规模论文库容量、风险和扩展建议"},
         {"title": "数据目录", "href": "catalog.html", "kind": "ops", "description": "机器数据、页面和契约的接入目录"},
         {"title": "待处理池", "href": "inbox.html", "kind": "workflow", "description": "候选论文队列和去重提示"},
         {"title": "复习计划", "href": "review.html", "kind": "workflow", "description": "待复习、需建计划、建议日期"},
@@ -2147,6 +2445,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "pivot.json", "description": "分类透视表维度、论文投影和交叉分布"},
         {"href": "compare.json", "description": "论文对比视图数据和推荐对比集合"},
         {"href": "taxonomy_map.json", "description": "分类节点、共现边、研究线簇和图谱治理建议"},
+        {"href": "scale.json", "description": "规模就绪评分、容量投影和大库治理风险"},
         {"href": "catalog.json", "description": "机器数据、页面入口和契约字段目录"},
         {"href": "snapshot.json", "description": "当前知识库治理快照和发布基线"},
         {"href": "inbox.json", "description": "候选论文队列和重复项"},
@@ -7389,6 +7688,234 @@ renderCompare();
 </script>
 """
     (report_dir / "compare.html").write_text(page_shell("论文对比", body, extra_css=compare_css), encoding="utf-8")
+
+
+def render_scale(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
+    payload = build_scale_payload(report_dir, papers, inbox_items)
+    status_label = {
+        "ready": "规模健康",
+        "watch": "需要观察",
+        "needs_governance": "需要治理",
+    }.get(str(payload["readiness_label"]), str(payload["readiness_label"]))
+    severity_label = {"high": "高", "medium": "中", "low": "低", "none": "无"}
+    bottleneck_rows = "".join(
+        "<tr>"
+        f'<td><span class="flag">{html.escape(severity_label.get(str(item["severity"]), str(item["severity"])))}</span></td>'
+        f"<td>{html.escape(str(item['area']))}</td>"
+        f"<td>{html.escape(str(item['signal']))}</td>"
+        f"<td>{html.escape(str(item['recommendation']))}</td>"
+        f'<td><a href="{html.escape(str(item["href"]))}">打开</a></td>'
+        f"<td>{'<code>' + html.escape(str(item.get('command') or '')) + '</code>' if item.get('command') else '-'}</td>"
+        "</tr>"
+        for item in payload["bottlenecks"]
+    )
+    projection_rows = "".join(
+        "<tr>"
+        f"<td>{item['paper_count']}</td>"
+        f"<td>{format_bytes(int(item['search_index_bytes']))}</td>"
+        f"<td>{format_bytes(int(item['papers_json_bytes']))}</td>"
+        f"<td>{format_bytes(int(item['taxonomy_map_bytes']))}</td>"
+        f"<td>{item['estimated_actions']}</td>"
+        f"<td>{html.escape(str(item['recommended_mode']))}</td>"
+        "</tr>"
+        for item in payload["capacity_projection"]
+    )
+    resource_rows = "".join(
+        "<tr>"
+        f'<td><a href="{html.escape(str(item["href"]))}">{html.escape(str(item["href"]))}</a></td>'
+        f"<td>{'<span class=\"flag\">ok</span>' if item.get('exists') else '<span class=\"flag\">missing</span>'}</td>"
+        f"<td>{format_bytes(int(item.get('size_bytes') or 0))}</td>"
+        "</tr>"
+        for item in payload["resource_sizes"]
+    )
+    tier_rows = "".join(
+        "<tr>"
+        f"<td>{html.escape(str(item['tier']))}</td>"
+        f"<td>{html.escape(str(item['paper_range']))}</td>"
+        f"<td>{html.escape(str(item['mode']))}</td>"
+        f"<td>{html.escape(str(item['priority']))}</td>"
+        "</tr>"
+        for item in payload["scale_tiers"]
+    )
+    queue_rows = "".join(
+        "<tr>"
+        f"<td>{html.escape(str(group))}</td>"
+        f"<td>{html.escape(str(name))}</td>"
+        f"<td>{count}</td>"
+        "</tr>"
+        for group, queues in payload["queue_sizes"].items()
+        for name, count in (queues.items() if isinstance(queues, dict) else [(group, queues)])
+    )
+    scale_css = """
+    .scale-status {
+      display: grid;
+      grid-template-columns: minmax(220px, 300px) 1fr;
+      gap: 16px;
+      align-items: stretch;
+      margin-bottom: 18px;
+    }
+    .scale-score {
+      display: grid;
+      place-items: center;
+      min-height: 210px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      text-align: center;
+      padding: 18px;
+    }
+    .scale-score strong {
+      display: block;
+      font-size: 58px;
+      line-height: 1;
+    }
+    .scale-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+    }
+    .scale-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .scale-controls select, .scale-controls input { max-width: 220px; }
+    .scale-table code {
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+    .bottleneck-row[hidden] { display: none; }
+    @media (max-width: 860px) {
+      .scale-status { grid-template-columns: 1fr; }
+    }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Scale Readiness</div>
+  <h1>规模就绪</h1>
+  <p class="lead">从大库运维角度检查论文数量增长后的容量、索引体量、分类复杂度和治理队列。适合决定什么时候拆分类、分派 owner、做桌面缓存或分页索引。</p>
+  <div class="stats">
+    <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="taxonomy_map.html">分类图谱</a>
+    <a class="stat" href="actions.html">行动中心</a>
+    <a class="stat" href="release.html">发布摘要</a>
+    <a class="stat" href="scale.json">Scale JSON</a>
+    <span class="stat">论文 {payload["count"]}</span>
+    <span class="stat">状态 {html.escape(status_label)}</span>
+  </div>
+</header>
+<main class="shell">
+  <section class="scale-status">
+    <div class="scale-score">
+      <div>
+        <span class="meta">Readiness score</span>
+        <strong>{payload["readiness_score"]}</strong>
+        <span class="flag">{html.escape(status_label)}</span>
+      </div>
+    </div>
+    <div class="scale-summary">
+      <section class="metric-card"><span>研究线</span><strong>{payload["line_count"]}</strong><span>最大占比 {payload["largest_line_share"]:.0%}</span></section>
+      <section class="metric-card"><span>分类节点</span><strong>{payload["taxonomy_node_count"]}</strong><span>图谱节点</span></section>
+      <section class="metric-card"><span>分类边</span><strong>{payload["taxonomy_edge_count"]}</strong><span>{payload["taxonomy_edges_per_paper"]} / paper</span></section>
+      <section class="metric-card"><span>状态体系</span><strong>{payload["status_workflow"]["workflow_count"]}</strong><span>active {html.escape(str(payload["status_workflow"]["active"] or "-"))}</span></section>
+      <section class="metric-card"><span>风险项</span><strong>{len(payload["bottlenecks"])}</strong><span>按优先级排序</span></section>
+    </div>
+  </section>
+  <section>
+    <h2 class="section-title">动态状态体系</h2>
+    <div class="metric-grid">
+      <section class="metric-card"><span>Active workflow</span><strong>{html.escape(str(payload["status_workflow"]["active"] or "-"))}</strong><span><a href="workflow.html">打开工作流中心</a></span></section>
+      <section class="metric-card"><span>Status 候选</span><strong>{payload["status_workflow"]["status_count"]}</strong><span>当前状态列/筛选选项</span></section>
+      <section class="metric-card"><span>Reading stage</span><strong>{payload["status_workflow"]["reading_stage_count"]}</strong><span>阅读深度候选</span></section>
+      <section class="metric-card"><span>Review stage</span><strong>{payload["status_workflow"]["review_stage_count"]}</strong><span>复习阶段候选</span></section>
+    </div>
+  </section>
+  <section>
+    <h2 class="section-title">规模瓶颈</h2>
+    <div class="scale-controls">
+      <input id="scaleSearch" type="search" placeholder="搜索 area、signal、建议">
+      <select id="scaleSeverity"><option value="">全部优先级</option><option value="high">高</option><option value="medium">中</option><option value="low">低</option><option value="none">无</option></select>
+      <button id="downloadScaleRisks" class="button" type="button">下载风险 CSV</button>
+    </div>
+    <div class="table-wrap"><table class="data-table scale-table"><thead><tr><th>优先级</th><th>区域</th><th>信号</th><th>建议</th><th>入口</th><th>命令</th></tr></thead><tbody id="scaleRiskRows">{bottleneck_rows}</tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">容量投影</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>论文数</th><th>Search index</th><th>Papers JSON</th><th>Taxonomy map</th><th>行动项估计</th><th>建议模式</th></tr></thead><tbody>{projection_rows}</tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">核心资源体量</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>资源</th><th>状态</th><th>大小</th></tr></thead><tbody>{resource_rows}</tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">扩展阶段</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>阶段</th><th>规模</th><th>模式</th><th>优先事项</th></tr></thead><tbody>{tier_rows}</tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">队列规模</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>分组</th><th>队列</th><th>数量</th></tr></thead><tbody>{queue_rows}</tbody></table></div>
+  </section>
+</main>
+<script>
+const scaleRows = Array.from(document.querySelectorAll("#scaleRiskRows tr"));
+const scaleSearch = document.querySelector("#scaleSearch");
+const scaleSeverity = document.querySelector("#scaleSeverity");
+const downloadScaleRisks = document.querySelector("#downloadScaleRisks");
+
+function scaleCsvCell(value) {{
+  const text = String(value ?? "");
+  return (text.includes(",") || text.includes('"') || text.includes("\\n"))
+    ? `"${{text.replaceAll('"', '""')}}"`
+    : text;
+}}
+
+function visibleScaleRows() {{
+  return scaleRows.filter(row => !row.hidden);
+}}
+
+function renderScaleRows() {{
+  const q = scaleSearch.value.trim().toLowerCase();
+  const severity = scaleSeverity.value;
+  scaleRows.forEach(row => {{
+    const cells = Array.from(row.children).map(cell => cell.textContent || "");
+    const rowSeverity = row.children[0]?.textContent?.trim() || "";
+    const hitSeverity = !severity || (
+      (severity === "high" && rowSeverity === "高")
+      || (severity === "medium" && rowSeverity === "中")
+      || (severity === "low" && rowSeverity === "低")
+      || (severity === "none" && rowSeverity === "无")
+    );
+    const hitSearch = !q || cells.join(" ").toLowerCase().includes(q);
+    row.hidden = !(hitSeverity && hitSearch);
+  }});
+}}
+
+function downloadRisks() {{
+  const header = ["severity", "area", "signal", "recommendation", "entry", "command"];
+  const rows = visibleScaleRows().map(row => Array.from(row.children).map(cell => cell.textContent.trim()));
+  if (!rows.length) {{
+    window.alert("当前没有匹配风险项。");
+    return;
+  }}
+  const csv = [header, ...rows].map(row => row.map(scaleCsvCell).join(",")).join("\\n") + "\\n";
+  const blob = new Blob([csv], {{ type: "text/csv;charset=utf-8" }});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "scale_bottlenecks.csv";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}}
+
+[scaleSearch, scaleSeverity].forEach(control => control.addEventListener("input", renderScaleRows));
+downloadScaleRisks.addEventListener("click", downloadRisks);
+renderScaleRows();
+</script>
+"""
+    (report_dir / "scale.html").write_text(page_shell("规模就绪", body, extra_css=scale_css), encoding="utf-8")
 
 
 def render_catalog(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
@@ -12794,6 +13321,7 @@ def build_wiki(report_dir: Path) -> int:
     write_taxonomy_map_json(report_dir, papers)
     write_inbox_json(report_dir, inbox_items)
     write_search_index(report_dir, papers)
+    write_scale_json(report_dir, papers, inbox_items)
     render_index(report_dir, papers)
     render_library(report_dir, papers)
     render_board(report_dir, papers)
@@ -12801,6 +13329,7 @@ def build_wiki(report_dir: Path) -> int:
     render_pivot(report_dir, papers)
     render_compare(report_dir, papers)
     render_taxonomy_map(report_dir, papers)
+    render_scale(report_dir, papers, inbox_items)
     render_inbox(report_dir, inbox_items)
     render_review(report_dir, papers)
     render_freshness(report_dir, papers)

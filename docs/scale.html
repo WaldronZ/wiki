@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Parallel Decoding with Diffusion Models</title>
+  <title>规模就绪</title>
   <style>
     :root {
       color-scheme: light;
@@ -350,6 +350,50 @@
       .data-table { display: block; overflow-x: auto; }
       header { padding-top: 28px; }
     }
+
+    .scale-status {
+      display: grid;
+      grid-template-columns: minmax(220px, 300px) 1fr;
+      gap: 16px;
+      align-items: stretch;
+      margin-bottom: 18px;
+    }
+    .scale-score {
+      display: grid;
+      place-items: center;
+      min-height: 210px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      text-align: center;
+      padding: 18px;
+    }
+    .scale-score strong {
+      display: block;
+      font-size: 58px;
+      line-height: 1;
+    }
+    .scale-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+    }
+    .scale-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .scale-controls select, .scale-controls input { max-width: 220px; }
+    .scale-table code {
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+    .bottleneck-row[hidden] { display: none; }
+    @media (max-width: 860px) {
+      .scale-status { grid-template-columns: 1fr; }
+    }
+    
   </style>
 </head>
 <body>
@@ -366,32 +410,132 @@
 </div>
 
 <header class="shell">
-  <div class="eyebrow">Research Line</div>
-  <h1>Parallel Decoding with Diffusion Models</h1>
-  <p class="lead">按论文在该研究线中的角色组织：foundation、baseline、main、system、variant、followup 等角色来自 frontmatter，可按你的分类习惯自由扩展。</p>
+  <div class="eyebrow">Scale Readiness</div>
+  <h1>规模就绪</h1>
+  <p class="lead">从大库运维角度检查论文数量增长后的容量、索引体量、分类复杂度和治理队列。适合决定什么时候拆分类、分派 owner、做桌面缓存或分页索引。</p>
   <div class="stats">
-    <a class="stat" href="../index.html">返回首页</a>
-    <a class="stat" href="../library.html">论文库表格</a>
-    <a class="stat" href="../review.html">复习计划</a>
-    <a class="stat" href="../dashboard.html">管理控制台</a>
-    <a class="stat" href="../collections.html">集合视图</a>
-    <a class="stat" href="../related.html">关联网络</a>
-    <a class="stat" href="../gaps.html">研究缺口</a>
-    <a class="stat" href="../taxonomy.html">分类治理</a>
-    <a class="stat" href="../timeline.html">时间轴</a>
-    <a class="stat" href="../matrix.html">研究矩阵</a>
-    <a class="stat" href="index.html">全部研究线</a>
-    <span class="stat">论文 3</span>
-    <span class="stat">角色 3</span>
+    <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="taxonomy_map.html">分类图谱</a>
+    <a class="stat" href="actions.html">行动中心</a>
+    <a class="stat" href="release.html">发布摘要</a>
+    <a class="stat" href="scale.json">Scale JSON</a>
+    <span class="stat">论文 5</span>
+    <span class="stat">状态 需要治理</span>
   </div>
 </header>
 <main class="shell">
-  <div class="line-detail"><section class="role-section"><h2>foundation <span class="meta">1</span></h2><article class="paper-row"><div><h3><a href="../2604.11035-introspective-dlm.html">内省式扩散语言模型</a></h3><div class="meta">Introspective Diffusion Language Models</div><div class="chips"><span class="chip">Diffusion Language Models</span><span class="chip">LLM</span><span class="chip">LLM Serving</span><span class="chip">gated LoRA</span><span class="chip">introspective consistency</span><span class="chip">introspective strided decoding</span></div></div><div class="card-flags"><span class="flag">2026</span><span class="flag">重要性 5</span><span class="flag">状态 read</span><span class="flag">有代码</span></div></article></section><section class="role-section"><h2>variant <span class="meta">1</span></h2><article class="paper-row"><div><h3><a href="../2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></h3><div class="meta">Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion</div><div class="chips"><span class="chip">Diffusion Language Models</span><span class="chip">KV Cache</span><span class="chip">LLM Inference</span><span class="chip">dual-view attention</span><span class="chip">forward KL distillation</span><span class="chip">intra-model consensus</span></div></div><div class="card-flags"><span class="flag">2026</span><span class="flag">重要性 4</span><span class="flag">状态 read</span><span class="flag">有代码</span></div></article></section><section class="role-section"><h2>followup <span class="meta">1</span></h2><article class="paper-row"><div><h3><a href="../2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a></h3><div class="meta">DFlash: Block Diffusion for Flash Speculative Decoding</div><div class="chips"><span class="chip">Diffusion Language Models</span><span class="chip">LLM Inference</span><span class="chip">LLM Serving</span><span class="chip">block diffusion</span><span class="chip">KV injection</span><span class="chip">parallel drafting</span></div></div><div class="card-flags"><span class="flag">2026</span><span class="flag">重要性 4</span><span class="flag">状态 read</span><span class="flag">有代码</span></div></article></section></div>
+  <section class="scale-status">
+    <div class="scale-score">
+      <div>
+        <span class="meta">Readiness score</span>
+        <strong>59</strong>
+        <span class="flag">需要治理</span>
+      </div>
+    </div>
+    <div class="scale-summary">
+      <section class="metric-card"><span>研究线</span><strong>2</strong><span>最大占比 60%</span></section>
+      <section class="metric-card"><span>分类节点</span><strong>52</strong><span>图谱节点</span></section>
+      <section class="metric-card"><span>分类边</span><strong>194</strong><span>38.8 / paper</span></section>
+      <section class="metric-card"><span>状态体系</span><strong>2</strong><span>active personal</span></section>
+      <section class="metric-card"><span>风险项</span><strong>5</strong><span>按优先级排序</span></section>
+    </div>
+  </section>
+  <section>
+    <h2 class="section-title">动态状态体系</h2>
+    <div class="metric-grid">
+      <section class="metric-card"><span>Active workflow</span><strong>personal</strong><span><a href="workflow.html">打开工作流中心</a></span></section>
+      <section class="metric-card"><span>Status 候选</span><strong>5</strong><span>当前状态列/筛选选项</span></section>
+      <section class="metric-card"><span>Reading stage</span><strong>4</strong><span>阅读深度候选</span></section>
+      <section class="metric-card"><span>Review stage</span><strong>3</strong><span>复习阶段候选</span></section>
+    </div>
+  </section>
+  <section>
+    <h2 class="section-title">规模瓶颈</h2>
+    <div class="scale-controls">
+      <input id="scaleSearch" type="search" placeholder="搜索 area、signal、建议">
+      <select id="scaleSeverity"><option value="">全部优先级</option><option value="high">高</option><option value="medium">中</option><option value="low">低</option><option value="none">无</option></select>
+      <button id="downloadScaleRisks" class="button" type="button">下载风险 CSV</button>
+    </div>
+    <div class="table-wrap"><table class="data-table scale-table"><thead><tr><th>优先级</th><th>区域</th><th>信号</th><th>建议</th><th>入口</th><th>命令</th></tr></thead><tbody id="scaleRiskRows"><tr><td><span class="flag">高</span></td><td>review</td><td>5 篇论文缺 next_review</td><td>先用 review.html 或 apply_review_plan.py 建立复习节奏，避免大库里旧论文沉底。</td><td><a href="review.html">打开</a></td><td><code>python3 scripts/apply_review_plan.py docs --write</code></td></tr><tr><td><span class="flag">高</span></td><td>taxonomy</td><td>sparse=0, dense=2, drift=0</td><td>优先处理 taxonomy drift，再用分类图谱和 facets 拆分过载节点、合并长尾标签。</td><td><a href="facets.html">打开</a></td><td><code>python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv</code></td></tr><tr><td><span class="flag">中</span></td><td>operations</td><td>62 个统一行动项</td><td>行动队列已经偏长，建议导出项目任务并按 owner/status 分派。</td><td><a href="actions.html">打开</a></td><td><code>python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv</code></td></tr><tr><td><span class="flag">低</span></td><td>portfolio</td><td>最大研究线占比 60%</td><td>研究线集中度较高；如果继续增长，可用 collections 和 matrix 拆出子线或阶段队列。</td><td><a href="collections.html">打开</a></td><td>-</td></tr><tr><td><span class="flag">低</span></td><td>taxonomy_graph</td><td>平均每篇 38.8 条分类边</td><td>分类图谱边密度偏高，后续可限制 topic/method 数或提高标签合并频率。</td><td><a href="taxonomy_map.html">打开</a></td><td>-</td></tr></tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">容量投影</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>论文数</th><th>Search index</th><th>Papers JSON</th><th>Taxonomy map</th><th>行动项估计</th><th>建议模式</th></tr></thead><tbody><tr><td>100</td><td>3.3 MB</td><td>344.8 KB</td><td>2.0 MB</td><td>1240</td><td>static wiki</td></tr><tr><td>500</td><td>16.3 MB</td><td>1.7 MB</td><td>10.0 MB</td><td>6200</td><td>static wiki</td></tr><tr><td>1000</td><td>32.7 MB</td><td>3.4 MB</td><td>19.9 MB</td><td>12400</td><td>split indexes</td></tr><tr><td>5000</td><td>163.5 MB</td><td>16.8 MB</td><td>99.5 MB</td><td>62000</td><td>desktop cache / paged indexes</td></tr></tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">核心资源体量</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>资源</th><th>状态</th><th>大小</th></tr></thead><tbody><tr><td><a href="papers.json">papers.json</a></td><td><span class="flag">ok</span></td><td>17.2 KB</td></tr><tr><td><a href="search_index.json">search_index.json</a></td><td><span class="flag">ok</span></td><td>167.4 KB</td></tr><tr><td><a href="stats.json">stats.json</a></td><td><span class="flag">ok</span></td><td>11.4 KB</td></tr><tr><td><a href="quality.json">quality.json</a></td><td><span class="flag">ok</span></td><td>5.2 KB</td></tr><tr><td><a href="review.json">review.json</a></td><td><span class="flag">ok</span></td><td>3.5 KB</td></tr><tr><td><a href="freshness.json">freshness.json</a></td><td><span class="flag">ok</span></td><td>4.9 KB</td></tr><tr><td><a href="taxonomy_actions.json">taxonomy_actions.json</a></td><td><span class="flag">ok</span></td><td>23.4 KB</td></tr><tr><td><a href="actions.json">actions.json</a></td><td><span class="flag">ok</span></td><td>33.5 KB</td></tr><tr><td><a href="workflow.json">workflow.json</a></td><td><span class="flag">ok</span></td><td>9.7 KB</td></tr><tr><td><a href="pivot.json">pivot.json</a></td><td><span class="flag">ok</span></td><td>18.7 KB</td></tr><tr><td><a href="compare.json">compare.json</a></td><td><span class="flag">ok</span></td><td>16.5 KB</td></tr><tr><td><a href="taxonomy_map.json">taxonomy_map.json</a></td><td><span class="flag">ok</span></td><td>101.9 KB</td></tr><tr><td><a href="inbox.json">inbox.json</a></td><td><span class="flag">ok</span></td><td>130 B</td></tr></tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">扩展阶段</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>阶段</th><th>规模</th><th>模式</th><th>优先事项</th></tr></thead><tbody><tr><td>personal</td><td>0-100</td><td>单目录静态 wiki</td><td>保持 frontmatter 完整和复习计划</td></tr><tr><td>serious_library</td><td>100-500</td><td>静态 wiki + 强制质量门</td><td>拆分过载 taxonomy，固定共享视图</td></tr><tr><td>large_library</td><td>500-1000</td><td>分片索引 + 项目化治理</td><td>按研究线 owner / 队列治理行动项</td></tr><tr><td>desktop_scale</td><td>1000+</td><td>桌面缓存或分页索引</td><td>将 search/action/taxonomy graph 改为增量同步</td></tr></tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">队列规模</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>分组</th><th>队列</th><th>数量</th></tr></thead><tbody><tr><td>quality</td><td>missing_required_metadata</td><td>0</td></tr><tr><td>quality</td><td>needs_review_plan</td><td>5</td></tr><tr><td>quality</td><td>due_review</td><td>0</td></tr><tr><td>quality</td><td>no_code_observation</td><td>0</td></tr><tr><td>quality</td><td>taxonomy_drift</td><td>0</td></tr><tr><td>quality</td><td>duplicate_reports</td><td>0</td></tr><tr><td>quality</td><td>taxonomy_sparse</td><td>0</td></tr><tr><td>quality</td><td>taxonomy_dense</td><td>2</td></tr><tr><td>quality</td><td>high_importance</td><td>2</td></tr><tr><td>review</td><td>due</td><td>0</td></tr><tr><td>review</td><td>needs_plan</td><td>5</td></tr><tr><td>review</td><td>scheduled</td><td>0</td></tr><tr><td>review</td><td>high_priority</td><td>2</td></tr><tr><td>freshness</td><td>due</td><td>0</td></tr><tr><td>freshness</td><td>needs_plan</td><td>5</td></tr><tr><td>freshness</td><td>stale</td><td>0</td></tr><tr><td>freshness</td><td>aging</td><td>0</td></tr><tr><td>actions</td><td>actions</td><td>62</td></tr><tr><td>inbox</td><td>inbox</td><td>0</td></tr></tbody></table></div>
+  </section>
 </main>
+<script>
+const scaleRows = Array.from(document.querySelectorAll("#scaleRiskRows tr"));
+const scaleSearch = document.querySelector("#scaleSearch");
+const scaleSeverity = document.querySelector("#scaleSeverity");
+const downloadScaleRisks = document.querySelector("#downloadScaleRisks");
+
+function scaleCsvCell(value) {
+  const text = String(value ?? "");
+  return (text.includes(",") || text.includes('"') || text.includes("\n"))
+    ? `"${text.replaceAll('"', '""')}"`
+    : text;
+}
+
+function visibleScaleRows() {
+  return scaleRows.filter(row => !row.hidden);
+}
+
+function renderScaleRows() {
+  const q = scaleSearch.value.trim().toLowerCase();
+  const severity = scaleSeverity.value;
+  scaleRows.forEach(row => {
+    const cells = Array.from(row.children).map(cell => cell.textContent || "");
+    const rowSeverity = row.children[0]?.textContent?.trim() || "";
+    const hitSeverity = !severity || (
+      (severity === "high" && rowSeverity === "高")
+      || (severity === "medium" && rowSeverity === "中")
+      || (severity === "low" && rowSeverity === "低")
+      || (severity === "none" && rowSeverity === "无")
+    );
+    const hitSearch = !q || cells.join(" ").toLowerCase().includes(q);
+    row.hidden = !(hitSeverity && hitSearch);
+  });
+}
+
+function downloadRisks() {
+  const header = ["severity", "area", "signal", "recommendation", "entry", "command"];
+  const rows = visibleScaleRows().map(row => Array.from(row.children).map(cell => cell.textContent.trim()));
+  if (!rows.length) {
+    window.alert("当前没有匹配风险项。");
+    return;
+  }
+  const csv = [header, ...rows].map(row => row.map(scaleCsvCell).join(",")).join("\n") + "\n";
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "scale_bottlenecks.csv";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+[scaleSearch, scaleSeverity].forEach(control => control.addEventListener("input", renderScaleRows));
+downloadScaleRisks.addEventListener("click", downloadRisks);
+renderScaleRows();
+</script>
 
 <script>
 (() => {
-  const prefix = "../";
+  const prefix = "";
   const openButton = document.querySelector("#quickOpen");
   const panel = document.querySelector("#quickPanel");
   const search = document.querySelector("#quickSearch");

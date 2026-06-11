@@ -105,6 +105,7 @@ REQUIRED_PAGES = {
     "pivot.html",
     "compare.html",
     "taxonomy_map.html",
+    "scale.html",
     "catalog.html",
     "inbox.html",
     "quality.html",
@@ -133,6 +134,7 @@ REQUIRED_PAGES = {
     "pivot.json",
     "compare.json",
     "taxonomy_map.json",
+    "scale.json",
     "catalog.json",
     "snapshot.json",
     "manifest.json",
@@ -554,6 +556,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     pivot_path = report_dir / "pivot.json"
     compare_path = report_dir / "compare.json"
     taxonomy_map_path = report_dir / "taxonomy_map.json"
+    scale_path = report_dir / "scale.json"
     catalog_path = report_dir / "catalog.json"
     stats_path = report_dir / "stats.json"
     inbox_path = report_dir / "inbox.json"
@@ -586,6 +589,9 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     if not taxonomy_map_path.exists():
         errors.append("missing taxonomy_map.json")
         return
+    if not scale_path.exists():
+        errors.append("missing scale.json")
+        return
     if not catalog_path.exists():
         errors.append("missing catalog.json")
         return
@@ -611,6 +617,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     pivot_data = json.loads(pivot_path.read_text(encoding="utf-8"))
     compare_data = json.loads(compare_path.read_text(encoding="utf-8"))
     taxonomy_map_data = json.loads(taxonomy_map_path.read_text(encoding="utf-8"))
+    scale_data = json.loads(scale_path.read_text(encoding="utf-8"))
     catalog_data = json.loads(catalog_path.read_text(encoding="utf-8"))
     stats_data = json.loads(stats_path.read_text(encoding="utf-8"))
     inbox_data = json.loads(inbox_path.read_text(encoding="utf-8"))
@@ -934,6 +941,67 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         errors.append("taxonomy_map.json clusters must be a list")
     if not isinstance(taxonomy_map_data.get("recommendations"), list):
         errors.append("taxonomy_map.json recommendations must be a list")
+
+    if scale_data.get("count") != len(report_slugs):
+        errors.append(f"scale.json count {scale_data.get('count')} != markdown report count {len(report_slugs)}")
+    required_scale = {
+        "readiness_score",
+        "readiness_label",
+        "resource_sizes",
+        "queue_sizes",
+        "bottlenecks",
+        "capacity_projection",
+        "scale_tiers",
+        "status_workflow",
+        "links",
+    }
+    missing_scale = sorted(required_scale - set(scale_data))
+    if missing_scale:
+        errors.append(f"scale.json missing keys: {', '.join(missing_scale)}")
+    score = scale_data.get("readiness_score")
+    if not isinstance(score, int) or not (0 <= score <= 100):
+        errors.append("scale.json readiness_score must be an integer from 0 to 100")
+    if scale_data.get("readiness_label") not in {"ready", "watch", "needs_governance"}:
+        errors.append("scale.json readiness_label has invalid value")
+    status_workflow = scale_data.get("status_workflow")
+    if not isinstance(status_workflow, dict):
+        errors.append("scale.json status_workflow must be an object")
+        status_workflow = {}
+    for key in ("workflow_count", "status_count", "reading_stage_count", "review_stage_count"):
+        value = status_workflow.get(key)
+        if not isinstance(value, int) or value < 0:
+            errors.append(f"scale.json status_workflow.{key} must be a non-negative integer")
+    if not status_workflow.get("active"):
+        errors.append("scale.json status_workflow.active must be non-empty")
+    resource_sizes = scale_data.get("resource_sizes")
+    if not isinstance(resource_sizes, list):
+        errors.append("scale.json resource_sizes must be a list")
+        resource_sizes = []
+    resource_hrefs = {str(item.get("href") or "") for item in resource_sizes if isinstance(item, dict)}
+    for href in ("papers.json", "search_index.json", "taxonomy_map.json", "actions.json"):
+        if href not in resource_hrefs:
+            errors.append(f"scale.json resource_sizes missing {href}")
+    bottlenecks = scale_data.get("bottlenecks")
+    if not isinstance(bottlenecks, list) or not bottlenecks:
+        errors.append("scale.json bottlenecks must be a non-empty list")
+        bottlenecks = []
+    for index, item in enumerate(bottlenecks):
+        if not isinstance(item, dict):
+            errors.append(f"scale.json bottlenecks[{index}] must be an object")
+            continue
+        for key in ("severity", "area", "signal", "recommendation", "href"):
+            if key not in item:
+                errors.append(f"scale.json bottlenecks[{index}] missing {key}")
+    projections = scale_data.get("capacity_projection")
+    if not isinstance(projections, list) or not projections:
+        errors.append("scale.json capacity_projection must be a non-empty list")
+    else:
+        projected_counts = {item.get("paper_count") for item in projections if isinstance(item, dict)}
+        for target in (100, 500, 1000, 5000):
+            if target not in projected_counts:
+                errors.append(f"scale.json capacity_projection missing {target}")
+    if not isinstance(scale_data.get("scale_tiers"), list) or not scale_data.get("scale_tiers"):
+        errors.append("scale.json scale_tiers must be a non-empty list")
 
     if catalog_data.get("count") != len(report_slugs):
         errors.append(f"catalog.json count {catalog_data.get('count')} != markdown report count {len(report_slugs)}")

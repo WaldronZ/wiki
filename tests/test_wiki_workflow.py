@@ -224,6 +224,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "pivot.html",
                 "compare.html",
                 "taxonomy_map.html",
+                "scale.html",
                 "catalog.html",
                 "inbox.html",
                 "quality.html",
@@ -256,6 +257,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "pivot.json",
                 "compare.json",
                 "taxonomy_map.json",
+                "scale.json",
                 "catalog.json",
                 "snapshot.json",
                 "manifest.json",
@@ -309,6 +311,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn('"href": "pivot.html"', index_html)
             self.assertIn('"href": "compare.html"', index_html)
             self.assertIn('"href": "taxonomy_map.html"', index_html)
+            self.assertIn('"href": "scale.html"', index_html)
             self.assertIn('"href": "catalog.html"', index_html)
             self.assertIn('"href": "balance.html"', index_html)
             self.assertIn('"href": "coverage.html"', index_html)
@@ -317,6 +320,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("Data: pivot.json", index_html)
             self.assertIn("Data: compare.json", index_html)
             self.assertIn("Data: taxonomy_map.json", index_html)
+            self.assertIn("Data: scale.json", index_html)
             self.assertIn("Data: catalog.json", index_html)
             self.assertIn("Data: snapshot.json", index_html)
             self.assertIn('"href": "snapshot.html"', index_html)
@@ -468,11 +472,30 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("Map JSON", taxonomy_map_html)
             self.assertIn('id="mapSearch"', taxonomy_map_html)
             self.assertIn("taxonomy_map_edges.csv", taxonomy_map_html)
+            scale = json.loads((report_dir / "scale.json").read_text(encoding="utf-8"))
+            self.assertEqual(scale["count"], 2)
+            self.assertIn(scale["readiness_label"], {"ready", "watch", "needs_governance"})
+            self.assertGreaterEqual(scale["readiness_score"], 0)
+            self.assertLessEqual(scale["readiness_score"], 100)
+            self.assertEqual(scale["status_workflow"]["active"], "research")
+            self.assertEqual(scale["status_workflow"]["workflow_count"], 2)
+            self.assertGreaterEqual(scale["status_workflow"]["status_count"], 5)
+            self.assertIn("search_index.json", {item["href"] for item in scale["resource_sizes"]})
+            self.assertTrue(scale["capacity_projection"])
+            self.assertTrue(scale["bottlenecks"])
+            scale_html = (report_dir / "scale.html").read_text(encoding="utf-8")
+            self.assertIn("规模就绪", scale_html)
+            self.assertIn("Scale JSON", scale_html)
+            self.assertIn("动态状态体系", scale_html)
+            self.assertIn("Active workflow", scale_html)
+            self.assertIn('id="scaleSearch"', scale_html)
+            self.assertIn("scale_bottlenecks.csv", scale_html)
             catalog = json.loads((report_dir / "catalog.json").read_text(encoding="utf-8"))
             self.assertEqual(catalog["count"], 2)
             self.assertIn("papers.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("catalog.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("taxonomy_map.json", {item["href"] for item in catalog["data_resources"]})
+            self.assertIn("scale.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("index.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("guides/taxonomy.json", {item["href"] for item in catalog["contracts"]})
             self.assertTrue(catalog["integration_recipes"])
@@ -652,6 +675,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("pivot.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("compare.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("taxonomy_map.html", {item["href"] for item in manifest["pages"]})
+            self.assertIn("scale.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("catalog.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("actions.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("freshness.html", {item["href"] for item in manifest["pages"]})
@@ -664,6 +688,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("pivot.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("compare.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("taxonomy_map.json", {item["href"] for item in manifest["data_files"]})
+            self.assertIn("scale.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("catalog.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("snapshot.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("freshness.json", {item["href"] for item in manifest["data_files"]})
@@ -696,6 +721,10 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertRegex(artifact_by_href["taxonomy_map.html"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["taxonomy_map.json"]["status"], "ok")
             self.assertRegex(artifact_by_href["taxonomy_map.json"]["sha256"], r"^[0-9a-f]{64}$")
+            self.assertEqual(artifact_by_href["scale.html"]["status"], "ok")
+            self.assertRegex(artifact_by_href["scale.html"]["sha256"], r"^[0-9a-f]{64}$")
+            self.assertEqual(artifact_by_href["scale.json"]["status"], "ok")
+            self.assertRegex(artifact_by_href["scale.json"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["catalog.html"]["status"], "ok")
             self.assertRegex(artifact_by_href["catalog.html"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["catalog.json"]["status"], "ok")
@@ -762,6 +791,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("compare.json", release_html)
             self.assertIn("taxonomy_map.html", release_html)
             self.assertIn("taxonomy_map.json", release_html)
+            self.assertIn("scale.html", release_html)
+            self.assertIn("scale.json", release_html)
             self.assertIn("catalog.html", release_html)
             self.assertIn("catalog.json", release_html)
             self.assertIn("snapshot.html", release_html)

@@ -1,0 +1,228 @@
+{
+  "generated_at": "2026-06-12T04:00:13",
+  "count": 5,
+  "readiness_score": 59,
+  "readiness_label": "needs_governance",
+  "line_count": 2,
+  "largest_line_share": 0.6,
+  "taxonomy_node_count": 52,
+  "taxonomy_edge_count": 194,
+  "taxonomy_edges_per_paper": 38.8,
+  "status_workflow": {
+    "active": "personal",
+    "workflow_count": 2,
+    "status_count": 5,
+    "reading_stage_count": 4,
+    "review_stage_count": 3,
+    "href": "workflow.html"
+  },
+  "resource_sizes": [
+    {
+      "href": "papers.json",
+      "exists": true,
+      "size_bytes": 17655
+    },
+    {
+      "href": "search_index.json",
+      "exists": true,
+      "size_bytes": 171390
+    },
+    {
+      "href": "stats.json",
+      "exists": true,
+      "size_bytes": 11682
+    },
+    {
+      "href": "quality.json",
+      "exists": true,
+      "size_bytes": 5329
+    },
+    {
+      "href": "review.json",
+      "exists": true,
+      "size_bytes": 3602
+    },
+    {
+      "href": "freshness.json",
+      "exists": true,
+      "size_bytes": 5002
+    },
+    {
+      "href": "taxonomy_actions.json",
+      "exists": true,
+      "size_bytes": 23950
+    },
+    {
+      "href": "actions.json",
+      "exists": true,
+      "size_bytes": 34334
+    },
+    {
+      "href": "workflow.json",
+      "exists": true,
+      "size_bytes": 9893
+    },
+    {
+      "href": "pivot.json",
+      "exists": true,
+      "size_bytes": 19198
+    },
+    {
+      "href": "compare.json",
+      "exists": true,
+      "size_bytes": 16848
+    },
+    {
+      "href": "taxonomy_map.json",
+      "exists": true,
+      "size_bytes": 104382
+    },
+    {
+      "href": "inbox.json",
+      "exists": true,
+      "size_bytes": 130
+    }
+  ],
+  "queue_sizes": {
+    "quality": {
+      "missing_required_metadata": 0,
+      "needs_review_plan": 5,
+      "due_review": 0,
+      "no_code_observation": 0,
+      "taxonomy_drift": 0,
+      "duplicate_reports": 0,
+      "taxonomy_sparse": 0,
+      "taxonomy_dense": 2,
+      "high_importance": 2
+    },
+    "review": {
+      "due": 0,
+      "needs_plan": 5,
+      "scheduled": 0,
+      "high_priority": 2
+    },
+    "freshness": {
+      "due": 0,
+      "needs_plan": 5,
+      "stale": 0,
+      "aging": 0
+    },
+    "actions": 62,
+    "inbox": 0
+  },
+  "bottlenecks": [
+    {
+      "severity": "high",
+      "rank": 90,
+      "area": "review",
+      "signal": "5 篇论文缺 next_review",
+      "recommendation": "先用 review.html 或 apply_review_plan.py 建立复习节奏，避免大库里旧论文沉底。",
+      "href": "review.html",
+      "command": "python3 scripts/apply_review_plan.py docs --write"
+    },
+    {
+      "severity": "high",
+      "rank": 90,
+      "area": "taxonomy",
+      "signal": "sparse=0, dense=2, drift=0",
+      "recommendation": "优先处理 taxonomy drift，再用分类图谱和 facets 拆分过载节点、合并长尾标签。",
+      "href": "facets.html",
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "severity": "medium",
+      "rank": 60,
+      "area": "operations",
+      "signal": "62 个统一行动项",
+      "recommendation": "行动队列已经偏长，建议导出项目任务并按 owner/status 分派。",
+      "href": "actions.html",
+      "command": "python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv"
+    },
+    {
+      "severity": "low",
+      "rank": 30,
+      "area": "portfolio",
+      "signal": "最大研究线占比 60%",
+      "recommendation": "研究线集中度较高；如果继续增长，可用 collections 和 matrix 拆出子线或阶段队列。",
+      "href": "collections.html",
+      "command": ""
+    },
+    {
+      "severity": "low",
+      "rank": 30,
+      "area": "taxonomy_graph",
+      "signal": "平均每篇 38.8 条分类边",
+      "recommendation": "分类图谱边密度偏高，后续可限制 topic/method 数或提高标签合并频率。",
+      "href": "taxonomy_map.html",
+      "command": ""
+    }
+  ],
+  "capacity_projection": [
+    {
+      "paper_count": 100,
+      "search_index_bytes": 3427800,
+      "papers_json_bytes": 353100,
+      "taxonomy_map_bytes": 2087640,
+      "estimated_actions": 1240,
+      "recommended_mode": "static wiki"
+    },
+    {
+      "paper_count": 500,
+      "search_index_bytes": 17139000,
+      "papers_json_bytes": 1765500,
+      "taxonomy_map_bytes": 10438200,
+      "estimated_actions": 6200,
+      "recommended_mode": "static wiki"
+    },
+    {
+      "paper_count": 1000,
+      "search_index_bytes": 34278000,
+      "papers_json_bytes": 3531000,
+      "taxonomy_map_bytes": 20876400,
+      "estimated_actions": 12400,
+      "recommended_mode": "split indexes"
+    },
+    {
+      "paper_count": 5000,
+      "search_index_bytes": 171390000,
+      "papers_json_bytes": 17655000,
+      "taxonomy_map_bytes": 104382000,
+      "estimated_actions": 62000,
+      "recommended_mode": "desktop cache / paged indexes"
+    }
+  ],
+  "scale_tiers": [
+    {
+      "tier": "personal",
+      "paper_range": "0-100",
+      "mode": "单目录静态 wiki",
+      "priority": "保持 frontmatter 完整和复习计划"
+    },
+    {
+      "tier": "serious_library",
+      "paper_range": "100-500",
+      "mode": "静态 wiki + 强制质量门",
+      "priority": "拆分过载 taxonomy，固定共享视图"
+    },
+    {
+      "tier": "large_library",
+      "paper_range": "500-1000",
+      "mode": "分片索引 + 项目化治理",
+      "priority": "按研究线 owner / 队列治理行动项"
+    },
+    {
+      "tier": "desktop_scale",
+      "paper_range": "1000+",
+      "mode": "桌面缓存或分页索引",
+      "priority": "将 search/action/taxonomy graph 改为增量同步"
+    }
+  ],
+  "links": {
+    "dashboard": "dashboard.html",
+    "quality": "quality.html",
+    "taxonomy_map": "taxonomy_map.html",
+    "actions": "actions.html",
+    "release": "release.html",
+    "catalog": "catalog.html"
+  }
+}

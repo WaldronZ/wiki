@@ -19,6 +19,7 @@ function htmlFiles() {
     "pivot.html",
     "compare.html",
     "taxonomy_map.html",
+    "scale.html",
     "catalog.html",
     "inbox.html",
     "quality.html",
