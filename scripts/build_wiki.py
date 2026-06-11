@@ -4367,6 +4367,10 @@ def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
         ("写入别名建议", "python3 scripts/apply_taxonomy_aliases.py docs --write"),
         ("导出治理清单", "python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md"),
         ("导出高优先级 CSV", "python3 scripts/export_taxonomy_actions.py docs --format csv --severity high --output docs/exports/taxonomy-actions.csv"),
+        ("导出项目任务", "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"),
+        ("导出均衡任务", "python3 scripts/export_taxonomy_balance.py docs --format project --max-score 50 --output docs/exports/taxonomy-balance-project.csv"),
+        ("导出粒度审计", "python3 scripts/export_taxonomy_load.py docs --format csv --output docs/exports/taxonomy-load.csv"),
+        ("导出分类补丁", "python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv"),
     ]
     command_buttons = "".join(
         f'<button class="button copy-quality-command" type="button" data-command="{html.escape(command, quote=True)}">{html.escape(label)}</button>'

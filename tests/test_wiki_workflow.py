@@ -313,6 +313,9 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("治理命令", quality_html)
             self.assertIn("copy-quality-command", quality_html)
             self.assertIn("python3 scripts/check_quality.py docs", quality_html)
+            self.assertIn("python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv", quality_html)
+            self.assertIn("python3 scripts/export_taxonomy_balance.py docs --format project --max-score 50 --output docs/exports/taxonomy-balance-project.csv", quality_html)
+            self.assertIn("python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv", quality_html)
 
             review = json.loads((report_dir / "review.json").read_text(encoding="utf-8"))
             self.assertEqual(review["count"], 2)
