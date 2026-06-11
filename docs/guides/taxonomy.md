@@ -165,7 +165,7 @@ has_code: true
 }
 ```
 
-如果想试一套新的状态流，不必先改所有报告：可以在 `docs/board.html` 新增临时状态列，把论文拖进去后导出 `status_board_patch.csv`，用 `scripts/apply_library_metadata.py` 预览或写回。确认这套状态值得长期保留后，再用 `docs/taxonomy.html` 的「状态工作流设计器」载入已有 workflow 或命名一套新 workflow；设计器输出的 JSON 会保留其它已配置 workflow，只替换或新增当前命名项，并切换 `active_status_workflow`。下载 `taxonomy_status_workflow.json` 后，先 dry-run 再写回：
+如果想试一套新的状态流，不必先改所有报告：可以在 `docs/board.html` 新增临时状态列，把论文拖进去后导出 `status_board_patch.csv`，用 `scripts/apply_library_metadata.py` 预览或写回；也可以在 `docs/status.html` 选择 workflow/status/reading stage/review stage 后，把当前命中论文导出为 `status_patch.csv`，先 dry-run 再批量写回指定状态字段。确认这套状态值得长期保留后，再用 `docs/taxonomy.html` 的「状态工作流设计器」载入已有 workflow 或命名一套新 workflow；设计器输出的 JSON 会保留其它已配置 workflow，只替换或新增当前命名项，并切换 `active_status_workflow`。下载 `taxonomy_status_workflow.json` 后，先 dry-run 再写回：
 
 ```bash
 python3 scripts/apply_status_workflow.py docs --input ~/Downloads/taxonomy_status_workflow.json

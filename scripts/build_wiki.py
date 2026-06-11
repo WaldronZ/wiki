@@ -2026,6 +2026,7 @@ def build_status_selector_payload(papers: list[dict[str, Any]]) -> dict[str, Any
             "python3 scripts/apply_shared_views.py docs --input <status_shared_view.json>",
             "python3 scripts/apply_shared_views.py docs --input <status_shared_view.json> --write",
             "python3 scripts/apply_library_metadata.py docs --input <status_patch.csv>",
+            "python3 scripts/apply_library_metadata.py docs --input <status_patch.csv> --write",
         ],
     }
 
@@ -9269,6 +9270,24 @@ def render_status(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       gap: 10px;
       margin-top: 12px;
     }
+    .status-patch {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+    .status-patch-controls {
+      display: grid;
+      grid-template-columns: minmax(140px, .8fr) minmax(160px, 1fr);
+      gap: 10px;
+    }
+    .status-patch-controls label {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 13px;
+    }
     .status-url {
       width: 100%;
       border: 1px solid var(--line);
@@ -9296,6 +9315,7 @@ def render_status(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     @media (max-width: 900px) {
       .status-layout { grid-template-columns: 1fr; }
       .status-builder { grid-template-columns: 1fr; }
+      .status-patch-controls { grid-template-columns: 1fr; }
     }
     """
     body = f"""
@@ -9347,6 +9367,27 @@ def render_status(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         <input class="status-url" id="statusShareUrl" readonly value="status.html">
         <p class="status-summary" id="statusSelectionSummary"></p>
       </div>
+      <div class="status-patch">
+        <h2 class="section-title">批量状态写回</h2>
+        <div class="status-patch-controls">
+          <label>
+            <span>写回字段</span>
+            <select id="statusPatchField">
+              <option value="status">status</option>
+              <option value="reading_stage">reading_stage</option>
+              <option value="review_stage">review_stage</option>
+            </select>
+          </label>
+          <label><span>写回值</span><select id="statusPatchValue"></select></label>
+        </div>
+        <div class="status-actions">
+          <button class="button" type="button" id="copyStatusPatch">复制 patch CSV</button>
+          <button class="button" type="button" id="downloadStatusPatch">下载 patch CSV</button>
+          <button class="button" type="button" id="copyStatusPatchDryRun">复制 dry-run</button>
+          <button class="button" type="button" id="copyStatusPatchWrite">复制 write</button>
+        </div>
+        <p class="meta" id="statusPatchSummary"></p>
+      </div>
       <h2 class="section-title">当前候选值</h2>
       <div class="status-grid" id="statusChoices"></div>
     </div>
@@ -9379,9 +9420,17 @@ const statusShareUrl = document.querySelector("#statusShareUrl");
 const statusSelectionSummary = document.querySelector("#statusSelectionSummary");
 const statusViewName = document.querySelector("#statusViewName");
 const statusViewPage = document.querySelector("#statusViewPage");
+const statusPatchField = document.querySelector("#statusPatchField");
+const statusPatchValue = document.querySelector("#statusPatchValue");
+const statusPatchSummary = document.querySelector("#statusPatchSummary");
 const openLibrary = document.querySelector("#openLibrary");
 const openBoard = document.querySelector("#openBoard");
 const openIndex = document.querySelector("#openIndex");
+const patchFieldConfig = {{
+  status: {{ valueKey: "status_values", paperField: "status", label: "status" }},
+  reading_stage: {{ valueKey: "reading_stage_values", paperField: "reading_stage", label: "reading_stage" }},
+  review_stage: {{ valueKey: "review_stage_values", paperField: "review_stage", label: "review_stage" }},
+}};
 
 function workflowByName(name) {{
   return statusPayload.workflows.find(workflow => workflow.name === name) || statusPayload.workflows[0] || {{}};
@@ -9457,6 +9506,13 @@ function targetPageHref() {{
   return queryHref(page);
 }}
 
+function csvCell(value) {{
+  const text = String(value ?? "");
+  return (text.includes(",") || text.includes('"') || text.includes("\\n"))
+    ? `"${{text.replaceAll('"', '""')}}"`
+    : text;
+}}
+
 function sharedViewPayload() {{
   const state = compactState();
   const page = statusViewPage.value || "library";
@@ -9475,6 +9531,18 @@ function sharedViewPayload() {{
 
 function downloadJson(filename, payload) {{
   const blob = new Blob([JSON.stringify(payload, null, 2) + "\\n"], {{ type: "application/json;charset=utf-8" }});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}}
+
+function downloadText(filename, text, type = "text/plain;charset=utf-8") {{
+  const blob = new Blob([text], {{ type }});
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
@@ -9514,6 +9582,44 @@ function renderSharedView(rows) {{
   statusSelectionSummary.textContent = `当前场景命中 ${{rows.length}} 篇论文；${{selected}}。共享视图可写回 guides/taxonomy.json，之后首页和论文库会出现同一套入口。`;
 }}
 
+function patchItemsFor(workflow, fieldName) {{
+  const config = patchFieldConfig[fieldName] || patchFieldConfig.status;
+  const workflowField = fieldName === "status" ? "status" : fieldName;
+  return workflowItems(workflow, workflowField, config.valueKey, config.paperField);
+}}
+
+function updatePatchValueOptions(workflow) {{
+  const current = statusPatchValue.value;
+  const items = patchItemsFor(workflow, statusPatchField.value);
+  statusPatchValue.replaceChildren();
+  items.forEach(item => {{
+    if (!item.value) return;
+    const option = new Option(item.value, item.value);
+    const definition = definitionText(item);
+    option.title = `${{definition.head}} — ${{definition.body}}`;
+    statusPatchValue.appendChild(option);
+  }});
+  const values = items.map(item => item.value).filter(Boolean);
+  statusPatchValue.value = values.includes(current) ? current : (values[0] || "");
+}}
+
+function statusPatchCsv() {{
+  const rows = filteredPapers();
+  const field = statusPatchField.value || "status";
+  const value = statusPatchValue.value || "";
+  const header = ["slug", field];
+  const csvRows = [header, ...rows.map(paper => [paper.slug, value])];
+  return csvRows.map(row => row.map(csvCell).join(",")).join("\\n") + "\\n";
+}}
+
+function renderStatusPatchSummary(rows) {{
+  const field = statusPatchField.value || "status";
+  const value = statusPatchValue.value || "";
+  statusPatchSummary.textContent = rows.length
+    ? `将为当前命中的 ${{rows.length}} 篇论文生成 ${{field}}=${{value || "(empty)"}} 的 status_patch.csv；正式写回前先 dry-run。`
+    : "当前没有命中论文，patch 只会包含表头。";
+}}
+
 function renderChoices(workflow, statusItems) {{
   statusChoices.replaceChildren();
   statusItems.forEach(item => {{
@@ -9550,6 +9656,7 @@ function renderRows() {{
   statusResultCount.textContent = `${{rows.length}} / ${{statusPayload.count}}`;
   statusRows.replaceChildren();
   renderSharedView(rows);
+  renderStatusPatchSummary(rows);
   if (!rows.length) {{
     const row = document.createElement("tr");
     row.innerHTML = `<td colspan="6" class="empty">当前选择没有命中论文。</td>`;
@@ -9587,6 +9694,7 @@ function renderStatus() {{
   fillSelect(statusReview, "全部复习阶段", reviewItems, "review_stage");
   renderChoices(workflow, statusItems);
   renderConfig(workflow);
+  updatePatchValueOptions(workflow);
   renderRows();
   syncLinks();
 }}
@@ -9617,6 +9725,14 @@ document.querySelector("#downloadStatusView").addEventListener("click", () => do
 
 document.querySelector("#copyStatusConfig").addEventListener("click", () => copyText(statusConfigPreview.value, "复制状态配置"));
 
+document.querySelector("#copyStatusPatch").addEventListener("click", () => copyText(statusPatchCsv(), "复制 patch CSV"));
+
+document.querySelector("#downloadStatusPatch").addEventListener("click", () => downloadText("status_patch.csv", statusPatchCsv(), "text/csv;charset=utf-8"));
+
+document.querySelector("#copyStatusPatchDryRun").addEventListener("click", () => copyText("python3 scripts/apply_library_metadata.py docs --input status_patch.csv", "复制 dry-run 命令"));
+
+document.querySelector("#copyStatusPatchWrite").addEventListener("click", () => copyText("python3 scripts/apply_library_metadata.py docs --input status_patch.csv --write", "复制 write 命令"));
+
 document.querySelectorAll(".copy-status-command").forEach(button => {{
   button.dataset.label = button.textContent;
   button.addEventListener("click", async () => {{
@@ -9626,7 +9742,7 @@ document.querySelectorAll(".copy-status-command").forEach(button => {{
   }});
 }});
 
-[statusWorkflow, statusValue, statusStage, statusReview, statusViewName, statusViewPage].forEach(control => {{
+[statusWorkflow, statusValue, statusStage, statusReview, statusViewName, statusViewPage, statusPatchField, statusPatchValue].forEach(control => {{
   control.addEventListener("input", () => {{
     if (control === statusWorkflow) {{
       statusValue.value = "";

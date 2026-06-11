@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T07:21:12",
+  "generated_at": "2026-06-12T07:24:56",
   "count": 5,
   "active_status_workflow": "personal",
   "workflow_count": 2,
@@ -643,6 +643,7 @@
     "python3 scripts/apply_status_workflow.py docs --input <taxonomy_status_workflow.json> --write",
     "python3 scripts/apply_shared_views.py docs --input <status_shared_view.json>",
     "python3 scripts/apply_shared_views.py docs --input <status_shared_view.json> --write",
-    "python3 scripts/apply_library_metadata.py docs --input <status_patch.csv>"
+    "python3 scripts/apply_library_metadata.py docs --input <status_patch.csv>",
+    "python3 scripts/apply_library_metadata.py docs --input <status_patch.csv> --write"
   ]
 }
