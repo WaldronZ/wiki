@@ -107,6 +107,7 @@ REQUIRED_PAGES = {
     "taxonomy_map.html",
     "scale.html",
     "ownership.html",
+    "routing.html",
     "catalog.html",
     "inbox.html",
     "quality.html",
@@ -137,6 +138,7 @@ REQUIRED_PAGES = {
     "taxonomy_map.json",
     "scale.json",
     "ownership.json",
+    "routing.json",
     "catalog.json",
     "snapshot.json",
     "manifest.json",
@@ -560,6 +562,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     taxonomy_map_path = report_dir / "taxonomy_map.json"
     scale_path = report_dir / "scale.json"
     ownership_path = report_dir / "ownership.json"
+    routing_path = report_dir / "routing.json"
     catalog_path = report_dir / "catalog.json"
     stats_path = report_dir / "stats.json"
     inbox_path = report_dir / "inbox.json"
@@ -598,6 +601,9 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     if not ownership_path.exists():
         errors.append("missing ownership.json")
         return
+    if not routing_path.exists():
+        errors.append("missing routing.json")
+        return
     if not catalog_path.exists():
         errors.append("missing catalog.json")
         return
@@ -625,6 +631,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     taxonomy_map_data = json.loads(taxonomy_map_path.read_text(encoding="utf-8"))
     scale_data = json.loads(scale_path.read_text(encoding="utf-8"))
     ownership_data = json.loads(ownership_path.read_text(encoding="utf-8"))
+    routing_data = json.loads(routing_path.read_text(encoding="utf-8"))
     catalog_data = json.loads(catalog_path.read_text(encoding="utf-8"))
     stats_data = json.loads(stats_path.read_text(encoding="utf-8"))
     inbox_data = json.loads(inbox_path.read_text(encoding="utf-8"))
@@ -1057,6 +1064,58 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         unknown_line_slugs = sorted(set(sample_slugs) - report_slugs) if isinstance(sample_slugs, list) else []
         if unknown_line_slugs:
             errors.append(f"ownership.json lines[{index}] references unknown slugs: {unknown_line_slugs}")
+
+    if routing_data.get("count") != len(report_slugs):
+        errors.append(f"routing.json count {routing_data.get('count')} != markdown report count {len(report_slugs)}")
+    required_routing = {
+        "line_profiles",
+        "label_profiles",
+        "paper_signatures",
+        "tokenizer",
+        "weights",
+        "input_contract",
+        "links",
+    }
+    missing_routing = sorted(required_routing - set(routing_data))
+    if missing_routing:
+        errors.append(f"routing.json missing keys: {', '.join(missing_routing)}")
+    line_profiles = routing_data.get("line_profiles")
+    if not isinstance(line_profiles, list) or not line_profiles:
+        errors.append("routing.json line_profiles must be a non-empty list")
+        line_profiles = []
+    label_profiles = routing_data.get("label_profiles")
+    if not isinstance(label_profiles, list) or not label_profiles:
+        errors.append("routing.json label_profiles must be a non-empty list")
+        label_profiles = []
+    paper_signatures = routing_data.get("paper_signatures")
+    if not isinstance(paper_signatures, list):
+        errors.append("routing.json paper_signatures must be a list")
+        paper_signatures = []
+    if routing_data.get("paper_count") != len(paper_signatures):
+        errors.append("routing.json paper_count must match paper_signatures length")
+    if {str(item.get("slug") or "") for item in paper_signatures if isinstance(item, dict)} != report_slugs:
+        errors.append("routing.json paper_signatures slugs must match markdown reports")
+    for index, profile in enumerate(line_profiles):
+        if not isinstance(profile, dict):
+            errors.append(f"routing.json line_profiles[{index}] must be an object")
+            continue
+        for key in ("line", "count", "href", "terms", "sample_slugs"):
+            if key not in profile:
+                errors.append(f"routing.json line_profiles[{index}] missing {key}")
+        if not isinstance(profile.get("terms"), list) or not profile.get("terms"):
+            errors.append(f"routing.json line_profiles[{index}].terms must be a non-empty list")
+    valid_label_fields = {"domains", "tracks", "problems", "topics", "methods"}
+    for index, profile in enumerate(label_profiles):
+        if not isinstance(profile, dict):
+            errors.append(f"routing.json label_profiles[{index}] must be an object")
+            continue
+        for key in ("field", "value", "count", "href", "terms", "sample_slugs"):
+            if key not in profile:
+                errors.append(f"routing.json label_profiles[{index}] missing {key}")
+        if profile.get("field") not in valid_label_fields:
+            errors.append(f"routing.json label_profiles[{index}].field has invalid value")
+        if not isinstance(profile.get("terms"), list) or not profile.get("terms"):
+            errors.append(f"routing.json label_profiles[{index}].terms must be a non-empty list")
 
     if catalog_data.get("count") != len(report_slugs):
         errors.append(f"catalog.json count {catalog_data.get('count')} != markdown report count {len(report_slugs)}")

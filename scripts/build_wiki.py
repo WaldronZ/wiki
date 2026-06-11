@@ -41,6 +41,7 @@ GENERATED_FIXED_PATHS = (
     "taxonomy_map.json",
     "scale.json",
     "ownership.json",
+    "routing.json",
     "catalog.json",
     "snapshot.json",
     "manifest.json",
@@ -53,6 +54,7 @@ GENERATED_FIXED_PATHS = (
     "taxonomy_map.html",
     "scale.html",
     "ownership.html",
+    "routing.html",
     "catalog.html",
     "inbox.html",
     "quality.html",
@@ -2272,6 +2274,222 @@ def write_ownership_json(report_dir: Path, papers: list[dict[str, Any]]) -> None
     )
 
 
+ROUTING_STOPWORDS = {
+    "about",
+    "across",
+    "after",
+    "also",
+    "among",
+    "based",
+    "baseline",
+    "between",
+    "from",
+    "into",
+    "large",
+    "model",
+    "models",
+    "paper",
+    "using",
+    "with",
+    "without",
+    "this",
+    "that",
+    "their",
+    "these",
+    "those",
+    "through",
+    "toward",
+    "towards",
+    "where",
+    "which",
+    "while",
+}
+
+
+def routing_tokenize(text: str) -> Counter:
+    tokens: Counter[str] = Counter()
+    for raw in re.findall(r"[A-Za-z0-9][A-Za-z0-9.+-]{1,}|[\u4e00-\u9fff]{2,}", str(text or "")):
+        token = raw.lower().strip(".+-")
+        if not token:
+            continue
+        if re.fullmatch(r"[a-z0-9.+-]+", token):
+            token = label_fingerprint(token)
+            parts = [part for part in token.split() if part and part not in ROUTING_STOPWORDS]
+            for part in parts:
+                if len(part) >= 3 or part in {"ai", "kv"}:
+                    tokens[part] += 1
+            if len(parts) > 1:
+                phrase = " ".join(parts)
+                tokens[phrase] += 2
+        elif len(token) >= 2:
+            tokens[token] += 1
+    return tokens
+
+
+def routing_label_terms(label: str, weight: int = 5) -> Counter:
+    counter = routing_tokenize(label)
+    return Counter({term: value * weight for term, value in counter.items()})
+
+
+def routing_paper_terms(paper: dict[str, Any]) -> Counter:
+    terms = Counter()
+    text_parts = [
+        paper.get("title"),
+        paper.get("title_en"),
+        paper.get("title_zh"),
+        paper.get("excerpt"),
+        paper.get("essence"),
+        str(paper.get("_search_text") or "")[:6000],
+    ]
+    for part in text_parts:
+        terms.update(routing_tokenize(str(part or "")))
+    for field, weight in (
+        ("domains", 7),
+        ("tracks", 7),
+        ("problems", 6),
+        ("topics", 5),
+        ("methods", 5),
+    ):
+        for value in paper.get(field, []) or []:
+            terms.update(routing_label_terms(str(value), weight))
+    for value, weight in ((paper.get("research_line"), 8), (paper.get("line_role"), 3)):
+        if value:
+            terms.update(routing_label_terms(str(value), weight))
+    return terms
+
+
+def routing_terms_payload(counter: Counter, limit: int = 40) -> list[dict[str, Any]]:
+    return [
+        {"term": str(term), "weight": int(weight)}
+        for term, weight in counter.most_common(limit)
+        if str(term).strip()
+    ]
+
+
+def routing_label_href(field: str, value: str) -> str:
+    key = {
+        "domains": "domain",
+        "tracks": "track",
+        "problems": "problem",
+        "topics": "topic",
+        "methods": "method",
+    }.get(field, "q")
+    return page_query_href("library.html", **{key: value})
+
+
+def build_routing_payload(papers: list[dict[str, Any]]) -> dict[str, Any]:
+    paper_terms = {paper["slug"]: routing_paper_terms(paper) for paper in papers}
+    label_fields = ("domains", "tracks", "problems", "topics", "methods")
+    line_groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    label_groups: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+    for paper in papers:
+        line = str(paper.get("research_line") or "Unassigned").strip() or "Unassigned"
+        line_groups[line].append(paper)
+        for field in label_fields:
+            for value in paper.get(field, []) or []:
+                label_groups[(field, str(value))].append(paper)
+
+    line_profiles = []
+    for line, items in sorted(line_groups.items(), key=lambda item: (-len(item[1]), item[0].lower())):
+        terms = Counter()
+        labels = Counter()
+        for paper in items:
+            terms.update(paper_terms[paper["slug"]])
+            for field in label_fields:
+                labels.update(str(value) for value in paper.get(field, []) or [])
+        terms.update(routing_label_terms(line, 10))
+        owner = research_line_owner(line)
+        sample_papers = sorted(items, key=lambda paper: (-(int(paper.get("importance") or 0)), -(paper.get("year") or 0), paper["title"]))[:6]
+        line_profiles.append(
+            {
+                "line": line,
+                "count": len(items),
+                "href": f"lines/{slugify_label(line)}.html" if line != "Unassigned" else page_query_href("library.html", line=line),
+                "owner": owner.get("owner", ""),
+                "team": owner.get("team", ""),
+                "top_labels": [{"label": label, "count": count} for label, count in labels.most_common(12)],
+                "terms": routing_terms_payload(terms, 48),
+                "sample_slugs": [paper["slug"] for paper in sample_papers],
+            }
+        )
+
+    label_profiles = []
+    for (field, value), items in sorted(label_groups.items(), key=lambda item: (item[0][0], item[0][1].lower())):
+        terms = routing_label_terms(value, 10)
+        for paper in items:
+            terms.update(paper_terms[paper["slug"]])
+        label_profiles.append(
+            {
+                "field": field,
+                "value": value,
+                "count": len(items),
+                "href": routing_label_href(field, value),
+                "terms": routing_terms_payload(terms, 36),
+                "sample_slugs": [paper["slug"] for paper in items[:6]],
+            }
+        )
+
+    paper_signatures = []
+    for paper in papers:
+        paper_signatures.append(
+            {
+                "slug": paper["slug"],
+                "title": paper.get("title_zh") or paper.get("title") or paper["slug"],
+                "title_en": paper.get("title_en") or "",
+                "href": paper_href(paper),
+                "year": paper.get("year"),
+                "research_line": paper.get("research_line") or "Unassigned",
+                "domains": paper.get("domains", []),
+                "tracks": paper.get("tracks", []),
+                "problems": paper.get("problems", []),
+                "topics": paper.get("topics", []),
+                "methods": paper.get("methods", []),
+                "terms": routing_terms_payload(paper_terms[paper["slug"]], 50),
+            }
+        )
+
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": len(papers),
+        "line_count": len(line_profiles),
+        "label_count": len(label_profiles),
+        "paper_count": len(paper_signatures),
+        "tokenizer": {
+            "version": 1,
+            "stopwords": sorted(ROUTING_STOPWORDS),
+            "description": "Lowercase latin terms, split punctuation, keep CJK runs, boost existing taxonomy labels.",
+        },
+        "weights": {
+            "research_line": 8,
+            "taxonomy_label": 5,
+            "label_profile": 10,
+            "paper_text": 1,
+        },
+        "line_profiles": line_profiles,
+        "label_profiles": label_profiles,
+        "paper_signatures": paper_signatures,
+        "input_contract": {
+            "title": "Paper title or method name",
+            "abstract": "Abstract, introduction snippet, or user notes",
+            "keywords": "Optional comma-separated hints such as model, task, method, codebase",
+        },
+        "links": {
+            "library": "library.html",
+            "taxonomy": "taxonomy.html",
+            "inbox": "inbox.html",
+            "quality": "quality.html",
+        },
+    }
+
+
+def write_routing_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_routing_payload(papers)
+    (report_dir / "routing.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
 COMPARE_FIELDS = [
     {"key": "title_zh", "label": "中文标题", "group": "identity"},
     {"key": "title_en", "label": "英文标题", "group": "identity"},
@@ -2407,6 +2625,7 @@ DATA_CONSUMER_HINTS = {
     "taxonomy_map.json": ["taxonomy", "graph", "desktop"],
     "scale.json": ["ops", "capacity-planning", "desktop"],
     "ownership.json": ["ops", "owners", "project-management"],
+    "routing.json": ["taxonomy", "intake", "classification"],
     "snapshot.json": ["release", "audit", "desktop"],
     "inbox.json": ["intake", "dedupe"],
     "manifest.json": ["release", "audit", "ci"],
@@ -2575,6 +2794,7 @@ def wiki_pages_manifest() -> list[dict[str, str]]:
         {"title": "分类图谱", "href": "taxonomy_map.html", "kind": "analysis", "description": "分类节点、共现边和研究线簇"},
         {"title": "规模就绪", "href": "scale.html", "kind": "ops", "description": "大规模论文库容量、风险和扩展建议"},
         {"title": "Owner 工作台", "href": "ownership.html", "kind": "ops", "description": "研究线 owner、工作量和治理队列"},
+        {"title": "分类路由器", "href": "routing.html", "kind": "workflow", "description": "新论文研究线和标签推荐"},
         {"title": "数据目录", "href": "catalog.html", "kind": "ops", "description": "机器数据、页面和契约的接入目录"},
         {"title": "待处理池", "href": "inbox.html", "kind": "workflow", "description": "候选论文队列和去重提示"},
         {"title": "复习计划", "href": "review.html", "kind": "workflow", "description": "待复习、需建计划、建议日期"},
@@ -2604,6 +2824,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "taxonomy_map.json", "description": "分类节点、共现边、研究线簇和图谱治理建议"},
         {"href": "scale.json", "description": "规模就绪评分、容量投影和大库治理风险"},
         {"href": "ownership.json", "description": "研究线 owner、工作量和治理队列"},
+        {"href": "routing.json", "description": "新论文分类路由画像和推荐权重"},
         {"href": "catalog.json", "description": "机器数据、页面入口和契约字段目录"},
         {"href": "snapshot.json", "description": "当前知识库治理快照和发布基线"},
         {"href": "inbox.json", "description": "候选论文队列和重复项"},
@@ -8329,6 +8550,289 @@ renderOwnershipRows();
     (report_dir / "ownership.html").write_text(page_shell("Owner 工作台", body, extra_css=ownership_css), encoding="utf-8")
 
 
+def render_routing(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_routing_payload(papers)
+    routing_data_json = json.dumps(payload, ensure_ascii=False).replace("</", "<\\/")
+    sample_options = "".join(
+        f'<option value="{html.escape(str(paper.get("title_en") or paper.get("title") or paper["slug"]), quote=True)}">{html.escape(str(paper.get("title_zh") or paper["slug"]))}</option>'
+        for paper in papers[:20]
+    )
+    routing_css = """
+    .routing-layout {
+      display: grid;
+      grid-template-columns: minmax(280px, 420px) 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+    .routing-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 14px;
+    }
+    .routing-panel textarea {
+      min-height: 240px;
+      resize: vertical;
+    }
+    .routing-panel label {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .routing-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .routing-score {
+      font-variant-numeric: tabular-nums;
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .routing-results {
+      display: grid;
+      gap: 16px;
+    }
+    .routing-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .routing-tags a,
+    .routing-tags span {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 3px 7px;
+      background: var(--panel);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 12px;
+    }
+    .routing-patch {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f8faf9;
+      padding: 12px;
+    }
+    @media (max-width: 900px) {
+      .routing-layout { grid-template-columns: 1fr; }
+    }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Classification Router</div>
+  <h1>新论文分类路由器</h1>
+  <p class="lead">粘贴论文标题、摘要或方法描述，页面会根据当前知识库的研究线、taxonomy 标签和相似论文给出可解释的分类建议。适合新增论文前先做 intake triage。</p>
+  <div class="stats">
+    <a class="stat" href="inbox.html">待处理池</a>
+    <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="taxonomy.html">分类治理</a>
+    <a class="stat" href="taxonomy_map.html">分类图谱</a>
+    <a class="stat" href="routing.json">Routing JSON</a>
+    <span class="stat">论文 {payload["count"]}</span>
+    <span class="stat">研究线 {payload["line_count"]}</span>
+    <span class="stat">标签 {payload["label_count"]}</span>
+  </div>
+</header>
+<main class="shell routing-layout">
+  <section class="routing-panel">
+    <label><span>标题或方法名</span><input id="routingTitle" list="routingSamples" placeholder="Paste paper title or method name"></label>
+    <datalist id="routingSamples">{sample_options}</datalist>
+    <label><span>摘要 / introduction 片段 / 备注</span><textarea id="routingAbstract" placeholder="Paste abstract, intro paragraph, or your notes"></textarea></label>
+    <label><span>关键词提示</span><input id="routingKeywords" placeholder="attention, diffusion, serving, kernel"></label>
+    <div class="routing-actions">
+      <button id="runRouting" class="button" type="button">推荐分类</button>
+      <button id="copyRoutingPatch" class="button" type="button">复制 frontmatter patch</button>
+      <button id="clearRouting" class="button" type="button">清空</button>
+    </div>
+    <p class="meta">推荐只作为 intake 初筛；写入前仍建议在 `docs/library.html` 或 `docs/taxonomy.html` 里复核。</p>
+  </section>
+  <section class="routing-results">
+    <section>
+      <h2 class="section-title">推荐研究线</h2>
+      <div class="table-wrap"><table class="data-table"><thead><tr><th>Score</th><th>研究线</th><th>Owner</th><th>匹配词</th><th>入口</th></tr></thead><tbody id="routingLineRows"></tbody></table></div>
+    </section>
+    <section>
+      <h2 class="section-title">推荐标签</h2>
+      <div class="table-wrap"><table class="data-table"><thead><tr><th>字段</th><th>标签</th><th>Score</th><th>样本数</th><th>匹配词</th></tr></thead><tbody id="routingLabelRows"></tbody></table></div>
+    </section>
+    <section>
+      <h2 class="section-title">相似论文</h2>
+      <div class="table-wrap"><table class="data-table"><thead><tr><th>Score</th><th>论文</th><th>研究线</th><th>匹配词</th></tr></thead><tbody id="routingPaperRows"></tbody></table></div>
+    </section>
+    <section>
+      <h2 class="section-title">建议 patch</h2>
+      <pre class="routing-patch" id="routingPatch">等待输入。</pre>
+    </section>
+  </section>
+</main>
+<script>
+const routingData = {routing_data_json};
+const routingStopwords = new Set(routingData.tokenizer?.stopwords || []);
+const fieldLabels = {{
+  domains: "domains",
+  tracks: "tracks",
+  problems: "problems",
+  topics: "topics",
+  methods: "methods",
+}};
+const routingTitle = document.querySelector("#routingTitle");
+const routingAbstract = document.querySelector("#routingAbstract");
+const routingKeywords = document.querySelector("#routingKeywords");
+const routingLineRows = document.querySelector("#routingLineRows");
+const routingLabelRows = document.querySelector("#routingLabelRows");
+const routingPaperRows = document.querySelector("#routingPaperRows");
+const routingPatch = document.querySelector("#routingPatch");
+const runRouting = document.querySelector("#runRouting");
+const copyRoutingPatch = document.querySelector("#copyRoutingPatch");
+const clearRouting = document.querySelector("#clearRouting");
+
+function escapeHtml(value) {{
+  return String(value ?? "").replace(/[&<>"']/g, char => ({{"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}}[char]));
+}}
+
+function normalizeAsciiToken(value) {{
+  return String(value || "")
+    .toLowerCase()
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .split(/\\s+/)
+    .filter(Boolean)
+    .map(token => token.length > 3 && token.endsWith("s") ? token.slice(0, -1) : token)
+    .filter(token => token && !routingStopwords.has(token));
+}}
+
+function routingTokens(text) {{
+  const counts = new Map();
+  const matches = String(text || "").match(/[A-Za-z0-9][A-Za-z0-9.+-]{{1,}}|[\\u4e00-\\u9fff]{{2,}}/g) || [];
+  for (const raw of matches) {{
+    if (/^[A-Za-z0-9.+-]+$/.test(raw)) {{
+      const parts = normalizeAsciiToken(raw);
+      for (const part of parts) {{
+        if (part.length >= 3 || part === "ai" || part === "kv") counts.set(part, (counts.get(part) || 0) + 1);
+      }}
+      if (parts.length > 1) {{
+        const phrase = parts.join(" ");
+        counts.set(phrase, (counts.get(phrase) || 0) + 2);
+      }}
+    }} else {{
+      const token = raw.toLowerCase();
+      if (token.length >= 2) counts.set(token, (counts.get(token) || 0) + 1);
+    }}
+  }}
+  return counts;
+}}
+
+function scoreProfile(profile, inputTerms, nameValue = "") {{
+  let score = 0;
+  const matched = [];
+  for (const item of profile.terms || []) {{
+    const count = inputTerms.get(item.term) || 0;
+    if (count) {{
+      score += count * Number(item.weight || 0);
+      matched.push(`${{item.term}}:${{Math.round(Number(item.weight || 0))}}`);
+    }}
+  }}
+  const inputText = [routingTitle.value, routingAbstract.value, routingKeywords.value].join(" ").toLowerCase();
+  const name = String(nameValue || "").toLowerCase();
+  if (name && inputText.includes(name)) score += 40;
+  return {{ ...profile, score, matched: matched.slice(0, 8) }};
+}}
+
+function ranked(items, inputTerms, nameKey, limit = 5) {{
+  return items
+    .map(item => scoreProfile(item, inputTerms, item[nameKey]))
+    .filter(item => item.score > 0)
+    .sort((a, b) => b.score - a.score || Number(b.count || 0) - Number(a.count || 0))
+    .slice(0, limit);
+}}
+
+function tagsHtml(values) {{
+  return `<div class="routing-tags">${{values.map(value => `<span>${{escapeHtml(value)}}</span>`).join("")}}</div>`;
+}}
+
+function renderRouting() {{
+  const text = [routingTitle.value, routingAbstract.value, routingKeywords.value].join(" ");
+  const inputTerms = routingTokens(text);
+  const lines = ranked(routingData.line_profiles || [], inputTerms, "line", 5);
+  const labels = ranked(routingData.label_profiles || [], inputTerms, "value", 12);
+  const papers = ranked(routingData.paper_signatures || [], inputTerms, "title", 8);
+  routingLineRows.innerHTML = lines.length ? lines.map(item => `
+    <tr>
+      <td class="routing-score">${{Math.round(item.score)}}</td>
+      <td><strong>${{escapeHtml(item.line)}}</strong><div class="routing-tags">${{(item.top_labels || []).slice(0, 5).map(label => `<span>${{escapeHtml(label.label)}} ${{label.count}}</span>`).join("")}}</div></td>
+      <td>${{escapeHtml(item.owner || item.team || "-")}}<div class="meta">${{escapeHtml(item.team || "")}}</div></td>
+      <td>${{tagsHtml(item.matched)}}</td>
+      <td><a href="${{escapeHtml(item.href)}}">打开</a></td>
+    </tr>
+  `).join("") : '<tr><td colspan="5" class="empty">输入更多标题、摘要或关键词后再推荐。</td></tr>';
+  routingLabelRows.innerHTML = labels.length ? labels.map(item => `
+    <tr>
+      <td>${{escapeHtml(fieldLabels[item.field] || item.field)}}</td>
+      <td><a href="${{escapeHtml(item.href)}}">${{escapeHtml(item.value)}}</a></td>
+      <td class="routing-score">${{Math.round(item.score)}}</td>
+      <td>${{item.count || 0}}</td>
+      <td>${{tagsHtml(item.matched)}}</td>
+    </tr>
+  `).join("") : '<tr><td colspan="5" class="empty">暂无标签建议。</td></tr>';
+  routingPaperRows.innerHTML = papers.length ? papers.map(item => `
+    <tr>
+      <td class="routing-score">${{Math.round(item.score)}}</td>
+      <td><a href="${{escapeHtml(item.href)}}">${{escapeHtml(item.title)}}</a><div class="meta">${{escapeHtml(item.slug)}}</div></td>
+      <td>${{escapeHtml(item.research_line || "-")}}</td>
+      <td>${{tagsHtml(item.matched)}}</td>
+    </tr>
+  `).join("") : '<tr><td colspan="4" class="empty">暂无相似论文。</td></tr>';
+  const byField = new Map();
+  for (const item of labels) {{
+    if (!byField.has(item.field)) byField.set(item.field, []);
+    byField.get(item.field).push(item.value);
+  }}
+  const bestLine = lines[0]?.line || "";
+  const patchLines = [
+    bestLine ? `research_line: "${{bestLine}}"` : "research_line: ",
+    "domains:",
+    ...(byField.get("domains") || []).slice(0, 2).map(value => `  - ${{value}}`),
+    "tracks:",
+    ...(byField.get("tracks") || []).slice(0, 2).map(value => `  - ${{value}}`),
+    "problems:",
+    ...(byField.get("problems") || []).slice(0, 2).map(value => `  - ${{value}}`),
+    "topics:",
+    ...(byField.get("topics") || []).slice(0, 4).map(value => `  - ${{value}}`),
+    "methods:",
+    ...(byField.get("methods") || []).slice(0, 4).map(value => `  - ${{value}}`),
+  ];
+  routingPatch.textContent = patchLines.join("\\n");
+}}
+
+runRouting.addEventListener("click", renderRouting);
+[routingTitle, routingAbstract, routingKeywords].forEach(control => control.addEventListener("input", renderRouting));
+copyRoutingPatch.addEventListener("click", async () => {{
+  const text = routingPatch.textContent || "";
+  try {{
+    await navigator.clipboard.writeText(text);
+    copyRoutingPatch.textContent = "已复制";
+    setTimeout(() => copyRoutingPatch.textContent = "复制 frontmatter patch", 1200);
+  }} catch (error) {{
+    window.prompt("复制 frontmatter patch", text);
+  }}
+}});
+clearRouting.addEventListener("click", () => {{
+  routingTitle.value = "";
+  routingAbstract.value = "";
+  routingKeywords.value = "";
+  renderRouting();
+}});
+renderRouting();
+</script>
+"""
+    (report_dir / "routing.html").write_text(page_shell("新论文分类路由器", body, extra_css=routing_css), encoding="utf-8")
+
+
 def render_catalog(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
     payload = build_catalog_payload(report_dir, papers, inbox_items)
     resource_rows = []
@@ -13747,6 +14251,7 @@ def build_wiki(report_dir: Path) -> int:
     write_search_index(report_dir, papers)
     write_scale_json(report_dir, papers, inbox_items)
     write_ownership_json(report_dir, papers)
+    write_routing_json(report_dir, papers)
     render_index(report_dir, papers)
     render_library(report_dir, papers)
     render_board(report_dir, papers)
@@ -13756,6 +14261,7 @@ def build_wiki(report_dir: Path) -> int:
     render_taxonomy_map(report_dir, papers)
     render_scale(report_dir, papers, inbox_items)
     render_ownership(report_dir, papers)
+    render_routing(report_dir, papers)
     render_inbox(report_dir, inbox_items)
     render_review(report_dir, papers)
     render_freshness(report_dir, papers)
