@@ -7511,7 +7511,10 @@ def render_timeline(report_dir: Path, papers: list[dict[str, Any]]) -> None:
 <main class="shell">
   <div class="results-bar">
     <strong id="timelineCount">显示 {len(papers)} / {len(papers)} 篇</strong>
-    <button id="timelineReset" class="button" type="button">重置筛选</button>
+    <div class="results-actions">
+      <button id="timelineCopyLink" class="button" type="button">复制当前链接</button>
+      <button id="timelineReset" class="button" type="button">重置筛选</button>
+    </div>
   </div>
   <div class="timeline-summary">
     <div class="metric-card"><strong>{len(years)}</strong><span>覆盖年份</span></div>
@@ -7534,6 +7537,7 @@ const timelineCode = document.querySelector("#timelineCode");
 const timelineImportance = document.querySelector("#timelineImportance");
 const timelineCount = document.querySelector("#timelineCount");
 const timelineReset = document.querySelector("#timelineReset");
+const timelineCopyLink = document.querySelector("#timelineCopyLink");
 const wikiControls = window.PAPER_WIKI.controls || {{}};
 const statusWorkflows = wikiControls.status_workflows || {{}};
 const activeStatusWorkflow = wikiControls.active_status_workflow || Object.keys(statusWorkflows)[0] || "default";
@@ -7542,6 +7546,17 @@ const fallbackStageValues = Array.isArray(wikiControls.reading_stage) ? wikiCont
 const observedStatusValues = Array.from(new Set(timelineItems.map(item => item.dataset.status).filter(Boolean)));
 const observedStageValues = Array.from(new Set(timelineItems.map(item => item.dataset.stage).filter(Boolean)));
 const timelineControls = [timelineSearch, timelineLine, timelineTrack, timelineRole, timelineWorkflow, timelineStatus, timelineStage, timelineCode, timelineImportance];
+const timelineStateControls = [
+  ["q", timelineSearch],
+  ["line", timelineLine],
+  ["track", timelineTrack],
+  ["role", timelineRole],
+  ["workflow", timelineWorkflow],
+  ["status", timelineStatus],
+  ["stage", timelineStage],
+  ["code", timelineCode],
+  ["importance", timelineImportance],
+];
 
 function timelineTokens(value) {{
   return String(value || "").split("|").filter(Boolean);
@@ -7596,6 +7611,54 @@ function applyTimelineWorkflow() {{
   );
 }}
 
+function timelineDefaultValue(key) {{
+  return key === "workflow" ? activeStatusWorkflow : "";
+}}
+
+function timelineState() {{
+  const state = {{}};
+  timelineStateControls.forEach(([key, control]) => {{
+    const defaultValue = timelineDefaultValue(key);
+    if (control.value && control.value !== defaultValue) state[key] = control.value;
+  }});
+  return state;
+}}
+
+function writeTimelineStateToUrl() {{
+  const params = new URLSearchParams(timelineState());
+  const query = params.toString();
+  window.history.replaceState(null, "", query ? `${{location.pathname}}?${{query}}` : location.pathname);
+}}
+
+function readTimelineStateFromUrl() {{
+  const params = new URLSearchParams(window.location.search);
+  timelineStateControls.forEach(([key, control]) => {{
+    if (["status", "stage"].includes(key)) return;
+    control.value = params.has(key) ? params.get(key) : timelineDefaultValue(key);
+  }});
+  applyTimelineWorkflow();
+  timelineStatus.value = params.has("status") ? params.get("status") : "";
+  timelineStage.value = params.has("stage") ? params.get("stage") : "";
+}}
+
+function timelineViewUrl() {{
+  const url = new URL(window.location.href);
+  url.search = new URLSearchParams(timelineState()).toString();
+  url.hash = "";
+  return url.toString();
+}}
+
+async function copyTimelineLink() {{
+  const text = timelineViewUrl();
+  try {{
+    await navigator.clipboard.writeText(text);
+    timelineCopyLink.textContent = "已复制";
+    setTimeout(() => timelineCopyLink.textContent = "复制当前链接", 1400);
+  }} catch {{
+    window.prompt("复制当前链接", text);
+  }}
+}}
+
 function renderTimeline() {{
   const q = timelineSearch.value.trim().toLowerCase();
   const minImportance = Number(timelineImportance.value || 0);
@@ -7618,6 +7681,7 @@ function renderTimeline() {{
     section.querySelector(".timeline-year-count").textContent = count;
   }});
   timelineCount.textContent = `显示 ${{visible}} / ${{timelineItems.length}} 篇`;
+  writeTimelineStateToUrl();
 }}
 
 timelineControls.forEach(control => control.addEventListener("input", () => {{
@@ -7632,8 +7696,9 @@ timelineReset.addEventListener("click", () => {{
   applyTimelineWorkflow();
   renderTimeline();
 }});
+timelineCopyLink.addEventListener("click", copyTimelineLink);
 populateTimelineWorkflowOptions();
-applyTimelineWorkflow();
+readTimelineStateFromUrl();
 renderTimeline();
 </script>
 """
@@ -7886,7 +7951,10 @@ def render_matrix(report_dir: Path, papers: list[dict[str, Any]]) -> None:
 <main class="shell">
   <div class="results-bar">
     <strong id="matrixCount">显示 {len(lines)} / {len(lines)} 条研究线</strong>
-    <button id="matrixReset" class="button" type="button">重置筛选</button>
+    <div class="results-actions">
+      <button id="matrixCopyLink" class="button" type="button">复制当前链接</button>
+      <button id="matrixReset" class="button" type="button">重置筛选</button>
+    </div>
   </div>
   <div class="matrix-layout">
     <div class="matrix-table-wrap">
@@ -7911,6 +7979,7 @@ const matrixWorkflow = document.querySelector("#matrixWorkflow");
 const matrixStatus = document.querySelector("#matrixStatus");
 const matrixImportance = document.querySelector("#matrixImportance");
 const matrixReset = document.querySelector("#matrixReset");
+const matrixCopyLink = document.querySelector("#matrixCopyLink");
 const matrixCount = document.querySelector("#matrixCount");
 const matrixDetailTitle = document.querySelector("#matrixDetailTitle");
 const matrixDetailMeta = document.querySelector("#matrixDetailMeta");
@@ -7921,6 +7990,13 @@ const matrixWorkflows = matrixControls.status_workflows || {{}};
 const activeMatrixWorkflow = matrixControls.active_status_workflow || Object.keys(matrixWorkflows)[0] || "default";
 const fallbackMatrixStatuses = Array.isArray(matrixControls.status) ? matrixControls.status : [];
 const observedMatrixStatuses = Array.from(new Set(matrixPapers.map(paper => paper.status).filter(Boolean)));
+const matrixStateControls = [
+  ["q", matrixSearch],
+  ["track", matrixTrack],
+  ["workflow", matrixWorkflow],
+  ["status", matrixStatus],
+  ["importance", matrixImportance],
+];
 
 function matrixTokens(value) {{
   return String(value || "").split("|").filter(Boolean);
@@ -7961,6 +8037,53 @@ function applyMatrixWorkflow() {{
   matrixStatus.value = values.includes(current) ? current : "";
 }}
 
+function matrixDefaultValue(key) {{
+  return key === "workflow" ? activeMatrixWorkflow : "";
+}}
+
+function matrixState() {{
+  const state = {{}};
+  matrixStateControls.forEach(([key, control]) => {{
+    const defaultValue = matrixDefaultValue(key);
+    if (control.value && control.value !== defaultValue) state[key] = control.value;
+  }});
+  return state;
+}}
+
+function writeMatrixStateToUrl() {{
+  const params = new URLSearchParams(matrixState());
+  const query = params.toString();
+  window.history.replaceState(null, "", query ? `${{location.pathname}}?${{query}}` : location.pathname);
+}}
+
+function readMatrixStateFromUrl() {{
+  const params = new URLSearchParams(window.location.search);
+  matrixStateControls.forEach(([key, control]) => {{
+    if (key === "status") return;
+    control.value = params.has(key) ? params.get(key) : matrixDefaultValue(key);
+  }});
+  applyMatrixWorkflow();
+  matrixStatus.value = params.has("status") ? params.get("status") : "";
+}}
+
+function matrixViewUrl() {{
+  const url = new URL(window.location.href);
+  url.search = new URLSearchParams(matrixState()).toString();
+  url.hash = "";
+  return url.toString();
+}}
+
+async function copyMatrixLink() {{
+  const text = matrixViewUrl();
+  try {{
+    await navigator.clipboard.writeText(text);
+    matrixCopyLink.textContent = "已复制";
+    setTimeout(() => matrixCopyLink.textContent = "复制当前链接", 1400);
+  }} catch {{
+    window.prompt("复制当前链接", text);
+  }}
+}}
+
 function renderMatrixFilters() {{
   const q = matrixSearch.value.trim().toLowerCase();
   const minImportance = Number(matrixImportance.value || 0);
@@ -7974,6 +8097,7 @@ function renderMatrixFilters() {{
     if (hit) visible += 1;
   }});
   matrixCount.textContent = `显示 ${{visible}} / ${{matrixRows.length}} 条研究线`;
+  writeMatrixStateToUrl();
 }}
 
 function renderMatrixDetail(line, year) {{
@@ -8009,9 +8133,10 @@ matrixReset.addEventListener("click", () => {{
   applyMatrixWorkflow();
   renderMatrixFilters();
 }});
+matrixCopyLink.addEventListener("click", copyMatrixLink);
 matrixCells.forEach(cell => cell.addEventListener("click", () => renderMatrixDetail(cell.dataset.line, cell.dataset.year)));
 populateMatrixWorkflowOptions();
-applyMatrixWorkflow();
+readMatrixStateFromUrl();
 renderMatrixFilters();
 const firstNonEmpty = matrixCells.find(cell => Number(cell.dataset.count || 0) > 0);
 if (firstNonEmpty) renderMatrixDetail(firstNonEmpty.dataset.line, firstNonEmpty.dataset.year);

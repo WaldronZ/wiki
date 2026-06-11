@@ -509,7 +509,10 @@ window.PAPER_WIKI = {"papers": [{"slug": "2602.06036-dflash", "title": "DFlash: 
 <main class="shell">
   <div class="results-bar">
     <strong id="matrixCount">显示 2 / 2 条研究线</strong>
-    <button id="matrixReset" class="button" type="button">重置筛选</button>
+    <div class="results-actions">
+      <button id="matrixCopyLink" class="button" type="button">复制当前链接</button>
+      <button id="matrixReset" class="button" type="button">重置筛选</button>
+    </div>
   </div>
   <div class="matrix-layout">
     <div class="matrix-table-wrap">
@@ -604,6 +607,7 @@ const matrixWorkflow = document.querySelector("#matrixWorkflow");
 const matrixStatus = document.querySelector("#matrixStatus");
 const matrixImportance = document.querySelector("#matrixImportance");
 const matrixReset = document.querySelector("#matrixReset");
+const matrixCopyLink = document.querySelector("#matrixCopyLink");
 const matrixCount = document.querySelector("#matrixCount");
 const matrixDetailTitle = document.querySelector("#matrixDetailTitle");
 const matrixDetailMeta = document.querySelector("#matrixDetailMeta");
@@ -614,6 +618,13 @@ const matrixWorkflows = matrixControls.status_workflows || {};
 const activeMatrixWorkflow = matrixControls.active_status_workflow || Object.keys(matrixWorkflows)[0] || "default";
 const fallbackMatrixStatuses = Array.isArray(matrixControls.status) ? matrixControls.status : [];
 const observedMatrixStatuses = Array.from(new Set(matrixPapers.map(paper => paper.status).filter(Boolean)));
+const matrixStateControls = [
+  ["q", matrixSearch],
+  ["track", matrixTrack],
+  ["workflow", matrixWorkflow],
+  ["status", matrixStatus],
+  ["importance", matrixImportance],
+];
 
 function matrixTokens(value) {
   return String(value || "").split("|").filter(Boolean);
@@ -654,6 +665,53 @@ function applyMatrixWorkflow() {
   matrixStatus.value = values.includes(current) ? current : "";
 }
 
+function matrixDefaultValue(key) {
+  return key === "workflow" ? activeMatrixWorkflow : "";
+}
+
+function matrixState() {
+  const state = {};
+  matrixStateControls.forEach(([key, control]) => {
+    const defaultValue = matrixDefaultValue(key);
+    if (control.value && control.value !== defaultValue) state[key] = control.value;
+  });
+  return state;
+}
+
+function writeMatrixStateToUrl() {
+  const params = new URLSearchParams(matrixState());
+  const query = params.toString();
+  window.history.replaceState(null, "", query ? `${location.pathname}?${query}` : location.pathname);
+}
+
+function readMatrixStateFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  matrixStateControls.forEach(([key, control]) => {
+    if (key === "status") return;
+    control.value = params.has(key) ? params.get(key) : matrixDefaultValue(key);
+  });
+  applyMatrixWorkflow();
+  matrixStatus.value = params.has("status") ? params.get("status") : "";
+}
+
+function matrixViewUrl() {
+  const url = new URL(window.location.href);
+  url.search = new URLSearchParams(matrixState()).toString();
+  url.hash = "";
+  return url.toString();
+}
+
+async function copyMatrixLink() {
+  const text = matrixViewUrl();
+  try {
+    await navigator.clipboard.writeText(text);
+    matrixCopyLink.textContent = "已复制";
+    setTimeout(() => matrixCopyLink.textContent = "复制当前链接", 1400);
+  } catch {
+    window.prompt("复制当前链接", text);
+  }
+}
+
 function renderMatrixFilters() {
   const q = matrixSearch.value.trim().toLowerCase();
   const minImportance = Number(matrixImportance.value || 0);
@@ -667,6 +725,7 @@ function renderMatrixFilters() {
     if (hit) visible += 1;
   });
   matrixCount.textContent = `显示 ${visible} / ${matrixRows.length} 条研究线`;
+  writeMatrixStateToUrl();
 }
 
 function renderMatrixDetail(line, year) {
@@ -702,9 +761,10 @@ matrixReset.addEventListener("click", () => {
   applyMatrixWorkflow();
   renderMatrixFilters();
 });
+matrixCopyLink.addEventListener("click", copyMatrixLink);
 matrixCells.forEach(cell => cell.addEventListener("click", () => renderMatrixDetail(cell.dataset.line, cell.dataset.year)));
 populateMatrixWorkflowOptions();
-applyMatrixWorkflow();
+readMatrixStateFromUrl();
 renderMatrixFilters();
 const firstNonEmpty = matrixCells.find(cell => Number(cell.dataset.count || 0) > 0);
 if (firstNonEmpty) renderMatrixDetail(firstNonEmpty.dataset.line, firstNonEmpty.dataset.year);

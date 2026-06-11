@@ -484,7 +484,10 @@ window.PAPER_WIKI = {"controls": {"active_status_workflow": "personal", "status"
 <main class="shell">
   <div class="results-bar">
     <strong id="timelineCount">显示 5 / 5 篇</strong>
-    <button id="timelineReset" class="button" type="button">重置筛选</button>
+    <div class="results-actions">
+      <button id="timelineCopyLink" class="button" type="button">复制当前链接</button>
+      <button id="timelineReset" class="button" type="button">重置筛选</button>
+    </div>
   </div>
   <div class="timeline-summary">
     <div class="metric-card"><strong>3</strong><span>覆盖年份</span></div>
@@ -611,6 +614,7 @@ const timelineCode = document.querySelector("#timelineCode");
 const timelineImportance = document.querySelector("#timelineImportance");
 const timelineCount = document.querySelector("#timelineCount");
 const timelineReset = document.querySelector("#timelineReset");
+const timelineCopyLink = document.querySelector("#timelineCopyLink");
 const wikiControls = window.PAPER_WIKI.controls || {};
 const statusWorkflows = wikiControls.status_workflows || {};
 const activeStatusWorkflow = wikiControls.active_status_workflow || Object.keys(statusWorkflows)[0] || "default";
@@ -619,6 +623,17 @@ const fallbackStageValues = Array.isArray(wikiControls.reading_stage) ? wikiCont
 const observedStatusValues = Array.from(new Set(timelineItems.map(item => item.dataset.status).filter(Boolean)));
 const observedStageValues = Array.from(new Set(timelineItems.map(item => item.dataset.stage).filter(Boolean)));
 const timelineControls = [timelineSearch, timelineLine, timelineTrack, timelineRole, timelineWorkflow, timelineStatus, timelineStage, timelineCode, timelineImportance];
+const timelineStateControls = [
+  ["q", timelineSearch],
+  ["line", timelineLine],
+  ["track", timelineTrack],
+  ["role", timelineRole],
+  ["workflow", timelineWorkflow],
+  ["status", timelineStatus],
+  ["stage", timelineStage],
+  ["code", timelineCode],
+  ["importance", timelineImportance],
+];
 
 function timelineTokens(value) {
   return String(value || "").split("|").filter(Boolean);
@@ -673,6 +688,54 @@ function applyTimelineWorkflow() {
   );
 }
 
+function timelineDefaultValue(key) {
+  return key === "workflow" ? activeStatusWorkflow : "";
+}
+
+function timelineState() {
+  const state = {};
+  timelineStateControls.forEach(([key, control]) => {
+    const defaultValue = timelineDefaultValue(key);
+    if (control.value && control.value !== defaultValue) state[key] = control.value;
+  });
+  return state;
+}
+
+function writeTimelineStateToUrl() {
+  const params = new URLSearchParams(timelineState());
+  const query = params.toString();
+  window.history.replaceState(null, "", query ? `${location.pathname}?${query}` : location.pathname);
+}
+
+function readTimelineStateFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  timelineStateControls.forEach(([key, control]) => {
+    if (["status", "stage"].includes(key)) return;
+    control.value = params.has(key) ? params.get(key) : timelineDefaultValue(key);
+  });
+  applyTimelineWorkflow();
+  timelineStatus.value = params.has("status") ? params.get("status") : "";
+  timelineStage.value = params.has("stage") ? params.get("stage") : "";
+}
+
+function timelineViewUrl() {
+  const url = new URL(window.location.href);
+  url.search = new URLSearchParams(timelineState()).toString();
+  url.hash = "";
+  return url.toString();
+}
+
+async function copyTimelineLink() {
+  const text = timelineViewUrl();
+  try {
+    await navigator.clipboard.writeText(text);
+    timelineCopyLink.textContent = "已复制";
+    setTimeout(() => timelineCopyLink.textContent = "复制当前链接", 1400);
+  } catch {
+    window.prompt("复制当前链接", text);
+  }
+}
+
 function renderTimeline() {
   const q = timelineSearch.value.trim().toLowerCase();
   const minImportance = Number(timelineImportance.value || 0);
@@ -695,6 +758,7 @@ function renderTimeline() {
     section.querySelector(".timeline-year-count").textContent = count;
   });
   timelineCount.textContent = `显示 ${visible} / ${timelineItems.length} 篇`;
+  writeTimelineStateToUrl();
 }
 
 timelineControls.forEach(control => control.addEventListener("input", () => {
@@ -709,8 +773,9 @@ timelineReset.addEventListener("click", () => {
   applyTimelineWorkflow();
   renderTimeline();
 });
+timelineCopyLink.addEventListener("click", copyTimelineLink);
 populateTimelineWorkflowOptions();
-applyTimelineWorkflow();
+readTimelineStateFromUrl();
 renderTimeline();
 </script>
 
