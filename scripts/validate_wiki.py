@@ -83,6 +83,7 @@ REQUIRED_PAGES = {
     "quality.html",
     "review.html",
     "dashboard.html",
+    "release.html",
     "collections.html",
     "related.html",
     "taxonomy.html",
@@ -96,6 +97,7 @@ REQUIRED_PAGES = {
     "inbox.json",
     "quality.json",
     "review.json",
+    "manifest.json",
     "lines/index.html",
 }
 
@@ -393,6 +395,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     review_path = report_dir / "review.json"
     stats_path = report_dir / "stats.json"
     inbox_path = report_dir / "inbox.json"
+    manifest_path = report_dir / "manifest.json"
     if not papers_path.exists():
         errors.append("missing papers.json")
         return
@@ -411,6 +414,9 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     if not inbox_path.exists():
         errors.append("missing inbox.json")
         return
+    if not manifest_path.exists():
+        errors.append("missing manifest.json")
+        return
 
     papers_data = json.loads(papers_path.read_text(encoding="utf-8"))
     search_data = json.loads(search_path.read_text(encoding="utf-8"))
@@ -418,6 +424,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     review_data = json.loads(review_path.read_text(encoding="utf-8"))
     stats_data = json.loads(stats_path.read_text(encoding="utf-8"))
     inbox_data = json.loads(inbox_path.read_text(encoding="utf-8"))
+    manifest_data = json.loads(manifest_path.read_text(encoding="utf-8"))
     paper_slugs = {paper.get("slug") for paper in papers_data.get("papers", [])}
     report_slugs = set(reports)
 
@@ -528,6 +535,23 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
 
     if inbox_data.get("count") != len(inbox_data.get("items") or []):
         errors.append("inbox.json count must match items length")
+
+    if manifest_data.get("count") != len(report_slugs):
+        errors.append(f"manifest.json count {manifest_data.get('count')} != markdown report count {len(report_slugs)}")
+    required_manifest = {"publish_ready", "publish_checks", "quality_score", "coverage", "queue_sizes", "pages", "data_files", "commands"}
+    missing_manifest = sorted(required_manifest - set(manifest_data))
+    if missing_manifest:
+        errors.append(f"manifest.json missing keys: {', '.join(missing_manifest)}")
+    manifest_pages = {str(item.get("href") or "") for item in manifest_data.get("pages", []) if isinstance(item, dict)}
+    expected_manifest_pages = {page for page in REQUIRED_PAGES if page.endswith(".html")}
+    missing_manifest_pages = sorted(expected_manifest_pages - manifest_pages)
+    if missing_manifest_pages:
+        errors.append(f"manifest.json pages missing entries: {', '.join(missing_manifest_pages)}")
+    manifest_data_files = {str(item.get("href") or "") for item in manifest_data.get("data_files", []) if isinstance(item, dict)}
+    expected_data_files = {page for page in REQUIRED_PAGES if page.endswith(".json")}
+    missing_manifest_files = sorted(expected_data_files - manifest_data_files)
+    if missing_manifest_files:
+        errors.append(f"manifest.json data_files missing entries: {', '.join(missing_manifest_files)}")
     required_inbox = {"count", "statuses", "priorities", "duplicates", "items"}
     missing_inbox = sorted(required_inbox - set(inbox_data))
     if missing_inbox:

@@ -30,6 +30,7 @@ GENERATED_FIXED_PATHS = (
     "inbox.json",
     "quality.json",
     "review.json",
+    "manifest.json",
     "index.html",
     "library.html",
     "board.html",
@@ -37,6 +38,7 @@ GENERATED_FIXED_PATHS = (
     "quality.html",
     "review.html",
     "dashboard.html",
+    "release.html",
     "collections.html",
     "related.html",
     "taxonomy.html",
@@ -1089,6 +1091,92 @@ def write_stats_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     )
 
 
+def wiki_pages_manifest() -> list[dict[str, str]]:
+    return [
+        {"title": "首页", "href": "index.html", "kind": "view", "description": "卡片检索、筛选、研究线概览"},
+        {"title": "论文库表格", "href": "library.html", "kind": "view", "description": "密集筛选、列管理、批量更新"},
+        {"title": "管理控制台", "href": "dashboard.html", "kind": "ops", "description": "覆盖率、队列和运营指标"},
+        {"title": "发布摘要", "href": "release.html", "kind": "ops", "description": "页面入口、数据文件、质量状态"},
+        {"title": "集合视图", "href": "collections.html", "kind": "view", "description": "共享视图、智能集合、研究线入口"},
+        {"title": "关联网络", "href": "related.html", "kind": "analysis", "description": "标签共现、相似论文、孤岛论文"},
+        {"title": "研究缺口", "href": "gaps.html", "kind": "ops", "description": "下一步行动和研究线缺口"},
+        {"title": "状态看板", "href": "board.html", "kind": "workflow", "description": "拖拽式状态流和 CSV patch"},
+        {"title": "待处理池", "href": "inbox.html", "kind": "workflow", "description": "候选论文队列和去重提示"},
+        {"title": "复习计划", "href": "review.html", "kind": "workflow", "description": "待复习、需建计划、建议日期"},
+        {"title": "质量治理", "href": "quality.html", "kind": "ops", "description": "弱元数据、别名建议、taxonomy drift"},
+        {"title": "分类治理", "href": "taxonomy.html", "kind": "ops", "description": "分类矩阵、状态工作流、治理队列"},
+        {"title": "时间轴", "href": "timeline.html", "kind": "analysis", "description": "按年份和研究线浏览论文演进"},
+        {"title": "研究矩阵", "href": "matrix.html", "kind": "analysis", "description": "research line x year 覆盖"},
+        {"title": "研究线", "href": "lines/index.html", "kind": "view", "description": "按研究脉络组织论文"},
+        {"title": "分类总览", "href": "tags.html", "kind": "view", "description": "按标签聚合论文"},
+    ]
+
+
+def data_files_manifest() -> list[dict[str, str]]:
+    return [
+        {"href": "papers.json", "description": "论文索引、taxonomy 聚合、前端 controls"},
+        {"href": "search_index.json", "description": "正文全文检索索引"},
+        {"href": "stats.json", "description": "运营统计、覆盖率和队列规模"},
+        {"href": "quality.json", "description": "质量问题、taxonomy drift、标签别名建议"},
+        {"href": "review.json", "description": "复习计划和建议 next_review"},
+        {"href": "inbox.json", "description": "候选论文队列和重复项"},
+        {"href": "manifest.json", "description": "发布摘要和页面入口清单"},
+    ]
+
+
+def build_manifest(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> dict[str, Any]:
+    quality = build_quality_report(papers)
+    review = build_review_plan(papers)
+    stats = build_stats_report(papers)
+    pages = wiki_pages_manifest()
+    data_files = data_files_manifest()
+    quality_queues = {name: len(slugs) for name, slugs in quality["queues"].items()}
+    review_queues = {name: len(slugs) for name, slugs in review["queues"].items()}
+    publish_checks = {
+        "metadata_complete": quality_queues.get("missing_required_metadata", 0) == 0,
+        "taxonomy_clean": quality_queues.get("taxonomy_drift", 0) == 0 and not quality["label_alias_suggestions"],
+        "has_review_plan": review_queues.get("needs_plan", 0) == 0,
+        "has_generated_pages": all((report_dir / page["href"]).exists() for page in pages if page["href"] != "release.html"),
+    }
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "name": "AutoPaperReader Wiki",
+        "count": len(papers),
+        "publish_ready": all(publish_checks.values()),
+        "publish_checks": publish_checks,
+        "quality_score": quality["quality_score"],
+        "coverage": quality["coverage"],
+        "queue_sizes": {
+            "quality": quality_queues,
+            "review": review_queues,
+            "inbox": {
+                "count": len(inbox_items),
+                "duplicates": sum(1 for item in inbox_items if item.get("duplicate")),
+            },
+        },
+        "taxonomy": stats["taxonomy"],
+        "research_lines": stats["research_lines"],
+        "controls": control_options(),
+        "pages": pages,
+        "data_files": data_files,
+        "commands": [
+            "python3 scripts/build_wiki.py docs",
+            "python3 scripts/check_quality.py docs",
+            "python3 scripts/validate_wiki.py docs --strict-taxonomy",
+            "python3 scripts/apply_library_metadata.py docs --input <csv> --write",
+            "python3 scripts/apply_taxonomy_aliases.py docs --write",
+        ],
+    }
+
+
+def write_manifest_json(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
+    payload = build_manifest(report_dir, papers, inbox_items)
+    (report_dir / "manifest.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
 def parse_date(value: Any) -> dt.date | None:
     text = str(value or "").strip()
     if not text:
@@ -1600,6 +1688,7 @@ def page_shell(
     ["首页", "index.html", "总览、搜索和筛选"],
     ["论文库表格", "library.html", "密集筛选、列管理和批量更新"],
     ["管理控制台", "dashboard.html", "覆盖率、队列和运营指标"],
+    ["发布摘要", "release.html", "页面入口、数据文件和发布状态"],
     ["集合视图", "collections.html", "共享视图和智能集合"],
     ["关联网络", "related.html", "标签共现和相似论文"],
     ["研究缺口", "gaps.html", "下一步行动和线索缺口"],
@@ -3644,6 +3733,117 @@ def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
     (report_dir / "quality.html").write_text(page_shell("质量治理", body, extra_css=quality_css), encoding="utf-8")
 
 
+def render_release(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
+    manifest = build_manifest(report_dir, papers, inbox_items)
+    status_label = "可发布" if manifest["publish_ready"] else "需治理"
+    check_rows = "".join(
+        "<tr>"
+        f"<td>{html.escape(name)}</td>"
+        f"<td><span class=\"flag\">{'通过' if passed else '待处理'}</span></td>"
+        "</tr>"
+        for name, passed in manifest["publish_checks"].items()
+    )
+    page_rows = "".join(
+        "<tr>"
+        f'<td><a href="{html.escape(page["href"])}">{html.escape(page["title"])}</a></td>'
+        f"<td>{html.escape(page['kind'])}</td>"
+        f"<td>{html.escape(page['description'])}</td>"
+        "</tr>"
+        for page in manifest["pages"]
+    )
+    data_rows = "".join(
+        "<tr>"
+        f'<td><a href="{html.escape(file["href"])}">{html.escape(file["href"])}</a></td>'
+        f"<td>{html.escape(file['description'])}</td>"
+        "</tr>"
+        for file in manifest["data_files"]
+    )
+    queue_rows = "".join(
+        "<tr>"
+        f"<td>{html.escape(group)}</td>"
+        f"<td>{html.escape(name)}</td>"
+        f"<td>{count}</td>"
+        "</tr>"
+        for group, queues in manifest["queue_sizes"].items()
+        for name, count in queues.items()
+    )
+    command_html = "\n".join(html.escape(command) for command in manifest["commands"])
+    line_rows = "".join(
+        "<tr>"
+        f'<td><a href="{html.escape(page_query_href("library.html", line=line["name"]))}">{html.escape(line["name"])}</a></td>'
+        f"<td>{line['count']}</td>"
+        f"<td>{html.escape(str(line.get('code_coverage') or ''))}</td>"
+        f"<td>{html.escape(str(line.get('avg_importance') or ''))}</td>"
+        "</tr>"
+        for line in manifest["research_lines"]
+    )
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Release Manifest</div>
+  <h1>知识库发布摘要</h1>
+  <p class="lead">面向开源、团队同步或桌面软件封装的发布视图：集中展示当前论文库质量、页面入口、机器可读数据、运营队列和推荐检查命令。</p>
+  <div class="stats">
+    <a class="stat" href="index.html">卡片首页</a>
+    <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="quality.html">质量治理</a>
+    <a class="stat" href="taxonomy.html">分类治理</a>
+    <a class="stat" href="manifest.json">Manifest JSON</a>
+    <span class="stat">状态 {html.escape(status_label)}</span>
+    <span class="stat">论文 {manifest["count"]}</span>
+    <span class="stat">质量分 {manifest["quality_score"]}</span>
+  </div>
+</header>
+<main class="shell">
+  <section>
+    <h2 class="section-title">发布状态</h2>
+    <div class="metric-grid">
+      <section class="metric-card"><span>状态</span><strong>{html.escape(status_label)}</strong><span>publish_ready = {str(manifest["publish_ready"]).lower()}</span></section>
+      <section class="metric-card"><span>质量分</span><strong>{manifest["quality_score"]}</strong><span>元数据和复习综合分</span></section>
+      <section class="metric-card"><span>分类覆盖</span><strong>{html.escape(str(manifest["coverage"]["taxonomy"]))}</strong><span>必要 taxonomy 字段</span></section>
+      <section class="metric-card"><span>代码覆盖</span><strong>{html.escape(str(manifest["coverage"]["code_observation"]))}</strong><span>代码观察或线索</span></section>
+    </div>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>检查项</th><th>状态</th></tr></thead><tbody>{check_rows}</tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">页面入口</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>页面</th><th>类型</th><th>用途</th></tr></thead><tbody>{page_rows}</tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">机器可读数据</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>文件</th><th>用途</th></tr></thead><tbody>{data_rows}</tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">队列规模</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>分组</th><th>队列</th><th>数量</th></tr></thead><tbody>{queue_rows}</tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">研究线摘要</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>研究线</th><th>论文</th><th>代码覆盖</th><th>平均重要性</th></tr></thead><tbody>{line_rows}</tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">推荐命令</h2>
+    <pre class="config-snippet"><code>{command_html}</code></pre>
+  </section>
+</main>
+"""
+    release_css = "\n".join(
+        [
+            "    .config-snippet {",
+            "      margin: 0;",
+            "      padding: 12px;",
+            "      border: 1px solid var(--line);",
+            "      border-radius: 8px;",
+            "      background: #f8fafc;",
+            "      overflow-x: auto;",
+            "      font-size: 13px;",
+            "      line-height: 1.55;",
+            "    }",
+        ]
+    )
+    (report_dir / "release.html").write_text(page_shell("知识库发布摘要", body, extra_css=release_css), encoding="utf-8")
+
+
 def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     quality = build_quality_report(papers)
     review_plan = build_review_plan(papers)
@@ -5636,6 +5836,8 @@ def build_wiki(report_dir: Path) -> int:
     render_gaps(report_dir, papers)
     render_line_pages(report_dir, papers)
     render_tags(report_dir, papers)
+    render_release(report_dir, papers, inbox_items)
+    write_manifest_json(report_dir, papers, inbox_items)
     return len(papers)
 
 

@@ -175,6 +175,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "quality.html",
                 "review.html",
                 "dashboard.html",
+                "release.html",
                 "collections.html",
                 "related.html",
                 "taxonomy.html",
@@ -188,6 +189,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "inbox.json",
                 "quality.json",
                 "review.json",
+                "manifest.json",
                 "lines/index.html",
             }
             for relative in generated:
@@ -262,6 +264,15 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertTrue(stats["research_lines"])
             self.assertEqual(stats["shared_views"], 2)
             self.assertEqual(stats["controls"]["review_stage"], ["fresh", "due", "reviewed"])
+            manifest = json.loads((report_dir / "manifest.json").read_text(encoding="utf-8"))
+            self.assertEqual(manifest["count"], 2)
+            self.assertIn("release.html", {item["href"] for item in manifest["pages"]})
+            self.assertIn("manifest.json", {item["href"] for item in manifest["data_files"]})
+            self.assertIn("python3 scripts/check_quality.py docs", manifest["commands"])
+            release_html = (report_dir / "release.html").read_text(encoding="utf-8")
+            self.assertIn("知识库发布摘要", release_html)
+            self.assertIn("Manifest JSON", release_html)
+            self.assertIn("推荐命令", release_html)
             collections_html = (report_dir / "collections.html").read_text(encoding="utf-8")
             self.assertIn("集合视图", collections_html)
             self.assertIn("共享视图", collections_html)

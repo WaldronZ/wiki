@@ -1,0 +1,464 @@
+{
+  "generated_at": "2026-06-11T22:21:58",
+  "name": "AutoPaperReader Wiki",
+  "count": 5,
+  "publish_ready": false,
+  "publish_checks": {
+    "metadata_complete": true,
+    "taxonomy_clean": true,
+    "has_review_plan": false,
+    "has_generated_pages": true
+  },
+  "quality_score": 92.0,
+  "coverage": {
+    "taxonomy": "100%",
+    "review_plan": "0%",
+    "code_observation": "100%",
+    "research_lines": 2
+  },
+  "queue_sizes": {
+    "quality": {
+      "missing_required_metadata": 0,
+      "needs_review_plan": 5,
+      "due_review": 0,
+      "no_code_observation": 0,
+      "taxonomy_drift": 0,
+      "high_importance": 2
+    },
+    "review": {
+      "due": 0,
+      "needs_plan": 5,
+      "scheduled": 0,
+      "high_priority": 2
+    },
+    "inbox": {
+      "count": 0,
+      "duplicates": 0
+    }
+  },
+  "taxonomy": {
+    "domains": [
+      {
+        "name": "LLM Systems",
+        "count": 5
+      }
+    ],
+    "tracks": [
+      {
+        "name": "Inference Acceleration",
+        "count": 3
+      },
+      {
+        "name": "Parallel Decoding",
+        "count": 3
+      },
+      {
+        "name": "Attention Kernels",
+        "count": 2
+      },
+      {
+        "name": "Inference Serving Systems",
+        "count": 1
+      }
+    ],
+    "problems": [
+      {
+        "name": "Customizable Attention Serving",
+        "count": 1
+      },
+      {
+        "name": "Efficient Exact Attention",
+        "count": 1
+      },
+      {
+        "name": "Lossless Speculative Decoding",
+        "count": 1
+      },
+      {
+        "name": "Memory-Efficient Parallel Token Generation",
+        "count": 1
+      },
+      {
+        "name": "Parallel Diffusion Decoding",
+        "count": 1
+      }
+    ],
+    "topics": [
+      {
+        "name": "Diffusion Language Models",
+        "count": 3
+      },
+      {
+        "name": "LLM Serving",
+        "count": 3
+      },
+      {
+        "name": "Speculative Decoding",
+        "count": 3
+      },
+      {
+        "name": "KV Cache",
+        "count": 2
+      },
+      {
+        "name": "LLM Inference",
+        "count": 2
+      },
+      {
+        "name": "Parallel Decoding",
+        "count": 2
+      },
+      {
+        "name": "Attention Kernels",
+        "count": 1
+      },
+      {
+        "name": "Efficient Attention",
+        "count": 1
+      },
+      {
+        "name": "GPU Kernel Optimization",
+        "count": 1
+      },
+      {
+        "name": "GPU Systems",
+        "count": 1
+      },
+      {
+        "name": "Inference Optimization",
+        "count": 1
+      },
+      {
+        "name": "LLM",
+        "count": 1
+      }
+    ],
+    "methods": [
+      {
+        "name": "FlashAttention",
+        "count": 2
+      },
+      {
+        "name": "block diffusion",
+        "count": 1
+      },
+      {
+        "name": "block-sparse attention",
+        "count": 1
+      },
+      {
+        "name": "composable KV-cache format",
+        "count": 1
+      },
+      {
+        "name": "CUDA / GPU parallelism",
+        "count": 1
+      },
+      {
+        "name": "CUDA Graph",
+        "count": 1
+      },
+      {
+        "name": "dual-view attention",
+        "count": 1
+      },
+      {
+        "name": "forward KL distillation",
+        "count": 1
+      },
+      {
+        "name": "gated LoRA",
+        "count": 1
+      },
+      {
+        "name": "intra-model consensus",
+        "count": 1
+      },
+      {
+        "name": "introspective consistency",
+        "count": 1
+      },
+      {
+        "name": "introspective strided decoding",
+        "count": 1
+      }
+    ],
+    "research_lines": [
+      {
+        "name": "Parallel Decoding with Diffusion Models",
+        "count": 3
+      },
+      {
+        "name": "Efficient Attention Kernels",
+        "count": 2
+      }
+    ],
+    "statuses": [
+      {
+        "name": "read",
+        "count": 5
+      },
+      {
+        "name": "archived",
+        "count": 0
+      },
+      {
+        "name": "reading",
+        "count": 0
+      },
+      {
+        "name": "skimmed",
+        "count": 0
+      },
+      {
+        "name": "unread",
+        "count": 0
+      }
+    ],
+    "reading_stages": [
+      {
+        "name": "deep_read",
+        "count": 5
+      },
+      {
+        "name": "code_checked",
+        "count": 0
+      },
+      {
+        "name": "normal_read",
+        "count": 0
+      },
+      {
+        "name": "skim",
+        "count": 0
+      }
+    ],
+    "review_stages": [
+      {
+        "name": "due",
+        "count": 0
+      },
+      {
+        "name": "fresh",
+        "count": 0
+      },
+      {
+        "name": "reviewed",
+        "count": 0
+      }
+    ]
+  },
+  "research_lines": [
+    {
+      "name": "Parallel Decoding with Diffusion Models",
+      "count": 3,
+      "roles": {
+        "followup": 1,
+        "foundation": 1,
+        "variant": 1
+      },
+      "code_coverage": "100%",
+      "avg_importance": 4.3
+    },
+    {
+      "name": "Efficient Attention Kernels",
+      "count": 2,
+      "roles": {
+        "foundation": 1,
+        "system": 1
+      },
+      "code_coverage": "100%",
+      "avg_importance": 4.5
+    }
+  ],
+  "controls": {
+    "status": [
+      "unread",
+      "skimmed",
+      "reading",
+      "read",
+      "archived"
+    ],
+    "reading_stage": [
+      "skim",
+      "normal_read",
+      "deep_read",
+      "code_checked"
+    ],
+    "review_stage": [
+      "fresh",
+      "due",
+      "reviewed"
+    ],
+    "line_role": [
+      "foundation",
+      "baseline",
+      "main",
+      "system",
+      "variant",
+      "followup",
+      "survey"
+    ],
+    "shared_views": [
+      {
+        "name": "重点论文",
+        "page": "all",
+        "state": {
+          "importance": "5",
+          "sort": "importance"
+        }
+      },
+      {
+        "name": "未设置复习",
+        "page": "index",
+        "state": {
+          "review": "none",
+          "sort": "importance"
+        }
+      },
+      {
+        "name": "Attention Kernels",
+        "page": "library",
+        "state": {
+          "track": "Attention Kernels",
+          "sort": "year"
+        }
+      }
+    ]
+  },
+  "pages": [
+    {
+      "title": "首页",
+      "href": "index.html",
+      "kind": "view",
+      "description": "卡片检索、筛选、研究线概览"
+    },
+    {
+      "title": "论文库表格",
+      "href": "library.html",
+      "kind": "view",
+      "description": "密集筛选、列管理、批量更新"
+    },
+    {
+      "title": "管理控制台",
+      "href": "dashboard.html",
+      "kind": "ops",
+      "description": "覆盖率、队列和运营指标"
+    },
+    {
+      "title": "发布摘要",
+      "href": "release.html",
+      "kind": "ops",
+      "description": "页面入口、数据文件、质量状态"
+    },
+    {
+      "title": "集合视图",
+      "href": "collections.html",
+      "kind": "view",
+      "description": "共享视图、智能集合、研究线入口"
+    },
+    {
+      "title": "关联网络",
+      "href": "related.html",
+      "kind": "analysis",
+      "description": "标签共现、相似论文、孤岛论文"
+    },
+    {
+      "title": "研究缺口",
+      "href": "gaps.html",
+      "kind": "ops",
+      "description": "下一步行动和研究线缺口"
+    },
+    {
+      "title": "状态看板",
+      "href": "board.html",
+      "kind": "workflow",
+      "description": "拖拽式状态流和 CSV patch"
+    },
+    {
+      "title": "待处理池",
+      "href": "inbox.html",
+      "kind": "workflow",
+      "description": "候选论文队列和去重提示"
+    },
+    {
+      "title": "复习计划",
+      "href": "review.html",
+      "kind": "workflow",
+      "description": "待复习、需建计划、建议日期"
+    },
+    {
+      "title": "质量治理",
+      "href": "quality.html",
+      "kind": "ops",
+      "description": "弱元数据、别名建议、taxonomy drift"
+    },
+    {
+      "title": "分类治理",
+      "href": "taxonomy.html",
+      "kind": "ops",
+      "description": "分类矩阵、状态工作流、治理队列"
+    },
+    {
+      "title": "时间轴",
+      "href": "timeline.html",
+      "kind": "analysis",
+      "description": "按年份和研究线浏览论文演进"
+    },
+    {
+      "title": "研究矩阵",
+      "href": "matrix.html",
+      "kind": "analysis",
+      "description": "research line x year 覆盖"
+    },
+    {
+      "title": "研究线",
+      "href": "lines/index.html",
+      "kind": "view",
+      "description": "按研究脉络组织论文"
+    },
+    {
+      "title": "分类总览",
+      "href": "tags.html",
+      "kind": "view",
+      "description": "按标签聚合论文"
+    }
+  ],
+  "data_files": [
+    {
+      "href": "papers.json",
+      "description": "论文索引、taxonomy 聚合、前端 controls"
+    },
+    {
+      "href": "search_index.json",
+      "description": "正文全文检索索引"
+    },
+    {
+      "href": "stats.json",
+      "description": "运营统计、覆盖率和队列规模"
+    },
+    {
+      "href": "quality.json",
+      "description": "质量问题、taxonomy drift、标签别名建议"
+    },
+    {
+      "href": "review.json",
+      "description": "复习计划和建议 next_review"
+    },
+    {
+      "href": "inbox.json",
+      "description": "候选论文队列和重复项"
+    },
+    {
+      "href": "manifest.json",
+      "description": "发布摘要和页面入口清单"
+    }
+  ],
+  "commands": [
+    "python3 scripts/build_wiki.py docs",
+    "python3 scripts/check_quality.py docs",
+    "python3 scripts/validate_wiki.py docs --strict-taxonomy",
+    "python3 scripts/apply_library_metadata.py docs --input <csv> --write",
+    "python3 scripts/apply_taxonomy_aliases.py docs --write"
+  ]
+}
