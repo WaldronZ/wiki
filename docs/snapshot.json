@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T05:38:22",
+  "generated_at": "2026-06-12T05:43:09",
   "snapshot_id": "89f0dcec1638050c",
   "name": "AutoPaperReader Wiki",
   "count": 5,
@@ -127,13 +127,13 @@
       {
         "href": "index.html",
         "kind": "page",
-        "sha256": "71f4a98d6bda4710179742f72e5ba6906fb54a673a188af06d7bdd23bd72a64e",
+        "sha256": "a88f1a9cc394d12d029ef600105a07b86cdebe1eed22ca3a1ef33624fe44381e",
         "status": "ok"
       },
       {
         "href": "library.html",
         "kind": "page",
-        "sha256": "8417746116e5eab7621cf140e7e7882237e21e91222a4931d9b3e881bfe8eb6c",
+        "sha256": "4e4389769173b037aaaff99443cc6cf8ee4c72d0094989a19801e65ed3855362",
         "status": "ok"
       },
       {
@@ -193,13 +193,13 @@
       {
         "href": "workflow.html",
         "kind": "page",
-        "sha256": "6ac71b73d9227ed15d47bb2b7ef3655a2985a6bcf3e025f148f851b4e4f3c671",
+        "sha256": "0fc2d0a207bab0a9958de42cd77d83f0f31c388e9cfd5b9a0b66bf751e812257",
         "status": "ok"
       },
       {
         "href": "status.html",
         "kind": "page",
-        "sha256": "8c11cb5d68ca2090c7b242dddf2da47c4029d259e78141af6289df679f2a2235",
+        "sha256": "e392d272407ac7260f1631e6558efa416b366ae524a806a9cfab3d204902aed3",
         "status": "ok"
       },
       {
@@ -211,7 +211,7 @@
       {
         "href": "compare.html",
         "kind": "page",
-        "sha256": "5344f102c32cabf39dabe863ebcb01da5860bf9098e5c75a379e2dc27f74e6b1",
+        "sha256": "1b1a93102e18d3eaaeaa6f74b5d01d38b8b652ccc8b87556296156b495a6a4f7",
         "status": "ok"
       },
       {
@@ -235,7 +235,7 @@
       {
         "href": "scale.html",
         "kind": "page",
-        "sha256": "1e93561244afe23f68ce1e85038de9b84cb22230f73a59e7da81a6543e80651b",
+        "sha256": "fe83066e390efd84a2ef3fbbfa9e7c14ae161b69bf6e6a8bcf692d2f9e46d35b",
         "status": "ok"
       },
       {
@@ -259,7 +259,7 @@
       {
         "href": "catalog.html",
         "kind": "page",
-        "sha256": "1f610766a8821386b623e30462bba3c1c76f568f9f40c425fff49b35387524d0",
+        "sha256": "9838811e92922c5a677808e154fbd164238b70cae14641b5f2296e17664acbd0",
         "status": "ok"
       },
       {
@@ -283,7 +283,7 @@
       {
         "href": "registry.html",
         "kind": "page",
-        "sha256": "a9405b87a9f3f11e5c0eae880361c36a53d6d1af9de34f4c3d3d4339fbabd099",
+        "sha256": "c5458da324e43ea0f4002975986f2577329d256d99ccac5fbd0d86c9784e5454",
         "status": "ok"
       },
       {
@@ -313,13 +313,13 @@
       {
         "href": "timeline.html",
         "kind": "page",
-        "sha256": "c644b0e7813714b621f57ffcfff2beb9ea242fb24a3b9553f8c9885268ee1165",
+        "sha256": "7d7e4e8c740a80573890e625154a52905afe540316bfc3253ad1be574f1233bd",
         "status": "ok"
       },
       {
         "href": "matrix.html",
         "kind": "page",
-        "sha256": "5b13c34aece5c262edddf7673cecfa1a5bd73e8bbc552a88850a123b604b7a78",
+        "sha256": "7d8e5fb7c904862b32e18bcb7535af0dba073dec9350874c426382fa63d9f2be",
         "status": "ok"
       },
       {
@@ -337,7 +337,7 @@
       {
         "href": "papers.json",
         "kind": "data",
-        "sha256": "b103a8fd9a0e8c342245b5f0822427c72976b51bc14157cdd933ff8a36993c3f",
+        "sha256": "47e1c18b287afe0a03736ba554d891218ac522ca207aa4614444f54010f41b18",
         "status": "ok"
       },
       {
@@ -349,7 +349,7 @@
       {
         "href": "stats.json",
         "kind": "data",
-        "sha256": "24d5f54e128a173795b2e85b16093fcd1eb0401e09ab8e4311c3e3a55a34b29a",
+        "sha256": "21398321161ea6e53882bbca7fa3875dbf5e0f9e99c7449115e7608d67cb2823",
         "status": "ok"
       },
       {
@@ -385,13 +385,13 @@
       {
         "href": "workflow.json",
         "kind": "data",
-        "sha256": "fb97c88a6539fa0865c1b284104461f000ccce252effda45b38040a7058e2c8d",
+        "sha256": "9c76e09541800de451b9a2fe635126c75d016b150ec9f725ff7239d0985fd047",
         "status": "ok"
       },
       {
         "href": "status.json",
         "kind": "data",
-        "sha256": "7fee9836adbdbd781dd83f5ded9d9f086aed23dbb8d5f366325627800caf6cc9",
+        "sha256": "78e3526ccd85688dc08fdb31d61eb45fcb47556b64e30fb4f5053f67b26c6401",
         "status": "ok"
       },
       {
@@ -403,7 +403,7 @@
       {
         "href": "compare.json",
         "kind": "data",
-        "sha256": "7a56be3782d6736b0509fbfe6035132c770a87ebe423d8a33bd5dbe700fe73b2",
+        "sha256": "9b059eb66708216ee48d444175175454e923b76fffa00fb25adc523315be0a7a",
         "status": "ok"
       },
       {
@@ -427,7 +427,7 @@
       {
         "href": "scale.json",
         "kind": "data",
-        "sha256": "d0c382d4508eebaab373b685c9abcd99a4046da59ee848d708191ee65674a98a",
+        "sha256": "6d1fa4913fffc9b789dd3d80e4013200527f2f81f78bd618fdc32df8ae6c2fd4",
         "status": "ok"
       },
       {
@@ -451,7 +451,7 @@
       {
         "href": "catalog.json",
         "kind": "data",
-        "sha256": "1528a1e42dd2c589d8ee43dc57cb7cce5739efe1416260d638b87caa0db1d833",
+        "sha256": "6794ad695c3aeb4d9d1988fa64427bb25d5e324c5e5a7177ad43d27eb0cab5cf",
         "status": "ok"
       },
       {
@@ -475,7 +475,7 @@
       {
         "href": "registry.json",
         "kind": "data",
-        "sha256": "168cd5ee655d3f981205947d70b17bcbeb6629abd0ccec83e3b82bfa4e38bd7f",
+        "sha256": "9a396a66bad24229d7aaeaea62b02c9ff4e24ed91ab99d985e6d7ebf30011a5d",
         "status": "ok"
       },
       {
@@ -505,7 +505,7 @@
       {
         "href": "guides/taxonomy.json",
         "kind": "contract",
-        "sha256": "ef706874c7b4f7976824801d708b38e7eeef9690a6fa1a2c0d0dd16b86468a05",
+        "sha256": "b09873f53b4d1b8534aa48bb623d0b7bf74ab6abb1817f7d4e7e81fc650aa491",
         "status": "ok"
       }
     ]

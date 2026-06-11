@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T05:38:22",
+  "generated_at": "2026-06-12T05:43:09",
   "count": 5,
   "active_status_workflow": "personal",
   "workflow_count": 2,
@@ -31,6 +31,8 @@
           "label": "阅读状态",
           "configured_count": 5,
           "used_configured_count": 1,
+          "defined_count": 5,
+          "deprecated_count": 0,
           "empty_count": 0,
           "empty_slugs": [],
           "values": [
@@ -38,30 +40,70 @@
               "value": "unread",
               "count": 0,
               "configured": true,
+              "definition": {
+                "description": "Known paper that has not been opened or routed into a reading pass yet.",
+                "owner": "workflow",
+                "status": "active"
+              },
+              "definition_status": "active",
+              "description": "Known paper that has not been opened or routed into a reading pass yet.",
+              "owner_name": "workflow",
               "href": "library.html?workflow=personal&status=unread"
             },
             {
               "value": "skimmed",
               "count": 0,
               "configured": true,
+              "definition": {
+                "description": "Paper has received a quick pass; keep it visible for deeper reading or triage.",
+                "owner": "workflow",
+                "status": "active"
+              },
+              "definition_status": "active",
+              "description": "Paper has received a quick pass; keep it visible for deeper reading or triage.",
+              "owner_name": "workflow",
               "href": "library.html?workflow=personal&status=skimmed"
             },
             {
               "value": "reading",
               "count": 0,
               "configured": true,
+              "definition": {
+                "description": "Currently being read, annotated, reproduced, or used for an active synthesis task.",
+                "owner": "workflow",
+                "status": "active"
+              },
+              "definition_status": "active",
+              "description": "Currently being read, annotated, reproduced, or used for an active synthesis task.",
+              "owner_name": "workflow",
               "href": "library.html?workflow=personal&status=reading"
             },
             {
               "value": "read",
               "count": 5,
               "configured": true,
+              "definition": {
+                "description": "Main report is stable enough to use as reference material.",
+                "owner": "workflow",
+                "status": "active"
+              },
+              "definition_status": "active",
+              "description": "Main report is stable enough to use as reference material.",
+              "owner_name": "workflow",
               "href": "library.html?workflow=personal&status=read"
             },
             {
               "value": "archived",
               "count": 0,
               "configured": true,
+              "definition": {
+                "description": "Kept for provenance but no longer active in current queues or weekly review.",
+                "owner": "workflow",
+                "status": "active"
+              },
+              "definition_status": "active",
+              "description": "Kept for provenance but no longer active in current queues or weekly review.",
+              "owner_name": "workflow",
               "href": "library.html?workflow=personal&status=archived"
             }
           ],
@@ -72,6 +114,8 @@
           "label": "阅读阶段",
           "configured_count": 4,
           "used_configured_count": 1,
+          "defined_count": 4,
+          "deprecated_count": 0,
           "empty_count": 0,
           "empty_slugs": [],
           "values": [
@@ -79,24 +123,56 @@
               "value": "skim",
               "count": 0,
               "configured": true,
+              "definition": {
+                "description": "Fast pass for scope, claims, and whether the paper belongs in this library.",
+                "owner": "workflow",
+                "status": "active"
+              },
+              "definition_status": "active",
+              "description": "Fast pass for scope, claims, and whether the paper belongs in this library.",
+              "owner_name": "workflow",
               "href": "library.html?workflow=personal&stage=skim"
             },
             {
               "value": "normal_read",
               "count": 0,
               "configured": true,
+              "definition": {
+                "description": "Standard reading pass focused on method, experiments, and limitations.",
+                "owner": "workflow",
+                "status": "active"
+              },
+              "definition_status": "active",
+              "description": "Standard reading pass focused on method, experiments, and limitations.",
+              "owner_name": "workflow",
               "href": "library.html?workflow=personal&stage=normal_read"
             },
             {
               "value": "deep_read",
               "count": 5,
               "configured": true,
+              "definition": {
+                "description": "Detailed pass including equations, assumptions, ablations, and cross-paper comparison.",
+                "owner": "workflow",
+                "status": "active"
+              },
+              "definition_status": "active",
+              "description": "Detailed pass including equations, assumptions, ablations, and cross-paper comparison.",
+              "owner_name": "workflow",
               "href": "library.html?workflow=personal&stage=deep_read"
             },
             {
               "value": "code_checked",
               "count": 0,
               "configured": true,
+              "definition": {
+                "description": "Implementation, repository structure, or reproducibility notes have been checked.",
+                "owner": "workflow",
+                "status": "active"
+              },
+              "definition_status": "active",
+              "description": "Implementation, repository structure, or reproducibility notes have been checked.",
+              "owner_name": "workflow",
               "href": "library.html?workflow=personal&stage=code_checked"
             }
           ],
@@ -107,6 +183,8 @@
           "label": "复习阶段",
           "configured_count": 3,
           "used_configured_count": 0,
+          "defined_count": 3,
+          "deprecated_count": 0,
           "empty_count": 5,
           "empty_slugs": [
             "2307.08691-flashattention-2",
@@ -120,18 +198,42 @@
               "value": "fresh",
               "count": 0,
               "configured": true,
+              "definition": {
+                "description": "Recently reviewed; no immediate spaced-review action is needed.",
+                "owner": "workflow",
+                "status": "active"
+              },
+              "definition_status": "active",
+              "description": "Recently reviewed; no immediate spaced-review action is needed.",
+              "owner_name": "workflow",
               "href": "library.html?workflow=personal&reviewStage=fresh"
             },
             {
               "value": "due",
               "count": 0,
               "configured": true,
+              "definition": {
+                "description": "Ready for scheduled review, synthesis, or update against newer related work.",
+                "owner": "workflow",
+                "status": "active"
+              },
+              "definition_status": "active",
+              "description": "Ready for scheduled review, synthesis, or update against newer related work.",
+              "owner_name": "workflow",
               "href": "library.html?workflow=personal&reviewStage=due"
             },
             {
               "value": "reviewed",
               "count": 0,
               "configured": true,
+              "definition": {
+                "description": "Completed the planned review checkpoint.",
+                "owner": "workflow",
+                "status": "active"
+              },
+              "definition_status": "active",
+              "description": "Completed the planned review checkpoint.",
+              "owner_name": "workflow",
               "href": "library.html?workflow=personal&reviewStage=reviewed"
             }
           ],
@@ -140,6 +242,8 @@
       },
       "unconfigured_total": 0,
       "empty_total": 5,
+      "definition_total": 12,
+      "deprecated_total": 0,
       "board_href": "board.html?workflow=personal",
       "library_href": "library.html?workflow=personal"
     },
@@ -173,6 +277,8 @@
           "label": "阅读状态",
           "configured_count": 6,
           "used_configured_count": 0,
+          "defined_count": 7,
+          "deprecated_count": 0,
           "empty_count": 0,
           "empty_slugs": [],
           "values": [
@@ -180,36 +286,84 @@
               "value": "inbox",
               "count": 0,
               "configured": true,
+              "definition": {
+                "description": "Research workflow entry state for candidate papers that need triage.",
+                "owner": "workflow",
+                "status": "active"
+              },
+              "definition_status": "active",
+              "description": "Research workflow entry state for candidate papers that need triage.",
+              "owner_name": "workflow",
               "href": "library.html?workflow=research&status=inbox"
             },
             {
               "value": "triaged",
               "count": 0,
               "configured": true,
+              "definition": {
+                "description": "Research candidate has been classified and assigned a likely next action.",
+                "owner": "workflow",
+                "status": "active"
+              },
+              "definition_status": "active",
+              "description": "Research candidate has been classified and assigned a likely next action.",
+              "owner_name": "workflow",
               "href": "library.html?workflow=research&status=triaged"
             },
             {
               "value": "reading",
               "count": 0,
               "configured": true,
+              "definition": {
+                "description": "Currently being read, annotated, reproduced, or used for an active synthesis task.",
+                "owner": "workflow",
+                "status": "active"
+              },
+              "definition_status": "active",
+              "description": "Currently being read, annotated, reproduced, or used for an active synthesis task.",
+              "owner_name": "workflow",
               "href": "library.html?workflow=research&status=reading"
             },
             {
               "value": "implemented",
               "count": 0,
               "configured": true,
+              "definition": {
+                "description": "Core idea or code path has been implemented, reproduced, or mapped to local code.",
+                "owner": "workflow",
+                "status": "active"
+              },
+              "definition_status": "active",
+              "description": "Core idea or code path has been implemented, reproduced, or mapped to local code.",
+              "owner_name": "workflow",
               "href": "library.html?workflow=research&status=implemented"
             },
             {
               "value": "cited",
               "count": 0,
               "configured": true,
+              "definition": {
+                "description": "Paper has been used in a writeup, roadmap, experiment note, or related synthesis.",
+                "owner": "workflow",
+                "status": "active"
+              },
+              "definition_status": "active",
+              "description": "Paper has been used in a writeup, roadmap, experiment note, or related synthesis.",
+              "owner_name": "workflow",
               "href": "library.html?workflow=research&status=cited"
             },
             {
               "value": "archived",
               "count": 0,
               "configured": true,
+              "definition": {
+                "description": "Kept for provenance but no longer active in current queues or weekly review.",
+                "owner": "workflow",
+                "status": "active"
+              },
+              "definition_status": "active",
+              "description": "Kept for provenance but no longer active in current queues or weekly review.",
+              "owner_name": "workflow",
               "href": "library.html?workflow=research&status=archived"
             }
           ],
@@ -218,14 +372,22 @@
               "value": "read",
               "count": 5,
               "configured": false,
+              "definition": {
+                "description": "Main report is stable enough to use as reference material.",
+                "owner": "workflow",
+                "status": "active"
+              },
+              "definition_status": "active",
+              "description": "Main report is stable enough to use as reference material.",
+              "owner_name": "workflow",
+              "href": "library.html?workflow=research&status=read",
               "slugs": [
                 "2307.08691-flashattention-2",
                 "2501.01005-flashinfer",
                 "2602.06036-dflash",
                 "2604.11035-introspective-dlm",
                 "2605.12825-orthrus"
-              ],
-              "href": "library.html?workflow=research&status=read"
+              ]
             }
           ]
         },
@@ -234,6 +396,8 @@
           "label": "阅读阶段",
           "configured_count": 5,
           "used_configured_count": 1,
+          "defined_count": 5,
+          "deprecated_count": 0,
           "empty_count": 0,
           "empty_slugs": [],
           "values": [
@@ -241,30 +405,70 @@
               "value": "skim",
               "count": 0,
               "configured": true,
+              "definition": {
+                "description": "Fast pass for scope, claims, and whether the paper belongs in this library.",
+                "owner": "workflow",
+                "status": "active"
+              },
+              "definition_status": "active",
+              "description": "Fast pass for scope, claims, and whether the paper belongs in this library.",
+              "owner_name": "workflow",
               "href": "library.html?workflow=research&stage=skim"
             },
             {
               "value": "normal_read",
               "count": 0,
               "configured": true,
+              "definition": {
+                "description": "Standard reading pass focused on method, experiments, and limitations.",
+                "owner": "workflow",
+                "status": "active"
+              },
+              "definition_status": "active",
+              "description": "Standard reading pass focused on method, experiments, and limitations.",
+              "owner_name": "workflow",
               "href": "library.html?workflow=research&stage=normal_read"
             },
             {
               "value": "deep_read",
               "count": 5,
               "configured": true,
+              "definition": {
+                "description": "Detailed pass including equations, assumptions, ablations, and cross-paper comparison.",
+                "owner": "workflow",
+                "status": "active"
+              },
+              "definition_status": "active",
+              "description": "Detailed pass including equations, assumptions, ablations, and cross-paper comparison.",
+              "owner_name": "workflow",
               "href": "library.html?workflow=research&stage=deep_read"
             },
             {
               "value": "code_checked",
               "count": 0,
               "configured": true,
+              "definition": {
+                "description": "Implementation, repository structure, or reproducibility notes have been checked.",
+                "owner": "workflow",
+                "status": "active"
+              },
+              "definition_status": "active",
+              "description": "Implementation, repository structure, or reproducibility notes have been checked.",
+              "owner_name": "workflow",
               "href": "library.html?workflow=research&stage=code_checked"
             },
             {
               "value": "reproduced",
               "count": 0,
               "configured": true,
+              "definition": {
+                "description": "Key result, benchmark, or implementation behavior has been reproduced locally or in a controlled experiment.",
+                "owner": "workflow",
+                "status": "active"
+              },
+              "definition_status": "active",
+              "description": "Key result, benchmark, or implementation behavior has been reproduced locally or in a controlled experiment.",
+              "owner_name": "workflow",
               "href": "library.html?workflow=research&stage=reproduced"
             }
           ],
@@ -275,6 +479,8 @@
           "label": "复习阶段",
           "configured_count": 4,
           "used_configured_count": 0,
+          "defined_count": 4,
+          "deprecated_count": 0,
           "empty_count": 5,
           "empty_slugs": [
             "2307.08691-flashattention-2",
@@ -288,24 +494,56 @@
               "value": "fresh",
               "count": 0,
               "configured": true,
+              "definition": {
+                "description": "Recently reviewed; no immediate spaced-review action is needed.",
+                "owner": "workflow",
+                "status": "active"
+              },
+              "definition_status": "active",
+              "description": "Recently reviewed; no immediate spaced-review action is needed.",
+              "owner_name": "workflow",
               "href": "library.html?workflow=research&reviewStage=fresh"
             },
             {
               "value": "due",
               "count": 0,
               "configured": true,
+              "definition": {
+                "description": "Ready for scheduled review, synthesis, or update against newer related work.",
+                "owner": "workflow",
+                "status": "active"
+              },
+              "definition_status": "active",
+              "description": "Ready for scheduled review, synthesis, or update against newer related work.",
+              "owner_name": "workflow",
               "href": "library.html?workflow=research&reviewStage=due"
             },
             {
               "value": "reviewed",
               "count": 0,
               "configured": true,
+              "definition": {
+                "description": "Completed the planned review checkpoint.",
+                "owner": "workflow",
+                "status": "active"
+              },
+              "definition_status": "active",
+              "description": "Completed the planned review checkpoint.",
+              "owner_name": "workflow",
               "href": "library.html?workflow=research&reviewStage=reviewed"
             },
             {
               "value": "evergreen",
               "count": 0,
               "configured": true,
+              "definition": {
+                "description": "Stable foundational paper worth keeping in recurring review or teaching sets.",
+                "owner": "workflow",
+                "status": "active"
+              },
+              "definition_status": "active",
+              "description": "Stable foundational paper worth keeping in recurring review or teaching sets.",
+              "owner_name": "workflow",
               "href": "library.html?workflow=research&reviewStage=evergreen"
             }
           ],
@@ -314,6 +552,8 @@
       },
       "unconfigured_total": 1,
       "empty_total": 5,
+      "definition_total": 16,
+      "deprecated_total": 0,
       "board_href": "board.html?workflow=research",
       "library_href": "library.html?workflow=research"
     }

@@ -412,6 +412,13 @@ def configured_label_definitions(config: dict[str, Any]) -> dict[str, dict[str, 
     return cleaned
 
 
+def label_definition(field: str, value: str) -> dict[str, str]:
+    label = normalize_label(str(value or "").strip())
+    if not label:
+        return {}
+    return LABEL_DEFINITIONS.get(field, {}).get(label, {}).copy()
+
+
 def research_line_owner(line: str) -> dict[str, str]:
     return RESEARCH_LINE_OWNERS.get(str(line or "").strip(), {})
 
@@ -450,6 +457,7 @@ def control_options() -> dict[str, Any]:
         "shared_views": SHARED_VIEWS.copy(),
         "governance_policy": json.loads(json.dumps(GOVERNANCE_POLICY)),
         "research_line_owners": json.loads(json.dumps(RESEARCH_LINE_OWNERS)),
+        "label_definitions": json.loads(json.dumps(LABEL_DEFINITIONS)),
     }
 
 
@@ -1814,31 +1822,39 @@ def workflow_field_distribution(
         counts[value] += 1
         slugs_by_value[value].append(str(paper["slug"]))
 
-    values = [
-        {
+    def value_payload(value: str, configured_value: bool) -> dict[str, Any]:
+        definition = label_definition(field_name, value)
+        return {
             "value": value,
             "count": int(counts.get(value, 0)),
-            "configured": True,
+            "configured": configured_value,
+            "definition": definition,
+            "definition_status": definition.get("status", ""),
+            "description": definition.get("description", ""),
+            "owner_name": definition.get("owner", ""),
             "href": page_query_href("library.html", workflow=workflow_name, **{query_key: value}),
         }
+
+    values = [
+        value_payload(value, True)
         for value in configured
     ]
     unconfigured = [
         {
-            "value": value,
-            "count": int(counts[value]),
-            "configured": False,
+            **value_payload(value, False),
             "slugs": sorted(slugs_by_value[value]),
-            "href": page_query_href("library.html", workflow=workflow_name, **{query_key: value}),
         }
         for value in sorted(counts, key=lambda item: (-counts[item], item.lower()))
         if value not in configured_set
     ]
+    all_values = values + unconfigured
     return {
         "field": field_name,
         "label": spec["label"],
         "configured_count": len(configured),
         "used_configured_count": sum(1 for value in configured if counts.get(value, 0)),
+        "defined_count": sum(1 for item in all_values if item.get("definition")),
+        "deprecated_count": sum(1 for item in all_values if item.get("definition_status") == "deprecated"),
         "empty_count": len(empty_slugs),
         "empty_slugs": sorted(empty_slugs),
         "values": values,
@@ -1865,6 +1881,8 @@ def build_workflow_payload(papers: list[dict[str, Any]]) -> dict[str, Any]:
         }
         unconfigured_total = sum(len(field["unconfigured"]) for field in fields.values())
         empty_total = sum(int(field["empty_count"]) for field in fields.values())
+        definition_total = sum(int(field["defined_count"]) for field in fields.values())
+        deprecated_total = sum(int(field["deprecated_count"]) for field in fields.values())
         workflow_items.append(
             {
                 "name": name_text,
@@ -1875,6 +1893,8 @@ def build_workflow_payload(papers: list[dict[str, Any]]) -> dict[str, Any]:
                 "fields": fields,
                 "unconfigured_total": unconfigured_total,
                 "empty_total": empty_total,
+                "definition_total": definition_total,
+                "deprecated_total": deprecated_total,
                 "board_href": page_query_href("board.html", workflow=name_text),
                 "library_href": page_query_href("library.html", workflow=name_text),
             }
@@ -1919,6 +1939,9 @@ def build_workflow_payload(papers: list[dict[str, Any]]) -> dict[str, Any]:
     ]
     if empty_statuses:
         recommendations.append(f"当前 workflow 有 {len(empty_statuses)} 个空 status，可保留为候选列，或在 workflow 中移除。")
+    deprecated_total = int(active_item.get("deprecated_total") or 0)
+    if deprecated_total:
+        recommendations.append(f"当前 workflow 有 {deprecated_total} 个 deprecated 状态/阶段定义，建议迁移或移出 active workflow。")
     if not recommendations:
         recommendations.append("当前状态工作流和论文 frontmatter 对齐良好。")
 
@@ -7983,16 +8006,24 @@ def render_workflow(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     active_fields = active.get("fields") or {}
     active_statuses = active_fields.get("status", {}).get("values", [])
 
+    def workflow_definition_cell(item: dict[str, Any]) -> str:
+        status = str(item.get("definition_status") or "")
+        owner = str(item.get("owner_name") or "")
+        description = str(item.get("description") or "")
+        headline = " / ".join(part for part in (status, owner) if part) or "-"
+        return f"{html.escape(headline)}<div class=\"meta\">{html.escape(description or 'No definition')}</div>"
+
     status_rows = "".join(
         "<tr>"
         f'<td><a href="{html.escape(str(item["href"]))}">{html.escape(str(item["value"]))}</a></td>'
         f"<td>{int(item['count'])}</td>"
+        f"<td>{workflow_definition_cell(item)}</td>"
         f'<td><a href="{html.escape(page_query_href("board.html", workflow=str(active.get("name") or ""), status=str(item["value"])))}">看板</a></td>'
         "</tr>"
         for item in active_statuses
     )
     if not status_rows:
-        status_rows = '<tr><td colspan="3" class="empty">当前 workflow 没有 status 配置。</td></tr>'
+        status_rows = '<tr><td colspan="4" class="empty">当前 workflow 没有 status 配置。</td></tr>'
 
     workflow_rows = "".join(
         "<tr>"
@@ -8000,6 +8031,7 @@ def render_workflow(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         f"<td>{len(workflow['status_values'])}</td>"
         f"<td>{len(workflow['reading_stage_values'])}</td>"
         f"<td>{len(workflow['review_stage_values'])}</td>"
+        f"<td>{workflow['definition_total']}</td>"
         f"<td>{workflow['unconfigured_total']}</td>"
         f"<td>{workflow['empty_total']}</td>"
         f'<td><a href="{html.escape(str(workflow["board_href"]))}">打开看板</a></td>'
@@ -8007,7 +8039,7 @@ def render_workflow(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         for workflow in payload["workflows"]
     )
     if not workflow_rows:
-        workflow_rows = '<tr><td colspan="7" class="empty">还没有命名 workflow。</td></tr>'
+        workflow_rows = '<tr><td colspan="8" class="empty">还没有命名 workflow。</td></tr>'
 
     drift_rows = "".join(
         "<tr>"
@@ -8029,6 +8061,7 @@ def render_workflow(report_dir: Path, papers: list[dict[str, Any]]) -> None:
             "<tr>"
             f'<td><a href="{html.escape(str(item["href"]))}">{html.escape(str(item["value"]))}</a></td>'
             f"<td>{int(item['count'])}</td>"
+            f"<td>{workflow_definition_cell(item)}</td>"
             f"<td>{'used' if int(item['count']) else 'empty'}</td>"
             "</tr>"
             for item in values
@@ -8037,16 +8070,17 @@ def render_workflow(report_dir: Path, papers: list[dict[str, Any]]) -> None:
             "<tr>"
             f'<td><a href="{html.escape(str(item["href"]))}">{html.escape(str(item["value"]))}</a></td>'
             f"<td>{int(item['count'])}</td>"
+            f"<td>{workflow_definition_cell(item)}</td>"
             "<td>unconfigured</td>"
             "</tr>"
             for item in field.get("unconfigured", [])
         )
-        table_rows = rows + extras or '<tr><td colspan="3" class="empty">没有可展示的值。</td></tr>'
+        table_rows = rows + extras or '<tr><td colspan="4" class="empty">没有可展示的值。</td></tr>'
         field_sections.append(
             f"""
   <section>
     <h2 class="section-title">{html.escape(str(field.get("label") or field_name))}</h2>
-    <div class="table-wrap"><table class="data-table"><thead><tr><th>值</th><th>论文</th><th>状态</th></tr></thead><tbody>{table_rows}</tbody></table></div>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>值</th><th>论文</th><th>定义</th><th>状态</th></tr></thead><tbody>{table_rows}</tbody></table></div>
   </section>"""
         )
 
@@ -8113,7 +8147,7 @@ def render_workflow(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <section class="workflow-summary">
     <div>
       <h2 class="section-title">当前 Status 分布</h2>
-      <div class="table-wrap"><table class="data-table"><thead><tr><th>Status</th><th>论文</th><th>入口</th></tr></thead><tbody>{status_rows}</tbody></table></div>
+      <div class="table-wrap"><table class="data-table"><thead><tr><th>Status</th><th>论文</th><th>定义</th><th>入口</th></tr></thead><tbody>{status_rows}</tbody></table></div>
     </div>
     <div class="workflow-command-panel">
       <strong>推荐动作</strong>
@@ -8124,7 +8158,7 @@ def render_workflow(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   </section>
   <section>
     <h2 class="section-title">Workflow 对比</h2>
-    <div class="table-wrap"><table class="data-table"><thead><tr><th>Workflow</th><th>Status</th><th>Reading</th><th>Review</th><th>未配置值</th><th>空字段</th><th>入口</th></tr></thead><tbody>{workflow_rows}</tbody></table></div>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>Workflow</th><th>Status</th><th>Reading</th><th>Review</th><th>已定义</th><th>未配置值</th><th>空字段</th><th>入口</th></tr></thead><tbody>{workflow_rows}</tbody></table></div>
   </section>
   <section>
     <h2 class="section-title">当前 Drift</h2>
@@ -8286,19 +8320,39 @@ function countFor(field, value) {{
   return statusPayload.papers.filter(paper => paper[field] === value).length;
 }}
 
-function mergeValues(configured, observed) {{
-  const seen = new Set();
-  return [...(configured || []), ...(observed || [])].filter(value => {{
-    if (!value || seen.has(value)) return false;
-    seen.add(value);
-    return true;
+function workflowItems(workflow, fieldName, valueKey, paperField) {{
+  const field = (workflow.fields || {{}})[fieldName] || {{}};
+  const configuredItems = Array.isArray(field.values) ? field.values : (workflow[valueKey] || []).map(value => ({{ value }}));
+  const unconfiguredItems = Array.isArray(field.unconfigured) ? field.unconfigured : [];
+  const byValue = new Map();
+  [...configuredItems, ...unconfiguredItems].forEach(item => {{
+    if (item && item.value && !byValue.has(item.value)) byValue.set(item.value, item);
   }});
+  uniqueObserved(paperField).forEach(value => {{
+    if (!byValue.has(value)) byValue.set(value, {{ value, count: countFor(paperField, value), configured: false }});
+  }});
+  return Array.from(byValue.values());
 }}
 
-function fillSelect(select, label, values, field) {{
+function definitionText(item) {{
+  const bits = [item.definition_status, item.owner_name].filter(Boolean);
+  return {{
+    head: bits.join(" / ") || "No definition",
+    body: item.description || "还没有为这个状态值写 description。",
+  }};
+}}
+
+function fillSelect(select, label, items, field) {{
   const current = select.value;
   select.replaceChildren(new Option(label, ""));
-  values.forEach(value => select.appendChild(new Option(`${{value}} (${{countFor(field, value)}})`, value)));
+  const values = items.map(item => item.value).filter(Boolean);
+  items.forEach(item => {{
+    const value = item.value;
+    const option = new Option(`${{value}} (${{countFor(field, value)}})`, value);
+    const definition = definitionText(item);
+    option.title = `${{definition.head}} — ${{definition.body}}`;
+    select.appendChild(option);
+  }});
   select.value = values.includes(current) ? current : "";
 }}
 
@@ -8334,21 +8388,22 @@ function renderConfig(workflow) {{
   statusConfigPreview.value = JSON.stringify(config, null, 2);
 }}
 
-function renderChoices(workflow) {{
-  const statusValues = mergeValues(workflow.status_values, uniqueObserved("status"));
+function renderChoices(workflow, statusItems) {{
   statusChoices.replaceChildren();
-  statusValues.forEach(value => {{
+  statusItems.forEach(item => {{
+    const value = item.value;
+    const definition = definitionText(item);
     const card = document.createElement("button");
     card.type = "button";
     card.className = "status-choice";
-    card.innerHTML = `<strong>${{value}}</strong><span>${{countFor("status", value)}} 篇论文</span>`;
+    card.innerHTML = `<strong>${{value}}</strong><span>${{countFor("status", value)}} 篇论文</span><span>${{definition.head}}</span><span>${{definition.body}}</span>`;
     card.addEventListener("click", () => {{
       statusValue.value = value;
       renderStatus();
     }});
     statusChoices.appendChild(card);
   }});
-  if (!statusValues.length) {{
+  if (!statusItems.length) {{
     const empty = document.createElement("p");
     empty.className = "empty";
     empty.textContent = "当前 workflow 没有 status 候选。";
@@ -8396,10 +8451,13 @@ function syncLinks() {{
 
 function renderStatus() {{
   const workflow = workflowByName(statusWorkflow.value);
-  fillSelect(statusValue, "全部状态", mergeValues(workflow.status_values, uniqueObserved("status")), "status");
-  fillSelect(statusStage, "全部阅读阶段", mergeValues(workflow.reading_stage_values, uniqueObserved("reading_stage")), "reading_stage");
-  fillSelect(statusReview, "全部复习阶段", mergeValues(workflow.review_stage_values, uniqueObserved("review_stage")), "review_stage");
-  renderChoices(workflow);
+  const statusItems = workflowItems(workflow, "status", "status_values", "status");
+  const stageItems = workflowItems(workflow, "reading_stage", "reading_stage_values", "reading_stage");
+  const reviewItems = workflowItems(workflow, "review_stage", "review_stage_values", "review_stage");
+  fillSelect(statusValue, "全部状态", statusItems, "status");
+  fillSelect(statusStage, "全部阅读阶段", stageItems, "reading_stage");
+  fillSelect(statusReview, "全部复习阶段", reviewItems, "review_stage");
+  renderChoices(workflow, statusItems);
   renderConfig(workflow);
   renderRows();
   syncLinks();
@@ -13334,7 +13392,7 @@ def build_registry_report(papers: list[dict[str, Any]]) -> dict[str, Any]:
             record = ensure_record(str(value))
             value_papers = grouped_papers.get(str(value), [])
             field_configured = str(value) in configured
-            definition = LABEL_DEFINITIONS.get(field, {}).get(str(value), {})
+            definition = label_definition(field, str(value))
             if field_configured:
                 record["configured"] = True
                 record["configured_fields"].append(field)

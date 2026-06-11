@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-06-12T05:38:22",
+  "generated_at": "2026-06-12T05:43:09",
   "count": 5,
-  "label_count": 68,
-  "configured_label_count": 26,
+  "label_count": 74,
+  "configured_label_count": 32,
   "alias_count": 3,
   "labels": [
     {
@@ -2685,7 +2685,12 @@
           "query_key": "status",
           "count": 0,
           "configured": true,
-          "href": "library.html?status=archived"
+          "href": "library.html?status=archived",
+          "definition": {
+            "description": "Kept for provenance but no longer active in current queues or weekly review.",
+            "owner": "workflow",
+            "status": "active"
+          }
         }
       ],
       "field_names": [
@@ -2701,12 +2706,21 @@
       "configured_fields": [
         "status"
       ],
-      "definitions": [],
-      "definition_count": 0,
-      "definition_status": "",
-      "description": "",
-      "owner": {},
-      "owner_name": "",
+      "definitions": [
+        {
+          "field": "status",
+          "description": "Kept for provenance but no longer active in current queues or weekly review.",
+          "owner": "workflow",
+          "status": "active"
+        }
+      ],
+      "definition_count": 1,
+      "definition_status": "active",
+      "description": "Kept for provenance but no longer active in current queues or weekly review.",
+      "owner": {
+        "owner": "workflow"
+      },
+      "owner_name": "workflow",
       "signals": [
         "unused_configured"
       ],
@@ -2756,6 +2770,61 @@
       "query_href": "library.html?role=baseline"
     },
     {
+      "id": "cited",
+      "label": "cited",
+      "key": "cited",
+      "fields": [
+        {
+          "field": "status",
+          "label": "阅读状态",
+          "english": "Status",
+          "query_key": "status",
+          "count": 0,
+          "configured": true,
+          "href": "library.html?status=cited",
+          "definition": {
+            "description": "Paper has been used in a writeup, roadmap, experiment note, or related synthesis.",
+            "owner": "workflow",
+            "status": "active"
+          }
+        }
+      ],
+      "field_names": [
+        "status"
+      ],
+      "total_count": 0,
+      "paper_count": 0,
+      "slugs": [],
+      "papers": [],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": true,
+      "configured_fields": [
+        "status"
+      ],
+      "definitions": [
+        {
+          "field": "status",
+          "description": "Paper has been used in a writeup, roadmap, experiment note, or related synthesis.",
+          "owner": "workflow",
+          "status": "active"
+        }
+      ],
+      "definition_count": 1,
+      "definition_status": "active",
+      "description": "Paper has been used in a writeup, roadmap, experiment note, or related synthesis.",
+      "owner": {
+        "owner": "workflow"
+      },
+      "owner_name": "workflow",
+      "signals": [
+        "unused_configured"
+      ],
+      "severity": "medium",
+      "recommended_action": "配置中存在但当前未使用；可保留为预设，也可移除以降低选择噪音。",
+      "query_href": "library.html?status=cited"
+    },
+    {
       "id": "code-checked",
       "label": "code_checked",
       "key": "code checked",
@@ -2767,7 +2836,12 @@
           "query_key": "stage",
           "count": 0,
           "configured": true,
-          "href": "library.html?stage=code_checked"
+          "href": "library.html?stage=code_checked",
+          "definition": {
+            "description": "Implementation, repository structure, or reproducibility notes have been checked.",
+            "owner": "workflow",
+            "status": "active"
+          }
         }
       ],
       "field_names": [
@@ -2783,12 +2857,21 @@
       "configured_fields": [
         "reading_stage"
       ],
-      "definitions": [],
-      "definition_count": 0,
-      "definition_status": "",
-      "description": "",
-      "owner": {},
-      "owner_name": "",
+      "definitions": [
+        {
+          "field": "reading_stage",
+          "description": "Implementation, repository structure, or reproducibility notes have been checked.",
+          "owner": "workflow",
+          "status": "active"
+        }
+      ],
+      "definition_count": 1,
+      "definition_status": "active",
+      "description": "Implementation, repository structure, or reproducibility notes have been checked.",
+      "owner": {
+        "owner": "workflow"
+      },
+      "owner_name": "workflow",
       "signals": [
         "unused_configured"
       ],
@@ -2808,7 +2891,12 @@
           "query_key": "reviewStage",
           "count": 0,
           "configured": true,
-          "href": "library.html?reviewStage=due"
+          "href": "library.html?reviewStage=due",
+          "definition": {
+            "description": "Ready for scheduled review, synthesis, or update against newer related work.",
+            "owner": "workflow",
+            "status": "active"
+          }
         }
       ],
       "field_names": [
@@ -2824,18 +2912,82 @@
       "configured_fields": [
         "review_stage"
       ],
-      "definitions": [],
-      "definition_count": 0,
-      "definition_status": "",
-      "description": "",
-      "owner": {},
-      "owner_name": "",
+      "definitions": [
+        {
+          "field": "review_stage",
+          "description": "Ready for scheduled review, synthesis, or update against newer related work.",
+          "owner": "workflow",
+          "status": "active"
+        }
+      ],
+      "definition_count": 1,
+      "definition_status": "active",
+      "description": "Ready for scheduled review, synthesis, or update against newer related work.",
+      "owner": {
+        "owner": "workflow"
+      },
+      "owner_name": "workflow",
       "signals": [
         "unused_configured"
       ],
       "severity": "medium",
       "recommended_action": "配置中存在但当前未使用；可保留为预设，也可移除以降低选择噪音。",
       "query_href": "library.html?reviewStage=due"
+    },
+    {
+      "id": "evergreen",
+      "label": "evergreen",
+      "key": "evergreen",
+      "fields": [
+        {
+          "field": "review_stage",
+          "label": "复习阶段",
+          "english": "Review stage",
+          "query_key": "reviewStage",
+          "count": 0,
+          "configured": true,
+          "href": "library.html?reviewStage=evergreen",
+          "definition": {
+            "description": "Stable foundational paper worth keeping in recurring review or teaching sets.",
+            "owner": "workflow",
+            "status": "active"
+          }
+        }
+      ],
+      "field_names": [
+        "review_stage"
+      ],
+      "total_count": 0,
+      "paper_count": 0,
+      "slugs": [],
+      "papers": [],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": true,
+      "configured_fields": [
+        "review_stage"
+      ],
+      "definitions": [
+        {
+          "field": "review_stage",
+          "description": "Stable foundational paper worth keeping in recurring review or teaching sets.",
+          "owner": "workflow",
+          "status": "active"
+        }
+      ],
+      "definition_count": 1,
+      "definition_status": "active",
+      "description": "Stable foundational paper worth keeping in recurring review or teaching sets.",
+      "owner": {
+        "owner": "workflow"
+      },
+      "owner_name": "workflow",
+      "signals": [
+        "unused_configured"
+      ],
+      "severity": "medium",
+      "recommended_action": "配置中存在但当前未使用；可保留为预设，也可移除以降低选择噪音。",
+      "query_href": "library.html?reviewStage=evergreen"
     },
     {
       "id": "fresh",
@@ -2849,7 +3001,12 @@
           "query_key": "reviewStage",
           "count": 0,
           "configured": true,
-          "href": "library.html?reviewStage=fresh"
+          "href": "library.html?reviewStage=fresh",
+          "definition": {
+            "description": "Recently reviewed; no immediate spaced-review action is needed.",
+            "owner": "workflow",
+            "status": "active"
+          }
         }
       ],
       "field_names": [
@@ -2865,18 +3022,137 @@
       "configured_fields": [
         "review_stage"
       ],
-      "definitions": [],
-      "definition_count": 0,
-      "definition_status": "",
-      "description": "",
-      "owner": {},
-      "owner_name": "",
+      "definitions": [
+        {
+          "field": "review_stage",
+          "description": "Recently reviewed; no immediate spaced-review action is needed.",
+          "owner": "workflow",
+          "status": "active"
+        }
+      ],
+      "definition_count": 1,
+      "definition_status": "active",
+      "description": "Recently reviewed; no immediate spaced-review action is needed.",
+      "owner": {
+        "owner": "workflow"
+      },
+      "owner_name": "workflow",
       "signals": [
         "unused_configured"
       ],
       "severity": "medium",
       "recommended_action": "配置中存在但当前未使用；可保留为预设，也可移除以降低选择噪音。",
       "query_href": "library.html?reviewStage=fresh"
+    },
+    {
+      "id": "implemented",
+      "label": "implemented",
+      "key": "implemented",
+      "fields": [
+        {
+          "field": "status",
+          "label": "阅读状态",
+          "english": "Status",
+          "query_key": "status",
+          "count": 0,
+          "configured": true,
+          "href": "library.html?status=implemented",
+          "definition": {
+            "description": "Core idea or code path has been implemented, reproduced, or mapped to local code.",
+            "owner": "workflow",
+            "status": "active"
+          }
+        }
+      ],
+      "field_names": [
+        "status"
+      ],
+      "total_count": 0,
+      "paper_count": 0,
+      "slugs": [],
+      "papers": [],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": true,
+      "configured_fields": [
+        "status"
+      ],
+      "definitions": [
+        {
+          "field": "status",
+          "description": "Core idea or code path has been implemented, reproduced, or mapped to local code.",
+          "owner": "workflow",
+          "status": "active"
+        }
+      ],
+      "definition_count": 1,
+      "definition_status": "active",
+      "description": "Core idea or code path has been implemented, reproduced, or mapped to local code.",
+      "owner": {
+        "owner": "workflow"
+      },
+      "owner_name": "workflow",
+      "signals": [
+        "unused_configured"
+      ],
+      "severity": "medium",
+      "recommended_action": "配置中存在但当前未使用；可保留为预设，也可移除以降低选择噪音。",
+      "query_href": "library.html?status=implemented"
+    },
+    {
+      "id": "inbox",
+      "label": "inbox",
+      "key": "inbox",
+      "fields": [
+        {
+          "field": "status",
+          "label": "阅读状态",
+          "english": "Status",
+          "query_key": "status",
+          "count": 0,
+          "configured": true,
+          "href": "library.html?status=inbox",
+          "definition": {
+            "description": "Research workflow entry state for candidate papers that need triage.",
+            "owner": "workflow",
+            "status": "active"
+          }
+        }
+      ],
+      "field_names": [
+        "status"
+      ],
+      "total_count": 0,
+      "paper_count": 0,
+      "slugs": [],
+      "papers": [],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": true,
+      "configured_fields": [
+        "status"
+      ],
+      "definitions": [
+        {
+          "field": "status",
+          "description": "Research workflow entry state for candidate papers that need triage.",
+          "owner": "workflow",
+          "status": "active"
+        }
+      ],
+      "definition_count": 1,
+      "definition_status": "active",
+      "description": "Research workflow entry state for candidate papers that need triage.",
+      "owner": {
+        "owner": "workflow"
+      },
+      "owner_name": "workflow",
+      "signals": [
+        "unused_configured"
+      ],
+      "severity": "medium",
+      "recommended_action": "配置中存在但当前未使用；可保留为预设，也可移除以降低选择噪音。",
+      "query_href": "library.html?status=inbox"
     },
     {
       "id": "main",
@@ -2931,7 +3207,12 @@
           "query_key": "stage",
           "count": 0,
           "configured": true,
-          "href": "library.html?stage=normal_read"
+          "href": "library.html?stage=normal_read",
+          "definition": {
+            "description": "Standard reading pass focused on method, experiments, and limitations.",
+            "owner": "workflow",
+            "status": "active"
+          }
         }
       ],
       "field_names": [
@@ -2947,12 +3228,21 @@
       "configured_fields": [
         "reading_stage"
       ],
-      "definitions": [],
-      "definition_count": 0,
-      "definition_status": "",
-      "description": "",
-      "owner": {},
-      "owner_name": "",
+      "definitions": [
+        {
+          "field": "reading_stage",
+          "description": "Standard reading pass focused on method, experiments, and limitations.",
+          "owner": "workflow",
+          "status": "active"
+        }
+      ],
+      "definition_count": 1,
+      "definition_status": "active",
+      "description": "Standard reading pass focused on method, experiments, and limitations.",
+      "owner": {
+        "owner": "workflow"
+      },
+      "owner_name": "workflow",
       "signals": [
         "unused_configured"
       ],
@@ -2972,7 +3262,12 @@
           "query_key": "status",
           "count": 0,
           "configured": true,
-          "href": "library.html?status=reading"
+          "href": "library.html?status=reading",
+          "definition": {
+            "description": "Currently being read, annotated, reproduced, or used for an active synthesis task.",
+            "owner": "workflow",
+            "status": "active"
+          }
         }
       ],
       "field_names": [
@@ -2988,18 +3283,82 @@
       "configured_fields": [
         "status"
       ],
-      "definitions": [],
-      "definition_count": 0,
-      "definition_status": "",
-      "description": "",
-      "owner": {},
-      "owner_name": "",
+      "definitions": [
+        {
+          "field": "status",
+          "description": "Currently being read, annotated, reproduced, or used for an active synthesis task.",
+          "owner": "workflow",
+          "status": "active"
+        }
+      ],
+      "definition_count": 1,
+      "definition_status": "active",
+      "description": "Currently being read, annotated, reproduced, or used for an active synthesis task.",
+      "owner": {
+        "owner": "workflow"
+      },
+      "owner_name": "workflow",
       "signals": [
         "unused_configured"
       ],
       "severity": "medium",
       "recommended_action": "配置中存在但当前未使用；可保留为预设，也可移除以降低选择噪音。",
       "query_href": "library.html?status=reading"
+    },
+    {
+      "id": "reproduced",
+      "label": "reproduced",
+      "key": "reproduced",
+      "fields": [
+        {
+          "field": "reading_stage",
+          "label": "阅读阶段",
+          "english": "Reading stage",
+          "query_key": "stage",
+          "count": 0,
+          "configured": true,
+          "href": "library.html?stage=reproduced",
+          "definition": {
+            "description": "Key result, benchmark, or implementation behavior has been reproduced locally or in a controlled experiment.",
+            "owner": "workflow",
+            "status": "active"
+          }
+        }
+      ],
+      "field_names": [
+        "reading_stage"
+      ],
+      "total_count": 0,
+      "paper_count": 0,
+      "slugs": [],
+      "papers": [],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": true,
+      "configured_fields": [
+        "reading_stage"
+      ],
+      "definitions": [
+        {
+          "field": "reading_stage",
+          "description": "Key result, benchmark, or implementation behavior has been reproduced locally or in a controlled experiment.",
+          "owner": "workflow",
+          "status": "active"
+        }
+      ],
+      "definition_count": 1,
+      "definition_status": "active",
+      "description": "Key result, benchmark, or implementation behavior has been reproduced locally or in a controlled experiment.",
+      "owner": {
+        "owner": "workflow"
+      },
+      "owner_name": "workflow",
+      "signals": [
+        "unused_configured"
+      ],
+      "severity": "medium",
+      "recommended_action": "配置中存在但当前未使用；可保留为预设，也可移除以降低选择噪音。",
+      "query_href": "library.html?stage=reproduced"
     },
     {
       "id": "reviewed",
@@ -3013,7 +3372,12 @@
           "query_key": "reviewStage",
           "count": 0,
           "configured": true,
-          "href": "library.html?reviewStage=reviewed"
+          "href": "library.html?reviewStage=reviewed",
+          "definition": {
+            "description": "Completed the planned review checkpoint.",
+            "owner": "workflow",
+            "status": "active"
+          }
         }
       ],
       "field_names": [
@@ -3029,12 +3393,21 @@
       "configured_fields": [
         "review_stage"
       ],
-      "definitions": [],
-      "definition_count": 0,
-      "definition_status": "",
-      "description": "",
-      "owner": {},
-      "owner_name": "",
+      "definitions": [
+        {
+          "field": "review_stage",
+          "description": "Completed the planned review checkpoint.",
+          "owner": "workflow",
+          "status": "active"
+        }
+      ],
+      "definition_count": 1,
+      "definition_status": "active",
+      "description": "Completed the planned review checkpoint.",
+      "owner": {
+        "owner": "workflow"
+      },
+      "owner_name": "workflow",
       "signals": [
         "unused_configured"
       ],
@@ -3054,7 +3427,12 @@
           "query_key": "stage",
           "count": 0,
           "configured": true,
-          "href": "library.html?stage=skim"
+          "href": "library.html?stage=skim",
+          "definition": {
+            "description": "Fast pass for scope, claims, and whether the paper belongs in this library.",
+            "owner": "workflow",
+            "status": "active"
+          }
         }
       ],
       "field_names": [
@@ -3070,12 +3448,21 @@
       "configured_fields": [
         "reading_stage"
       ],
-      "definitions": [],
-      "definition_count": 0,
-      "definition_status": "",
-      "description": "",
-      "owner": {},
-      "owner_name": "",
+      "definitions": [
+        {
+          "field": "reading_stage",
+          "description": "Fast pass for scope, claims, and whether the paper belongs in this library.",
+          "owner": "workflow",
+          "status": "active"
+        }
+      ],
+      "definition_count": 1,
+      "definition_status": "active",
+      "description": "Fast pass for scope, claims, and whether the paper belongs in this library.",
+      "owner": {
+        "owner": "workflow"
+      },
+      "owner_name": "workflow",
       "signals": [
         "unused_configured"
       ],
@@ -3095,7 +3482,12 @@
           "query_key": "status",
           "count": 0,
           "configured": true,
-          "href": "library.html?status=skimmed"
+          "href": "library.html?status=skimmed",
+          "definition": {
+            "description": "Paper has received a quick pass; keep it visible for deeper reading or triage.",
+            "owner": "workflow",
+            "status": "active"
+          }
         }
       ],
       "field_names": [
@@ -3111,12 +3503,21 @@
       "configured_fields": [
         "status"
       ],
-      "definitions": [],
-      "definition_count": 0,
-      "definition_status": "",
-      "description": "",
-      "owner": {},
-      "owner_name": "",
+      "definitions": [
+        {
+          "field": "status",
+          "description": "Paper has received a quick pass; keep it visible for deeper reading or triage.",
+          "owner": "workflow",
+          "status": "active"
+        }
+      ],
+      "definition_count": 1,
+      "definition_status": "active",
+      "description": "Paper has received a quick pass; keep it visible for deeper reading or triage.",
+      "owner": {
+        "owner": "workflow"
+      },
+      "owner_name": "workflow",
       "signals": [
         "unused_configured"
       ],
@@ -3166,9 +3567,9 @@
       "query_href": "library.html?role=survey"
     },
     {
-      "id": "unread",
-      "label": "unread",
-      "key": "unread",
+      "id": "triaged",
+      "label": "triaged",
+      "key": "triaged",
       "fields": [
         {
           "field": "status",
@@ -3177,7 +3578,12 @@
           "query_key": "status",
           "count": 0,
           "configured": true,
-          "href": "library.html?status=unread"
+          "href": "library.html?status=triaged",
+          "definition": {
+            "description": "Research candidate has been classified and assigned a likely next action.",
+            "owner": "workflow",
+            "status": "active"
+          }
         }
       ],
       "field_names": [
@@ -3193,12 +3599,76 @@
       "configured_fields": [
         "status"
       ],
-      "definitions": [],
-      "definition_count": 0,
-      "definition_status": "",
-      "description": "",
-      "owner": {},
-      "owner_name": "",
+      "definitions": [
+        {
+          "field": "status",
+          "description": "Research candidate has been classified and assigned a likely next action.",
+          "owner": "workflow",
+          "status": "active"
+        }
+      ],
+      "definition_count": 1,
+      "definition_status": "active",
+      "description": "Research candidate has been classified and assigned a likely next action.",
+      "owner": {
+        "owner": "workflow"
+      },
+      "owner_name": "workflow",
+      "signals": [
+        "unused_configured"
+      ],
+      "severity": "medium",
+      "recommended_action": "配置中存在但当前未使用；可保留为预设，也可移除以降低选择噪音。",
+      "query_href": "library.html?status=triaged"
+    },
+    {
+      "id": "unread",
+      "label": "unread",
+      "key": "unread",
+      "fields": [
+        {
+          "field": "status",
+          "label": "阅读状态",
+          "english": "Status",
+          "query_key": "status",
+          "count": 0,
+          "configured": true,
+          "href": "library.html?status=unread",
+          "definition": {
+            "description": "Known paper that has not been opened or routed into a reading pass yet.",
+            "owner": "workflow",
+            "status": "active"
+          }
+        }
+      ],
+      "field_names": [
+        "status"
+      ],
+      "total_count": 0,
+      "paper_count": 0,
+      "slugs": [],
+      "papers": [],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": true,
+      "configured_fields": [
+        "status"
+      ],
+      "definitions": [
+        {
+          "field": "status",
+          "description": "Known paper that has not been opened or routed into a reading pass yet.",
+          "owner": "workflow",
+          "status": "active"
+        }
+      ],
+      "definition_count": 1,
+      "definition_status": "active",
+      "description": "Known paper that has not been opened or routed into a reading pass yet.",
+      "owner": {
+        "owner": "workflow"
+      },
+      "owner_name": "workflow",
       "signals": [
         "unused_configured"
       ],
@@ -3218,7 +3688,12 @@
           "query_key": "stage",
           "count": 5,
           "configured": true,
-          "href": "library.html?stage=deep_read"
+          "href": "library.html?stage=deep_read",
+          "definition": {
+            "description": "Detailed pass including equations, assumptions, ablations, and cross-paper comparison.",
+            "owner": "workflow",
+            "status": "active"
+          }
         }
       ],
       "field_names": [
@@ -3286,12 +3761,21 @@
       "configured_fields": [
         "reading_stage"
       ],
-      "definitions": [],
-      "definition_count": 0,
-      "definition_status": "",
-      "description": "",
-      "owner": {},
-      "owner_name": "",
+      "definitions": [
+        {
+          "field": "reading_stage",
+          "description": "Detailed pass including equations, assumptions, ablations, and cross-paper comparison.",
+          "owner": "workflow",
+          "status": "active"
+        }
+      ],
+      "definition_count": 1,
+      "definition_status": "active",
+      "description": "Detailed pass including equations, assumptions, ablations, and cross-paper comparison.",
+      "owner": {
+        "owner": "workflow"
+      },
+      "owner_name": "workflow",
       "signals": [],
       "severity": "ok",
       "recommended_action": "当前标签状态稳定。",
@@ -3309,7 +3793,12 @@
           "query_key": "status",
           "count": 5,
           "configured": true,
-          "href": "library.html?status=read"
+          "href": "library.html?status=read",
+          "definition": {
+            "description": "Main report is stable enough to use as reference material.",
+            "owner": "workflow",
+            "status": "active"
+          }
         }
       ],
       "field_names": [
@@ -3377,12 +3866,21 @@
       "configured_fields": [
         "status"
       ],
-      "definitions": [],
-      "definition_count": 0,
-      "definition_status": "",
-      "description": "",
-      "owner": {},
-      "owner_name": "",
+      "definitions": [
+        {
+          "field": "status",
+          "description": "Main report is stable enough to use as reference material.",
+          "owner": "workflow",
+          "status": "active"
+        }
+      ],
+      "definition_count": 1,
+      "definition_status": "active",
+      "description": "Main report is stable enough to use as reference material.",
+      "owner": {
+        "owner": "workflow"
+      },
+      "owner_name": "workflow",
       "signals": [],
       "severity": "ok",
       "recommended_action": "当前标签状态稳定。",
@@ -3846,14 +4344,14 @@
   ],
   "summary": {
     "high": 1,
-    "medium": 58,
+    "medium": 64,
     "low": 0,
     "ok": 9,
     "cross_field": 3,
     "singleton": 37,
-    "unused_configured": 13,
+    "unused_configured": 19,
     "unowned_research_line": 0,
-    "defined": 7,
+    "defined": 25,
     "deprecated_in_use": 0,
     "undefined_label": 42
   },
@@ -3862,10 +4360,10 @@
     "line_role": 7,
     "methods": 26,
     "problems": 5,
-    "reading_stage": 4,
+    "reading_stage": 5,
     "research_line": 2,
-    "review_stage": 3,
-    "status": 5,
+    "review_stage": 4,
+    "status": 9,
     "topics": 14,
     "tracks": 4
   },
@@ -3875,7 +4373,7 @@
     "overloaded": 1,
     "singleton": 37,
     "undefined_label": 42,
-    "unused_configured": 13
+    "unused_configured": 19
   },
   "csv_columns": [
     "label",

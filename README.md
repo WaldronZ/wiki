@@ -176,7 +176,7 @@ paper_reader/
 - 所有 wiki 汇总页：提供全局快速跳转，可搜索主要页面、机器数据、共享视图、治理 playbook、常用命令和全部单篇报告
 - `docs/library.html`：论文库表格，适合大量论文的密集筛选、排序、列管理、密度切换、状态体系切换和批量管理
 - `docs/board.html`：状态看板，按自定义 `status` 分列，可动态切换 `status_workflows` 并保留 URL 状态，也可临时新增状态列，拖拽后导出 `status_board_patch.csv`
-- `docs/workflow.html`：工作流中心，集中对比多套 `status_workflows`、active workflow 分布、未配置状态 drift、空字段和绑定 workflow 的共享视图
+- `docs/workflow.html`：工作流中心，集中对比多套 `status_workflows`、active workflow 分布、状态定义覆盖、未配置状态 drift、空字段和绑定 workflow 的共享视图
 - `docs/status.html`：状态选择器，运行时动态选择 workflow/status/reading stage/review stage，并生成可跳转 URL、共享视图 JSON 和 workflow 配置片段
 - `docs/pivot.html`：分类透视表，支持在 research line、domain、track、problem、topic、method、status、year 等维度之间动态交叉分析
 - `docs/compare.html`：论文对比页，按搜索、研究线、方向、状态或推荐集合选择论文，并排比较分类、状态、复习计划、评分和代码线索
@@ -221,7 +221,7 @@ paper_reader/
 - `docs/freshness.json`：机器可读时效报告，给出 due / needs_plan / stale / aging 队列和研究线新鲜度
 - `docs/taxonomy_actions.json`：机器可读分类治理任务，列出长尾合并候选、过载拆分候选、空候选状态和关注项
 - `docs/actions.json`：机器可读统一行动队列，汇总 quality、review、taxonomy、dedupe 和 inbox 来源的任务
-- `docs/workflow.json`：机器可读状态工作流审计，包含 active workflow、每套 workflow 的字段分布、未配置值、共享视图绑定和推荐动作
+- `docs/workflow.json`：机器可读状态工作流审计，包含 active workflow、每套 workflow 的字段分布、状态定义、未配置值、共享视图绑定和推荐动作
 - `docs/status.json`：机器可读运行时状态选择契约，包含 workflow 选项、论文状态快照、默认选择、跳转链接和写回命令
 - `docs/pivot.json`：机器可读分类透视表，包含可交叉的维度、每篇论文的维度投影和常用预设矩阵
 - `docs/compare.json`：机器可读论文对比数据，包含对比字段、论文元数据和高优先级/研究线/方向推荐集合

@@ -173,6 +173,20 @@ class WikiWorkflowTest(unittest.TestCase):
                                 "status": "watch",
                             }
                         },
+                        "status": {
+                            "read": {
+                                "description": "Report is stable enough for reuse.",
+                                "owner": "workflow-owner",
+                                "status": "active",
+                            }
+                        },
+                        "reading_stage": {
+                            "deep_read": {
+                                "description": "Detailed analysis pass.",
+                                "owner": "workflow-owner",
+                                "status": "active",
+                            }
+                        },
                     },
                     "governance_policy": {
                         "taxonomy_load": {
@@ -485,6 +499,10 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(len(active_workflow["status_values"]), 5)
             self.assertEqual(active_workflow["fields"]["status"]["values"][3]["value"], "read")
             self.assertEqual(active_workflow["fields"]["status"]["values"][3]["count"], 2)
+            self.assertEqual(active_workflow["fields"]["status"]["values"][3]["definition_status"], "active")
+            self.assertEqual(active_workflow["fields"]["status"]["values"][3]["owner_name"], "workflow-owner")
+            self.assertIn("stable enough", active_workflow["fields"]["status"]["values"][3]["description"])
+            self.assertGreater(active_workflow["definition_total"], 0)
             self.assertEqual(active_workflow["fields"]["review_stage"]["empty_count"], 1)
             self.assertEqual(workflow["active_unconfigured"], [])
             self.assertTrue(workflow["recommendations"])
@@ -494,12 +512,15 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("当前 Status 分布", workflow_html)
             self.assertIn("Workflow 对比", workflow_html)
             self.assertIn("当前 Drift", workflow_html)
+            self.assertIn("Report is stable enough for reuse.", workflow_html)
             self.assertIn("状态工作流配置、分布和漂移审计", workflow_html)
             status = json.loads((report_dir / "status.json").read_text(encoding="utf-8"))
             self.assertEqual(status["count"], 2)
             self.assertEqual(status["active_status_workflow"], "research")
             self.assertEqual(status["workflow_count"], 2)
             self.assertEqual({item["name"] for item in status["workflows"]}, {"simple", "research"})
+            active_status_workflow = next(item for item in status["workflows"] if item["active"])
+            self.assertIn("stable enough", active_status_workflow["fields"]["status"]["values"][3]["description"])
             self.assertEqual({item["slug"] for item in status["papers"]}, {"2601.00001-alpha-paper", "2501.00002-beta-paper"})
             self.assertEqual(status["defaults"]["workflow"], "research")
             self.assertEqual(status["links"]["library"], "library.html")
@@ -515,6 +536,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn('id="copyStatusConfig"', status_html)
             self.assertIn("function renderStatus", status_html)
             self.assertIn("active_status_workflow", status_html)
+            self.assertIn("Report is stable enough for reuse.", status_html)
             pivot = json.loads((report_dir / "pivot.json").read_text(encoding="utf-8"))
             self.assertEqual(pivot["count"], 2)
             self.assertIn("research_line", {item["key"] for item in pivot["dimensions"]})

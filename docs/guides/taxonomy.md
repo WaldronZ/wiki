@@ -122,7 +122,9 @@ has_code: true
 }
 ```
 
-支持的定义字段和 report frontmatter 一致：`domains`、`tracks`、`problems`、`topics`、`methods`、`research_line`、`line_role`、`status`、`reading_stage`、`review_stage`。`status` 可用 `active`、`watch`、`deprecated`；如果一个 deprecated 标签仍在报告中使用，registry 会把它标成高优先级治理项。
+支持的定义字段和 report frontmatter 一致：`domains`、`tracks`、`problems`、`topics`、`methods`、`research_line`、`line_role`、`status`、`reading_stage`、`review_stage`。定义对象里的 `status` 可用 `active`、`watch`、`deprecated`；如果一个 deprecated 标签仍在报告中使用，registry 会把它标成高优先级治理项。
+
+状态字段也建议写定义。`status.html` 和 `workflow.html` 会读取 `label_definitions.status`、`label_definitions.reading_stage` 和 `label_definitions.review_stage`，把每个候选状态的含义、owner 和定义状态展示出来；`workflow.json` / `status.json` 也会输出同样信息，方便后续桌面软件、DMG 封装或 Codex 本地 agent 读取同一份状态契约。
 
 `docs/facets.html` 是日常分类工作台：它会按字段展示每个标签命中的论文数、长尾标签、过载标签和动态状态候选值。论文数量变多后，优先从这里判断哪些标签需要合并、哪些大桶需要拆成更细的 track / problem。页面可以按字段、优先级和动作类型筛选治理项，并把当前筛选复制成 Markdown checklist 或对应的 `scripts/export_taxonomy_actions.py --format project` 命令，方便分派到 issue、项目看板或桌面软件。对应的机器可读任务会写入 `docs/taxonomy_actions.json`；`scripts/export_taxonomy_actions.py --format patch` 还能把合并候选导出成可人工确认目标值的写回模板。决定把某个标签或状态重命名之前，可以到 `docs/taxonomy.html` 的「分类变更预览」选择字段、旧值和新值，先查看受影响论文，再下载 `taxonomy_change_patch.csv`，用 `scripts/apply_library_metadata.py` dry-run 或写回。日常给一批论文补 `topics` / `methods` 时，`docs/library.html` 的批量分类字段支持替换、追加、移除三种写入方式；导出的 CSV 会用 `_list_mode` 记录模式，命令行也可以显式传 `--list-mode append` 或 `--list-mode remove`。
 

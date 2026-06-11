@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T05:38:22",
+  "generated_at": "2026-06-12T05:43:09",
   "count": 5,
   "controls": {
     "active_status_workflow": "personal",
@@ -139,6 +139,152 @@
         "team": "generation",
         "cadence": "biweekly",
         "note": "Track diffusion language model and speculative decoding updates."
+      }
+    },
+    "label_definitions": {
+      "domains": {
+        "LLM Systems": {
+          "description": "Systems-oriented papers about serving, inference, kernels, memory, and scalability for language models.",
+          "owner": "systems",
+          "status": "active"
+        }
+      },
+      "research_line": {
+        "Efficient Attention Kernels": {
+          "description": "Papers about exact or approximate attention kernels, GPU execution, and serving-time attention engines.",
+          "owner": "kernel-owner",
+          "status": "active"
+        },
+        "Parallel Decoding with Diffusion Models": {
+          "description": "Papers that use diffusion-style or speculative mechanisms for parallel token generation.",
+          "owner": "decoding-owner",
+          "status": "active"
+        }
+      },
+      "topics": {
+        "Attention Kernels": {
+          "description": "Attention implementation, scheduling, and memory-layout techniques used by LLM inference systems.",
+          "owner": "kernel-owner",
+          "status": "active"
+        },
+        "Parallel Decoding": {
+          "description": "Methods that generate or verify multiple tokens per step rather than strictly left-to-right one-token decoding.",
+          "owner": "decoding-owner",
+          "status": "active"
+        },
+        "Speculative Decoding": {
+          "description": "Draft-and-verify decoding methods that preserve target-model output distribution while improving latency.",
+          "owner": "decoding-owner",
+          "status": "active"
+        }
+      },
+      "methods": {
+        "FlashAttention": {
+          "description": "IO-aware exact attention kernel family that reduces HBM traffic with tiling and online softmax.",
+          "owner": "kernel-owner",
+          "status": "active"
+        },
+        "Speculative Decoding": {
+          "description": "Use a draft process and acceptance rule to accelerate autoregressive generation.",
+          "owner": "decoding-owner",
+          "status": "active"
+        }
+      },
+      "status": {
+        "unread": {
+          "description": "Known paper that has not been opened or routed into a reading pass yet.",
+          "owner": "workflow",
+          "status": "active"
+        },
+        "skimmed": {
+          "description": "Paper has received a quick pass; keep it visible for deeper reading or triage.",
+          "owner": "workflow",
+          "status": "active"
+        },
+        "reading": {
+          "description": "Currently being read, annotated, reproduced, or used for an active synthesis task.",
+          "owner": "workflow",
+          "status": "active"
+        },
+        "read": {
+          "description": "Main report is stable enough to use as reference material.",
+          "owner": "workflow",
+          "status": "active"
+        },
+        "archived": {
+          "description": "Kept for provenance but no longer active in current queues or weekly review.",
+          "owner": "workflow",
+          "status": "active"
+        },
+        "inbox": {
+          "description": "Research workflow entry state for candidate papers that need triage.",
+          "owner": "workflow",
+          "status": "active"
+        },
+        "triaged": {
+          "description": "Research candidate has been classified and assigned a likely next action.",
+          "owner": "workflow",
+          "status": "active"
+        },
+        "implemented": {
+          "description": "Core idea or code path has been implemented, reproduced, or mapped to local code.",
+          "owner": "workflow",
+          "status": "active"
+        },
+        "cited": {
+          "description": "Paper has been used in a writeup, roadmap, experiment note, or related synthesis.",
+          "owner": "workflow",
+          "status": "active"
+        }
+      },
+      "reading_stage": {
+        "skim": {
+          "description": "Fast pass for scope, claims, and whether the paper belongs in this library.",
+          "owner": "workflow",
+          "status": "active"
+        },
+        "normal_read": {
+          "description": "Standard reading pass focused on method, experiments, and limitations.",
+          "owner": "workflow",
+          "status": "active"
+        },
+        "deep_read": {
+          "description": "Detailed pass including equations, assumptions, ablations, and cross-paper comparison.",
+          "owner": "workflow",
+          "status": "active"
+        },
+        "code_checked": {
+          "description": "Implementation, repository structure, or reproducibility notes have been checked.",
+          "owner": "workflow",
+          "status": "active"
+        },
+        "reproduced": {
+          "description": "Key result, benchmark, or implementation behavior has been reproduced locally or in a controlled experiment.",
+          "owner": "workflow",
+          "status": "active"
+        }
+      },
+      "review_stage": {
+        "fresh": {
+          "description": "Recently reviewed; no immediate spaced-review action is needed.",
+          "owner": "workflow",
+          "status": "active"
+        },
+        "due": {
+          "description": "Ready for scheduled review, synthesis, or update against newer related work.",
+          "owner": "workflow",
+          "status": "active"
+        },
+        "reviewed": {
+          "description": "Completed the planned review checkpoint.",
+          "owner": "workflow",
+          "status": "active"
+        },
+        "evergreen": {
+          "description": "Stable foundational paper worth keeping in recurring review or teaching sets.",
+          "owner": "workflow",
+          "status": "active"
+        }
       }
     }
   },
