@@ -22,6 +22,7 @@ PYTHON_SCRIPTS = [
     "scripts/apply_review_plan.py",
     "scripts/apply_library_metadata.py",
     "scripts/export_library_csv.py",
+    "scripts/export_reading_list.py",
     "scripts/check_quality.py",
 ]
 

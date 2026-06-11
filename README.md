@@ -62,6 +62,7 @@ paper_reader/
 │   ├── check_quality.py
 │   ├── check_wiki_js.js
 │   ├── export_library_csv.py
+│   ├── export_reading_list.py
 │   └── render_report_html.py
 └── sources/
     └── .gitkeep
@@ -77,6 +78,7 @@ paper_reader/
 - `scripts/render_report_html.py` 是稳定 HTML 渲染兜底脚本，用于修复公式裸露、图片破图等展示问题
 - `scripts/apply_review_plan.py` 用于把 `docs/review.json` 的建议复习日期安全写回报告 frontmatter，默认只 dry-run
 - `scripts/export_library_csv.py` 用于把 `papers.json`、`review.json` 和 `quality.json` 合并导出成 CSV，便于用表格工具批量管理
+- `scripts/export_reading_list.py` 用于按研究线、状态、方向、主题、方法或重要性导出 Markdown 阅读清单、BibTeX 或链接列表
 - `scripts/apply_library_metadata.py` 用于把编辑后的 CSV 分类/状态字段安全写回报告 frontmatter，默认只 dry-run
 - `scripts/check_quality.py` 是本地一键质量门禁，和 GitHub Actions 使用同一组检查
 
@@ -229,6 +231,14 @@ python3 -m unittest discover -s tests
 python3 scripts/export_library_csv.py docs --output docs/library.csv
 ```
 
+导出可分享阅读清单或引用清单：
+
+```bash
+python3 scripts/export_reading_list.py docs --line "Parallel Decoding with Diffusion Models" --min-importance 4 --output docs/exports/parallel-decoding-reading-list.md
+python3 scripts/export_reading_list.py docs --format bibtex --track "Attention Kernels" --output docs/exports/attention-kernels.bib
+python3 scripts/export_reading_list.py docs --format links --status read
+```
+
 把表格里编辑过的分类和状态字段写回报告 frontmatter：
 
 ```bash
@@ -237,7 +247,7 @@ python3 scripts/apply_library_metadata.py docs --input docs/library.csv --write
 python3 scripts/build_wiki.py docs
 ```
 
-`docs/library.html` 也支持先筛选论文、勾选当前页或指定行、批量选择 `status` / `reading_stage` / `review_stage` / `next_review`，再下载 `metadata_patch.csv`。`docs/board.html` 支持把论文卡片拖到新的状态列，然后下载 `status_board_patch.csv`。下载后用同一个写回脚本预览和应用：
+`docs/library.html` 也支持先筛选论文、勾选当前页或指定行、批量选择 `status` / `reading_stage` / `review_stage` / `next_review`，再下载 `metadata_patch.csv`；也可以把当前筛选和排序结果直接导出为 `reading_list.md` 或 `library.bib`。`docs/board.html` 支持把论文卡片拖到新的状态列，然后下载 `status_board_patch.csv`。下载后用同一个写回脚本预览和应用：
 
 ```bash
 python3 scripts/apply_library_metadata.py docs --input ~/Downloads/metadata_patch.csv

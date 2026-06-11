@@ -210,6 +210,10 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn('id="bulkStatus"', library_html)
             self.assertIn('id="bulkReviewStage"', library_html)
             self.assertIn("metadata_patch.csv", library_html)
+            self.assertIn('id="exportMarkdown"', library_html)
+            self.assertIn('id="exportBibtex"', library_html)
+            self.assertIn("reading_list.md", library_html)
+            self.assertIn("library.bib", library_html)
             self.assertIn('data-slug="2601.00001-alpha-paper"', library_html)
             board_html = (report_dir / "board.html").read_text(encoding="utf-8")
             self.assertIn("状态看板", board_html)
@@ -274,6 +278,46 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(row_by_slug["2501.00002-beta-paper"]["review_state"], "scheduled")
             self.assertTrue(row_by_slug["2601.00001-alpha-paper"]["suggested_next_review"])
             self.assertTrue(row_by_slug["2601.00001-alpha-paper"]["quality_score"])
+
+            reading_list_path = report_dir / "exports" / "reading-list.md"
+            self.run_cmd(
+                "scripts/export_reading_list.py",
+                str(report_dir),
+                "--line",
+                "LLM Serving",
+                "--min-importance",
+                "5",
+                "--output",
+                str(reading_list_path),
+            )
+            reading_list = reading_list_path.read_text(encoding="utf-8")
+            self.assertIn("Alpha Paper", reading_list)
+            self.assertNotIn("Beta Paper", reading_list)
+
+            bib_path = report_dir / "exports" / "library.bib"
+            self.run_cmd(
+                "scripts/export_reading_list.py",
+                str(report_dir),
+                "--format",
+                "bibtex",
+                "--track",
+                "Attention Kernels",
+                "--output",
+                str(bib_path),
+            )
+            bibtex = bib_path.read_text(encoding="utf-8")
+            self.assertIn("@misc", bibtex)
+            self.assertIn("Beta Paper", bibtex)
+            self.assertNotIn("Alpha Paper", bibtex)
+            unsafe_export = self.run_cmd(
+                "scripts/export_reading_list.py",
+                str(report_dir),
+                "--output",
+                str(report_dir / "reading-list.md"),
+                check=False,
+            )
+            self.assertNotEqual(unsafe_export.returncode, 0)
+            self.assertIn("Refusing to write a Markdown export", unsafe_export.stderr)
 
             patch_path = report_dir / "metadata_patch.csv"
             with patch_path.open("w", encoding="utf-8", newline="") as handle:

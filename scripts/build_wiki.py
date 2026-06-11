@@ -1882,7 +1882,13 @@ def render_library_row(paper: dict[str, Any]) -> str:
   data-year="{html.escape(str(paper.get("year") or 0), quote=True)}"
   data-updated="{html.escape(str(paper.get("updated_at") or ""), quote=True)}"
   data-slug="{html.escape(str(paper.get("slug") or ""), quote=True)}"
-  data-title="{html.escape(str(paper.get("title_en") or paper.get("title") or paper.get("slug") or ""), quote=True)}">
+  data-title="{html.escape(str(paper.get("title_en") or paper.get("title") or paper.get("slug") or ""), quote=True)}"
+  data-title-zh="{html.escape(str(paper.get("title_zh") or ""), quote=True)}"
+  data-authors="{html.escape('; '.join(str(author) for author in paper.get("authors", [])), quote=True)}"
+  data-arxiv-id="{html.escape(str(paper.get("arxiv_id") or ""), quote=True)}"
+  data-arxiv-url="{html.escape(str(paper.get("arxiv_url") or ""), quote=True)}"
+  data-code-url="{html.escape(str(paper.get("code_url") or ""), quote=True)}"
+  data-href="{html.escape(str(link), quote=True)}">
   <td><input class="row-check" type="checkbox" aria-label="选择 {html.escape(str(paper.get("slug") or ""), quote=True)}"></td>
   <td class="library-title">
     <strong><a href="{html.escape(link)}">{html.escape(paper["title_zh"] or paper["title"])}</a></strong>
@@ -1967,6 +1973,8 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       <select id="savedView" class="saved-view" aria-label="选择保存视图"><option value="">选择视图</option></select>
       <button id="saveView" class="button" type="button">保存视图</button>
       <button id="deleteView" class="button" type="button">删除视图</button>
+      <button id="exportMarkdown" class="button" type="button">导出清单</button>
+      <button id="exportBibtex" class="button" type="button">导出 BibTeX</button>
       <button id="resetFilters" class="button" type="button">重置筛选</button>
     </div>
   </div>
@@ -2021,6 +2029,8 @@ const nextPage = document.querySelector("#nextPage");
 const savedView = document.querySelector("#savedView");
 const saveView = document.querySelector("#saveView");
 const deleteView = document.querySelector("#deleteView");
+const exportMarkdown = document.querySelector("#exportMarkdown");
+const exportBibtex = document.querySelector("#exportBibtex");
 const rowChecks = allRows.map(row => row.querySelector(".row-check"));
 const toggleVisible = document.querySelector("#toggleVisible");
 const bulkCount = document.querySelector("#bulkCount");
@@ -2033,6 +2043,7 @@ const clearSelected = document.querySelector("#clearSelected");
 const downloadPatch = document.querySelector("#downloadPatch");
 const sharedViews = window.PAPER_WIKI.shared_views || [];
 let currentPage = 1;
+let currentRankedRows = [...allRows];
 const savedViewsKey = "autopaperreader:library:savedViews";
 const controls = [
   ["q", search],
@@ -2188,6 +2199,74 @@ function downloadCsv(filename, rows) {{
   URL.revokeObjectURL(url);
 }}
 
+function downloadText(filename, text, type = "text/plain;charset=utf-8") {{
+  const blob = new Blob([text], {{ type }});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}}
+
+function mdEscape(value) {{
+  return String(value ?? "").replace(/[\\[\\]()`]/g, "\\\\$&");
+}}
+
+function bibtexEscape(value) {{
+  return String(value ?? "").replaceAll("\\\\", "\\\\\\\\").replaceAll("{{", "\\\\{{").replaceAll("}}", "\\\\}}");
+}}
+
+function bibtexKey(row) {{
+  const firstAuthor = String(row.dataset.authors || "paper").split(";")[0].trim().split(/\\s+/).pop() || "paper";
+  const author = firstAuthor.toLowerCase().replace(/[^a-z0-9]+/g, "") || "paper";
+  const year = row.dataset.year && row.dataset.year !== "0" ? row.dataset.year : "nd";
+  const slug = String(row.dataset.slug || "paper").toLowerCase().replace(/[^a-z0-9]+/g, "").slice(0, 24);
+  return `${{author}}${{year}}${{slug}}`;
+}}
+
+function rowUrl(row) {{
+  return row.dataset.arxivUrl || row.dataset.href || "";
+}}
+
+function exportRows(format) {{
+  if (!currentRankedRows.length) {{
+    window.alert("当前筛选结果为空。");
+    return;
+  }}
+  if (format === "markdown") {{
+    const lines = ["# Reading List", ""];
+    currentRankedRows.forEach(row => {{
+      const title = row.dataset.title || row.dataset.slug;
+      const titleZh = row.dataset.titleZh || "";
+      const url = rowUrl(row);
+      const label = url ? `[${{mdEscape(title)}}](${{url}})` : mdEscape(title);
+      const meta = [row.dataset.year !== "0" ? row.dataset.year : "", row.dataset.line, row.dataset.status, row.dataset.importance !== "0" ? `I${{row.dataset.importance}}` : ""].filter(Boolean).join(" · ");
+      lines.push(`- ${{label}}`);
+      if (titleZh && titleZh !== title) lines.push(`  - 中文：${{titleZh}}`);
+      if (meta) lines.push(`  - 元数据：${{meta}}`);
+      if (row.dataset.codeUrl) lines.push(`  - 代码：${{row.dataset.codeUrl}}`);
+    }});
+    lines.push("");
+    downloadText("reading_list.md", lines.join("\\n"), "text/markdown;charset=utf-8");
+    return;
+  }}
+  const entries = currentRankedRows.map(row => {{
+    const fields = [
+      ["title", row.dataset.title || row.dataset.slug],
+      ["author", String(row.dataset.authors || "").split(";").map(author => author.trim()).filter(Boolean).join(" and ")],
+      ["year", row.dataset.year !== "0" ? row.dataset.year : ""],
+      ["url", rowUrl(row)],
+      ["note", row.dataset.arxivId],
+    ].filter(([, value]) => value);
+    const body = fields.map(([name, value]) => `  ${{name}} = {{${{bibtexEscape(value)}}}},`).join("\\n");
+    return `@misc{{${{bibtexKey(row)}},\\n${{body}}\\n}}`;
+  }});
+  downloadText("library.bib", entries.join("\\n\\n") + "\\n", "application/x-bibtex;charset=utf-8");
+}}
+
 function buildPatchRows() {{
   const fields = [];
   const values = {{}};
@@ -2231,6 +2310,7 @@ function render() {{
       && (!minImportance || Number(row.dataset.importance || 0) >= minImportance);
   }});
   const ranked = sortRows(filtered);
+  currentRankedRows = ranked;
   const limit = pageLimit();
   const totalPages = limit === Infinity ? 1 : Math.max(1, Math.ceil(ranked.length / limit));
   currentPage = Math.min(Math.max(currentPage, 1), totalPages);
@@ -2324,6 +2404,8 @@ downloadPatch.addEventListener("click", () => {{
   const rows = buildPatchRows();
   if (rows.length) downloadCsv("metadata_patch.csv", rows);
 }});
+exportMarkdown.addEventListener("click", () => exportRows("markdown"));
+exportBibtex.addEventListener("click", () => exportRows("bibtex"));
 
 readStateFromUrl();
 refreshSavedViews();
