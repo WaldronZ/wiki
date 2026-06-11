@@ -775,6 +775,7 @@ def validate_taxonomy_config(report_dir: Path, errors: list[str], warnings: list
         return {}
 
     known_fields = {
+        "$schema",
         "label_aliases",
         "shared_views",
         "active_status_workflow",

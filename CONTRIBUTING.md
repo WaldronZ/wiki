@@ -32,8 +32,9 @@ Use the issue forms to keep a large paper library manageable:
 
 1. Update `docs/guides/taxonomy.json` for label aliases, state values, role order,
    or shared views.
-2. Update `docs/guides/metadata.schema.json` only when the frontmatter contract
-   itself changes.
+2. Update `docs/guides/taxonomy.schema.json` if the taxonomy config contract
+   changes; update `docs/guides/metadata.schema.json` only when the report
+   frontmatter contract itself changes.
 3. Update `docs/guides/taxonomy.md` and `README.md` if the user-facing workflow
    changes.
 4. Run `python3 scripts/build_wiki.py docs`.

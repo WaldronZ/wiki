@@ -1,4 +1,5 @@
 {
+  "$schema": "taxonomy.schema.json",
   "label_aliases": {
     "attention kernel": "Attention Kernels",
     "diffusion language models": "Diffusion Language Models",

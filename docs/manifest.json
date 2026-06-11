@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T01:47:09",
+  "generated_at": "2026-06-12T01:50:06",
   "name": "AutoPaperReader Wiki",
   "count": 5,
   "publish_ready": false,
@@ -529,6 +529,10 @@
       "description": "候选论文 inbox.csv 字段契约"
     },
     {
+      "href": "guides/taxonomy.schema.json",
+      "description": "taxonomy.json 配置字段契约"
+    },
+    {
       "href": "guides/taxonomy.json",
       "description": "分类别名、状态工作流和共享视图配置"
     }
@@ -570,8 +574,8 @@
       "description": "页面入口、数据文件、质量状态",
       "exists": true,
       "status": "ok",
-      "size_bytes": 45377,
-      "sha256": "06e2a91c9cdc14e5cd17f23593135d45fefc67b563639bff2e6ad221f105a8cc",
+      "size_bytes": 45801,
+      "sha256": "7d4bd069b820915154047b84ff09d118edfa8cb388e37d787b4d035ad1392947",
       "hash_mode": "raw"
     },
     {
@@ -812,13 +816,23 @@
       "hash_mode": "raw"
     },
     {
+      "href": "guides/taxonomy.schema.json",
+      "kind": "contract",
+      "description": "taxonomy.json 配置字段契约",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 3926,
+      "sha256": "47ead254b3a90f8962e91d0bf33c64b0a866680fd67e5370b5e54782354694b8",
+      "hash_mode": "raw"
+    },
+    {
       "href": "guides/taxonomy.json",
       "kind": "contract",
       "description": "分类别名、状态工作流和共享视图配置",
       "exists": true,
       "status": "ok",
-      "size_bytes": 2300,
-      "sha256": "fbe4a42b4c3513c510434ee70ede3e4649a360e5937fa5049288fbc866599154",
+      "size_bytes": 2337,
+      "sha256": "abefab849bb766f723547107a50758ba55d8fe8c2a8e92f0c63ad2436ea6cdc4",
       "hash_mode": "raw"
     }
   ],

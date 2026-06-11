@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/autopaperreader/taxonomy.schema.json",
+  "title": "AutoPaperReader taxonomy configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Optional editor schema reference."
+    },
+    "label_aliases": {
+      "type": "object",
+      "description": "Map alternate labels to canonical taxonomy labels.",
+      "propertyNames": {
+        "type": "string",
+        "minLength": 1
+      },
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "role_order": {
+      "$ref": "#/$defs/non_empty_string_list"
+    },
+    "status_values": {
+      "$ref": "#/$defs/non_empty_string_list"
+    },
+    "reading_stage_values": {
+      "$ref": "#/$defs/non_empty_string_list"
+    },
+    "review_stage_values": {
+      "$ref": "#/$defs/non_empty_string_list"
+    },
+    "active_status_workflow": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Name of the default workflow in status_workflows."
+    },
+    "status_workflows": {
+      "type": "object",
+      "description": "Named workflow presets for status, reading stage, and review stage values.",
+      "propertyNames": {
+        "type": "string",
+        "minLength": 1
+      },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "status_values": {
+            "$ref": "#/$defs/non_empty_string_list"
+          },
+          "reading_stage_values": {
+            "$ref": "#/$defs/non_empty_string_list"
+          },
+          "review_stage_values": {
+            "$ref": "#/$defs/non_empty_string_list"
+          }
+        },
+        "required": [
+          "status_values",
+          "reading_stage_values",
+          "review_stage_values"
+        ]
+      }
+    },
+    "shared_views": {
+      "type": "array",
+      "description": "Repository-shared saved filters for index/library views.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "page": {
+            "type": "string",
+            "enum": ["all", "index", "library"]
+          },
+          "state": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": false,
+            "properties": {
+              "q": {"$ref": "#/$defs/filter_value"},
+              "domain": {"$ref": "#/$defs/filter_value"},
+              "track": {"$ref": "#/$defs/filter_value"},
+              "problem": {"$ref": "#/$defs/filter_value"},
+              "line": {"$ref": "#/$defs/filter_value"},
+              "role": {"$ref": "#/$defs/filter_value"},
+              "topic": {"$ref": "#/$defs/filter_value"},
+              "method": {"$ref": "#/$defs/filter_value"},
+              "status": {"$ref": "#/$defs/filter_value"},
+              "stage": {"$ref": "#/$defs/filter_value"},
+              "reviewStage": {"$ref": "#/$defs/filter_value"},
+              "review": {"$ref": "#/$defs/filter_value"},
+              "code": {"$ref": "#/$defs/filter_value"},
+              "importance": {"$ref": "#/$defs/filter_value"},
+              "sort": {"$ref": "#/$defs/filter_value"},
+              "size": {"$ref": "#/$defs/filter_value"},
+              "page": {"$ref": "#/$defs/filter_value"}
+            }
+          }
+        },
+        "required": ["name", "state"]
+      }
+    }
+  },
+  "$defs": {
+    "non_empty_string_list": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "filter_value": {
+      "type": ["string", "number", "boolean"],
+      "description": "URL query state value; objects and arrays are not allowed."
+    }
+  }
+}
