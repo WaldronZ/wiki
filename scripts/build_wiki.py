@@ -73,8 +73,15 @@ DEFAULT_ROLE_ORDER = [
     "survey",
 ]
 
+DEFAULT_STATUS_VALUES = ["unread", "skimmed", "reading", "read", "archived"]
+DEFAULT_READING_STAGE_VALUES = ["skim", "normal_read", "deep_read", "code_checked"]
+DEFAULT_REVIEW_STAGE_VALUES = ["fresh", "due", "reviewed"]
+
 LABEL_ALIASES = DEFAULT_LABEL_ALIASES.copy()
 ROLE_ORDER = {role: index for index, role in enumerate(DEFAULT_ROLE_ORDER)}
+STATUS_VALUES = DEFAULT_STATUS_VALUES.copy()
+READING_STAGE_VALUES = DEFAULT_READING_STAGE_VALUES.copy()
+REVIEW_STAGE_VALUES = DEFAULT_REVIEW_STAGE_VALUES.copy()
 
 
 def parse_args() -> argparse.Namespace:
@@ -95,10 +102,13 @@ def parse_args() -> argparse.Namespace:
 
 def load_taxonomy_config(report_dir: Path) -> None:
     """Load optional taxonomy normalization config for this report directory."""
-    global LABEL_ALIASES, ROLE_ORDER
+    global LABEL_ALIASES, ROLE_ORDER, STATUS_VALUES, READING_STAGE_VALUES, REVIEW_STAGE_VALUES
 
     LABEL_ALIASES = DEFAULT_LABEL_ALIASES.copy()
     ROLE_ORDER = {role: index for index, role in enumerate(DEFAULT_ROLE_ORDER)}
+    STATUS_VALUES = DEFAULT_STATUS_VALUES.copy()
+    READING_STAGE_VALUES = DEFAULT_READING_STAGE_VALUES.copy()
+    REVIEW_STAGE_VALUES = DEFAULT_REVIEW_STAGE_VALUES.copy()
 
     config_path = report_dir / "guides" / "taxonomy.json"
     if not config_path.exists():
@@ -126,6 +136,18 @@ def load_taxonomy_config(report_dir: Path) -> None:
             for index, role in enumerate(role_order)
             if str(role).strip()
         }
+
+    STATUS_VALUES = configured_values(config, "status_values", DEFAULT_STATUS_VALUES)
+    READING_STAGE_VALUES = configured_values(config, "reading_stage_values", DEFAULT_READING_STAGE_VALUES)
+    REVIEW_STAGE_VALUES = configured_values(config, "review_stage_values", DEFAULT_REVIEW_STAGE_VALUES)
+
+
+def configured_values(config: dict[str, Any], key: str, defaults: list[str]) -> list[str]:
+    values = config.get(key)
+    if not isinstance(values, list) or not values:
+        return defaults.copy()
+    cleaned = [str(value).strip() for value in values if str(value).strip()]
+    return cleaned or defaults.copy()
 
 
 def strip_frontmatter(text: str) -> tuple[dict[str, Any], str]:
@@ -469,6 +491,13 @@ def scalar_counts(papers: list[dict[str, Any]], field: str) -> dict[str, int]:
     return dict(sorted(counter.items(), key=lambda item: (-item[1], item[0].lower())))
 
 
+def configured_scalar_counts(papers: list[dict[str, Any]], field: str, values: list[str]) -> dict[str, int]:
+    counts = scalar_counts(papers, field)
+    for value in values:
+        counts.setdefault(value, 0)
+    return dict(sorted(counts.items(), key=lambda item: (item[1] == 0, -item[1], item[0].lower())))
+
+
 def tag_counts(papers: list[dict[str, Any]]) -> dict[str, int]:
     return list_counts(papers, ("topics", "methods"))
 
@@ -482,9 +511,9 @@ def taxonomy_counts(papers: list[dict[str, Any]]) -> dict[str, dict[str, int]]:
         "methods": list_counts(papers, ("methods",)),
         "research_lines": scalar_counts(papers, "research_line"),
         "line_roles": scalar_counts(papers, "line_role"),
-        "statuses": scalar_counts(papers, "status"),
-        "reading_stages": scalar_counts(papers, "reading_stage"),
-        "review_stages": scalar_counts(papers, "review_stage"),
+        "statuses": configured_scalar_counts(papers, "status", STATUS_VALUES),
+        "reading_stages": configured_scalar_counts(papers, "reading_stage", READING_STAGE_VALUES),
+        "review_stages": configured_scalar_counts(papers, "review_stage", REVIEW_STAGE_VALUES),
     }
 
 
@@ -821,6 +850,7 @@ def page_shell(title: str, body: str, data: dict[str, Any] | None = None) -> str
       color: var(--muted);
     }}
     .results-actions {{ display: flex; gap: 10px; flex-wrap: wrap; }}
+    .saved-view {{ min-width: 180px; width: auto; }}
     .pager {{
       display: flex;
       align-items: center;
@@ -1117,6 +1147,9 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <div class="results-bar">
     <strong id="resultCount">显示 {len(papers)} / {len(papers)} 篇</strong>
     <div class="results-actions">
+      <select id="savedView" class="saved-view" aria-label="选择保存视图"><option value="">选择视图</option></select>
+      <button id="saveView" class="button" type="button">保存视图</button>
+      <button id="deleteView" class="button" type="button">删除视图</button>
       <button id="resetFilters" class="button" type="button">重置筛选</button>
     </div>
   </div>
@@ -1150,8 +1183,12 @@ const pager = document.querySelector("#pager");
 const pageInfo = document.querySelector("#pageInfo");
 const prevPage = document.querySelector("#prevPage");
 const nextPage = document.querySelector("#nextPage");
+const savedView = document.querySelector("#savedView");
+const saveView = document.querySelector("#saveView");
+const deleteView = document.querySelector("#deleteView");
 const searchTextBySlug = new Map((window.PAPER_WIKI.search_index || []).map(item => [item.slug, item.search_text || ""]));
 let currentPage = 1;
+const savedViewsKey = "autopaperreader:index:savedViews";
 const queryControls = [
   ["q", search],
   ["domain", domain],
@@ -1181,24 +1218,66 @@ function getPageSize() {{
   return pageSize.value === "all" ? Infinity : Number(pageSize.value || 12);
 }}
 
+function defaultValueFor(key) {{
+  return key === "sort" ? "default" : key === "size" ? "12" : "";
+}}
+
+function currentState() {{
+  const state = {{}};
+  queryControls.forEach(([key, el]) => {{
+    const defaultValue = defaultValueFor(key);
+    if (el.value && el.value !== defaultValue) state[key] = el.value;
+  }});
+  if (currentPage > 1) state.page = String(currentPage);
+  return state;
+}}
+
+function applyState(state) {{
+  queryControls.forEach(([key, el]) => {{
+    el.value = state[key] || defaultValueFor(key);
+  }});
+  currentPage = Number(state.page || 1) || 1;
+  render();
+}}
+
 function readStateFromUrl() {{
   const params = new URLSearchParams(window.location.search);
   queryControls.forEach(([key, el]) => {{
-    if (params.has(key)) el.value = params.get(key);
+    el.value = params.has(key) ? params.get(key) : defaultValueFor(key);
   }});
   currentPage = Number(params.get("page") || 1) || 1;
 }}
 
 function writeStateToUrl() {{
-  const params = new URLSearchParams();
-  queryControls.forEach(([key, el]) => {{
-    const defaultValue = key === "sort" ? "default" : key === "size" ? "12" : "";
-    if (el.value && el.value !== defaultValue) params.set(key, el.value);
-  }});
-  if (currentPage > 1) params.set("page", String(currentPage));
+  const params = new URLSearchParams(currentState());
   const query = params.toString();
   const nextUrl = query ? `${{location.pathname}}?${{query}}` : location.pathname;
   window.history.replaceState(null, "", nextUrl);
+}}
+
+function readSavedViews() {{
+  try {{
+    const views = JSON.parse(localStorage.getItem(savedViewsKey) || "[]");
+    return Array.isArray(views) ? views.filter(view => view && view.name && view.state) : [];
+  }} catch {{
+    return [];
+  }}
+}}
+
+function writeSavedViews(views) {{
+  try {{
+    localStorage.setItem(savedViewsKey, JSON.stringify(views.slice(0, 50)));
+    return true;
+  }} catch {{
+    window.alert("浏览器本地存储不可用，无法保存视图。");
+    return false;
+  }}
+}}
+
+function refreshSavedViews() {{
+  const views = readSavedViews();
+  savedView.replaceChildren(new Option("选择视图", ""));
+  views.forEach((view, index) => savedView.add(new Option(view.name, String(index))));
 }}
 
 function card(p) {{
@@ -1307,13 +1386,37 @@ nextPage.addEventListener("click", () => {{
   render();
 }});
 resetFilters.addEventListener("click", () => {{
-  filterControls.forEach(el => el.value = "");
-  sort.value = "default";
-  pageSize.value = "12";
+  queryControls.forEach(([key, el]) => {{
+    el.value = defaultValueFor(key);
+  }});
   currentPage = 1;
   render();
 }});
+saveView.addEventListener("click", () => {{
+  const name = window.prompt("保存当前视图为");
+  if (!name || !name.trim()) return;
+  const normalized = name.trim();
+  const views = readSavedViews().filter(view => view.name !== normalized);
+  views.unshift({{ name: normalized, state: currentState() }});
+  if (!writeSavedViews(views)) return;
+  refreshSavedViews();
+  savedView.value = "0";
+}});
+deleteView.addEventListener("click", () => {{
+  if (!savedView.value) return;
+  const index = Number(savedView.value);
+  const views = readSavedViews();
+  views.splice(index, 1);
+  if (!writeSavedViews(views)) return;
+  refreshSavedViews();
+}});
+savedView.addEventListener("change", () => {{
+  if (!savedView.value) return;
+  const view = readSavedViews()[Number(savedView.value)];
+  if (view) applyState(view.state || {{}});
+}});
 readStateFromUrl();
+refreshSavedViews();
 render();
 </script>
 """
@@ -1501,7 +1604,12 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
 <main class="shell">
   <div class="results-bar">
     <strong id="resultCount">显示 {len(papers)} / {len(papers)} 篇</strong>
-    <div class="results-actions"><button id="resetFilters" class="button" type="button">重置筛选</button></div>
+    <div class="results-actions">
+      <select id="savedView" class="saved-view" aria-label="选择保存视图"><option value="">选择视图</option></select>
+      <button id="saveView" class="button" type="button">保存视图</button>
+      <button id="deleteView" class="button" type="button">删除视图</button>
+      <button id="resetFilters" class="button" type="button">重置筛选</button>
+    </div>
   </div>
   <div class="table-wrap">
     <table class="library-table">
@@ -1539,7 +1647,11 @@ const pager = document.querySelector("#pager");
 const pageInfo = document.querySelector("#pageInfo");
 const prevPage = document.querySelector("#prevPage");
 const nextPage = document.querySelector("#nextPage");
+const savedView = document.querySelector("#savedView");
+const saveView = document.querySelector("#saveView");
+const deleteView = document.querySelector("#deleteView");
 let currentPage = 1;
+const savedViewsKey = "autopaperreader:library:savedViews";
 const controls = [
   ["q", search],
   ["domain", domain],
@@ -1568,23 +1680,65 @@ function pageLimit() {{
   return pageSize.value === "all" ? Infinity : Number(pageSize.value || 50);
 }}
 
+function defaultValueFor(key) {{
+  return key === "sort" ? "default" : key === "size" ? "50" : "";
+}}
+
+function currentState() {{
+  const state = {{}};
+  controls.forEach(([key, el]) => {{
+    const defaultValue = defaultValueFor(key);
+    if (el.value && el.value !== defaultValue) state[key] = el.value;
+  }});
+  if (currentPage > 1) state.page = String(currentPage);
+  return state;
+}}
+
+function applyState(state) {{
+  controls.forEach(([key, el]) => {{
+    el.value = state[key] || defaultValueFor(key);
+  }});
+  currentPage = Number(state.page || 1) || 1;
+  render();
+}}
+
 function readStateFromUrl() {{
   const params = new URLSearchParams(window.location.search);
   controls.forEach(([key, el]) => {{
-    if (params.has(key)) el.value = params.get(key);
+    el.value = params.has(key) ? params.get(key) : defaultValueFor(key);
   }});
   currentPage = Number(params.get("page") || 1) || 1;
 }}
 
 function writeStateToUrl() {{
-  const params = new URLSearchParams();
-  controls.forEach(([key, el]) => {{
-    const defaultValue = key === "sort" ? "default" : key === "size" ? "50" : "";
-    if (el.value && el.value !== defaultValue) params.set(key, el.value);
-  }});
-  if (currentPage > 1) params.set("page", String(currentPage));
+  const params = new URLSearchParams(currentState());
   const query = params.toString();
   window.history.replaceState(null, "", query ? `${{location.pathname}}?${{query}}` : location.pathname);
+}}
+
+function readSavedViews() {{
+  try {{
+    const views = JSON.parse(localStorage.getItem(savedViewsKey) || "[]");
+    return Array.isArray(views) ? views.filter(view => view && view.name && view.state) : [];
+  }} catch {{
+    return [];
+  }}
+}}
+
+function writeSavedViews(views) {{
+  try {{
+    localStorage.setItem(savedViewsKey, JSON.stringify(views.slice(0, 50)));
+    return true;
+  }} catch {{
+    window.alert("浏览器本地存储不可用，无法保存视图。");
+    return false;
+  }}
+}}
+
+function refreshSavedViews() {{
+  const views = readSavedViews();
+  savedView.replaceChildren(new Option("选择视图", ""));
+  views.forEach((view, index) => savedView.add(new Option(view.name, String(index))));
 }}
 
 function sortRows(rows) {{
@@ -1649,10 +1803,33 @@ controls.forEach(([, el]) => el.addEventListener("input", () => {{
 }}));
 resetFilters.addEventListener("click", () => {{
   controls.forEach(([key, el]) => {{
-    el.value = key === "sort" ? "default" : key === "size" ? "50" : "";
+    el.value = defaultValueFor(key);
   }});
   currentPage = 1;
   render();
+}});
+saveView.addEventListener("click", () => {{
+  const name = window.prompt("保存当前视图为");
+  if (!name || !name.trim()) return;
+  const normalized = name.trim();
+  const views = readSavedViews().filter(view => view.name !== normalized);
+  views.unshift({{ name: normalized, state: currentState() }});
+  if (!writeSavedViews(views)) return;
+  refreshSavedViews();
+  savedView.value = "0";
+}});
+deleteView.addEventListener("click", () => {{
+  if (!savedView.value) return;
+  const index = Number(savedView.value);
+  const views = readSavedViews();
+  views.splice(index, 1);
+  if (!writeSavedViews(views)) return;
+  refreshSavedViews();
+}});
+savedView.addEventListener("change", () => {{
+  if (!savedView.value) return;
+  const view = readSavedViews()[Number(savedView.value)];
+  if (view) applyState(view.state || {{}});
 }});
 prevPage.addEventListener("click", () => {{
   currentPage -= 1;
@@ -1664,6 +1841,7 @@ nextPage.addEventListener("click", () => {{
 }});
 
 readStateFromUrl();
+refreshSavedViews();
 render();
 </script>
 """

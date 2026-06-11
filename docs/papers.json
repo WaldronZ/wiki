@@ -114,12 +114,23 @@
       "variant": 1
     },
     "statuses": {
-      "read": 5
+      "read": 5,
+      "archived": 0,
+      "reading": 0,
+      "skimmed": 0,
+      "unread": 0
     },
     "reading_stages": {
-      "deep_read": 5
+      "deep_read": 5,
+      "code_checked": 0,
+      "normal_read": 0,
+      "skim": 0
     },
-    "review_stages": {}
+    "review_stages": {
+      "due": 0,
+      "fresh": 0,
+      "reviewed": 0
+    }
   },
   "papers": [
     {

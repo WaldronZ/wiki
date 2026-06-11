@@ -86,6 +86,7 @@
       color: var(--muted);
     }
     .results-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .saved-view { min-width: 180px; width: auto; }
     .pager {
       display: flex;
       align-items: center;
@@ -294,9 +295,9 @@
     <select id="problem"><option value="">全部问题</option><option value="Customizable Attention Serving">Customizable Attention Serving (1)</option><option value="Efficient Exact Attention">Efficient Exact Attention (1)</option><option value="Lossless Speculative Decoding">Lossless Speculative Decoding (1)</option><option value="Memory-Efficient Parallel Token Generation">Memory-Efficient Parallel Token Generation (1)</option><option value="Parallel Diffusion Decoding">Parallel Diffusion Decoding (1)</option></select>
     <select id="line"><option value="">全部研究线</option><option value="Parallel Decoding with Diffusion Models">Parallel Decoding with Diffusion Models (3)</option><option value="Efficient Attention Kernels">Efficient Attention Kernels (2)</option></select>
     <select id="role"><option value="">全部角色</option><option value="foundation">foundation (2)</option><option value="followup">followup (1)</option><option value="system">system (1)</option><option value="variant">variant (1)</option></select>
-    <select id="status"><option value="">全部状态</option><option value="read">read (5)</option></select>
-    <select id="stage"><option value="">阅读阶段</option><option value="deep_read">deep_read (5)</option></select>
-    <select id="reviewStage"><option value="">复习阶段</option></select>
+    <select id="status"><option value="">全部状态</option><option value="read">read (5)</option><option value="archived">archived (0)</option><option value="reading">reading (0)</option><option value="skimmed">skimmed (0)</option><option value="unread">unread (0)</option></select>
+    <select id="stage"><option value="">阅读阶段</option><option value="deep_read">deep_read (5)</option><option value="code_checked">code_checked (0)</option><option value="normal_read">normal_read (0)</option><option value="skim">skim (0)</option></select>
+    <select id="reviewStage"><option value="">复习阶段</option><option value="due">due (0)</option><option value="fresh">fresh (0)</option><option value="reviewed">reviewed (0)</option></select>
     <select id="code"><option value="">代码状态</option><option value="yes">有代码</option><option value="no">无代码</option></select>
     <select id="importance"><option value="">重要性</option><option value="5">5 星</option><option value="4">4 星及以上</option><option value="3">3 星及以上</option></select>
     <select id="sort"><option value="default">默认排序</option><option value="importance">重要性优先</option><option value="updated">最近更新</option><option value="year">年份新到旧</option><option value="title">标题 A-Z</option></select>
@@ -306,7 +307,12 @@
 <main class="shell">
   <div class="results-bar">
     <strong id="resultCount">显示 5 / 5 篇</strong>
-    <div class="results-actions"><button id="resetFilters" class="button" type="button">重置筛选</button></div>
+    <div class="results-actions">
+      <select id="savedView" class="saved-view" aria-label="选择保存视图"><option value="">选择视图</option></select>
+      <button id="saveView" class="button" type="button">保存视图</button>
+      <button id="deleteView" class="button" type="button">删除视图</button>
+      <button id="resetFilters" class="button" type="button">重置筛选</button>
+    </div>
   </div>
   <div class="table-wrap">
     <table class="library-table">
@@ -483,7 +489,11 @@ const pager = document.querySelector("#pager");
 const pageInfo = document.querySelector("#pageInfo");
 const prevPage = document.querySelector("#prevPage");
 const nextPage = document.querySelector("#nextPage");
+const savedView = document.querySelector("#savedView");
+const saveView = document.querySelector("#saveView");
+const deleteView = document.querySelector("#deleteView");
 let currentPage = 1;
+const savedViewsKey = "autopaperreader:library:savedViews";
 const controls = [
   ["q", search],
   ["domain", domain],
@@ -512,23 +522,65 @@ function pageLimit() {
   return pageSize.value === "all" ? Infinity : Number(pageSize.value || 50);
 }
 
+function defaultValueFor(key) {
+  return key === "sort" ? "default" : key === "size" ? "50" : "";
+}
+
+function currentState() {
+  const state = {};
+  controls.forEach(([key, el]) => {
+    const defaultValue = defaultValueFor(key);
+    if (el.value && el.value !== defaultValue) state[key] = el.value;
+  });
+  if (currentPage > 1) state.page = String(currentPage);
+  return state;
+}
+
+function applyState(state) {
+  controls.forEach(([key, el]) => {
+    el.value = state[key] || defaultValueFor(key);
+  });
+  currentPage = Number(state.page || 1) || 1;
+  render();
+}
+
 function readStateFromUrl() {
   const params = new URLSearchParams(window.location.search);
   controls.forEach(([key, el]) => {
-    if (params.has(key)) el.value = params.get(key);
+    el.value = params.has(key) ? params.get(key) : defaultValueFor(key);
   });
   currentPage = Number(params.get("page") || 1) || 1;
 }
 
 function writeStateToUrl() {
-  const params = new URLSearchParams();
-  controls.forEach(([key, el]) => {
-    const defaultValue = key === "sort" ? "default" : key === "size" ? "50" : "";
-    if (el.value && el.value !== defaultValue) params.set(key, el.value);
-  });
-  if (currentPage > 1) params.set("page", String(currentPage));
+  const params = new URLSearchParams(currentState());
   const query = params.toString();
   window.history.replaceState(null, "", query ? `${location.pathname}?${query}` : location.pathname);
+}
+
+function readSavedViews() {
+  try {
+    const views = JSON.parse(localStorage.getItem(savedViewsKey) || "[]");
+    return Array.isArray(views) ? views.filter(view => view && view.name && view.state) : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeSavedViews(views) {
+  try {
+    localStorage.setItem(savedViewsKey, JSON.stringify(views.slice(0, 50)));
+    return true;
+  } catch {
+    window.alert("浏览器本地存储不可用，无法保存视图。");
+    return false;
+  }
+}
+
+function refreshSavedViews() {
+  const views = readSavedViews();
+  savedView.replaceChildren(new Option("选择视图", ""));
+  views.forEach((view, index) => savedView.add(new Option(view.name, String(index))));
 }
 
 function sortRows(rows) {
@@ -593,10 +645,33 @@ controls.forEach(([, el]) => el.addEventListener("input", () => {
 }));
 resetFilters.addEventListener("click", () => {
   controls.forEach(([key, el]) => {
-    el.value = key === "sort" ? "default" : key === "size" ? "50" : "";
+    el.value = defaultValueFor(key);
   });
   currentPage = 1;
   render();
+});
+saveView.addEventListener("click", () => {
+  const name = window.prompt("保存当前视图为");
+  if (!name || !name.trim()) return;
+  const normalized = name.trim();
+  const views = readSavedViews().filter(view => view.name !== normalized);
+  views.unshift({ name: normalized, state: currentState() });
+  if (!writeSavedViews(views)) return;
+  refreshSavedViews();
+  savedView.value = "0";
+});
+deleteView.addEventListener("click", () => {
+  if (!savedView.value) return;
+  const index = Number(savedView.value);
+  const views = readSavedViews();
+  views.splice(index, 1);
+  if (!writeSavedViews(views)) return;
+  refreshSavedViews();
+});
+savedView.addEventListener("change", () => {
+  if (!savedView.value) return;
+  const view = readSavedViews()[Number(savedView.value)];
+  if (view) applyState(view.state || {});
 });
 prevPage.addEventListener("click", () => {
   currentPage -= 1;
@@ -608,6 +683,7 @@ nextPage.addEventListener("click", () => {
 });
 
 readStateFromUrl();
+refreshSavedViews();
 render();
 </script>
 

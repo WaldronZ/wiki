@@ -117,6 +117,9 @@ class WikiWorkflowTest(unittest.TestCase):
                         "llm serving": "LLM Serving",
                     },
                     "role_order": ["foundation", "system", "followup"],
+                    "status_values": ["unread", "triaged", "reading", "read", "archived"],
+                    "reading_stage_values": ["skimmed", "deep_read", "code_checked"],
+                    "review_stage_values": ["fresh", "due", "reviewed"],
                 }
             ),
             encoding="utf-8",
@@ -159,6 +162,10 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(papers["count"], 2)
             self.assertIn("LLM Serving", papers["taxonomy"]["research_lines"])
             self.assertIn("Request Scheduling", papers["taxonomy"]["problems"])
+            self.assertIn("triaged", papers["taxonomy"]["statuses"])
+            self.assertEqual(papers["taxonomy"]["statuses"]["triaged"], 0)
+            index_html = (report_dir / "index.html").read_text(encoding="utf-8")
+            self.assertIn('<option value="triaged">triaged (0)</option>', index_html)
 
             review = json.loads((report_dir / "review.json").read_text(encoding="utf-8"))
             self.assertEqual(review["count"], 2)

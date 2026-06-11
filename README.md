@@ -147,9 +147,9 @@ has_code: true
 
 分类建议见 [`docs/guides/taxonomy.md`](docs/guides/taxonomy.md)。核心原则是：`domains/tracks/problems` 管结构层级，`topics/methods` 管交叉筛选，`research_line/line_role` 管研究脉络，`status/reading_stage/review_stage` 管个人阅读状态。
 
-标签别名和研究线角色排序可在 [`docs/guides/taxonomy.json`](docs/guides/taxonomy.json) 里自定义；修改后运行 `python3 scripts/build_wiki.py docs` 即可刷新。
+标签别名、研究线角色排序、阅读状态、阅读阶段和复习阶段可在 [`docs/guides/taxonomy.json`](docs/guides/taxonomy.json) 里自定义；修改后运行 `python3 scripts/build_wiki.py docs` 即可刷新筛选项。
 
-首页筛选、排序、分页状态会写入 URL query string。比如按研究线、重要性排序后复制浏览器地址，即可分享同一个论文列表视图。
+首页和论文库表格的筛选、排序、分页状态会写入 URL query string。比如按研究线、重要性排序后复制浏览器地址，即可分享同一个论文列表视图。常用状态组合也可以保存为浏览器本地视图，用来快速切换“待读”“重点复习”“有代码复现”等队列。
 
 手动刷新 wiki：
 
