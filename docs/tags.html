@@ -238,6 +238,61 @@
       cursor: pointer;
     }
     .button:disabled { cursor: not-allowed; opacity: .45; }
+    .quick-open {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 80;
+      min-width: 92px;
+      box-shadow: var(--shadow);
+    }
+    .quick-panel[hidden] { display: none; }
+    .quick-panel {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      place-items: start center;
+      padding: 74px 16px 16px;
+      background: rgba(34, 36, 38, .28);
+    }
+    .quick-dialog {
+      width: min(680px, 100%);
+      max-height: min(720px, calc(100vh - 96px));
+      display: grid;
+      grid-template-rows: auto 1fr;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: 0 24px 80px rgba(28, 31, 32, .24);
+      overflow: hidden;
+    }
+    .quick-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .quick-close { min-width: 40px; padding: 0; }
+    .quick-list {
+      overflow-y: auto;
+      padding: 8px;
+    }
+    .quick-item {
+      display: grid;
+      gap: 2px;
+      width: 100%;
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: var(--ink);
+    }
+    .quick-item:hover, .quick-item.is-active {
+      background: var(--chip);
+      text-decoration: none;
+    }
+    .quick-item strong { line-height: 1.25; }
+    .quick-empty { padding: 24px; color: var(--muted); }
     .section-title { margin: 28px 0 12px; font-size: 22px; }
     .tag-list { display: flex; flex-wrap: wrap; gap: 10px; }
     .tag-pill {
@@ -282,6 +337,16 @@
 </head>
 <body>
 
+<button class="button quick-open" type="button" id="quickOpen">快速跳转</button>
+<div class="quick-panel" id="quickPanel" hidden>
+  <div class="quick-dialog" role="dialog" aria-modal="true" aria-label="快速跳转">
+    <div class="quick-head">
+      <input id="quickSearch" type="search" placeholder="搜索页面或论文" aria-labelledby="quickTitle">
+      <button class="button quick-close" type="button" id="quickClose" aria-label="关闭">×</button>
+    </div>
+    <div class="quick-list" id="quickList"></div>
+  </div>
+</div>
 
 <header class="shell">
   <div class="eyebrow">AutoPaperReader Wiki</div>
@@ -331,5 +396,144 @@
 <section><h2 class="section-title">方法 Method</h2><section><h2 class="section-title">FlashAttention <span class="meta">2</span></h2><ul><li><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a> <span class="meta">2025</span></li>
 <li><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a> <span class="meta">2023</span></li></ul></section><section><h2 class="section-title">block diffusion <span class="meta">1</span></h2><ul><li><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a> <span class="meta">2026</span></li></ul></section><section><h2 class="section-title">block-sparse attention <span class="meta">1</span></h2><ul><li><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a> <span class="meta">2025</span></li></ul></section><section><h2 class="section-title">composable KV-cache format <span class="meta">1</span></h2><ul><li><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a> <span class="meta">2025</span></li></ul></section><section><h2 class="section-title">CUDA / GPU parallelism <span class="meta">1</span></h2><ul><li><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a> <span class="meta">2023</span></li></ul></section><section><h2 class="section-title">CUDA Graph <span class="meta">1</span></h2><ul><li><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a> <span class="meta">2025</span></li></ul></section><section><h2 class="section-title">dual-view attention <span class="meta">1</span></h2><ul><li><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a> <span class="meta">2026</span></li></ul></section><section><h2 class="section-title">forward KL distillation <span class="meta">1</span></h2><ul><li><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a> <span class="meta">2026</span></li></ul></section><section><h2 class="section-title">gated LoRA <span class="meta">1</span></h2><ul><li><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> <span class="meta">2026</span></li></ul></section><section><h2 class="section-title">intra-model consensus <span class="meta">1</span></h2><ul><li><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a> <span class="meta">2026</span></li></ul></section><section><h2 class="section-title">introspective consistency <span class="meta">1</span></h2><ul><li><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> <span class="meta">2026</span></li></ul></section><section><h2 class="section-title">introspective strided decoding <span class="meta">1</span></h2><ul><li><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> <span class="meta">2026</span></li></ul></section><section><h2 class="section-title">JIT compilation <span class="meta">1</span></h2><ul><li><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a> <span class="meta">2025</span></li></ul></section><section><h2 class="section-title">KV injection <span class="meta">1</span></h2><ul><li><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a> <span class="meta">2026</span></li></ul></section><section><h2 class="section-title">load-balanced scheduling <span class="meta">1</span></h2><ul><li><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a> <span class="meta">2025</span></li></ul></section><section><h2 class="section-title">logit-shifted causal training <span class="meta">1</span></h2><ul><li><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> <span class="meta">2026</span></li></ul></section><section><h2 class="section-title">masked diffusion <span class="meta">1</span></h2><ul><li><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a> <span class="meta">2026</span></li></ul></section><section><h2 class="section-title">online softmax <span class="meta">1</span></h2><ul><li><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a> <span class="meta">2023</span></li></ul></section><section><h2 class="section-title">p/q acceptance <span class="meta">1</span></h2><ul><li><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> <span class="meta">2026</span></li></ul></section><section><h2 class="section-title">parallel drafting <span class="meta">1</span></h2><ul><li><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a> <span class="meta">2026</span></li></ul></section><section><h2 class="section-title">SGLang serving <span class="meta">1</span></h2><ul><li><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> <span class="meta">2026</span></li></ul></section><section><h2 class="section-title">shared KV cache <span class="meta">1</span></h2><ul><li><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a> <span class="meta">2026</span></li></ul></section><section><h2 class="section-title">Speculative Decoding <span class="meta">1</span></h2><ul><li><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a> <span class="meta">2026</span></li></ul></section><section><h2 class="section-title">target hidden features <span class="meta">1</span></h2><ul><li><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a> <span class="meta">2026</span></li></ul></section><section><h2 class="section-title">tiling <span class="meta">1</span></h2><ul><li><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a> <span class="meta">2023</span></li></ul></section><section><h2 class="section-title">work partitioning <span class="meta">1</span></h2><ul><li><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a> <span class="meta">2023</span></li></ul></section></section></main>
 
+<script>
+(() => {
+  const prefix = "";
+  const openButton = document.querySelector("#quickOpen");
+  const panel = document.querySelector("#quickPanel");
+  const search = document.querySelector("#quickSearch");
+  const list = document.querySelector("#quickList");
+  const closeButton = document.querySelector("#quickClose");
+  if (!openButton || !panel || !search || !list || !closeButton) return;
+
+  const pages = [
+    ["首页", "index.html", "总览、搜索和筛选"],
+    ["论文库表格", "library.html", "密集筛选、列管理和批量更新"],
+    ["管理控制台", "dashboard.html", "覆盖率、队列和运营指标"],
+    ["集合视图", "collections.html", "共享视图和智能集合"],
+    ["关联网络", "related.html", "标签共现和相似论文"],
+    ["研究缺口", "gaps.html", "下一步行动和线索缺口"],
+    ["状态看板", "board.html", "拖拽状态流"],
+    ["待处理池", "inbox.html", "候选论文队列"],
+    ["复习计划", "review.html", "待复习和建议日期"],
+    ["质量治理", "quality.html", "元数据和 taxonomy drift"],
+    ["分类治理", "taxonomy.html", "分类矩阵和状态工作流"],
+    ["时间轴", "timeline.html", "按年份浏览研究路线"],
+    ["研究矩阵", "matrix.html", "研究线和年份覆盖"],
+    ["研究线", "lines/index.html", "按研究脉络组织论文"],
+    ["分类总览", "tags.html", "标签聚合入口"],
+  ].map(([title, href, meta]) => ({
+    title,
+    href: prefix + href,
+    meta,
+    kind: "page",
+  }));
+
+  const dataPapers = (window.PAPER_WIKI && Array.isArray(window.PAPER_WIKI.papers))
+    ? window.PAPER_WIKI.papers.map((paper) => ({
+        title: paper.title_zh || paper.title || paper.slug,
+        href: prefix + (paper.html_path || paper.md_path || ""),
+        meta: [paper.research_line, paper.status, paper.arxiv_id].filter(Boolean).join(" · "),
+        kind: "paper",
+      })).filter((item) => item.href)
+    : [];
+  const rowPapers = Array.from(document.querySelectorAll("[data-slug][data-href]")).map((row) => ({
+    title: row.dataset.titleZh || row.dataset.title || row.dataset.slug,
+    href: row.dataset.href || "",
+    meta: [row.dataset.line, row.dataset.status, row.dataset.arxivId].filter(Boolean).join(" · "),
+    kind: "paper",
+  })).filter((item) => item.href);
+  const paperMap = new Map([...dataPapers, ...rowPapers].map((item) => [item.href, item]));
+  const papers = Array.from(paperMap.values());
+  const entries = [...pages, ...papers];
+  let activeIndex = 0;
+
+  function score(entry, query) {
+    if (!query) return entry.kind === "page" ? 2 : 1;
+    const haystack = `${entry.title} ${entry.meta} ${entry.href}`.toLowerCase();
+    if (haystack.includes(query)) return entry.title.toLowerCase().includes(query) ? 3 : 2;
+    return 0;
+  }
+
+  function currentEntries() {
+    const query = search.value.trim().toLowerCase();
+    return entries
+      .map((entry) => [score(entry, query), entry])
+      .filter(([rank]) => rank > 0)
+      .sort((left, right) => right[0] - left[0] || left[1].title.localeCompare(right[1].title))
+      .slice(0, 40)
+      .map(([, entry]) => entry);
+  }
+
+  function render() {
+    const visible = currentEntries();
+    activeIndex = Math.min(activeIndex, Math.max(visible.length - 1, 0));
+    if (!visible.length) {
+      list.innerHTML = '<div class="quick-empty">没有匹配结果</div>';
+      return;
+    }
+    list.replaceChildren(...visible.map((entry, index) => {
+      const link = document.createElement("a");
+      link.className = `quick-item${index === activeIndex ? " is-active" : ""}`;
+      link.href = entry.href;
+      link.dataset.index = String(index);
+      const title = document.createElement("strong");
+      title.textContent = entry.title;
+      const meta = document.createElement("span");
+      meta.className = "meta";
+      meta.textContent = entry.meta || entry.href;
+      link.append(title, meta);
+      return link;
+    }));
+  }
+
+  function open() {
+    panel.hidden = false;
+    search.value = "";
+    activeIndex = 0;
+    render();
+    search.focus();
+  }
+
+  function close() {
+    panel.hidden = true;
+    openButton.focus();
+  }
+
+  openButton.addEventListener("click", open);
+  closeButton.addEventListener("click", close);
+  panel.addEventListener("click", (event) => {
+    if (event.target === panel) close();
+  });
+  search.addEventListener("input", () => {
+    activeIndex = 0;
+    render();
+  });
+  search.addEventListener("keydown", (event) => {
+    const visible = currentEntries();
+    if (event.key === "Escape") {
+      event.preventDefault();
+      close();
+    } else if (event.key === "ArrowDown") {
+      event.preventDefault();
+      activeIndex = Math.min(activeIndex + 1, Math.max(visible.length - 1, 0));
+      render();
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      activeIndex = Math.max(activeIndex - 1, 0);
+      render();
+    } else if (event.key === "Enter" && visible[activeIndex]) {
+      event.preventDefault();
+      window.location.href = visible[activeIndex].href;
+    }
+  });
+  document.addEventListener("keydown", (event) => {
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+      event.preventDefault();
+      panel.hidden ? open() : close();
+    }
+  });
+})();
+</script>
 </body>
 </html>
