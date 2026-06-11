@@ -44,6 +44,7 @@ GENERATED_FIXED_PATHS = (
     "release.html",
     "collections.html",
     "balance.html",
+    "coverage.html",
     "facets.html",
     "related.html",
     "taxonomy.html",
@@ -1285,6 +1286,7 @@ def wiki_pages_manifest() -> list[dict[str, str]]:
         {"title": "发布摘要", "href": "release.html", "kind": "ops", "description": "页面入口、数据文件、质量状态"},
         {"title": "集合视图", "href": "collections.html", "kind": "view", "description": "共享视图、智能集合、研究线入口"},
         {"title": "分类均衡", "href": "balance.html", "kind": "ops", "description": "分类维度健康度、长尾和过载复盘"},
+        {"title": "覆盖地图", "href": "coverage.html", "kind": "ops", "description": "研究线 x 分类字段覆盖缺口"},
         {"title": "分类工作台", "href": "facets.html", "kind": "ops", "description": "标签规模、长尾和过载分类"},
         {"title": "关联网络", "href": "related.html", "kind": "analysis", "description": "标签共现、相似论文、孤岛论文"},
         {"title": "研究缺口", "href": "gaps.html", "kind": "ops", "description": "下一步行动和研究线缺口"},
@@ -6372,6 +6374,313 @@ renderBalanceRows();
     (report_dir / "balance.html").write_text(page_shell("分类均衡复盘", body, extra_css=balance_css), encoding="utf-8")
 
 
+def render_coverage(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    coverage_specs = [
+        ("domains", "Domain", "domain", True),
+        ("tracks", "Track", "track", True),
+        ("problems", "Problem", "problem", True),
+        ("topics", "Topic", "topic", True),
+        ("methods", "Method", "method", True),
+        ("line_role", "Role", "role", False),
+    ]
+    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for paper in papers:
+        grouped[str(paper.get("research_line") or "Unassigned")].append(paper)
+
+    def values_for(paper: dict[str, Any], field: str, is_list: bool) -> list[str]:
+        if is_list:
+            return [str(value).strip() for value in paper.get(field, []) if str(value).strip()]
+        value = str(paper.get(field) or "").strip()
+        return [value] if value and value != "Unassigned" else []
+
+    def top_values(items: list[dict[str, Any]], field: str, is_list: bool) -> list[tuple[str, int]]:
+        counts: Counter[str] = Counter()
+        for paper in items:
+            counts.update(values_for(paper, field, is_list))
+        return counts.most_common(4)
+
+    coverage_rows: list[dict[str, Any]] = []
+    for line, items in sorted(grouped.items(), key=lambda item: (-len(item[1]), item[0].lower())):
+        total = len(items)
+        field_rows = []
+        present_slots = 0
+        missing_slots = 0
+        for field, label, query_key, is_list in coverage_specs:
+            missing = sum(1 for paper in items if not values_for(paper, field, is_list))
+            present = total - missing
+            present_slots += present
+            missing_slots += missing
+            values = sorted({value for paper in items for value in values_for(paper, field, is_list)}, key=str.lower)
+            top = top_values(items, field, is_list)
+            field_rows.append(
+                {
+                    "field": field,
+                    "label": label,
+                    "query_key": query_key,
+                    "coverage": round((present / total) * 100) if total else 100,
+                    "missing": missing,
+                    "unique": len(values),
+                    "top_values": [{"value": value, "count": count} for value, count in top],
+                }
+            )
+        score = round((present_slots / (total * len(coverage_specs))) * 100) if total else 100
+        risk = "high" if score < 70 or missing_slots >= max(2, total) else "medium" if score < 90 or missing_slots else "low"
+        coverage_rows.append(
+            {
+                "line": line,
+                "href": f"lines/{slugify_label(line)}.html" if line != "Unassigned" else page_query_href("library.html", line=line),
+                "count": total,
+                "score": score,
+                "risk": risk,
+                "missing_total": missing_slots,
+                "fields": field_rows,
+            }
+        )
+
+    def field_cell(line: str, field: dict[str, Any]) -> str:
+        top = field["top_values"][:2]
+        top_html = ", ".join(
+            f'<a href="{html.escape(page_query_href("library.html", line=line, **{field["query_key"]: item["value"]}))}">{html.escape(item["value"])}</a> <span class="meta">{item["count"]}</span>'
+            for item in top
+        )
+        if not top_html:
+            top_html = '<span class="meta">暂无值</span>'
+        return (
+            f'<td data-missing="{field["missing"]}" data-coverage="{field["coverage"]}">'
+            f'<strong>{field["coverage"]}%</strong>'
+            f'<div class="meta">缺 {field["missing"]} / 唯一 {field["unique"]}</div>'
+            f'<div class="coverage-top">{top_html}</div>'
+            "</td>"
+        )
+
+    table_rows = "".join(
+        "<tr "
+        f'data-line="{html.escape(row["line"], quote=True)}" '
+        f'data-risk="{row["risk"]}" '
+        f'data-score="{row["score"]}" '
+        f'data-missing="{row["missing_total"]}" '
+        f'data-count="{row["count"]}" '
+        f'data-search="{html.escape(" ".join([row["line"], row["risk"], *[item["label"] for item in row["fields"]]]).lower(), quote=True)}">'
+        f'<td><a href="{html.escape(row["href"])}">{html.escape(row["line"])}</a><div class="meta">{row["count"]} 篇</div></td>'
+        f'<td><strong>{row["score"]}</strong><div class="balance-meter"><span style="width:{row["score"]}%"></span></div></td>'
+        f'<td><span class="flag">{row["risk"]}</span><div class="meta">缺口 {row["missing_total"]}</div></td>'
+        + "".join(field_cell(str(row["line"]), field) for field in row["fields"])
+        + "</tr>"
+        for row in coverage_rows
+    )
+    field_headers = "".join(f"<th>{html.escape(label)}</th>" for _field, label, _query_key, _is_list in coverage_specs)
+    coverage_json = json.dumps(coverage_rows, ensure_ascii=False).replace("</", "<\\/")
+    weak_lines = sum(1 for row in coverage_rows if row["risk"] == "high")
+    total_missing = sum(int(row["missing_total"]) for row in coverage_rows)
+    avg_score = round(sum(int(row["score"]) for row in coverage_rows) / len(coverage_rows), 1) if coverage_rows else 100
+    coverage_css = """
+    .coverage-top {
+      display: grid;
+      gap: 3px;
+      margin-top: 4px;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .coverage-controls {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) minmax(140px, 190px) minmax(160px, 210px) repeat(3, auto);
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .coverage-controls input,
+    .coverage-controls select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 10px 12px;
+      color: var(--text);
+      font: inherit;
+    }
+    .coverage-table {
+      min-width: 1180px;
+    }
+    .balance-meter {
+      width: 120px;
+      height: 8px;
+      border-radius: 999px;
+      background: #eadfce;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+    .balance-meter span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--accent);
+    }
+    @media (max-width: 900px) {
+      .coverage-controls { grid-template-columns: 1fr; }
+    }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Coverage Map</div>
+  <h1>研究线分类覆盖地图</h1>
+  <p class="lead">按研究线检查 domain、track、problem、topic、method 和角色是否覆盖完整。适合在论文数量变多后，把补分类任务分派到具体研究线。</p>
+  <div class="stats">
+    <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="balance.html">分类均衡</a>
+    <a class="stat" href="facets.html">分类工作台</a>
+    <a class="stat" href="quality.html">质量治理</a>
+    <a class="stat" href="lines/index.html">研究线</a>
+    <span class="stat">研究线 {len(coverage_rows)}</span>
+    <span class="stat">平均覆盖 {avg_score}</span>
+    <span class="stat">高风险 {weak_lines}</span>
+    <span class="stat">缺口 {total_missing}</span>
+  </div>
+</header>
+<main class="shell">
+  <section class="metric-grid">
+    <section class="metric-card"><span>平均覆盖分</span><strong>{avg_score}</strong><span>跨研究线和字段的完整度</span></section>
+    <section class="metric-card"><span>高风险研究线</span><strong>{weak_lines}</strong><span>优先补 taxonomy</span></section>
+    <section class="metric-card"><span>字段缺口</span><strong>{total_missing}</strong><span>paper-field 级缺失</span></section>
+    <section class="metric-card"><span>研究线</span><strong>{len(coverage_rows)}</strong><span>含 Unassigned</span></section>
+  </section>
+  <section>
+    <h2 class="section-title">覆盖明细</h2>
+    <div class="coverage-controls">
+      <input id="coverageSearch" type="search" placeholder="搜索研究线或字段">
+      <select id="coverageRisk"><option value="">全部风险</option><option value="high">high</option><option value="medium">medium</option><option value="low">low</option></select>
+      <select id="coverageSort"><option value="risk">风险优先</option><option value="score">覆盖分低到高</option><option value="missing">缺口多到少</option><option value="count">论文多到少</option><option value="line">研究线 A-Z</option></select>
+      <strong id="coverageCount">{len(coverage_rows)} 条</strong>
+      <button id="downloadCoverageCsv" class="button" type="button">下载当前 CSV</button>
+      <button id="copyCoverageMarkdown" class="button" type="button">复制治理清单</button>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table coverage-table"><thead><tr><th>研究线</th><th>覆盖分</th><th>风险</th>{field_headers}</tr></thead><tbody id="coverageRows">{table_rows}</tbody></table>
+    </div>
+  </section>
+</main>
+<script>
+const coverageData = {coverage_json};
+const coverageSearch = document.querySelector("#coverageSearch");
+const coverageRisk = document.querySelector("#coverageRisk");
+const coverageSort = document.querySelector("#coverageSort");
+const coverageCount = document.querySelector("#coverageCount");
+const coverageBody = document.querySelector("#coverageRows");
+const coverageRows = Array.from(document.querySelectorAll("#coverageRows tr"));
+const downloadCoverageCsv = document.querySelector("#downloadCoverageCsv");
+const copyCoverageMarkdown = document.querySelector("#copyCoverageMarkdown");
+const coverageRiskRank = {{ high: 0, medium: 1, low: 2 }};
+
+function visibleCoverageRows() {{
+  return coverageRows.filter(row => !row.hidden);
+}}
+
+function coverageCsvCell(value) {{
+  const text = String(value ?? "");
+  return (text.includes(",") || text.includes('"') || text.includes("\\n"))
+    ? `"${{text.replaceAll('"', '""')}}"`
+    : text;
+}}
+
+function coverageMetric(row, key) {{
+  return Number(row.dataset[key] || 0);
+}}
+
+function sortCoverageRows(rows) {{
+  const mode = coverageSort.value;
+  return [...rows].sort((a, b) => {{
+    if (mode === "score") return coverageMetric(a, "score") - coverageMetric(b, "score") || a.dataset.line.localeCompare(b.dataset.line);
+    if (mode === "missing") return coverageMetric(b, "missing") - coverageMetric(a, "missing") || a.dataset.line.localeCompare(b.dataset.line);
+    if (mode === "count") return coverageMetric(b, "count") - coverageMetric(a, "count") || a.dataset.line.localeCompare(b.dataset.line);
+    if (mode === "line") return a.dataset.line.localeCompare(b.dataset.line);
+    return (coverageRiskRank[a.dataset.risk] ?? 9) - (coverageRiskRank[b.dataset.risk] ?? 9) || coverageMetric(a, "score") - coverageMetric(b, "score");
+  }});
+}}
+
+function renderCoverageRows() {{
+  const q = coverageSearch.value.trim().toLowerCase();
+  const risk = coverageRisk.value;
+  let visible = 0;
+  coverageRows.forEach(row => {{
+    const hit = (!q || row.dataset.search.includes(q)) && (!risk || row.dataset.risk === risk);
+    row.hidden = !hit;
+    if (hit) visible += 1;
+  }});
+  sortCoverageRows(coverageRows).forEach(row => coverageBody.appendChild(row));
+  coverageCount.textContent = `${{visible}} / ${{coverageRows.length}} 条`;
+}}
+
+function filteredCoverageData() {{
+  const visibleLines = new Set(visibleCoverageRows().map(row => row.dataset.line));
+  return coverageData.filter(row => visibleLines.has(row.line));
+}}
+
+function downloadCoverageRows() {{
+  const rows = filteredCoverageData();
+  if (!rows.length) {{
+    window.alert("当前筛选结果为空。");
+    return;
+  }}
+  const header = ["research_line", "papers", "score", "risk", "missing_total", "field", "coverage", "missing", "unique", "top_values"];
+  const flat = [];
+  rows.forEach(row => {{
+    row.fields.forEach(field => {{
+      flat.push([
+        row.line,
+        row.count,
+        row.score,
+        row.risk,
+        row.missing_total,
+        field.label,
+        field.coverage,
+        field.missing,
+        field.unique,
+        (field.top_values || []).map(item => `${{item.value}}:${{item.count}}`).join("; "),
+      ]);
+    }});
+  }});
+  const csv = [header, ...flat].map(row => row.map(coverageCsvCell).join(",")).join("\\n") + "\\n";
+  const blob = new Blob([csv], {{ type: "text/csv;charset=utf-8" }});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "research_line_coverage.csv";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}}
+
+async function copyCoverageQueue() {{
+  const rows = filteredCoverageData();
+  if (!rows.length) {{
+    window.alert("当前筛选结果为空。");
+    return;
+  }}
+  const lines = ["# Research Line Coverage Review", ""];
+  rows.forEach(row => {{
+    const weak = row.fields.filter(field => field.missing > 0 || field.coverage < 100);
+    lines.push(`- [ ] ${{row.risk}} / score ${{row.score}} / ${{row.line}}`);
+    lines.push(`  - Papers: ${{row.count}}, missing slots: ${{row.missing_total}}`);
+    weak.forEach(field => lines.push(`  - ${{field.label}}: ${{field.coverage}}%, missing ${{field.missing}}, unique ${{field.unique}}`));
+  }});
+  const text = lines.join("\\n") + "\\n";
+  try {{
+    await navigator.clipboard.writeText(text);
+    window.alert("已复制。");
+  }} catch {{
+    window.prompt("复制治理清单", text);
+  }}
+}}
+
+[coverageSearch, coverageRisk, coverageSort].forEach(control => control.addEventListener("input", renderCoverageRows));
+downloadCoverageCsv.addEventListener("click", downloadCoverageRows);
+copyCoverageMarkdown.addEventListener("click", copyCoverageQueue);
+renderCoverageRows();
+</script>
+"""
+    (report_dir / "coverage.html").write_text(page_shell("研究线分类覆盖地图", body, extra_css=coverage_css), encoding="utf-8")
+
+
 def taxonomy_action_status(count: int, share: float) -> tuple[str, str]:
     if count == 0:
         return "unused_config", "medium"
@@ -9123,6 +9432,7 @@ def build_wiki(report_dir: Path) -> int:
     render_dashboard(report_dir, papers)
     render_collections(report_dir, papers)
     render_balance(report_dir, papers)
+    render_coverage(report_dir, papers)
     render_facets(report_dir, papers)
     render_related(report_dir, papers)
     render_taxonomy(report_dir, papers)

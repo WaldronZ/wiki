@@ -22,6 +22,7 @@ function htmlFiles() {
     "release.html",
     "collections.html",
     "balance.html",
+    "coverage.html",
     "facets.html",
     "related.html",
     "taxonomy.html",

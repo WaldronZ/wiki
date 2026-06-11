@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>研究线年份矩阵</title>
+  <title>研究线分类覆盖地图</title>
   <style>
     :root {
       color-scheme: light;
@@ -351,175 +351,54 @@
       header { padding-top: 28px; }
     }
 
-    .matrix-layout {
+    .coverage-top {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
-      gap: 16px;
-      align-items: start;
-    }
-    .matrix-table-wrap {
-      overflow-x: auto;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-    }
-    .research-matrix {
-      width: 100%;
-      min-width: 760px;
-      border-collapse: collapse;
-    }
-    .research-matrix th,
-    .research-matrix td {
-      border-bottom: 1px solid var(--line);
-      border-right: 1px solid var(--line);
-      padding: 8px;
-      vertical-align: middle;
-    }
-    .research-matrix thead th {
-      position: sticky;
-      top: 0;
-      z-index: 1;
-      background: #f0ebe1;
-      color: var(--muted);
-      font-size: 13px;
-      text-align: center;
-    }
-    .research-matrix tbody th {
-      position: sticky;
-      left: 0;
-      z-index: 1;
-      width: 220px;
-      background: var(--panel);
-      text-align: left;
-    }
-    .research-matrix tbody th span {
-      display: block;
-      line-height: 1.3;
-    }
-    .research-matrix tbody th small {
-      color: var(--muted);
-      font-weight: 650;
-    }
-    .research-matrix tr[hidden] { display: none; }
-    .matrix-cell {
-      display: grid;
-      place-items: center;
       gap: 3px;
-      width: 100%;
-      min-width: 76px;
-      min-height: 54px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #faf7f0;
-      color: var(--ink);
-      cursor: pointer;
-      font: inherit;
-    }
-    .matrix-cell strong {
-      font-size: 18px;
-      line-height: 1;
-    }
-    .matrix-cell span {
-      max-width: 120px;
-      overflow: hidden;
-      color: var(--muted);
-      font-size: 11px;
-      line-height: 1.25;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .matrix-cell.heat-0 { opacity: .35; }
-    .matrix-cell.heat-1 { background: #edf3f1; }
-    .matrix-cell.heat-2 { background: #d9ebe8; }
-    .matrix-cell.heat-3 { background: #b9d9d6; }
-    .matrix-cell.heat-4 { background: #86bbb7; }
-    .matrix-cell.heat-5 { background: #4f9691; color: #fff; }
-    .matrix-cell.heat-5 span { color: #eef8f6; }
-    .matrix-cell.active {
-      outline: 3px solid color-mix(in srgb, var(--accent) 48%, transparent);
-      outline-offset: 2px;
-    }
-    .matrix-detail {
-      position: sticky;
-      top: 86px;
-      display: grid;
-      gap: 12px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-      padding: 16px;
-    }
-    .matrix-detail h2 {
-      margin: 0;
-      font-size: 20px;
-      line-height: 1.25;
-    }
-    .matrix-detail-list {
-      display: grid;
-      gap: 10px;
-    }
-    .matrix-paper {
-      display: grid;
-      gap: 6px;
-      padding: 10px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #fffaf2;
-    }
-    .matrix-paper h3 {
-      margin: 0;
-      font-size: 15px;
+      margin-top: 4px;
+      font-size: 12px;
       line-height: 1.35;
     }
-    .active-filters {
-      display: flex;
-      flex-wrap: wrap;
+    .coverage-controls {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) minmax(140px, 190px) minmax(160px, 210px) repeat(3, auto);
+      gap: 10px;
       align-items: center;
-      gap: 8px;
-      min-height: 34px;
-      margin: -4px 0 16px;
-      color: var(--muted);
-      font-size: 13px;
+      margin-bottom: 12px;
     }
-    .active-filter-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      max-width: 280px;
-      min-height: 30px;
+    .coverage-controls input,
+    .coverage-controls select {
+      width: 100%;
       border: 1px solid var(--line);
-      border-radius: 999px;
-      background: var(--chip);
-      color: var(--ink);
-      padding: 0 10px;
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 10px 12px;
+      color: var(--text);
       font: inherit;
-      cursor: pointer;
     }
-    .active-filter-chip span {
+    .coverage-table {
+      min-width: 1180px;
+    }
+    .balance-meter {
+      width: 120px;
+      height: 8px;
+      border-radius: 999px;
+      background: #eadfce;
       overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      margin-top: 6px;
     }
-    .active-filter-chip b {
-      color: var(--muted);
-      font-weight: 750;
+    .balance-meter span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--accent);
     }
-    .active-filter-chip::after {
-      content: "x";
-      color: var(--muted);
-      font-weight: 850;
-    }
-    @media (max-width: 980px) {
-      .matrix-layout { grid-template-columns: 1fr; }
-      .matrix-detail { position: static; }
+    @media (max-width: 900px) {
+      .coverage-controls { grid-template-columns: 1fr; }
     }
     
   </style>
 </head>
 <body>
-<script>
-window.PAPER_WIKI = {"papers": [{"slug": "2602.06036-dflash", "title": "DFlash: Block Diffusion for Flash Speculative Decoding", "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法", "title_en": "DFlash: Block Diffusion for Flash Speculative Decoding", "line": "Parallel Decoding with Diffusion Models", "year": "2026", "role": "followup", "status": "read", "reading_stage": "deep_read", "importance": 4, "has_code": true, "href": "2602.06036-dflash.html", "topics": ["Diffusion Language Models", "LLM Inference", "LLM Serving", "Speculative Decoding"], "methods": ["block diffusion", "KV injection", "parallel drafting", "Speculative Decoding"]}, {"slug": "2604.11035-introspective-dlm", "title": "Introspective Diffusion Language Models", "title_zh": "内省式扩散语言模型", "title_en": "Introspective Diffusion Language Models", "line": "Parallel Decoding with Diffusion Models", "year": "2026", "role": "foundation", "status": "read", "reading_stage": "deep_read", "importance": 5, "has_code": true, "href": "2604.11035-introspective-dlm.html", "topics": ["Diffusion Language Models", "LLM", "LLM Serving", "Parallel Decoding"], "methods": ["gated LoRA", "introspective consistency", "introspective strided decoding", "logit-shifted causal training"]}, {"slug": "2605.12825-orthrus", "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion", "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成", "title_en": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion", "line": "Parallel Decoding with Diffusion Models", "year": "2026", "role": "variant", "status": "read", "reading_stage": "deep_read", "importance": 4, "has_code": true, "href": "2605.12825-orthrus.html", "topics": ["Diffusion Language Models", "KV Cache", "LLM Inference", "Parallel Decoding"], "methods": ["dual-view attention", "forward KL distillation", "intra-model consensus", "masked diffusion"]}, {"slug": "2501.01005-flashinfer", "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving", "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎", "title_en": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving", "line": "Efficient Attention Kernels", "year": "2025", "role": "system", "status": "read", "reading_stage": "deep_read", "importance": 4, "has_code": true, "href": "2501.01005-flashinfer.html", "topics": ["Attention Kernels", "GPU Systems", "Inference Optimization", "KV Cache"], "methods": ["block-sparse attention", "composable KV-cache format", "CUDA Graph", "FlashAttention"]}, {"slug": "2307.08691-flashattention-2", "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning", "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention", "title_en": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning", "line": "Efficient Attention Kernels", "year": "2023", "role": "foundation", "status": "read", "reading_stage": "deep_read", "importance": 5, "has_code": true, "href": "2307.08691-flashattention-2.html", "topics": ["Efficient Attention", "GPU Kernel Optimization", "Long Context", "Transformer"], "methods": ["CUDA / GPU parallelism", "FlashAttention", "online softmax", "tiling"]}], "controls": {"active_status_workflow": "personal", "status": ["unread", "skimmed", "reading", "read", "archived"], "reading_stage": ["skim", "normal_read", "deep_read", "code_checked"], "review_stage": ["fresh", "due", "reviewed"], "status_workflows": {"personal": {"status_values": ["unread", "skimmed", "reading", "read", "archived"], "reading_stage_values": ["skim", "normal_read", "deep_read", "code_checked"], "review_stage_values": ["fresh", "due", "reviewed"]}, "research": {"status_values": ["inbox", "triaged", "reading", "implemented", "cited", "archived"], "reading_stage_values": ["skim", "normal_read", "deep_read", "code_checked", "reproduced"], "review_stage_values": ["fresh", "due", "reviewed", "evergreen"]}}, "line_role": ["foundation", "baseline", "main", "system", "variant", "followup", "survey"]}};
-</script>
 
 <button class="button quick-open" type="button" id="quickOpen">快速跳转</button>
 <div class="quick-panel" id="quickPanel" hidden>
@@ -533,357 +412,161 @@ window.PAPER_WIKI = {"papers": [{"slug": "2602.06036-dflash", "title": "DFlash: 
 </div>
 
 <header class="shell">
-  <div class="eyebrow">Research Matrix</div>
-  <h1>研究线年份矩阵</h1>
-  <p class="lead">用矩阵方式查看每条研究线在不同年份的论文覆盖，快速发现高密度阶段、空档年份和需要补读的方向。</p>
+  <div class="eyebrow">Coverage Map</div>
+  <h1>研究线分类覆盖地图</h1>
+  <p class="lead">按研究线检查 domain、track、problem、topic、method 和角色是否覆盖完整。适合在论文数量变多后，把补分类任务分派到具体研究线。</p>
   <div class="stats">
-    <a class="stat" href="index.html">卡片首页</a>
     <a class="stat" href="library.html">论文库表格</a>
-    <a class="stat" href="timeline.html">时间轴</a>
-    <a class="stat" href="matrix.html">研究矩阵</a>
-    <a class="stat" href="dashboard.html">管理控制台</a>
-    <a class="stat" href="collections.html">集合视图</a>
-    <a class="stat" href="related.html">关联网络</a>
-    <a class="stat" href="gaps.html">研究缺口</a>
-    <a class="stat" href="taxonomy.html">分类治理</a>
+    <a class="stat" href="balance.html">分类均衡</a>
+    <a class="stat" href="facets.html">分类工作台</a>
+    <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="lines/index.html">研究线</a>
-    <span class="stat">论文 5</span>
-    <span class="stat">年份 3</span>
     <span class="stat">研究线 2</span>
+    <span class="stat">平均覆盖 100.0</span>
+    <span class="stat">高风险 0</span>
+    <span class="stat">缺口 0</span>
   </div>
 </header>
-<div class="toolbar">
-  <div class="shell controls">
-    <input id="matrixSearch" type="search" placeholder="搜索研究线">
-    <select id="matrixTrack"><option value="">全部方向</option><option value="Inference Acceleration">Inference Acceleration (3)</option><option value="Parallel Decoding">Parallel Decoding (3)</option><option value="Attention Kernels">Attention Kernels (2)</option><option value="Inference Serving Systems">Inference Serving Systems (1)</option></select>
-    <select id="matrixWorkflow" aria-label="状态体系"></select>
-    <select id="matrixStatus"><option value="">全部状态</option><option value="read">read (5)</option><option value="archived">archived (0)</option><option value="reading">reading (0)</option><option value="skimmed">skimmed (0)</option><option value="unread">unread (0)</option></select>
-    <select id="matrixImportance"><option value="">重要性</option><option value="5">含 5 星</option><option value="4">含 4 星及以上</option><option value="3">含 3 星及以上</option></select>
-  </div>
-</div>
 <main class="shell">
-  <div class="results-bar">
-    <strong id="matrixCount">显示 2 / 2 条研究线</strong>
-    <div class="results-actions">
-      <button id="matrixCopyLink" class="button" type="button">复制当前链接</button>
-      <button id="matrixReset" class="button" type="button">重置筛选</button>
+  <section class="metric-grid">
+    <section class="metric-card"><span>平均覆盖分</span><strong>100.0</strong><span>跨研究线和字段的完整度</span></section>
+    <section class="metric-card"><span>高风险研究线</span><strong>0</strong><span>优先补 taxonomy</span></section>
+    <section class="metric-card"><span>字段缺口</span><strong>0</strong><span>paper-field 级缺失</span></section>
+    <section class="metric-card"><span>研究线</span><strong>2</strong><span>含 Unassigned</span></section>
+  </section>
+  <section>
+    <h2 class="section-title">覆盖明细</h2>
+    <div class="coverage-controls">
+      <input id="coverageSearch" type="search" placeholder="搜索研究线或字段">
+      <select id="coverageRisk"><option value="">全部风险</option><option value="high">high</option><option value="medium">medium</option><option value="low">low</option></select>
+      <select id="coverageSort"><option value="risk">风险优先</option><option value="score">覆盖分低到高</option><option value="missing">缺口多到少</option><option value="count">论文多到少</option><option value="line">研究线 A-Z</option></select>
+      <strong id="coverageCount">2 条</strong>
+      <button id="downloadCoverageCsv" class="button" type="button">下载当前 CSV</button>
+      <button id="copyCoverageMarkdown" class="button" type="button">复制治理清单</button>
     </div>
-  </div>
-  <div class="active-filters" id="matrixActiveFilters" aria-live="polite"></div>
-  <div class="matrix-layout">
-    <div class="matrix-table-wrap">
-      <table class="research-matrix">
-        <thead><tr><th>研究线</th><th>2026</th><th>2025</th><th>2023</th></tr></thead>
-        <tbody><tr class="matrix-row"
-  data-line="Parallel Decoding with Diffusion Models"
-  data-search="parallel decoding with diffusion models"
-  data-tracks="Inference Acceleration|Parallel Decoding"
-  data-statuses="read"
-  data-importance="5">
-  <th scope="row"><span>Parallel Decoding with Diffusion Models</span><small>3 篇</small></th>
-  <td>
-  <button class="matrix-cell heat-5" type="button"
-    data-line="Parallel Decoding with Diffusion Models"
-    data-year="2026"
-    data-count="3"
-    aria-label="Parallel Decoding with Diffusion Models 2026 3 篇">
-    <strong>3</strong>
-    <span>DFlash：用于快速 speculative decoding 的块扩散方法; 内省式扩散语言模型; Orthrus：通过双视角扩散实现内存高效的并行 token 生成</span>
-  </button>
-</td><td>
-  <button class="matrix-cell heat-0" type="button"
-    data-line="Parallel Decoding with Diffusion Models"
-    data-year="2025"
-    data-count="0"
-    aria-label="Parallel Decoding with Diffusion Models 2025 0 篇">
-    <strong></strong>
-    <span></span>
-  </button>
-</td><td>
-  <button class="matrix-cell heat-0" type="button"
-    data-line="Parallel Decoding with Diffusion Models"
-    data-year="2023"
-    data-count="0"
-    aria-label="Parallel Decoding with Diffusion Models 2023 0 篇">
-    <strong></strong>
-    <span></span>
-  </button>
-</td>
-</tr><tr class="matrix-row"
-  data-line="Efficient Attention Kernels"
-  data-search="efficient attention kernels"
-  data-tracks="Attention Kernels|Inference Serving Systems"
-  data-statuses="read"
-  data-importance="5">
-  <th scope="row"><span>Efficient Attention Kernels</span><small>2 篇</small></th>
-  <td>
-  <button class="matrix-cell heat-0" type="button"
-    data-line="Efficient Attention Kernels"
-    data-year="2026"
-    data-count="0"
-    aria-label="Efficient Attention Kernels 2026 0 篇">
-    <strong></strong>
-    <span></span>
-  </button>
-</td><td>
-  <button class="matrix-cell heat-2" type="button"
-    data-line="Efficient Attention Kernels"
-    data-year="2025"
-    data-count="1"
-    aria-label="Efficient Attention Kernels 2025 1 篇">
-    <strong>1</strong>
-    <span>FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</span>
-  </button>
-</td><td>
-  <button class="matrix-cell heat-2" type="button"
-    data-line="Efficient Attention Kernels"
-    data-year="2023"
-    data-count="1"
-    aria-label="Efficient Attention Kernels 2023 1 篇">
-    <strong>1</strong>
-    <span>FlashAttention-2：用更好的并行性与工作划分加速 Attention</span>
-  </button>
-</td>
-</tr></tbody>
-      </table>
+    <div class="table-wrap">
+      <table class="data-table coverage-table"><thead><tr><th>研究线</th><th>覆盖分</th><th>风险</th><th>Domain</th><th>Track</th><th>Problem</th><th>Topic</th><th>Method</th><th>Role</th></tr></thead><tbody id="coverageRows"><tr data-line="Parallel Decoding with Diffusion Models" data-risk="low" data-score="100" data-missing="0" data-count="3" data-search="parallel decoding with diffusion models low domain track problem topic method role"><td><a href="lines/parallel-decoding-with-diffusion-models.html">Parallel Decoding with Diffusion Models</a><div class="meta">3 篇</div></td><td><strong>100</strong><div class="balance-meter"><span style="width:100%"></span></div></td><td><span class="flag">low</span><div class="meta">缺口 0</div></td><td data-missing="0" data-coverage="100"><strong>100%</strong><div class="meta">缺 0 / 唯一 1</div><div class="coverage-top"><a href="library.html?line=Parallel+Decoding+with+Diffusion+Models&amp;domain=LLM+Systems">LLM Systems</a> <span class="meta">3</span></div></td><td data-missing="0" data-coverage="100"><strong>100%</strong><div class="meta">缺 0 / 唯一 2</div><div class="coverage-top"><a href="library.html?line=Parallel+Decoding+with+Diffusion+Models&amp;track=Inference+Acceleration">Inference Acceleration</a> <span class="meta">3</span>, <a href="library.html?line=Parallel+Decoding+with+Diffusion+Models&amp;track=Parallel+Decoding">Parallel Decoding</a> <span class="meta">3</span></div></td><td data-missing="0" data-coverage="100"><strong>100%</strong><div class="meta">缺 0 / 唯一 3</div><div class="coverage-top"><a href="library.html?line=Parallel+Decoding+with+Diffusion+Models&amp;problem=Lossless+Speculative+Decoding">Lossless Speculative Decoding</a> <span class="meta">1</span>, <a href="library.html?line=Parallel+Decoding+with+Diffusion+Models&amp;problem=Parallel+Diffusion+Decoding">Parallel Diffusion Decoding</a> <span class="meta">1</span></div></td><td data-missing="0" data-coverage="100"><strong>100%</strong><div class="meta">缺 0 / 唯一 7</div><div class="coverage-top"><a href="library.html?line=Parallel+Decoding+with+Diffusion+Models&amp;topic=Diffusion+Language+Models">Diffusion Language Models</a> <span class="meta">3</span>, <a href="library.html?line=Parallel+Decoding+with+Diffusion+Models&amp;topic=Speculative+Decoding">Speculative Decoding</a> <span class="meta">3</span></div></td><td data-missing="0" data-coverage="100"><strong>100%</strong><div class="meta">缺 0 / 唯一 16</div><div class="coverage-top"><a href="library.html?line=Parallel+Decoding+with+Diffusion+Models&amp;method=block+diffusion">block diffusion</a> <span class="meta">1</span>, <a href="library.html?line=Parallel+Decoding+with+Diffusion+Models&amp;method=KV+injection">KV injection</a> <span class="meta">1</span></div></td><td data-missing="0" data-coverage="100"><strong>100%</strong><div class="meta">缺 0 / 唯一 3</div><div class="coverage-top"><a href="library.html?line=Parallel+Decoding+with+Diffusion+Models&amp;role=followup">followup</a> <span class="meta">1</span>, <a href="library.html?line=Parallel+Decoding+with+Diffusion+Models&amp;role=foundation">foundation</a> <span class="meta">1</span></div></td></tr><tr data-line="Efficient Attention Kernels" data-risk="low" data-score="100" data-missing="0" data-count="2" data-search="efficient attention kernels low domain track problem topic method role"><td><a href="lines/efficient-attention-kernels.html">Efficient Attention Kernels</a><div class="meta">2 篇</div></td><td><strong>100</strong><div class="balance-meter"><span style="width:100%"></span></div></td><td><span class="flag">low</span><div class="meta">缺口 0</div></td><td data-missing="0" data-coverage="100"><strong>100%</strong><div class="meta">缺 0 / 唯一 1</div><div class="coverage-top"><a href="library.html?line=Efficient+Attention+Kernels&amp;domain=LLM+Systems">LLM Systems</a> <span class="meta">2</span></div></td><td data-missing="0" data-coverage="100"><strong>100%</strong><div class="meta">缺 0 / 唯一 2</div><div class="coverage-top"><a href="library.html?line=Efficient+Attention+Kernels&amp;track=Attention+Kernels">Attention Kernels</a> <span class="meta">2</span>, <a href="library.html?line=Efficient+Attention+Kernels&amp;track=Inference+Serving+Systems">Inference Serving Systems</a> <span class="meta">1</span></div></td><td data-missing="0" data-coverage="100"><strong>100%</strong><div class="meta">缺 0 / 唯一 2</div><div class="coverage-top"><a href="library.html?line=Efficient+Attention+Kernels&amp;problem=Customizable+Attention+Serving">Customizable Attention Serving</a> <span class="meta">1</span>, <a href="library.html?line=Efficient+Attention+Kernels&amp;problem=Efficient+Exact+Attention">Efficient Exact Attention</a> <span class="meta">1</span></div></td><td data-missing="0" data-coverage="100"><strong>100%</strong><div class="meta">缺 0 / 唯一 9</div><div class="coverage-top"><a href="library.html?line=Efficient+Attention+Kernels&amp;topic=Attention+Kernels">Attention Kernels</a> <span class="meta">1</span>, <a href="library.html?line=Efficient+Attention+Kernels&amp;topic=GPU+Systems">GPU Systems</a> <span class="meta">1</span></div></td><td data-missing="0" data-coverage="100"><strong>100%</strong><div class="meta">缺 0 / 唯一 10</div><div class="coverage-top"><a href="library.html?line=Efficient+Attention+Kernels&amp;method=FlashAttention">FlashAttention</a> <span class="meta">2</span>, <a href="library.html?line=Efficient+Attention+Kernels&amp;method=block-sparse+attention">block-sparse attention</a> <span class="meta">1</span></div></td><td data-missing="0" data-coverage="100"><strong>100%</strong><div class="meta">缺 0 / 唯一 2</div><div class="coverage-top"><a href="library.html?line=Efficient+Attention+Kernels&amp;role=system">system</a> <span class="meta">1</span>, <a href="library.html?line=Efficient+Attention+Kernels&amp;role=foundation">foundation</a> <span class="meta">1</span></div></td></tr></tbody></table>
     </div>
-    <aside class="matrix-detail" aria-live="polite">
-      <h2 id="matrixDetailTitle">选择一个格子</h2>
-      <p id="matrixDetailMeta" class="meta">点击矩阵中的数字，查看该研究线该年份的论文。</p>
-      <div id="matrixDetailList" class="matrix-detail-list"></div>
-    </aside>
-  </div>
+  </section>
 </main>
 <script>
-const matrixRows = Array.from(document.querySelectorAll(".matrix-row"));
-const matrixCells = Array.from(document.querySelectorAll(".matrix-cell"));
-const matrixSearch = document.querySelector("#matrixSearch");
-const matrixTrack = document.querySelector("#matrixTrack");
-const matrixWorkflow = document.querySelector("#matrixWorkflow");
-const matrixStatus = document.querySelector("#matrixStatus");
-const matrixImportance = document.querySelector("#matrixImportance");
-const matrixReset = document.querySelector("#matrixReset");
-const matrixCopyLink = document.querySelector("#matrixCopyLink");
-const matrixActiveFilters = document.querySelector("#matrixActiveFilters");
-const matrixCount = document.querySelector("#matrixCount");
-const matrixDetailTitle = document.querySelector("#matrixDetailTitle");
-const matrixDetailMeta = document.querySelector("#matrixDetailMeta");
-const matrixDetailList = document.querySelector("#matrixDetailList");
-const matrixPapers = window.PAPER_WIKI.papers || [];
-const matrixControls = window.PAPER_WIKI.controls || {};
-const matrixWorkflows = matrixControls.status_workflows || {};
-const activeMatrixWorkflow = matrixControls.active_status_workflow || Object.keys(matrixWorkflows)[0] || "default";
-const fallbackMatrixStatuses = Array.isArray(matrixControls.status) ? matrixControls.status : [];
-const observedMatrixStatuses = Array.from(new Set(matrixPapers.map(paper => paper.status).filter(Boolean)));
-const matrixStateControls = [
-  ["q", matrixSearch],
-  ["track", matrixTrack],
-  ["workflow", matrixWorkflow],
-  ["status", matrixStatus],
-  ["importance", matrixImportance],
-];
-const matrixControlsByKey = new Map(matrixStateControls);
-const matrixFilterLabels = {
-  q: "搜索",
-  track: "方向",
-  workflow: "状态体系",
-  status: "状态",
-  importance: "重要性",
-};
+const coverageData = [{"line": "Parallel Decoding with Diffusion Models", "href": "lines/parallel-decoding-with-diffusion-models.html", "count": 3, "score": 100, "risk": "low", "missing_total": 0, "fields": [{"field": "domains", "label": "Domain", "query_key": "domain", "coverage": 100, "missing": 0, "unique": 1, "top_values": [{"value": "LLM Systems", "count": 3}]}, {"field": "tracks", "label": "Track", "query_key": "track", "coverage": 100, "missing": 0, "unique": 2, "top_values": [{"value": "Inference Acceleration", "count": 3}, {"value": "Parallel Decoding", "count": 3}]}, {"field": "problems", "label": "Problem", "query_key": "problem", "coverage": 100, "missing": 0, "unique": 3, "top_values": [{"value": "Lossless Speculative Decoding", "count": 1}, {"value": "Parallel Diffusion Decoding", "count": 1}, {"value": "Memory-Efficient Parallel Token Generation", "count": 1}]}, {"field": "topics", "label": "Topic", "query_key": "topic", "coverage": 100, "missing": 0, "unique": 7, "top_values": [{"value": "Diffusion Language Models", "count": 3}, {"value": "Speculative Decoding", "count": 3}, {"value": "LLM Inference", "count": 2}, {"value": "LLM Serving", "count": 2}]}, {"field": "methods", "label": "Method", "query_key": "method", "coverage": 100, "missing": 0, "unique": 16, "top_values": [{"value": "block diffusion", "count": 1}, {"value": "KV injection", "count": 1}, {"value": "parallel drafting", "count": 1}, {"value": "Speculative Decoding", "count": 1}]}, {"field": "line_role", "label": "Role", "query_key": "role", "coverage": 100, "missing": 0, "unique": 3, "top_values": [{"value": "followup", "count": 1}, {"value": "foundation", "count": 1}, {"value": "variant", "count": 1}]}]}, {"line": "Efficient Attention Kernels", "href": "lines/efficient-attention-kernels.html", "count": 2, "score": 100, "risk": "low", "missing_total": 0, "fields": [{"field": "domains", "label": "Domain", "query_key": "domain", "coverage": 100, "missing": 0, "unique": 1, "top_values": [{"value": "LLM Systems", "count": 2}]}, {"field": "tracks", "label": "Track", "query_key": "track", "coverage": 100, "missing": 0, "unique": 2, "top_values": [{"value": "Attention Kernels", "count": 2}, {"value": "Inference Serving Systems", "count": 1}]}, {"field": "problems", "label": "Problem", "query_key": "problem", "coverage": 100, "missing": 0, "unique": 2, "top_values": [{"value": "Customizable Attention Serving", "count": 1}, {"value": "Efficient Exact Attention", "count": 1}]}, {"field": "topics", "label": "Topic", "query_key": "topic", "coverage": 100, "missing": 0, "unique": 9, "top_values": [{"value": "Attention Kernels", "count": 1}, {"value": "GPU Systems", "count": 1}, {"value": "Inference Optimization", "count": 1}, {"value": "KV Cache", "count": 1}]}, {"field": "methods", "label": "Method", "query_key": "method", "coverage": 100, "missing": 0, "unique": 10, "top_values": [{"value": "FlashAttention", "count": 2}, {"value": "block-sparse attention", "count": 1}, {"value": "composable KV-cache format", "count": 1}, {"value": "CUDA Graph", "count": 1}]}, {"field": "line_role", "label": "Role", "query_key": "role", "coverage": 100, "missing": 0, "unique": 2, "top_values": [{"value": "system", "count": 1}, {"value": "foundation", "count": 1}]}]}];
+const coverageSearch = document.querySelector("#coverageSearch");
+const coverageRisk = document.querySelector("#coverageRisk");
+const coverageSort = document.querySelector("#coverageSort");
+const coverageCount = document.querySelector("#coverageCount");
+const coverageBody = document.querySelector("#coverageRows");
+const coverageRows = Array.from(document.querySelectorAll("#coverageRows tr"));
+const downloadCoverageCsv = document.querySelector("#downloadCoverageCsv");
+const copyCoverageMarkdown = document.querySelector("#copyCoverageMarkdown");
+const coverageRiskRank = { high: 0, medium: 1, low: 2 };
 
-function matrixTokens(value) {
-  return String(value || "").split("|").filter(Boolean);
+function visibleCoverageRows() {
+  return coverageRows.filter(row => !row.hidden);
 }
 
-function esc(value) {
-  return String(value ?? "").replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char]));
+function coverageCsvCell(value) {
+  const text = String(value ?? "");
+  return (text.includes(",") || text.includes('"') || text.includes("\n"))
+    ? `"${text.replaceAll('"', '""')}"`
+    : text;
 }
 
-function orderedMatrixValues(values) {
-  return Array.from(new Set(values.map(value => String(value || "").trim()).filter(Boolean)));
+function coverageMetric(row, key) {
+  return Number(row.dataset[key] || 0);
 }
 
-function matrixWorkflowValues(name) {
-  const workflow = matrixWorkflows[name] || {};
-  const configured = Array.isArray(workflow.status_values) ? workflow.status_values : fallbackMatrixStatuses;
-  return orderedMatrixValues([...configured, ...observedMatrixStatuses]);
-}
-
-function populateMatrixWorkflowOptions() {
-  const names = Object.keys(matrixWorkflows);
-  const workflowNames = names.length ? names : [activeMatrixWorkflow];
-  matrixWorkflow.replaceChildren(...workflowNames.map(name => {
-    const label = name === activeMatrixWorkflow ? `${name} (默认)` : name;
-    return new Option(label, name);
-  }));
-  matrixWorkflow.value = workflowNames.includes(activeMatrixWorkflow) ? activeMatrixWorkflow : workflowNames[0] || "";
-}
-
-function applyMatrixWorkflow() {
-  const current = matrixStatus.value;
-  const values = matrixWorkflowValues(matrixWorkflow.value || activeMatrixWorkflow);
-  matrixStatus.replaceChildren(new Option("全部状态", ""));
-  values.forEach(value => {
-    const count = matrixPapers.filter(paper => paper.status === value).length;
-    matrixStatus.appendChild(new Option(`${value} (${count})`, value));
-  });
-  matrixStatus.value = values.includes(current) ? current : "";
-}
-
-function matrixDefaultValue(key) {
-  return key === "workflow" ? activeMatrixWorkflow : "";
-}
-
-function matrixState() {
-  const state = {};
-  matrixStateControls.forEach(([key, control]) => {
-    const defaultValue = matrixDefaultValue(key);
-    if (control.value && control.value !== defaultValue) state[key] = control.value;
-  });
-  return state;
-}
-
-function matrixCleanOptionLabel(label) {
-  return String(label || "").replace(/\s\(\d+\)$/, "").replace(/\s\(默认\)$/, "");
-}
-
-function matrixDisplayValue(key, control) {
-  if (key === "q") return control.value.trim();
-  const option = control.options && control.selectedIndex >= 0 ? control.options[control.selectedIndex] : null;
-  return matrixCleanOptionLabel(option ? option.textContent : control.value);
-}
-
-function renderMatrixActiveFilters() {
-  const state = matrixState();
-  const entries = Object.entries(state).filter(([key]) => matrixControlsByKey.has(key));
-  matrixActiveFilters.replaceChildren();
-  if (!entries.length) {
-    matrixActiveFilters.textContent = "未设置筛选条件";
-    return;
-  }
-  const prefix = document.createElement("span");
-  prefix.textContent = "当前筛选";
-  matrixActiveFilters.appendChild(prefix);
-  entries.forEach(([key]) => {
-    const control = matrixControlsByKey.get(key);
-    const chip = document.createElement("button");
-    chip.className = "active-filter-chip";
-    chip.type = "button";
-    chip.dataset.filterKey = key;
-    chip.title = `移除${matrixFilterLabels[key] || key}筛选`;
-    const name = document.createElement("b");
-    name.textContent = matrixFilterLabels[key] || key;
-    const value = document.createElement("span");
-    value.textContent = matrixDisplayValue(key, control);
-    chip.append(name, value);
-    matrixActiveFilters.appendChild(chip);
+function sortCoverageRows(rows) {
+  const mode = coverageSort.value;
+  return [...rows].sort((a, b) => {
+    if (mode === "score") return coverageMetric(a, "score") - coverageMetric(b, "score") || a.dataset.line.localeCompare(b.dataset.line);
+    if (mode === "missing") return coverageMetric(b, "missing") - coverageMetric(a, "missing") || a.dataset.line.localeCompare(b.dataset.line);
+    if (mode === "count") return coverageMetric(b, "count") - coverageMetric(a, "count") || a.dataset.line.localeCompare(b.dataset.line);
+    if (mode === "line") return a.dataset.line.localeCompare(b.dataset.line);
+    return (coverageRiskRank[a.dataset.risk] ?? 9) - (coverageRiskRank[b.dataset.risk] ?? 9) || coverageMetric(a, "score") - coverageMetric(b, "score");
   });
 }
 
-function clearMatrixFilter(key) {
-  const control = matrixControlsByKey.get(key);
-  if (!control) return;
-  control.value = matrixDefaultValue(key);
-  if (key === "workflow") applyMatrixWorkflow();
-  renderMatrixFilters();
-}
-
-function writeMatrixStateToUrl() {
-  const params = new URLSearchParams(matrixState());
-  const query = params.toString();
-  window.history.replaceState(null, "", query ? `${location.pathname}?${query}` : location.pathname);
-}
-
-function readMatrixStateFromUrl() {
-  const params = new URLSearchParams(window.location.search);
-  matrixStateControls.forEach(([key, control]) => {
-    if (key === "status") return;
-    control.value = params.has(key) ? params.get(key) : matrixDefaultValue(key);
-  });
-  applyMatrixWorkflow();
-  matrixStatus.value = params.has("status") ? params.get("status") : "";
-}
-
-function matrixViewUrl() {
-  const url = new URL(window.location.href);
-  url.search = new URLSearchParams(matrixState()).toString();
-  url.hash = "";
-  return url.toString();
-}
-
-async function copyMatrixLink() {
-  const text = matrixViewUrl();
-  try {
-    await navigator.clipboard.writeText(text);
-    matrixCopyLink.textContent = "已复制";
-    setTimeout(() => matrixCopyLink.textContent = "复制当前链接", 1400);
-  } catch {
-    window.prompt("复制当前链接", text);
-  }
-}
-
-function renderMatrixFilters() {
-  const q = matrixSearch.value.trim().toLowerCase();
-  const minImportance = Number(matrixImportance.value || 0);
+function renderCoverageRows() {
+  const q = coverageSearch.value.trim().toLowerCase();
+  const risk = coverageRisk.value;
   let visible = 0;
-  matrixRows.forEach(row => {
-    const hit = (!q || row.dataset.search.includes(q))
-      && (!matrixTrack.value || matrixTokens(row.dataset.tracks).includes(matrixTrack.value))
-      && (!matrixStatus.value || matrixTokens(row.dataset.statuses).includes(matrixStatus.value))
-      && (!minImportance || Number(row.dataset.importance || 0) >= minImportance);
+  coverageRows.forEach(row => {
+    const hit = (!q || row.dataset.search.includes(q)) && (!risk || row.dataset.risk === risk);
     row.hidden = !hit;
     if (hit) visible += 1;
   });
-  matrixCount.textContent = `显示 ${visible} / ${matrixRows.length} 条研究线`;
-  renderMatrixActiveFilters();
-  writeMatrixStateToUrl();
+  sortCoverageRows(coverageRows).forEach(row => coverageBody.appendChild(row));
+  coverageCount.textContent = `${visible} / ${coverageRows.length} 条`;
 }
 
-function renderMatrixDetail(line, year) {
-  matrixCells.forEach(cell => cell.classList.toggle("active", cell.dataset.line === line && cell.dataset.year === year));
-  const papers = matrixPapers.filter(paper => paper.line === line && paper.year === year);
-  matrixDetailTitle.textContent = `${line} / ${year}`;
-  matrixDetailMeta.textContent = `${papers.length} 篇论文`;
-  if (!papers.length) {
-    matrixDetailList.innerHTML = '<div class="empty">这个格子还没有论文。</div>';
+function filteredCoverageData() {
+  const visibleLines = new Set(visibleCoverageRows().map(row => row.dataset.line));
+  return coverageData.filter(row => visibleLines.has(row.line));
+}
+
+function downloadCoverageRows() {
+  const rows = filteredCoverageData();
+  if (!rows.length) {
+    window.alert("当前筛选结果为空。");
     return;
   }
-  matrixDetailList.innerHTML = papers.map(paper => {
-    const labels = [paper.role, paper.status, paper.reading_stage, paper.importance ? `I ${paper.importance}` : "", paper.has_code ? "code" : ""].filter(Boolean);
-    const chips = [...(paper.topics || []), ...(paper.methods || [])].slice(0, 6);
-    return `<article class="matrix-paper">
-      <h3><a href="${esc(paper.href)}">${esc(paper.title_zh || paper.title)}</a></h3>
-      <div class="meta">${esc(paper.title_en || "")}</div>
-      <div class="card-flags">${labels.map(label => `<span class="flag">${esc(label)}</span>`).join("")}</div>
-      <div class="chips">${chips.map(chip => `<span class="chip">${esc(chip)}</span>`).join("")}</div>
-    </article>`;
-  }).join("");
+  const header = ["research_line", "papers", "score", "risk", "missing_total", "field", "coverage", "missing", "unique", "top_values"];
+  const flat = [];
+  rows.forEach(row => {
+    row.fields.forEach(field => {
+      flat.push([
+        row.line,
+        row.count,
+        row.score,
+        row.risk,
+        row.missing_total,
+        field.label,
+        field.coverage,
+        field.missing,
+        field.unique,
+        (field.top_values || []).map(item => `${item.value}:${item.count}`).join("; "),
+      ]);
+    });
+  });
+  const csv = [header, ...flat].map(row => row.map(coverageCsvCell).join(",")).join("\n") + "\n";
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "research_line_coverage.csv";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
 }
 
-[matrixSearch, matrixTrack, matrixWorkflow, matrixStatus, matrixImportance].forEach(control => control.addEventListener("input", () => {
-  if (control === matrixWorkflow) applyMatrixWorkflow();
-  renderMatrixFilters();
-}));
-matrixReset.addEventListener("click", () => {
-  [matrixSearch, matrixTrack, matrixStatus, matrixImportance].forEach(control => {
-    control.value = "";
+async function copyCoverageQueue() {
+  const rows = filteredCoverageData();
+  if (!rows.length) {
+    window.alert("当前筛选结果为空。");
+    return;
+  }
+  const lines = ["# Research Line Coverage Review", ""];
+  rows.forEach(row => {
+    const weak = row.fields.filter(field => field.missing > 0 || field.coverage < 100);
+    lines.push(`- [ ] ${row.risk} / score ${row.score} / ${row.line}`);
+    lines.push(`  - Papers: ${row.count}, missing slots: ${row.missing_total}`);
+    weak.forEach(field => lines.push(`  - ${field.label}: ${field.coverage}%, missing ${field.missing}, unique ${field.unique}`));
   });
-  matrixWorkflow.value = activeMatrixWorkflow;
-  applyMatrixWorkflow();
-  renderMatrixFilters();
-});
-matrixCopyLink.addEventListener("click", copyMatrixLink);
-matrixActiveFilters.addEventListener("click", event => {
-  const target = event.target instanceof Element ? event.target.closest("[data-filter-key]") : null;
-  if (!target) return;
-  clearMatrixFilter(target.dataset.filterKey);
-});
-matrixCells.forEach(cell => cell.addEventListener("click", () => renderMatrixDetail(cell.dataset.line, cell.dataset.year)));
-populateMatrixWorkflowOptions();
-readMatrixStateFromUrl();
-renderMatrixFilters();
-const firstNonEmpty = matrixCells.find(cell => Number(cell.dataset.count || 0) > 0);
-if (firstNonEmpty) renderMatrixDetail(firstNonEmpty.dataset.line, firstNonEmpty.dataset.year);
+  const text = lines.join("\n") + "\n";
+  try {
+    await navigator.clipboard.writeText(text);
+    window.alert("已复制。");
+  } catch {
+    window.prompt("复制治理清单", text);
+  }
+}
+
+[coverageSearch, coverageRisk, coverageSort].forEach(control => control.addEventListener("input", renderCoverageRows));
+downloadCoverageCsv.addEventListener("click", downloadCoverageRows);
+copyCoverageMarkdown.addEventListener("click", copyCoverageQueue);
+renderCoverageRows();
 </script>
 
 <script>
