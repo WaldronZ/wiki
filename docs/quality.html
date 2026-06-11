@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>管理控制台</title>
+  <title>质量治理</title>
   <style>
     :root {
       color-scheme: light;
@@ -284,38 +284,38 @@
 
 
 <header class="shell">
-  <div class="eyebrow">Knowledge Base Operations</div>
-  <h1>管理控制台</h1>
-  <p class="lead">面向大量论文的运营视图：看分类覆盖、研究线健康度、复习队列和需要补元数据的报告。所有数据来自 markdown frontmatter 与 wiki 索引。</p>
+  <div class="eyebrow">Quality Gate</div>
+  <h1>质量治理</h1>
+  <p class="lead">把分类漂移、弱元数据、复习计划和候选论文去重集中到一个发布前检查视图。适合论文库变大后做持续治理。</p>
   <div class="stats">
-    <a class="stat" href="index.html">返回首页</a>
+    <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="inbox.html">待处理池</a>
-    <a class="stat" href="review.html">复习计划</a>
-    <a class="stat" href="quality.html">质量治理</a>
-    <a class="stat" href="lines/index.html">研究线</a>
-    <a class="stat" href="taxonomy.html">分类治理</a>
-    <a class="stat" href="tags.html">分类总览</a>
     <a class="stat" href="quality.json">质量 JSON</a>
-    <a class="stat" href="stats.json">统计 JSON</a>
-    <span class="stat">生成时间 2026-06-11T16:48:29</span>
+    <span class="stat">论文 5</span>
+    <span class="stat">生成时间 2026-06-11T17:04:15</span>
   </div>
 </header>
 <main class="shell">
   <section>
-    <h2 class="section-title">总览</h2>
-    <div class="metric-grid"><section class="metric-card"><span>论文</span><strong>5</strong><span>已纳入 wiki 的报告数</span></section><section class="metric-card"><span>质量分</span><strong>92.0</strong><span>元数据、复习计划和代码观察综合分</span></section><section class="metric-card"><span>研究线</span><strong>2</strong><span>有明确 research_line 的脉络</span></section><section class="metric-card"><span>代码覆盖</span><strong>100%</strong><span>包含代码观察或代码仓库线索</span></section><section class="metric-card"><span>分类覆盖</span><strong>100%</strong><span>必要 taxonomy 字段完整</span></section><section class="metric-card"><span>高优先级</span><strong>2</strong><span>importance &gt;= 5</span></section><section class="metric-card"><span>待复习</span><strong>0</strong><span>next_review &lt;= 2026-06-11</span></section><section class="metric-card"><span>需建复习计划</span><strong>5</strong><span>缺 next_review 的建议队列</span></section><section class="metric-card"><span>待补分类</span><strong>0</strong><span>缺 taxonomy 或 line role</span></section></div>
+    <h2 class="section-title">质量门禁</h2>
+    <div class="metric-grid"><section class="metric-card"><span>质量分</span><strong>92.0</strong><span>综合得分</span></section><section class="metric-card"><span>分类覆盖</span><strong>100%</strong><span>必要字段</span></section><section class="metric-card"><span>复习计划</span><strong>0%</strong><span>next_review</span></section><section class="metric-card"><span>漂移项</span><strong>0</strong><span>taxonomy drift</span></section><section class="metric-card"><span>重复候选</span><strong>0</strong><span>inbox</span></section></div>
   </section>
   <section>
-    <h2 class="section-title">研究线健康度</h2>
-    <table class="data-table"><thead><tr><th>研究线</th><th>论文</th><th>角色</th><th>平均重要性</th><th>代码覆盖</th></tr></thead><tbody><tr><td><a href="lines/parallel-decoding-with-diffusion-models.html">Parallel Decoding with Diffusion Models</a></td><td>3</td><td>foundation, variant, followup</td><td>4.3</td><td>100%</td></tr><tr><td><a href="lines/efficient-attention-kernels.html">Efficient Attention Kernels</a></td><td>2</td><td>foundation, system</td><td>4.5</td><td>100%</td></tr></tbody></table>
+    <h2 class="section-title">待处理问题</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>论文</th><th>分数</th><th>缺失字段</th><th>弱字段</th><th>复习</th></tr></thead><tbody><tr><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a><div class="meta">Parallel Decoding with Diffusion Models</div></td><td>92</td><td>-</td><td>next_review, review_stage</td><td>-</td></tr><tr><td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a><div class="meta">Parallel Decoding with Diffusion Models</div></td><td>92</td><td>-</td><td>next_review, review_stage</td><td>-</td></tr><tr><td><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a><div class="meta">Parallel Decoding with Diffusion Models</div></td><td>92</td><td>-</td><td>next_review, review_stage</td><td>-</td></tr><tr><td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a><div class="meta">Efficient Attention Kernels</div></td><td>92</td><td>-</td><td>next_review, review_stage</td><td>-</td></tr><tr><td><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a><div class="meta">Efficient Attention Kernels</div></td><td>92</td><td>-</td><td>next_review, review_stage</td><td>-</td></tr></tbody></table></div>
   </section>
   <section>
-    <h2 class="section-title">管理队列</h2>
-    <div class="queue-grid"><section class="role-section"><h2>高优先级 <span class="meta">2</span></h2><ol class="queue-list"><li><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a> <span class="meta">Efficient Attention Kernels</span></li><li><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> <span class="meta">Parallel Decoding with Diffusion Models</span></li></ol></section><section class="role-section"><h2>待补分类 <span class="meta">0</span></h2><div class="empty">taxonomy 覆盖完整。</div></section><section class="role-section"><h2>待复习 <span class="meta">0</span></h2><div class="empty">没有到期复习项。</div></section><section class="role-section"><h2>未设置复习 <span class="meta">5</span></h2><ol class="queue-list"><li><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a> <span class="meta">Parallel Decoding with Diffusion Models</span></li><li><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> <span class="meta">Parallel Decoding with Diffusion Models</span></li><li><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a> <span class="meta">Parallel Decoding with Diffusion Models</span></li><li><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a> <span class="meta">Efficient Attention Kernels</span></li><li><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a> <span class="meta">Efficient Attention Kernels</span></li></ol></section><section class="role-section"><h2>无代码观察 <span class="meta">0</span></h2><div class="empty">所有论文都有代码观察或代码线索。</div></section></div>
+    <h2 class="section-title">Taxonomy Drift</h2>
+    <div class="table-wrap"><div class="empty">暂无 taxonomy drift。</div></div>
   </section>
   <section>
-    <h2 class="section-title">质量队列</h2>
+    <h2 class="section-title">候选去重</h2>
+    <div class="table-wrap"><div class="empty">暂无疑似重复候选。</div></div>
+  </section>
+  <section>
+    <h2 class="section-title">队列摘要</h2>
     <table class="data-table"><thead><tr><th>队列</th><th>数量</th><th>样例 slug</th></tr></thead><tbody><tr><td>missing_required_metadata</td><td>0</td><td></td></tr><tr><td>needs_review_plan</td><td>5</td><td>2602.06036-dflash, 2604.11035-introspective-dlm, 2605.12825-orthrus, 2501.01005-flashinfer, 2307.08691-flashattention-2</td></tr><tr><td>due_review</td><td>0</td><td></td></tr><tr><td>no_code_observation</td><td>0</td><td></td></tr><tr><td>taxonomy_drift</td><td>0</td><td></td></tr><tr><td>high_importance</td><td>2</td><td>2307.08691-flashattention-2, 2604.11035-introspective-dlm</td></tr></tbody></table>
   </section>
 </main>

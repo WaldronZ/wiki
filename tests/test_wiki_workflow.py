@@ -165,6 +165,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "index.html",
                 "library.html",
                 "inbox.html",
+                "quality.html",
                 "review.html",
                 "dashboard.html",
                 "taxonomy.html",
@@ -210,6 +211,13 @@ class WikiWorkflowTest(unittest.TestCase):
             inbox_html = (report_dir / "inbox.html").read_text(encoding="utf-8")
             self.assertIn("Gamma Paper", inbox_html)
             self.assertIn("复制任务", inbox_html)
+            quality = json.loads((report_dir / "quality.json").read_text(encoding="utf-8"))
+            self.assertIn("taxonomy_drift", quality)
+            self.assertEqual(quality["taxonomy_drift"], [])
+            self.assertEqual(quality["queues"]["taxonomy_drift"], [])
+            quality_html = (report_dir / "quality.html").read_text(encoding="utf-8")
+            self.assertIn("质量治理", quality_html)
+            self.assertIn("Taxonomy Drift", quality_html)
 
             review = json.loads((report_dir / "review.json").read_text(encoding="utf-8"))
             self.assertEqual(review["count"], 2)
@@ -321,6 +329,13 @@ class WikiWorkflowTest(unittest.TestCase):
                 beta_path.read_text(encoding="utf-8").replace("status: read", "status: half_read"),
                 encoding="utf-8",
             )
+            self.run_cmd("scripts/build_wiki.py", str(report_dir))
+            quality = json.loads((report_dir / "quality.json").read_text(encoding="utf-8"))
+            self.assertEqual(quality["queues"]["taxonomy_drift"], ["2501.00002-beta-paper"])
+            self.assertEqual(quality["taxonomy_drift"][0]["field"], "status")
+            self.assertEqual(quality["taxonomy_drift"][0]["value"], "half_read")
+            quality_html = (report_dir / "quality.html").read_text(encoding="utf-8")
+            self.assertIn("half_read", quality_html)
 
             relaxed = self.run_cmd("scripts/validate_wiki.py", str(report_dir))
             self.assertEqual(relaxed.returncode, 0)

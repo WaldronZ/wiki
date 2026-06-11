@@ -32,6 +32,7 @@ GENERATED_FIXED_PATHS = (
     "index.html",
     "library.html",
     "inbox.html",
+    "quality.html",
     "review.html",
     "dashboard.html",
     "taxonomy.html",
@@ -690,6 +691,33 @@ def taxonomy_counts(papers: list[dict[str, Any]]) -> dict[str, dict[str, int]]:
     }
 
 
+def taxonomy_drift_items(papers: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    specs = {
+        "status": STATUS_VALUES,
+        "reading_stage": READING_STAGE_VALUES,
+        "review_stage": REVIEW_STAGE_VALUES,
+        "line_role": list(ROLE_ORDER.keys()),
+    }
+    drift: list[dict[str, Any]] = []
+    for paper in papers:
+        for field, allowed in specs.items():
+            value = str(paper.get(field) or "").strip()
+            if not value or value == "Unassigned":
+                continue
+            if value not in allowed:
+                drift.append(
+                    {
+                        "slug": paper["slug"],
+                        "title": paper["title"],
+                        "title_zh": paper["title_zh"],
+                        "field": field,
+                        "value": value,
+                        "allowed": allowed,
+                    }
+                )
+    return drift
+
+
 def paper_quality_issue(paper: dict[str, Any], today: str) -> dict[str, Any]:
     missing_fields: list[str] = []
     weak_fields: list[str] = []
@@ -736,6 +764,7 @@ def paper_quality_issue(paper: dict[str, Any], today: str) -> dict[str, Any]:
 def build_quality_report(papers: list[dict[str, Any]]) -> dict[str, Any]:
     today = dt.date.today().isoformat()
     issues = [paper_quality_issue(paper, today) for paper in papers]
+    taxonomy_drift = taxonomy_drift_items(papers)
     papers_with_issues = [
         issue
         for issue in issues
@@ -752,6 +781,7 @@ def build_quality_report(papers: list[dict[str, Any]]) -> dict[str, Any]:
         "needs_review_plan": [paper["slug"] for paper in papers if not paper.get("next_review")],
         "due_review": [issue["slug"] for issue in issues if issue["due_review"]],
         "no_code_observation": [paper["slug"] for paper in papers if not paper.get("has_code")],
+        "taxonomy_drift": sorted({item["slug"] for item in taxonomy_drift}),
         "high_importance": [
             paper["slug"]
             for paper in sorted(papers, key=lambda p: (-(p.get("importance") or 0), p["title"]))
@@ -771,6 +801,7 @@ def build_quality_report(papers: list[dict[str, Any]]) -> dict[str, Any]:
         },
         "queues": queues,
         "issues": papers_with_issues,
+        "taxonomy_drift": taxonomy_drift,
     }
 
 
@@ -1383,6 +1414,7 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="inbox.html">待处理池</a>
     <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="lines/index.html">研究线</a>
     <a class="stat" href="tags.html">分类总览</a>
@@ -1890,6 +1922,7 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="inbox.html">待处理池</a>
     <a class="stat" href="review.html">复习计划</a>
+    <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="lines/index.html">研究线</a>
     <a class="stat" href="tags.html">分类总览</a>
@@ -2456,6 +2489,141 @@ def render_review(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     (report_dir / "review.html").write_text(page_shell("复习计划", body), encoding="utf-8")
 
 
+def render_quality_issue_row(issue: dict[str, Any]) -> str:
+    missing = ", ".join(issue.get("missing_fields") or []) or "-"
+    weak = ", ".join(issue.get("weak_fields") or []) or "-"
+    review = "到期" if issue.get("due_review") else "-"
+    title = issue.get("title_zh") or issue.get("title") or issue.get("slug")
+    href = f"{html.escape(str(issue.get('slug') or ''))}.html"
+    return (
+        "<tr>"
+        f'<td><a href="{href}">{html.escape(str(title))}</a><div class="meta">{html.escape(str(issue.get("research_line") or ""))}</div></td>'
+        f"<td>{html.escape(str(issue.get('score') or 0))}</td>"
+        f"<td>{html.escape(missing)}</td>"
+        f"<td>{html.escape(weak)}</td>"
+        f"<td>{html.escape(review)}</td>"
+        "</tr>"
+    )
+
+
+def render_quality_drift_row(item: dict[str, Any]) -> str:
+    title = item.get("title_zh") or item.get("title") or item.get("slug")
+    href = f"{html.escape(str(item.get('slug') or ''))}.html"
+    allowed = ", ".join(str(value) for value in item.get("allowed", []))
+    return (
+        "<tr>"
+        f'<td><a href="{href}">{html.escape(str(title))}</a></td>'
+        f"<td>{html.escape(str(item.get('field') or ''))}</td>"
+        f"<td><span class=\"flag\">{html.escape(str(item.get('value') or ''))}</span></td>"
+        f"<td>{html.escape(allowed)}</td>"
+        "</tr>"
+    )
+
+
+def render_quality_inbox_row(item: dict[str, Any]) -> str:
+    title = item.get("title") or item.get("arxiv_id") or item.get("link") or "Untitled"
+    link = str(item.get("link") or "")
+    link_html = f'<a href="{html.escape(link)}">{html.escape(link)}</a>' if link else ""
+    return (
+        "<tr>"
+        f"<td>{html.escape(str(title))}<div class=\"meta\">{html.escape(str(item.get('arxiv_id') or ''))}</div></td>"
+        f"<td>{link_html}</td>"
+        f"<td>{html.escape(str(item.get('status') or 'queued'))}</td>"
+        f"<td>{html.escape(str(item.get('note') or ''))}</td>"
+        "</tr>"
+    )
+
+
+def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
+    quality = build_quality_report(papers)
+    issue_rows = "".join(render_quality_issue_row(issue) for issue in quality["issues"])
+    drift_rows = "".join(render_quality_drift_row(item) for item in quality["taxonomy_drift"])
+    duplicate_inbox = [item for item in inbox_items if item.get("duplicate")]
+    duplicate_rows = "".join(render_quality_inbox_row(item) for item in duplicate_inbox)
+
+    issue_table = (
+        '<table class="data-table"><thead><tr><th>论文</th><th>分数</th><th>缺失字段</th><th>弱字段</th><th>复习</th></tr></thead>'
+        f"<tbody>{issue_rows}</tbody></table>"
+        if issue_rows
+        else '<div class="empty">暂无质量问题。</div>'
+    )
+    drift_table = (
+        '<table class="data-table"><thead><tr><th>论文</th><th>字段</th><th>当前值</th><th>允许值</th></tr></thead>'
+        f"<tbody>{drift_rows}</tbody></table>"
+        if drift_rows
+        else '<div class="empty">暂无 taxonomy drift。</div>'
+    )
+    duplicate_table = (
+        '<table class="data-table"><thead><tr><th>候选论文</th><th>链接</th><th>状态</th><th>备注</th></tr></thead>'
+        f"<tbody>{duplicate_rows}</tbody></table>"
+        if duplicate_rows
+        else '<div class="empty">暂无疑似重复候选。</div>'
+    )
+    queue_rows = "".join(
+        "<tr>"
+        f"<td>{html.escape(name)}</td>"
+        f"<td>{len(slugs)}</td>"
+        f"<td>{html.escape(', '.join(slugs[:10]))}{' ...' if len(slugs) > 10 else ''}</td>"
+        "</tr>"
+        for name, slugs in quality["queues"].items()
+    )
+    queue_table = (
+        '<table class="data-table"><thead><tr><th>队列</th><th>数量</th><th>样例 slug</th></tr></thead>'
+        f"<tbody>{queue_rows}</tbody></table>"
+    )
+    metrics = [
+        ("质量分", str(quality["quality_score"]), "综合得分"),
+        ("分类覆盖", quality["coverage"]["taxonomy"], "必要字段"),
+        ("复习计划", quality["coverage"]["review_plan"], "next_review"),
+        ("漂移项", str(len(quality["taxonomy_drift"])), "taxonomy drift"),
+        ("重复候选", str(len(duplicate_inbox)), "inbox"),
+    ]
+    metric_html = "".join(
+        f'<section class="metric-card"><span>{html.escape(label)}</span><strong>{html.escape(value)}</strong><span>{html.escape(note)}</span></section>'
+        for label, value, note in metrics
+    )
+
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Quality Gate</div>
+  <h1>质量治理</h1>
+  <p class="lead">把分类漂移、弱元数据、复习计划和候选论文去重集中到一个发布前检查视图。适合论文库变大后做持续治理。</p>
+  <div class="stats">
+    <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="taxonomy.html">分类治理</a>
+    <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="inbox.html">待处理池</a>
+    <a class="stat" href="quality.json">质量 JSON</a>
+    <span class="stat">论文 {quality["count"]}</span>
+    <span class="stat">生成时间 {html.escape(quality["generated_at"])}</span>
+  </div>
+</header>
+<main class="shell">
+  <section>
+    <h2 class="section-title">质量门禁</h2>
+    <div class="metric-grid">{metric_html}</div>
+  </section>
+  <section>
+    <h2 class="section-title">待处理问题</h2>
+    <div class="table-wrap">{issue_table}</div>
+  </section>
+  <section>
+    <h2 class="section-title">Taxonomy Drift</h2>
+    <div class="table-wrap">{drift_table}</div>
+  </section>
+  <section>
+    <h2 class="section-title">候选去重</h2>
+    <div class="table-wrap">{duplicate_table}</div>
+  </section>
+  <section>
+    <h2 class="section-title">队列摘要</h2>
+    {queue_table}
+  </section>
+</main>
+"""
+    (report_dir / "quality.html").write_text(page_shell("质量治理", body), encoding="utf-8")
+
+
 def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     quality = build_quality_report(papers)
     review_plan = build_review_plan(papers)
@@ -2575,6 +2743,7 @@ def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="inbox.html">待处理池</a>
     <a class="stat" href="review.html">复习计划</a>
+    <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="lines/index.html">研究线</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="tags.html">分类总览</a>
@@ -2793,6 +2962,7 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="index.html">返回首页</a>
     <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="tags.html">分类总览</a>
     {guide_link}
     <a class="stat" href="stats.json">统计 JSON</a>
@@ -3025,6 +3195,7 @@ def build_wiki(report_dir: Path) -> int:
     render_library(report_dir, papers)
     render_inbox(report_dir, inbox_items)
     render_review(report_dir, papers)
+    render_quality(report_dir, papers, inbox_items)
     render_dashboard(report_dir, papers)
     render_taxonomy(report_dir, papers)
     render_line_pages(report_dir, papers)

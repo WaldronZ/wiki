@@ -15,6 +15,7 @@ function htmlFiles() {
     "index.html",
     "library.html",
     "inbox.html",
+    "quality.html",
     "review.html",
     "dashboard.html",
     "taxonomy.html",

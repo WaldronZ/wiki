@@ -70,6 +70,7 @@
       "needs_review_plan": 5,
       "due_review": 0,
       "no_code_observation": 0,
+      "taxonomy_drift": 0,
       "high_importance": 2
     },
     "review": {

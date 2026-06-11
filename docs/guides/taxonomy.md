@@ -121,7 +121,7 @@ has_code: true
 - 列表里不能有重复值或空值。
 - `shared_views` 必须是对象列表，每个视图都要有非空 `name` 和非空 `state`。
 
-报告里的 `status`、`reading_stage`、`review_stage` 和 `line_role` 如果不在 `taxonomy.json` 对应列表中，普通校验会给 warning，方便你逐步治理旧报告；发布或团队协作前可以使用严格模式把它升级为 error：
+报告里的 `status`、`reading_stage`、`review_stage` 和 `line_role` 如果不在 `taxonomy.json` 对应列表中，会被记录到 `docs/quality.json` 的 `taxonomy_drift`，并展示在 `docs/quality.html`。普通校验会给 warning，方便你逐步治理旧报告；发布或团队协作前可以使用严格模式把它升级为 error：
 
 ```bash
 python3 scripts/validate_wiki.py docs --strict-taxonomy
