@@ -4855,10 +4855,12 @@ def render_facets(report_dir: Path, papers: list[dict[str, Any]]) -> None:
 
     facet_cards = []
     table_rows = []
+    field_options = []
     long_tail_total = 0
     overloaded_total = 0
     unused_total = 0
     for field, english, query_key, label, is_list in FACET_SPECS:
+        field_options.append(f'<option value="{html.escape(label, quote=True)}">{html.escape(label)}</option>')
         counts = facet_count_for_field(papers, taxonomy, field, is_list)
         used_items = [(value, count) for value, count in counts.items() if count > 0]
         long_tail = sum(1 for _, count in used_items if count == 1)
@@ -4886,8 +4888,9 @@ def render_facets(report_dir: Path, papers: list[dict[str, Any]]) -> None:
             flag_html = "".join(f'<span class="flag">{html.escape(flag)}</span>' for flag in flags) or '<span class="flag">stable</span>'
             href = page_query_href("library.html", **{query_key: value})
             value_cell = f'<a href="{html.escape(href)}">{html.escape(value)}</a>'
+            search_text = " ".join([label, english, value, action, taxonomy_action_recommendation(action, label)]).lower()
             table_rows.append(
-                "<tr>"
+                f'<tr data-field="{html.escape(label, quote=True)}" data-action="{html.escape(action, quote=True)}" data-search="{html.escape(search_text, quote=True)}">'
                 f"<td>{html.escape(label)}</td>"
                 f"<td>{value_cell}</td>"
                 f"<td>{count}</td>"
@@ -4943,6 +4946,26 @@ def render_facets(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       padding: 14px;
     }
     .facet-action h3 { margin: 0 0 6px; font-size: 16px; }
+    .facet-controls {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) repeat(2, minmax(150px, 210px)) auto;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .facet-controls input,
+    .facet-controls select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 10px 12px;
+      color: var(--text);
+      font: inherit;
+    }
+    @media (max-width: 760px) {
+      .facet-controls { grid-template-columns: 1fr; }
+    }
     """
     body = f"""
 <header class="shell">
@@ -4977,9 +5000,40 @@ def render_facets(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   </section>
   <section>
     <h2 class="section-title">分类明细</h2>
+    <div class="facet-controls">
+      <input id="facetSearch" type="search" placeholder="搜索字段、标签、建议动作">
+      <select id="facetField"><option value="">全部字段</option>{"".join(field_options)}</select>
+      <select id="facetAction"><option value="">全部状态</option><option value="merge_candidate">长尾待合并</option><option value="split_candidate">过载待拆分</option><option value="unused_config">候选空值</option><option value="watch">观察中</option><option value="stable">稳定</option></select>
+      <strong id="facetResultCount">{len(table_rows)} 项</strong>
+    </div>
     <div class="table-wrap">{table_html}</div>
   </section>
 </main>
+<script>
+const facetSearch = document.querySelector("#facetSearch");
+const facetField = document.querySelector("#facetField");
+const facetAction = document.querySelector("#facetAction");
+const facetResultCount = document.querySelector("#facetResultCount");
+const facetRows = Array.from(document.querySelectorAll("tr[data-field]"));
+
+function renderFacetRows() {{
+  const q = facetSearch.value.trim().toLowerCase();
+  const field = facetField.value;
+  const action = facetAction.value;
+  let visible = 0;
+  facetRows.forEach(row => {{
+    const hit = (!q || row.dataset.search.includes(q))
+      && (!field || row.dataset.field === field)
+      && (!action || row.dataset.action === action);
+    row.hidden = !hit;
+    if (hit) visible += 1;
+  }});
+  facetResultCount.textContent = `${{visible}} / ${{facetRows.length}} 项`;
+}}
+
+[facetSearch, facetField, facetAction].forEach((control) => control.addEventListener("input", renderFacetRows));
+renderFacetRows();
+</script>
 """
     (report_dir / "facets.html").write_text(page_shell("分类工作台", body, extra_css=facets_css), encoding="utf-8")
 
