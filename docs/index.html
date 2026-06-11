@@ -411,6 +411,8 @@ window.PAPER_WIKI = {"papers": [{"slug": "2602.06036-dflash", "title": "DFlash: 
       <button id="saveView" class="button" type="button">保存视图</button>
       <button id="copySharedView" class="button" type="button">复制共享视图</button>
       <button id="deleteView" class="button" type="button">删除视图</button>
+      <button id="exportSavedViews" class="button" type="button">导出视图</button>
+      <button id="importSavedViews" class="button" type="button">导入视图</button>
       <button id="resetFilters" class="button" type="button">重置筛选</button>
     </div>
   </div>
@@ -497,6 +499,8 @@ const savedView = document.querySelector("#savedView");
 const saveView = document.querySelector("#saveView");
 const copySharedView = document.querySelector("#copySharedView");
 const deleteView = document.querySelector("#deleteView");
+const exportSavedViews = document.querySelector("#exportSavedViews");
+const importSavedViews = document.querySelector("#importSavedViews");
 const searchTextBySlug = new Map((window.PAPER_WIKI.search_index || []).map(item => [item.slug, item.search_text || ""]));
 const sharedViews = window.PAPER_WIKI.shared_views || [];
 let currentPage = 1;
@@ -586,6 +590,30 @@ function writeSavedViews(views) {
   }
 }
 
+function normalizeSavedViews(payload, pageName) {
+  const candidates = Array.isArray(payload)
+    ? payload
+    : Array.isArray(payload?.saved_views)
+      ? payload.saved_views
+      : Array.isArray(payload?.shared_views)
+        ? payload.shared_views
+        : payload?.name && payload?.state
+          ? [payload]
+          : [];
+  const allowedKeys = new Set([...queryControls.map(([key]) => key), "page"]);
+  const pageScope = new Set(["all", pageName, ""]);
+  return candidates.map(view => {
+    const page = String(view?.page || "").trim();
+    if (!pageScope.has(page)) return null;
+    const name = String(view?.name || "").trim();
+    const rawState = view?.state && typeof view.state === "object" && !Array.isArray(view.state) ? view.state : {};
+    const state = Object.fromEntries(Object.entries(rawState)
+      .filter(([key, value]) => allowedKeys.has(key) && value !== null && typeof value !== "object")
+      .map(([key, value]) => [key, String(value)]));
+    return name ? { name, state } : null;
+  }).filter(Boolean);
+}
+
 function sharedViewPayload(page) {
   const name = window.prompt("共享视图名称");
   if (!name || !name.trim()) return null;
@@ -607,6 +635,18 @@ async function copyJsonSnippet(payload) {
   } catch {
     window.prompt("复制 shared view JSON", text);
   }
+}
+
+function downloadText(filename, text, type = "text/plain;charset=utf-8") {
+  const blob = new Blob([text], { type });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
 }
 
 function refreshSavedViews() {
@@ -749,6 +789,34 @@ saveView.addEventListener("click", () => {
   savedView.value = "local:0";
 });
 copySharedView.addEventListener("click", () => copyJsonSnippet(sharedViewPayload("index")));
+exportSavedViews.addEventListener("click", () => {
+  const views = readSavedViews();
+  if (!views.length) {
+    window.alert("当前没有本地保存视图。");
+    return;
+  }
+  const payload = { page: "index", saved_views: views };
+  downloadText("index_saved_views.json", JSON.stringify(payload, null, 2) + "\n", "application/json;charset=utf-8");
+});
+importSavedViews.addEventListener("click", () => {
+  const text = window.prompt("粘贴 saved_views / shared_views JSON");
+  if (!text || !text.trim()) return;
+  try {
+    const incoming = normalizeSavedViews(JSON.parse(text), "index");
+    if (!incoming.length) {
+      window.alert("没有找到可导入的视图。");
+      return;
+    }
+    const names = new Set(incoming.map(view => view.name));
+    const merged = [...incoming, ...readSavedViews().filter(view => !names.has(view.name))];
+    if (!writeSavedViews(merged)) return;
+    refreshSavedViews();
+    savedView.value = "local:0";
+    window.alert(`已导入 ${incoming.length} 个视图。`);
+  } catch {
+    window.alert("JSON 解析失败，请检查格式。");
+  }
+});
 deleteView.addEventListener("click", () => {
   if (!savedView.value || !savedView.value.startsWith("local:")) {
     if (savedView.value.startsWith("shared:")) window.alert("共享视图来自 taxonomy.json，不能在页面里删除。");
