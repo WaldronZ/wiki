@@ -1458,6 +1458,22 @@ def command_recipes_manifest() -> list[dict[str, Any]]:
             "mutates": False,
         },
         {
+            "id": "actions_markdown",
+            "kind": "export",
+            "label": "Export unified action checklist",
+            "command": "python3 scripts/export_actions.py docs --output docs/exports/actions.md",
+            "output": "docs/exports/actions.md",
+            "mutates": False,
+        },
+        {
+            "id": "actions_project",
+            "kind": "export",
+            "label": "Export unified action project tasks",
+            "command": "python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv",
+            "output": "docs/exports/actions-project.csv",
+            "mutates": False,
+        },
+        {
             "id": "taxonomy_balance_project",
             "kind": "export",
             "label": "Export taxonomy balance project tasks",
@@ -1504,6 +1520,16 @@ def governance_playbooks_manifest() -> list[dict[str, Any]]:
             "steps": [
                 "taxonomy_balance_project",
                 "taxonomy_actions_project",
+                "quality_gate",
+            ],
+        },
+        {
+            "id": "weekly_action_review",
+            "label": "Weekly action review",
+            "description": "Export the unified queue, assign dynamic task statuses, and run the local quality gate.",
+            "steps": [
+                "actions_markdown",
+                "actions_project",
                 "quality_gate",
             ],
         },
@@ -5584,6 +5610,8 @@ def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
         ("预览元数据写入", "python3 scripts/apply_library_metadata.py docs --input <csv>"),
         ("预览别名写入", "python3 scripts/apply_taxonomy_aliases.py docs"),
         ("写入别名建议", "python3 scripts/apply_taxonomy_aliases.py docs --write"),
+        ("导出统一行动清单", "python3 scripts/export_actions.py docs --output docs/exports/actions.md"),
+        ("导出统一项目任务", "python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv"),
         ("导出治理清单", "python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md"),
         ("导出高优先级 CSV", "python3 scripts/export_taxonomy_actions.py docs --format csv --severity high --output docs/exports/taxonomy-actions.csv"),
         ("导出项目任务", "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"),

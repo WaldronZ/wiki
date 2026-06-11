@@ -387,6 +387,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("治理命令", quality_html)
             self.assertIn("copy-quality-command", quality_html)
             self.assertIn("python3 scripts/check_quality.py docs", quality_html)
+            self.assertIn("python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv", quality_html)
             self.assertIn("python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv", quality_html)
             self.assertIn("python3 scripts/export_taxonomy_balance.py docs --format project --max-score 50 --output docs/exports/taxonomy-balance-project.csv", quality_html)
             self.assertIn("python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv", quality_html)
@@ -410,6 +411,55 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("taxonomy", actions["summary"]["groups"])
             self.assertTrue(any(item["source"] == "taxonomy_actions.json" for item in actions["actions"]))
             self.assertTrue(any(item["source"] == "review.json" for item in actions["actions"]))
+
+            actions_export_path = report_dir / "exports" / "actions.md"
+            self.run_cmd(
+                "scripts/export_actions.py",
+                str(report_dir),
+                "--group",
+                "review",
+                "--output",
+                str(actions_export_path),
+            )
+            actions_export = actions_export_path.read_text(encoding="utf-8")
+            self.assertIn("# AutoPaperReader Action Queue", actions_export)
+            self.assertIn("review.json", actions_export)
+
+            actions_project_path = report_dir / "exports" / "actions-project.csv"
+            self.run_cmd(
+                "scripts/export_actions.py",
+                str(report_dir),
+                "--format",
+                "project",
+                "--source",
+                "taxonomy_actions.json",
+                "--assignee",
+                "wiki-owner",
+                "--task-status",
+                "ready",
+                "--due-date",
+                "2026-07-01",
+                "--output",
+                str(actions_project_path),
+            )
+            action_project_rows = list(csv.DictReader(actions_project_path.read_text(encoding="utf-8").splitlines()))
+            self.assertTrue(action_project_rows)
+            self.assertEqual(action_project_rows[0]["status"], "ready")
+            self.assertEqual(action_project_rows[0]["assignee"], "wiki-owner")
+            self.assertEqual(action_project_rows[0]["due_date"], "2026-07-01")
+            self.assertIn("action_center", action_project_rows[0]["labels"])
+            self.assertEqual(action_project_rows[0]["source"], "taxonomy_actions.json")
+
+            unsafe_actions_export = self.run_cmd(
+                "scripts/export_actions.py",
+                str(report_dir),
+                "--output",
+                str(report_dir / "actions.md"),
+                check=False,
+            )
+            self.assertNotEqual(unsafe_actions_export.returncode, 0)
+            self.assertIn("Refusing to write a Markdown export", unsafe_actions_export.stderr)
+
             stats = json.loads((report_dir / "stats.json").read_text(encoding="utf-8"))
             self.assertEqual(stats["count"], 2)
             self.assertIn("quality", stats["queue_sizes"])
@@ -449,12 +499,14 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(artifact_by_href["manifest.json"]["status"], "generated_after_inventory")
             self.assertTrue(manifest["publish_checks"]["artifacts_present"])
             self.assertIn("python3 scripts/check_quality.py docs", manifest["commands"])
+            self.assertIn("python3 scripts/export_actions.py docs --output docs/exports/actions.md", manifest["commands"])
             self.assertIn("python3 scripts/export_taxonomy_load.py docs --format csv --output docs/exports/taxonomy-load.csv", manifest["commands"])
             recipe_by_id = {item["id"]: item for item in manifest["command_recipes"]}
             self.assertEqual(recipe_by_id["quality_gate"]["kind"], "check")
             self.assertFalse(recipe_by_id["quality_gate"]["mutates"])
             self.assertFalse(recipe_by_id["apply_metadata_dry_run"]["mutates"])
             self.assertEqual(recipe_by_id["apply_metadata_dry_run"]["command"], "python3 scripts/apply_library_metadata.py docs --input <csv>")
+            self.assertEqual(recipe_by_id["actions_project"]["output"], "docs/exports/actions-project.csv")
             self.assertEqual(recipe_by_id["taxonomy_balance_project"]["output"], "docs/exports/taxonomy-balance-project.csv")
             self.assertEqual(recipe_by_id["taxonomy_actions_patch"]["output"], "docs/exports/taxonomy-action-patch.csv")
             playbook_by_id = {item["id"]: item for item in manifest["governance_playbooks"]}
@@ -462,6 +514,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 playbook_by_id["taxonomy_merge_batch"]["steps"],
                 ["taxonomy_actions_markdown", "taxonomy_actions_patch", "apply_metadata_dry_run", "quality_gate"],
             )
+            self.assertEqual(playbook_by_id["weekly_action_review"]["steps"], ["actions_markdown", "actions_project", "quality_gate"])
             release_html = (report_dir / "release.html").read_text(encoding="utf-8")
             self.assertIn("知识库发布摘要", release_html)
             self.assertIn("Manifest JSON", release_html)

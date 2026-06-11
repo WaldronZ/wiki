@@ -70,6 +70,7 @@ paper_reader/
 │   ├── build_wiki.py
 │   ├── check_quality.py
 │   ├── check_wiki_js.js
+│   ├── export_actions.py
 │   ├── export_library_csv.py
 │   ├── export_reading_list.py
 │   ├── export_taxonomy_actions.py
@@ -91,6 +92,7 @@ paper_reader/
 - `scripts/apply_review_plan.py` 用于把 `docs/review.json` 的建议复习日期安全写回报告 frontmatter，默认只 dry-run
 - `scripts/export_library_csv.py` 用于把 `papers.json`、`review.json` 和 `quality.json` 合并导出成 CSV，便于用表格工具批量管理
 - `scripts/export_reading_list.py` 用于按研究线、状态、方向、主题、方法或重要性导出 Markdown 阅读清单、BibTeX 或链接列表
+- `scripts/export_actions.py` 用于把 `actions.json` 导出成统一 checklist、审计 CSV 或可自定义任务状态的项目任务 CSV
 - `scripts/export_taxonomy_actions.py` 用于把 `taxonomy_actions.json` 导出成 Markdown checklist、审计 CSV 或项目任务 CSV，便于分派分类治理任务
 - `scripts/export_taxonomy_balance.py` 用于把 `stats.json` 中的分类均衡度导出成复盘 checklist、CSV 或项目任务 CSV
 - `scripts/export_taxonomy_load.py` 用于把 `quality.json` 中的分类粒度审计导出成 Markdown checklist、审计 CSV 或可写回的分类 patch CSV
@@ -141,7 +143,7 @@ paper_reader/
 - `docs/review.html`：复习计划页，展示待复习、需建计划、已计划和高优先级队列
 - `docs/dashboard.html`：管理控制台，展示分类覆盖、分类均衡度、研究线健康度、待复习和待补分类队列
 - `docs/release.html`：发布摘要页，集中展示发布状态、页面入口、数据文件、数据契约、artifact inventory、队列规模、推荐命令和治理 playbooks
-- `docs/actions.html`：行动中心，统一筛选、导出和复制复习、质量、分类治理、重复项和 inbox 任务
+- `docs/actions.html`：行动中心，统一筛选、导出和复制复习、质量、分类治理、重复项和 inbox 任务；`scripts/export_actions.py` 可把同一队列导出为 checklist 或带自定义任务状态的项目 CSV
 - `docs/collections.html`：集合视图页，集中展示共享筛选视图、分类粒度智能队列和研究线集合入口
 - `docs/balance.html`：分类均衡复盘页，按维度展示均衡分、长尾、过载、空候选和可导出的复盘清单
 - `docs/coverage.html`：研究线分类覆盖地图，按研究线展示各分类字段覆盖率、缺口、top values 和可导出的治理清单
@@ -277,6 +279,8 @@ python3 scripts/export_reading_list.py docs --format links --status read
 导出可分派的分类治理清单：
 
 ```bash
+python3 scripts/export_actions.py docs --output docs/exports/actions.md
+python3 scripts/export_actions.py docs --format project --group review --severity high --assignee wiki-owner --task-status ready --output docs/exports/actions-project.csv
 python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md
 python3 scripts/export_taxonomy_actions.py docs --format csv --severity high --output docs/exports/taxonomy-actions.csv
 python3 scripts/export_taxonomy_actions.py docs --format csv --field topics --severity high --output docs/exports/topic-actions.csv
