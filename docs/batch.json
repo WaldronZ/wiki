@@ -1,0 +1,1904 @@
+{
+  "generated_at": "2026-06-12T06:08:41",
+  "count": 5,
+  "dimension_count": 11,
+  "batch_count": 60,
+  "dimensions": [
+    {
+      "key": "research_line",
+      "label": "研究线",
+      "query": "line",
+      "multi": false,
+      "paper_key": "research_line"
+    },
+    {
+      "key": "line_role",
+      "label": "研究角色",
+      "query": "role",
+      "multi": false,
+      "paper_key": "line_role"
+    },
+    {
+      "key": "domain",
+      "label": "Domain",
+      "query": "domain",
+      "multi": true,
+      "paper_key": "domains"
+    },
+    {
+      "key": "track",
+      "label": "Track",
+      "query": "track",
+      "multi": true,
+      "paper_key": "tracks"
+    },
+    {
+      "key": "problem",
+      "label": "Problem",
+      "query": "problem",
+      "multi": true,
+      "paper_key": "problems"
+    },
+    {
+      "key": "topic",
+      "label": "Topic",
+      "query": "topic",
+      "multi": true,
+      "paper_key": "topics"
+    },
+    {
+      "key": "method",
+      "label": "Method",
+      "query": "method",
+      "multi": true,
+      "paper_key": "methods"
+    },
+    {
+      "key": "status",
+      "label": "Status",
+      "query": "status",
+      "multi": false,
+      "paper_key": "status"
+    },
+    {
+      "key": "reading_stage",
+      "label": "Reading stage",
+      "query": "stage",
+      "multi": false,
+      "paper_key": "reading_stage"
+    },
+    {
+      "key": "review_stage",
+      "label": "Review stage",
+      "query": "reviewStage",
+      "multi": false,
+      "paper_key": "review_stage"
+    },
+    {
+      "key": "code",
+      "label": "Code",
+      "query": "code",
+      "multi": false,
+      "paper_key": "has_code"
+    }
+  ],
+  "summary": {
+    "high": 60,
+    "medium": 0,
+    "low": 0,
+    "missing_review": 99,
+    "missing_taxonomy": 0
+  },
+  "batches": [
+    {
+      "id": "code::yes",
+      "dimension": "code",
+      "dimension_label": "Code",
+      "value": "yes",
+      "count": 5,
+      "severity": "high",
+      "priority": 121,
+      "latest_year": 2026,
+      "high_importance": 2,
+      "missing_review": 5,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 5 篇",
+      "href": "library.html?code=yes",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2307.08691-flashattention-2",
+        "2602.06036-dflash",
+        "2605.12825-orthrus",
+        "2501.01005-flashinfer"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "domain::LLM Systems",
+      "dimension": "domain",
+      "dimension_label": "Domain",
+      "value": "LLM Systems",
+      "count": 5,
+      "severity": "high",
+      "priority": 121,
+      "latest_year": 2026,
+      "high_importance": 2,
+      "missing_review": 5,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 5 篇",
+      "href": "library.html?domain=LLM+Systems",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2307.08691-flashattention-2",
+        "2602.06036-dflash",
+        "2605.12825-orthrus",
+        "2501.01005-flashinfer"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "reading_stage::deep_read",
+      "dimension": "reading_stage",
+      "dimension_label": "Reading stage",
+      "value": "deep_read",
+      "count": 5,
+      "severity": "high",
+      "priority": 121,
+      "latest_year": 2026,
+      "high_importance": 2,
+      "missing_review": 5,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 5 篇",
+      "href": "library.html?stage=deep_read",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2307.08691-flashattention-2",
+        "2602.06036-dflash",
+        "2605.12825-orthrus",
+        "2501.01005-flashinfer"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "review_stage::未设置",
+      "dimension": "review_stage",
+      "dimension_label": "Review stage",
+      "value": "未设置",
+      "count": 5,
+      "severity": "high",
+      "priority": 121,
+      "latest_year": 2026,
+      "high_importance": 2,
+      "missing_review": 5,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 5 篇",
+      "href": "library.html",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2307.08691-flashattention-2",
+        "2602.06036-dflash",
+        "2605.12825-orthrus",
+        "2501.01005-flashinfer"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "status::read",
+      "dimension": "status",
+      "dimension_label": "Status",
+      "value": "read",
+      "count": 5,
+      "severity": "high",
+      "priority": 121,
+      "latest_year": 2026,
+      "high_importance": 2,
+      "missing_review": 5,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 5 篇",
+      "href": "library.html?status=read",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2307.08691-flashattention-2",
+        "2602.06036-dflash",
+        "2605.12825-orthrus",
+        "2501.01005-flashinfer"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "research_line::Parallel Decoding with Diffusion Models",
+      "dimension": "research_line",
+      "dimension_label": "研究线",
+      "value": "Parallel Decoding with Diffusion Models",
+      "count": 3,
+      "severity": "high",
+      "priority": 108,
+      "latest_year": 2026,
+      "high_importance": 1,
+      "missing_review": 3,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 3 篇",
+      "href": "library.html?line=Parallel+Decoding+with+Diffusion+Models",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2602.06036-dflash",
+        "2605.12825-orthrus"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
+      ]
+    },
+    {
+      "id": "topic::Diffusion Language Models",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "Diffusion Language Models",
+      "count": 3,
+      "severity": "high",
+      "priority": 108,
+      "latest_year": 2026,
+      "high_importance": 1,
+      "missing_review": 3,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 3 篇",
+      "href": "library.html?topic=Diffusion+Language+Models",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2602.06036-dflash",
+        "2605.12825-orthrus"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
+      ]
+    },
+    {
+      "id": "topic::LLM Serving",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "LLM Serving",
+      "count": 3,
+      "severity": "high",
+      "priority": 108,
+      "latest_year": 2026,
+      "high_importance": 1,
+      "missing_review": 3,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 3 篇",
+      "href": "library.html?topic=LLM+Serving",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2602.06036-dflash",
+        "2501.01005-flashinfer"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "topic::Speculative Decoding",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "Speculative Decoding",
+      "count": 3,
+      "severity": "high",
+      "priority": 108,
+      "latest_year": 2026,
+      "high_importance": 1,
+      "missing_review": 3,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 3 篇",
+      "href": "library.html?topic=Speculative+Decoding",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2602.06036-dflash",
+        "2605.12825-orthrus"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
+      ]
+    },
+    {
+      "id": "track::Inference Acceleration",
+      "dimension": "track",
+      "dimension_label": "Track",
+      "value": "Inference Acceleration",
+      "count": 3,
+      "severity": "high",
+      "priority": 108,
+      "latest_year": 2026,
+      "high_importance": 1,
+      "missing_review": 3,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 3 篇",
+      "href": "library.html?track=Inference+Acceleration",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2602.06036-dflash",
+        "2605.12825-orthrus"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
+      ]
+    },
+    {
+      "id": "track::Parallel Decoding",
+      "dimension": "track",
+      "dimension_label": "Track",
+      "value": "Parallel Decoding",
+      "count": 3,
+      "severity": "high",
+      "priority": 108,
+      "latest_year": 2026,
+      "high_importance": 1,
+      "missing_review": 3,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 3 篇",
+      "href": "library.html?track=Parallel+Decoding",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2602.06036-dflash",
+        "2605.12825-orthrus"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
+      ]
+    },
+    {
+      "id": "line_role::foundation",
+      "dimension": "line_role",
+      "dimension_label": "研究角色",
+      "value": "foundation",
+      "count": 2,
+      "severity": "high",
+      "priority": 106,
+      "latest_year": 2026,
+      "high_importance": 2,
+      "missing_review": 2,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 2 篇",
+      "href": "library.html?role=foundation",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2307.08691-flashattention-2"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "FlashAttention-2：用更好的并行性与工作划分加速 Attention"
+      ]
+    },
+    {
+      "id": "method::FlashAttention",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "FlashAttention",
+      "count": 2,
+      "severity": "high",
+      "priority": 103,
+      "latest_year": 2025,
+      "high_importance": 1,
+      "missing_review": 2,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 2 篇",
+      "href": "library.html?method=FlashAttention",
+      "sample_slugs": [
+        "2307.08691-flashattention-2",
+        "2501.01005-flashinfer"
+      ],
+      "sample_titles": [
+        "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
+        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "research_line::Efficient Attention Kernels",
+      "dimension": "research_line",
+      "dimension_label": "研究线",
+      "value": "Efficient Attention Kernels",
+      "count": 2,
+      "severity": "high",
+      "priority": 103,
+      "latest_year": 2025,
+      "high_importance": 1,
+      "missing_review": 2,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 2 篇",
+      "href": "library.html?line=Efficient+Attention+Kernels",
+      "sample_slugs": [
+        "2307.08691-flashattention-2",
+        "2501.01005-flashinfer"
+      ],
+      "sample_titles": [
+        "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
+        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "topic::Parallel Decoding",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "Parallel Decoding",
+      "count": 2,
+      "severity": "high",
+      "priority": 103,
+      "latest_year": 2026,
+      "high_importance": 1,
+      "missing_review": 2,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 2 篇",
+      "href": "library.html?topic=Parallel+Decoding",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
+      ]
+    },
+    {
+      "id": "track::Attention Kernels",
+      "dimension": "track",
+      "dimension_label": "Track",
+      "value": "Attention Kernels",
+      "count": 2,
+      "severity": "high",
+      "priority": 103,
+      "latest_year": 2025,
+      "high_importance": 1,
+      "missing_review": 2,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 2 篇",
+      "href": "library.html?track=Attention+Kernels",
+      "sample_slugs": [
+        "2307.08691-flashattention-2",
+        "2501.01005-flashinfer"
+      ],
+      "sample_titles": [
+        "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
+        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "topic::KV Cache",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "KV Cache",
+      "count": 2,
+      "severity": "high",
+      "priority": 100,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 2,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 2 篇",
+      "href": "library.html?topic=KV+Cache",
+      "sample_slugs": [
+        "2605.12825-orthrus",
+        "2501.01005-flashinfer"
+      ],
+      "sample_titles": [
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "topic::LLM Inference",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "LLM Inference",
+      "count": 2,
+      "severity": "high",
+      "priority": 100,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 2,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 2 篇",
+      "href": "library.html?topic=LLM+Inference",
+      "sample_slugs": [
+        "2602.06036-dflash",
+        "2605.12825-orthrus"
+      ],
+      "sample_titles": [
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
+      ]
+    },
+    {
+      "id": "method::CUDA / GPU parallelism",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "CUDA / GPU parallelism",
+      "count": 1,
+      "severity": "high",
+      "priority": 98,
+      "latest_year": 2023,
+      "high_importance": 1,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=CUDA+%2F+GPU+parallelism",
+      "sample_slugs": [
+        "2307.08691-flashattention-2"
+      ],
+      "sample_titles": [
+        "FlashAttention-2：用更好的并行性与工作划分加速 Attention"
+      ]
+    },
+    {
+      "id": "method::gated LoRA",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "gated LoRA",
+      "count": 1,
+      "severity": "high",
+      "priority": 98,
+      "latest_year": 2026,
+      "high_importance": 1,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=gated+LoRA",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型"
+      ]
+    },
+    {
+      "id": "method::introspective consistency",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "introspective consistency",
+      "count": 1,
+      "severity": "high",
+      "priority": 98,
+      "latest_year": 2026,
+      "high_importance": 1,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=introspective+consistency",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型"
+      ]
+    },
+    {
+      "id": "method::introspective strided decoding",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "introspective strided decoding",
+      "count": 1,
+      "severity": "high",
+      "priority": 98,
+      "latest_year": 2026,
+      "high_importance": 1,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=introspective+strided+decoding",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型"
+      ]
+    },
+    {
+      "id": "method::logit-shifted causal training",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "logit-shifted causal training",
+      "count": 1,
+      "severity": "high",
+      "priority": 98,
+      "latest_year": 2026,
+      "high_importance": 1,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=logit-shifted+causal+training",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型"
+      ]
+    },
+    {
+      "id": "method::online softmax",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "online softmax",
+      "count": 1,
+      "severity": "high",
+      "priority": 98,
+      "latest_year": 2023,
+      "high_importance": 1,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=online+softmax",
+      "sample_slugs": [
+        "2307.08691-flashattention-2"
+      ],
+      "sample_titles": [
+        "FlashAttention-2：用更好的并行性与工作划分加速 Attention"
+      ]
+    },
+    {
+      "id": "method::p/q acceptance",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "p/q acceptance",
+      "count": 1,
+      "severity": "high",
+      "priority": 98,
+      "latest_year": 2026,
+      "high_importance": 1,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=p%2Fq+acceptance",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型"
+      ]
+    },
+    {
+      "id": "method::SGLang serving",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "SGLang serving",
+      "count": 1,
+      "severity": "high",
+      "priority": 98,
+      "latest_year": 2026,
+      "high_importance": 1,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=SGLang+serving",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型"
+      ]
+    },
+    {
+      "id": "method::tiling",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "tiling",
+      "count": 1,
+      "severity": "high",
+      "priority": 98,
+      "latest_year": 2023,
+      "high_importance": 1,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=tiling",
+      "sample_slugs": [
+        "2307.08691-flashattention-2"
+      ],
+      "sample_titles": [
+        "FlashAttention-2：用更好的并行性与工作划分加速 Attention"
+      ]
+    },
+    {
+      "id": "method::work partitioning",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "work partitioning",
+      "count": 1,
+      "severity": "high",
+      "priority": 98,
+      "latest_year": 2023,
+      "high_importance": 1,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=work+partitioning",
+      "sample_slugs": [
+        "2307.08691-flashattention-2"
+      ],
+      "sample_titles": [
+        "FlashAttention-2：用更好的并行性与工作划分加速 Attention"
+      ]
+    },
+    {
+      "id": "problem::Efficient Exact Attention",
+      "dimension": "problem",
+      "dimension_label": "Problem",
+      "value": "Efficient Exact Attention",
+      "count": 1,
+      "severity": "high",
+      "priority": 98,
+      "latest_year": 2023,
+      "high_importance": 1,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?problem=Efficient+Exact+Attention",
+      "sample_slugs": [
+        "2307.08691-flashattention-2"
+      ],
+      "sample_titles": [
+        "FlashAttention-2：用更好的并行性与工作划分加速 Attention"
+      ]
+    },
+    {
+      "id": "problem::Parallel Diffusion Decoding",
+      "dimension": "problem",
+      "dimension_label": "Problem",
+      "value": "Parallel Diffusion Decoding",
+      "count": 1,
+      "severity": "high",
+      "priority": 98,
+      "latest_year": 2026,
+      "high_importance": 1,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?problem=Parallel+Diffusion+Decoding",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型"
+      ]
+    },
+    {
+      "id": "topic::Efficient Attention",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "Efficient Attention",
+      "count": 1,
+      "severity": "high",
+      "priority": 98,
+      "latest_year": 2023,
+      "high_importance": 1,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?topic=Efficient+Attention",
+      "sample_slugs": [
+        "2307.08691-flashattention-2"
+      ],
+      "sample_titles": [
+        "FlashAttention-2：用更好的并行性与工作划分加速 Attention"
+      ]
+    },
+    {
+      "id": "topic::GPU Kernel Optimization",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "GPU Kernel Optimization",
+      "count": 1,
+      "severity": "high",
+      "priority": 98,
+      "latest_year": 2023,
+      "high_importance": 1,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?topic=GPU+Kernel+Optimization",
+      "sample_slugs": [
+        "2307.08691-flashattention-2"
+      ],
+      "sample_titles": [
+        "FlashAttention-2：用更好的并行性与工作划分加速 Attention"
+      ]
+    },
+    {
+      "id": "topic::LLM",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "LLM",
+      "count": 1,
+      "severity": "high",
+      "priority": 98,
+      "latest_year": 2026,
+      "high_importance": 1,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?topic=LLM",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型"
+      ]
+    },
+    {
+      "id": "topic::Long Context",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "Long Context",
+      "count": 1,
+      "severity": "high",
+      "priority": 98,
+      "latest_year": 2023,
+      "high_importance": 1,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?topic=Long+Context",
+      "sample_slugs": [
+        "2307.08691-flashattention-2"
+      ],
+      "sample_titles": [
+        "FlashAttention-2：用更好的并行性与工作划分加速 Attention"
+      ]
+    },
+    {
+      "id": "topic::Transformer",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "Transformer",
+      "count": 1,
+      "severity": "high",
+      "priority": 98,
+      "latest_year": 2023,
+      "high_importance": 1,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?topic=Transformer",
+      "sample_slugs": [
+        "2307.08691-flashattention-2"
+      ],
+      "sample_titles": [
+        "FlashAttention-2：用更好的并行性与工作划分加速 Attention"
+      ]
+    },
+    {
+      "id": "line_role::followup",
+      "dimension": "line_role",
+      "dimension_label": "研究角色",
+      "value": "followup",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?role=followup",
+      "sample_slugs": [
+        "2602.06036-dflash"
+      ],
+      "sample_titles": [
+        "DFlash：用于快速 speculative decoding 的块扩散方法"
+      ]
+    },
+    {
+      "id": "line_role::system",
+      "dimension": "line_role",
+      "dimension_label": "研究角色",
+      "value": "system",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?role=system",
+      "sample_slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "sample_titles": [
+        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "line_role::variant",
+      "dimension": "line_role",
+      "dimension_label": "研究角色",
+      "value": "variant",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?role=variant",
+      "sample_slugs": [
+        "2605.12825-orthrus"
+      ],
+      "sample_titles": [
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
+      ]
+    },
+    {
+      "id": "method::block diffusion",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "block diffusion",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=block+diffusion",
+      "sample_slugs": [
+        "2602.06036-dflash"
+      ],
+      "sample_titles": [
+        "DFlash：用于快速 speculative decoding 的块扩散方法"
+      ]
+    },
+    {
+      "id": "method::block-sparse attention",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "block-sparse attention",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=block-sparse+attention",
+      "sample_slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "sample_titles": [
+        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "method::composable KV-cache format",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "composable KV-cache format",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=composable+KV-cache+format",
+      "sample_slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "sample_titles": [
+        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "method::CUDA Graph",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "CUDA Graph",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=CUDA+Graph",
+      "sample_slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "sample_titles": [
+        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "method::dual-view attention",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "dual-view attention",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=dual-view+attention",
+      "sample_slugs": [
+        "2605.12825-orthrus"
+      ],
+      "sample_titles": [
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
+      ]
+    },
+    {
+      "id": "method::forward KL distillation",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "forward KL distillation",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=forward+KL+distillation",
+      "sample_slugs": [
+        "2605.12825-orthrus"
+      ],
+      "sample_titles": [
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
+      ]
+    },
+    {
+      "id": "method::intra-model consensus",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "intra-model consensus",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=intra-model+consensus",
+      "sample_slugs": [
+        "2605.12825-orthrus"
+      ],
+      "sample_titles": [
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
+      ]
+    },
+    {
+      "id": "method::JIT compilation",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "JIT compilation",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=JIT+compilation",
+      "sample_slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "sample_titles": [
+        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "method::KV injection",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "KV injection",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=KV+injection",
+      "sample_slugs": [
+        "2602.06036-dflash"
+      ],
+      "sample_titles": [
+        "DFlash：用于快速 speculative decoding 的块扩散方法"
+      ]
+    },
+    {
+      "id": "method::load-balanced scheduling",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "load-balanced scheduling",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=load-balanced+scheduling",
+      "sample_slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "sample_titles": [
+        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "method::masked diffusion",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "masked diffusion",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=masked+diffusion",
+      "sample_slugs": [
+        "2605.12825-orthrus"
+      ],
+      "sample_titles": [
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
+      ]
+    },
+    {
+      "id": "method::parallel drafting",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "parallel drafting",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=parallel+drafting",
+      "sample_slugs": [
+        "2602.06036-dflash"
+      ],
+      "sample_titles": [
+        "DFlash：用于快速 speculative decoding 的块扩散方法"
+      ]
+    },
+    {
+      "id": "method::shared KV cache",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "shared KV cache",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=shared+KV+cache",
+      "sample_slugs": [
+        "2605.12825-orthrus"
+      ],
+      "sample_titles": [
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
+      ]
+    },
+    {
+      "id": "method::Speculative Decoding",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "Speculative Decoding",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=Speculative+Decoding",
+      "sample_slugs": [
+        "2602.06036-dflash"
+      ],
+      "sample_titles": [
+        "DFlash：用于快速 speculative decoding 的块扩散方法"
+      ]
+    },
+    {
+      "id": "method::target hidden features",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "target hidden features",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=target+hidden+features",
+      "sample_slugs": [
+        "2602.06036-dflash"
+      ],
+      "sample_titles": [
+        "DFlash：用于快速 speculative decoding 的块扩散方法"
+      ]
+    },
+    {
+      "id": "problem::Customizable Attention Serving",
+      "dimension": "problem",
+      "dimension_label": "Problem",
+      "value": "Customizable Attention Serving",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?problem=Customizable+Attention+Serving",
+      "sample_slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "sample_titles": [
+        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "problem::Lossless Speculative Decoding",
+      "dimension": "problem",
+      "dimension_label": "Problem",
+      "value": "Lossless Speculative Decoding",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?problem=Lossless+Speculative+Decoding",
+      "sample_slugs": [
+        "2602.06036-dflash"
+      ],
+      "sample_titles": [
+        "DFlash：用于快速 speculative decoding 的块扩散方法"
+      ]
+    },
+    {
+      "id": "problem::Memory-Efficient Parallel Token Generation",
+      "dimension": "problem",
+      "dimension_label": "Problem",
+      "value": "Memory-Efficient Parallel Token Generation",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?problem=Memory-Efficient+Parallel+Token+Generation",
+      "sample_slugs": [
+        "2605.12825-orthrus"
+      ],
+      "sample_titles": [
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
+      ]
+    },
+    {
+      "id": "topic::Attention Kernels",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "Attention Kernels",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?topic=Attention+Kernels",
+      "sample_slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "sample_titles": [
+        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "topic::GPU Systems",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "GPU Systems",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?topic=GPU+Systems",
+      "sample_slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "sample_titles": [
+        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "topic::Inference Optimization",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "Inference Optimization",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?topic=Inference+Optimization",
+      "sample_slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "sample_titles": [
+        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "track::Inference Serving Systems",
+      "dimension": "track",
+      "dimension_label": "Track",
+      "value": "Inference Serving Systems",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?track=Inference+Serving+Systems",
+      "sample_slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "sample_titles": [
+        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    }
+  ],
+  "top_batches": [
+    {
+      "id": "code::yes",
+      "dimension": "code",
+      "dimension_label": "Code",
+      "value": "yes",
+      "count": 5,
+      "severity": "high",
+      "priority": 121,
+      "latest_year": 2026,
+      "high_importance": 2,
+      "missing_review": 5,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 5 篇",
+      "href": "library.html?code=yes",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2307.08691-flashattention-2",
+        "2602.06036-dflash",
+        "2605.12825-orthrus",
+        "2501.01005-flashinfer"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "domain::LLM Systems",
+      "dimension": "domain",
+      "dimension_label": "Domain",
+      "value": "LLM Systems",
+      "count": 5,
+      "severity": "high",
+      "priority": 121,
+      "latest_year": 2026,
+      "high_importance": 2,
+      "missing_review": 5,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 5 篇",
+      "href": "library.html?domain=LLM+Systems",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2307.08691-flashattention-2",
+        "2602.06036-dflash",
+        "2605.12825-orthrus",
+        "2501.01005-flashinfer"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "reading_stage::deep_read",
+      "dimension": "reading_stage",
+      "dimension_label": "Reading stage",
+      "value": "deep_read",
+      "count": 5,
+      "severity": "high",
+      "priority": 121,
+      "latest_year": 2026,
+      "high_importance": 2,
+      "missing_review": 5,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 5 篇",
+      "href": "library.html?stage=deep_read",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2307.08691-flashattention-2",
+        "2602.06036-dflash",
+        "2605.12825-orthrus",
+        "2501.01005-flashinfer"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "review_stage::未设置",
+      "dimension": "review_stage",
+      "dimension_label": "Review stage",
+      "value": "未设置",
+      "count": 5,
+      "severity": "high",
+      "priority": 121,
+      "latest_year": 2026,
+      "high_importance": 2,
+      "missing_review": 5,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 5 篇",
+      "href": "library.html",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2307.08691-flashattention-2",
+        "2602.06036-dflash",
+        "2605.12825-orthrus",
+        "2501.01005-flashinfer"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "status::read",
+      "dimension": "status",
+      "dimension_label": "Status",
+      "value": "read",
+      "count": 5,
+      "severity": "high",
+      "priority": 121,
+      "latest_year": 2026,
+      "high_importance": 2,
+      "missing_review": 5,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 5 篇",
+      "href": "library.html?status=read",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2307.08691-flashattention-2",
+        "2602.06036-dflash",
+        "2605.12825-orthrus",
+        "2501.01005-flashinfer"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "research_line::Parallel Decoding with Diffusion Models",
+      "dimension": "research_line",
+      "dimension_label": "研究线",
+      "value": "Parallel Decoding with Diffusion Models",
+      "count": 3,
+      "severity": "high",
+      "priority": 108,
+      "latest_year": 2026,
+      "high_importance": 1,
+      "missing_review": 3,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 3 篇",
+      "href": "library.html?line=Parallel+Decoding+with+Diffusion+Models",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2602.06036-dflash",
+        "2605.12825-orthrus"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
+      ]
+    },
+    {
+      "id": "topic::Diffusion Language Models",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "Diffusion Language Models",
+      "count": 3,
+      "severity": "high",
+      "priority": 108,
+      "latest_year": 2026,
+      "high_importance": 1,
+      "missing_review": 3,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 3 篇",
+      "href": "library.html?topic=Diffusion+Language+Models",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2602.06036-dflash",
+        "2605.12825-orthrus"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
+      ]
+    },
+    {
+      "id": "topic::LLM Serving",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "LLM Serving",
+      "count": 3,
+      "severity": "high",
+      "priority": 108,
+      "latest_year": 2026,
+      "high_importance": 1,
+      "missing_review": 3,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 3 篇",
+      "href": "library.html?topic=LLM+Serving",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2602.06036-dflash",
+        "2501.01005-flashinfer"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "topic::Speculative Decoding",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "Speculative Decoding",
+      "count": 3,
+      "severity": "high",
+      "priority": 108,
+      "latest_year": 2026,
+      "high_importance": 1,
+      "missing_review": 3,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 3 篇",
+      "href": "library.html?topic=Speculative+Decoding",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2602.06036-dflash",
+        "2605.12825-orthrus"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
+      ]
+    },
+    {
+      "id": "track::Inference Acceleration",
+      "dimension": "track",
+      "dimension_label": "Track",
+      "value": "Inference Acceleration",
+      "count": 3,
+      "severity": "high",
+      "priority": 108,
+      "latest_year": 2026,
+      "high_importance": 1,
+      "missing_review": 3,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 3 篇",
+      "href": "library.html?track=Inference+Acceleration",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2602.06036-dflash",
+        "2605.12825-orthrus"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
+      ]
+    },
+    {
+      "id": "track::Parallel Decoding",
+      "dimension": "track",
+      "dimension_label": "Track",
+      "value": "Parallel Decoding",
+      "count": 3,
+      "severity": "high",
+      "priority": 108,
+      "latest_year": 2026,
+      "high_importance": 1,
+      "missing_review": 3,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 3 篇",
+      "href": "library.html?track=Parallel+Decoding",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2602.06036-dflash",
+        "2605.12825-orthrus"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
+      ]
+    },
+    {
+      "id": "line_role::foundation",
+      "dimension": "line_role",
+      "dimension_label": "研究角色",
+      "value": "foundation",
+      "count": 2,
+      "severity": "high",
+      "priority": 106,
+      "latest_year": 2026,
+      "high_importance": 2,
+      "missing_review": 2,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 2 篇",
+      "href": "library.html?role=foundation",
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2307.08691-flashattention-2"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "FlashAttention-2：用更好的并行性与工作划分加速 Attention"
+      ]
+    }
+  ],
+  "links": {
+    "library": "library.html",
+    "actions": "actions.html",
+    "quality": "quality.html",
+    "review": "review.html",
+    "facets": "facets.html",
+    "scale": "scale.html"
+  }
+}

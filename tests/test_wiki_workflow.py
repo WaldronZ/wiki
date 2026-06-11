@@ -265,6 +265,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "board.html",
                 "workflow.html",
                 "status.html",
+                "batch.html",
                 "pivot.html",
                 "compare.html",
                 "taxonomy_map.html",
@@ -309,6 +310,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "command.json",
                 "workflow.json",
                 "status.json",
+                "batch.json",
                 "pivot.json",
                 "compare.json",
                 "taxonomy_map.json",
@@ -379,6 +381,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn('"href": "actions.html"', index_html)
             self.assertIn('"href": "workflow.html"', index_html)
             self.assertIn('"href": "status.html"', index_html)
+            self.assertIn('"href": "batch.html"', index_html)
             self.assertIn('"href": "pivot.html"', index_html)
             self.assertIn('"href": "compare.html"', index_html)
             self.assertIn('"href": "taxonomy_map.html"', index_html)
@@ -397,6 +400,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("Data: manifest.json", index_html)
             self.assertIn("Data: workflow.json", index_html)
             self.assertIn("Data: status.json", index_html)
+            self.assertIn("Data: batch.json", index_html)
             self.assertIn("Data: pivot.json", index_html)
             self.assertIn("Data: compare.json", index_html)
             self.assertIn("Data: taxonomy_map.json", index_html)
@@ -556,6 +560,27 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("function renderStatus", status_html)
             self.assertIn("active_status_workflow", status_html)
             self.assertIn("Report is stable enough for reuse.", status_html)
+            batch = json.loads((report_dir / "batch.json").read_text(encoding="utf-8"))
+            self.assertEqual(batch["count"], 2)
+            self.assertGreater(batch["batch_count"], 0)
+            self.assertIn("research_line", {item["key"] for item in batch["dimensions"]})
+            self.assertIn("status", {item["key"] for item in batch["dimensions"]})
+            self.assertTrue(batch["top_batches"])
+            serving_batch = next(item for item in batch["batches"] if item["dimension"] == "research_line" and item["value"] == "LLM Serving")
+            self.assertEqual(serving_batch["count"], 1)
+            self.assertIn(serving_batch["severity"], {"high", "medium", "low"})
+            self.assertIn("library.html?line=LLM+Serving", serving_batch["href"])
+            self.assertIn("2601.00001-alpha-paper", serving_batch["sample_slugs"])
+            batch_html = (report_dir / "batch.html").read_text(encoding="utf-8")
+            self.assertIn("批次规划", batch_html)
+            self.assertIn("Batch JSON", batch_html)
+            self.assertIn('id="batchSearch"', batch_html)
+            self.assertIn('id="batchDimension"', batch_html)
+            self.assertIn('id="batchSeverity"', batch_html)
+            self.assertIn('id="downloadBatchCsv"', batch_html)
+            self.assertIn('id="copyBatchMarkdown"', batch_html)
+            self.assertIn("paper_batches.csv", batch_html)
+            self.assertIn("function renderBatchRows", batch_html)
             pivot = json.loads((report_dir / "pivot.json").read_text(encoding="utf-8"))
             self.assertEqual(pivot["count"], 2)
             self.assertIn("research_line", {item["key"] for item in pivot["dimensions"]})
@@ -964,6 +989,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("snapshot.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("workflow.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("status.html", {item["href"] for item in manifest["pages"]})
+            self.assertIn("batch.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("pivot.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("compare.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("taxonomy_map.html", {item["href"] for item in manifest["pages"]})
@@ -987,6 +1013,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("command.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("workflow.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("status.json", {item["href"] for item in manifest["data_files"]})
+            self.assertIn("batch.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("pivot.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("compare.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("taxonomy_map.json", {item["href"] for item in manifest["data_files"]})
@@ -1025,6 +1052,10 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertRegex(artifact_by_href["status.html"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["status.json"]["status"], "ok")
             self.assertRegex(artifact_by_href["status.json"]["sha256"], r"^[0-9a-f]{64}$")
+            self.assertEqual(artifact_by_href["batch.html"]["status"], "ok")
+            self.assertRegex(artifact_by_href["batch.html"]["sha256"], r"^[0-9a-f]{64}$")
+            self.assertEqual(artifact_by_href["batch.json"]["status"], "ok")
+            self.assertRegex(artifact_by_href["batch.json"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["intake.html"]["status"], "ok")
             self.assertRegex(artifact_by_href["intake.html"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["intake.json"]["status"], "ok")

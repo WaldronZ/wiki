@@ -104,6 +104,7 @@ REQUIRED_PAGES = {
     "board.html",
     "workflow.html",
     "status.html",
+    "batch.html",
     "pivot.html",
     "compare.html",
     "taxonomy_map.html",
@@ -146,6 +147,7 @@ REQUIRED_PAGES = {
     "command.json",
     "workflow.json",
     "status.json",
+    "batch.json",
     "pivot.json",
     "compare.json",
     "taxonomy_map.json",
@@ -576,6 +578,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     command_path = report_dir / "command.json"
     workflow_path = report_dir / "workflow.json"
     status_path = report_dir / "status.json"
+    batch_path = report_dir / "batch.json"
     pivot_path = report_dir / "pivot.json"
     compare_path = report_dir / "compare.json"
     taxonomy_map_path = report_dir / "taxonomy_map.json"
@@ -616,6 +619,9 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         return
     if not status_path.exists():
         errors.append("missing status.json")
+        return
+    if not batch_path.exists():
+        errors.append("missing batch.json")
         return
     if not pivot_path.exists():
         errors.append("missing pivot.json")
@@ -677,6 +683,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     command_data = json.loads(command_path.read_text(encoding="utf-8"))
     workflow_data = json.loads(workflow_path.read_text(encoding="utf-8"))
     status_data = json.loads(status_path.read_text(encoding="utf-8"))
+    batch_data = json.loads(batch_path.read_text(encoding="utf-8"))
     pivot_data = json.loads(pivot_path.read_text(encoding="utf-8"))
     compare_data = json.loads(compare_path.read_text(encoding="utf-8"))
     taxonomy_map_data = json.loads(taxonomy_map_path.read_text(encoding="utf-8"))
@@ -924,6 +931,50 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         errors.append("status.json links must include library, board, and workflow")
     if not isinstance(status_data.get("commands"), list):
         errors.append("status.json commands must be a list")
+
+    if batch_data.get("count") != len(report_slugs):
+        errors.append(f"batch.json count {batch_data.get('count')} != markdown report count {len(report_slugs)}")
+    required_batch = {"dimension_count", "batch_count", "dimensions", "summary", "batches", "top_batches", "links"}
+    missing_batch = sorted(required_batch - set(batch_data))
+    if missing_batch:
+        errors.append(f"batch.json missing keys: {', '.join(missing_batch)}")
+    batch_dimensions = batch_data.get("dimensions")
+    if not isinstance(batch_dimensions, list) or not batch_dimensions:
+        errors.append("batch.json dimensions must be a non-empty list")
+        batch_dimension_keys = set()
+    else:
+        batch_dimension_keys = {str(item.get("key") or "") for item in batch_dimensions if isinstance(item, dict)}
+        if batch_data.get("dimension_count") != len(batch_dimensions):
+            errors.append("batch.json dimension_count must match dimensions length")
+    batch_items = batch_data.get("batches")
+    if not isinstance(batch_items, list):
+        errors.append("batch.json batches must be a list")
+        batch_items = []
+    elif batch_data.get("batch_count") != len(batch_items):
+        errors.append("batch.json batch_count must match batches length")
+    valid_batch_severities = {"high", "medium", "low"}
+    for index, item in enumerate(batch_items):
+        if not isinstance(item, dict):
+            errors.append(f"batch.json batches[{index}] must be an object")
+            continue
+        for key in ("id", "dimension", "value", "count", "severity", "priority", "recommended_action", "href", "sample_slugs"):
+            if key not in item:
+                errors.append(f"batch.json batches[{index}] missing {key}")
+        if item.get("severity") not in valid_batch_severities:
+            errors.append(f"batch.json batches[{index}] has invalid severity")
+        if str(item.get("dimension") or "") not in batch_dimension_keys:
+            errors.append(f"batch.json batches[{index}] references unknown dimension")
+        if not isinstance(item.get("sample_slugs"), list):
+            errors.append(f"batch.json batches[{index}].sample_slugs must be a list")
+        else:
+            unknown_slugs = sorted(str(slug) for slug in item.get("sample_slugs", []) if str(slug) not in report_slugs)
+            if unknown_slugs:
+                errors.append(f"batch.json batches[{index}] references unknown sample slugs: {unknown_slugs}")
+    if not isinstance(batch_data.get("top_batches"), list):
+        errors.append("batch.json top_batches must be a list")
+    batch_links = batch_data.get("links")
+    if not isinstance(batch_links, dict) or not {"library", "actions", "review", "facets"}.issubset(batch_links):
+        errors.append("batch.json links must include library, actions, review, and facets")
 
     if pivot_data.get("count") != len(report_slugs):
         errors.append(f"pivot.json count {pivot_data.get('count')} != markdown report count {len(report_slugs)}")

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T06:00:39",
+  "generated_at": "2026-06-12T06:08:41",
   "count": 5,
   "inbox_count": 0,
   "lane_count": 6,
@@ -40,6 +40,12 @@
           "description": "密集筛选、列管理、批量更新"
         },
         {
+          "title": "批次规划",
+          "href": "batch.html",
+          "kind": "ops",
+          "description": "按分类、状态和复习缺口切分可执行论文批次"
+        },
+        {
           "title": "集合视图",
           "href": "collections.html",
           "kind": "view",
@@ -72,6 +78,10 @@
         {
           "href": "search_index.json",
           "description": "正文全文检索索引"
+        },
+        {
+          "href": "batch.json",
+          "description": "按分类、状态和治理缺口生成的可执行论文批次"
         },
         {
           "href": "review.json",
@@ -242,6 +252,12 @@
           "description": "分类标签字典、alias 和跨字段治理"
         },
         {
+          "title": "批次规划",
+          "href": "batch.html",
+          "kind": "ops",
+          "description": "按分类、状态和复习缺口切分可执行论文批次"
+        },
+        {
           "title": "分类工作台",
           "href": "facets.html",
           "kind": "ops",
@@ -276,6 +292,10 @@
         {
           "href": "registry.json",
           "description": "分类标签注册表、alias、字段复用和治理信号"
+        },
+        {
+          "href": "batch.json",
+          "description": "按分类、状态和治理缺口生成的可执行论文批次"
         },
         {
           "href": "taxonomy_actions.json",
@@ -470,6 +490,12 @@
           "description": "按研究线组织阶段、里程碑和下一步计划"
         },
         {
+          "title": "批次规划",
+          "href": "batch.html",
+          "kind": "ops",
+          "description": "按分类、状态和复习缺口切分可执行论文批次"
+        },
+        {
           "title": "时间轴",
           "href": "timeline.html",
           "kind": "analysis",
@@ -516,6 +542,10 @@
         {
           "href": "roadmap.json",
           "description": "研究线路线图、阶段覆盖、里程碑和下一步计划"
+        },
+        {
+          "href": "batch.json",
+          "description": "按分类、状态和治理缺口生成的可执行论文批次"
         },
         {
           "href": "compare.json",

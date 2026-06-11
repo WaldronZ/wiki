@@ -41,6 +41,7 @@ GENERATED_FIXED_PATHS = (
     "command.json",
     "workflow.json",
     "status.json",
+    "batch.json",
     "pivot.json",
     "compare.json",
     "taxonomy_map.json",
@@ -58,6 +59,7 @@ GENERATED_FIXED_PATHS = (
     "board.html",
     "workflow.html",
     "status.html",
+    "batch.html",
     "pivot.html",
     "compare.html",
     "taxonomy_map.html",
@@ -2030,6 +2032,165 @@ def write_status_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     )
 
 
+BATCH_DIMENSIONS = [
+    {"key": "research_line", "label": "研究线", "query": "line", "multi": False, "paper_key": "research_line"},
+    {"key": "line_role", "label": "研究角色", "query": "role", "multi": False, "paper_key": "line_role"},
+    {"key": "domain", "label": "Domain", "query": "domain", "multi": True, "paper_key": "domains"},
+    {"key": "track", "label": "Track", "query": "track", "multi": True, "paper_key": "tracks"},
+    {"key": "problem", "label": "Problem", "query": "problem", "multi": True, "paper_key": "problems"},
+    {"key": "topic", "label": "Topic", "query": "topic", "multi": True, "paper_key": "topics"},
+    {"key": "method", "label": "Method", "query": "method", "multi": True, "paper_key": "methods"},
+    {"key": "status", "label": "Status", "query": "status", "multi": False, "paper_key": "status"},
+    {"key": "reading_stage", "label": "Reading stage", "query": "stage", "multi": False, "paper_key": "reading_stage"},
+    {"key": "review_stage", "label": "Review stage", "query": "reviewStage", "multi": False, "paper_key": "review_stage"},
+    {"key": "code", "label": "Code", "query": "code", "multi": False, "paper_key": "has_code"},
+]
+
+
+def paper_missing_taxonomy(paper: dict[str, Any]) -> bool:
+    return any(
+        not paper.get(field)
+        for field in ("domains", "tracks", "problems", "topics", "methods", "line_role")
+    ) or str(paper.get("research_line") or "") == "Unassigned"
+
+
+def batch_dimension_values(paper: dict[str, Any], dimension: dict[str, Any]) -> list[str]:
+    key = str(dimension["key"])
+    paper_key = str(dimension["paper_key"])
+    if key == "code":
+        return ["yes" if paper.get("has_code") else "no"]
+    if dimension.get("multi"):
+        values = [str(value).strip() for value in paper.get(paper_key, []) if str(value).strip()]
+        return values or ["未设置"]
+    value = str(paper.get(paper_key) or "").strip()
+    return [value or "未设置"]
+
+
+def batch_href(dimension: dict[str, Any], value: str) -> str:
+    if value == "未设置" or value == "unset":
+        return "library.html"
+    key = str(dimension["key"])
+    query = str(dimension["query"])
+    if key == "code":
+        return page_query_href("library.html", code=value)
+    return page_query_href("library.html", **{query: value})
+
+
+def batch_severity(count: int, missing_review: int, due_review: int, missing_taxonomy: int, no_code: int) -> str:
+    if not count:
+        return "low"
+    review_gap = (missing_review + due_review) / count
+    taxonomy_gap = missing_taxonomy / count
+    code_gap = no_code / count
+    if due_review or taxonomy_gap >= 0.5 or review_gap >= 0.5:
+        return "high"
+    if taxonomy_gap >= 0.25 or review_gap >= 0.25 or code_gap >= 0.5:
+        return "medium"
+    return "low"
+
+
+def batch_action(missing_review: int, due_review: int, missing_taxonomy: int, no_code: int, high_importance: int) -> str:
+    if due_review:
+        return f"先复习到期论文 {due_review} 篇"
+    if missing_review:
+        return f"补 next_review {missing_review} 篇"
+    if missing_taxonomy:
+        return f"补 taxonomy {missing_taxonomy} 篇"
+    if no_code:
+        return f"补代码观察 {no_code} 篇"
+    if high_importance:
+        return f"整理重点论文 {high_importance} 篇"
+    return "保持观察"
+
+
+def batch_record(dimension: dict[str, Any], value: str, items: list[dict[str, Any]], today: str) -> dict[str, Any]:
+    count = len(items)
+    missing_review = sum(1 for paper in items if not paper.get("next_review"))
+    due_review = sum(1 for paper in items if paper.get("next_review") and str(paper.get("next_review")) <= today)
+    missing_taxonomy = sum(1 for paper in items if paper_missing_taxonomy(paper))
+    no_code = sum(1 for paper in items if not paper.get("has_code"))
+    high_importance = sum(1 for paper in items if int(paper.get("importance") or 0) >= 5)
+    latest_year = max((int(paper.get("year") or 0) for paper in items), default=0)
+    severity = batch_severity(count, missing_review, due_review, missing_taxonomy, no_code)
+    priority = (
+        {"high": 90, "medium": 60, "low": 30}.get(severity, 0)
+        + due_review * 8
+        + missing_review * 4
+        + missing_taxonomy * 5
+        + high_importance * 3
+        + min(count, 20)
+    )
+    samples = sorted(
+        items,
+        key=lambda paper: (-(int(paper.get("importance") or 0)), -(int(paper.get("year") or 0)), paper["title"]),
+    )[:6]
+    return {
+        "id": f"{dimension['key']}::{value}",
+        "dimension": dimension["key"],
+        "dimension_label": dimension["label"],
+        "value": value,
+        "count": count,
+        "severity": severity,
+        "priority": priority,
+        "latest_year": latest_year or "",
+        "high_importance": high_importance,
+        "missing_review": missing_review,
+        "due_review": due_review,
+        "missing_taxonomy": missing_taxonomy,
+        "no_code": no_code,
+        "recommended_action": batch_action(missing_review, due_review, missing_taxonomy, no_code, high_importance),
+        "href": batch_href(dimension, value),
+        "sample_slugs": [paper["slug"] for paper in samples],
+        "sample_titles": [paper.get("title_zh") or paper.get("title") or paper["slug"] for paper in samples],
+    }
+
+
+def build_batch_payload(papers: list[dict[str, Any]]) -> dict[str, Any]:
+    today = dt.date.today().isoformat()
+    batches: list[dict[str, Any]] = []
+    for dimension in BATCH_DIMENSIONS:
+        grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+        for paper in papers:
+            for value in batch_dimension_values(paper, dimension):
+                grouped[value].append(paper)
+        for value, items in grouped.items():
+            batches.append(batch_record(dimension, value, items, today))
+    batches.sort(key=lambda item: (-int(item["priority"]), str(item["dimension"]), str(item["value"]).lower()))
+    summary = {
+        "high": sum(1 for item in batches if item["severity"] == "high"),
+        "medium": sum(1 for item in batches if item["severity"] == "medium"),
+        "low": sum(1 for item in batches if item["severity"] == "low"),
+        "missing_review": sum(int(item["missing_review"]) for item in batches),
+        "missing_taxonomy": sum(int(item["missing_taxonomy"]) for item in batches),
+    }
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": len(papers),
+        "dimension_count": len(BATCH_DIMENSIONS),
+        "batch_count": len(batches),
+        "dimensions": BATCH_DIMENSIONS,
+        "summary": summary,
+        "batches": batches,
+        "top_batches": batches[:12],
+        "links": {
+            "library": "library.html",
+            "actions": "actions.html",
+            "quality": "quality.html",
+            "review": "review.html",
+            "facets": "facets.html",
+            "scale": "scale.html",
+        },
+    }
+
+
+def write_batch_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_batch_payload(papers)
+    (report_dir / "batch.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
 PIVOT_DIMENSIONS = {
     "research_line": {"label": "研究线", "query": "line", "multi": False},
     "domain": {"label": "Domain", "query": "domain", "multi": True, "paper_key": "domains"},
@@ -3386,6 +3547,7 @@ DATA_CONSUMER_HINTS = {
     "command.json": ["command-center", "desktop", "navigation", "ops"],
     "workflow.json": ["workflow", "desktop", "filters"],
     "status.json": ["workflow", "runtime-selector", "desktop"],
+    "batch.json": ["batch-planning", "classification", "ops", "desktop"],
     "pivot.json": ["analytics", "classification", "desktop"],
     "compare.json": ["comparison", "curation", "desktop"],
     "taxonomy_map.json": ["taxonomy", "graph", "desktop"],
@@ -3487,7 +3649,7 @@ def build_catalog_payload(report_dir: Path, papers: list[dict[str, Any]], inbox_
         {
             "name": "Desktop sync bootstrap",
             "command": "read docs/catalog.json, docs/papers.json, docs/search_index.json",
-            "uses": ["catalog.json", "papers.json", "search_index.json", "workflow.json"],
+            "uses": ["catalog.json", "papers.json", "search_index.json", "workflow.json", "batch.json"],
             "outputs": ["local searchable paper library"],
         },
         {
@@ -3514,7 +3676,7 @@ def build_catalog_payload(report_dir: Path, papers: list[dict[str, Any]], inbox_
         "data_resources": data_resources,
         "contracts": contracts,
         "integration_recipes": integration_recipes,
-        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json"],
+        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "batch.json"],
     }
 
 
@@ -3538,7 +3700,7 @@ def write_catalog_placeholders(report_dir: Path) -> None:
         "data_resources": [],
         "contracts": [],
         "integration_recipes": [],
-        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json"],
+        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "batch.json"],
     }
     (report_dir / "catalog.json").write_text(
         json.dumps(payload, ensure_ascii=False, indent=2),
@@ -3689,7 +3851,7 @@ def build_onboarding_payload(report_dir: Path, papers: list[dict[str, Any]], inb
         "contribution_paths": contribution_paths,
         "command_groups": command_groups,
         "contracts": contract_files_manifest(),
-        "bootstrap_files": ["command.json", "onboarding.json", "catalog.json", "manifest.json", "papers.json", "intake.json", "routing.json", "quality.json"],
+        "bootstrap_files": ["command.json", "onboarding.json", "catalog.json", "manifest.json", "papers.json", "batch.json", "intake.json", "routing.json", "quality.json"],
         "core_pages": [
             item
             for item in wiki_pages_manifest()
@@ -3732,6 +3894,7 @@ def wiki_pages_manifest() -> list[dict[str, str]]:
         {"title": "状态看板", "href": "board.html", "kind": "workflow", "description": "拖拽式状态流和 CSV patch"},
         {"title": "工作流中心", "href": "workflow.html", "kind": "workflow", "description": "状态体系对比、分布和漂移审计"},
         {"title": "状态选择器", "href": "status.html", "kind": "workflow", "description": "动态选择状态体系、阶段和值并生成可分享视图"},
+        {"title": "批次规划", "href": "batch.html", "kind": "ops", "description": "按分类、状态和复习缺口切分可执行论文批次"},
         {"title": "分类透视表", "href": "pivot.html", "kind": "analysis", "description": "任意两个分类维度交叉分析论文分布"},
         {"title": "论文对比", "href": "compare.html", "kind": "analysis", "description": "并排比较候选论文的分类、状态和质量信号"},
         {"title": "分类图谱", "href": "taxonomy_map.html", "kind": "analysis", "description": "分类节点、共现边和研究线簇"},
@@ -3770,6 +3933,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "command.json", "description": "场景化命令中心，组织页面入口、队列、数据和推荐命令"},
         {"href": "workflow.json", "description": "状态工作流配置、分布和漂移审计"},
         {"href": "status.json", "description": "运行时状态选择器、状态字段选项和论文状态快照"},
+        {"href": "batch.json", "description": "按分类、状态和治理缺口生成的可执行论文批次"},
         {"href": "pivot.json", "description": "分类透视表维度、论文投影和交叉分布"},
         {"href": "compare.json", "description": "论文对比视图数据和推荐对比集合"},
         {"href": "taxonomy_map.json", "description": "分类节点、共现边、研究线簇和图谱治理建议"},
@@ -4847,8 +5011,8 @@ def build_command_center_payload(report_dir: Path, papers: list[dict[str, Any]],
             "Daily Reading",
             "日常阅读、筛选、复习和状态推进。适合每天打开的主工作区。",
             "library.html",
-            ["index.html", "library.html", "collections.html", "review.html", "board.html", "status.html"],
-            ["papers.json", "search_index.json", "review.json", "status.json"],
+            ["index.html", "library.html", "batch.html", "collections.html", "review.html", "board.html", "status.html"],
+            ["papers.json", "search_index.json", "batch.json", "review.json", "status.json"],
             ["actions_markdown", "actions_project"],
             [
                 {"label": "论文", "value": len(papers), "hint": "library size"},
@@ -4887,8 +5051,8 @@ def build_command_center_payload(report_dir: Path, papers: list[dict[str, Any]],
             "Taxonomy Governance",
             "管理 domain/track/problem/topic/method、研究线 owner、标签定义和分类漂移。",
             "registry.html",
-            ["registry.html", "facets.html", "taxonomy.html", "balance.html", "coverage.html", "ownership.html"],
-            ["registry.json", "taxonomy_actions.json", "quality.json", "ownership.json"],
+            ["registry.html", "batch.html", "facets.html", "taxonomy.html", "balance.html", "coverage.html", "ownership.html"],
+            ["registry.json", "batch.json", "taxonomy_actions.json", "quality.json", "ownership.json"],
             ["taxonomy_registry_project", "taxonomy_actions_project", "taxonomy_balance_project", "quality_gate"],
             [
                 {"label": "高风险标签", "value": registry_high, "hint": "registry high"},
@@ -4927,8 +5091,8 @@ def build_command_center_payload(report_dir: Path, papers: list[dict[str, Any]],
             "Research Synthesis",
             "围绕研究线、年份、相似论文和缺口做综述、路线图与论文比较。",
             "roadmap.html",
-            ["roadmap.html", "timeline.html", "matrix.html", "pivot.html", "compare.html", "related.html", "gaps.html", "clusters.html"],
-            ["roadmap.json", "compare.json", "pivot.json", "taxonomy_map.json", "clusters.json"],
+            ["roadmap.html", "batch.html", "timeline.html", "matrix.html", "pivot.html", "compare.html", "related.html", "gaps.html", "clusters.html"],
+            ["roadmap.json", "batch.json", "compare.json", "pivot.json", "taxonomy_map.json", "clusters.json"],
             ["actions_markdown"],
             [
                 {"label": "研究线", "value": len(stats["taxonomy"]["research_lines"]), "hint": "lines"},
@@ -6122,6 +6286,7 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]], inbox_items: li
     <span class="stat">最近更新 {html.escape(data["generated_at"])}</span>
     <a class="stat" href="command.html">命令中心</a>
     <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="batch.html">批次规划</a>
     <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="inbox.html">待处理池</a>
     <a class="stat" href="review.html">复习计划</a>
@@ -7032,6 +7197,7 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <p class="lead">面向大量论文的密集管理视图：快速扫状态、研究线、分类覆盖、重要性和代码情况。适合批量整理与查漏补缺。</p>
   <div class="stats">
     <a class="stat" href="index.html">卡片首页</a>
+    <a class="stat" href="batch.html">批次规划</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="collections.html">集合视图</a>
     <a class="stat" href="related.html">关联网络</a>
@@ -9287,6 +9453,266 @@ readStatusUrl();
 </script>
 """
     (report_dir / "status.html").write_text(page_shell("状态选择器", body, extra_css=status_css), encoding="utf-8")
+
+
+def render_batch(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_batch_payload(papers)
+    batch_json = json.dumps(payload, ensure_ascii=False).replace("</", "<\\/")
+    dimension_options = "".join(
+        f'<option value="{html.escape(str(item["key"]), quote=True)}">{html.escape(str(item["label"]))}</option>'
+        for item in payload["dimensions"]
+    )
+    top_rows = "".join(
+        "<tr>"
+        f'<td><span class="flag">{html.escape(str(item["severity"]))}</span></td>'
+        f"<td>{html.escape(str(item['dimension_label']))}</td>"
+        f'<td><a href="{html.escape(str(item["href"]))}">{html.escape(str(item["value"]))}</a></td>'
+        f"<td>{int(item['count'])}</td>"
+        f"<td>{int(item['missing_review'])}</td>"
+        f"<td>{int(item['missing_taxonomy'])}</td>"
+        f"<td>{html.escape(str(item['recommended_action']))}</td>"
+        "</tr>"
+        for item in payload["top_batches"][:8]
+    ) or '<tr><td colspan="7" class="empty">暂无批次。</td></tr>'
+    batch_css = """
+    .batch-layout {
+      display: grid;
+      grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
+      gap: 16px;
+      align-items: start;
+    }
+    .batch-panel {
+      position: sticky;
+      top: 82px;
+      display: grid;
+      gap: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 14px;
+    }
+    .batch-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .batch-table td,
+    .batch-table th {
+      vertical-align: top;
+    }
+    .batch-table code {
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+    .batch-samples {
+      max-width: 320px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    @media (max-width: 920px) {
+      .batch-layout { grid-template-columns: 1fr; }
+      .batch-panel { position: static; }
+    }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Batch Planner</div>
+  <h1>批次规划</h1>
+  <p class="lead">把大量论文按研究线、标签、状态、阅读阶段和复习缺口切成可执行批次。先选批次，再跳回论文库做批量 patch、导出或分派。</p>
+  <div class="stats">
+    <a class="stat" href="batch.json">Batch JSON</a>
+    <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="actions.html">行动中心</a>
+    <a class="stat" href="review.html">复习计划</a>
+    <a class="stat" href="facets.html">分类工作台</a>
+    <a class="stat" href="scale.html">规模就绪</a>
+    <span class="stat">论文 {payload["count"]}</span>
+    <span class="stat">批次 {payload["batch_count"]}</span>
+    <span class="stat">高风险 {payload["summary"]["high"]}</span>
+  </div>
+</header>
+<main class="shell">
+  <section class="batch-summary">
+    <section class="metric-card"><span>批次</span><strong>{payload["batch_count"]}</strong><span>{payload["dimension_count"]} 个维度</span></section>
+    <section class="metric-card"><span>高风险</span><strong>{payload["summary"]["high"]}</strong><span>优先整理</span></section>
+    <section class="metric-card"><span>中风险</span><strong>{payload["summary"]["medium"]}</strong><span>进入维护队列</span></section>
+    <section class="metric-card"><span>缺复习</span><strong>{payload["summary"]["missing_review"]}</strong><span>跨批次累计</span></section>
+    <section class="metric-card"><span>缺分类</span><strong>{payload["summary"]["missing_taxonomy"]}</strong><span>跨批次累计</span></section>
+  </section>
+  <section class="batch-layout">
+    <aside class="batch-panel">
+      <input id="batchSearch" type="search" placeholder="搜索维度、值、动作或样例论文">
+      <select id="batchDimension"><option value="">全部维度</option>{dimension_options}</select>
+      <select id="batchSeverity"><option value="">全部风险</option><option value="high">high</option><option value="medium">medium</option><option value="low">low</option></select>
+      <select id="batchSort"><option value="priority">优先级</option><option value="count">批次规模</option><option value="missingReview">缺复习</option><option value="missingTaxonomy">缺分类</option><option value="latestYear">最新年份</option><option value="name">名称</option></select>
+      <button class="button" id="copyBatchMarkdown" type="button">复制 Markdown 计划</button>
+      <button class="button" id="downloadBatchCsv" type="button">下载 CSV</button>
+      <button class="button" id="resetBatch" type="button">重置</button>
+      <div class="meta" id="batchCount">准备加载批次</div>
+    </aside>
+    <div>
+      <section>
+        <h2 class="section-title">优先批次</h2>
+        <div class="table-wrap"><table class="data-table"><thead><tr><th>风险</th><th>维度</th><th>值</th><th>论文</th><th>缺复习</th><th>缺分类</th><th>建议</th></tr></thead><tbody>{top_rows}</tbody></table></div>
+      </section>
+      <section>
+        <h2 class="section-title">批次列表</h2>
+        <div class="table-wrap"><table class="data-table batch-table"><thead><tr><th>风险</th><th>维度</th><th>批次</th><th>论文</th><th>缺口</th><th>建议动作</th><th>样例</th></tr></thead><tbody id="batchRows"></tbody></table></div>
+      </section>
+    </div>
+  </section>
+</main>
+<script>
+const batchPayload = {batch_json};
+const batchRows = document.querySelector("#batchRows");
+const batchSearch = document.querySelector("#batchSearch");
+const batchDimension = document.querySelector("#batchDimension");
+const batchSeverity = document.querySelector("#batchSeverity");
+const batchSort = document.querySelector("#batchSort");
+const batchCount = document.querySelector("#batchCount");
+
+function batchEscape(value) {{
+  return String(value ?? "").replace(/[&<>"']/g, char => ({{ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }}[char]));
+}}
+
+function batchCsvCell(value) {{
+  const text = String(value ?? "");
+  return (text.includes(",") || text.includes('"') || text.includes("\\n"))
+    ? `"${{text.replaceAll('"', '""')}}"`
+    : text;
+}}
+
+function batchSearchText(item) {{
+  return [
+    item.dimension_label,
+    item.dimension,
+    item.value,
+    item.severity,
+    item.recommended_action,
+    ...(item.sample_slugs || []),
+    ...(item.sample_titles || []),
+  ].join(" ").toLowerCase();
+}}
+
+function filteredBatches() {{
+  const q = batchSearch.value.trim().toLowerCase();
+  const items = (batchPayload.batches || []).filter(item => (
+    (!q || batchSearchText(item).includes(q))
+    && (!batchDimension.value || item.dimension === batchDimension.value)
+    && (!batchSeverity.value || item.severity === batchSeverity.value)
+  ));
+  const mode = batchSort.value;
+  return items.sort((left, right) => {{
+    if (mode === "count") return Number(right.count || 0) - Number(left.count || 0) || String(left.value).localeCompare(String(right.value));
+    if (mode === "missingReview") return Number(right.missing_review || 0) - Number(left.missing_review || 0) || Number(right.priority || 0) - Number(left.priority || 0);
+    if (mode === "missingTaxonomy") return Number(right.missing_taxonomy || 0) - Number(left.missing_taxonomy || 0) || Number(right.priority || 0) - Number(left.priority || 0);
+    if (mode === "latestYear") return Number(right.latest_year || 0) - Number(left.latest_year || 0) || Number(right.priority || 0) - Number(left.priority || 0);
+    if (mode === "name") return `${{left.dimension_label}} ${{left.value}}`.localeCompare(`${{right.dimension_label}} ${{right.value}}`);
+    return Number(right.priority || 0) - Number(left.priority || 0) || Number(right.count || 0) - Number(left.count || 0);
+  }});
+}}
+
+function gapText(item) {{
+  return [
+    `重点 ${{item.high_importance}}`,
+    `缺复习 ${{item.missing_review}}`,
+    `到期 ${{item.due_review}}`,
+    `缺分类 ${{item.missing_taxonomy}}`,
+    `无代码 ${{item.no_code}}`,
+  ].join(" · ");
+}}
+
+function renderBatchRows() {{
+  const items = filteredBatches();
+  batchCount.textContent = `显示 ${{items.length}} / ${{batchPayload.batch_count}} 个批次`;
+  if (!items.length) {{
+    batchRows.innerHTML = '<tr><td colspan="7" class="empty">没有匹配批次。</td></tr>';
+    return;
+  }}
+  batchRows.innerHTML = items.map(item => {{
+    const samples = (item.sample_titles || []).slice(0, 4).map((title, index) => {{
+      const slug = (item.sample_slugs || [])[index] || "";
+      return `<div>${{batchEscape(title)}} <span class="meta">${{batchEscape(slug)}}</span></div>`;
+    }}).join("");
+    return `<tr>
+      <td><span class="flag">${{batchEscape(item.severity)}}</span></td>
+      <td>${{batchEscape(item.dimension_label)}}</td>
+      <td><a href="${{batchEscape(item.href)}}">${{batchEscape(item.value)}}</a><div class="meta">${{batchEscape(item.dimension)}}</div></td>
+      <td>${{Number(item.count || 0)}}</td>
+      <td>${{batchEscape(gapText(item))}}</td>
+      <td>${{batchEscape(item.recommended_action)}}<div><code>${{batchEscape(item.href)}}</code></div></td>
+      <td><div class="batch-samples">${{samples || "-"}}</div></td>
+    </tr>`;
+  }}).join("");
+}}
+
+function visibleBatchRows() {{
+  return filteredBatches();
+}}
+
+function batchCsv(items) {{
+  const header = ["severity", "dimension", "value", "count", "priority", "high_importance", "missing_review", "due_review", "missing_taxonomy", "no_code", "latest_year", "recommended_action", "href", "sample_slugs"];
+  const rows = items.map(item => [
+    item.severity,
+    item.dimension,
+    item.value,
+    item.count,
+    item.priority,
+    item.high_importance,
+    item.missing_review,
+    item.due_review,
+    item.missing_taxonomy,
+    item.no_code,
+    item.latest_year,
+    item.recommended_action,
+    item.href,
+    (item.sample_slugs || []).join(";"),
+  ]);
+  return [header, ...rows].map(row => row.map(batchCsvCell).join(",")).join("\\n") + "\\n";
+}}
+
+function markdownPlan(items) {{
+  return items.slice(0, 40).map(item => (
+    `- [ ] ${{item.dimension_label}} / ${{item.value}}: ${{item.count}} papers, risk=${{item.severity}}, action=${{item.recommended_action}} (${{item.href}})`
+  )).join("\\n") + "\\n";
+}}
+
+function downloadText(filename, text, type) {{
+  const blob = new Blob([text], {{ type }});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}}
+
+async function copyText(text, fallbackTitle) {{
+  try {{
+    await navigator.clipboard.writeText(text);
+  }} catch {{
+    window.prompt(fallbackTitle, text);
+  }}
+}}
+
+[batchSearch, batchDimension, batchSeverity, batchSort].forEach(control => control.addEventListener("input", renderBatchRows));
+document.querySelector("#downloadBatchCsv").addEventListener("click", () => downloadText("paper_batches.csv", batchCsv(visibleBatchRows()), "text/csv;charset=utf-8"));
+document.querySelector("#copyBatchMarkdown").addEventListener("click", () => copyText(markdownPlan(visibleBatchRows()), "复制 Markdown 批次计划"));
+document.querySelector("#resetBatch").addEventListener("click", () => {{
+  batchSearch.value = "";
+  batchDimension.value = "";
+  batchSeverity.value = "";
+  batchSort.value = "priority";
+  renderBatchRows();
+}});
+renderBatchRows();
+</script>
+"""
+    (report_dir / "batch.html").write_text(page_shell("批次规划", body, extra_css=batch_css), encoding="utf-8")
 
 
 def render_pivot(report_dir: Path, papers: list[dict[str, Any]]) -> None:
@@ -18113,6 +18539,7 @@ def build_wiki(report_dir: Path) -> int:
     write_stats_json(report_dir, papers)
     write_workflow_json(report_dir, papers)
     write_status_json(report_dir, papers)
+    write_batch_json(report_dir, papers)
     write_pivot_json(report_dir, papers)
     write_compare_json(report_dir, papers)
     write_taxonomy_map_json(report_dir, papers)
@@ -18132,6 +18559,7 @@ def build_wiki(report_dir: Path) -> int:
     render_board(report_dir, papers)
     render_workflow(report_dir, papers)
     render_status(report_dir, papers)
+    render_batch(report_dir, papers)
     render_pivot(report_dir, papers)
     render_compare(report_dir, papers)
     render_taxonomy_map(report_dir, papers)
