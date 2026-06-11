@@ -97,7 +97,7 @@ has_code: true
 
 `docs/quality.json` 会输出 `label_alias_suggestions`，`docs/quality.html` 和 `docs/taxonomy.html` 会展示“标签归一化建议”。这些建议只根据大小写、复数、连字符、斜杠等规范化后相同的标签生成，适合发现 `tiling` / `Tiling`、`KV-cache` / `KV Cache` 这类漂移；最终是否合并仍由你把建议片段写入 `label_aliases` 来确认。
 
-`docs/facets.html` 是日常分类工作台：它会按字段展示每个标签命中的论文数、长尾标签、过载标签和动态状态候选值。论文数量变多后，优先从这里判断哪些标签需要合并、哪些大桶需要拆成更细的 track / problem。对应的机器可读任务会写入 `docs/taxonomy_actions.json`，便于接入 issue、看板或桌面软件。
+`docs/facets.html` 是日常分类工作台：它会按字段展示每个标签命中的论文数、长尾标签、过载标签和动态状态候选值。论文数量变多后，优先从这里判断哪些标签需要合并、哪些大桶需要拆成更细的 track / problem。对应的机器可读任务会写入 `docs/taxonomy_actions.json`，便于接入 issue、看板或桌面软件。决定把某个标签或状态重命名之前，可以到 `docs/taxonomy.html` 的「分类变更预览」选择字段、旧值和新值，先查看受影响论文，再下载 `taxonomy_change_patch.csv`，用 `scripts/apply_library_metadata.py` dry-run 或写回。
 
 `role_order` 会影响研究线详情页和首页研究线概览中的论文排序。`status_values`、`reading_stage_values` 和 `review_stage_values` 会进入首页和论文库表格的筛选项；其中 `status_values` 还会成为 `docs/board.html` 的状态看板列。即使某个状态当前还没有论文使用，也可以先作为可选管理状态出现。构建后的 `papers.json` 和 `stats.json` 会把这些选项输出到 `controls` 字段，供后续前端、脚本或桌面软件动态读取。
 

@@ -5957,6 +5957,36 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     workflow_config_json = html.escape(json.dumps(workflow_config, ensure_ascii=False, indent=2))
     workflow_seed_json = html.escape(json.dumps(workflow_seed, ensure_ascii=False), quote=True)
     workflow_all_json = html.escape(json.dumps(status_workflows, ensure_ascii=False), quote=True)
+    taxonomy_change_fields = []
+    for field, english, _query_key, label, is_list in FACET_SPECS:
+        values = sorted(facet_count_for_field(papers, taxonomy, field, is_list), key=lambda value: value.lower())
+        taxonomy_change_fields.append(
+            {
+                "field": field,
+                "label": label,
+                "english": english,
+                "is_list": is_list,
+                "values": values,
+            }
+        )
+    taxonomy_change_papers = [
+        {
+            "slug": paper["slug"],
+            "title": paper.get("title_zh") or paper.get("title") or paper["slug"],
+            "href": paper_href(paper),
+            "fields": {
+                field["field"]: (
+                    paper.get(field["field"], [])
+                    if field["is_list"]
+                    else str(paper.get(field["field"]) or "")
+                )
+                for field in taxonomy_change_fields
+            },
+        }
+        for paper in papers
+    ]
+    taxonomy_change_fields_json = json.dumps(taxonomy_change_fields, ensure_ascii=False).replace("</", "<\\/")
+    taxonomy_change_papers_json = json.dumps(taxonomy_change_papers, ensure_ascii=False).replace("</", "<\\/")
 
     long_tail = Counter(
         tag
@@ -6078,6 +6108,26 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     </section>
   </section>
   <section>
+    <h2 class="section-title">分类变更预览</h2>
+    <section class="taxonomy-panel taxonomy-change-planner">
+      <div>
+        <h2>标签 / 状态重命名影响</h2>
+        <p class="meta">选择字段和旧值，填写新值后预览受影响论文；导出的 CSV 可用 apply_library_metadata.py 先 dry-run，再写回 frontmatter。</p>
+      </div>
+      <div class="taxonomy-change-grid">
+        <label><span>字段</span><select id="taxonomyChangeField"></select></label>
+        <label><span>旧值</span><select id="taxonomyChangeFrom"></select></label>
+        <label><span>新值</span><input id="taxonomyChangeTo" type="text" placeholder="New value"></label>
+        <button class="button primary" type="button" id="downloadTaxonomyChangePatch">下载 CSV patch</button>
+      </div>
+      <div class="designer-actions">
+        <strong id="taxonomyChangeCount">0 篇论文</strong>
+        <span class="meta">导出后运行：python3 scripts/apply_library_metadata.py docs --input ~/Downloads/taxonomy_change_patch.csv</span>
+      </div>
+      <div id="taxonomyChangePreview" class="taxonomy-change-preview"></div>
+    </section>
+  </section>
+  <section>
     <h2 class="section-title">治理队列</h2>
     <div class="queue-grid">{queue_cards}</div>
   </section>
@@ -6091,6 +6141,133 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   </section>
 </main>
 <script>
+const taxonomyChangeFields = {taxonomy_change_fields_json};
+const taxonomyChangePapers = {taxonomy_change_papers_json};
+
+(() => {{
+  const fieldSelect = document.querySelector("#taxonomyChangeField");
+  const fromSelect = document.querySelector("#taxonomyChangeFrom");
+  const toInput = document.querySelector("#taxonomyChangeTo");
+  const count = document.querySelector("#taxonomyChangeCount");
+  const preview = document.querySelector("#taxonomyChangePreview");
+  const downloadButton = document.querySelector("#downloadTaxonomyChangePatch");
+  if (!fieldSelect || !fromSelect || !toInput || !count || !preview || !downloadButton) return;
+  const fieldByName = new Map(taxonomyChangeFields.map((field) => [field.field, field]));
+
+  function uniqueValues(values) {{
+    return Array.from(new Set(values.map((value) => String(value || "").trim()).filter(Boolean)));
+  }}
+
+  function csvCell(value) {{
+    const text = String(value ?? "");
+    return (text.includes(",") || text.includes('"') || text.includes("\\n"))
+      ? `"${{text.replaceAll('"', '""')}}"`
+      : text;
+  }}
+
+  function escapeHtml(value) {{
+    return String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;");
+  }}
+
+  function downloadCsv(filename, rows) {{
+    const csv = rows.map((row) => row.map(csvCell).join(",")).join("\\n") + "\\n";
+    const blob = new Blob([csv], {{ type: "text/csv;charset=utf-8" }});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  }}
+
+  function fieldValue(paper, field) {{
+    const spec = fieldByName.get(field);
+    const value = paper.fields[field];
+    return spec && spec.is_list ? (Array.isArray(value) ? value : []) : String(value || "");
+  }}
+
+  function paperHasValue(paper, field, fromValue) {{
+    const spec = fieldByName.get(field);
+    const value = fieldValue(paper, field);
+    return spec && spec.is_list ? value.includes(fromValue) : value === fromValue;
+  }}
+
+  function replacementValue(paper, field, fromValue, toValue) {{
+    const spec = fieldByName.get(field);
+    if (spec && spec.is_list) {{
+      return uniqueValues(fieldValue(paper, field).map((value) => value === fromValue ? toValue : value)).join("; ");
+    }}
+    return toValue;
+  }}
+
+  function currentChanges() {{
+    const field = fieldSelect.value;
+    const fromValue = fromSelect.value;
+    const toValue = toInput.value.trim();
+    if (!field || !fromValue || !toValue) return [];
+    return taxonomyChangePapers
+      .filter((paper) => paperHasValue(paper, field, fromValue))
+      .map((paper) => ({{
+        ...paper,
+        field,
+        nextValue: replacementValue(paper, field, fromValue, toValue),
+      }}));
+  }}
+
+  function renderPreview() {{
+    const field = fieldSelect.value;
+    const fromValue = fromSelect.value;
+    const toValue = toInput.value.trim();
+    const changes = currentChanges();
+    downloadButton.disabled = changes.length === 0;
+    count.textContent = `${{changes.length}} 篇论文`;
+    if (!field || !fromValue) {{
+      preview.innerHTML = '<div class="empty">请选择字段和旧值。</div>';
+      return;
+    }}
+    if (!toValue) {{
+      preview.innerHTML = '<div class="empty">填写新值后会显示可导出的 patch。</div>';
+      return;
+    }}
+    if (!changes.length) {{
+      preview.innerHTML = '<div class="empty">没有论文命中这次变更。</div>';
+      return;
+    }}
+    const items = changes.slice(0, 30).map((paper) => (
+      `<li><a href="${{escapeHtml(paper.href)}}">${{escapeHtml(paper.title)}}</a><span class="meta">${{escapeHtml(paper.slug)}} -> ${{escapeHtml(paper.nextValue)}}</span></li>`
+    )).join("");
+    const more = changes.length > 30 ? `<div class="meta">另有 ${{changes.length - 30}} 篇未显示。</div>` : "";
+    preview.innerHTML = `<ol class="queue-list">${{items}}</ol>${{more}}`;
+  }}
+
+  function refreshFromOptions() {{
+    const spec = fieldByName.get(fieldSelect.value) || taxonomyChangeFields[0];
+    const values = spec ? spec.values : [];
+    fromSelect.replaceChildren(...values.map((value) => new Option(value, value)));
+    renderPreview();
+  }}
+
+  function downloadPatch() {{
+    const field = fieldSelect.value;
+    const changes = currentChanges();
+    if (!changes.length) return;
+    downloadCsv("taxonomy_change_patch.csv", [["slug", field], ...changes.map((paper) => [paper.slug, paper.nextValue])]);
+  }}
+
+  fieldSelect.replaceChildren(...taxonomyChangeFields.map((field) => new Option(`${{field.label}} / ${{field.english}}`, field.field)));
+  fieldSelect.addEventListener("input", refreshFromOptions);
+  fromSelect.addEventListener("input", renderPreview);
+  toInput.addEventListener("input", renderPreview);
+  downloadButton.addEventListener("click", downloadPatch);
+  refreshFromOptions();
+}})();
+
 (() => {{
   const designer = document.querySelector(".workflow-designer");
   if (!designer) return;
@@ -6227,8 +6404,27 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
             "      font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;",
             "    }",
             "    .designer-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px; }",
+            "    .taxonomy-change-planner { margin-top: 8px; }",
+            "    .taxonomy-change-grid {",
+            "      display: grid;",
+            "      grid-template-columns: repeat(3, minmax(0, 1fr)) auto;",
+            "      gap: 12px;",
+            "      align-items: end;",
+            "      margin: 14px 0;",
+            "    }",
+            "    .taxonomy-change-grid label { display: grid; gap: 6px; font-weight: 700; }",
+            "    .taxonomy-change-grid input, .taxonomy-change-grid select {",
+            "      width: 100%;",
+            "      border: 1px solid var(--line);",
+            "      border-radius: 8px;",
+            "      padding: 10px 12px;",
+            "      background: #fff;",
+            "      color: var(--ink);",
+            "      font: inherit;",
+            "    }",
+            "    .taxonomy-change-preview { margin-top: 10px; }",
             "    .button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }",
-            "    @media (max-width: 820px) { .designer-grid { grid-template-columns: 1fr; } }",
+            "    @media (max-width: 820px) { .designer-grid, .taxonomy-change-grid { grid-template-columns: 1fr; } }",
         ]
     )
     (report_dir / "taxonomy.html").write_text(page_shell("分类治理", body, extra_css=taxonomy_css), encoding="utf-8")

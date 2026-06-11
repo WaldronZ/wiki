@@ -363,8 +363,27 @@
       font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
     }
     .designer-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px; }
+    .taxonomy-change-planner { margin-top: 8px; }
+    .taxonomy-change-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+      gap: 12px;
+      align-items: end;
+      margin: 14px 0;
+    }
+    .taxonomy-change-grid label { display: grid; gap: 6px; font-weight: 700; }
+    .taxonomy-change-grid input, .taxonomy-change-grid select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 12px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+    }
+    .taxonomy-change-preview { margin-top: 10px; }
     .button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
-    @media (max-width: 820px) { .designer-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 820px) { .designer-grid, .taxonomy-change-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -502,6 +521,26 @@
     </section>
   </section>
   <section>
+    <h2 class="section-title">分类变更预览</h2>
+    <section class="taxonomy-panel taxonomy-change-planner">
+      <div>
+        <h2>标签 / 状态重命名影响</h2>
+        <p class="meta">选择字段和旧值，填写新值后预览受影响论文；导出的 CSV 可用 apply_library_metadata.py 先 dry-run，再写回 frontmatter。</p>
+      </div>
+      <div class="taxonomy-change-grid">
+        <label><span>字段</span><select id="taxonomyChangeField"></select></label>
+        <label><span>旧值</span><select id="taxonomyChangeFrom"></select></label>
+        <label><span>新值</span><input id="taxonomyChangeTo" type="text" placeholder="New value"></label>
+        <button class="button primary" type="button" id="downloadTaxonomyChangePatch">下载 CSV patch</button>
+      </div>
+      <div class="designer-actions">
+        <strong id="taxonomyChangeCount">0 篇论文</strong>
+        <span class="meta">导出后运行：python3 scripts/apply_library_metadata.py docs --input ~/Downloads/taxonomy_change_patch.csv</span>
+      </div>
+      <div id="taxonomyChangePreview" class="taxonomy-change-preview"></div>
+    </section>
+  </section>
+  <section>
     <h2 class="section-title">治理队列</h2>
     <div class="queue-grid"><section class="role-section"><h2>缺 Domain <span class="meta">0</span></h2><div class="empty">所有论文都有 domain。</div></section><section class="role-section"><h2>缺 Track <span class="meta">0</span></h2><div class="empty">所有论文都有 track。</div></section><section class="role-section"><h2>缺 Problem <span class="meta">0</span></h2><div class="empty">所有论文都有 problem。</div></section><section class="role-section"><h2>缺 Topic <span class="meta">0</span></h2><div class="empty">所有论文都有 topic。</div></section><section class="role-section"><h2>缺 Method <span class="meta">0</span></h2><div class="empty">所有论文都有 method。</div></section><section class="role-section"><h2>缺研究线 <span class="meta">0</span></h2><div class="empty">所有论文都有 research_line。</div></section><section class="role-section"><h2>缺角色 <span class="meta">0</span></h2><div class="empty">所有论文都有 line_role。</div></section></div>
   </section>
@@ -515,6 +554,133 @@
   </section>
 </main>
 <script>
+const taxonomyChangeFields = [{"field": "domains", "label": "结构域", "english": "Domain", "is_list": true, "values": ["LLM Systems"]}, {"field": "tracks", "label": "方向", "english": "Track", "is_list": true, "values": ["Attention Kernels", "Inference Acceleration", "Inference Serving Systems", "Parallel Decoding"]}, {"field": "problems", "label": "问题", "english": "Problem", "is_list": true, "values": ["Customizable Attention Serving", "Efficient Exact Attention", "Lossless Speculative Decoding", "Memory-Efficient Parallel Token Generation", "Parallel Diffusion Decoding"]}, {"field": "topics", "label": "主题", "english": "Topic", "is_list": true, "values": ["Attention Kernels", "Diffusion Language Models", "Efficient Attention", "GPU Kernel Optimization", "GPU Systems", "Inference Optimization", "KV Cache", "LLM", "LLM Inference", "LLM Serving", "Long Context", "Parallel Decoding", "Speculative Decoding", "Transformer"]}, {"field": "methods", "label": "方法", "english": "Method", "is_list": true, "values": ["block diffusion", "block-sparse attention", "composable KV-cache format", "CUDA / GPU parallelism", "CUDA Graph", "dual-view attention", "FlashAttention", "forward KL distillation", "gated LoRA", "intra-model consensus", "introspective consistency", "introspective strided decoding", "JIT compilation", "KV injection", "load-balanced scheduling", "logit-shifted causal training", "masked diffusion", "online softmax", "p/q acceptance", "parallel drafting", "SGLang serving", "shared KV cache", "Speculative Decoding", "target hidden features", "tiling", "work partitioning"]}, {"field": "research_line", "label": "研究线", "english": "Research line", "is_list": false, "values": ["Efficient Attention Kernels", "Parallel Decoding with Diffusion Models"]}, {"field": "line_role", "label": "研究线角色", "english": "Line role", "is_list": false, "values": ["followup", "foundation", "system", "variant"]}, {"field": "status", "label": "阅读状态", "english": "Status", "is_list": false, "values": ["archived", "read", "reading", "skimmed", "unread"]}, {"field": "reading_stage", "label": "阅读阶段", "english": "Reading stage", "is_list": false, "values": ["code_checked", "deep_read", "normal_read", "skim"]}, {"field": "review_stage", "label": "复习阶段", "english": "Review stage", "is_list": false, "values": ["due", "fresh", "reviewed"]}];
+const taxonomyChangePapers = [{"slug": "2602.06036-dflash", "title": "DFlash：用于快速 speculative decoding 的块扩散方法", "href": "2602.06036-dflash.html", "fields": {"domains": ["LLM Systems"], "tracks": ["Inference Acceleration", "Parallel Decoding"], "problems": ["Lossless Speculative Decoding"], "topics": ["Diffusion Language Models", "LLM Inference", "LLM Serving", "Speculative Decoding"], "methods": ["block diffusion", "KV injection", "parallel drafting", "Speculative Decoding", "target hidden features"], "research_line": "Parallel Decoding with Diffusion Models", "line_role": "followup", "status": "read", "reading_stage": "deep_read", "review_stage": ""}}, {"slug": "2604.11035-introspective-dlm", "title": "内省式扩散语言模型", "href": "2604.11035-introspective-dlm.html", "fields": {"domains": ["LLM Systems"], "tracks": ["Inference Acceleration", "Parallel Decoding"], "problems": ["Parallel Diffusion Decoding"], "topics": ["Diffusion Language Models", "LLM", "LLM Serving", "Parallel Decoding", "Speculative Decoding"], "methods": ["gated LoRA", "introspective consistency", "introspective strided decoding", "logit-shifted causal training", "p/q acceptance", "SGLang serving"], "research_line": "Parallel Decoding with Diffusion Models", "line_role": "foundation", "status": "read", "reading_stage": "deep_read", "review_stage": ""}}, {"slug": "2605.12825-orthrus", "title": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成", "href": "2605.12825-orthrus.html", "fields": {"domains": ["LLM Systems"], "tracks": ["Inference Acceleration", "Parallel Decoding"], "problems": ["Memory-Efficient Parallel Token Generation"], "topics": ["Diffusion Language Models", "KV Cache", "LLM Inference", "Parallel Decoding", "Speculative Decoding"], "methods": ["dual-view attention", "forward KL distillation", "intra-model consensus", "masked diffusion", "shared KV cache"], "research_line": "Parallel Decoding with Diffusion Models", "line_role": "variant", "status": "read", "reading_stage": "deep_read", "review_stage": ""}}, {"slug": "2501.01005-flashinfer", "title": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎", "href": "2501.01005-flashinfer.html", "fields": {"domains": ["LLM Systems"], "tracks": ["Attention Kernels", "Inference Serving Systems"], "problems": ["Customizable Attention Serving"], "topics": ["Attention Kernels", "GPU Systems", "Inference Optimization", "KV Cache", "LLM Serving"], "methods": ["block-sparse attention", "composable KV-cache format", "CUDA Graph", "FlashAttention", "JIT compilation", "load-balanced scheduling"], "research_line": "Efficient Attention Kernels", "line_role": "system", "status": "read", "reading_stage": "deep_read", "review_stage": ""}}, {"slug": "2307.08691-flashattention-2", "title": "FlashAttention-2：用更好的并行性与工作划分加速 Attention", "href": "2307.08691-flashattention-2.html", "fields": {"domains": ["LLM Systems"], "tracks": ["Attention Kernels"], "problems": ["Efficient Exact Attention"], "topics": ["Efficient Attention", "GPU Kernel Optimization", "Long Context", "Transformer"], "methods": ["CUDA / GPU parallelism", "FlashAttention", "online softmax", "tiling", "work partitioning"], "research_line": "Efficient Attention Kernels", "line_role": "foundation", "status": "read", "reading_stage": "deep_read", "review_stage": ""}}];
+
+(() => {
+  const fieldSelect = document.querySelector("#taxonomyChangeField");
+  const fromSelect = document.querySelector("#taxonomyChangeFrom");
+  const toInput = document.querySelector("#taxonomyChangeTo");
+  const count = document.querySelector("#taxonomyChangeCount");
+  const preview = document.querySelector("#taxonomyChangePreview");
+  const downloadButton = document.querySelector("#downloadTaxonomyChangePatch");
+  if (!fieldSelect || !fromSelect || !toInput || !count || !preview || !downloadButton) return;
+  const fieldByName = new Map(taxonomyChangeFields.map((field) => [field.field, field]));
+
+  function uniqueValues(values) {
+    return Array.from(new Set(values.map((value) => String(value || "").trim()).filter(Boolean)));
+  }
+
+  function csvCell(value) {
+    const text = String(value ?? "");
+    return (text.includes(",") || text.includes('"') || text.includes("\n"))
+      ? `"${text.replaceAll('"', '""')}"`
+      : text;
+  }
+
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;");
+  }
+
+  function downloadCsv(filename, rows) {
+    const csv = rows.map((row) => row.map(csvCell).join(",")).join("\n") + "\n";
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function fieldValue(paper, field) {
+    const spec = fieldByName.get(field);
+    const value = paper.fields[field];
+    return spec && spec.is_list ? (Array.isArray(value) ? value : []) : String(value || "");
+  }
+
+  function paperHasValue(paper, field, fromValue) {
+    const spec = fieldByName.get(field);
+    const value = fieldValue(paper, field);
+    return spec && spec.is_list ? value.includes(fromValue) : value === fromValue;
+  }
+
+  function replacementValue(paper, field, fromValue, toValue) {
+    const spec = fieldByName.get(field);
+    if (spec && spec.is_list) {
+      return uniqueValues(fieldValue(paper, field).map((value) => value === fromValue ? toValue : value)).join("; ");
+    }
+    return toValue;
+  }
+
+  function currentChanges() {
+    const field = fieldSelect.value;
+    const fromValue = fromSelect.value;
+    const toValue = toInput.value.trim();
+    if (!field || !fromValue || !toValue) return [];
+    return taxonomyChangePapers
+      .filter((paper) => paperHasValue(paper, field, fromValue))
+      .map((paper) => ({
+        ...paper,
+        field,
+        nextValue: replacementValue(paper, field, fromValue, toValue),
+      }));
+  }
+
+  function renderPreview() {
+    const field = fieldSelect.value;
+    const fromValue = fromSelect.value;
+    const toValue = toInput.value.trim();
+    const changes = currentChanges();
+    downloadButton.disabled = changes.length === 0;
+    count.textContent = `${changes.length} 篇论文`;
+    if (!field || !fromValue) {
+      preview.innerHTML = '<div class="empty">请选择字段和旧值。</div>';
+      return;
+    }
+    if (!toValue) {
+      preview.innerHTML = '<div class="empty">填写新值后会显示可导出的 patch。</div>';
+      return;
+    }
+    if (!changes.length) {
+      preview.innerHTML = '<div class="empty">没有论文命中这次变更。</div>';
+      return;
+    }
+    const items = changes.slice(0, 30).map((paper) => (
+      `<li><a href="${escapeHtml(paper.href)}">${escapeHtml(paper.title)}</a><span class="meta">${escapeHtml(paper.slug)} -> ${escapeHtml(paper.nextValue)}</span></li>`
+    )).join("");
+    const more = changes.length > 30 ? `<div class="meta">另有 ${changes.length - 30} 篇未显示。</div>` : "";
+    preview.innerHTML = `<ol class="queue-list">${items}</ol>${more}`;
+  }
+
+  function refreshFromOptions() {
+    const spec = fieldByName.get(fieldSelect.value) || taxonomyChangeFields[0];
+    const values = spec ? spec.values : [];
+    fromSelect.replaceChildren(...values.map((value) => new Option(value, value)));
+    renderPreview();
+  }
+
+  function downloadPatch() {
+    const field = fieldSelect.value;
+    const changes = currentChanges();
+    if (!changes.length) return;
+    downloadCsv("taxonomy_change_patch.csv", [["slug", field], ...changes.map((paper) => [paper.slug, paper.nextValue])]);
+  }
+
+  fieldSelect.replaceChildren(...taxonomyChangeFields.map((field) => new Option(`${field.label} / ${field.english}`, field.field)));
+  fieldSelect.addEventListener("input", refreshFromOptions);
+  fromSelect.addEventListener("input", renderPreview);
+  toInput.addEventListener("input", renderPreview);
+  downloadButton.addEventListener("click", downloadPatch);
+  refreshFromOptions();
+})();
+
 (() => {
   const designer = document.querySelector(".workflow-designer");
   if (!designer) return;
