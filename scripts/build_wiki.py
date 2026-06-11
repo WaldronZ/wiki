@@ -24,6 +24,7 @@ DEFAULT_REPORT_DIR = ROOT / "docs"
 GENERATED_FIXED_PATHS = (
     "papers.json",
     "search_index.json",
+    "stats.json",
     "quality.json",
     "review.json",
     "index.html",
@@ -685,6 +686,83 @@ def write_quality_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     )
 
 
+def top_counts(counts: dict[str, int], limit: int = 12) -> list[dict[str, Any]]:
+    return [
+        {"name": name, "count": count}
+        for name, count in list(counts.items())[:limit]
+    ]
+
+
+def build_stats_report(papers: list[dict[str, Any]]) -> dict[str, Any]:
+    quality = build_quality_report(papers)
+    review = build_review_plan(papers)
+    taxonomy = taxonomy_counts(papers)
+    total = len(papers)
+    years = Counter(str(paper.get("year") or "unknown") for paper in papers)
+    code_count = sum(1 for paper in papers if paper.get("has_code"))
+    importance_counts = Counter(str(paper.get("importance") or "unknown") for paper in papers)
+
+    line_items = []
+    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for paper in papers:
+        grouped[str(paper.get("research_line") or "Unassigned")].append(paper)
+    for line, items in sorted(grouped.items(), key=lambda item: (-len(item[1]), item[0].lower())):
+        code_items = sum(1 for paper in items if paper.get("has_code"))
+        line_items.append(
+            {
+                "name": line,
+                "count": len(items),
+                "roles": scalar_counts(items, "line_role"),
+                "code_coverage": percent(code_items, len(items)),
+                "avg_importance": round(
+                    sum(int(paper.get("importance") or 0) for paper in items) / len(items),
+                    1,
+                ),
+            }
+        )
+
+    queue_sizes = {
+        "quality": {name: len(slugs) for name, slugs in quality["queues"].items()},
+        "review": {name: len(slugs) for name, slugs in review["queues"].items()},
+    }
+
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": total,
+        "quality_score": quality["quality_score"],
+        "coverage": {
+            **quality["coverage"],
+            "code": percent(code_count, total),
+        },
+        "queue_sizes": queue_sizes,
+        "taxonomy": {
+            "domains": top_counts(taxonomy["domains"]),
+            "tracks": top_counts(taxonomy["tracks"]),
+            "problems": top_counts(taxonomy["problems"]),
+            "topics": top_counts(taxonomy["topics"]),
+            "methods": top_counts(taxonomy["methods"]),
+            "research_lines": top_counts(taxonomy["research_lines"]),
+            "statuses": top_counts(taxonomy["statuses"]),
+            "reading_stages": top_counts(taxonomy["reading_stages"]),
+            "review_stages": top_counts(taxonomy["review_stages"]),
+        },
+        "distributions": {
+            "years": dict(sorted(years.items(), key=lambda item: item[0], reverse=True)),
+            "importance": dict(sorted(importance_counts.items(), key=lambda item: item[0], reverse=True)),
+        },
+        "research_lines": line_items,
+        "shared_views": len(SHARED_VIEWS),
+    }
+
+
+def write_stats_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_stats_report(papers)
+    (report_dir / "stats.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
 def parse_date(value: Any) -> dt.date | None:
     text = str(value or "").strip()
     if not text:
@@ -1195,6 +1273,7 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="lines/index.html">研究线</a>
     <a class="stat" href="tags.html">分类总览</a>
     <a class="stat" href="quality.json">质量 JSON</a>
+    <a class="stat" href="stats.json">统计 JSON</a>
     <a class="stat" href="papers.json">JSON 索引</a>
   </div>
 </header>
@@ -1674,6 +1753,7 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="lines/index.html">研究线</a>
     <a class="stat" href="tags.html">分类总览</a>
     <a class="stat" href="quality.json">质量 JSON</a>
+    <a class="stat" href="stats.json">统计 JSON</a>
     <span class="stat">论文 {len(papers)}</span>
   </div>
 </header>
@@ -2141,6 +2221,7 @@ def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="tags.html">分类总览</a>
     <a class="stat" href="quality.json">质量 JSON</a>
+    <a class="stat" href="stats.json">统计 JSON</a>
     <span class="stat">生成时间 {html.escape(dt.datetime.now().isoformat(timespec="seconds"))}</span>
   </div>
 </header>
@@ -2356,6 +2437,7 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="tags.html">分类总览</a>
     {guide_link}
+    <a class="stat" href="stats.json">统计 JSON</a>
     <a class="stat" href="papers.json">JSON 索引</a>
     <span class="stat">论文 {len(papers)}</span>
     <span class="stat">Domain {len(taxonomy["domains"])}</span>
@@ -2577,6 +2659,7 @@ def build_wiki(report_dir: Path) -> int:
     write_json(report_dir, papers)
     write_quality_json(report_dir, papers)
     write_review_json(report_dir, papers)
+    write_stats_json(report_dir, papers)
     write_search_index(report_dir, papers)
     render_index(report_dir, papers)
     render_library(report_dir, papers)

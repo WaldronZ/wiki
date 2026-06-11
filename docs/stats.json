@@ -1,0 +1,274 @@
+{
+  "generated_at": "2026-06-11T17:47:20",
+  "count": 5,
+  "quality_score": 92.0,
+  "coverage": {
+    "taxonomy": "100%",
+    "review_plan": "0%",
+    "code_observation": "100%",
+    "research_lines": 2,
+    "code": "100%"
+  },
+  "queue_sizes": {
+    "quality": {
+      "missing_required_metadata": 0,
+      "needs_review_plan": 5,
+      "due_review": 0,
+      "no_code_observation": 0,
+      "high_importance": 2
+    },
+    "review": {
+      "due": 0,
+      "needs_plan": 5,
+      "scheduled": 0,
+      "high_priority": 2
+    }
+  },
+  "taxonomy": {
+    "domains": [
+      {
+        "name": "LLM Systems",
+        "count": 5
+      }
+    ],
+    "tracks": [
+      {
+        "name": "Inference Acceleration",
+        "count": 3
+      },
+      {
+        "name": "Parallel Decoding",
+        "count": 3
+      },
+      {
+        "name": "Attention Kernels",
+        "count": 2
+      },
+      {
+        "name": "Inference Serving Systems",
+        "count": 1
+      }
+    ],
+    "problems": [
+      {
+        "name": "Customizable Attention Serving",
+        "count": 1
+      },
+      {
+        "name": "Efficient Exact Attention",
+        "count": 1
+      },
+      {
+        "name": "Lossless Speculative Decoding",
+        "count": 1
+      },
+      {
+        "name": "Memory-Efficient Parallel Token Generation",
+        "count": 1
+      },
+      {
+        "name": "Parallel Diffusion Decoding",
+        "count": 1
+      }
+    ],
+    "topics": [
+      {
+        "name": "Diffusion Language Models",
+        "count": 3
+      },
+      {
+        "name": "LLM Serving",
+        "count": 3
+      },
+      {
+        "name": "Speculative Decoding",
+        "count": 3
+      },
+      {
+        "name": "KV Cache",
+        "count": 2
+      },
+      {
+        "name": "LLM Inference",
+        "count": 2
+      },
+      {
+        "name": "Parallel Decoding",
+        "count": 2
+      },
+      {
+        "name": "Attention Kernels",
+        "count": 1
+      },
+      {
+        "name": "Efficient Attention",
+        "count": 1
+      },
+      {
+        "name": "GPU Kernel Optimization",
+        "count": 1
+      },
+      {
+        "name": "GPU Systems",
+        "count": 1
+      },
+      {
+        "name": "Inference Optimization",
+        "count": 1
+      },
+      {
+        "name": "LLM",
+        "count": 1
+      }
+    ],
+    "methods": [
+      {
+        "name": "FlashAttention",
+        "count": 2
+      },
+      {
+        "name": "block diffusion",
+        "count": 1
+      },
+      {
+        "name": "block-sparse attention",
+        "count": 1
+      },
+      {
+        "name": "composable KV-cache format",
+        "count": 1
+      },
+      {
+        "name": "CUDA / GPU parallelism",
+        "count": 1
+      },
+      {
+        "name": "CUDA Graph",
+        "count": 1
+      },
+      {
+        "name": "dual-view attention",
+        "count": 1
+      },
+      {
+        "name": "forward KL distillation",
+        "count": 1
+      },
+      {
+        "name": "gated LoRA",
+        "count": 1
+      },
+      {
+        "name": "intra-model consensus",
+        "count": 1
+      },
+      {
+        "name": "introspective consistency",
+        "count": 1
+      },
+      {
+        "name": "introspective strided decoding",
+        "count": 1
+      }
+    ],
+    "research_lines": [
+      {
+        "name": "Parallel Decoding with Diffusion Models",
+        "count": 3
+      },
+      {
+        "name": "Efficient Attention Kernels",
+        "count": 2
+      }
+    ],
+    "statuses": [
+      {
+        "name": "read",
+        "count": 5
+      },
+      {
+        "name": "archived",
+        "count": 0
+      },
+      {
+        "name": "reading",
+        "count": 0
+      },
+      {
+        "name": "skimmed",
+        "count": 0
+      },
+      {
+        "name": "unread",
+        "count": 0
+      }
+    ],
+    "reading_stages": [
+      {
+        "name": "deep_read",
+        "count": 5
+      },
+      {
+        "name": "code_checked",
+        "count": 0
+      },
+      {
+        "name": "normal_read",
+        "count": 0
+      },
+      {
+        "name": "skim",
+        "count": 0
+      }
+    ],
+    "review_stages": [
+      {
+        "name": "due",
+        "count": 0
+      },
+      {
+        "name": "fresh",
+        "count": 0
+      },
+      {
+        "name": "reviewed",
+        "count": 0
+      }
+    ]
+  },
+  "distributions": {
+    "years": {
+      "2026": 3,
+      "2025": 1,
+      "2023": 1
+    },
+    "importance": {
+      "5": 2,
+      "4": 3
+    }
+  },
+  "research_lines": [
+    {
+      "name": "Parallel Decoding with Diffusion Models",
+      "count": 3,
+      "roles": {
+        "followup": 1,
+        "foundation": 1,
+        "variant": 1
+      },
+      "code_coverage": "100%",
+      "avg_importance": 4.3
+    },
+    {
+      "name": "Efficient Attention Kernels",
+      "count": 2,
+      "roles": {
+        "foundation": 1,
+        "system": 1
+      },
+      "code_coverage": "100%",
+      "avg_importance": 4.5
+    }
+  ],
+  "shared_views": 3
+}

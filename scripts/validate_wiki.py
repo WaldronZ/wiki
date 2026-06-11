@@ -51,6 +51,7 @@ REQUIRED_PAGES = {
     "tags.html",
     "papers.json",
     "search_index.json",
+    "stats.json",
     "quality.json",
     "review.json",
     "lines/index.html",
@@ -240,6 +241,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     search_path = report_dir / "search_index.json"
     quality_path = report_dir / "quality.json"
     review_path = report_dir / "review.json"
+    stats_path = report_dir / "stats.json"
     if not papers_path.exists():
         errors.append("missing papers.json")
         return
@@ -252,11 +254,15 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     if not review_path.exists():
         errors.append("missing review.json")
         return
+    if not stats_path.exists():
+        errors.append("missing stats.json")
+        return
 
     papers_data = json.loads(papers_path.read_text(encoding="utf-8"))
     search_data = json.loads(search_path.read_text(encoding="utf-8"))
     quality_data = json.loads(quality_path.read_text(encoding="utf-8"))
     review_data = json.loads(review_path.read_text(encoding="utf-8"))
+    stats_data = json.loads(stats_path.read_text(encoding="utf-8"))
     paper_slugs = {paper.get("slug") for paper in papers_data.get("papers", [])}
     report_slugs = set(reports)
 
@@ -328,6 +334,17 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     missing_taxonomy = sorted(required_taxonomy - set(taxonomy))
     if missing_taxonomy:
         errors.append(f"papers.json taxonomy missing keys: {', '.join(missing_taxonomy)}")
+
+    if stats_data.get("count") != len(report_slugs):
+        errors.append(f"stats.json count {stats_data.get('count')} != markdown report count {len(report_slugs)}")
+    required_stats = {"quality_score", "coverage", "queue_sizes", "taxonomy", "distributions", "research_lines"}
+    missing_stats = sorted(required_stats - set(stats_data))
+    if missing_stats:
+        errors.append(f"stats.json missing keys: {', '.join(missing_stats)}")
+    if set((stats_data.get("queue_sizes") or {}).keys()) != {"quality", "review"}:
+        errors.append("stats.json queue_sizes must contain quality and review")
+    if not isinstance(stats_data.get("research_lines"), list):
+        errors.append("stats.json research_lines must be a list")
 
 
 def validate_taxonomy_config(report_dir: Path, errors: list[str], warnings: list[str]) -> dict[str, Any]:

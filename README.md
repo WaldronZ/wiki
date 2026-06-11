@@ -4,7 +4,7 @@ AutoPaperReader 是一个自动化「找论文 -> 读论文 -> 写报告」的 a
 
 它的目标是把一篇论文从检索、下载源码、分析论文、分析配套代码，到最终输出结构化中文阅读报告的流程串起来，并把产物（包括 Markdown 报告和 HTML 展示网页）统一组织到固定目录中。
 
-项目还会把这些逐篇报告汇总成一个轻量动态 wiki：`docs/index.html` 提供全文搜索、研究线、分类/状态/代码/重要性/复习筛选、排序、分页和可分享 URL 状态；`docs/library.html` 提供适合大量论文批量管理的密集表格视图；`docs/review.html` 提供复习队列和建议复习日期；`docs/dashboard.html` 提供分类覆盖、研究线健康度和待处理队列；`docs/taxonomy.html` 提供分类治理、状态矩阵和研究线角色矩阵；`docs/lines/index.html` 提供研究线入口；`docs/tags.html` 提供分类总览；`docs/papers.json` 提供机器可读索引；`docs/search_index.json` 提供正文检索索引；`docs/quality.json` 提供元数据质量与运营队列报告；`docs/review.json` 提供机器可读复习计划。
+项目还会把这些逐篇报告汇总成一个轻量动态 wiki：`docs/index.html` 提供全文搜索、研究线、分类/状态/代码/重要性/复习筛选、排序、分页和可分享 URL 状态；`docs/library.html` 提供适合大量论文批量管理的密集表格视图；`docs/review.html` 提供复习队列和建议复习日期；`docs/dashboard.html` 提供分类覆盖、研究线健康度和待处理队列；`docs/taxonomy.html` 提供分类治理、状态矩阵和研究线角色矩阵；`docs/lines/index.html` 提供研究线入口；`docs/tags.html` 提供分类总览；`docs/papers.json` 提供机器可读索引；`docs/search_index.json` 提供正文检索索引；`docs/stats.json` 提供机器可读运营指标；`docs/quality.json` 提供元数据质量与运营队列报告；`docs/review.json` 提供机器可读复习计划。
 
 **注：建议开启 Agent Teams 特性 `export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`**
 
@@ -39,6 +39,7 @@ paper_reader/
 │   ├── tags.html
 │   ├── papers.json
 │   ├── search_index.json
+│   ├── stats.json
 │   ├── quality.json
 │   ├── review.json
 │   ├── guides/
@@ -109,6 +110,7 @@ paper_reader/
 - `docs/tags.html`：分类总览
 - `docs/papers.json`：论文索引数据
 - `docs/search_index.json`：全文搜索索引
+- `docs/stats.json`：机器可读统计摘要，包含覆盖率、队列规模、研究线和分类分布
 - `docs/quality.json`：元数据质量报告，列出缺分类、缺复习计划、待复习、缺代码观察等队列
 - `docs/review.json`：机器可读复习计划，给出 suggested_next_review 和优先级
 

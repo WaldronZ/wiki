@@ -164,6 +164,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "tags.html",
                 "papers.json",
                 "search_index.json",
+                "stats.json",
                 "quality.json",
                 "review.json",
                 "lines/index.html",
@@ -189,6 +190,12 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(review["count"], 2)
             self.assertEqual(review["queues"]["needs_plan"], ["2601.00001-alpha-paper"])
             self.assertEqual(review["queues"]["scheduled"], ["2501.00002-beta-paper"])
+            stats = json.loads((report_dir / "stats.json").read_text(encoding="utf-8"))
+            self.assertEqual(stats["count"], 2)
+            self.assertIn("quality", stats["queue_sizes"])
+            self.assertIn("review", stats["queue_sizes"])
+            self.assertTrue(stats["research_lines"])
+            self.assertEqual(stats["shared_views"], 2)
 
             csv_path = report_dir / "library.csv"
             self.run_cmd("scripts/export_library_csv.py", str(report_dir), "--output", str(csv_path))
