@@ -550,6 +550,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("python3 scripts/apply_inbox_items.py docs --input <candidate_csv> --write", manifest["commands"])
             self.assertIn("python3 scripts/apply_shared_views.py docs --input <shared_views.json> --write", manifest["commands"])
             self.assertIn("python3 scripts/apply_status_workflow.py docs --input <taxonomy_status_workflow.json> --write", manifest["commands"])
+            self.assertIn("python3 scripts/apply_governance_policy.py docs --input <taxonomy_governance_policy.json> --write", manifest["commands"])
             self.assertIn("python3 scripts/export_actions.py docs --output docs/exports/actions.md", manifest["commands"])
             self.assertIn("python3 scripts/export_taxonomy_load.py docs --format csv --output docs/exports/taxonomy-load.csv", manifest["commands"])
             recipe_by_id = {item["id"]: item for item in manifest["command_recipes"]}
@@ -560,6 +561,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(recipe_by_id["apply_inbox"]["output"], "docs/inbox.csv")
             self.assertEqual(recipe_by_id["apply_shared_views"]["output"], "docs/guides/taxonomy.json")
             self.assertEqual(recipe_by_id["apply_status_workflow"]["output"], "docs/guides/taxonomy.json")
+            self.assertEqual(recipe_by_id["apply_governance_policy"]["output"], "docs/guides/taxonomy.json")
+            self.assertFalse(recipe_by_id["apply_governance_policy_dry_run"]["mutates"])
             self.assertEqual(recipe_by_id["actions_project"]["output"], "docs/exports/actions-project.csv")
             self.assertEqual(recipe_by_id["taxonomy_balance_project"]["output"], "docs/exports/taxonomy-balance-project.csv")
             self.assertEqual(recipe_by_id["taxonomy_actions_patch"]["output"], "docs/exports/taxonomy-action-patch.csv")
@@ -600,6 +603,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("复制命令组", release_html)
             self.assertIn("taxonomy_balance_project", release_html)
             self.assertIn("taxonomy_actions_patch", release_html)
+            self.assertIn("apply_governance_policy", release_html)
             self.assertIn("shared_view_rollout", release_html)
             self.assertIn("status_workflow_rollout", release_html)
             self.assertIn("paper_intake_batch", release_html)
@@ -674,6 +678,12 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("knownWorkflows", taxonomy_html)
             self.assertIn("loadWorkflow", taxonomy_html)
             self.assertIn("taxonomy_status_workflow.json", taxonomy_html)
+            self.assertIn("治理策略配置", taxonomy_html)
+            self.assertIn("治理策略设计器", taxonomy_html)
+            self.assertIn('id="downloadPolicy"', taxonomy_html)
+            self.assertIn("taxonomy_governance_policy.json", taxonomy_html)
+            self.assertIn("apply_governance_policy.py", taxonomy_html)
+            self.assertIn("&quot;governance_policy&quot;: {", taxonomy_html)
             self.assertIn("分类变更预览", taxonomy_html)
             self.assertIn('id="taxonomyChangeField"', taxonomy_html)
             self.assertIn("taxonomy_change_patch.csv", taxonomy_html)
@@ -1255,6 +1265,62 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertNotEqual(broken.returncode, 0)
             self.assertIn("missing required keys", broken.stderr)
 
+    def test_apply_governance_policy_merges_thresholds(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_name:
+            report_dir = self.make_report_dir(Path(tmp_name))
+            self.run_cmd("scripts/build_wiki.py", str(report_dir))
+
+            policy_path = Path(tmp_name) / "taxonomy_governance_policy.json"
+            policy_path.write_text(
+                json.dumps(
+                    {
+                        "governance_policy": {
+                            "taxonomy_load": {"min_tags": 7},
+                            "taxonomy_actions": {"split_share": 0.5},
+                        }
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            dry = self.run_cmd("scripts/apply_governance_policy.py", str(report_dir), "--input", str(policy_path))
+            self.assertIn("DRY  UPDATE taxonomy_load.min_tags 5 -> 7", dry.stdout)
+            self.assertIn("DRY  UPDATE taxonomy_actions.split_share 0.6 -> 0.5", dry.stdout)
+            taxonomy_before = json.loads((report_dir / "guides" / "taxonomy.json").read_text(encoding="utf-8"))
+            self.assertEqual(taxonomy_before["governance_policy"]["taxonomy_load"]["min_tags"], 5)
+
+            write = self.run_cmd(
+                "scripts/apply_governance_policy.py",
+                str(report_dir),
+                "--input",
+                str(policy_path),
+                "--write",
+            )
+            self.assertIn("WRITE  UPDATE taxonomy_load.min_tags 5 -> 7", write.stdout)
+            taxonomy_after = json.loads((report_dir / "guides" / "taxonomy.json").read_text(encoding="utf-8"))
+            self.assertEqual(taxonomy_after["governance_policy"]["taxonomy_load"]["min_tags"], 7)
+            self.assertEqual(taxonomy_after["governance_policy"]["taxonomy_actions"]["split_share"], 0.5)
+
+            self.run_cmd("scripts/build_wiki.py", str(report_dir))
+            self.run_cmd("scripts/validate_wiki.py", str(report_dir), "--strict-taxonomy")
+            quality = json.loads((report_dir / "quality.json").read_text(encoding="utf-8"))
+            self.assertEqual(quality["governance_policy"]["taxonomy_load"]["min_tags"], 7)
+
+            broken_path = Path(tmp_name) / "broken_governance_policy.json"
+            broken_path.write_text(
+                json.dumps({"governance_policy": {"taxonomy_load": {"min_tags": -1}}}),
+                encoding="utf-8",
+            )
+            broken = self.run_cmd(
+                "scripts/apply_governance_policy.py",
+                str(report_dir),
+                "--input",
+                str(broken_path),
+                check=False,
+            )
+            self.assertNotEqual(broken.returncode, 0)
+            self.assertIn("must be a non-negative integer", broken.stderr)
+
     def test_apply_shared_views_merges_saved_view_exports(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_name:
             report_dir = self.make_report_dir(Path(tmp_name))
@@ -1343,6 +1409,10 @@ class WikiWorkflowTest(unittest.TestCase):
                             {"name": "bad", "page": "sidebar", "state": {"unknown": "x"}},
                             {"name": "", "page": "all", "state": {}},
                         ],
+                        "governance_policy": {
+                            "taxonomy_load": {"min_tags": -1},
+                            "unknown": {"x": 1},
+                        },
                     }
                 ),
                 encoding="utf-8",
@@ -1359,6 +1429,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("shared_views[0].page", result.stderr)
             self.assertIn("shared_views[0].state has unknown keys", result.stderr)
             self.assertIn("shared_views[1].name", result.stderr)
+            self.assertIn("governance_policy has unknown sections", result.stderr)
+            self.assertIn("governance_policy.taxonomy_load.min_tags", result.stderr)
 
     def test_invalid_taxonomy_schema_fails_validation(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_name:

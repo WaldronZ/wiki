@@ -96,6 +96,7 @@ paper_reader/
 - `scripts/apply_review_plan.py` 用于把 `docs/review.json` 的建议复习日期安全写回报告 frontmatter，默认只 dry-run
 - `scripts/apply_shared_views.py` 用于把首页/论文库导出的 saved views 或复制的 shared view JSON 安全合并到 `guides/taxonomy.json`，默认只 dry-run
 - `scripts/apply_status_workflow.py` 用于把 `docs/taxonomy.html` 下载的 `taxonomy_status_workflow.json` 安全合并到 `guides/taxonomy.json`，默认只 dry-run
+- `scripts/apply_governance_policy.py` 用于把 `docs/taxonomy.html` 下载的 `taxonomy_governance_policy.json` 安全合并到 `guides/taxonomy.json`，默认只 dry-run
 - `scripts/export_library_csv.py` 用于把 `papers.json`、`review.json` 和 `quality.json` 合并导出成 CSV，便于用表格工具批量管理
 - `scripts/export_reading_list.py` 用于按研究线、状态、方向、主题、方法或重要性导出 Markdown 阅读清单、BibTeX 或链接列表
 - `scripts/export_actions.py` 用于把 `actions.json` 导出成统一 checklist、审计 CSV 或可自定义任务状态的项目任务 CSV
@@ -312,6 +313,14 @@ python3 scripts/export_taxonomy_load.py docs --format patch --signal sparse_tags
 ```bash
 python3 scripts/apply_status_workflow.py docs --input ~/Downloads/taxonomy_status_workflow.json
 python3 scripts/apply_status_workflow.py docs --input ~/Downloads/taxonomy_status_workflow.json --write
+python3 scripts/build_wiki.py docs
+```
+
+应用治理策略设计器导出的阈值：
+
+```bash
+python3 scripts/apply_governance_policy.py docs --input ~/Downloads/taxonomy_governance_policy.json
+python3 scripts/apply_governance_policy.py docs --input ~/Downloads/taxonomy_governance_policy.json --write
 python3 scripts/build_wiki.py docs
 ```
 

@@ -1522,6 +1522,22 @@ def command_recipes_manifest() -> list[dict[str, Any]]:
             "mutates": True,
         },
         {
+            "id": "apply_governance_policy_dry_run",
+            "kind": "check",
+            "label": "Preview governance policy JSON",
+            "command": "python3 scripts/apply_governance_policy.py docs --input <taxonomy_governance_policy.json>",
+            "output": "",
+            "mutates": False,
+        },
+        {
+            "id": "apply_governance_policy",
+            "kind": "writeback",
+            "label": "Apply governance policy JSON",
+            "command": "python3 scripts/apply_governance_policy.py docs --input <taxonomy_governance_policy.json> --write",
+            "output": "docs/guides/taxonomy.json",
+            "mutates": True,
+        },
+        {
             "id": "apply_shared_views_dry_run",
             "kind": "check",
             "label": "Preview shared views JSON",
@@ -8428,6 +8444,61 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     workflow_config_json = html.escape(json.dumps(workflow_config, ensure_ascii=False, indent=2))
     workflow_seed_json = html.escape(json.dumps(workflow_seed, ensure_ascii=False), quote=True)
     workflow_all_json = html.escape(json.dumps(status_workflows, ensure_ascii=False), quote=True)
+    governance_policy = controls.get("governance_policy") or {}
+    policy_sections = [
+        ("taxonomy_load", "单篇分类密度", "影响 quality.json 的 taxonomy_load 队列"),
+        ("taxonomy_actions", "分类 action 阈值", "影响 taxonomy_actions.json 的 merge / watch / split 判断"),
+        ("taxonomy_balance", "分类均衡风险", "影响 balance.html 的 high / medium / low 风险"),
+        ("coverage", "研究线覆盖风险", "影响 coverage.html 的覆盖风险"),
+    ]
+    policy_labels = {
+        "min_structure_labels": "最少结构标签",
+        "min_tags": "最少 topic/method",
+        "max_tags": "最多 topic/method",
+        "max_methods": "最多 method",
+        "singleton_max_count": "长尾最大计数",
+        "watch_share": "关注占比",
+        "watch_min_count": "关注最少论文",
+        "split_share": "拆分占比",
+        "split_min_count": "拆分最少论文",
+        "high_score_below": "高风险低于",
+        "medium_score_below": "中风险低于",
+        "singleton_medium_count": "中风险长尾数",
+        "unused_medium_count": "中风险空候选数",
+        "missing_high_min": "高风险最少缺口",
+    }
+    policy_rows = []
+    policy_inputs = []
+    for section, title, effect in policy_sections:
+        values = governance_policy.get(section) or {}
+        for key, value in values.items():
+            label = policy_labels.get(str(key), str(key))
+            policy_rows.append(
+                "<tr>"
+                f"<td>{html.escape(section)}</td>"
+                f"<td>{html.escape(label)}<div class=\"meta\">{html.escape(str(key))}</div></td>"
+                f"<td><code>{html.escape(str(value))}</code></td>"
+                f"<td>{html.escape(effect)}</td>"
+                "</tr>"
+            )
+            step = "0.01" if isinstance(value, float) else "1"
+            policy_inputs.append(
+                "<label>"
+                f"<span>{html.escape(title)} / {html.escape(label)}</span>"
+                f'<input class="policy-input" type="number" min="0" step="{step}" '
+                f'data-section="{html.escape(section, quote=True)}" data-key="{html.escape(str(key), quote=True)}" '
+                f'value="{html.escape(str(value), quote=True)}">'
+                "</label>"
+            )
+    policy_table = (
+        '<table class="data-table"><thead><tr><th>策略组</th><th>阈值</th><th>当前值</th><th>影响</th></tr></thead>'
+        f"<tbody>{''.join(policy_rows)}</tbody></table>"
+        if policy_rows
+        else '<div class="empty">暂无治理策略配置。</div>'
+    )
+    policy_config = {"governance_policy": governance_policy}
+    policy_config_json = html.escape(json.dumps(policy_config, ensure_ascii=False, indent=2))
+    policy_seed_json = html.escape(json.dumps(policy_config, ensure_ascii=False), quote=True)
     taxonomy_change_fields = []
     for field, english, _query_key, label, is_list in FACET_SPECS:
         values = sorted(facet_count_for_field(papers, taxonomy, field, is_list), key=lambda value: value.lower())
@@ -8576,6 +8647,31 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         <span class="meta" id="workflowMessage"></span>
       </div>
       <pre class="config-snippet"><code id="workflowPreview"></code></pre>
+    </section>
+  </section>
+  <section>
+    <h2 class="section-title">治理策略配置</h2>
+    <div class="taxonomy-board">
+      <section class="taxonomy-panel"><h2>当前阈值</h2>{policy_table}</section>
+      <section class="taxonomy-panel">
+        <h2>governance_policy 片段</h2>
+        <pre class="config-snippet"><code>{policy_config_json}</code></pre>
+      </section>
+    </div>
+    <section class="taxonomy-panel policy-designer" data-policy="{policy_seed_json}">
+      <div>
+        <h2>治理策略设计器</h2>
+        <p class="meta">调整阈值后复制或下载 JSON，用 apply_governance_policy.py 先 dry-run 再写入 guides/taxonomy.json。刷新 wiki 后 quality、facets、balance 和 coverage 会用同一套策略重算。</p>
+      </div>
+      <div class="policy-grid">{''.join(policy_inputs)}</div>
+      <div class="designer-actions">
+        <button class="button" type="button" id="resetPolicy">恢复当前策略</button>
+        <button class="button" type="button" id="copyPolicy">复制 JSON</button>
+        <button class="button primary" type="button" id="downloadPolicy">下载治理策略</button>
+        <span class="meta" id="policyMessage"></span>
+      </div>
+      <p class="meta">应用命令：python3 scripts/apply_governance_policy.py docs --input ~/Downloads/taxonomy_governance_policy.json --write</p>
+      <pre class="config-snippet"><code id="policyPreview"></code></pre>
     </section>
   </section>
   <section>
@@ -8841,6 +8937,79 @@ const taxonomyChangePapers = {taxonomy_change_papers_json};
   document.querySelector("#copyWorkflow").addEventListener("click", copy);
   reset();
 }})();
+
+(() => {{
+  const designer = document.querySelector(".policy-designer");
+  if (!designer) return;
+  const seed = JSON.parse(designer.dataset.policy || "{{}}");
+  const inputs = Array.from(designer.querySelectorAll(".policy-input"));
+  const preview = document.querySelector("#policyPreview");
+  const message = document.querySelector("#policyMessage");
+
+  function numericValue(input) {{
+    const raw = input.value.trim();
+    if (raw === "") return 0;
+    const value = Number(raw);
+    return Number.isFinite(value) ? value : 0;
+  }}
+
+  function payload() {{
+    const governancePolicy = {{}};
+    inputs.forEach((input) => {{
+      const section = input.dataset.section;
+      const key = input.dataset.key;
+      if (!section || !key) return;
+      governancePolicy[section] = governancePolicy[section] || {{}};
+      const step = String(input.step || "1");
+      const value = numericValue(input);
+      governancePolicy[section][key] = step.includes(".") ? value : Math.round(value);
+    }});
+    return {{ governance_policy: governancePolicy }};
+  }}
+
+  function renderPreview() {{
+    const data = payload();
+    preview.textContent = JSON.stringify(data, null, 2);
+    const invalid = inputs.filter((input) => Number(input.value) < 0 || !Number.isFinite(Number(input.value)));
+    message.textContent = invalid.length ? `有 ${{invalid.length}} 个无效阈值` : "";
+    return data;
+  }}
+
+  function reset() {{
+    const policy = seed.governance_policy || {{}};
+    inputs.forEach((input) => {{
+      const value = policy[input.dataset.section]?.[input.dataset.key];
+      if (value !== undefined) input.value = value;
+    }});
+    renderPreview();
+  }}
+
+  function download() {{
+    const blob = new Blob([JSON.stringify(renderPreview(), null, 2) + "\\n"], {{ type: "application/json" }});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "taxonomy_governance_policy.json";
+    link.click();
+    URL.revokeObjectURL(url);
+  }}
+
+  async function copy() {{
+    const text = JSON.stringify(renderPreview(), null, 2);
+    try {{
+      await navigator.clipboard.writeText(text);
+      message.textContent = "已复制 JSON";
+    }} catch (error) {{
+      message.textContent = "当前浏览器不允许复制，可手动选中下方 JSON";
+    }}
+  }}
+
+  inputs.forEach((input) => input.addEventListener("input", renderPreview));
+  document.querySelector("#resetPolicy").addEventListener("click", reset);
+  document.querySelector("#downloadPolicy").addEventListener("click", download);
+  document.querySelector("#copyPolicy").addEventListener("click", copy);
+  reset();
+}})();
 </script>
 """
     taxonomy_css = "\n".join(
@@ -8856,13 +9025,21 @@ const taxonomyChangePapers = {taxonomy_change_papers_json};
             "      line-height: 1.55;",
             "    }",
             "    .workflow-designer { margin-top: 16px; }",
+            "    .policy-designer { margin-top: 16px; }",
             "    .designer-grid {",
             "      display: grid;",
             "      grid-template-columns: repeat(3, minmax(0, 1fr));",
             "      gap: 12px;",
             "      margin: 14px 0;",
             "    }",
+            "    .policy-grid {",
+            "      display: grid;",
+            "      grid-template-columns: repeat(3, minmax(0, 1fr));",
+            "      gap: 12px;",
+            "      margin: 14px 0;",
+            "    }",
             "    .designer-grid label { display: grid; gap: 6px; font-weight: 700; }",
+            "    .policy-grid label { display: grid; gap: 6px; font-weight: 700; }",
             "    .designer-grid textarea {",
             "      width: 100%;",
             "      min-height: 132px;",
@@ -8873,6 +9050,15 @@ const taxonomyChangePapers = {taxonomy_change_papers_json};
             "      background: #fff;",
             "      color: var(--ink);",
             "      font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;",
+            "    }",
+            "    .policy-grid input {",
+            "      width: 100%;",
+            "      border: 1px solid var(--line);",
+            "      border-radius: 8px;",
+            "      padding: 10px 12px;",
+            "      background: #fff;",
+            "      color: var(--ink);",
+            "      font: inherit;",
             "    }",
             "    .designer-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px; }",
             "    .taxonomy-change-planner { margin-top: 8px; }",
@@ -8895,7 +9081,7 @@ const taxonomyChangePapers = {taxonomy_change_papers_json};
             "    }",
             "    .taxonomy-change-preview { margin-top: 10px; }",
             "    .button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }",
-            "    @media (max-width: 820px) { .designer-grid, .taxonomy-change-grid { grid-template-columns: 1fr; } }",
+            "    @media (max-width: 820px) { .designer-grid, .policy-grid, .taxonomy-change-grid { grid-template-columns: 1fr; } }",
         ]
     )
     (report_dir / "taxonomy.html").write_text(page_shell("分类治理", body, extra_css=taxonomy_css), encoding="utf-8")

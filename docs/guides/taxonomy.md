@@ -167,6 +167,13 @@ python3 scripts/build_wiki.py docs
 
 `governance_policy` 的默认行为适合小到中型个人论文库。论文数量变大后，可以提高 `taxonomy_load.min_tags` 让每篇论文需要更多 topic/method 入口，降低 `taxonomy_actions.split_share` 更早提示大桶拆分，或调高 `coverage.high_score_below` 让研究线分类覆盖更严格。策略会写入 `papers.json`、`stats.json` 和 `manifest.json` 的 `controls.governance_policy`，后续桌面软件可以直接读取同一份契约。
 
+`docs/taxonomy.html` 的「治理策略设计器」可以直接编辑这些阈值并下载 `taxonomy_governance_policy.json`。正式合并前先 dry-run：
+
+```bash
+python3 scripts/apply_governance_policy.py docs --input ~/Downloads/taxonomy_governance_policy.json
+python3 scripts/apply_governance_policy.py docs --input ~/Downloads/taxonomy_governance_policy.json --write
+```
+
 报告 frontmatter 的字段契约写在 `docs/guides/metadata.schema.json`，用于约束必填字段、字符串 / 列表 / 布尔 / 整数类型、`importance` / `confidence` / `reproducibility` 的 1-5 范围，以及 `last_reviewed` / `next_review` 的 `YYYY-MM-DD` 日期格式。这个 schema 是给校验器和后续桌面软件共用的机器可读契约。
 
 报告里的 `status`、`reading_stage`、`review_stage` 和 `line_role` 如果不在 `taxonomy.json` 对应列表中，会被记录到 `docs/quality.json` 的 `taxonomy_drift`，并展示在 `docs/quality.html`。普通校验会给 warning，方便你逐步治理旧报告；发布或团队协作前可以使用严格模式把它升级为 error：
