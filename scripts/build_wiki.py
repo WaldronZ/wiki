@@ -101,6 +101,32 @@ DEFAULT_ROLE_ORDER = [
 DEFAULT_STATUS_VALUES = ["unread", "skimmed", "reading", "read", "archived"]
 DEFAULT_READING_STAGE_VALUES = ["skim", "normal_read", "deep_read", "code_checked"]
 DEFAULT_REVIEW_STAGE_VALUES = ["fresh", "due", "reviewed"]
+DEFAULT_GOVERNANCE_POLICY: dict[str, Any] = {
+    "taxonomy_load": {
+        "min_structure_labels": 3,
+        "min_tags": 3,
+        "max_tags": 10,
+        "max_methods": 8,
+    },
+    "taxonomy_actions": {
+        "singleton_max_count": 1,
+        "watch_share": 0.4,
+        "watch_min_count": 4,
+        "split_share": 0.6,
+        "split_min_count": 5,
+    },
+    "taxonomy_balance": {
+        "high_score_below": 45,
+        "medium_score_below": 70,
+        "singleton_medium_count": 3,
+        "unused_medium_count": 3,
+    },
+    "coverage": {
+        "high_score_below": 70,
+        "medium_score_below": 90,
+        "missing_high_min": 2,
+    },
+}
 VIEW_PAGES = {"all", "index", "library"}
 VIEW_STATE_KEYS = {
     "q",
@@ -131,6 +157,7 @@ REVIEW_STAGE_VALUES = DEFAULT_REVIEW_STAGE_VALUES.copy()
 STATUS_WORKFLOWS: dict[str, dict[str, list[str]]] = {}
 SHARED_VIEWS: list[dict[str, Any]] = []
 ACTIVE_STATUS_WORKFLOW = ""
+GOVERNANCE_POLICY: dict[str, Any] = json.loads(json.dumps(DEFAULT_GOVERNANCE_POLICY))
 QUICK_OPEN_PAPERS: list[dict[str, str]] = []
 
 
@@ -152,7 +179,7 @@ def parse_args() -> argparse.Namespace:
 
 def load_taxonomy_config(report_dir: Path) -> None:
     """Load optional taxonomy normalization config for this report directory."""
-    global LABEL_ALIASES, ROLE_ORDER, STATUS_VALUES, READING_STAGE_VALUES, REVIEW_STAGE_VALUES, STATUS_WORKFLOWS, SHARED_VIEWS, ACTIVE_STATUS_WORKFLOW
+    global LABEL_ALIASES, ROLE_ORDER, STATUS_VALUES, READING_STAGE_VALUES, REVIEW_STAGE_VALUES, STATUS_WORKFLOWS, SHARED_VIEWS, ACTIVE_STATUS_WORKFLOW, GOVERNANCE_POLICY
 
     LABEL_ALIASES = DEFAULT_LABEL_ALIASES.copy()
     ROLE_ORDER = {role: index for index, role in enumerate(DEFAULT_ROLE_ORDER)}
@@ -162,6 +189,7 @@ def load_taxonomy_config(report_dir: Path) -> None:
     STATUS_WORKFLOWS = {}
     SHARED_VIEWS = []
     ACTIVE_STATUS_WORKFLOW = ""
+    GOVERNANCE_POLICY = json.loads(json.dumps(DEFAULT_GOVERNANCE_POLICY))
 
     config_path = report_dir / "guides" / "taxonomy.json"
     if not config_path.exists():
@@ -206,6 +234,7 @@ def load_taxonomy_config(report_dir: Path) -> None:
         },
     )
     SHARED_VIEWS = configured_shared_views(config)
+    GOVERNANCE_POLICY = configured_governance_policy(config)
 
 
 def configured_values(config: dict[str, Any], key: str, defaults: list[str]) -> list[str]:
@@ -270,6 +299,24 @@ def configured_shared_views(config: dict[str, Any]) -> list[dict[str, Any]]:
     return cleaned
 
 
+def configured_governance_policy(config: dict[str, Any]) -> dict[str, Any]:
+    policy = json.loads(json.dumps(DEFAULT_GOVERNANCE_POLICY))
+    overrides = config.get("governance_policy") or {}
+    if not isinstance(overrides, dict):
+        return policy
+    for section, defaults in DEFAULT_GOVERNANCE_POLICY.items():
+        section_overrides = overrides.get(section) or {}
+        if not isinstance(section_overrides, dict):
+            continue
+        for key, default in defaults.items():
+            value = section_overrides.get(key)
+            if isinstance(default, int) and isinstance(value, int) and value >= 0:
+                policy[section][key] = value
+            elif isinstance(default, float) and isinstance(value, (int, float)) and value >= 0:
+                policy[section][key] = float(value)
+    return policy
+
+
 def shared_views_for(page: str) -> list[dict[str, Any]]:
     return [
         {"name": view["name"], "state": view["state"]}
@@ -302,6 +349,7 @@ def control_options() -> dict[str, Any]:
         },
         "line_role": list(ROLE_ORDER.keys()),
         "shared_views": SHARED_VIEWS.copy(),
+        "governance_policy": json.loads(json.dumps(GOVERNANCE_POLICY)),
     }
 
 
@@ -1077,18 +1125,19 @@ def paper_quality_issue(paper: dict[str, Any], today: str) -> dict[str, Any]:
 
 
 def paper_taxonomy_load_issue(paper: dict[str, Any]) -> dict[str, Any] | None:
+    policy = GOVERNANCE_POLICY["taxonomy_load"]
     structure_count = sum(len(paper.get(field, []) or []) for field in ("domains", "tracks", "problems"))
     topic_count = len(paper.get("topics", []) or [])
     method_count = len(paper.get("methods", []) or [])
     tag_count = topic_count + method_count
     signals: list[str] = []
-    if structure_count < 3:
+    if structure_count < int(policy["min_structure_labels"]):
         signals.append("sparse_structure")
-    if tag_count < 3:
+    if tag_count < int(policy["min_tags"]):
         signals.append("sparse_tags")
-    if tag_count > 10:
+    if tag_count > int(policy["max_tags"]):
         signals.append("dense_tags")
-    if method_count > 8:
+    if method_count > int(policy["max_methods"]):
         signals.append("method_overload")
     if not signals:
         return None
@@ -1108,6 +1157,7 @@ def paper_taxonomy_load_issue(paper: dict[str, Any]) -> dict[str, Any] | None:
         "method_count": method_count,
         "tag_count": tag_count,
         "signals": signals,
+        "policy": policy.copy(),
         "recommendation": recommendation,
     }
 
@@ -1175,6 +1225,7 @@ def build_quality_report(papers: list[dict[str, Any]]) -> dict[str, Any]:
         "queues": queues,
         "issues": papers_with_issues,
         "taxonomy_load": taxonomy_load,
+        "governance_policy": json.loads(json.dumps(GOVERNANCE_POLICY)),
         "taxonomy_drift": taxonomy_drift,
         "label_alias_suggestions": alias_suggestions,
         "duplicate_reports": duplicate_groups,
@@ -7016,6 +7067,7 @@ def facet_count_for_field(papers: list[dict[str, Any]], taxonomy: dict[str, dict
 
 def taxonomy_balance_report(papers: list[dict[str, Any]]) -> list[dict[str, Any]]:
     taxonomy = taxonomy_counts(papers)
+    policy = GOVERNANCE_POLICY["taxonomy_actions"]
     total = len(papers)
     rows: list[dict[str, Any]] = []
     for field, english, query_key, label, is_list in FACET_SPECS:
@@ -7026,7 +7078,7 @@ def taxonomy_balance_report(papers: list[dict[str, Any]]) -> list[dict[str, Any]
         overloaded_count = sum(
             1
             for _value, count in used_items
-            if total and count / total >= 0.6 and count >= 5
+            if total and count / total >= float(policy["split_share"]) and count >= int(policy["split_min_count"])
         )
         max_value, max_count = max(used_items, key=lambda item: (item[1], item[0].lower()), default=("", 0))
         observed_total = sum(count for _value, count in used_items)
@@ -7060,6 +7112,7 @@ def taxonomy_balance_report(papers: list[dict[str, Any]]) -> list[dict[str, Any]
 def render_balance(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     rows = taxonomy_balance_report(papers)
     actions = build_taxonomy_actions(papers)
+    policy = GOVERNANCE_POLICY["taxonomy_balance"]
     avg_score = round(sum(int(row["balance_score"]) for row in rows) / len(rows), 1) if rows else 100
     weakest = min(rows, key=lambda row: int(row["balance_score"]), default=None)
     total_singletons = sum(int(row["singleton_count"]) for row in rows)
@@ -7068,9 +7121,9 @@ def render_balance(report_dir: Path, papers: list[dict[str, Any]]) -> None:
 
     def risk_level(row: dict[str, Any]) -> str:
         score = int(row["balance_score"])
-        if score < 45 or int(row["overloaded_count"]) > 0:
+        if score < int(policy["high_score_below"]) or int(row["overloaded_count"]) > 0:
             return "high"
-        if score < 70 or int(row["singleton_count"]) >= 3 or int(row["unused_count"]) >= 3:
+        if score < int(policy["medium_score_below"]) or int(row["singleton_count"]) >= int(policy["singleton_medium_count"]) or int(row["unused_count"]) >= int(policy["unused_medium_count"]):
             return "medium"
         return "low"
 
@@ -7310,6 +7363,7 @@ renderBalanceRows();
 
 
 def render_coverage(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    policy = GOVERNANCE_POLICY["coverage"]
     coverage_specs = [
         ("domains", "Domain", "domain", True),
         ("tracks", "Track", "track", True),
@@ -7359,7 +7413,14 @@ def render_coverage(report_dir: Path, papers: list[dict[str, Any]]) -> None:
                 }
             )
         score = round((present_slots / (total * len(coverage_specs))) * 100) if total else 100
-        risk = "high" if score < 70 or missing_slots >= max(2, total) else "medium" if score < 90 or missing_slots else "low"
+        missing_high = max(int(policy["missing_high_min"]), total)
+        risk = (
+            "high"
+            if score < int(policy["high_score_below"]) or missing_slots >= missing_high
+            else "medium"
+            if score < int(policy["medium_score_below"]) or missing_slots
+            else "low"
+        )
         coverage_rows.append(
             {
                 "line": line,
@@ -7617,13 +7678,14 @@ renderCoverageRows();
 
 
 def taxonomy_action_status(count: int, share: float) -> tuple[str, str]:
+    policy = GOVERNANCE_POLICY["taxonomy_actions"]
     if count == 0:
         return "unused_config", "medium"
-    if count == 1:
+    if count <= int(policy["singleton_max_count"]):
         return "merge_candidate", "medium"
-    if share >= 0.6 and count >= 5:
+    if share >= float(policy["split_share"]) and count >= int(policy["split_min_count"]):
         return "split_candidate", "high"
-    if share >= 0.4 and count >= 4:
+    if share >= float(policy["watch_share"]) and count >= int(policy["watch_min_count"]):
         return "watch", "low"
     return "stable", "none"
 
@@ -7685,6 +7747,7 @@ def build_taxonomy_actions(papers: list[dict[str, Any]]) -> dict[str, Any]:
         "count": len(actions),
         "paper_count": total,
         "summary": summary,
+        "governance_policy": json.loads(json.dumps(GOVERNANCE_POLICY["taxonomy_actions"])),
         "actions": actions,
     }
 

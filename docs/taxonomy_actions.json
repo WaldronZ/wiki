@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T02:48:23",
+  "generated_at": "2026-06-12T02:54:11",
   "count": 55,
   "paper_count": 5,
   "summary": {
@@ -7,6 +7,13 @@
     "split_candidate": 3,
     "unused_config": 10,
     "watch": 0
+  },
+  "governance_policy": {
+    "singleton_max_count": 1,
+    "watch_share": 0.4,
+    "watch_min_count": 4,
+    "split_share": 0.6,
+    "split_min_count": 5
   },
   "actions": [
     {

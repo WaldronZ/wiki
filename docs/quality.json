@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T02:48:23",
+  "generated_at": "2026-06-12T02:54:11",
   "count": 5,
   "quality_score": 92.0,
   "coverage": {
@@ -122,6 +122,12 @@
       "signals": [
         "dense_tags"
       ],
+      "policy": {
+        "min_structure_labels": 3,
+        "min_tags": 3,
+        "max_tags": 10,
+        "max_methods": 8
+      },
       "recommendation": "检查 topic / method 是否过细，保留最能区分论文的标签。"
     },
     {
@@ -137,9 +143,41 @@
       "signals": [
         "dense_tags"
       ],
+      "policy": {
+        "min_structure_labels": 3,
+        "min_tags": 3,
+        "max_tags": 10,
+        "max_methods": 8
+      },
       "recommendation": "检查 topic / method 是否过细，保留最能区分论文的标签。"
     }
   ],
+  "governance_policy": {
+    "taxonomy_load": {
+      "min_structure_labels": 3,
+      "min_tags": 3,
+      "max_tags": 10,
+      "max_methods": 8
+    },
+    "taxonomy_actions": {
+      "singleton_max_count": 1,
+      "watch_share": 0.4,
+      "watch_min_count": 4,
+      "split_share": 0.6,
+      "split_min_count": 5
+    },
+    "taxonomy_balance": {
+      "high_score_below": 45,
+      "medium_score_below": 70,
+      "singleton_medium_count": 3,
+      "unused_medium_count": 3
+    },
+    "coverage": {
+      "high_score_below": 70,
+      "medium_score_below": 90,
+      "missing_high_min": 2
+    }
+  },
   "taxonomy_drift": [],
   "label_alias_suggestions": [],
   "duplicate_reports": []

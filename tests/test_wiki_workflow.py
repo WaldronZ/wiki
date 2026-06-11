@@ -145,6 +145,32 @@ class WikiWorkflowTest(unittest.TestCase):
                             "state": {"track": "Attention Kernels", "sort": "year"},
                         },
                     ],
+                    "governance_policy": {
+                        "taxonomy_load": {
+                            "min_structure_labels": 3,
+                            "min_tags": 5,
+                            "max_tags": 10,
+                            "max_methods": 8,
+                        },
+                        "taxonomy_actions": {
+                            "singleton_max_count": 1,
+                            "watch_share": 0.4,
+                            "watch_min_count": 4,
+                            "split_share": 0.6,
+                            "split_min_count": 5,
+                        },
+                        "taxonomy_balance": {
+                            "high_score_below": 45,
+                            "medium_score_below": 70,
+                            "singleton_medium_count": 3,
+                            "unused_medium_count": 3,
+                        },
+                        "coverage": {
+                            "high_score_below": 70,
+                            "medium_score_below": 90,
+                            "missing_high_min": 2,
+                        },
+                    },
                 }
             ),
             encoding="utf-8",
@@ -372,9 +398,11 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("taxonomy_drift", quality)
             self.assertEqual(quality["taxonomy_drift"], [])
             self.assertEqual(quality["queues"]["taxonomy_drift"], [])
-            self.assertEqual(quality["queues"]["taxonomy_sparse"], ["2601.00001-alpha-paper"])
+            self.assertEqual(quality["governance_policy"]["taxonomy_load"]["min_tags"], 5)
+            self.assertEqual(quality["queues"]["taxonomy_sparse"], ["2501.00002-beta-paper", "2601.00001-alpha-paper"])
             self.assertEqual(quality["queues"]["taxonomy_dense"], [])
             self.assertEqual(quality["taxonomy_load"][0]["signals"], ["sparse_tags"])
+            self.assertEqual(quality["taxonomy_load"][0]["policy"]["min_tags"], 5)
             self.assertEqual(quality["duplicate_reports"], [])
             self.assertEqual(quality["label_alias_suggestions"][0]["canonical"], "KV Cache")
             self.assertEqual(quality["label_alias_suggestions"][0]["aliases"], {"KV-cache": "KV Cache"})
@@ -416,6 +444,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("copyFreshnessQueue", freshness_html)
             taxonomy_actions = json.loads((report_dir / "taxonomy_actions.json").read_text(encoding="utf-8"))
             self.assertEqual(taxonomy_actions["paper_count"], 2)
+            self.assertEqual(taxonomy_actions["governance_policy"]["split_share"], 0.6)
             self.assertGreater(taxonomy_actions["summary"]["unused_config"], 0)
             triaged_action = next(item for item in taxonomy_actions["actions"] if item["field"] == "status" and item["value"] == "triaged")
             self.assertEqual(triaged_action["action"], "unused_config")
@@ -483,6 +512,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(stats["shared_views"], 2)
             self.assertEqual(stats["controls"]["review_stage"], ["fresh", "due", "reviewed"])
             self.assertIn("research", stats["controls"]["status_workflows"])
+            self.assertEqual(stats["controls"]["governance_policy"]["taxonomy_load"]["min_tags"], 5)
             self.assertTrue(stats["taxonomy_balance"])
             balance_by_field = {item["field"]: item for item in stats["taxonomy_balance"]}
             self.assertEqual(balance_by_field["domains"]["max_value"], "LLM Systems")
@@ -490,6 +520,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("balance_score", balance_by_field["topics"])
             manifest = json.loads((report_dir / "manifest.json").read_text(encoding="utf-8"))
             self.assertEqual(manifest["count"], 2)
+            self.assertEqual(manifest["controls"]["governance_policy"]["taxonomy_load"]["min_tags"], 5)
             self.assertTrue(manifest["publish_checks"]["no_duplicate_reports"])
             self.assertIn("release.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("actions.html", {item["href"] for item in manifest["pages"]})
@@ -898,11 +929,15 @@ class WikiWorkflowTest(unittest.TestCase):
                 str(taxonomy_load_patch_path),
             )
             taxonomy_load_patch_rows = list(csv.DictReader(taxonomy_load_patch_path.read_text(encoding="utf-8").splitlines()))
-            self.assertEqual(len(taxonomy_load_patch_rows), 1)
-            self.assertEqual(taxonomy_load_patch_rows[0]["slug"], "2601.00001-alpha-paper")
-            self.assertEqual(taxonomy_load_patch_rows[0]["topics"], "LLM Serving")
-            self.assertEqual(taxonomy_load_patch_rows[0]["methods"], "Speculative Decoding")
-            self.assertEqual(taxonomy_load_patch_rows[0]["research_line"], "LLM Serving")
+            self.assertEqual(len(taxonomy_load_patch_rows), 2)
+            self.assertEqual(
+                sorted(row["slug"] for row in taxonomy_load_patch_rows),
+                ["2501.00002-beta-paper", "2601.00001-alpha-paper"],
+            )
+            alpha_patch = next(row for row in taxonomy_load_patch_rows if row["slug"] == "2601.00001-alpha-paper")
+            self.assertEqual(alpha_patch["topics"], "LLM Serving")
+            self.assertEqual(alpha_patch["methods"], "Speculative Decoding")
+            self.assertEqual(alpha_patch["research_line"], "LLM Serving")
             patch_dry_run = self.run_cmd(
                 "scripts/apply_library_metadata.py",
                 str(report_dir),

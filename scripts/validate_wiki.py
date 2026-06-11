@@ -154,6 +154,32 @@ SHARED_VIEW_STATE_KEYS = {
     "size",
     "page",
 }
+GOVERNANCE_POLICY_FIELDS: dict[str, dict[str, type]] = {
+    "taxonomy_load": {
+        "min_structure_labels": int,
+        "min_tags": int,
+        "max_tags": int,
+        "max_methods": int,
+    },
+    "taxonomy_actions": {
+        "singleton_max_count": int,
+        "watch_share": float,
+        "watch_min_count": int,
+        "split_share": float,
+        "split_min_count": int,
+    },
+    "taxonomy_balance": {
+        "high_score_below": int,
+        "medium_score_below": int,
+        "singleton_medium_count": int,
+        "unused_medium_count": int,
+    },
+    "coverage": {
+        "high_score_below": int,
+        "medium_score_below": int,
+        "missing_high_min": int,
+    },
+}
 
 
 class LinkParser(HTMLParser):
@@ -781,6 +807,7 @@ def validate_taxonomy_config(report_dir: Path, errors: list[str], warnings: list
         "$schema",
         "label_aliases",
         "shared_views",
+        "governance_policy",
         "active_status_workflow",
         "status_workflows",
         *TAXONOMY_CONFIG_LIST_FIELDS,
@@ -879,6 +906,39 @@ def validate_taxonomy_config(report_dir: Path, errors: list[str], warnings: list
                 errors.append(
                     f"guides/taxonomy.json: shared_views[{index}].state has unknown keys: {', '.join(unknown_state)}"
                 )
+
+    policy = config.get("governance_policy", {})
+    if policy is not None and policy != {} and not isinstance(policy, dict):
+        errors.append("guides/taxonomy.json: governance_policy must be an object")
+    elif isinstance(policy, dict):
+        unknown_sections = sorted(set(policy) - set(GOVERNANCE_POLICY_FIELDS))
+        if unknown_sections:
+            errors.append(f"guides/taxonomy.json: governance_policy has unknown sections: {', '.join(unknown_sections)}")
+        for section, fields in GOVERNANCE_POLICY_FIELDS.items():
+            values = policy.get(section, {})
+            if values is None or values == {}:
+                continue
+            if not isinstance(values, dict):
+                errors.append(f"guides/taxonomy.json: governance_policy.{section} must be an object")
+                continue
+            unknown_keys = sorted(set(values) - set(fields))
+            if unknown_keys:
+                errors.append(
+                    f"guides/taxonomy.json: governance_policy.{section} has unknown keys: {', '.join(unknown_keys)}"
+                )
+            for key, expected_type in fields.items():
+                if key not in values:
+                    continue
+                value = values[key]
+                if expected_type is int:
+                    if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+                        errors.append(
+                            f"guides/taxonomy.json: governance_policy.{section}.{key} must be a non-negative integer"
+                        )
+                elif not isinstance(value, (int, float)) or isinstance(value, bool) or value < 0:
+                    errors.append(
+                        f"guides/taxonomy.json: governance_policy.{section}.{key} must be a non-negative number"
+                    )
     return config
 
 
@@ -907,6 +967,8 @@ def validate_taxonomy_schema_contract(report_dir: Path, errors: list[str], warni
         errors.append("guides/taxonomy.schema.json: properties.status_workflows is required")
     if "shared_views" not in (schema.get("properties") or {}):
         errors.append("guides/taxonomy.schema.json: properties.shared_views is required")
+    if "governance_policy" not in (schema.get("properties") or {}):
+        errors.append("guides/taxonomy.schema.json: properties.governance_policy is required")
 
 
 def validate_string_list(value: Any, label: str, errors: list[str], allow_none: bool) -> None:

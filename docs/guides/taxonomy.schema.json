@@ -109,6 +109,53 @@
         },
         "required": ["name", "state"]
       }
+    },
+    "governance_policy": {
+      "type": "object",
+      "description": "Configurable governance thresholds for quality, taxonomy actions, balance, and coverage reports.",
+      "additionalProperties": false,
+      "properties": {
+        "taxonomy_load": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "min_structure_labels": {"type": "integer", "minimum": 0},
+            "min_tags": {"type": "integer", "minimum": 0},
+            "max_tags": {"type": "integer", "minimum": 0},
+            "max_methods": {"type": "integer", "minimum": 0}
+          }
+        },
+        "taxonomy_actions": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "singleton_max_count": {"type": "integer", "minimum": 0},
+            "watch_share": {"type": "number", "minimum": 0},
+            "watch_min_count": {"type": "integer", "minimum": 0},
+            "split_share": {"type": "number", "minimum": 0},
+            "split_min_count": {"type": "integer", "minimum": 0}
+          }
+        },
+        "taxonomy_balance": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "high_score_below": {"type": "integer", "minimum": 0},
+            "medium_score_below": {"type": "integer", "minimum": 0},
+            "singleton_medium_count": {"type": "integer", "minimum": 0},
+            "unused_medium_count": {"type": "integer", "minimum": 0}
+          }
+        },
+        "coverage": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "high_score_below": {"type": "integer", "minimum": 0},
+            "medium_score_below": {"type": "integer", "minimum": 0},
+            "missing_high_min": {"type": "integer", "minimum": 0}
+          }
+        }
+      }
     }
   },
   "$defs": {

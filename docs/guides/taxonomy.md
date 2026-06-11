@@ -163,6 +163,9 @@ python3 scripts/build_wiki.py docs
 - `active_status_workflow` 必须指向 `status_workflows` 中已有的名称；每个 workflow 只允许包含 `status_values`、`reading_stage_values` 和 `review_stage_values`。
 - 列表里不能有重复值或空值。
 - `shared_views` 必须是对象列表，每个视图都要有非空 `name` 和非空 `state`；`state` 可以保存 `workflow`，用于团队共享某套状态体系下的队列。
+- `governance_policy` 可选，用来调整质量治理、分类 action、分类均衡和研究线覆盖地图的阈值；每个阈值必须是非负整数或非负数字。
+
+`governance_policy` 的默认行为适合小到中型个人论文库。论文数量变大后，可以提高 `taxonomy_load.min_tags` 让每篇论文需要更多 topic/method 入口，降低 `taxonomy_actions.split_share` 更早提示大桶拆分，或调高 `coverage.high_score_below` 让研究线分类覆盖更严格。策略会写入 `papers.json`、`stats.json` 和 `manifest.json` 的 `controls.governance_policy`，后续桌面软件可以直接读取同一份契约。
 
 报告 frontmatter 的字段契约写在 `docs/guides/metadata.schema.json`，用于约束必填字段、字符串 / 列表 / 布尔 / 整数类型、`importance` / `confidence` / `reproducibility` 的 1-5 范围，以及 `last_reviewed` / `next_review` 的 `YYYY-MM-DD` 日期格式。这个 schema 是给校验器和后续桌面软件共用的机器可读契约。
 
