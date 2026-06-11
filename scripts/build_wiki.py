@@ -6033,7 +6033,7 @@ def render_facets(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     overloaded_total = 0
     unused_total = 0
     for field, english, query_key, label, is_list in FACET_SPECS:
-        field_options.append(f'<option value="{html.escape(label, quote=True)}">{html.escape(label)}</option>')
+        field_options.append(f'<option value="{html.escape(field, quote=True)}">{html.escape(label)}</option>')
         counts = facet_count_for_field(papers, taxonomy, field, is_list)
         used_items = [(value, count) for value, count in counts.items() if count > 0]
         long_tail = sum(1 for _, count in used_items if count == 1)
@@ -6050,7 +6050,7 @@ def render_facets(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         )
         for value, count in counts.items():
             share = (count / total) if total else 0
-            action, _severity = taxonomy_action_status(count, share)
+            action, severity = taxonomy_action_status(count, share)
             flags = [action]
             if action == "unused_config":
                 flags.append("unused")
@@ -6062,13 +6062,14 @@ def render_facets(report_dir: Path, papers: list[dict[str, Any]]) -> None:
             href = page_query_href("library.html", **{query_key: value})
             value_cell = f'<a href="{html.escape(href)}">{html.escape(value)}</a>'
             recommendation = taxonomy_action_recommendation(action, label)
-            search_text = " ".join([label, english, value, action, recommendation]).lower()
+            search_text = " ".join([label, english, value, action, severity, recommendation]).lower()
             table_rows.append(
-                f'<tr data-field="{html.escape(label, quote=True)}" data-action="{html.escape(action, quote=True)}" data-value="{html.escape(value, quote=True)}" data-count="{count}" data-share="{round(share, 4)}" data-href="{html.escape(href, quote=True)}" data-recommendation="{html.escape(recommendation, quote=True)}" data-search="{html.escape(search_text, quote=True)}">'
+                f'<tr data-field="{html.escape(label, quote=True)}" data-field-key="{html.escape(field, quote=True)}" data-action="{html.escape(action, quote=True)}" data-severity="{html.escape(severity, quote=True)}" data-value="{html.escape(value, quote=True)}" data-count="{count}" data-share="{round(share, 4)}" data-href="{html.escape(href, quote=True)}" data-recommendation="{html.escape(recommendation, quote=True)}" data-search="{html.escape(search_text, quote=True)}">'
                 f"<td>{html.escape(label)}</td>"
                 f"<td>{value_cell}</td>"
                 f"<td>{count}</td>"
                 f"<td>{round(share * 100)}%</td>"
+                f"<td>{html.escape(severity)}</td>"
                 f"<td>{flag_html}</td>"
                 f"<td>{sample_links(field, value, is_list)}</td>"
                 f"<td>{html.escape(recommendation)}</td>"
@@ -6076,7 +6077,7 @@ def render_facets(report_dir: Path, papers: list[dict[str, Any]]) -> None:
             )
 
     table_html = (
-        '<table class="data-table"><thead><tr><th>字段</th><th>标签</th><th>论文</th><th>占比</th><th>状态</th><th>样例</th><th>建议动作</th></tr></thead>'
+        '<table class="data-table"><thead><tr><th>字段</th><th>标签</th><th>论文</th><th>占比</th><th>优先级</th><th>状态</th><th>样例</th><th>建议动作</th></tr></thead>'
         f"<tbody>{''.join(table_rows)}</tbody></table>"
         if table_rows
         else '<div class="empty">还没有可审计的分类。</div>'
@@ -6122,7 +6123,7 @@ def render_facets(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     .facet-action h3 { margin: 0 0 6px; font-size: 16px; }
     .facet-controls {
       display: grid;
-      grid-template-columns: minmax(220px, 1fr) repeat(2, minmax(150px, 210px)) auto;
+      grid-template-columns: minmax(220px, 1fr) repeat(3, minmax(140px, 190px)) repeat(3, auto);
       gap: 10px;
       align-items: center;
       margin-bottom: 12px;
@@ -6177,9 +6178,12 @@ def render_facets(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <div class="facet-controls">
       <input id="facetSearch" type="search" placeholder="搜索字段、标签、建议动作">
       <select id="facetField"><option value="">全部字段</option>{"".join(field_options)}</select>
+      <select id="facetSeverity"><option value="">全部优先级</option><option value="high">high</option><option value="medium">medium</option><option value="low">low</option><option value="none">none</option></select>
       <select id="facetAction"><option value="">全部状态</option><option value="merge_candidate">长尾待合并</option><option value="split_candidate">过载待拆分</option><option value="unused_config">候选空值</option><option value="watch">观察中</option><option value="stable">稳定</option></select>
       <strong id="facetResultCount">{len(table_rows)} 项</strong>
       <button id="downloadFacetCsv" class="button" type="button">下载当前 CSV</button>
+      <button id="copyFacetMarkdown" class="button" type="button">复制清单</button>
+      <button id="copyFacetCommand" class="button" type="button">复制治理命令</button>
     </div>
     <div class="table-wrap">{table_html}</div>
   </section>
@@ -6187,10 +6191,22 @@ def render_facets(report_dir: Path, papers: list[dict[str, Any]]) -> None:
 <script>
 const facetSearch = document.querySelector("#facetSearch");
 const facetField = document.querySelector("#facetField");
+const facetSeverity = document.querySelector("#facetSeverity");
 const facetAction = document.querySelector("#facetAction");
 const facetResultCount = document.querySelector("#facetResultCount");
 const downloadFacetCsv = document.querySelector("#downloadFacetCsv");
+const copyFacetMarkdown = document.querySelector("#copyFacetMarkdown");
+const copyFacetCommand = document.querySelector("#copyFacetCommand");
 const facetRows = Array.from(document.querySelectorAll("tr[data-field]"));
+
+async function copyFacetText(text, fallbackLabel) {{
+  try {{
+    await navigator.clipboard.writeText(text);
+    window.alert("已复制。");
+  }} catch {{
+    window.prompt(fallbackLabel, text);
+  }}
+}}
 
 function facetCsvCell(value) {{
   const text = String(value ?? "");
@@ -6199,18 +6215,24 @@ function facetCsvCell(value) {{
     : text;
 }}
 
+function visibleFacetRows() {{
+  return facetRows.filter(row => !row.hidden);
+}}
+
 function downloadFacetRows() {{
-  const rows = facetRows.filter(row => !row.hidden);
+  const rows = visibleFacetRows();
   if (!rows.length) {{
     window.alert("当前筛选结果为空。");
     return;
   }}
-  const header = ["field", "value", "count", "share", "action", "recommendation", "href"];
+  const header = ["field", "field_key", "value", "count", "share", "severity", "action", "recommendation", "href"];
   const body = rows.map(row => [
     row.dataset.field,
+    row.dataset.fieldKey,
     row.dataset.value,
     row.dataset.count,
     row.dataset.share,
+    row.dataset.severity,
     row.dataset.action,
     row.dataset.recommendation,
     row.dataset.href,
@@ -6227,14 +6249,39 @@ function downloadFacetRows() {{
   URL.revokeObjectURL(url);
 }}
 
+function facetMarkdownQueue() {{
+  const rows = visibleFacetRows();
+  if (!rows.length) return "";
+  const lines = ["# Taxonomy Governance Queue", ""];
+  rows.forEach(row => {{
+    const share = Math.round(Number(row.dataset.share || 0) * 100);
+    lines.push(`- [ ] ${{row.dataset.severity}} / ${{row.dataset.action}} / ${{row.dataset.field}}: [${{row.dataset.value}}](${{row.dataset.href}})`);
+    lines.push(`  - Count: ${{row.dataset.count}} papers, ${{share}}%`);
+    lines.push(`  - Recommendation: ${{row.dataset.recommendation}}`);
+  }});
+  lines.push("");
+  return lines.join("\\n");
+}}
+
+function taxonomyExportCommand(format = "markdown") {{
+  const args = ["python3 scripts/export_taxonomy_actions.py docs"];
+  if (format !== "markdown") args.push(`--format ${{format}}`);
+  if (facetField.value) args.push(`--field ${{facetField.value}}`);
+  if (facetSeverity.value && facetSeverity.value !== "none") args.push(`--severity ${{facetSeverity.value}}`);
+  if (facetAction.value && facetAction.value !== "stable") args.push(`--action ${{facetAction.value}}`);
+  return args.join(" ");
+}}
+
 function renderFacetRows() {{
   const q = facetSearch.value.trim().toLowerCase();
   const field = facetField.value;
+  const severity = facetSeverity.value;
   const action = facetAction.value;
   let visible = 0;
   facetRows.forEach(row => {{
     const hit = (!q || row.dataset.search.includes(q))
-      && (!field || row.dataset.field === field)
+      && (!field || row.dataset.fieldKey === field)
+      && (!severity || row.dataset.severity === severity)
       && (!action || row.dataset.action === action);
     row.hidden = !hit;
     if (hit) visible += 1;
@@ -6242,8 +6289,17 @@ function renderFacetRows() {{
   facetResultCount.textContent = `${{visible}} / ${{facetRows.length}} 项`;
 }}
 
-[facetSearch, facetField, facetAction].forEach((control) => control.addEventListener("input", renderFacetRows));
+[facetSearch, facetField, facetSeverity, facetAction].forEach((control) => control.addEventListener("input", renderFacetRows));
 downloadFacetCsv.addEventListener("click", downloadFacetRows);
+copyFacetMarkdown.addEventListener("click", () => {{
+  const text = facetMarkdownQueue();
+  if (!text) {{
+    window.alert("当前筛选结果为空。");
+    return;
+  }}
+  copyFacetText(text, "复制分类治理清单");
+}});
+copyFacetCommand.addEventListener("click", () => copyFacetText(taxonomyExportCommand("project"), "复制分类治理命令"));
 renderFacetRows();
 </script>
 """

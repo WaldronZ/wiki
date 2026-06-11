@@ -103,6 +103,11 @@ def parse_args() -> argparse.Namespace:
         action="append",
         help="Only include this action type. Can be repeated.",
     )
+    parser.add_argument(
+        "--field",
+        action="append",
+        help="Only include actions for this metadata field. Can be repeated.",
+    )
     return parser.parse_args()
 
 
@@ -138,11 +143,14 @@ def load_papers(report_dir: Path) -> list[dict[str, Any]]:
 def filter_actions(actions: list[dict[str, Any]], args: argparse.Namespace) -> list[dict[str, Any]]:
     severities = set(args.severity or [])
     action_types = set(args.action or [])
+    fields = {str(field).strip() for field in (args.field or []) if str(field).strip()}
     filtered = []
     for item in actions:
         if severities and item.get("severity") not in severities:
             continue
         if action_types and item.get("action") not in action_types:
+            continue
+        if fields and item.get("field") not in fields:
             continue
         filtered.append(item)
     severity_rank = {"high": 0, "medium": 1, "low": 2}

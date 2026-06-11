@@ -445,9 +445,14 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("字段概览", facets_html)
             self.assertIn('id="facetSearch"', facets_html)
             self.assertIn('id="facetField"', facets_html)
+            self.assertIn('id="facetSeverity"', facets_html)
             self.assertIn('id="facetAction"', facets_html)
             self.assertIn('id="facetResultCount"', facets_html)
             self.assertIn('id="downloadFacetCsv"', facets_html)
+            self.assertIn('id="copyFacetMarkdown"', facets_html)
+            self.assertIn('id="copyFacetCommand"', facets_html)
+            self.assertIn("taxonomyExportCommand", facets_html)
+            self.assertIn("field_key", facets_html)
             self.assertIn("facet_actions_filtered.csv", facets_html)
             self.assertIn("long-tail", facets_html)
             self.assertIn("unused", facets_html)
@@ -542,6 +547,21 @@ class WikiWorkflowTest(unittest.TestCase):
             taxonomy_action_rows = list(csv.DictReader(taxonomy_actions_csv_path.read_text(encoding="utf-8").splitlines()))
             self.assertTrue(taxonomy_action_rows)
             self.assertIn("severity", taxonomy_action_rows[0])
+
+            taxonomy_actions_field_path = report_dir / "exports" / "taxonomy-actions-field.csv"
+            self.run_cmd(
+                "scripts/export_taxonomy_actions.py",
+                str(report_dir),
+                "--format",
+                "csv",
+                "--field",
+                "status",
+                "--output",
+                str(taxonomy_actions_field_path),
+            )
+            taxonomy_field_rows = list(csv.DictReader(taxonomy_actions_field_path.read_text(encoding="utf-8").splitlines()))
+            self.assertTrue(taxonomy_field_rows)
+            self.assertEqual({row["field"] for row in taxonomy_field_rows}, {"status"})
 
             taxonomy_project_path = report_dir / "exports" / "taxonomy-project.csv"
             self.run_cmd(

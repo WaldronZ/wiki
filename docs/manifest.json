@@ -563,7 +563,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 44547,
-      "sha256": "9277538927e5d7e9d0e6604165835c9a963fdf2b12a823f1173cb0881a238b3c",
+      "sha256": "598ff2881d8dc44795294bffafa55200bbaa59ba9b4b221c946da8ca00a1128b",
       "hash_mode": "raw"
     },
     {
@@ -582,8 +582,8 @@
       "description": "标签规模、长尾和过载分类",
       "exists": true,
       "status": "ok",
-      "size_bytes": 78508,
-      "sha256": "fd09881e22575b8a98d02436e11ee53a356ec8594a9ac88e47fc8534c1b11057",
+      "size_bytes": 85717,
+      "sha256": "42e783e1aea666a712aaaf924704e2f814d30b08f5e91d1783007e04d87ca1d6",
       "hash_mode": "raw"
     },
     {

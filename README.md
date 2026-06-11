@@ -139,7 +139,7 @@ paper_reader/
 - `docs/dashboard.html`：管理控制台，展示分类覆盖、分类均衡度、研究线健康度、待复习和待补分类队列
 - `docs/release.html`：发布摘要页，集中展示发布状态、页面入口、数据文件、数据契约、artifact inventory、队列规模、推荐命令和治理 playbooks
 - `docs/collections.html`：集合视图页，集中展示共享筛选视图、分类粒度智能队列和研究线集合入口
-- `docs/facets.html`：分类工作台，按字段审计标签规模、搜索筛选并导出长尾标签、过载标签和动态状态候选值
+- `docs/facets.html`：分类工作台，按字段审计标签规模、搜索筛选、优先级筛选，并把长尾标签、过载标签和动态状态候选值导出或复制成治理清单
 - `docs/related.html`：关联网络页，展示标签共现、相似论文对和孤岛论文，帮助发现潜在研究簇
 - `docs/gaps.html`：研究缺口页，自动诊断研究线缺角色、缺分类、分类粒度、缺复习、缺代码观察和后续工作空档
 - `docs/taxonomy.html`：分类治理页，展示 domain/track/problem 层级、状态矩阵、研究线角色矩阵、状态工作流设计器、分类变更预览和治理队列
@@ -269,6 +269,7 @@ python3 scripts/export_reading_list.py docs --format links --status read
 ```bash
 python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md
 python3 scripts/export_taxonomy_actions.py docs --format csv --severity high --output docs/exports/taxonomy-actions.csv
+python3 scripts/export_taxonomy_actions.py docs --format csv --field topics --severity high --output docs/exports/topic-actions.csv
 python3 scripts/export_taxonomy_actions.py docs --format project --assignee taxonomy-owner --task-status ready --output docs/exports/taxonomy-project.csv
 python3 scripts/export_taxonomy_actions.py docs --format patch --action merge_candidate --target-value "Unified Label" --output docs/exports/taxonomy-action-patch.csv
 python3 scripts/export_taxonomy_balance.py docs --format project --max-score 50 --assignee taxonomy-owner --output docs/exports/taxonomy-balance-project.csv
