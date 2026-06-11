@@ -46,6 +46,7 @@ paper_reader/
 │   │   └── taxonomy.json
 │   └── .gitkeep
 ├── scripts/
+│   ├── apply_library_metadata.py
 │   ├── apply_review_plan.py
 │   ├── build_wiki.py
 │   ├── export_library_csv.py
@@ -64,6 +65,7 @@ paper_reader/
 - `scripts/render_report_html.py` 是稳定 HTML 渲染兜底脚本，用于修复公式裸露、图片破图等展示问题
 - `scripts/apply_review_plan.py` 用于把 `docs/review.json` 的建议复习日期安全写回报告 frontmatter，默认只 dry-run
 - `scripts/export_library_csv.py` 用于把 `papers.json`、`review.json` 和 `quality.json` 合并导出成 CSV，便于用表格工具批量管理
+- `scripts/apply_library_metadata.py` 用于把编辑后的 CSV 分类/状态字段安全写回报告 frontmatter，默认只 dry-run
 
 ## 工作流概览
 
@@ -182,6 +184,16 @@ python3 -m unittest discover -s tests
 ```bash
 python3 scripts/export_library_csv.py docs --output docs/library.csv
 ```
+
+把表格里编辑过的分类和状态字段写回报告 frontmatter：
+
+```bash
+python3 scripts/apply_library_metadata.py docs --input docs/library.csv
+python3 scripts/apply_library_metadata.py docs --input docs/library.csv --write
+python3 scripts/build_wiki.py docs
+```
+
+支持 `--field status --field topics` 限定字段，支持 `--slug <slug>` 限定论文；空单元格默认不会清空原值，需要显式加 `--clear-empty`。
 
 预览并写入复习计划建议：
 

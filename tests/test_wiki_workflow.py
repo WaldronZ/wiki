@@ -183,6 +183,40 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertTrue(row_by_slug["2601.00001-alpha-paper"]["suggested_next_review"])
             self.assertTrue(row_by_slug["2601.00001-alpha-paper"]["quality_score"])
 
+            patch_path = report_dir / "metadata_patch.csv"
+            with patch_path.open("w", encoding="utf-8", newline="") as handle:
+                writer = csv.DictWriter(handle, fieldnames=["slug", "status", "topics", "methods"])
+                writer.writeheader()
+                writer.writerow(
+                    {
+                        "slug": "2601.00001-alpha-paper",
+                        "status": "triaged",
+                        "topics": "LLM Serving; Request Scheduling",
+                        "methods": "Speculative Decoding; queueing",
+                    }
+                )
+
+            dry_metadata = self.run_cmd(
+                "scripts/apply_library_metadata.py",
+                str(report_dir),
+                "--input",
+                str(patch_path),
+            )
+            self.assertIn("DRY  2601.00001-alpha-paper", dry_metadata.stdout)
+            self.assertNotIn("status: triaged", (report_dir / "2601.00001-alpha-paper.md").read_text(encoding="utf-8"))
+
+            self.run_cmd(
+                "scripts/apply_library_metadata.py",
+                str(report_dir),
+                "--input",
+                str(patch_path),
+                "--write",
+            )
+            metadata_updated = (report_dir / "2601.00001-alpha-paper.md").read_text(encoding="utf-8")
+            self.assertIn("status: triaged", metadata_updated)
+            self.assertIn("  - Request Scheduling", metadata_updated)
+            self.assertIn("  - queueing", metadata_updated)
+
             dry = self.run_cmd("scripts/apply_review_plan.py", str(report_dir))
             self.assertIn("DRY  2601.00001-alpha-paper", dry.stdout)
             self.assertIn("OK   2501.00002-beta-paper", dry.stdout)
