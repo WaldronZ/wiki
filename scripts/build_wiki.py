@@ -7465,6 +7465,44 @@ def render_timeline(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       margin-bottom: 18px;
     }
     .timeline-summary .metric-card strong { font-size: 24px; }
+    .active-filters {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      min-height: 34px;
+      margin: -4px 0 16px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .active-filter-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      max-width: 280px;
+      min-height: 30px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--chip);
+      color: var(--ink);
+      padding: 0 10px;
+      font: inherit;
+      cursor: pointer;
+    }
+    .active-filter-chip span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .active-filter-chip b {
+      color: var(--muted);
+      font-weight: 750;
+    }
+    .active-filter-chip::after {
+      content: "x";
+      color: var(--muted);
+      font-weight: 850;
+    }
     @media (max-width: 760px) {
       .timeline-year { grid-template-columns: 1fr; }
       .timeline-year-head { position: static; }
@@ -7516,6 +7554,7 @@ def render_timeline(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       <button id="timelineReset" class="button" type="button">重置筛选</button>
     </div>
   </div>
+  <div class="active-filters" id="timelineActiveFilters" aria-live="polite"></div>
   <div class="timeline-summary">
     <div class="metric-card"><strong>{len(years)}</strong><span>覆盖年份</span></div>
     <div class="metric-card"><strong>{len(taxonomy["research_lines"])}</strong><span>研究线</span></div>
@@ -7538,6 +7577,7 @@ const timelineImportance = document.querySelector("#timelineImportance");
 const timelineCount = document.querySelector("#timelineCount");
 const timelineReset = document.querySelector("#timelineReset");
 const timelineCopyLink = document.querySelector("#timelineCopyLink");
+const timelineActiveFilters = document.querySelector("#timelineActiveFilters");
 const wikiControls = window.PAPER_WIKI.controls || {{}};
 const statusWorkflows = wikiControls.status_workflows || {{}};
 const activeStatusWorkflow = wikiControls.active_status_workflow || Object.keys(statusWorkflows)[0] || "default";
@@ -7557,6 +7597,18 @@ const timelineStateControls = [
   ["code", timelineCode],
   ["importance", timelineImportance],
 ];
+const timelineControlsByKey = new Map(timelineStateControls);
+const timelineFilterLabels = {{
+  q: "搜索",
+  line: "研究线",
+  track: "方向",
+  role: "角色",
+  workflow: "状态体系",
+  status: "状态",
+  stage: "阅读阶段",
+  code: "代码",
+  importance: "重要性",
+}};
 
 function timelineTokens(value) {{
   return String(value || "").split("|").filter(Boolean);
@@ -7624,6 +7676,51 @@ function timelineState() {{
   return state;
 }}
 
+function timelineCleanOptionLabel(label) {{
+  return String(label || "").replace(/\\s\\(\\d+\\)$/, "").replace(/\\s\\(默认\\)$/, "");
+}}
+
+function timelineDisplayValue(key, control) {{
+  if (key === "q") return control.value.trim();
+  const option = control.options && control.selectedIndex >= 0 ? control.options[control.selectedIndex] : null;
+  return timelineCleanOptionLabel(option ? option.textContent : control.value);
+}}
+
+function renderTimelineActiveFilters() {{
+  const state = timelineState();
+  const entries = Object.entries(state).filter(([key]) => timelineControlsByKey.has(key));
+  timelineActiveFilters.replaceChildren();
+  if (!entries.length) {{
+    timelineActiveFilters.textContent = "未设置筛选条件";
+    return;
+  }}
+  const prefix = document.createElement("span");
+  prefix.textContent = "当前筛选";
+  timelineActiveFilters.appendChild(prefix);
+  entries.forEach(([key]) => {{
+    const control = timelineControlsByKey.get(key);
+    const chip = document.createElement("button");
+    chip.className = "active-filter-chip";
+    chip.type = "button";
+    chip.dataset.filterKey = key;
+    chip.title = `移除${{timelineFilterLabels[key] || key}}筛选`;
+    const name = document.createElement("b");
+    name.textContent = timelineFilterLabels[key] || key;
+    const value = document.createElement("span");
+    value.textContent = timelineDisplayValue(key, control);
+    chip.append(name, value);
+    timelineActiveFilters.appendChild(chip);
+  }});
+}}
+
+function clearTimelineFilter(key) {{
+  const control = timelineControlsByKey.get(key);
+  if (!control) return;
+  control.value = timelineDefaultValue(key);
+  if (key === "workflow") applyTimelineWorkflow();
+  renderTimeline();
+}}
+
 function writeTimelineStateToUrl() {{
   const params = new URLSearchParams(timelineState());
   const query = params.toString();
@@ -7681,6 +7778,7 @@ function renderTimeline() {{
     section.querySelector(".timeline-year-count").textContent = count;
   }});
   timelineCount.textContent = `显示 ${{visible}} / ${{timelineItems.length}} 篇`;
+  renderTimelineActiveFilters();
   writeTimelineStateToUrl();
 }}
 
@@ -7697,6 +7795,11 @@ timelineReset.addEventListener("click", () => {{
   renderTimeline();
 }});
 timelineCopyLink.addEventListener("click", copyTimelineLink);
+timelineActiveFilters.addEventListener("click", event => {{
+  const target = event.target instanceof Element ? event.target.closest("[data-filter-key]") : null;
+  if (!target) return;
+  clearTimelineFilter(target.dataset.filterKey);
+}});
 populateTimelineWorkflowOptions();
 readTimelineStateFromUrl();
 renderTimeline();
@@ -7912,6 +8015,44 @@ def render_matrix(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       font-size: 15px;
       line-height: 1.35;
     }
+    .active-filters {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      min-height: 34px;
+      margin: -4px 0 16px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .active-filter-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      max-width: 280px;
+      min-height: 30px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--chip);
+      color: var(--ink);
+      padding: 0 10px;
+      font: inherit;
+      cursor: pointer;
+    }
+    .active-filter-chip span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .active-filter-chip b {
+      color: var(--muted);
+      font-weight: 750;
+    }
+    .active-filter-chip::after {
+      content: "x";
+      color: var(--muted);
+      font-weight: 850;
+    }
     @media (max-width: 980px) {
       .matrix-layout { grid-template-columns: 1fr; }
       .matrix-detail { position: static; }
@@ -7956,6 +8097,7 @@ def render_matrix(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       <button id="matrixReset" class="button" type="button">重置筛选</button>
     </div>
   </div>
+  <div class="active-filters" id="matrixActiveFilters" aria-live="polite"></div>
   <div class="matrix-layout">
     <div class="matrix-table-wrap">
       <table class="research-matrix">
@@ -7980,6 +8122,7 @@ const matrixStatus = document.querySelector("#matrixStatus");
 const matrixImportance = document.querySelector("#matrixImportance");
 const matrixReset = document.querySelector("#matrixReset");
 const matrixCopyLink = document.querySelector("#matrixCopyLink");
+const matrixActiveFilters = document.querySelector("#matrixActiveFilters");
 const matrixCount = document.querySelector("#matrixCount");
 const matrixDetailTitle = document.querySelector("#matrixDetailTitle");
 const matrixDetailMeta = document.querySelector("#matrixDetailMeta");
@@ -7997,6 +8140,14 @@ const matrixStateControls = [
   ["status", matrixStatus],
   ["importance", matrixImportance],
 ];
+const matrixControlsByKey = new Map(matrixStateControls);
+const matrixFilterLabels = {{
+  q: "搜索",
+  track: "方向",
+  workflow: "状态体系",
+  status: "状态",
+  importance: "重要性",
+}};
 
 function matrixTokens(value) {{
   return String(value || "").split("|").filter(Boolean);
@@ -8050,6 +8201,51 @@ function matrixState() {{
   return state;
 }}
 
+function matrixCleanOptionLabel(label) {{
+  return String(label || "").replace(/\\s\\(\\d+\\)$/, "").replace(/\\s\\(默认\\)$/, "");
+}}
+
+function matrixDisplayValue(key, control) {{
+  if (key === "q") return control.value.trim();
+  const option = control.options && control.selectedIndex >= 0 ? control.options[control.selectedIndex] : null;
+  return matrixCleanOptionLabel(option ? option.textContent : control.value);
+}}
+
+function renderMatrixActiveFilters() {{
+  const state = matrixState();
+  const entries = Object.entries(state).filter(([key]) => matrixControlsByKey.has(key));
+  matrixActiveFilters.replaceChildren();
+  if (!entries.length) {{
+    matrixActiveFilters.textContent = "未设置筛选条件";
+    return;
+  }}
+  const prefix = document.createElement("span");
+  prefix.textContent = "当前筛选";
+  matrixActiveFilters.appendChild(prefix);
+  entries.forEach(([key]) => {{
+    const control = matrixControlsByKey.get(key);
+    const chip = document.createElement("button");
+    chip.className = "active-filter-chip";
+    chip.type = "button";
+    chip.dataset.filterKey = key;
+    chip.title = `移除${{matrixFilterLabels[key] || key}}筛选`;
+    const name = document.createElement("b");
+    name.textContent = matrixFilterLabels[key] || key;
+    const value = document.createElement("span");
+    value.textContent = matrixDisplayValue(key, control);
+    chip.append(name, value);
+    matrixActiveFilters.appendChild(chip);
+  }});
+}}
+
+function clearMatrixFilter(key) {{
+  const control = matrixControlsByKey.get(key);
+  if (!control) return;
+  control.value = matrixDefaultValue(key);
+  if (key === "workflow") applyMatrixWorkflow();
+  renderMatrixFilters();
+}}
+
 function writeMatrixStateToUrl() {{
   const params = new URLSearchParams(matrixState());
   const query = params.toString();
@@ -8097,6 +8293,7 @@ function renderMatrixFilters() {{
     if (hit) visible += 1;
   }});
   matrixCount.textContent = `显示 ${{visible}} / ${{matrixRows.length}} 条研究线`;
+  renderMatrixActiveFilters();
   writeMatrixStateToUrl();
 }}
 
@@ -8134,6 +8331,11 @@ matrixReset.addEventListener("click", () => {{
   renderMatrixFilters();
 }});
 matrixCopyLink.addEventListener("click", copyMatrixLink);
+matrixActiveFilters.addEventListener("click", event => {{
+  const target = event.target instanceof Element ? event.target.closest("[data-filter-key]") : null;
+  if (!target) return;
+  clearMatrixFilter(target.dataset.filterKey);
+}});
 matrixCells.forEach(cell => cell.addEventListener("click", () => renderMatrixDetail(cell.dataset.line, cell.dataset.year)));
 populateMatrixWorkflowOptions();
 readMatrixStateFromUrl();
