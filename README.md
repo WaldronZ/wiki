@@ -132,8 +132,8 @@ paper_reader/
 - 所有 wiki 汇总页：提供全局快速跳转，可搜索主要页面；在首页和论文库等带论文数据的页面可直接跳到单篇报告
 - `docs/library.html`：论文库表格，适合大量论文的密集筛选、排序、列管理、密度切换、状态体系切换和批量管理
 - `docs/board.html`：状态看板，按自定义 `status` 分列，也可临时新增状态列，拖拽后导出 `status_board_patch.csv`
-- `docs/inbox.csv`：候选论文待处理池源数据，可手动追加 title/link/status/priority/tags/note
-- `docs/inbox.html`：候选论文待处理池，支持筛选、去重提示和复制阅读任务
+- `docs/inbox.csv`：候选论文待处理池源数据，可手动追加 id/title/link/status/priority/tags/note/added_at
+- `docs/inbox.html`：候选论文待处理池，支持筛选、去重提示、复制阅读任务、下载当前筛选 CSV 和复制 inbox 模板
 - `docs/quality.html`：质量治理页，集中展示弱元数据、分类粒度审计与 CSV 导出、标签归一化建议、taxonomy drift 和库内重复报告
 - `docs/review.html`：复习计划页，展示待复习、需建计划、已计划和高优先级队列
 - `docs/dashboard.html`：管理控制台，展示分类覆盖、分类均衡度、研究线健康度、待复习和待补分类队列
@@ -212,11 +212,11 @@ python3 scripts/build_wiki.py docs
 批量收集候选论文时，可以先维护 `docs/inbox.csv`：
 
 ```csv
-title,link,status,priority,tags,note
-Example Paper,https://arxiv.org/abs/2601.00001,queued,high,LLM Serving;Batching,先读方法
+id,title,link,status,priority,tags,note,added_at
+paper-1,Example Paper,https://arxiv.org/abs/2601.00001,queued,high,LLM Serving;Batching,先读方法,
 ```
 
-刷新后打开 `docs/inbox.html`，可以筛选候选论文、查看疑似重复项，并复制单篇论文或当前筛选结果的阅读任务给 agent 流程。
+刷新后打开 `docs/inbox.html`，可以筛选候选论文、查看疑似重复项，复制单篇论文或当前筛选结果的阅读任务给 agent 流程，也可以下载当前筛选 CSV 或复制标准 `inbox.csv` 模板。
 
 开源协作时，可以直接用 GitHub issue forms 收集输入：`Paper intake` 对应新增候选论文，`Taxonomy governance` 对应标签合并、拆分、状态 workflow 调整，`Report quality issue` 对应元数据、渲染、重复报告或过期分析问题。PR 模板会要求说明是否更新生成物、是否影响当前 active workflow，以及是否通过质量门禁。
 

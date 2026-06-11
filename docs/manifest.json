@@ -563,7 +563,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 44547,
-      "sha256": "598ff2881d8dc44795294bffafa55200bbaa59ba9b4b221c946da8ca00a1128b",
+      "sha256": "32a256fda9adc0a9c420da57a3d2c57d62b90276f391138924fab035123f7de9",
       "hash_mode": "raw"
     },
     {
@@ -622,8 +622,8 @@
       "description": "候选论文队列和去重提示",
       "exists": true,
       "status": "ok",
-      "size_bytes": 24337,
-      "sha256": "6d7d88bd5f476e69d7f977e165295d1c865dc08f6044a1a58900b4b658ad1a38",
+      "size_bytes": 26390,
+      "sha256": "f392f56bd4112e44a93eb5947b9b444e231931cf42b5b3be36db820a67e356e9",
       "hash_mode": "raw"
     },
     {

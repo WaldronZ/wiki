@@ -4736,6 +4736,7 @@ def render_inbox_row(item: dict[str, Any]) -> str:
     link = str(item.get("link") or "")
     link_html = f'<a href="{html.escape(link)}">{html.escape(link)}</a>' if link else ""
     duplicate = '<span class="flag">已在库中</span>' if item.get("duplicate") else ""
+    tags_text = "; ".join(str(tag) for tag in item.get("tags", []) if tag)
     prompt_bits = [
         item.get("title") or "",
         item.get("link") or "",
@@ -4744,8 +4745,15 @@ def render_inbox_row(item: dict[str, Any]) -> str:
     prompt = " ".join(str(bit) for bit in prompt_bits if bit).strip()
     return f"""<tr
   data-search="{html.escape(' '.join(str(value) for value in [item.get('title'), item.get('link'), item.get('arxiv_id'), item.get('note'), *item.get('tags', [])] if value).lower(), quote=True)}"
+  data-id="{html.escape(str(item.get("id") or ""), quote=True)}"
+  data-title="{html.escape(str(item.get("title") or ""), quote=True)}"
+  data-link="{html.escape(str(item.get("link") or ""), quote=True)}"
+  data-arxiv-id="{html.escape(str(item.get("arxiv_id") or ""), quote=True)}"
   data-status="{html.escape(str(item.get("status") or ""), quote=True)}"
   data-priority="{html.escape(str(item.get("priority") or ""), quote=True)}"
+  data-tags="{html.escape(tags_text, quote=True)}"
+  data-note="{html.escape(str(item.get("note") or ""), quote=True)}"
+  data-added-at="{html.escape(str(item.get("added_at") or ""), quote=True)}"
   data-duplicate="{"yes" if item.get("duplicate") else "no"}">
   <td class="library-title">
     <strong>{html.escape(str(item.get("title") or "Untitled"))}</strong>
@@ -4797,6 +4805,8 @@ def render_inbox(report_dir: Path, items: list[dict[str, Any]]) -> None:
     <strong id="inboxCount">显示 {len(items)} / {len(items)} 条</strong>
     <div class="results-actions">
       <button id="copyVisiblePrompts" class="button" type="button">复制当前筛选任务</button>
+      <button id="downloadInboxCsv" class="button" type="button">下载当前 CSV</button>
+      <button id="copyInboxTemplate" class="button" type="button">复制 CSV 模板</button>
     </div>
   </div>
   <div class="table-wrap">
@@ -4814,11 +4824,47 @@ const inboxPriority = document.querySelector("#inboxPriority");
 const inboxDuplicate = document.querySelector("#inboxDuplicate");
 const inboxCount = document.querySelector("#inboxCount");
 const copyVisiblePrompts = document.querySelector("#copyVisiblePrompts");
+const downloadInboxCsv = document.querySelector("#downloadInboxCsv");
+const copyInboxTemplate = document.querySelector("#copyInboxTemplate");
 let visibleInboxRows = [...inboxRows];
+const inboxCsvHeader = ["id", "title", "link", "status", "priority", "tags", "note", "added_at"];
 
 function promptForRow(row) {{
   const button = row.querySelector(".copy-prompt");
   return button ? `请按 AutoPaperReader 工作流阅读这篇论文：${{button.dataset.prompt}}` : "";
+}}
+
+function csvCell(value) {{
+  const text = String(value ?? "");
+  return (text.includes(",") || text.includes('"') || text.includes("\\n"))
+    ? `"${{text.replaceAll('"', '""')}}"`
+    : text;
+}}
+
+function inboxRowsToCsv(rows) {{
+  const body = rows.map(row => [
+    row.dataset.id,
+    row.dataset.title,
+    row.dataset.link,
+    row.dataset.status,
+    row.dataset.priority,
+    row.dataset.tags,
+    row.dataset.note,
+    row.dataset.addedAt,
+  ]);
+  return [inboxCsvHeader, ...body].map(row => row.map(csvCell).join(",")).join("\\n") + "\\n";
+}}
+
+function downloadText(filename, text, type) {{
+  const blob = new Blob([text], {{ type }});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
 }}
 
 async function copyText(text, fallbackTitle) {{
@@ -4860,6 +4906,19 @@ copyVisiblePrompts.addEventListener("click", async () => {{
   const copied = await copyText(text, "复制当前筛选任务");
   copyVisiblePrompts.textContent = copied ? `已复制 ${{prompts.length}} 条` : "复制当前筛选任务";
   if (copied) setTimeout(() => copyVisiblePrompts.textContent = "复制当前筛选任务", 1400);
+}});
+downloadInboxCsv.addEventListener("click", () => {{
+  if (!visibleInboxRows.length) {{
+    window.alert("当前筛选结果为空。");
+    return;
+  }}
+  downloadText("inbox_filtered.csv", inboxRowsToCsv(visibleInboxRows), "text/csv;charset=utf-8");
+}});
+copyInboxTemplate.addEventListener("click", async () => {{
+  const template = inboxCsvHeader.join(",") + "\\n" + ["paper-1", "Paper title", "https://arxiv.org/abs/0000.00000", "queued", "medium", "tag-a; tag-b", "why this matters", ""].map(csvCell).join(",") + "\\n";
+  const copied = await copyText(template, "复制 inbox.csv 模板");
+  copyInboxTemplate.textContent = copied ? "已复制模板" : "复制 CSV 模板";
+  if (copied) setTimeout(() => copyInboxTemplate.textContent = "复制 CSV 模板", 1400);
 }});
 document.querySelectorAll(".copy-prompt").forEach(button => {{
   button.addEventListener("click", async () => {{
