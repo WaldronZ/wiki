@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T05:57:07",
+  "generated_at": "2026-06-12T06:00:39",
   "name": "AutoPaperReader Wiki",
   "count": 5,
   "publish_ready": false,
@@ -981,7 +981,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 85643,
-      "sha256": "170360b698279bbe3ad04f685b6940143300aba4c211715a4789e6f3ecd38f5a",
+      "sha256": "3da2230852593db08fcd290eadbff22c1f90819f5db62c6ae099da3b116d7a61",
       "hash_mode": "raw"
     },
     {
@@ -991,7 +991,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 50528,
-      "sha256": "83480f57f7de6e05ebf99e86d2dece5681a22c7a0bb9978cc30ab431ab49c636",
+      "sha256": "aa6b3d44955d94da60a10e076cc8014a90ae18f68da5b00884c44eb7b212aef4",
       "hash_mode": "raw"
     },
     {
@@ -1090,8 +1090,8 @@
       "description": "动态选择状态体系、阶段和值并生成可分享视图",
       "exists": true,
       "status": "ok",
-      "size_bytes": 62598,
-      "sha256": "e3b3df8eac11efabf7b6f99ed2ead4c705bd12eaea23285c0e6c73cf61ea790e",
+      "size_bytes": 67201,
+      "sha256": "99d3d2ebc80908b67b9aae5b43c8c384f5b9c959ccfa264073cc9da93c85c359",
       "hash_mode": "normalized"
     },
     {
@@ -1191,7 +1191,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 52664,
-      "sha256": "5b98f6a4913e3708322f5c8bf023046e2f5f51f01ffca6bd3428181027ce0867",
+      "sha256": "e4f9a735833695b2c5c0f41997919425558c3f9ff9fb1ad8db35e0dc924f11fb",
       "hash_mode": "raw"
     },
     {
@@ -1420,8 +1420,8 @@
       "description": "运行时状态选择器、状态字段选项和论文状态快照",
       "exists": true,
       "status": "ok",
-      "size_bytes": 24520,
-      "sha256": "78e3526ccd85688dc08fdb31d61eb45fcb47556b64e30fb4f5053f67b26c6401",
+      "size_bytes": 24696,
+      "sha256": "aed6a43de3dd9e93fb0ea6e32e9c7f0cbce3d9338e19609eab5aab92e94508ca",
       "hash_mode": "normalized"
     },
     {
@@ -1521,7 +1521,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 39799,
-      "sha256": "e1fe2ca6945200eafdd2b79809bb064d3f9a641682946fd1e22abfb37d219dd2",
+      "sha256": "3a75c9b67ab1ab734485ec1b32d4f347814447057aa99f99167a2731093e29df",
       "hash_mode": "normalized"
     },
     {
@@ -1531,7 +1531,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 15199,
-      "sha256": "c15ae035a87e39a7e12ffd9bc8959e5b23c0634df80efb5d3409614c836abc37",
+      "sha256": "72e4f88efb35f6b1272c94823b5e105e27f3c295e61ff9aad6b2f7fca886e3d2",
       "hash_mode": "normalized"
     },
     {

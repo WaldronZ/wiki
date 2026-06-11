@@ -2015,6 +2015,8 @@ def build_status_selector_payload(papers: list[dict[str, Any]]) -> dict[str, Any
         "commands": [
             "python3 scripts/apply_status_workflow.py docs --input <taxonomy_status_workflow.json>",
             "python3 scripts/apply_status_workflow.py docs --input <taxonomy_status_workflow.json> --write",
+            "python3 scripts/apply_shared_views.py docs --input <status_shared_view.json>",
+            "python3 scripts/apply_shared_views.py docs --input <status_shared_view.json> --write",
             "python3 scripts/apply_library_metadata.py docs --input <status_patch.csv>",
         ],
     }
@@ -8892,6 +8894,40 @@ def render_status(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       gap: 8px;
       margin-top: 12px;
     }
+    .status-builder {
+      display: grid;
+      grid-template-columns: minmax(180px, 1fr) minmax(160px, 220px);
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .status-builder label {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .status-builder input,
+    .status-builder select {
+      width: 100%;
+    }
+    .status-output {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .status-url {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f8f5ed;
+      color: var(--ink);
+      padding: 9px 10px;
+      font: 13px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .status-summary {
+      color: var(--muted);
+      font-size: 13px;
+    }
     .status-config {
       width: 100%;
       min-height: 160px;
@@ -8903,7 +8939,10 @@ def render_status(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       padding: 10px;
       font: 13px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
     }
-    @media (max-width: 900px) { .status-layout { grid-template-columns: 1fr; } }
+    @media (max-width: 900px) {
+      .status-layout { grid-template-columns: 1fr; }
+      .status-builder { grid-template-columns: 1fr; }
+    }
     """
     body = f"""
 <header class="shell">
@@ -8934,8 +8973,25 @@ def render_status(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         <a class="button" id="openLibrary" href="library.html">打开论文库</a>
         <a class="button" id="openBoard" href="board.html">打开看板</a>
         <a class="button" id="openIndex" href="index.html">打开首页</a>
+        <button class="button" type="button" id="copyStatusUrl">复制当前链接</button>
         <button class="button" type="button" id="copyStatusView">复制共享视图</button>
+        <button class="button" type="button" id="downloadStatusView">下载共享视图</button>
         <button class="button" type="button" id="copyStatusConfig">复制当前 workflow 配置</button>
+      </div>
+      <div class="status-builder">
+        <label><span>场景名称</span><input id="statusViewName" type="text" value="状态视图"></label>
+        <label>
+          <span>共享视图页面</span>
+          <select id="statusViewPage">
+            <option value="library">论文库</option>
+            <option value="index">首页</option>
+            <option value="all">全局</option>
+          </select>
+        </label>
+      </div>
+      <div class="status-output">
+        <input class="status-url" id="statusShareUrl" readonly value="status.html">
+        <p class="status-summary" id="statusSelectionSummary"></p>
       </div>
       <h2 class="section-title">当前候选值</h2>
       <div class="status-grid" id="statusChoices"></div>
@@ -8943,8 +8999,10 @@ def render_status(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <aside class="status-panel">
       <h2 class="section-title">配置片段</h2>
       <textarea class="status-config" id="statusConfigPreview" readonly></textarea>
+      <h2 class="section-title">共享视图包</h2>
+      <textarea class="status-config" id="statusSharedViewPreview" readonly></textarea>
       <div class="bulk-actions">{command_buttons}</div>
-      <p class="meta">复制 JSON 后可用 apply_status_workflow.py 预览或写回；页面选择只影响当前浏览视图，不会直接修改报告。</p>
+      <p class="meta">复制 JSON 后可用 apply_status_workflow.py 或 apply_shared_views.py 预览/写回；页面选择只影响当前浏览视图，不会直接修改报告。</p>
     </aside>
   </section>
   <section>
@@ -8962,6 +9020,11 @@ const statusChoices = document.querySelector("#statusChoices");
 const statusRows = document.querySelector("#statusRows");
 const statusResultCount = document.querySelector("#statusResultCount");
 const statusConfigPreview = document.querySelector("#statusConfigPreview");
+const statusSharedViewPreview = document.querySelector("#statusSharedViewPreview");
+const statusShareUrl = document.querySelector("#statusShareUrl");
+const statusSelectionSummary = document.querySelector("#statusSelectionSummary");
+const statusViewName = document.querySelector("#statusViewName");
+const statusViewPage = document.querySelector("#statusViewPage");
 const openLibrary = document.querySelector("#openLibrary");
 const openBoard = document.querySelector("#openBoard");
 const openIndex = document.querySelector("#openIndex");
@@ -9023,12 +9086,49 @@ function stateFromControls() {{
   }};
 }}
 
+function compactState() {{
+  return Object.fromEntries(Object.entries(stateFromControls()).filter(([, value]) => value));
+}}
+
 function queryHref(page) {{
   const url = new URL(page, window.location.href);
   Object.entries(stateFromControls()).forEach(([key, value]) => {{
     if (value) url.searchParams.set(key, value);
   }});
   return `${{url.pathname.split("/").pop()}}${{url.search}}`;
+}}
+
+function targetPageHref() {{
+  const page = statusViewPage.value === "index" ? "index.html" : "library.html";
+  return queryHref(page);
+}}
+
+function sharedViewPayload() {{
+  const state = compactState();
+  const page = statusViewPage.value || "library";
+  const name = statusViewName.value.trim() || `状态视图-${{state.workflow || "default"}}`;
+  return {{
+    page,
+    shared_views: [
+      {{
+        name,
+        page,
+        state,
+      }},
+    ],
+  }};
+}}
+
+function downloadJson(filename, payload) {{
+  const blob = new Blob([JSON.stringify(payload, null, 2) + "\\n"], {{ type: "application/json;charset=utf-8" }});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
 }}
 
 function renderConfig(workflow) {{
@@ -9044,6 +9144,20 @@ function renderConfig(workflow) {{
     }},
   }};
   statusConfigPreview.value = JSON.stringify(config, null, 2);
+}}
+
+function renderSharedView(rows) {{
+  const state = compactState();
+  const payload = sharedViewPayload();
+  statusSharedViewPreview.value = JSON.stringify(payload, null, 2);
+  statusShareUrl.value = targetPageHref();
+  const selected = [
+    state.workflow ? `workflow=${{state.workflow}}` : "",
+    state.status ? `status=${{state.status}}` : "",
+    state.stage ? `reading=${{state.stage}}` : "",
+    state.reviewStage ? `review=${{state.reviewStage}}` : "",
+  ].filter(Boolean).join(" / ") || "全部状态";
+  statusSelectionSummary.textContent = `当前场景命中 ${{rows.length}} 篇论文；${{selected}}。共享视图可写回 guides/taxonomy.json，之后首页和论文库会出现同一套入口。`;
 }}
 
 function renderChoices(workflow, statusItems) {{
@@ -9081,6 +9195,7 @@ function renderRows() {{
   const rows = filteredPapers();
   statusResultCount.textContent = `${{rows.length}} / ${{statusPayload.count}}`;
   statusRows.replaceChildren();
+  renderSharedView(rows);
   if (!rows.length) {{
     const row = document.createElement("tr");
     row.innerHTML = `<td colspan="6" class="empty">当前选择没有命中论文。</td>`;
@@ -9105,6 +9220,7 @@ function syncLinks() {{
   openLibrary.href = queryHref("library.html");
   openBoard.href = queryHref("board.html");
   openIndex.href = queryHref("index.html");
+  statusShareUrl.value = targetPageHref();
 }}
 
 function renderStatus() {{
@@ -9139,11 +9255,11 @@ async function copyText(value, fallbackTitle) {{
   }}
 }}
 
-document.querySelector("#copyStatusView").addEventListener("click", () => {{
-  const state = Object.fromEntries(Object.entries(stateFromControls()).filter(([, value]) => value));
-  const payload = {{ name: `状态视图-${{state.workflow || "default"}}`, page: "library", state }};
-  copyText(JSON.stringify(payload, null, 2), "复制共享视图");
-}});
+document.querySelector("#copyStatusUrl").addEventListener("click", () => copyText(statusShareUrl.value, "复制当前链接"));
+
+document.querySelector("#copyStatusView").addEventListener("click", () => copyText(statusSharedViewPreview.value, "复制共享视图"));
+
+document.querySelector("#downloadStatusView").addEventListener("click", () => downloadJson("status_shared_view.json", sharedViewPayload()));
 
 document.querySelector("#copyStatusConfig").addEventListener("click", () => copyText(statusConfigPreview.value, "复制状态配置"));
 
@@ -9156,7 +9272,7 @@ document.querySelectorAll(".copy-status-command").forEach(button => {{
   }});
 }});
 
-[statusWorkflow, statusValue, statusStage, statusReview].forEach(control => {{
+[statusWorkflow, statusValue, statusStage, statusReview, statusViewName, statusViewPage].forEach(control => {{
   control.addEventListener("input", () => {{
     if (control === statusWorkflow) {{
       statusValue.value = "";
