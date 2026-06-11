@@ -542,8 +542,8 @@
       "description": "密集筛选、列管理、批量更新",
       "exists": true,
       "status": "ok",
-      "size_bytes": 101555,
-      "sha256": "e7ecfdd4740a70f4e1f8f6c6d98ed974a7738aa344ad717f99085fbee29123b8",
+      "size_bytes": 102321,
+      "sha256": "27a886fc42dd37383bc6cf46c2c1613fbaf32a410306f84eee3f62fc75806dad",
       "hash_mode": "raw"
     },
     {
@@ -563,7 +563,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 44547,
-      "sha256": "8f224c2247630a2f7095c9fedcf53722352f33deefc5b3975c32c36c556db7c6",
+      "sha256": "999e486a7827e036192697af212761e127f4b25c8a7653aeadc61eaf8e14c92c",
       "hash_mode": "raw"
     },
     {

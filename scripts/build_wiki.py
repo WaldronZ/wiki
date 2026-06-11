@@ -3174,6 +3174,7 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <select id="status"><option value="">全部状态</option>{render_topic_options(taxonomy["statuses"])}</select>
     <select id="stage"><option value="">阅读阶段</option>{render_topic_options(taxonomy["reading_stages"])}</select>
     <select id="reviewStage"><option value="">复习阶段</option>{render_topic_options(taxonomy["review_stages"])}</select>
+    <select id="review"><option value="">复习队列</option><option value="due">到期复习</option><option value="none">未设置复习</option><option value="planned">已设置复习</option></select>
     <select id="code"><option value="">代码状态</option><option value="yes">有代码</option><option value="no">无代码</option></select>
     <select id="importance"><option value="">重要性</option><option value="5">5 星</option><option value="4">4 星及以上</option><option value="3">3 星及以上</option></select>
     <select id="sort"><option value="default">默认排序</option><option value="importance">重要性优先</option><option value="updated">最近更新</option><option value="year">年份新到旧</option><option value="title">标题 A-Z</option></select>
@@ -3311,6 +3312,7 @@ const statusWorkflow = document.querySelector("#statusWorkflow");
 const status = document.querySelector("#status");
 const stage = document.querySelector("#stage");
 const reviewStage = document.querySelector("#reviewStage");
+const review = document.querySelector("#review");
 const code = document.querySelector("#code");
 const importance = document.querySelector("#importance");
 const sort = document.querySelector("#sort");
@@ -3395,6 +3397,7 @@ const controls = [
   ["status", status],
   ["stage", stage],
   ["reviewStage", reviewStage],
+  ["review", review],
   ["code", code],
   ["importance", importance],
   ["sort", sort],
@@ -3414,6 +3417,7 @@ const activeFilterLabels = {{
   status: "状态",
   stage: "阅读阶段",
   reviewStage: "复习阶段",
+  review: "复习队列",
   code: "代码",
   importance: "重要性",
 }};
@@ -3742,6 +3746,15 @@ function visibleRows() {{
 
 function selectedRows() {{
   return allRows.filter(row => row.querySelector(".row-check").checked);
+}}
+
+function matchesReviewQueue(row, value, today = localDateString()) {{
+  if (!value) return true;
+  const nextReview = row.dataset.nextReview || "";
+  if (value === "none") return !nextReview;
+  if (value === "planned") return Boolean(nextReview);
+  if (value === "due") return Boolean(nextReview && nextReview <= today);
+  return true;
 }}
 
 function percentLabel(count, total) {{
@@ -4088,6 +4101,8 @@ function buildPatchRows() {{
 function render() {{
   const q = search.value.trim().toLowerCase();
   const minImportance = Number(importance.value || 0);
+  const reviewValue = review.value;
+  const today = localDateString();
   const filtered = allRows.filter(row => {{
     return (!q || row.dataset.search.includes(q))
       && hasToken(row, "domains", domain.value)
@@ -4100,6 +4115,7 @@ function render() {{
       && (!status.value || row.dataset.status === status.value)
       && (!stage.value || row.dataset.stage === stage.value)
       && (!reviewStage.value || row.dataset.reviewStage === reviewStage.value)
+      && matchesReviewQueue(row, reviewValue, today)
       && (!code.value || row.dataset.code === code.value)
       && (!minImportance || Number(row.dataset.importance || 0) >= minImportance);
   }});
