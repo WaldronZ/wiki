@@ -38,6 +38,7 @@ GENERATED_FIXED_PATHS = (
     "dashboard.html",
     "taxonomy.html",
     "timeline.html",
+    "matrix.html",
     "tags.html",
     "lines/index.html",
 )
@@ -1420,6 +1421,7 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="timeline.html">时间轴</a>
+    <a class="stat" href="matrix.html">研究矩阵</a>
     <a class="stat" href="lines/index.html">研究线</a>
     <a class="stat" href="tags.html">分类总览</a>
     <a class="stat" href="quality.json">质量 JSON</a>
@@ -1930,6 +1932,7 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="timeline.html">时间轴</a>
+    <a class="stat" href="matrix.html">研究矩阵</a>
     <a class="stat" href="lines/index.html">研究线</a>
     <a class="stat" href="tags.html">分类总览</a>
     <a class="stat" href="quality.json">质量 JSON</a>
@@ -2497,6 +2500,7 @@ def render_board(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="timeline.html">时间轴</a>
+    <a class="stat" href="matrix.html">研究矩阵</a>
     <span class="stat">论文 {len(papers)}</span>
     <span class="stat">状态 {len(statuses)}</span>
   </div>
@@ -3111,6 +3115,7 @@ def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="lines/index.html">研究线</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="timeline.html">时间轴</a>
+    <a class="stat" href="matrix.html">研究矩阵</a>
     <a class="stat" href="tags.html">分类总览</a>
     <a class="stat" href="quality.json">质量 JSON</a>
     <a class="stat" href="stats.json">统计 JSON</a>
@@ -3374,6 +3379,7 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="timeline.html">时间轴</a>
+    <a class="stat" href="matrix.html">研究矩阵</a>
     <a class="stat" href="tags.html">分类总览</a>
     {guide_link}
     <a class="stat" href="stats.json">统计 JSON</a>
@@ -3723,6 +3729,333 @@ renderTimeline();
     (report_dir / "timeline.html").write_text(page_shell("研究路线时间轴", body, extra_css=timeline_css), encoding="utf-8")
 
 
+def render_matrix(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    grouped: dict[str, dict[str, list[dict[str, Any]]]] = defaultdict(lambda: defaultdict(list))
+    for paper in papers:
+        line = str(paper.get("research_line") or "Unassigned")
+        year = str(paper.get("year") or "unknown")
+        grouped[line][year].append(paper)
+
+    years = sorted(
+        {str(paper.get("year") or "unknown") for paper in papers},
+        key=lambda value: int(value) if value.isdigit() else -1,
+        reverse=True,
+    )
+    lines = sorted(
+        grouped,
+        key=lambda line: (-sum(len(items) for items in grouped[line].values()), line == "Unassigned", line.lower()),
+    )
+    max_count = max((len(items) for by_year in grouped.values() for items in by_year.values()), default=0)
+
+    def cell_intensity(count: int) -> int:
+        if not count or not max_count:
+            return 0
+        return max(1, min(5, round(count * 5 / max_count)))
+
+    rows = []
+    for line in lines:
+        line_items = [paper for items in grouped[line].values() for paper in items]
+        tracks = attr_tokens(sorted({track for paper in line_items for track in paper.get("tracks", [])}))
+        statuses = attr_tokens(sorted({str(paper.get("status") or "") for paper in line_items if paper.get("status")}))
+        max_importance = max((int(paper.get("importance") or 0) for paper in line_items), default=0)
+        cells = []
+        for year in years:
+            items = grouped[line].get(year, [])
+            count = len(items)
+            titles = "; ".join(str(paper.get("title_zh") or paper.get("title") or paper["slug"]) for paper in items[:4])
+            cells.append(
+                f"""<td>
+  <button class="matrix-cell heat-{cell_intensity(count)}" type="button"
+    data-line="{html.escape(line, quote=True)}"
+    data-year="{html.escape(year, quote=True)}"
+    data-count="{count}"
+    aria-label="{html.escape(f'{line} {year} {count} 篇', quote=True)}">
+    <strong>{count if count else ""}</strong>
+    <span>{html.escape(titles)}</span>
+  </button>
+</td>"""
+            )
+        rows.append(
+            f"""<tr class="matrix-row"
+  data-line="{html.escape(line, quote=True)}"
+  data-search="{html.escape(line.lower(), quote=True)}"
+  data-tracks="{html.escape(tracks, quote=True)}"
+  data-statuses="{html.escape(statuses, quote=True)}"
+  data-importance="{max_importance}">
+  <th scope="row"><span>{html.escape(line)}</span><small>{len(line_items)} 篇</small></th>
+  {"".join(cells)}
+</tr>"""
+        )
+
+    matrix_items = []
+    for paper in papers:
+        matrix_items.append(
+            {
+                "slug": paper["slug"],
+                "title": paper.get("title") or "",
+                "title_zh": paper.get("title_zh") or "",
+                "title_en": paper.get("title_en") or "",
+                "line": paper.get("research_line") or "Unassigned",
+                "year": str(paper.get("year") or "unknown"),
+                "role": paper.get("line_role") or "",
+                "status": paper.get("status") or "",
+                "reading_stage": paper.get("reading_stage") or "",
+                "importance": paper.get("importance") or "",
+                "has_code": bool(paper.get("has_code")),
+                "href": paper.get("html_path") or paper.get("md_path") or "",
+                "topics": paper.get("topics", [])[:4],
+                "methods": paper.get("methods", [])[:4],
+            }
+        )
+
+    taxonomy = taxonomy_counts(papers)
+    header_years = "".join(f"<th>{html.escape(year)}</th>" for year in years)
+    matrix_css = """
+    .matrix-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+      gap: 16px;
+      align-items: start;
+    }
+    .matrix-table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+    .research-matrix {
+      width: 100%;
+      min-width: 760px;
+      border-collapse: collapse;
+    }
+    .research-matrix th,
+    .research-matrix td {
+      border-bottom: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      padding: 8px;
+      vertical-align: middle;
+    }
+    .research-matrix thead th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: #f0ebe1;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+    .research-matrix tbody th {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      width: 220px;
+      background: var(--panel);
+      text-align: left;
+    }
+    .research-matrix tbody th span {
+      display: block;
+      line-height: 1.3;
+    }
+    .research-matrix tbody th small {
+      color: var(--muted);
+      font-weight: 650;
+    }
+    .research-matrix tr[hidden] { display: none; }
+    .matrix-cell {
+      display: grid;
+      place-items: center;
+      gap: 3px;
+      width: 100%;
+      min-width: 76px;
+      min-height: 54px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #faf7f0;
+      color: var(--ink);
+      cursor: pointer;
+      font: inherit;
+    }
+    .matrix-cell strong {
+      font-size: 18px;
+      line-height: 1;
+    }
+    .matrix-cell span {
+      max-width: 120px;
+      overflow: hidden;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.25;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .matrix-cell.heat-0 { opacity: .35; }
+    .matrix-cell.heat-1 { background: #edf3f1; }
+    .matrix-cell.heat-2 { background: #d9ebe8; }
+    .matrix-cell.heat-3 { background: #b9d9d6; }
+    .matrix-cell.heat-4 { background: #86bbb7; }
+    .matrix-cell.heat-5 { background: #4f9691; color: #fff; }
+    .matrix-cell.heat-5 span { color: #eef8f6; }
+    .matrix-cell.active {
+      outline: 3px solid color-mix(in srgb, var(--accent) 48%, transparent);
+      outline-offset: 2px;
+    }
+    .matrix-detail {
+      position: sticky;
+      top: 86px;
+      display: grid;
+      gap: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 16px;
+    }
+    .matrix-detail h2 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.25;
+    }
+    .matrix-detail-list {
+      display: grid;
+      gap: 10px;
+    }
+    .matrix-paper {
+      display: grid;
+      gap: 6px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fffaf2;
+    }
+    .matrix-paper h3 {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.35;
+    }
+    @media (max-width: 980px) {
+      .matrix-layout { grid-template-columns: 1fr; }
+      .matrix-detail { position: static; }
+    }
+    """
+    data = {"papers": matrix_items}
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Research Matrix</div>
+  <h1>研究线年份矩阵</h1>
+  <p class="lead">用矩阵方式查看每条研究线在不同年份的论文覆盖，快速发现高密度阶段、空档年份和需要补读的方向。</p>
+  <div class="stats">
+    <a class="stat" href="index.html">卡片首页</a>
+    <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="timeline.html">时间轴</a>
+    <a class="stat" href="matrix.html">研究矩阵</a>
+    <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="taxonomy.html">分类治理</a>
+    <a class="stat" href="lines/index.html">研究线</a>
+    <span class="stat">论文 {len(papers)}</span>
+    <span class="stat">年份 {len(years)}</span>
+    <span class="stat">研究线 {len(lines)}</span>
+  </div>
+</header>
+<div class="toolbar">
+  <div class="shell controls">
+    <input id="matrixSearch" type="search" placeholder="搜索研究线">
+    <select id="matrixTrack"><option value="">全部方向</option>{render_topic_options(taxonomy["tracks"])}</select>
+    <select id="matrixStatus"><option value="">全部状态</option>{render_topic_options(taxonomy["statuses"])}</select>
+    <select id="matrixImportance"><option value="">重要性</option><option value="5">含 5 星</option><option value="4">含 4 星及以上</option><option value="3">含 3 星及以上</option></select>
+  </div>
+</div>
+<main class="shell">
+  <div class="results-bar">
+    <strong id="matrixCount">显示 {len(lines)} / {len(lines)} 条研究线</strong>
+    <button id="matrixReset" class="button" type="button">重置筛选</button>
+  </div>
+  <div class="matrix-layout">
+    <div class="matrix-table-wrap">
+      <table class="research-matrix">
+        <thead><tr><th>研究线</th>{header_years}</tr></thead>
+        <tbody>{"".join(rows)}</tbody>
+      </table>
+    </div>
+    <aside class="matrix-detail" aria-live="polite">
+      <h2 id="matrixDetailTitle">选择一个格子</h2>
+      <p id="matrixDetailMeta" class="meta">点击矩阵中的数字，查看该研究线该年份的论文。</p>
+      <div id="matrixDetailList" class="matrix-detail-list"></div>
+    </aside>
+  </div>
+</main>
+<script>
+const matrixRows = Array.from(document.querySelectorAll(".matrix-row"));
+const matrixCells = Array.from(document.querySelectorAll(".matrix-cell"));
+const matrixSearch = document.querySelector("#matrixSearch");
+const matrixTrack = document.querySelector("#matrixTrack");
+const matrixStatus = document.querySelector("#matrixStatus");
+const matrixImportance = document.querySelector("#matrixImportance");
+const matrixReset = document.querySelector("#matrixReset");
+const matrixCount = document.querySelector("#matrixCount");
+const matrixDetailTitle = document.querySelector("#matrixDetailTitle");
+const matrixDetailMeta = document.querySelector("#matrixDetailMeta");
+const matrixDetailList = document.querySelector("#matrixDetailList");
+const matrixPapers = window.PAPER_WIKI.papers || [];
+
+function matrixTokens(value) {{
+  return String(value || "").split("|").filter(Boolean);
+}}
+
+function esc(value) {{
+  return String(value ?? "").replace(/[&<>"']/g, char => ({{ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }}[char]));
+}}
+
+function renderMatrixFilters() {{
+  const q = matrixSearch.value.trim().toLowerCase();
+  const minImportance = Number(matrixImportance.value || 0);
+  let visible = 0;
+  matrixRows.forEach(row => {{
+    const hit = (!q || row.dataset.search.includes(q))
+      && (!matrixTrack.value || matrixTokens(row.dataset.tracks).includes(matrixTrack.value))
+      && (!matrixStatus.value || matrixTokens(row.dataset.statuses).includes(matrixStatus.value))
+      && (!minImportance || Number(row.dataset.importance || 0) >= minImportance);
+    row.hidden = !hit;
+    if (hit) visible += 1;
+  }});
+  matrixCount.textContent = `显示 ${{visible}} / ${{matrixRows.length}} 条研究线`;
+}}
+
+function renderMatrixDetail(line, year) {{
+  matrixCells.forEach(cell => cell.classList.toggle("active", cell.dataset.line === line && cell.dataset.year === year));
+  const papers = matrixPapers.filter(paper => paper.line === line && paper.year === year);
+  matrixDetailTitle.textContent = `${{line}} / ${{year}}`;
+  matrixDetailMeta.textContent = `${{papers.length}} 篇论文`;
+  if (!papers.length) {{
+    matrixDetailList.innerHTML = '<div class="empty">这个格子还没有论文。</div>';
+    return;
+  }}
+  matrixDetailList.innerHTML = papers.map(paper => {{
+    const labels = [paper.role, paper.status, paper.reading_stage, paper.importance ? `I ${{paper.importance}}` : "", paper.has_code ? "code" : ""].filter(Boolean);
+    const chips = [...(paper.topics || []), ...(paper.methods || [])].slice(0, 6);
+    return `<article class="matrix-paper">
+      <h3><a href="${{esc(paper.href)}}">${{esc(paper.title_zh || paper.title)}}</a></h3>
+      <div class="meta">${{esc(paper.title_en || "")}}</div>
+      <div class="card-flags">${{labels.map(label => `<span class="flag">${{esc(label)}}</span>`).join("")}}</div>
+      <div class="chips">${{chips.map(chip => `<span class="chip">${{esc(chip)}}</span>`).join("")}}</div>
+    </article>`;
+  }}).join("");
+}}
+
+[matrixSearch, matrixTrack, matrixStatus, matrixImportance].forEach(control => control.addEventListener("input", renderMatrixFilters));
+matrixReset.addEventListener("click", () => {{
+  [matrixSearch, matrixTrack, matrixStatus, matrixImportance].forEach(control => {{
+    control.value = "";
+  }});
+  renderMatrixFilters();
+}});
+matrixCells.forEach(cell => cell.addEventListener("click", () => renderMatrixDetail(cell.dataset.line, cell.dataset.year)));
+renderMatrixFilters();
+const firstNonEmpty = matrixCells.find(cell => Number(cell.dataset.count || 0) > 0);
+if (firstNonEmpty) renderMatrixDetail(firstNonEmpty.dataset.line, firstNonEmpty.dataset.year);
+</script>
+"""
+    (report_dir / "matrix.html").write_text(page_shell("研究线年份矩阵", body, data, matrix_css), encoding="utf-8")
+
+
 def render_line_pages(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     lines_dir = report_dir / "lines"
     lines_dir.mkdir(parents=True, exist_ok=True)
@@ -3797,6 +4130,7 @@ def render_line_pages(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="../dashboard.html">管理控制台</a>
     <a class="stat" href="../taxonomy.html">分类治理</a>
     <a class="stat" href="../timeline.html">时间轴</a>
+    <a class="stat" href="../matrix.html">研究矩阵</a>
     <a class="stat" href="index.html">全部研究线</a>
     <span class="stat">论文 {len(items)}</span>
     <span class="stat">角色 {len(role_groups)}</span>
@@ -3820,6 +4154,7 @@ def render_line_pages(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="../dashboard.html">管理控制台</a>
     <a class="stat" href="../taxonomy.html">分类治理</a>
     <a class="stat" href="../timeline.html">时间轴</a>
+    <a class="stat" href="../matrix.html">研究矩阵</a>
     <a class="stat" href="../tags.html">分类总览</a>
     <span class="stat">研究线 {len(grouped)}</span>
     <span class="stat">论文 {sum(len(items) for items in grouped.values())}</span>
@@ -3891,6 +4226,7 @@ def render_tags(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="index.html">返回首页</a>
     <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="timeline.html">时间轴</a>
+    <a class="stat" href="matrix.html">研究矩阵</a>
     <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
@@ -3922,6 +4258,7 @@ def build_wiki(report_dir: Path) -> int:
     render_dashboard(report_dir, papers)
     render_taxonomy(report_dir, papers)
     render_timeline(report_dir, papers)
+    render_matrix(report_dir, papers)
     render_line_pages(report_dir, papers)
     render_tags(report_dir, papers)
     return len(papers)

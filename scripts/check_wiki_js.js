@@ -21,6 +21,7 @@ function htmlFiles() {
     "dashboard.html",
     "taxonomy.html",
     "timeline.html",
+    "matrix.html",
     "tags.html",
     "lines/index.html",
   ].map((relative) => path.join(reportDir, relative));

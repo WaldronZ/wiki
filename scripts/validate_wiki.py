@@ -85,6 +85,7 @@ REQUIRED_PAGES = {
     "dashboard.html",
     "taxonomy.html",
     "timeline.html",
+    "matrix.html",
     "tags.html",
     "papers.json",
     "search_index.json",
