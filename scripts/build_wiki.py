@@ -37,6 +37,7 @@ GENERATED_FIXED_PATHS = (
     "actions.json",
     "workflow.json",
     "pivot.json",
+    "compare.json",
     "snapshot.json",
     "manifest.json",
     "index.html",
@@ -44,6 +45,7 @@ GENERATED_FIXED_PATHS = (
     "board.html",
     "workflow.html",
     "pivot.html",
+    "compare.html",
     "inbox.html",
     "quality.html",
     "review.html",
@@ -1635,6 +1637,126 @@ def write_pivot_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     )
 
 
+COMPARE_FIELDS = [
+    {"key": "title_zh", "label": "中文标题", "group": "identity"},
+    {"key": "title_en", "label": "英文标题", "group": "identity"},
+    {"key": "year", "label": "年份", "group": "identity"},
+    {"key": "arxiv_id", "label": "arXiv", "group": "identity"},
+    {"key": "research_line", "label": "研究线", "group": "taxonomy"},
+    {"key": "line_role", "label": "研究线角色", "group": "taxonomy"},
+    {"key": "domains", "label": "Domains", "group": "taxonomy"},
+    {"key": "tracks", "label": "Tracks", "group": "taxonomy"},
+    {"key": "problems", "label": "Problems", "group": "taxonomy"},
+    {"key": "topics", "label": "Topics", "group": "taxonomy"},
+    {"key": "methods", "label": "Methods", "group": "taxonomy"},
+    {"key": "status", "label": "状态", "group": "workflow"},
+    {"key": "reading_stage", "label": "阅读阶段", "group": "workflow"},
+    {"key": "review_stage", "label": "复习阶段", "group": "workflow"},
+    {"key": "next_review", "label": "下次复习", "group": "workflow"},
+    {"key": "importance", "label": "重要性", "group": "score"},
+    {"key": "confidence", "label": "置信度", "group": "score"},
+    {"key": "reproducibility", "label": "可复现性", "group": "score"},
+    {"key": "has_code", "label": "代码", "group": "evidence"},
+    {"key": "code_url", "label": "代码链接", "group": "evidence"},
+    {"key": "excerpt", "label": "摘要", "group": "notes"},
+    {"key": "essence", "label": "一句话精髓", "group": "notes"},
+]
+
+
+def compare_paper_payload(paper: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "slug": paper["slug"],
+        "href": paper.get("html_path") or paper.get("md_path") or "",
+        "title": paper.get("title") or "",
+        "title_zh": paper.get("title_zh") or paper.get("title") or "",
+        "title_en": paper.get("title_en") or paper.get("title") or "",
+        "year": paper.get("year") or "",
+        "arxiv_id": paper.get("arxiv_id") or "",
+        "arxiv_url": paper.get("arxiv_url") or "",
+        "code_url": paper.get("code_url") or "",
+        "authors": paper.get("authors", []),
+        "research_line": paper.get("research_line") or "Unassigned",
+        "line_role": paper.get("line_role") or "",
+        "domains": paper.get("domains", []),
+        "tracks": paper.get("tracks", []),
+        "problems": paper.get("problems", []),
+        "topics": paper.get("topics", []),
+        "methods": paper.get("methods", []),
+        "status": paper.get("status") or "",
+        "reading_stage": paper.get("reading_stage") or "",
+        "review_stage": paper.get("review_stage") or "",
+        "next_review": paper.get("next_review") or "",
+        "importance": paper.get("importance") or "",
+        "confidence": paper.get("confidence") or "",
+        "reproducibility": paper.get("reproducibility") or "",
+        "has_code": bool(paper.get("has_code")),
+        "excerpt": paper.get("excerpt") or "",
+        "essence": paper.get("essence") or "",
+    }
+
+
+def build_compare_payload(papers: list[dict[str, Any]]) -> dict[str, Any]:
+    sorted_by_importance = sorted(
+        papers,
+        key=lambda paper: (-(int(paper.get("importance") or 0)), -(int(paper.get("year") or 0)), paper["title"]),
+    )
+    suggested_sets: list[dict[str, Any]] = [
+        {
+            "name": "高优先级论文",
+            "kind": "priority",
+            "slugs": [paper["slug"] for paper in sorted_by_importance if int(paper.get("importance") or 0) >= 5][:8],
+        },
+        {
+            "name": "缺复习计划",
+            "kind": "workflow",
+            "slugs": [paper["slug"] for paper in papers if not paper.get("next_review")][:12],
+        },
+    ]
+    grouped_lines: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    grouped_tracks: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for paper in papers:
+        grouped_lines[str(paper.get("research_line") or "Unassigned")].append(paper)
+        for track in paper.get("tracks", []) or []:
+            grouped_tracks[str(track)].append(paper)
+    for line, items in sorted(grouped_lines.items(), key=lambda item: (-len(item[1]), item[0].lower())):
+        if line == "Unassigned" or len(items) < 2:
+            continue
+        suggested_sets.append(
+            {
+                "name": f"研究线：{line}",
+                "kind": "research_line",
+                "slugs": [paper["slug"] for paper in sorted(items, key=lambda p: (role_rank(str(p.get("line_role") or "")), -(int(p.get("year") or 0)), p["title"]))][:10],
+            }
+        )
+    for track, items in sorted(grouped_tracks.items(), key=lambda item: (-len(item[1]), item[0].lower())):
+        if len(items) < 2:
+            continue
+        suggested_sets.append(
+            {
+                "name": f"方向：{track}",
+                "kind": "track",
+                "slugs": [paper["slug"] for paper in sorted(items, key=lambda p: (-(int(p.get("importance") or 0)), p["title"]))][:10],
+            }
+        )
+    suggested_sets = [item for item in suggested_sets if item["slugs"]]
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": len(papers),
+        "fields": COMPARE_FIELDS,
+        "papers": [compare_paper_payload(paper) for paper in papers],
+        "suggested_sets": suggested_sets,
+        "controls": control_options(),
+    }
+
+
+def write_compare_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_compare_payload(papers)
+    (report_dir / "compare.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
 def wiki_pages_manifest() -> list[dict[str, str]]:
     return [
         {"title": "首页", "href": "index.html", "kind": "view", "description": "卡片检索、筛选、研究线概览"},
@@ -1652,6 +1774,7 @@ def wiki_pages_manifest() -> list[dict[str, str]]:
         {"title": "状态看板", "href": "board.html", "kind": "workflow", "description": "拖拽式状态流和 CSV patch"},
         {"title": "工作流中心", "href": "workflow.html", "kind": "workflow", "description": "状态体系对比、分布和漂移审计"},
         {"title": "分类透视表", "href": "pivot.html", "kind": "analysis", "description": "任意两个分类维度交叉分析论文分布"},
+        {"title": "论文对比", "href": "compare.html", "kind": "analysis", "description": "并排比较候选论文的分类、状态和质量信号"},
         {"title": "待处理池", "href": "inbox.html", "kind": "workflow", "description": "候选论文队列和去重提示"},
         {"title": "复习计划", "href": "review.html", "kind": "workflow", "description": "待复习、需建计划、建议日期"},
         {"title": "时效治理", "href": "freshness.html", "kind": "ops", "description": "报告新鲜度、过期分析和研究线维护"},
@@ -1676,6 +1799,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "actions.json", "description": "统一行动队列，汇总质量、复习、分类和 inbox 任务"},
         {"href": "workflow.json", "description": "状态工作流配置、分布和漂移审计"},
         {"href": "pivot.json", "description": "分类透视表维度、论文投影和交叉分布"},
+        {"href": "compare.json", "description": "论文对比视图数据和推荐对比集合"},
         {"href": "snapshot.json", "description": "当前知识库治理快照和发布基线"},
         {"href": "inbox.json", "description": "候选论文队列和重复项"},
         {"href": "manifest.json", "description": "发布摘要和页面入口清单"},
@@ -6289,6 +6413,342 @@ renderPivot();
 </script>
 """
     (report_dir / "pivot.html").write_text(page_shell("分类透视表", body, extra_css=pivot_css), encoding="utf-8")
+
+
+def render_compare(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_compare_payload(papers)
+    compare_json = json.dumps(payload, ensure_ascii=False)
+    compare_css = """
+    .compare-layout {
+      display: grid;
+      grid-template-columns: minmax(260px, 360px) minmax(0, 1fr);
+      gap: 16px;
+      align-items: start;
+    }
+    .compare-picker {
+      position: sticky;
+      top: 82px;
+      display: grid;
+      gap: 12px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+    .compare-paper-list {
+      display: grid;
+      gap: 8px;
+      max-height: 58vh;
+      overflow: auto;
+    }
+    .compare-paper-button {
+      width: 100%;
+      display: grid;
+      gap: 4px;
+      text-align: left;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--ink);
+      cursor: pointer;
+    }
+    .compare-paper-button.active {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(47, 111, 115, .16);
+    }
+    .selected-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .selected-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel);
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .selected-chip button {
+      width: 22px;
+      height: 22px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--bg);
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .compare-table-wrap {
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      max-height: 72vh;
+    }
+    .compare-table {
+      width: max-content;
+      min-width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .compare-table th,
+    .compare-table td {
+      min-width: 190px;
+      max-width: 320px;
+      padding: 10px;
+      border-bottom: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      vertical-align: top;
+    }
+    .compare-table th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: var(--panel);
+      text-align: left;
+    }
+    .compare-field {
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      min-width: 150px;
+      background: var(--panel);
+      font-weight: 800;
+    }
+    .compare-title-cell strong {
+      display: block;
+      line-height: 1.35;
+      margin-bottom: 6px;
+    }
+    .compare-value-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .compare-empty { color: var(--muted); }
+    @media (max-width: 980px) {
+      .compare-layout { grid-template-columns: 1fr; }
+      .compare-picker { position: static; }
+    }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Paper Compare</div>
+  <h1>论文对比</h1>
+  <p class="lead">把同一研究线、同一方向或临时筛选出的论文并排比较，快速看清分类、状态、复习计划、分数和代码线索的差异。</p>
+  <div class="stats">
+    <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="pivot.html">分类透视表</a>
+    <a class="stat" href="related.html">关联网络</a>
+    <a class="stat" href="workflow.html">工作流中心</a>
+    <a class="stat" href="compare.json">Compare JSON</a>
+    <span class="stat">论文 {payload["count"]}</span>
+    <span class="stat">推荐集合 {len(payload["suggested_sets"])}</span>
+  </div>
+</header>
+<main class="shell compare-layout">
+  <aside class="compare-picker">
+    <input id="compareSearch" type="search" placeholder="搜索标题、slug、研究线、分类">
+    <select id="compareLine"><option value="">全部研究线</option></select>
+    <select id="compareTrack"><option value="">全部方向</option></select>
+    <select id="compareStatus"><option value="">全部状态</option></select>
+    <select id="comparePreset"><option value="">载入推荐集合</option></select>
+    <div class="results-bar"><strong id="compareAvailableCount">0 篇</strong><button id="compareClear" class="button" type="button">清空</button></div>
+    <div id="comparePaperList" class="compare-paper-list"></div>
+  </aside>
+  <section>
+    <div class="results-bar">
+      <strong id="compareSelectedCount">已选 0 篇</strong>
+      <div class="results-actions">
+        <button id="compareCopyLink" class="button" type="button">复制当前链接</button>
+      </div>
+    </div>
+    <div id="compareSelectedStrip" class="selected-strip"></div>
+    <div id="compareTableWrap" class="compare-table-wrap"></div>
+  </section>
+</main>
+<script>
+const compareData = {compare_json};
+const comparePapers = compareData.papers || [];
+const compareFields = compareData.fields || [];
+const compareBySlug = new Map(comparePapers.map(paper => [paper.slug, paper]));
+const compareSearch = document.querySelector("#compareSearch");
+const compareLine = document.querySelector("#compareLine");
+const compareTrack = document.querySelector("#compareTrack");
+const compareStatus = document.querySelector("#compareStatus");
+const comparePreset = document.querySelector("#comparePreset");
+const compareClear = document.querySelector("#compareClear");
+const compareCopyLink = document.querySelector("#compareCopyLink");
+const compareAvailableCount = document.querySelector("#compareAvailableCount");
+const compareSelectedCount = document.querySelector("#compareSelectedCount");
+const comparePaperList = document.querySelector("#comparePaperList");
+const compareSelectedStrip = document.querySelector("#compareSelectedStrip");
+const compareTableWrap = document.querySelector("#compareTableWrap");
+let selectedSlugs = [];
+
+function compareEscape(value) {{
+  return String(value ?? "").replace(/[&<>"']/g, char => ({{"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}}[char]));
+}}
+
+function uniqueSorted(values) {{
+  return Array.from(new Set(values.map(value => String(value || "").trim()).filter(Boolean))).sort((a, b) => a.localeCompare(b));
+}}
+
+function fillOptions(select, values, placeholder) {{
+  const current = select.value;
+  select.replaceChildren(new Option(placeholder, ""));
+  values.forEach(value => select.appendChild(new Option(value, value)));
+  select.value = values.includes(current) ? current : "";
+}}
+
+function paperSearchText(paper) {{
+  return [
+    paper.slug,
+    paper.title,
+    paper.title_zh,
+    paper.title_en,
+    paper.research_line,
+    paper.line_role,
+    ...(paper.domains || []),
+    ...(paper.tracks || []),
+    ...(paper.problems || []),
+    ...(paper.topics || []),
+    ...(paper.methods || []),
+  ].join(" ").toLowerCase();
+}}
+
+function paperMatchesFilters(paper) {{
+  const q = compareSearch.value.trim().toLowerCase();
+  return (!q || paperSearchText(paper).includes(q))
+    && (!compareLine.value || paper.research_line === compareLine.value)
+    && (!compareTrack.value || (paper.tracks || []).includes(compareTrack.value))
+    && (!compareStatus.value || paper.status === compareStatus.value);
+}}
+
+function readCompareState() {{
+  const params = new URLSearchParams(window.location.search);
+  selectedSlugs = (params.get("slugs") || "")
+    .split(",")
+    .map(slug => slug.trim())
+    .filter(slug => compareBySlug.has(slug));
+  if (!selectedSlugs.length) {{
+    const firstSet = (compareData.suggested_sets || []).find(item => (item.slugs || []).length);
+    selectedSlugs = firstSet ? firstSet.slugs.slice(0, 4) : comparePapers.slice(0, 3).map(paper => paper.slug);
+  }}
+}}
+
+function writeCompareState() {{
+  const url = new URL(window.location.href);
+  if (selectedSlugs.length) url.searchParams.set("slugs", selectedSlugs.join(","));
+  else url.searchParams.delete("slugs");
+  window.history.replaceState(null, "", url);
+}}
+
+function togglePaper(slug) {{
+  if (selectedSlugs.includes(slug)) selectedSlugs = selectedSlugs.filter(item => item !== slug);
+  else selectedSlugs = [...selectedSlugs, slug];
+  writeCompareState();
+  renderCompare();
+}}
+
+function formatCompareValue(value, key) {{
+  if (Array.isArray(value)) {{
+    if (!value.length) return '<span class="compare-empty">-</span>';
+    return `<div class="compare-value-list">${{value.map(item => `<span class="chip">${{compareEscape(item)}}</span>`).join("")}}</div>`;
+  }}
+  if (key === "has_code") return value ? "有" : "无";
+  if (key === "code_url" && value) return `<a href="${{compareEscape(value)}}">code</a>`;
+  if (!value && value !== 0) return '<span class="compare-empty">-</span>';
+  return compareEscape(value);
+}}
+
+function renderAvailablePapers() {{
+  const papers = comparePapers.filter(paperMatchesFilters);
+  compareAvailableCount.textContent = `${{papers.length}} 篇`;
+  comparePaperList.innerHTML = papers.map(paper => {{
+    const active = selectedSlugs.includes(paper.slug);
+    const labels = [paper.research_line, paper.status, paper.year].filter(Boolean).join(" · ");
+    return `<button class="compare-paper-button${{active ? " active" : ""}}" type="button" data-slug="${{compareEscape(paper.slug)}}">
+      <strong>${{compareEscape(paper.title_zh || paper.title || paper.slug)}}</strong>
+      <span class="meta">${{compareEscape(labels)}}</span>
+      <span class="meta">${{compareEscape(paper.slug)}}</span>
+    </button>`;
+  }}).join("") || '<div class="empty">没有匹配论文。</div>';
+  comparePaperList.querySelectorAll("[data-slug]").forEach(button => button.addEventListener("click", () => togglePaper(button.dataset.slug)));
+}}
+
+function renderSelectedStrip() {{
+  const papers = selectedSlugs.map(slug => compareBySlug.get(slug)).filter(Boolean);
+  compareSelectedCount.textContent = `已选 ${{papers.length}} 篇`;
+  compareSelectedStrip.innerHTML = papers.map(paper => `
+    <span class="selected-chip">${{compareEscape(paper.slug)}}<button type="button" data-remove="${{compareEscape(paper.slug)}}" aria-label="移除 ${{compareEscape(paper.slug)}}">x</button></span>
+  `).join("");
+  compareSelectedStrip.querySelectorAll("[data-remove]").forEach(button => button.addEventListener("click", () => togglePaper(button.dataset.remove)));
+}}
+
+function renderCompareTable() {{
+  const papers = selectedSlugs.map(slug => compareBySlug.get(slug)).filter(Boolean);
+  if (!papers.length) {{
+    compareTableWrap.innerHTML = '<div class="empty">请选择要对比的论文。</div>';
+    return;
+  }}
+  const header = `<thead><tr><th class="compare-field">字段</th>${{papers.map(paper => `
+    <th class="compare-title-cell"><strong><a href="${{compareEscape(paper.href)}}">${{compareEscape(paper.title_zh || paper.title || paper.slug)}}</a></strong><span class="meta">${{compareEscape(paper.slug)}}</span></th>
+  `).join("")}}</tr></thead>`;
+  const rows = compareFields.map(field => `
+    <tr>
+      <td class="compare-field">${{compareEscape(field.label)}}<div class="meta">${{compareEscape(field.group)}}</div></td>
+      ${{papers.map(paper => `<td>${{formatCompareValue(paper[field.key], field.key)}}</td>`).join("")}}
+    </tr>
+  `).join("");
+  compareTableWrap.innerHTML = `<table class="compare-table">${{header}}<tbody>${{rows}}</tbody></table>`;
+}}
+
+function renderCompare() {{
+  renderAvailablePapers();
+  renderSelectedStrip();
+  renderCompareTable();
+}}
+
+fillOptions(compareLine, uniqueSorted(comparePapers.map(paper => paper.research_line)), "全部研究线");
+fillOptions(compareTrack, uniqueSorted(comparePapers.flatMap(paper => paper.tracks || [])), "全部方向");
+fillOptions(compareStatus, uniqueSorted(comparePapers.map(paper => paper.status)), "全部状态");
+(compareData.suggested_sets || []).forEach((set, index) => {{
+  comparePreset.appendChild(new Option(`${{set.name}} (${{(set.slugs || []).length}})`, String(index)));
+}});
+readCompareState();
+[compareSearch, compareLine, compareTrack, compareStatus].forEach(control => control.addEventListener("input", renderCompare));
+comparePreset.addEventListener("input", () => {{
+  const preset = (compareData.suggested_sets || [])[Number(comparePreset.value)];
+  if (!preset) return;
+  selectedSlugs = (preset.slugs || []).filter(slug => compareBySlug.has(slug));
+  writeCompareState();
+  renderCompare();
+}});
+compareClear.addEventListener("click", () => {{
+  selectedSlugs = [];
+  writeCompareState();
+  renderCompare();
+}});
+compareCopyLink.addEventListener("click", async () => {{
+  writeCompareState();
+  try {{
+    await navigator.clipboard.writeText(window.location.href);
+    compareCopyLink.textContent = "已复制";
+    setTimeout(() => compareCopyLink.textContent = "复制当前链接", 1200);
+  }} catch (error) {{
+    window.prompt("复制当前链接", window.location.href);
+  }}
+}});
+renderCompare();
+</script>
+"""
+    (report_dir / "compare.html").write_text(page_shell("论文对比", body, extra_css=compare_css), encoding="utf-8")
 
 
 def render_inbox_row(item: dict[str, Any]) -> str:
@@ -11573,6 +12033,7 @@ def build_wiki(report_dir: Path) -> int:
     write_stats_json(report_dir, papers)
     write_workflow_json(report_dir, papers)
     write_pivot_json(report_dir, papers)
+    write_compare_json(report_dir, papers)
     write_inbox_json(report_dir, inbox_items)
     write_search_index(report_dir, papers)
     render_index(report_dir, papers)
@@ -11580,6 +12041,7 @@ def build_wiki(report_dir: Path) -> int:
     render_board(report_dir, papers)
     render_workflow(report_dir, papers)
     render_pivot(report_dir, papers)
+    render_compare(report_dir, papers)
     render_inbox(report_dir, inbox_items)
     render_review(report_dir, papers)
     render_freshness(report_dir, papers)

@@ -103,6 +103,7 @@ REQUIRED_PAGES = {
     "board.html",
     "workflow.html",
     "pivot.html",
+    "compare.html",
     "inbox.html",
     "quality.html",
     "review.html",
@@ -128,6 +129,7 @@ REQUIRED_PAGES = {
     "taxonomy_actions.json",
     "workflow.json",
     "pivot.json",
+    "compare.json",
     "snapshot.json",
     "manifest.json",
     "lines/index.html",
@@ -546,6 +548,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     taxonomy_actions_path = report_dir / "taxonomy_actions.json"
     workflow_path = report_dir / "workflow.json"
     pivot_path = report_dir / "pivot.json"
+    compare_path = report_dir / "compare.json"
     stats_path = report_dir / "stats.json"
     inbox_path = report_dir / "inbox.json"
     snapshot_path = report_dir / "snapshot.json"
@@ -571,6 +574,9 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     if not pivot_path.exists():
         errors.append("missing pivot.json")
         return
+    if not compare_path.exists():
+        errors.append("missing compare.json")
+        return
     if not stats_path.exists():
         errors.append("missing stats.json")
         return
@@ -591,6 +597,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     taxonomy_actions_data = json.loads(taxonomy_actions_path.read_text(encoding="utf-8"))
     workflow_data = json.loads(workflow_path.read_text(encoding="utf-8"))
     pivot_data = json.loads(pivot_path.read_text(encoding="utf-8"))
+    compare_data = json.loads(compare_path.read_text(encoding="utf-8"))
     stats_data = json.loads(stats_path.read_text(encoding="utf-8"))
     inbox_data = json.loads(inbox_path.read_text(encoding="utf-8"))
     snapshot_data = json.loads(snapshot_path.read_text(encoding="utf-8"))
@@ -821,6 +828,46 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         unknown_cell_slugs = sorted(cell_slugs - report_slugs)
         if unknown_cell_slugs:
             errors.append(f"pivot.json presets[{index}] references unknown slugs: {unknown_cell_slugs}")
+
+    if compare_data.get("count") != len(report_slugs):
+        errors.append(f"compare.json count {compare_data.get('count')} != markdown report count {len(report_slugs)}")
+    required_compare = {"fields", "papers", "suggested_sets"}
+    missing_compare = sorted(required_compare - set(compare_data))
+    if missing_compare:
+        errors.append(f"compare.json missing keys: {', '.join(missing_compare)}")
+    compare_fields = compare_data.get("fields")
+    if not isinstance(compare_fields, list) or not compare_fields:
+        errors.append("compare.json fields must be a non-empty list")
+    else:
+        field_keys = {str(item.get("key") or "") for item in compare_fields if isinstance(item, dict)}
+        for key in ("title_zh", "research_line", "topics", "methods", "status", "importance", "has_code"):
+            if key not in field_keys:
+                errors.append(f"compare.json fields missing {key}")
+    compare_papers = compare_data.get("papers")
+    if not isinstance(compare_papers, list):
+        errors.append("compare.json papers must be a list")
+        compare_papers = []
+    compare_slugs = {item.get("slug") for item in compare_papers if isinstance(item, dict)}
+    if compare_slugs != report_slugs:
+        errors.append(
+            "compare.json paper slugs do not match markdown reports: "
+            f"missing={sorted(report_slugs - compare_slugs)}, extra={sorted(compare_slugs - report_slugs)}"
+        )
+    compare_sets = compare_data.get("suggested_sets")
+    if not isinstance(compare_sets, list):
+        errors.append("compare.json suggested_sets must be a list")
+        compare_sets = []
+    for index, item in enumerate(compare_sets):
+        if not isinstance(item, dict):
+            errors.append(f"compare.json suggested_sets[{index}] must be an object")
+            continue
+        slugs = item.get("slugs", [])
+        if not isinstance(slugs, list):
+            errors.append(f"compare.json suggested_sets[{index}].slugs must be a list")
+            continue
+        unknown_set_slugs = sorted(set(slugs) - report_slugs)
+        if unknown_set_slugs:
+            errors.append(f"compare.json suggested_sets[{index}] references unknown slugs: {unknown_set_slugs}")
 
     if stats_data.get("count") != len(report_slugs):
         errors.append(f"stats.json count {stats_data.get('count')} != markdown report count {len(report_slugs)}")
