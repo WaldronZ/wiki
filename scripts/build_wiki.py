@@ -38,6 +38,7 @@ GENERATED_FIXED_PATHS = (
     "workflow.json",
     "pivot.json",
     "compare.json",
+    "catalog.json",
     "snapshot.json",
     "manifest.json",
     "index.html",
@@ -46,6 +47,7 @@ GENERATED_FIXED_PATHS = (
     "workflow.html",
     "pivot.html",
     "compare.html",
+    "catalog.html",
     "inbox.html",
     "quality.html",
     "review.html",
@@ -1757,6 +1759,165 @@ def write_compare_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     )
 
 
+DATA_CONSUMER_HINTS = {
+    "papers.json": ["frontend", "desktop", "search", "filters"],
+    "search_index.json": ["search", "desktop"],
+    "stats.json": ["dashboard", "ops", "analytics"],
+    "quality.json": ["quality-gate", "ops", "writeback"],
+    "review.json": ["review", "scheduler", "writeback"],
+    "freshness.json": ["freshness", "maintenance"],
+    "taxonomy_actions.json": ["taxonomy", "project-management", "writeback"],
+    "actions.json": ["tasks", "project-management", "exports"],
+    "workflow.json": ["workflow", "desktop", "filters"],
+    "pivot.json": ["analytics", "classification", "desktop"],
+    "compare.json": ["comparison", "curation", "desktop"],
+    "snapshot.json": ["release", "audit", "desktop"],
+    "inbox.json": ["intake", "dedupe"],
+    "manifest.json": ["release", "audit", "ci"],
+}
+
+CATALOG_STATIC_SIZE_RESOURCES = {"catalog.json", "manifest.json"}
+
+
+def summarize_json_resource(report_dir: Path, href: str, description: str) -> dict[str, Any]:
+    path = report_dir / href
+    payload: dict[str, Any] | None = None
+    error = ""
+    if path.exists():
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            error = str(exc)
+    top_level_keys = sorted(payload.keys()) if isinstance(payload, dict) else []
+    collections = []
+    if isinstance(payload, dict):
+        for key, value in payload.items():
+            if isinstance(value, list):
+                collections.append({"key": key, "type": "list", "count": len(value)})
+            elif isinstance(value, dict):
+                collections.append({"key": key, "type": "object", "count": len(value)})
+    return {
+        "href": href,
+        "description": description,
+        "exists": path.exists(),
+        "size_bytes": 0 if href in CATALOG_STATIC_SIZE_RESOURCES else (path.stat().st_size if path.exists() else 0),
+        "top_level_keys": top_level_keys,
+        "collections": collections,
+        "declared_count": payload.get("count") if isinstance(payload, dict) else None,
+        "generated_at": payload.get("generated_at") if isinstance(payload, dict) else "",
+        "consumers": DATA_CONSUMER_HINTS.get(href, []),
+        "error": error,
+    }
+
+
+def build_catalog_payload(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> dict[str, Any]:
+    pages = wiki_pages_manifest()
+    data_files = data_files_manifest()
+    contracts = contract_files_manifest()
+    data_resources = [
+        summarize_json_resource(report_dir, item["href"], item["description"])
+        for item in data_files
+        if item["href"] != "catalog.json"
+    ]
+    catalog_self = {
+        "href": "catalog.json",
+        "description": "机器数据、页面入口和契约字段目录",
+        "exists": True,
+        "size_bytes": 0,
+        "top_level_keys": [
+            "generated_at",
+            "count",
+            "inbox_count",
+            "page_count",
+            "data_file_count",
+            "contract_count",
+            "pages",
+            "data_resources",
+            "contracts",
+            "integration_recipes",
+            "recommended_bootstrap_files",
+        ],
+        "collections": [],
+        "declared_count": len(papers),
+        "generated_at": "",
+        "consumers": ["desktop", "api", "open-source-onboarding"],
+        "error": "",
+    }
+    data_resources.append(catalog_self)
+    integration_recipes = [
+        {
+            "name": "Build local wiki",
+            "command": "python3 scripts/build_wiki.py docs",
+            "uses": ["docs/*.md", "docs/guides/taxonomy.json"],
+            "outputs": ["docs/index.html", "docs/papers.json", "docs/manifest.json"],
+        },
+        {
+            "name": "Validate publish readiness",
+            "command": "python3 scripts/check_quality.py docs",
+            "uses": ["docs/manifest.json", "docs/quality.json", "docs/workflow.json"],
+            "outputs": ["terminal quality gate result"],
+        },
+        {
+            "name": "Desktop sync bootstrap",
+            "command": "read docs/catalog.json, docs/papers.json, docs/search_index.json",
+            "uses": ["catalog.json", "papers.json", "search_index.json", "workflow.json"],
+            "outputs": ["local searchable paper library"],
+        },
+        {
+            "name": "Project task export",
+            "command": "python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv",
+            "uses": ["actions.json", "taxonomy_actions.json", "review.json"],
+            "outputs": ["docs/exports/actions-project.csv"],
+        },
+    ]
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": len(papers),
+        "inbox_count": len(inbox_items),
+        "page_count": len(pages),
+        "data_file_count": len(data_files),
+        "contract_count": len(contracts),
+        "pages": pages,
+        "data_resources": data_resources,
+        "contracts": contracts,
+        "integration_recipes": integration_recipes,
+        "recommended_bootstrap_files": ["catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json"],
+    }
+
+
+def write_catalog_json(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
+    payload = build_catalog_payload(report_dir, papers, inbox_items)
+    (report_dir / "catalog.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
+def write_catalog_placeholders(report_dir: Path) -> None:
+    payload = {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": 0,
+        "inbox_count": 0,
+        "page_count": 0,
+        "data_file_count": 0,
+        "contract_count": 0,
+        "pages": [],
+        "data_resources": [],
+        "contracts": [],
+        "integration_recipes": [],
+        "recommended_bootstrap_files": ["catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json"],
+    }
+    (report_dir / "catalog.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    (report_dir / "catalog.html").write_text(
+        "<!doctype html><html lang=\"zh-CN\"><head><meta charset=\"utf-8\"><title>数据目录</title></head>"
+        "<body><h1>数据目录</h1><p>Catalog placeholder; rebuilt by scripts/build_wiki.py.</p></body></html>",
+        encoding="utf-8",
+    )
+
+
 def wiki_pages_manifest() -> list[dict[str, str]]:
     return [
         {"title": "首页", "href": "index.html", "kind": "view", "description": "卡片检索、筛选、研究线概览"},
@@ -1775,6 +1936,7 @@ def wiki_pages_manifest() -> list[dict[str, str]]:
         {"title": "工作流中心", "href": "workflow.html", "kind": "workflow", "description": "状态体系对比、分布和漂移审计"},
         {"title": "分类透视表", "href": "pivot.html", "kind": "analysis", "description": "任意两个分类维度交叉分析论文分布"},
         {"title": "论文对比", "href": "compare.html", "kind": "analysis", "description": "并排比较候选论文的分类、状态和质量信号"},
+        {"title": "数据目录", "href": "catalog.html", "kind": "ops", "description": "机器数据、页面和契约的接入目录"},
         {"title": "待处理池", "href": "inbox.html", "kind": "workflow", "description": "候选论文队列和去重提示"},
         {"title": "复习计划", "href": "review.html", "kind": "workflow", "description": "待复习、需建计划、建议日期"},
         {"title": "时效治理", "href": "freshness.html", "kind": "ops", "description": "报告新鲜度、过期分析和研究线维护"},
@@ -1800,6 +1962,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "workflow.json", "description": "状态工作流配置、分布和漂移审计"},
         {"href": "pivot.json", "description": "分类透视表维度、论文投影和交叉分布"},
         {"href": "compare.json", "description": "论文对比视图数据和推荐对比集合"},
+        {"href": "catalog.json", "description": "机器数据、页面入口和契约字段目录"},
         {"href": "snapshot.json", "description": "当前知识库治理快照和发布基线"},
         {"href": "inbox.json", "description": "候选论文队列和重复项"},
         {"href": "manifest.json", "description": "发布摘要和页面入口清单"},
@@ -5608,6 +5771,7 @@ def render_board(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         else '<select id="boardWorkflow" aria-label="状态工作流"><option value="">默认状态流</option></select>'
     )
     workflow_json = json.dumps(status_workflows, ensure_ascii=False)
+    active_workflow_json = json.dumps(active_workflow, ensure_ascii=False)
     statuses = list(taxonomy["statuses"].keys())
     fallback_statuses = sorted(
         {
@@ -5766,6 +5930,7 @@ const boardCards = Array.from(document.querySelectorAll(".board-card"));
 const boardWrap = document.querySelector("#boardWrap");
 let dropzones = Array.from(document.querySelectorAll(".board-dropzone"));
 const boardWorkflows = {workflow_json};
+const activeBoardWorkflow = {active_workflow_json};
 const boardSearch = document.querySelector("#boardSearch");
 const boardWorkflow = document.querySelector("#boardWorkflow");
 const boardLine = document.querySelector("#boardLine");
@@ -5807,6 +5972,41 @@ function changedCards() {{
   return boardCards.filter(card => card.dataset.status !== card.dataset.originalStatus);
 }}
 
+function syncBoardUrl() {{
+  const url = new URL(window.location.href);
+  const defaults = {{
+    q: "",
+    workflow: activeBoardWorkflow || "",
+    line: "",
+    track: "",
+    importance: "",
+  }};
+  const values = {{
+    q: boardSearch.value.trim(),
+    workflow: boardWorkflow.value || "",
+    line: boardLine.value || "",
+    track: boardTrack.value || "",
+    importance: boardImportance.value || "",
+  }};
+  Object.entries(values).forEach(([key, value]) => {{
+    if (value && value !== defaults[key]) url.searchParams.set(key, value);
+    else url.searchParams.delete(key);
+  }});
+  window.history.replaceState(null, "", url);
+}}
+
+function readBoardState() {{
+  const params = new URLSearchParams(window.location.search);
+  boardSearch.value = params.get("q") || "";
+  const workflow = params.get("workflow") || activeBoardWorkflow || boardWorkflow.value;
+  if (workflow && Array.from(boardWorkflow.options).some(option => option.value === workflow)) {{
+    boardWorkflow.value = workflow;
+  }}
+  boardLine.value = params.get("line") || "";
+  boardTrack.value = params.get("track") || "";
+  boardImportance.value = params.get("importance") || "";
+}}
+
 function placeCard(card, status) {{
   const zone = dropzones.find(item => item.dataset.status === status);
   if (!zone) return;
@@ -5816,7 +6016,7 @@ function placeCard(card, status) {{
   renderBoard();
 }}
 
-function renderBoard() {{
+function renderBoard(updateUrl = true) {{
   const q = boardSearch.value.trim().toLowerCase();
   const minImportance = Number(boardImportance.value || 0);
   let visible = 0;
@@ -5837,6 +6037,7 @@ function renderBoard() {{
   changedCount.textContent = `未保存 ${{changed}} 篇`;
   downloadBoardPatch.disabled = changed === 0;
   resetBoardChanges.disabled = changed === 0;
+  if (updateUrl) syncBoardUrl();
 }}
 
 function attachDropzone(zone) {{
@@ -5896,7 +6097,7 @@ function uniqueValues(values) {{
     }});
 }}
 
-function applyWorkflow(name) {{
+function applyWorkflow(name, updateUrl = true) {{
   const workflow = boardWorkflows[name] || {{}};
   const workflowStatuses = Array.isArray(workflow.status_values) ? workflow.status_values : [];
   const activeStatuses = boardCards.map(card => card.dataset.status || card.dataset.originalStatus || "unread");
@@ -5915,7 +6116,7 @@ function applyWorkflow(name) {{
     const zone = dropzones.find(item => item.dataset.status === status) || dropzones[0];
     zone.appendChild(card);
   }});
-  renderBoard();
+  renderBoard(updateUrl);
 }}
 
 boardCards.forEach(card => {{
@@ -5943,7 +6144,7 @@ newStatusName.addEventListener("keydown", event => {{
   }}
 }});
 
-[boardSearch, boardLine, boardTrack, boardImportance].forEach(el => el.addEventListener("input", renderBoard));
+[boardSearch, boardLine, boardTrack, boardImportance].forEach(el => el.addEventListener("input", () => renderBoard()));
 boardWorkflow.addEventListener("change", () => applyWorkflow(boardWorkflow.value));
 downloadBoardPatch.addEventListener("click", () => {{
   const changed = changedCards();
@@ -5953,7 +6154,8 @@ downloadBoardPatch.addEventListener("click", () => {{
 resetBoardChanges.addEventListener("click", () => {{
   changedCards().forEach(card => placeCard(card, card.dataset.originalStatus));
 }});
-renderBoard();
+readBoardState();
+applyWorkflow(boardWorkflow.value, false);
 </script>
 """
     (report_dir / "board.html").write_text(page_shell("状态看板", body, extra_css=board_css), encoding="utf-8")
@@ -6749,6 +6951,123 @@ renderCompare();
 </script>
 """
     (report_dir / "compare.html").write_text(page_shell("论文对比", body, extra_css=compare_css), encoding="utf-8")
+
+
+def render_catalog(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
+    payload = build_catalog_payload(report_dir, papers, inbox_items)
+    resource_rows = []
+    for item in payload["data_resources"]:
+        collections = ", ".join(
+            f"{entry.get('key')}:{entry.get('count')}"
+            for entry in item.get("collections", [])[:6]
+        )
+        keys = ", ".join(str(key) for key in item.get("top_level_keys", [])[:8])
+        consumers = ", ".join(str(value) for value in item.get("consumers", []))
+        resource_rows.append(
+            "<tr>"
+            f'<td><a href="{html.escape(str(item["href"]))}">{html.escape(str(item["href"]))}</a></td>'
+            f"<td>{html.escape(str(item.get('description') or ''))}</td>"
+            f"<td><span class=\"flag\">{'ok' if item.get('exists') else 'missing'}</span></td>"
+            f"<td>{html.escape(str(item.get('declared_count') if item.get('declared_count') is not None else '-'))}</td>"
+            f"<td>{html.escape(str(item.get('size_bytes') or 0))}</td>"
+            f"<td>{html.escape(keys or '-')}</td>"
+            f"<td>{html.escape(collections or '-')}</td>"
+            f"<td>{html.escape(consumers or '-')}</td>"
+            "</tr>"
+        )
+    page_rows = "".join(
+        "<tr>"
+        f'<td><a href="{html.escape(str(page["href"]))}">{html.escape(str(page["title"]))}</a></td>'
+        f"<td>{html.escape(str(page['kind']))}</td>"
+        f"<td>{html.escape(str(page['description']))}</td>"
+        "</tr>"
+        for page in payload["pages"]
+    )
+    contract_rows = "".join(
+        "<tr>"
+        f'<td><a href="{html.escape(str(contract["href"]))}">{html.escape(str(contract["href"]))}</a></td>'
+        f"<td>{html.escape(str(contract['description']))}</td>"
+        "</tr>"
+        for contract in payload["contracts"]
+    )
+    recipe_rows = "".join(
+        "<tr>"
+        f"<td>{html.escape(str(recipe['name']))}</td>"
+        f"<td><code>{html.escape(str(recipe['command']))}</code></td>"
+        f"<td>{html.escape(', '.join(str(value) for value in recipe.get('uses', [])))}</td>"
+        f"<td>{html.escape(', '.join(str(value) for value in recipe.get('outputs', [])))}</td>"
+        "</tr>"
+        for recipe in payload["integration_recipes"]
+    )
+    bootstrap_files = "".join(
+        f'<span class="chip">{html.escape(str(item))}</span>'
+        for item in payload["recommended_bootstrap_files"]
+    )
+    catalog_css = """
+    .catalog-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .catalog-summary .metric-card strong { font-size: 24px; }
+    .catalog-bootstrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0 0 18px;
+    }
+    .catalog-table code {
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Data Catalog</div>
+  <h1>数据目录</h1>
+  <p class="lead">把 wiki 页面、机器可读 JSON 和数据契约整理成一个接入目录。适合后续桌面软件、DMG 封装、开源贡献者或外部脚本快速发现可用数据源。</p>
+  <div class="stats">
+    <a class="stat" href="release.html">发布摘要</a>
+    <a class="stat" href="manifest.json">Manifest JSON</a>
+    <a class="stat" href="catalog.json">Catalog JSON</a>
+    <a class="stat" href="workflow.html">工作流中心</a>
+    <span class="stat">论文 {payload["count"]}</span>
+    <span class="stat">数据 {payload["data_file_count"]}</span>
+    <span class="stat">页面 {payload["page_count"]}</span>
+  </div>
+</header>
+<main class="shell">
+  <section class="catalog-summary">
+    <section class="metric-card"><span>论文</span><strong>{payload["count"]}</strong><span>当前报告数量</span></section>
+    <section class="metric-card"><span>Inbox</span><strong>{payload["inbox_count"]}</strong><span>候选论文队列</span></section>
+    <section class="metric-card"><span>页面</span><strong>{payload["page_count"]}</strong><span>可打开入口</span></section>
+    <section class="metric-card"><span>数据文件</span><strong>{payload["data_file_count"]}</strong><span>JSON 接入点</span></section>
+    <section class="metric-card"><span>契约</span><strong>{payload["contract_count"]}</strong><span>模板与 schema</span></section>
+  </section>
+  <section>
+    <h2 class="section-title">推荐启动文件</h2>
+    <div class="catalog-bootstrap">{bootstrap_files}</div>
+  </section>
+  <section>
+    <h2 class="section-title">机器数据</h2>
+    <div class="table-wrap"><table class="data-table catalog-table"><thead><tr><th>文件</th><th>用途</th><th>状态</th><th>Count</th><th>Bytes</th><th>顶层字段</th><th>集合</th><th>消费者</th></tr></thead><tbody>{"".join(resource_rows)}</tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">页面入口</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>页面</th><th>类型</th><th>用途</th></tr></thead><tbody>{page_rows}</tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">数据契约</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>文件</th><th>用途</th></tr></thead><tbody>{contract_rows}</tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">集成 Recipes</h2>
+    <div class="table-wrap"><table class="data-table catalog-table"><thead><tr><th>场景</th><th>命令 / 读取方式</th><th>输入</th><th>输出</th></tr></thead><tbody>{recipe_rows}</tbody></table></div>
+  </section>
+</main>
+"""
+    (report_dir / "catalog.html").write_text(page_shell("数据目录", body, extra_css=catalog_css), encoding="utf-8")
 
 
 def render_inbox_row(item: dict[str, Any]) -> str:
@@ -12059,6 +12378,12 @@ def build_wiki(report_dir: Path) -> int:
     render_gaps(report_dir, papers)
     render_line_pages(report_dir, papers)
     render_tags(report_dir, papers)
+    write_catalog_placeholders(report_dir)
+    write_snapshot_json(report_dir, papers, inbox_items)
+    render_snapshot(report_dir, papers, inbox_items)
+    write_manifest_json(report_dir, papers, inbox_items)
+    write_catalog_json(report_dir, papers, inbox_items)
+    render_catalog(report_dir, papers, inbox_items)
     write_snapshot_json(report_dir, papers, inbox_items)
     render_snapshot(report_dir, papers, inbox_items)
     render_release(report_dir, papers, inbox_items)

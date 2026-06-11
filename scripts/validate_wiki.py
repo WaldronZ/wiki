@@ -104,6 +104,7 @@ REQUIRED_PAGES = {
     "workflow.html",
     "pivot.html",
     "compare.html",
+    "catalog.html",
     "inbox.html",
     "quality.html",
     "review.html",
@@ -130,6 +131,7 @@ REQUIRED_PAGES = {
     "workflow.json",
     "pivot.json",
     "compare.json",
+    "catalog.json",
     "snapshot.json",
     "manifest.json",
     "lines/index.html",
@@ -549,6 +551,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     workflow_path = report_dir / "workflow.json"
     pivot_path = report_dir / "pivot.json"
     compare_path = report_dir / "compare.json"
+    catalog_path = report_dir / "catalog.json"
     stats_path = report_dir / "stats.json"
     inbox_path = report_dir / "inbox.json"
     snapshot_path = report_dir / "snapshot.json"
@@ -577,6 +580,9 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     if not compare_path.exists():
         errors.append("missing compare.json")
         return
+    if not catalog_path.exists():
+        errors.append("missing catalog.json")
+        return
     if not stats_path.exists():
         errors.append("missing stats.json")
         return
@@ -598,6 +604,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     workflow_data = json.loads(workflow_path.read_text(encoding="utf-8"))
     pivot_data = json.loads(pivot_path.read_text(encoding="utf-8"))
     compare_data = json.loads(compare_path.read_text(encoding="utf-8"))
+    catalog_data = json.loads(catalog_path.read_text(encoding="utf-8"))
     stats_data = json.loads(stats_path.read_text(encoding="utf-8"))
     inbox_data = json.loads(inbox_path.read_text(encoding="utf-8"))
     snapshot_data = json.loads(snapshot_path.read_text(encoding="utf-8"))
@@ -868,6 +875,52 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         unknown_set_slugs = sorted(set(slugs) - report_slugs)
         if unknown_set_slugs:
             errors.append(f"compare.json suggested_sets[{index}] references unknown slugs: {unknown_set_slugs}")
+
+    if catalog_data.get("count") != len(report_slugs):
+        errors.append(f"catalog.json count {catalog_data.get('count')} != markdown report count {len(report_slugs)}")
+    required_catalog = {"pages", "data_resources", "contracts", "integration_recipes", "recommended_bootstrap_files"}
+    missing_catalog = sorted(required_catalog - set(catalog_data))
+    if missing_catalog:
+        errors.append(f"catalog.json missing keys: {', '.join(missing_catalog)}")
+    catalog_pages = catalog_data.get("pages")
+    if not isinstance(catalog_pages, list):
+        errors.append("catalog.json pages must be a list")
+        catalog_pages = []
+    catalog_page_hrefs = {str(item.get("href") or "") for item in catalog_pages if isinstance(item, dict)}
+    expected_catalog_pages = {page for page in REQUIRED_PAGES if page.endswith(".html")}
+    missing_catalog_pages = sorted(expected_catalog_pages - catalog_page_hrefs)
+    if missing_catalog_pages:
+        errors.append(f"catalog.json pages missing entries: {', '.join(missing_catalog_pages)}")
+    catalog_resources = catalog_data.get("data_resources")
+    if not isinstance(catalog_resources, list):
+        errors.append("catalog.json data_resources must be a list")
+        catalog_resources = []
+    catalog_resource_hrefs = {str(item.get("href") or "") for item in catalog_resources if isinstance(item, dict)}
+    expected_catalog_resources = {page for page in REQUIRED_PAGES if page.endswith(".json")}
+    missing_catalog_resources = sorted(expected_catalog_resources - catalog_resource_hrefs)
+    if missing_catalog_resources:
+        errors.append(f"catalog.json data_resources missing entries: {', '.join(missing_catalog_resources)}")
+    for index, item in enumerate(catalog_resources):
+        if not isinstance(item, dict):
+            errors.append(f"catalog.json data_resources[{index}] must be an object")
+            continue
+        for key in ("href", "description", "exists", "top_level_keys", "collections", "consumers"):
+            if key not in item:
+                errors.append(f"catalog.json data_resources[{index}] missing {key}")
+        if not isinstance(item.get("collections"), list):
+            errors.append(f"catalog.json data_resources[{index}].collections must be a list")
+    catalog_contracts = catalog_data.get("contracts")
+    if not isinstance(catalog_contracts, list):
+        errors.append("catalog.json contracts must be a list")
+        catalog_contracts = []
+    catalog_contract_hrefs = {str(item.get("href") or "") for item in catalog_contracts if isinstance(item, dict)}
+    if "guides/taxonomy.json" not in catalog_contract_hrefs:
+        errors.append("catalog.json contracts missing guides/taxonomy.json")
+    if not isinstance(catalog_data.get("integration_recipes"), list) or not catalog_data.get("integration_recipes"):
+        errors.append("catalog.json integration_recipes must be a non-empty list")
+    bootstrap_files = catalog_data.get("recommended_bootstrap_files")
+    if not isinstance(bootstrap_files, list) or "catalog.json" not in bootstrap_files:
+        errors.append("catalog.json recommended_bootstrap_files must include catalog.json")
 
     if stats_data.get("count") != len(report_slugs):
         errors.append(f"stats.json count {stats_data.get('count')} != markdown report count {len(report_slugs)}")

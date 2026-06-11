@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>状态看板</title>
+  <title>数据目录</title>
   <style>
     :root {
       color-scheme: light;
@@ -351,89 +351,23 @@
       header { padding-top: 28px; }
     }
 
-    .board-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-    }
-    .status-composer {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-      padding: 12px;
-      margin: 10px 0 12px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-    }
-    .status-composer input {
-      flex: 1 1 220px;
-      min-width: 0;
-    }
-    .board-wrap {
+    .catalog-summary {
       display: grid;
-      grid-auto-flow: column;
-      grid-auto-columns: minmax(280px, 1fr);
-      gap: 14px;
-      overflow-x: auto;
-      padding-bottom: 10px;
-      min-height: 480px;
-    }
-    .board-column {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-      min-width: 280px;
-      max-width: 420px;
-    }
-    .board-column header {
-      position: sticky;
-      top: 0;
-      z-index: 1;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 12px;
-      padding: 12px;
-      border-bottom: 1px solid var(--line);
-      background: var(--panel);
-      border-radius: 8px 8px 0 0;
+      margin-bottom: 18px;
     }
-    .board-column h2 { margin: 0; font-size: 15px; line-height: 1.2; }
-    .board-count {
-      min-width: 26px;
-      text-align: center;
-      color: var(--muted);
-      font-weight: 800;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 2px 8px;
+    .catalog-summary .metric-card strong { font-size: 24px; }
+    .catalog-bootstrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0 0 18px;
     }
-    .board-dropzone {
-      display: grid;
-      align-content: start;
-      gap: 10px;
-      min-height: 360px;
-      padding: 12px;
+    .catalog-table code {
+      white-space: normal;
+      overflow-wrap: anywhere;
     }
-    .board-dropzone.drag-over { outline: 2px solid var(--accent); outline-offset: -5px; }
-    .board-card {
-      display: grid;
-      gap: 7px;
-      padding: 12px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--bg);
-      cursor: grab;
-    }
-    .board-card:active { cursor: grabbing; }
-    .board-card.changed { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(37, 99, 235, .14); }
-    .board-card[hidden] { display: none; }
-    .board-card h3 { margin: 0; font-size: 15px; line-height: 1.35; }
-    .board-card .chips { padding-top: 0; }
-    .board-help { color: var(--muted); font-size: 13px; line-height: 1.5; }
     
   </style>
 </head>
@@ -451,366 +385,48 @@
 </div>
 
 <header class="shell">
-  <div class="eyebrow">Status Board</div>
-  <h1>状态看板</h1>
-  <p class="lead">按自定义 status 分列管理论文。拖拽卡片只会在浏览器里暂存改动，下载 CSV 后用现有写回脚本应用到 markdown frontmatter。</p>
+  <div class="eyebrow">Data Catalog</div>
+  <h1>数据目录</h1>
+  <p class="lead">把 wiki 页面、机器可读 JSON 和数据契约整理成一个接入目录。适合后续桌面软件、DMG 封装、开源贡献者或外部脚本快速发现可用数据源。</p>
   <div class="stats">
-    <a class="stat" href="index.html">卡片首页</a>
-    <a class="stat" href="library.html">论文库表格</a>
-    <a class="stat" href="board.html">状态看板</a>
-    <a class="stat" href="dashboard.html">管理控制台</a>
-    <a class="stat" href="collections.html">集合视图</a>
-    <a class="stat" href="related.html">关联网络</a>
-    <a class="stat" href="gaps.html">研究缺口</a>
-    <a class="stat" href="quality.html">质量治理</a>
-    <a class="stat" href="taxonomy.html">分类治理</a>
-    <a class="stat" href="timeline.html">时间轴</a>
-    <a class="stat" href="matrix.html">研究矩阵</a>
+    <a class="stat" href="release.html">发布摘要</a>
+    <a class="stat" href="manifest.json">Manifest JSON</a>
+    <a class="stat" href="catalog.json">Catalog JSON</a>
+    <a class="stat" href="workflow.html">工作流中心</a>
     <span class="stat">论文 5</span>
-    <span class="stat">状态 5</span>
+    <span class="stat">数据 15</span>
+    <span class="stat">页面 26</span>
   </div>
 </header>
-<div class="toolbar">
-  <div class="shell controls">
-    <input id="boardSearch" type="search" placeholder="搜索标题、作者、研究线、分类、状态">
-    <select id="boardWorkflow" aria-label="状态工作流"><option value="personal" selected>personal</option><option value="research">research</option></select>
-    <select id="boardLine"><option value="">全部研究线</option><option value="Parallel Decoding with Diffusion Models">Parallel Decoding with Diffusion Models (3)</option><option value="Efficient Attention Kernels">Efficient Attention Kernels (2)</option></select>
-    <select id="boardTrack"><option value="">全部方向</option><option value="Inference Acceleration">Inference Acceleration (3)</option><option value="Parallel Decoding">Parallel Decoding (3)</option><option value="Attention Kernels">Attention Kernels (2)</option><option value="Inference Serving Systems">Inference Serving Systems (1)</option></select>
-    <select id="boardImportance"><option value="">重要性</option><option value="5">5 星</option><option value="4">4 星及以上</option><option value="3">3 星及以上</option></select>
-  </div>
-</div>
 <main class="shell">
-  <div class="results-bar">
-    <strong id="boardCount">显示 5 / 5 篇</strong>
-    <div class="board-actions">
-      <span id="changedCount" class="board-help">未保存 0 篇</span>
-      <button id="downloadBoardPatch" class="button" type="button">下载 CSV</button>
-      <button id="resetBoardChanges" class="button" type="button">撤销改动</button>
-    </div>
-  </div>
-  <div class="status-composer">
-    <input id="newStatusName" type="text" placeholder="新增临时状态列，例如 queued_for_deep_read" aria-label="新增状态名称">
-    <button id="addStatusColumn" class="button" type="button">新增状态列</button>
-  </div>
-  <div class="board-help">导出后运行：python3 scripts/apply_library_metadata.py docs --input ~/Downloads/status_board_patch.csv --write</div>
-  <div class="board-wrap" id="boardWrap"><section class="board-column" data-status="read">
-  <header><h2>read</h2><span class="board-count">0</span></header>
-  <div class="board-dropzone" data-status="read"><article class="board-card" draggable="true"
-  data-slug="2602.06036-dflash"
-  data-original-status="read"
-  data-status="read"
-  data-line="Parallel Decoding with Diffusion Models"
-  data-tracks="Inference Acceleration|Parallel Decoding"
-  data-importance="4"
-  data-search="2602.06036-dflash dflash: block diffusion for flash speculative decoding dflash：用于快速 speculative decoding 的块扩散方法 dflash: block diffusion for flash speculative decoding 2602.06036v1 parallel decoding with diffusion models followup read deep_read jian chen yesheng liang zhijian liu llm systems inference acceleration parallel decoding lossless speculative decoding diffusion language models llm inference llm serving speculative decoding block diffusion kv injection parallel drafting speculative decoding target hidden features">
-  <h3><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a></h3>
-  <div class="meta">DFlash: Block Diffusion for Flash Speculative Decoding</div>
-  <div class="meta">Parallel Decoding with Diffusion Models</div>
-  <div class="card-flags"><span class="flag">I 4</span><span class="flag">deep_read</span><span class="flag">followup</span><span class="flag">code</span></div>
-  <div class="chips"><span class="chip">Diffusion Language Models</span><span class="chip">LLM Inference</span><span class="chip">LLM Serving</span><span class="chip">Speculative Decoding</span><span class="chip">+5</span></div>
-</article>
-<article class="board-card" draggable="true"
-  data-slug="2604.11035-introspective-dlm"
-  data-original-status="read"
-  data-status="read"
-  data-line="Parallel Decoding with Diffusion Models"
-  data-tracks="Inference Acceleration|Parallel Decoding"
-  data-importance="5"
-  data-search="2604.11035-introspective-dlm introspective diffusion language models 内省式扩散语言模型 introspective diffusion language models 2604.11035v1 parallel decoding with diffusion models foundation read deep_read yifan yu yuqing jian junxiong wang zhongzhu zhou donglin zhuang xinyu fang sri yanamandra xiaoxia wu qingyang wu shuaiwen leon song tri dao ben athiwaratkun james zou fan lai chenfeng xu llm systems inference acceleration parallel decoding parallel diffusion decoding diffusion language models llm llm serving parallel decoding speculative decoding gated lora introspective consistency introspective strided decoding logit-shifted causal training p/q acceptance sglang serving">
-  <h3><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a></h3>
-  <div class="meta">Introspective Diffusion Language Models</div>
-  <div class="meta">Parallel Decoding with Diffusion Models</div>
-  <div class="card-flags"><span class="flag">I 5</span><span class="flag">deep_read</span><span class="flag">foundation</span><span class="flag">code</span></div>
-  <div class="chips"><span class="chip">Diffusion Language Models</span><span class="chip">LLM</span><span class="chip">LLM Serving</span><span class="chip">Parallel Decoding</span><span class="chip">+7</span></div>
-</article>
-<article class="board-card" draggable="true"
-  data-slug="2605.12825-orthrus"
-  data-original-status="read"
-  data-status="read"
-  data-line="Parallel Decoding with Diffusion Models"
-  data-tracks="Inference Acceleration|Parallel Decoding"
-  data-importance="4"
-  data-search="2605.12825-orthrus orthrus: memory-efficient parallel token generation via dual-view diffusion orthrus：通过双视角扩散实现内存高效的并行 token 生成 orthrus: memory-efficient parallel token generation via dual-view diffusion 2605.12825v2 parallel decoding with diffusion models variant read deep_read chien van nguyen chaitra hegde van cuong pham ryan a. rossi franck dernoncourt thien huu nguyen llm systems inference acceleration parallel decoding memory-efficient parallel token generation diffusion language models kv cache llm inference parallel decoding speculative decoding dual-view attention forward kl distillation intra-model consensus masked diffusion shared kv cache">
-  <h3><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></h3>
-  <div class="meta">Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion</div>
-  <div class="meta">Parallel Decoding with Diffusion Models</div>
-  <div class="card-flags"><span class="flag">I 4</span><span class="flag">deep_read</span><span class="flag">variant</span><span class="flag">code</span></div>
-  <div class="chips"><span class="chip">Diffusion Language Models</span><span class="chip">KV Cache</span><span class="chip">LLM Inference</span><span class="chip">Parallel Decoding</span><span class="chip">+6</span></div>
-</article>
-<article class="board-card" draggable="true"
-  data-slug="2501.01005-flashinfer"
-  data-original-status="read"
-  data-status="read"
-  data-line="Efficient Attention Kernels"
-  data-tracks="Attention Kernels|Inference Serving Systems"
-  data-importance="4"
-  data-search="2501.01005-flashinfer flashinfer: efficient and customizable attention engine for llm inference serving flashinfer：面向 llm 推理服务的高效可定制 attention 引擎 flashinfer: efficient and customizable attention engine for llm inference serving 2501.01005v2 efficient attention kernels system read deep_read zihao ye lequn chen ruihang lai wuwei lin yineng zhang stephanie wang tianqi chen baris kasikci vinod grover arvind krishnamurthy luis ceze llm systems attention kernels inference serving systems customizable attention serving attention kernels gpu systems inference optimization kv cache llm serving block-sparse attention composable kv-cache format cuda graph flashattention jit compilation load-balanced scheduling">
-  <h3><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></h3>
-  <div class="meta">FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving</div>
-  <div class="meta">Efficient Attention Kernels</div>
-  <div class="card-flags"><span class="flag">I 4</span><span class="flag">deep_read</span><span class="flag">system</span><span class="flag">code</span></div>
-  <div class="chips"><span class="chip">Attention Kernels</span><span class="chip">GPU Systems</span><span class="chip">Inference Optimization</span><span class="chip">KV Cache</span><span class="chip">+7</span></div>
-</article>
-<article class="board-card" draggable="true"
-  data-slug="2307.08691-flashattention-2"
-  data-original-status="read"
-  data-status="read"
-  data-line="Efficient Attention Kernels"
-  data-tracks="Attention Kernels"
-  data-importance="5"
-  data-search="2307.08691-flashattention-2 flashattention-2: faster attention with better parallelism and work partitioning flashattention-2：用更好的并行性与工作划分加速 attention flashattention-2: faster attention with better parallelism and work partitioning 2307.08691v1 efficient attention kernels foundation read deep_read tri dao llm systems attention kernels efficient exact attention efficient attention gpu kernel optimization long context transformer cuda / gpu parallelism flashattention online softmax tiling work partitioning">
-  <h3><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></h3>
-  <div class="meta">FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning</div>
-  <div class="meta">Efficient Attention Kernels</div>
-  <div class="card-flags"><span class="flag">I 5</span><span class="flag">deep_read</span><span class="flag">foundation</span><span class="flag">code</span></div>
-  <div class="chips"><span class="chip">Efficient Attention</span><span class="chip">GPU Kernel Optimization</span><span class="chip">Long Context</span><span class="chip">Transformer</span><span class="chip">+5</span></div>
-</article></div>
-</section><section class="board-column" data-status="archived">
-  <header><h2>archived</h2><span class="board-count">0</span></header>
-  <div class="board-dropzone" data-status="archived"></div>
-</section><section class="board-column" data-status="reading">
-  <header><h2>reading</h2><span class="board-count">0</span></header>
-  <div class="board-dropzone" data-status="reading"></div>
-</section><section class="board-column" data-status="skimmed">
-  <header><h2>skimmed</h2><span class="board-count">0</span></header>
-  <div class="board-dropzone" data-status="skimmed"></div>
-</section><section class="board-column" data-status="unread">
-  <header><h2>unread</h2><span class="board-count">0</span></header>
-  <div class="board-dropzone" data-status="unread"></div>
-</section></div>
+  <section class="catalog-summary">
+    <section class="metric-card"><span>论文</span><strong>5</strong><span>当前报告数量</span></section>
+    <section class="metric-card"><span>Inbox</span><strong>0</strong><span>候选论文队列</span></section>
+    <section class="metric-card"><span>页面</span><strong>26</strong><span>可打开入口</span></section>
+    <section class="metric-card"><span>数据文件</span><strong>15</strong><span>JSON 接入点</span></section>
+    <section class="metric-card"><span>契约</span><strong>5</strong><span>模板与 schema</span></section>
+  </section>
+  <section>
+    <h2 class="section-title">推荐启动文件</h2>
+    <div class="catalog-bootstrap"><span class="chip">catalog.json</span><span class="chip">manifest.json</span><span class="chip">papers.json</span><span class="chip">search_index.json</span><span class="chip">workflow.json</span></div>
+  </section>
+  <section>
+    <h2 class="section-title">机器数据</h2>
+    <div class="table-wrap"><table class="data-table catalog-table"><thead><tr><th>文件</th><th>用途</th><th>状态</th><th>Count</th><th>Bytes</th><th>顶层字段</th><th>集合</th><th>消费者</th></tr></thead><tbody><tr><td><a href="papers.json">papers.json</a></td><td>论文索引、taxonomy 聚合、前端 controls</td><td><span class="flag">ok</span></td><td>5</td><td>17655</td><td>controls, count, generated_at, papers, tags, taxonomy</td><td>controls:8, tags:39, taxonomy:10, papers:5</td><td>frontend, desktop, search, filters</td></tr><tr><td><a href="search_index.json">search_index.json</a></td><td>正文全文检索索引</td><td><span class="flag">ok</span></td><td>5</td><td>171390</td><td>count, generated_at, papers</td><td>papers:5</td><td>search, desktop</td></tr><tr><td><a href="stats.json">stats.json</a></td><td>运营统计、覆盖率和队列规模</td><td><span class="flag">ok</span></td><td>5</td><td>11682</td><td>controls, count, coverage, distributions, generated_at, quality_score, queue_sizes, research_lines</td><td>controls:8, coverage:5, queue_sizes:2, taxonomy:9, distributions:2, taxonomy_balance:10</td><td>dashboard, ops, analytics</td></tr><tr><td><a href="quality.json">quality.json</a></td><td>质量问题、taxonomy load、taxonomy drift、标签别名建议</td><td><span class="flag">ok</span></td><td>5</td><td>5329</td><td>count, coverage, duplicate_reports, generated_at, governance_policy, issues, label_alias_suggestions, quality_score</td><td>coverage:4, queues:9, issues:5, taxonomy_load:2, governance_policy:4, taxonomy_drift:0</td><td>quality-gate, ops, writeback</td></tr><tr><td><a href="review.json">review.json</a></td><td>复习计划和建议 next_review</td><td><span class="flag">ok</span></td><td>5</td><td>3602</td><td>count, generated_at, items, queues</td><td>queues:4, items:5</td><td>review, scheduler, writeback</td></tr><tr><td><a href="freshness.json">freshness.json</a></td><td>报告新鲜度、过期分析和研究线维护队列</td><td><span class="flag">ok</span></td><td>5</td><td>5002</td><td>count, generated_at, items, line_health, queues, summary, today</td><td>summary:2, queues:4, line_health:2, items:5</td><td>freshness, maintenance</td></tr><tr><td><a href="taxonomy_actions.json">taxonomy_actions.json</a></td><td>分类长尾、过载和空候选治理任务</td><td><span class="flag">ok</span></td><td>55</td><td>23950</td><td>actions, count, generated_at, governance_policy, paper_count, summary</td><td>summary:4, governance_policy:5, actions:55</td><td>taxonomy, project-management, writeback</td></tr><tr><td><a href="actions.json">actions.json</a></td><td>统一行动队列，汇总质量、复习、分类和 inbox 任务</td><td><span class="flag">ok</span></td><td>62</td><td>34334</td><td>actions, count, generated_at, summary</td><td>summary:2, actions:62</td><td>tasks, project-management, exports</td></tr><tr><td><a href="workflow.json">workflow.json</a></td><td>状态工作流配置、分布和漂移审计</td><td><span class="flag">ok</span></td><td>5</td><td>9893</td><td>active_status_workflow, active_unconfigured, commands, count, generated_at, recommendations, shared_workflow_views, workflow_count</td><td>workflows:2, active_unconfigured:0, shared_workflow_views:0, recommendations:2, commands:4</td><td>workflow, desktop, filters</td></tr><tr><td><a href="pivot.json">pivot.json</a></td><td>分类透视表维度、论文投影和交叉分布</td><td><span class="flag">ok</span></td><td>5</td><td>19198</td><td>count, dimensions, generated_at, papers, presets</td><td>dimensions:12, papers:5, presets:4</td><td>analytics, classification, desktop</td></tr><tr><td><a href="compare.json">compare.json</a></td><td>论文对比视图数据和推荐对比集合</td><td><span class="flag">ok</span></td><td>5</td><td>16848</td><td>controls, count, fields, generated_at, papers, suggested_sets</td><td>fields:22, papers:5, suggested_sets:7, controls:8</td><td>comparison, curation, desktop</td></tr><tr><td><a href="snapshot.json">snapshot.json</a></td><td>当前知识库治理快照和发布基线</td><td><span class="flag">ok</span></td><td>5</td><td>10490</td><td>action_groups, active_status_workflow, artifact_summary, count, coverage, generated_at, governance_policy, links</td><td>publish_checks:6, coverage:4, queue_sizes:3, risk_queue_sizes:8, action_groups:2, governance_policy:4</td><td>release, audit, desktop</td></tr><tr><td><a href="inbox.json">inbox.json</a></td><td>候选论文队列和重复项</td><td><span class="flag">ok</span></td><td>0</td><td>130</td><td>count, duplicates, generated_at, items, priorities, statuses</td><td>statuses:0, priorities:0, duplicates:0, items:0</td><td>intake, dedupe</td></tr><tr><td><a href="manifest.json">manifest.json</a></td><td>发布摘要和页面入口清单</td><td><span class="flag">ok</span></td><td>5</td><td>0</td><td>artifact_inventory, command_recipes, commands, contract_files, controls, count, coverage, data_files</td><td>publish_checks:6, coverage:4, queue_sizes:3, taxonomy:9, research_lines:2, controls:8</td><td>release, audit, ci</td></tr><tr><td><a href="catalog.json">catalog.json</a></td><td>机器数据、页面入口和契约字段目录</td><td><span class="flag">ok</span></td><td>5</td><td>0</td><td>generated_at, count, inbox_count, page_count, data_file_count, contract_count, pages, data_resources</td><td>-</td><td>desktop, api, open-source-onboarding</td></tr></tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">页面入口</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>页面</th><th>类型</th><th>用途</th></tr></thead><tbody><tr><td><a href="index.html">首页</a></td><td>view</td><td>卡片检索、筛选、研究线概览</td></tr><tr><td><a href="library.html">论文库表格</a></td><td>view</td><td>密集筛选、列管理、批量更新</td></tr><tr><td><a href="dashboard.html">管理控制台</a></td><td>ops</td><td>覆盖率、队列和运营指标</td></tr><tr><td><a href="release.html">发布摘要</a></td><td>ops</td><td>页面入口、数据文件、质量状态</td></tr><tr><td><a href="snapshot.html">治理快照</a></td><td>ops</td><td>当前发布基线、队列和治理策略快照</td></tr><tr><td><a href="actions.html">行动中心</a></td><td>ops</td><td>统一运营队列和可分派任务</td></tr><tr><td><a href="collections.html">集合视图</a></td><td>view</td><td>共享视图、智能集合、研究线入口</td></tr><tr><td><a href="balance.html">分类均衡</a></td><td>ops</td><td>分类维度健康度、长尾和过载复盘</td></tr><tr><td><a href="coverage.html">覆盖地图</a></td><td>ops</td><td>研究线 x 分类字段覆盖缺口</td></tr><tr><td><a href="facets.html">分类工作台</a></td><td>ops</td><td>标签规模、长尾和过载分类</td></tr><tr><td><a href="related.html">关联网络</a></td><td>analysis</td><td>标签共现、相似论文、孤岛论文</td></tr><tr><td><a href="gaps.html">研究缺口</a></td><td>ops</td><td>下一步行动和研究线缺口</td></tr><tr><td><a href="board.html">状态看板</a></td><td>workflow</td><td>拖拽式状态流和 CSV patch</td></tr><tr><td><a href="workflow.html">工作流中心</a></td><td>workflow</td><td>状态体系对比、分布和漂移审计</td></tr><tr><td><a href="pivot.html">分类透视表</a></td><td>analysis</td><td>任意两个分类维度交叉分析论文分布</td></tr><tr><td><a href="compare.html">论文对比</a></td><td>analysis</td><td>并排比较候选论文的分类、状态和质量信号</td></tr><tr><td><a href="catalog.html">数据目录</a></td><td>ops</td><td>机器数据、页面和契约的接入目录</td></tr><tr><td><a href="inbox.html">待处理池</a></td><td>workflow</td><td>候选论文队列和去重提示</td></tr><tr><td><a href="review.html">复习计划</a></td><td>workflow</td><td>待复习、需建计划、建议日期</td></tr><tr><td><a href="freshness.html">时效治理</a></td><td>ops</td><td>报告新鲜度、过期分析和研究线维护</td></tr><tr><td><a href="quality.html">质量治理</a></td><td>ops</td><td>弱元数据、别名建议、taxonomy drift</td></tr><tr><td><a href="taxonomy.html">分类治理</a></td><td>ops</td><td>分类矩阵、状态工作流、治理队列</td></tr><tr><td><a href="timeline.html">时间轴</a></td><td>analysis</td><td>按年份和研究线浏览论文演进</td></tr><tr><td><a href="matrix.html">研究矩阵</a></td><td>analysis</td><td>research line x year 覆盖</td></tr><tr><td><a href="lines/index.html">研究线</a></td><td>view</td><td>按研究脉络组织论文</td></tr><tr><td><a href="tags.html">分类总览</a></td><td>view</td><td>按标签聚合论文</td></tr></tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">数据契约</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>文件</th><th>用途</th></tr></thead><tbody><tr><td><a href="guides/report.template.md">guides/report.template.md</a></td><td>中文论文阅读报告模板</td></tr><tr><td><a href="guides/metadata.schema.json">guides/metadata.schema.json</a></td><td>报告 frontmatter 字段契约</td></tr><tr><td><a href="guides/inbox.schema.json">guides/inbox.schema.json</a></td><td>候选论文 inbox.csv 字段契约</td></tr><tr><td><a href="guides/taxonomy.schema.json">guides/taxonomy.schema.json</a></td><td>taxonomy.json 配置字段契约</td></tr><tr><td><a href="guides/taxonomy.json">guides/taxonomy.json</a></td><td>分类别名、状态工作流和共享视图配置</td></tr></tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">集成 Recipes</h2>
+    <div class="table-wrap"><table class="data-table catalog-table"><thead><tr><th>场景</th><th>命令 / 读取方式</th><th>输入</th><th>输出</th></tr></thead><tbody><tr><td>Build local wiki</td><td><code>python3 scripts/build_wiki.py docs</code></td><td>docs/*.md, docs/guides/taxonomy.json</td><td>docs/index.html, docs/papers.json, docs/manifest.json</td></tr><tr><td>Validate publish readiness</td><td><code>python3 scripts/check_quality.py docs</code></td><td>docs/manifest.json, docs/quality.json, docs/workflow.json</td><td>terminal quality gate result</td></tr><tr><td>Desktop sync bootstrap</td><td><code>read docs/catalog.json, docs/papers.json, docs/search_index.json</code></td><td>catalog.json, papers.json, search_index.json, workflow.json</td><td>local searchable paper library</td></tr><tr><td>Project task export</td><td><code>python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv</code></td><td>actions.json, taxonomy_actions.json, review.json</td><td>docs/exports/actions-project.csv</td></tr></tbody></table></div>
+  </section>
 </main>
-<script>
-const boardCards = Array.from(document.querySelectorAll(".board-card"));
-const boardWrap = document.querySelector("#boardWrap");
-let dropzones = Array.from(document.querySelectorAll(".board-dropzone"));
-const boardWorkflows = {"personal": {"status_values": ["unread", "skimmed", "reading", "read", "archived"], "reading_stage_values": ["skim", "normal_read", "deep_read", "code_checked"], "review_stage_values": ["fresh", "due", "reviewed"]}, "research": {"status_values": ["inbox", "triaged", "reading", "implemented", "cited", "archived"], "reading_stage_values": ["skim", "normal_read", "deep_read", "code_checked", "reproduced"], "review_stage_values": ["fresh", "due", "reviewed", "evergreen"]}};
-const activeBoardWorkflow = "personal";
-const boardSearch = document.querySelector("#boardSearch");
-const boardWorkflow = document.querySelector("#boardWorkflow");
-const boardLine = document.querySelector("#boardLine");
-const boardTrack = document.querySelector("#boardTrack");
-const boardImportance = document.querySelector("#boardImportance");
-const boardCount = document.querySelector("#boardCount");
-const changedCount = document.querySelector("#changedCount");
-const downloadBoardPatch = document.querySelector("#downloadBoardPatch");
-const resetBoardChanges = document.querySelector("#resetBoardChanges");
-const newStatusName = document.querySelector("#newStatusName");
-const addStatusColumn = document.querySelector("#addStatusColumn");
-let draggedCard = null;
-
-function boardTokens(value) {
-  return String(value || "").split("|").filter(Boolean);
-}
-
-function boardCsvCell(value) {
-  const text = String(value ?? "");
-  return (text.includes(",") || text.includes('"') || text.includes("\n"))
-    ? `"${text.replaceAll('"', '""')}"`
-    : text;
-}
-
-function downloadBoardCsv(filename, rows) {
-  const csv = rows.map(row => row.map(boardCsvCell).join(",")).join("\n") + "\n";
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = filename;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  URL.revokeObjectURL(url);
-}
-
-function changedCards() {
-  return boardCards.filter(card => card.dataset.status !== card.dataset.originalStatus);
-}
-
-function syncBoardUrl() {
-  const url = new URL(window.location.href);
-  const defaults = {
-    q: "",
-    workflow: activeBoardWorkflow || "",
-    line: "",
-    track: "",
-    importance: "",
-  };
-  const values = {
-    q: boardSearch.value.trim(),
-    workflow: boardWorkflow.value || "",
-    line: boardLine.value || "",
-    track: boardTrack.value || "",
-    importance: boardImportance.value || "",
-  };
-  Object.entries(values).forEach(([key, value]) => {
-    if (value && value !== defaults[key]) url.searchParams.set(key, value);
-    else url.searchParams.delete(key);
-  });
-  window.history.replaceState(null, "", url);
-}
-
-function readBoardState() {
-  const params = new URLSearchParams(window.location.search);
-  boardSearch.value = params.get("q") || "";
-  const workflow = params.get("workflow") || activeBoardWorkflow || boardWorkflow.value;
-  if (workflow && Array.from(boardWorkflow.options).some(option => option.value === workflow)) {
-    boardWorkflow.value = workflow;
-  }
-  boardLine.value = params.get("line") || "";
-  boardTrack.value = params.get("track") || "";
-  boardImportance.value = params.get("importance") || "";
-}
-
-function placeCard(card, status) {
-  const zone = dropzones.find(item => item.dataset.status === status);
-  if (!zone) return;
-  zone.appendChild(card);
-  card.dataset.status = status;
-  card.classList.toggle("changed", card.dataset.status !== card.dataset.originalStatus);
-  renderBoard();
-}
-
-function renderBoard(updateUrl = true) {
-  const q = boardSearch.value.trim().toLowerCase();
-  const minImportance = Number(boardImportance.value || 0);
-  let visible = 0;
-  boardCards.forEach(card => {
-    const hit = (!q || card.dataset.search.includes(q))
-      && (!boardLine.value || card.dataset.line === boardLine.value)
-      && (!boardTrack.value || boardTokens(card.dataset.tracks).includes(boardTrack.value))
-      && (!minImportance || Number(card.dataset.importance || 0) >= minImportance);
-    card.hidden = !hit;
-    if (hit) visible += 1;
-  });
-  dropzones.forEach(zone => {
-    const count = Array.from(zone.querySelectorAll(".board-card")).filter(card => !card.hidden).length;
-    zone.closest(".board-column").querySelector(".board-count").textContent = count;
-  });
-  const changed = changedCards().length;
-  boardCount.textContent = `显示 ${visible} / ${boardCards.length} 篇`;
-  changedCount.textContent = `未保存 ${changed} 篇`;
-  downloadBoardPatch.disabled = changed === 0;
-  resetBoardChanges.disabled = changed === 0;
-  if (updateUrl) syncBoardUrl();
-}
-
-function attachDropzone(zone) {
-  zone.addEventListener("dragover", event => {
-    event.preventDefault();
-    zone.classList.add("drag-over");
-  });
-  zone.addEventListener("dragleave", () => zone.classList.remove("drag-over"));
-  zone.addEventListener("drop", event => {
-    event.preventDefault();
-    zone.classList.remove("drag-over");
-    if (draggedCard) placeCard(draggedCard, zone.dataset.status);
-  });
-}
-
-function createBoardColumn(status) {
-  const normalized = String(status || "").trim();
-  const section = document.createElement("section");
-  section.className = "board-column";
-  section.dataset.status = normalized;
-  const header = document.createElement("header");
-  const title = document.createElement("h2");
-  title.textContent = normalized;
-  const count = document.createElement("span");
-  count.className = "board-count";
-  count.textContent = "0";
-  header.append(title, count);
-  const zone = document.createElement("div");
-  zone.className = "board-dropzone";
-  zone.dataset.status = normalized;
-  section.append(header, zone);
-  attachDropzone(zone);
-  return { section, zone };
-}
-
-function addBoardColumn(status) {
-  const normalized = String(status || "").trim();
-  if (!normalized) return;
-  if (dropzones.some(zone => zone.dataset.status === normalized)) {
-    window.alert("这个状态列已经存在。");
-    return;
-  }
-  const { section, zone } = createBoardColumn(normalized);
-  boardWrap.appendChild(section);
-  dropzones.push(zone);
-  renderBoard();
-}
-
-function uniqueValues(values) {
-  const seen = new Set();
-  return values
-    .map(value => String(value || "").trim())
-    .filter(value => {
-      if (!value || seen.has(value)) return false;
-      seen.add(value);
-      return true;
-    });
-}
-
-function applyWorkflow(name, updateUrl = true) {
-  const workflow = boardWorkflows[name] || {};
-  const workflowStatuses = Array.isArray(workflow.status_values) ? workflow.status_values : [];
-  const activeStatuses = boardCards.map(card => card.dataset.status || card.dataset.originalStatus || "unread");
-  const orderedStatuses = uniqueValues([...workflowStatuses, ...activeStatuses]);
-  if (!orderedStatuses.length) return;
-  const cards = boardCards.slice();
-  boardWrap.textContent = "";
-  dropzones = [];
-  orderedStatuses.forEach(status => {
-    const { section, zone } = createBoardColumn(status);
-    boardWrap.appendChild(section);
-    dropzones.push(zone);
-  });
-  cards.forEach(card => {
-    const status = card.dataset.status || card.dataset.originalStatus || "unread";
-    const zone = dropzones.find(item => item.dataset.status === status) || dropzones[0];
-    zone.appendChild(card);
-  });
-  renderBoard(updateUrl);
-}
-
-boardCards.forEach(card => {
-  card.addEventListener("dragstart", event => {
-    draggedCard = card;
-    event.dataTransfer.effectAllowed = "move";
-    event.dataTransfer.setData("text/plain", card.dataset.slug);
-  });
-  card.addEventListener("dragend", () => {
-    draggedCard = null;
-    dropzones.forEach(zone => zone.classList.remove("drag-over"));
-  });
-});
-
-dropzones.forEach(attachDropzone);
-addStatusColumn.addEventListener("click", () => {
-  addBoardColumn(newStatusName.value);
-  newStatusName.value = "";
-  newStatusName.focus();
-});
-newStatusName.addEventListener("keydown", event => {
-  if (event.key === "Enter") {
-    event.preventDefault();
-    addStatusColumn.click();
-  }
-});
-
-[boardSearch, boardLine, boardTrack, boardImportance].forEach(el => el.addEventListener("input", () => renderBoard()));
-boardWorkflow.addEventListener("change", () => applyWorkflow(boardWorkflow.value));
-downloadBoardPatch.addEventListener("click", () => {
-  const changed = changedCards();
-  if (!changed.length) return;
-  downloadBoardCsv("status_board_patch.csv", [["slug", "status"], ...changed.map(card => [card.dataset.slug, card.dataset.status])]);
-});
-resetBoardChanges.addEventListener("click", () => {
-  changedCards().forEach(card => placeCard(card, card.dataset.originalStatus));
-});
-readBoardState();
-applyWorkflow(boardWorkflow.value, false);
-</script>
 
 <script>
 (() => {

@@ -1,0 +1,984 @@
+{
+  "generated_at": "2026-06-12T03:42:54",
+  "count": 5,
+  "inbox_count": 0,
+  "page_count": 26,
+  "data_file_count": 15,
+  "contract_count": 5,
+  "pages": [
+    {
+      "title": "首页",
+      "href": "index.html",
+      "kind": "view",
+      "description": "卡片检索、筛选、研究线概览"
+    },
+    {
+      "title": "论文库表格",
+      "href": "library.html",
+      "kind": "view",
+      "description": "密集筛选、列管理、批量更新"
+    },
+    {
+      "title": "管理控制台",
+      "href": "dashboard.html",
+      "kind": "ops",
+      "description": "覆盖率、队列和运营指标"
+    },
+    {
+      "title": "发布摘要",
+      "href": "release.html",
+      "kind": "ops",
+      "description": "页面入口、数据文件、质量状态"
+    },
+    {
+      "title": "治理快照",
+      "href": "snapshot.html",
+      "kind": "ops",
+      "description": "当前发布基线、队列和治理策略快照"
+    },
+    {
+      "title": "行动中心",
+      "href": "actions.html",
+      "kind": "ops",
+      "description": "统一运营队列和可分派任务"
+    },
+    {
+      "title": "集合视图",
+      "href": "collections.html",
+      "kind": "view",
+      "description": "共享视图、智能集合、研究线入口"
+    },
+    {
+      "title": "分类均衡",
+      "href": "balance.html",
+      "kind": "ops",
+      "description": "分类维度健康度、长尾和过载复盘"
+    },
+    {
+      "title": "覆盖地图",
+      "href": "coverage.html",
+      "kind": "ops",
+      "description": "研究线 x 分类字段覆盖缺口"
+    },
+    {
+      "title": "分类工作台",
+      "href": "facets.html",
+      "kind": "ops",
+      "description": "标签规模、长尾和过载分类"
+    },
+    {
+      "title": "关联网络",
+      "href": "related.html",
+      "kind": "analysis",
+      "description": "标签共现、相似论文、孤岛论文"
+    },
+    {
+      "title": "研究缺口",
+      "href": "gaps.html",
+      "kind": "ops",
+      "description": "下一步行动和研究线缺口"
+    },
+    {
+      "title": "状态看板",
+      "href": "board.html",
+      "kind": "workflow",
+      "description": "拖拽式状态流和 CSV patch"
+    },
+    {
+      "title": "工作流中心",
+      "href": "workflow.html",
+      "kind": "workflow",
+      "description": "状态体系对比、分布和漂移审计"
+    },
+    {
+      "title": "分类透视表",
+      "href": "pivot.html",
+      "kind": "analysis",
+      "description": "任意两个分类维度交叉分析论文分布"
+    },
+    {
+      "title": "论文对比",
+      "href": "compare.html",
+      "kind": "analysis",
+      "description": "并排比较候选论文的分类、状态和质量信号"
+    },
+    {
+      "title": "数据目录",
+      "href": "catalog.html",
+      "kind": "ops",
+      "description": "机器数据、页面和契约的接入目录"
+    },
+    {
+      "title": "待处理池",
+      "href": "inbox.html",
+      "kind": "workflow",
+      "description": "候选论文队列和去重提示"
+    },
+    {
+      "title": "复习计划",
+      "href": "review.html",
+      "kind": "workflow",
+      "description": "待复习、需建计划、建议日期"
+    },
+    {
+      "title": "时效治理",
+      "href": "freshness.html",
+      "kind": "ops",
+      "description": "报告新鲜度、过期分析和研究线维护"
+    },
+    {
+      "title": "质量治理",
+      "href": "quality.html",
+      "kind": "ops",
+      "description": "弱元数据、别名建议、taxonomy drift"
+    },
+    {
+      "title": "分类治理",
+      "href": "taxonomy.html",
+      "kind": "ops",
+      "description": "分类矩阵、状态工作流、治理队列"
+    },
+    {
+      "title": "时间轴",
+      "href": "timeline.html",
+      "kind": "analysis",
+      "description": "按年份和研究线浏览论文演进"
+    },
+    {
+      "title": "研究矩阵",
+      "href": "matrix.html",
+      "kind": "analysis",
+      "description": "research line x year 覆盖"
+    },
+    {
+      "title": "研究线",
+      "href": "lines/index.html",
+      "kind": "view",
+      "description": "按研究脉络组织论文"
+    },
+    {
+      "title": "分类总览",
+      "href": "tags.html",
+      "kind": "view",
+      "description": "按标签聚合论文"
+    }
+  ],
+  "data_resources": [
+    {
+      "href": "papers.json",
+      "description": "论文索引、taxonomy 聚合、前端 controls",
+      "exists": true,
+      "size_bytes": 17655,
+      "top_level_keys": [
+        "controls",
+        "count",
+        "generated_at",
+        "papers",
+        "tags",
+        "taxonomy"
+      ],
+      "collections": [
+        {
+          "key": "controls",
+          "type": "object",
+          "count": 8
+        },
+        {
+          "key": "tags",
+          "type": "object",
+          "count": 39
+        },
+        {
+          "key": "taxonomy",
+          "type": "object",
+          "count": 10
+        },
+        {
+          "key": "papers",
+          "type": "list",
+          "count": 5
+        }
+      ],
+      "declared_count": 5,
+      "generated_at": "2026-06-12T03:42:54",
+      "consumers": [
+        "frontend",
+        "desktop",
+        "search",
+        "filters"
+      ],
+      "error": ""
+    },
+    {
+      "href": "search_index.json",
+      "description": "正文全文检索索引",
+      "exists": true,
+      "size_bytes": 171390,
+      "top_level_keys": [
+        "count",
+        "generated_at",
+        "papers"
+      ],
+      "collections": [
+        {
+          "key": "papers",
+          "type": "list",
+          "count": 5
+        }
+      ],
+      "declared_count": 5,
+      "generated_at": "2026-06-12T03:42:54",
+      "consumers": [
+        "search",
+        "desktop"
+      ],
+      "error": ""
+    },
+    {
+      "href": "stats.json",
+      "description": "运营统计、覆盖率和队列规模",
+      "exists": true,
+      "size_bytes": 11682,
+      "top_level_keys": [
+        "controls",
+        "count",
+        "coverage",
+        "distributions",
+        "generated_at",
+        "quality_score",
+        "queue_sizes",
+        "research_lines",
+        "shared_views",
+        "taxonomy",
+        "taxonomy_balance"
+      ],
+      "collections": [
+        {
+          "key": "controls",
+          "type": "object",
+          "count": 8
+        },
+        {
+          "key": "coverage",
+          "type": "object",
+          "count": 5
+        },
+        {
+          "key": "queue_sizes",
+          "type": "object",
+          "count": 2
+        },
+        {
+          "key": "taxonomy",
+          "type": "object",
+          "count": 9
+        },
+        {
+          "key": "distributions",
+          "type": "object",
+          "count": 2
+        },
+        {
+          "key": "taxonomy_balance",
+          "type": "list",
+          "count": 10
+        },
+        {
+          "key": "research_lines",
+          "type": "list",
+          "count": 2
+        }
+      ],
+      "declared_count": 5,
+      "generated_at": "2026-06-12T03:42:54",
+      "consumers": [
+        "dashboard",
+        "ops",
+        "analytics"
+      ],
+      "error": ""
+    },
+    {
+      "href": "quality.json",
+      "description": "质量问题、taxonomy load、taxonomy drift、标签别名建议",
+      "exists": true,
+      "size_bytes": 5329,
+      "top_level_keys": [
+        "count",
+        "coverage",
+        "duplicate_reports",
+        "generated_at",
+        "governance_policy",
+        "issues",
+        "label_alias_suggestions",
+        "quality_score",
+        "queues",
+        "taxonomy_drift",
+        "taxonomy_load"
+      ],
+      "collections": [
+        {
+          "key": "coverage",
+          "type": "object",
+          "count": 4
+        },
+        {
+          "key": "queues",
+          "type": "object",
+          "count": 9
+        },
+        {
+          "key": "issues",
+          "type": "list",
+          "count": 5
+        },
+        {
+          "key": "taxonomy_load",
+          "type": "list",
+          "count": 2
+        },
+        {
+          "key": "governance_policy",
+          "type": "object",
+          "count": 4
+        },
+        {
+          "key": "taxonomy_drift",
+          "type": "list",
+          "count": 0
+        },
+        {
+          "key": "label_alias_suggestions",
+          "type": "list",
+          "count": 0
+        },
+        {
+          "key": "duplicate_reports",
+          "type": "list",
+          "count": 0
+        }
+      ],
+      "declared_count": 5,
+      "generated_at": "2026-06-12T03:42:54",
+      "consumers": [
+        "quality-gate",
+        "ops",
+        "writeback"
+      ],
+      "error": ""
+    },
+    {
+      "href": "review.json",
+      "description": "复习计划和建议 next_review",
+      "exists": true,
+      "size_bytes": 3602,
+      "top_level_keys": [
+        "count",
+        "generated_at",
+        "items",
+        "queues"
+      ],
+      "collections": [
+        {
+          "key": "queues",
+          "type": "object",
+          "count": 4
+        },
+        {
+          "key": "items",
+          "type": "list",
+          "count": 5
+        }
+      ],
+      "declared_count": 5,
+      "generated_at": "2026-06-12T03:42:54",
+      "consumers": [
+        "review",
+        "scheduler",
+        "writeback"
+      ],
+      "error": ""
+    },
+    {
+      "href": "freshness.json",
+      "description": "报告新鲜度、过期分析和研究线维护队列",
+      "exists": true,
+      "size_bytes": 5002,
+      "top_level_keys": [
+        "count",
+        "generated_at",
+        "items",
+        "line_health",
+        "queues",
+        "summary",
+        "today"
+      ],
+      "collections": [
+        {
+          "key": "summary",
+          "type": "object",
+          "count": 2
+        },
+        {
+          "key": "queues",
+          "type": "object",
+          "count": 4
+        },
+        {
+          "key": "line_health",
+          "type": "list",
+          "count": 2
+        },
+        {
+          "key": "items",
+          "type": "list",
+          "count": 5
+        }
+      ],
+      "declared_count": 5,
+      "generated_at": "2026-06-12T03:42:54",
+      "consumers": [
+        "freshness",
+        "maintenance"
+      ],
+      "error": ""
+    },
+    {
+      "href": "taxonomy_actions.json",
+      "description": "分类长尾、过载和空候选治理任务",
+      "exists": true,
+      "size_bytes": 23950,
+      "top_level_keys": [
+        "actions",
+        "count",
+        "generated_at",
+        "governance_policy",
+        "paper_count",
+        "summary"
+      ],
+      "collections": [
+        {
+          "key": "summary",
+          "type": "object",
+          "count": 4
+        },
+        {
+          "key": "governance_policy",
+          "type": "object",
+          "count": 5
+        },
+        {
+          "key": "actions",
+          "type": "list",
+          "count": 55
+        }
+      ],
+      "declared_count": 55,
+      "generated_at": "2026-06-12T03:42:54",
+      "consumers": [
+        "taxonomy",
+        "project-management",
+        "writeback"
+      ],
+      "error": ""
+    },
+    {
+      "href": "actions.json",
+      "description": "统一行动队列，汇总质量、复习、分类和 inbox 任务",
+      "exists": true,
+      "size_bytes": 34334,
+      "top_level_keys": [
+        "actions",
+        "count",
+        "generated_at",
+        "summary"
+      ],
+      "collections": [
+        {
+          "key": "summary",
+          "type": "object",
+          "count": 2
+        },
+        {
+          "key": "actions",
+          "type": "list",
+          "count": 62
+        }
+      ],
+      "declared_count": 62,
+      "generated_at": "2026-06-12T03:42:54",
+      "consumers": [
+        "tasks",
+        "project-management",
+        "exports"
+      ],
+      "error": ""
+    },
+    {
+      "href": "workflow.json",
+      "description": "状态工作流配置、分布和漂移审计",
+      "exists": true,
+      "size_bytes": 9893,
+      "top_level_keys": [
+        "active_status_workflow",
+        "active_unconfigured",
+        "commands",
+        "count",
+        "generated_at",
+        "recommendations",
+        "shared_workflow_views",
+        "workflow_count",
+        "workflows"
+      ],
+      "collections": [
+        {
+          "key": "workflows",
+          "type": "list",
+          "count": 2
+        },
+        {
+          "key": "active_unconfigured",
+          "type": "list",
+          "count": 0
+        },
+        {
+          "key": "shared_workflow_views",
+          "type": "list",
+          "count": 0
+        },
+        {
+          "key": "recommendations",
+          "type": "list",
+          "count": 2
+        },
+        {
+          "key": "commands",
+          "type": "list",
+          "count": 4
+        }
+      ],
+      "declared_count": 5,
+      "generated_at": "2026-06-12T03:42:54",
+      "consumers": [
+        "workflow",
+        "desktop",
+        "filters"
+      ],
+      "error": ""
+    },
+    {
+      "href": "pivot.json",
+      "description": "分类透视表维度、论文投影和交叉分布",
+      "exists": true,
+      "size_bytes": 19198,
+      "top_level_keys": [
+        "count",
+        "dimensions",
+        "generated_at",
+        "papers",
+        "presets"
+      ],
+      "collections": [
+        {
+          "key": "dimensions",
+          "type": "list",
+          "count": 12
+        },
+        {
+          "key": "papers",
+          "type": "list",
+          "count": 5
+        },
+        {
+          "key": "presets",
+          "type": "list",
+          "count": 4
+        }
+      ],
+      "declared_count": 5,
+      "generated_at": "2026-06-12T03:42:54",
+      "consumers": [
+        "analytics",
+        "classification",
+        "desktop"
+      ],
+      "error": ""
+    },
+    {
+      "href": "compare.json",
+      "description": "论文对比视图数据和推荐对比集合",
+      "exists": true,
+      "size_bytes": 16848,
+      "top_level_keys": [
+        "controls",
+        "count",
+        "fields",
+        "generated_at",
+        "papers",
+        "suggested_sets"
+      ],
+      "collections": [
+        {
+          "key": "fields",
+          "type": "list",
+          "count": 22
+        },
+        {
+          "key": "papers",
+          "type": "list",
+          "count": 5
+        },
+        {
+          "key": "suggested_sets",
+          "type": "list",
+          "count": 7
+        },
+        {
+          "key": "controls",
+          "type": "object",
+          "count": 8
+        }
+      ],
+      "declared_count": 5,
+      "generated_at": "2026-06-12T03:42:54",
+      "consumers": [
+        "comparison",
+        "curation",
+        "desktop"
+      ],
+      "error": ""
+    },
+    {
+      "href": "snapshot.json",
+      "description": "当前知识库治理快照和发布基线",
+      "exists": true,
+      "size_bytes": 10490,
+      "top_level_keys": [
+        "action_groups",
+        "active_status_workflow",
+        "artifact_summary",
+        "count",
+        "coverage",
+        "generated_at",
+        "governance_policy",
+        "links",
+        "name",
+        "publish_checks",
+        "publish_ready",
+        "quality_score",
+        "queue_sizes",
+        "research_lines",
+        "risk_queue_sizes",
+        "snapshot_id"
+      ],
+      "collections": [
+        {
+          "key": "publish_checks",
+          "type": "object",
+          "count": 6
+        },
+        {
+          "key": "coverage",
+          "type": "object",
+          "count": 4
+        },
+        {
+          "key": "queue_sizes",
+          "type": "object",
+          "count": 3
+        },
+        {
+          "key": "risk_queue_sizes",
+          "type": "object",
+          "count": 8
+        },
+        {
+          "key": "action_groups",
+          "type": "list",
+          "count": 2
+        },
+        {
+          "key": "governance_policy",
+          "type": "object",
+          "count": 4
+        },
+        {
+          "key": "research_lines",
+          "type": "list",
+          "count": 2
+        },
+        {
+          "key": "artifact_summary",
+          "type": "object",
+          "count": 3
+        },
+        {
+          "key": "links",
+          "type": "object",
+          "count": 5
+        }
+      ],
+      "declared_count": 5,
+      "generated_at": "2026-06-12T03:42:54",
+      "consumers": [
+        "release",
+        "audit",
+        "desktop"
+      ],
+      "error": ""
+    },
+    {
+      "href": "inbox.json",
+      "description": "候选论文队列和重复项",
+      "exists": true,
+      "size_bytes": 130,
+      "top_level_keys": [
+        "count",
+        "duplicates",
+        "generated_at",
+        "items",
+        "priorities",
+        "statuses"
+      ],
+      "collections": [
+        {
+          "key": "statuses",
+          "type": "object",
+          "count": 0
+        },
+        {
+          "key": "priorities",
+          "type": "object",
+          "count": 0
+        },
+        {
+          "key": "duplicates",
+          "type": "list",
+          "count": 0
+        },
+        {
+          "key": "items",
+          "type": "list",
+          "count": 0
+        }
+      ],
+      "declared_count": 0,
+      "generated_at": "2026-06-12T03:42:54",
+      "consumers": [
+        "intake",
+        "dedupe"
+      ],
+      "error": ""
+    },
+    {
+      "href": "manifest.json",
+      "description": "发布摘要和页面入口清单",
+      "exists": true,
+      "size_bytes": 0,
+      "top_level_keys": [
+        "artifact_inventory",
+        "command_recipes",
+        "commands",
+        "contract_files",
+        "controls",
+        "count",
+        "coverage",
+        "data_files",
+        "generated_at",
+        "governance_playbooks",
+        "name",
+        "pages",
+        "publish_checks",
+        "publish_ready",
+        "quality_score",
+        "queue_sizes",
+        "research_lines",
+        "taxonomy"
+      ],
+      "collections": [
+        {
+          "key": "publish_checks",
+          "type": "object",
+          "count": 6
+        },
+        {
+          "key": "coverage",
+          "type": "object",
+          "count": 4
+        },
+        {
+          "key": "queue_sizes",
+          "type": "object",
+          "count": 3
+        },
+        {
+          "key": "taxonomy",
+          "type": "object",
+          "count": 9
+        },
+        {
+          "key": "research_lines",
+          "type": "list",
+          "count": 2
+        },
+        {
+          "key": "controls",
+          "type": "object",
+          "count": 8
+        },
+        {
+          "key": "pages",
+          "type": "list",
+          "count": 26
+        },
+        {
+          "key": "data_files",
+          "type": "list",
+          "count": 15
+        },
+        {
+          "key": "contract_files",
+          "type": "list",
+          "count": 5
+        },
+        {
+          "key": "artifact_inventory",
+          "type": "list",
+          "count": 46
+        },
+        {
+          "key": "command_recipes",
+          "type": "list",
+          "count": 22
+        },
+        {
+          "key": "governance_playbooks",
+          "type": "list",
+          "count": 7
+        },
+        {
+          "key": "commands",
+          "type": "list",
+          "count": 22
+        }
+      ],
+      "declared_count": 5,
+      "generated_at": "2026-06-12T03:42:54",
+      "consumers": [
+        "release",
+        "audit",
+        "ci"
+      ],
+      "error": ""
+    },
+    {
+      "href": "catalog.json",
+      "description": "机器数据、页面入口和契约字段目录",
+      "exists": true,
+      "size_bytes": 0,
+      "top_level_keys": [
+        "generated_at",
+        "count",
+        "inbox_count",
+        "page_count",
+        "data_file_count",
+        "contract_count",
+        "pages",
+        "data_resources",
+        "contracts",
+        "integration_recipes",
+        "recommended_bootstrap_files"
+      ],
+      "collections": [],
+      "declared_count": 5,
+      "generated_at": "",
+      "consumers": [
+        "desktop",
+        "api",
+        "open-source-onboarding"
+      ],
+      "error": ""
+    }
+  ],
+  "contracts": [
+    {
+      "href": "guides/report.template.md",
+      "description": "中文论文阅读报告模板"
+    },
+    {
+      "href": "guides/metadata.schema.json",
+      "description": "报告 frontmatter 字段契约"
+    },
+    {
+      "href": "guides/inbox.schema.json",
+      "description": "候选论文 inbox.csv 字段契约"
+    },
+    {
+      "href": "guides/taxonomy.schema.json",
+      "description": "taxonomy.json 配置字段契约"
+    },
+    {
+      "href": "guides/taxonomy.json",
+      "description": "分类别名、状态工作流和共享视图配置"
+    }
+  ],
+  "integration_recipes": [
+    {
+      "name": "Build local wiki",
+      "command": "python3 scripts/build_wiki.py docs",
+      "uses": [
+        "docs/*.md",
+        "docs/guides/taxonomy.json"
+      ],
+      "outputs": [
+        "docs/index.html",
+        "docs/papers.json",
+        "docs/manifest.json"
+      ]
+    },
+    {
+      "name": "Validate publish readiness",
+      "command": "python3 scripts/check_quality.py docs",
+      "uses": [
+        "docs/manifest.json",
+        "docs/quality.json",
+        "docs/workflow.json"
+      ],
+      "outputs": [
+        "terminal quality gate result"
+      ]
+    },
+    {
+      "name": "Desktop sync bootstrap",
+      "command": "read docs/catalog.json, docs/papers.json, docs/search_index.json",
+      "uses": [
+        "catalog.json",
+        "papers.json",
+        "search_index.json",
+        "workflow.json"
+      ],
+      "outputs": [
+        "local searchable paper library"
+      ]
+    },
+    {
+      "name": "Project task export",
+      "command": "python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv",
+      "uses": [
+        "actions.json",
+        "taxonomy_actions.json",
+        "review.json"
+      ],
+      "outputs": [
+        "docs/exports/actions-project.csv"
+      ]
+    }
+  ],
+  "recommended_bootstrap_files": [
+    "catalog.json",
+    "manifest.json",
+    "papers.json",
+    "search_index.json",
+    "workflow.json"
+  ]
+}

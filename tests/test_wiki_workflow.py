@@ -223,6 +223,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "workflow.html",
                 "pivot.html",
                 "compare.html",
+                "catalog.html",
                 "inbox.html",
                 "quality.html",
                 "review.html",
@@ -253,6 +254,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "workflow.json",
                 "pivot.json",
                 "compare.json",
+                "catalog.json",
                 "snapshot.json",
                 "manifest.json",
                 "lines/index.html",
@@ -304,12 +306,14 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn('"href": "workflow.html"', index_html)
             self.assertIn('"href": "pivot.html"', index_html)
             self.assertIn('"href": "compare.html"', index_html)
+            self.assertIn('"href": "catalog.html"', index_html)
             self.assertIn('"href": "balance.html"', index_html)
             self.assertIn('"href": "coverage.html"', index_html)
             self.assertIn("Data: manifest.json", index_html)
             self.assertIn("Data: workflow.json", index_html)
             self.assertIn("Data: pivot.json", index_html)
             self.assertIn("Data: compare.json", index_html)
+            self.assertIn("Data: catalog.json", index_html)
             self.assertIn("Data: snapshot.json", index_html)
             self.assertIn('"href": "snapshot.html"', index_html)
             self.assertIn("Command: Export taxonomy balance project tasks", index_html)
@@ -393,6 +397,9 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn('id="boardWorkflow"', board_html)
             self.assertIn("const boardWorkflows =", board_html)
             self.assertIn("applyWorkflow(boardWorkflow.value)", board_html)
+            self.assertIn("readBoardState", board_html)
+            self.assertIn("syncBoardUrl", board_html)
+            self.assertIn("url.searchParams.set(key, value)", board_html)
             self.assertIn('id="newStatusName"', board_html)
             self.assertIn("新增状态列", board_html)
             workflow = json.loads((report_dir / "workflow.json").read_text(encoding="utf-8"))
@@ -444,6 +451,19 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn('id="comparePreset"', compare_html)
             self.assertIn('id="compareCopyLink"', compare_html)
             self.assertIn("Paper Compare", compare_html)
+            catalog = json.loads((report_dir / "catalog.json").read_text(encoding="utf-8"))
+            self.assertEqual(catalog["count"], 2)
+            self.assertIn("papers.json", {item["href"] for item in catalog["data_resources"]})
+            self.assertIn("catalog.json", {item["href"] for item in catalog["data_resources"]})
+            self.assertIn("index.html", {item["href"] for item in catalog["pages"]})
+            self.assertIn("guides/taxonomy.json", {item["href"] for item in catalog["contracts"]})
+            self.assertTrue(catalog["integration_recipes"])
+            self.assertIn("catalog.json", catalog["recommended_bootstrap_files"])
+            catalog_html = (report_dir / "catalog.html").read_text(encoding="utf-8")
+            self.assertIn("数据目录", catalog_html)
+            self.assertIn("Catalog JSON", catalog_html)
+            self.assertIn("机器数据", catalog_html)
+            self.assertIn("集成 Recipes", catalog_html)
             inbox = json.loads((report_dir / "inbox.json").read_text(encoding="utf-8"))
             self.assertEqual(inbox["count"], 2)
             self.assertEqual(inbox["statuses"]["queued"], 2)
@@ -613,6 +633,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("workflow.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("pivot.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("compare.html", {item["href"] for item in manifest["pages"]})
+            self.assertIn("catalog.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("actions.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("freshness.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("balance.html", {item["href"] for item in manifest["pages"]})
@@ -623,6 +644,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("workflow.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("pivot.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("compare.json", {item["href"] for item in manifest["data_files"]})
+            self.assertIn("catalog.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("snapshot.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("freshness.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("manifest.json", {item["href"] for item in manifest["data_files"]})
@@ -650,6 +672,10 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertRegex(artifact_by_href["compare.html"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["compare.json"]["status"], "ok")
             self.assertRegex(artifact_by_href["compare.json"]["sha256"], r"^[0-9a-f]{64}$")
+            self.assertEqual(artifact_by_href["catalog.html"]["status"], "ok")
+            self.assertRegex(artifact_by_href["catalog.html"]["sha256"], r"^[0-9a-f]{64}$")
+            self.assertEqual(artifact_by_href["catalog.json"]["status"], "ok")
+            self.assertRegex(artifact_by_href["catalog.json"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["snapshot.html"]["status"], "ok")
             self.assertRegex(artifact_by_href["snapshot.html"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["snapshot.json"]["status"], "ok")
@@ -710,6 +736,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("pivot.json", release_html)
             self.assertIn("compare.html", release_html)
             self.assertIn("compare.json", release_html)
+            self.assertIn("catalog.html", release_html)
+            self.assertIn("catalog.json", release_html)
             self.assertIn("snapshot.html", release_html)
             self.assertIn("snapshot.json", release_html)
             self.assertIn("guides/metadata.schema.json", release_html)
