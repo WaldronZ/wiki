@@ -1229,6 +1229,7 @@ def build_manifest(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
             "python3 scripts/validate_wiki.py docs --strict-taxonomy",
             "python3 scripts/apply_library_metadata.py docs --input <csv> --write",
             "python3 scripts/apply_taxonomy_aliases.py docs --write",
+            "python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md",
         ],
     }
 

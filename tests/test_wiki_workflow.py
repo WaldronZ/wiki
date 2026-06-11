@@ -350,6 +350,45 @@ class WikiWorkflowTest(unittest.TestCase):
             quality_after_alias = json.loads((report_dir / "quality.json").read_text(encoding="utf-8"))
             self.assertEqual(quality_after_alias["label_alias_suggestions"], [])
 
+            taxonomy_actions_path = report_dir / "exports" / "taxonomy-actions.md"
+            self.run_cmd(
+                "scripts/export_taxonomy_actions.py",
+                str(report_dir),
+                "--action",
+                "unused_config",
+                "--output",
+                str(taxonomy_actions_path),
+            )
+            taxonomy_actions_md = taxonomy_actions_path.read_text(encoding="utf-8")
+            self.assertIn("# Taxonomy Action Queue", taxonomy_actions_md)
+            self.assertIn("unused_config", taxonomy_actions_md)
+            self.assertIn("triaged", taxonomy_actions_md)
+
+            taxonomy_actions_csv_path = report_dir / "exports" / "taxonomy-actions.csv"
+            self.run_cmd(
+                "scripts/export_taxonomy_actions.py",
+                str(report_dir),
+                "--format",
+                "csv",
+                "--severity",
+                "medium",
+                "--output",
+                str(taxonomy_actions_csv_path),
+            )
+            taxonomy_action_rows = list(csv.DictReader(taxonomy_actions_csv_path.read_text(encoding="utf-8").splitlines()))
+            self.assertTrue(taxonomy_action_rows)
+            self.assertIn("severity", taxonomy_action_rows[0])
+
+            unsafe_taxonomy_export = self.run_cmd(
+                "scripts/export_taxonomy_actions.py",
+                str(report_dir),
+                "--output",
+                str(report_dir / "taxonomy-actions.md"),
+                check=False,
+            )
+            self.assertNotEqual(unsafe_taxonomy_export.returncode, 0)
+            self.assertIn("Refusing to write a Markdown export", unsafe_taxonomy_export.stderr)
+
             reading_list_path = report_dir / "exports" / "reading-list.md"
             self.run_cmd(
                 "scripts/export_reading_list.py",

@@ -24,6 +24,7 @@ PYTHON_SCRIPTS = [
     "scripts/apply_taxonomy_aliases.py",
     "scripts/export_library_csv.py",
     "scripts/export_reading_list.py",
+    "scripts/export_taxonomy_actions.py",
     "scripts/check_quality.py",
 ]
 
