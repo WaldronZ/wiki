@@ -16,13 +16,13 @@ jobs:
           python-version: "3.11"
 
       - name: Check Python syntax
-        run: python -m py_compile scripts/build_wiki.py scripts/render_report_html.py scripts/validate_wiki.py scripts/apply_review_plan.py scripts/export_library_csv.py
+        run: python -m py_compile scripts/build_wiki.py scripts/render_report_html.py scripts/validate_wiki.py scripts/apply_review_plan.py scripts/apply_library_metadata.py scripts/export_library_csv.py
 
       - name: Check generated wiki is current
         run: python scripts/build_wiki.py docs --check
 
       - name: Validate wiki artifacts
-        run: python scripts/validate_wiki.py docs
+        run: python scripts/validate_wiki.py docs --strict-taxonomy
 
       - name: Run workflow tests
         run: python -m unittest discover -s tests

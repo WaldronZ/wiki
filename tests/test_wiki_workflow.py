@@ -254,6 +254,30 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("duplicate value", result.stderr)
             self.assertIn("status_values must be a list", result.stderr)
 
+    def test_strict_taxonomy_detects_report_value_drift(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_name:
+            report_dir = self.make_report_dir(Path(tmp_name))
+            self.run_cmd("scripts/build_wiki.py", str(report_dir))
+
+            beta_path = report_dir / "2501.00002-beta-paper.md"
+            beta_path.write_text(
+                beta_path.read_text(encoding="utf-8").replace("status: read", "status: half_read"),
+                encoding="utf-8",
+            )
+
+            relaxed = self.run_cmd("scripts/validate_wiki.py", str(report_dir))
+            self.assertEqual(relaxed.returncode, 0)
+            self.assertIn("status 'half_read' is not in guides/taxonomy.json", relaxed.stderr)
+
+            strict = self.run_cmd(
+                "scripts/validate_wiki.py",
+                str(report_dir),
+                "--strict-taxonomy",
+                check=False,
+            )
+            self.assertNotEqual(strict.returncode, 0)
+            self.assertIn("status 'half_read' is not in guides/taxonomy.json", strict.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()

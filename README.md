@@ -171,6 +171,7 @@ python3 scripts/build_wiki.py docs --check
 
 ```bash
 python3 scripts/validate_wiki.py docs
+python3 scripts/validate_wiki.py docs --strict-taxonomy
 ```
 
 运行脚本工作流测试：

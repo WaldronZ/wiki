@@ -102,3 +102,9 @@ has_code: true
 - `label_aliases` 必须是 object，key 和 value 都是非空字符串。
 - `role_order`、`status_values`、`reading_stage_values`、`review_stage_values` 必须是字符串列表。
 - 列表里不能有重复值或空值。
+
+报告里的 `status`、`reading_stage`、`review_stage` 和 `line_role` 如果不在 `taxonomy.json` 对应列表中，普通校验会给 warning，方便你逐步治理旧报告；发布或团队协作前可以使用严格模式把它升级为 error：
+
+```bash
+python3 scripts/validate_wiki.py docs --strict-taxonomy
+```

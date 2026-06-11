@@ -86,6 +86,11 @@ def parse_args() -> argparse.Namespace:
         default=str(DEFAULT_REPORT_DIR),
         help="Directory containing generated wiki files and paper reports.",
     )
+    parser.add_argument(
+        "--strict-taxonomy",
+        action="store_true",
+        help="Treat report values outside configured taxonomy lists as errors instead of warnings.",
+    )
     return parser.parse_args()
 
 
@@ -305,20 +310,20 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         errors.append(f"papers.json taxonomy missing keys: {', '.join(missing_taxonomy)}")
 
 
-def validate_taxonomy_config(report_dir: Path, errors: list[str], warnings: list[str]) -> None:
+def validate_taxonomy_config(report_dir: Path, errors: list[str], warnings: list[str]) -> dict[str, Any]:
     config_path = report_dir / "guides" / "taxonomy.json"
     if not config_path.exists():
-        return
+        return {}
 
     try:
         config = json.loads(config_path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as exc:
         errors.append(f"guides/taxonomy.json: invalid JSON: {exc}")
-        return
+        return {}
 
     if not isinstance(config, dict):
         errors.append("guides/taxonomy.json: root must be an object")
-        return
+        return {}
 
     known_fields = {"label_aliases", *TAXONOMY_CONFIG_LIST_FIELDS}
     unknown_fields = sorted(set(config) - known_fields)
@@ -351,6 +356,42 @@ def validate_taxonomy_config(report_dir: Path, errors: list[str], warnings: list
             if normalized in seen:
                 errors.append(f"guides/taxonomy.json: {field} has duplicate value '{value}'")
             seen.add(normalized)
+    return config
+
+
+def configured_set(config: dict[str, Any], field: str) -> set[str]:
+    values = config.get(field, [])
+    if not isinstance(values, list):
+        return set()
+    return {value.strip() for value in values if isinstance(value, str) and value.strip()}
+
+
+def validate_controlled_taxonomy(
+    reports: dict[str, dict[str, Any]],
+    config: dict[str, Any],
+    errors: list[str],
+    warnings: list[str],
+    strict: bool,
+) -> None:
+    controlled = {
+        "status": configured_set(config, "status_values"),
+        "reading_stage": configured_set(config, "reading_stage_values"),
+        "review_stage": configured_set(config, "review_stage_values"),
+        "line_role": configured_set(config, "role_order"),
+    }
+    sink = errors if strict else warnings
+    for slug, meta in reports.items():
+        for field, allowed in controlled.items():
+            if not allowed:
+                continue
+            value = str(meta.get(field) or "").strip()
+            if not value or value == "Unassigned" or value in allowed:
+                continue
+            allowed_text = ", ".join(sorted(allowed))
+            message = f"{slug}: {field} '{value}' is not in guides/taxonomy.json ({allowed_text})"
+            if not strict:
+                message += "; run with --strict-taxonomy to fail on this drift"
+            sink.append(message)
 
 
 def validate_pages(report_dir: Path, reports: dict[str, dict[str, Any]], errors: list[str]) -> None:
@@ -414,7 +455,8 @@ def main() -> int:
         errors.append(f"report directory does not exist: {report_dir}")
     else:
         reports = validate_reports(report_dir, errors, warnings)
-        validate_taxonomy_config(report_dir, errors, warnings)
+        config = validate_taxonomy_config(report_dir, errors, warnings)
+        validate_controlled_taxonomy(reports, config, errors, warnings, args.strict_taxonomy)
         validate_json(report_dir, reports, errors)
         validate_pages(report_dir, reports, errors)
 
