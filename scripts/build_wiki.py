@@ -1252,7 +1252,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "papers.json", "description": "论文索引、taxonomy 聚合、前端 controls"},
         {"href": "search_index.json", "description": "正文全文检索索引"},
         {"href": "stats.json", "description": "运营统计、覆盖率和队列规模"},
-        {"href": "quality.json", "description": "质量问题、taxonomy drift、标签别名建议"},
+        {"href": "quality.json", "description": "质量问题、taxonomy load、taxonomy drift、标签别名建议"},
         {"href": "review.json", "description": "复习计划和建议 next_review"},
         {"href": "taxonomy_actions.json", "description": "分类长尾、过载和空候选治理任务"},
         {"href": "inbox.json", "description": "候选论文队列和重复项"},
@@ -1303,6 +1303,7 @@ def build_manifest(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
             "python3 scripts/apply_library_metadata.py docs --input <csv> --write",
             "python3 scripts/apply_taxonomy_aliases.py docs --write",
             "python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md",
+            "python3 scripts/export_taxonomy_load.py docs --format csv --output docs/exports/taxonomy-load.csv",
         ],
     }
 

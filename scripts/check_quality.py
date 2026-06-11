@@ -25,6 +25,7 @@ PYTHON_SCRIPTS = [
     "scripts/export_library_csv.py",
     "scripts/export_reading_list.py",
     "scripts/export_taxonomy_actions.py",
+    "scripts/export_taxonomy_load.py",
     "scripts/check_quality.py",
 ]
 

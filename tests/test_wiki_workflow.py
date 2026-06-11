@@ -334,6 +334,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("taxonomy_actions.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("manifest.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("python3 scripts/check_quality.py docs", manifest["commands"])
+            self.assertIn("python3 scripts/export_taxonomy_load.py docs --format csv --output docs/exports/taxonomy-load.csv", manifest["commands"])
             release_html = (report_dir / "release.html").read_text(encoding="utf-8")
             self.assertIn("知识库发布摘要", release_html)
             self.assertIn("Manifest JSON", release_html)
@@ -451,6 +452,43 @@ class WikiWorkflowTest(unittest.TestCase):
             )
             self.assertNotEqual(unsafe_taxonomy_export.returncode, 0)
             self.assertIn("Refusing to write a Markdown export", unsafe_taxonomy_export.stderr)
+
+            taxonomy_load_path = report_dir / "exports" / "taxonomy-load.md"
+            self.run_cmd(
+                "scripts/export_taxonomy_load.py",
+                str(report_dir),
+                "--signal",
+                "sparse_tags",
+                "--output",
+                str(taxonomy_load_path),
+            )
+            taxonomy_load_md = taxonomy_load_path.read_text(encoding="utf-8")
+            self.assertIn("# Taxonomy Load Audit", taxonomy_load_md)
+            self.assertIn("sparse_tags", taxonomy_load_md)
+            self.assertIn("2601.00001-alpha-paper", taxonomy_load_md)
+
+            taxonomy_load_csv_path = report_dir / "exports" / "taxonomy-load.csv"
+            self.run_cmd(
+                "scripts/export_taxonomy_load.py",
+                str(report_dir),
+                "--format",
+                "csv",
+                "--output",
+                str(taxonomy_load_csv_path),
+            )
+            taxonomy_load_rows = list(csv.DictReader(taxonomy_load_csv_path.read_text(encoding="utf-8").splitlines()))
+            self.assertTrue(taxonomy_load_rows)
+            self.assertIn("signals", taxonomy_load_rows[0])
+
+            unsafe_taxonomy_load_export = self.run_cmd(
+                "scripts/export_taxonomy_load.py",
+                str(report_dir),
+                "--output",
+                str(report_dir / "taxonomy-load.md"),
+                check=False,
+            )
+            self.assertNotEqual(unsafe_taxonomy_load_export.returncode, 0)
+            self.assertIn("Refusing to write a Markdown export", unsafe_taxonomy_load_export.stderr)
 
             reading_list_path = report_dir / "exports" / "reading-list.md"
             self.run_cmd(

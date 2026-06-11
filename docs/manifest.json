@@ -450,7 +450,7 @@
     },
     {
       "href": "quality.json",
-      "description": "质量问题、taxonomy drift、标签别名建议"
+      "description": "质量问题、taxonomy load、taxonomy drift、标签别名建议"
     },
     {
       "href": "review.json",
@@ -475,6 +475,7 @@
     "python3 scripts/validate_wiki.py docs --strict-taxonomy",
     "python3 scripts/apply_library_metadata.py docs --input <csv> --write",
     "python3 scripts/apply_taxonomy_aliases.py docs --write",
-    "python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md"
+    "python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md",
+    "python3 scripts/export_taxonomy_load.py docs --format csv --output docs/exports/taxonomy-load.csv"
   ]
 }
