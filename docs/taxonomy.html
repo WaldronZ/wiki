@@ -288,6 +288,28 @@
       font-size: 13px;
       line-height: 1.55;
     }
+    .workflow-designer { margin-top: 16px; }
+    .designer-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 14px 0;
+    }
+    .designer-grid label { display: grid; gap: 6px; font-weight: 700; }
+    .designer-grid textarea {
+      width: 100%;
+      min-height: 132px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      background: #fff;
+      color: var(--ink);
+      font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .designer-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px; }
+    .button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    @media (max-width: 820px) { .designer-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -303,6 +325,7 @@
     <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="collections.html">集合视图</a>
+    <a class="stat" href="related.html">关联网络</a>
     <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="timeline.html">时间轴</a>
@@ -363,6 +386,24 @@
 }</code></pre>
       </section>
     </div>
+    <section class="taxonomy-panel workflow-designer" data-workflow="{&quot;status_values&quot;: [&quot;unread&quot;, &quot;skimmed&quot;, &quot;reading&quot;, &quot;read&quot;, &quot;archived&quot;], &quot;reading_stage_values&quot;: [&quot;skim&quot;, &quot;normal_read&quot;, &quot;deep_read&quot;, &quot;code_checked&quot;], &quot;review_stage_values&quot;: [&quot;fresh&quot;, &quot;due&quot;, &quot;reviewed&quot;]}">
+      <div>
+        <h2>状态工作流设计器</h2>
+        <p class="meta">每行一个值。下载或复制后合并到 guides/taxonomy.json，再运行 build_wiki，首页、论文库、看板和 JSON controls 会同步更新。</p>
+      </div>
+      <div class="designer-grid">
+        <label><span>Status</span><textarea id="workflowStatus" rows="6"></textarea></label>
+        <label><span>Reading stage</span><textarea id="workflowReadingStage" rows="6"></textarea></label>
+        <label><span>Review stage</span><textarea id="workflowReviewStage" rows="6"></textarea></label>
+      </div>
+      <div class="designer-actions">
+        <button class="button" type="button" id="resetWorkflow">恢复当前配置</button>
+        <button class="button" type="button" id="copyWorkflow">复制 JSON</button>
+        <button class="button primary" type="button" id="downloadWorkflow">下载状态配置</button>
+        <span class="meta" id="workflowMessage"></span>
+      </div>
+      <pre class="config-snippet"><code id="workflowPreview"></code></pre>
+    </section>
   </section>
   <section>
     <h2 class="section-title">治理队列</h2>
@@ -373,6 +414,81 @@
     <div class="tag-list"><span class="tag-pill"><span>Attention Kernels</span><strong>1</strong></span><span class="tag-pill"><span>block diffusion</span><strong>1</strong></span><span class="tag-pill"><span>block-sparse attention</span><strong>1</strong></span><span class="tag-pill"><span>composable KV-cache format</span><strong>1</strong></span><span class="tag-pill"><span>CUDA / GPU parallelism</span><strong>1</strong></span><span class="tag-pill"><span>CUDA Graph</span><strong>1</strong></span><span class="tag-pill"><span>dual-view attention</span><strong>1</strong></span><span class="tag-pill"><span>Efficient Attention</span><strong>1</strong></span><span class="tag-pill"><span>forward KL distillation</span><strong>1</strong></span><span class="tag-pill"><span>gated LoRA</span><strong>1</strong></span><span class="tag-pill"><span>GPU Kernel Optimization</span><strong>1</strong></span><span class="tag-pill"><span>GPU Systems</span><strong>1</strong></span><span class="tag-pill"><span>Inference Optimization</span><strong>1</strong></span><span class="tag-pill"><span>intra-model consensus</span><strong>1</strong></span><span class="tag-pill"><span>introspective consistency</span><strong>1</strong></span><span class="tag-pill"><span>introspective strided decoding</span><strong>1</strong></span><span class="tag-pill"><span>JIT compilation</span><strong>1</strong></span><span class="tag-pill"><span>KV injection</span><strong>1</strong></span><span class="tag-pill"><span>LLM</span><strong>1</strong></span><span class="tag-pill"><span>load-balanced scheduling</span><strong>1</strong></span><span class="tag-pill"><span>logit-shifted causal training</span><strong>1</strong></span><span class="tag-pill"><span>Long Context</span><strong>1</strong></span><span class="tag-pill"><span>masked diffusion</span><strong>1</strong></span><span class="tag-pill"><span>online softmax</span><strong>1</strong></span></div>
   </section>
 </main>
+<script>
+(() => {
+  const designer = document.querySelector(".workflow-designer");
+  if (!designer) return;
+  const seed = JSON.parse(designer.dataset.workflow || "{}");
+  const fields = {
+    status_values: document.querySelector("#workflowStatus"),
+    reading_stage_values: document.querySelector("#workflowReadingStage"),
+    review_stage_values: document.querySelector("#workflowReviewStage"),
+  };
+  const preview = document.querySelector("#workflowPreview");
+  const message = document.querySelector("#workflowMessage");
+
+  function uniqueLines(text) {
+    const seen = new Set();
+    return String(text || "")
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter((line) => {
+        if (!line || seen.has(line)) return false;
+        seen.add(line);
+        return true;
+      });
+  }
+
+  function payload() {
+    return Object.fromEntries(
+      Object.entries(fields).map(([key, input]) => [key, uniqueLines(input.value)])
+    );
+  }
+
+  function renderPreview() {
+    const data = payload();
+    preview.textContent = JSON.stringify(data, null, 2);
+    const emptyFields = Object.entries(data)
+      .filter(([, values]) => values.length === 0)
+      .map(([key]) => key);
+    message.textContent = emptyFields.length ? `空字段：${emptyFields.join(", ")}` : "";
+    return data;
+  }
+
+  function reset() {
+    Object.entries(fields).forEach(([key, input]) => {
+      input.value = (seed[key] || []).join("\n");
+    });
+    renderPreview();
+  }
+
+  function download() {
+    const blob = new Blob([JSON.stringify(renderPreview(), null, 2) + "\n"], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "taxonomy_status_workflow.json";
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
+  async function copy() {
+    const text = JSON.stringify(renderPreview(), null, 2);
+    try {
+      await navigator.clipboard.writeText(text);
+      message.textContent = "已复制 JSON";
+    } catch (error) {
+      message.textContent = "当前浏览器不允许复制，可手动选中下方 JSON";
+    }
+  }
+
+  Object.values(fields).forEach((input) => input.addEventListener("input", renderPreview));
+  document.querySelector("#resetWorkflow").addEventListener("click", reset);
+  document.querySelector("#downloadWorkflow").addEventListener("click", download);
+  document.querySelector("#copyWorkflow").addEventListener("click", copy);
+  reset();
+})();
+</script>
 
 </body>
 </html>

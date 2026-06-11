@@ -84,6 +84,7 @@ REQUIRED_PAGES = {
     "review.html",
     "dashboard.html",
     "collections.html",
+    "related.html",
     "taxonomy.html",
     "timeline.html",
     "matrix.html",

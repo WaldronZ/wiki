@@ -11,6 +11,7 @@ import argparse
 import csv
 import datetime as dt
 import html
+import itertools
 import json
 import re
 import sys
@@ -37,6 +38,7 @@ GENERATED_FIXED_PATHS = (
     "review.html",
     "dashboard.html",
     "collections.html",
+    "related.html",
     "taxonomy.html",
     "timeline.html",
     "matrix.html",
@@ -1516,6 +1518,7 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="collections.html">集合视图</a>
+    <a class="stat" href="related.html">关联网络</a>
     <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
@@ -2032,6 +2035,7 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="index.html">卡片首页</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="collections.html">集合视图</a>
+    <a class="stat" href="related.html">关联网络</a>
     <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="inbox.html">待处理池</a>
@@ -2681,6 +2685,7 @@ def render_board(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="collections.html">集合视图</a>
+    <a class="stat" href="related.html">关联网络</a>
     <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
@@ -2916,6 +2921,7 @@ def render_inbox(report_dir: Path, items: list[dict[str, Any]]) -> None:
     <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="collections.html">集合视图</a>
+    <a class="stat" href="related.html">关联网络</a>
     <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="inbox.json">Inbox JSON</a>
     <span class="stat">候选 {len(items)}</span>
@@ -3019,6 +3025,7 @@ def render_review(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="collections.html">集合视图</a>
+    <a class="stat" href="related.html">关联网络</a>
     <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="review.json">复习 JSON</a>
@@ -3146,6 +3153,7 @@ def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
   <div class="stats">
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="collections.html">集合视图</a>
+    <a class="stat" href="related.html">关联网络</a>
     <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="library.html">论文库表格</a>
@@ -3302,6 +3310,7 @@ def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="inbox.html">待处理池</a>
     <a class="stat" href="collections.html">集合视图</a>
+    <a class="stat" href="related.html">关联网络</a>
     <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="lines/index.html">研究线</a>
@@ -3476,6 +3485,7 @@ def render_collections(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="collections.html">集合视图</a>
+    <a class="stat" href="related.html">关联网络</a>
     <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="quality.html">质量治理</a>
@@ -3500,6 +3510,172 @@ def render_collections(report_dir: Path, papers: list[dict[str, Any]]) -> None:
 </main>
 """
     (report_dir / "collections.html").write_text(page_shell("集合视图", body, extra_css=collections_css), encoding="utf-8")
+
+
+def paper_relation_features(paper: dict[str, Any]) -> set[str]:
+    features: set[str] = set()
+    for field in ("domains", "tracks", "problems", "topics", "methods"):
+        features.update(f"{field}:{value}" for value in paper.get(field, []) if value)
+    if paper.get("research_line") and paper.get("research_line") != "Unassigned":
+        features.add(f"line:{paper['research_line']}")
+    if paper.get("line_role"):
+        features.add(f"role:{paper['line_role']}")
+    return features
+
+
+def relation_label(feature: str) -> str:
+    prefixes = {
+        "domains": "Domain",
+        "tracks": "Track",
+        "problems": "Problem",
+        "topics": "Topic",
+        "methods": "Method",
+        "line": "Line",
+        "role": "Role",
+    }
+    if ":" not in feature:
+        return feature
+    prefix, value = feature.split(":", 1)
+    return f"{prefixes.get(prefix, prefix)} / {value}"
+
+
+def render_related(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    feature_by_slug = {paper["slug"]: paper_relation_features(paper) for paper in papers}
+    pair_counter: Counter[tuple[str, str]] = Counter()
+    pair_examples: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+    for paper in papers:
+        features = sorted(feature_by_slug[paper["slug"]])
+        for left, right in itertools.combinations(features, 2):
+            key = (left, right)
+            pair_counter[key] += 1
+            if len(pair_examples[key]) < 4:
+                pair_examples[key].append(paper)
+
+    cooccurrence_rows = []
+    for (left, right), count in sorted(pair_counter.items(), key=lambda item: (-item[1], item[0][0], item[0][1]))[:40]:
+        examples = "、".join(
+            f'<a href="{html.escape(paper_href(paper))}">{html.escape(paper["title_zh"] or paper["title"])}</a>'
+            for paper in pair_examples[(left, right)]
+        )
+        cooccurrence_rows.append(
+            "<tr>"
+            f"<td>{html.escape(relation_label(left))}</td>"
+            f"<td>{html.escape(relation_label(right))}</td>"
+            f"<td>{count}</td>"
+            f"<td>{examples}</td>"
+            "</tr>"
+        )
+    cooccurrence_table = (
+        '<table class="data-table"><thead><tr><th>标签 A</th><th>标签 B</th><th>共现</th><th>样例论文</th></tr></thead>'
+        f"<tbody>{''.join(cooccurrence_rows)}</tbody></table>"
+        if cooccurrence_rows
+        else '<div class="empty">还没有足够标签形成共现。</div>'
+    )
+
+    similarity_rows = []
+    max_score_by_slug = {paper["slug"]: 0 for paper in papers}
+    for left, right in itertools.combinations(papers, 2):
+        left_features = feature_by_slug[left["slug"]]
+        right_features = feature_by_slug[right["slug"]]
+        union = left_features | right_features
+        if not union:
+            continue
+        shared = left_features & right_features
+        score = round(100 * len(shared) / len(union))
+        if score <= 0:
+            continue
+        max_score_by_slug[left["slug"]] = max(max_score_by_slug[left["slug"]], score)
+        max_score_by_slug[right["slug"]] = max(max_score_by_slug[right["slug"]], score)
+        similarity_rows.append((score, left, right, sorted(shared)))
+
+    similar_table_rows = []
+    for score, left, right, shared in sorted(
+        similarity_rows,
+        key=lambda item: (-item[0], item[1]["title"], item[2]["title"]),
+    )[:60]:
+        shared_labels = "".join(f'<span class="chip">{html.escape(relation_label(feature))}</span>' for feature in shared[:8])
+        if len(shared) > 8:
+            shared_labels += f'<span class="chip">+{len(shared) - 8}</span>'
+        similar_table_rows.append(
+            "<tr>"
+            f"<td>{score}</td>"
+            f'<td><a href="{html.escape(paper_href(left))}">{html.escape(left["title_zh"] or left["title"])}</a></td>'
+            f'<td><a href="{html.escape(paper_href(right))}">{html.escape(right["title_zh"] or right["title"])}</a></td>'
+            f'<td><div class="chips">{shared_labels}</div></td>'
+            "</tr>"
+        )
+    similarity_table = (
+        '<table class="data-table"><thead><tr><th>相似度</th><th>论文 A</th><th>论文 B</th><th>共享特征</th></tr></thead>'
+        f"<tbody>{''.join(similar_table_rows)}</tbody></table>"
+        if similar_table_rows
+        else '<div class="empty">还没有可计算的相似论文。</div>'
+    )
+
+    isolated = [paper for paper in papers if max_score_by_slug.get(paper["slug"], 0) == 0]
+    isolated_html = (
+        '<ol class="queue-list">'
+        + "".join(
+            f'<li><a href="{html.escape(paper_href(paper))}">{html.escape(paper["title_zh"] or paper["title"])}</a>'
+            f' <span class="meta">{html.escape(str(paper.get("research_line") or "Unassigned"))}</span></li>'
+            for paper in isolated
+        )
+        + "</ol>"
+        if isolated
+        else '<div class="empty">没有孤岛论文。</div>'
+    )
+
+    related_css = """
+    .relation-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+    .relation-summary .metric-card strong { font-size: 28px; }
+    .data-table td:nth-child(4) .chips { padding-top: 0; }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Relation Network</div>
+  <h1>关联网络</h1>
+  <p class="lead">按 frontmatter 中的研究线、结构分类、主题和方法计算标签共现与论文相似度，帮助发现研究簇、重复分类、孤岛论文和潜在的阅读路径。</p>
+  <div class="stats">
+    <a class="stat" href="index.html">卡片首页</a>
+    <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="collections.html">集合视图</a>
+    <a class="stat" href="related.html">关联网络</a>
+    <a class="stat" href="matrix.html">研究矩阵</a>
+    <a class="stat" href="timeline.html">时间轴</a>
+    <a class="stat" href="taxonomy.html">分类治理</a>
+    <a class="stat" href="gaps.html">研究缺口</a>
+    <span class="stat">论文 {len(papers)}</span>
+    <span class="stat">共现 {len(pair_counter)}</span>
+    <span class="stat">相似对 {len(similarity_rows)}</span>
+  </div>
+</header>
+<main class="shell">
+  <section>
+    <h2 class="section-title">关系摘要</h2>
+    <div class="relation-summary">
+      <div class="metric-card"><strong>{len(pair_counter)}</strong><span>标签共现边</span></div>
+      <div class="metric-card"><strong>{len(similarity_rows)}</strong><span>相似论文对</span></div>
+      <div class="metric-card"><strong>{len(isolated)}</strong><span>孤岛论文</span></div>
+    </div>
+  </section>
+  <section>
+    <h2 class="section-title">标签共现</h2>
+    <div class="table-wrap">{cooccurrence_table}</div>
+  </section>
+  <section>
+    <h2 class="section-title">相似论文</h2>
+    <div class="table-wrap">{similarity_table}</div>
+  </section>
+  <section>
+    <h2 class="section-title">孤岛论文</h2>
+    {isolated_html}
+  </section>
+</main>
+"""
+    (report_dir / "related.html").write_text(page_shell("关联网络", body, extra_css=related_css), encoding="utf-8")
 
 
 def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
@@ -3688,6 +3864,7 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         "review_stage_values": controls["review_stage"],
     }
     workflow_config_json = html.escape(json.dumps(workflow_config, ensure_ascii=False, indent=2))
+    workflow_seed_json = html.escape(json.dumps(workflow_config, ensure_ascii=False), quote=True)
 
     long_tail = Counter(
         tag
@@ -3736,6 +3913,7 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="collections.html">集合视图</a>
+    <a class="stat" href="related.html">关联网络</a>
     <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="timeline.html">时间轴</a>
@@ -3777,6 +3955,24 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         <pre class="config-snippet"><code>{workflow_config_json}</code></pre>
       </section>
     </div>
+    <section class="taxonomy-panel workflow-designer" data-workflow="{workflow_seed_json}">
+      <div>
+        <h2>状态工作流设计器</h2>
+        <p class="meta">每行一个值。下载或复制后合并到 guides/taxonomy.json，再运行 build_wiki，首页、论文库、看板和 JSON controls 会同步更新。</p>
+      </div>
+      <div class="designer-grid">
+        <label><span>Status</span><textarea id="workflowStatus" rows="6"></textarea></label>
+        <label><span>Reading stage</span><textarea id="workflowReadingStage" rows="6"></textarea></label>
+        <label><span>Review stage</span><textarea id="workflowReviewStage" rows="6"></textarea></label>
+      </div>
+      <div class="designer-actions">
+        <button class="button" type="button" id="resetWorkflow">恢复当前配置</button>
+        <button class="button" type="button" id="copyWorkflow">复制 JSON</button>
+        <button class="button primary" type="button" id="downloadWorkflow">下载状态配置</button>
+        <span class="meta" id="workflowMessage"></span>
+      </div>
+      <pre class="config-snippet"><code id="workflowPreview"></code></pre>
+    </section>
   </section>
   <section>
     <h2 class="section-title">治理队列</h2>
@@ -3787,6 +3983,81 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     {tail_html}
   </section>
 </main>
+<script>
+(() => {{
+  const designer = document.querySelector(".workflow-designer");
+  if (!designer) return;
+  const seed = JSON.parse(designer.dataset.workflow || "{{}}");
+  const fields = {{
+    status_values: document.querySelector("#workflowStatus"),
+    reading_stage_values: document.querySelector("#workflowReadingStage"),
+    review_stage_values: document.querySelector("#workflowReviewStage"),
+  }};
+  const preview = document.querySelector("#workflowPreview");
+  const message = document.querySelector("#workflowMessage");
+
+  function uniqueLines(text) {{
+    const seen = new Set();
+    return String(text || "")
+      .split(/\\r?\\n/)
+      .map((line) => line.trim())
+      .filter((line) => {{
+        if (!line || seen.has(line)) return false;
+        seen.add(line);
+        return true;
+      }});
+  }}
+
+  function payload() {{
+    return Object.fromEntries(
+      Object.entries(fields).map(([key, input]) => [key, uniqueLines(input.value)])
+    );
+  }}
+
+  function renderPreview() {{
+    const data = payload();
+    preview.textContent = JSON.stringify(data, null, 2);
+    const emptyFields = Object.entries(data)
+      .filter(([, values]) => values.length === 0)
+      .map(([key]) => key);
+    message.textContent = emptyFields.length ? `空字段：${{emptyFields.join(", ")}}` : "";
+    return data;
+  }}
+
+  function reset() {{
+    Object.entries(fields).forEach(([key, input]) => {{
+      input.value = (seed[key] || []).join("\\n");
+    }});
+    renderPreview();
+  }}
+
+  function download() {{
+    const blob = new Blob([JSON.stringify(renderPreview(), null, 2) + "\\n"], {{ type: "application/json" }});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "taxonomy_status_workflow.json";
+    link.click();
+    URL.revokeObjectURL(url);
+  }}
+
+  async function copy() {{
+    const text = JSON.stringify(renderPreview(), null, 2);
+    try {{
+      await navigator.clipboard.writeText(text);
+      message.textContent = "已复制 JSON";
+    }} catch (error) {{
+      message.textContent = "当前浏览器不允许复制，可手动选中下方 JSON";
+    }}
+  }}
+
+  Object.values(fields).forEach((input) => input.addEventListener("input", renderPreview));
+  document.querySelector("#resetWorkflow").addEventListener("click", reset);
+  document.querySelector("#downloadWorkflow").addEventListener("click", download);
+  document.querySelector("#copyWorkflow").addEventListener("click", copy);
+  reset();
+}})();
+</script>
 """
     taxonomy_css = "\n".join(
         [
@@ -3800,6 +4071,28 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
             "      font-size: 13px;",
             "      line-height: 1.55;",
             "    }",
+            "    .workflow-designer { margin-top: 16px; }",
+            "    .designer-grid {",
+            "      display: grid;",
+            "      grid-template-columns: repeat(3, minmax(0, 1fr));",
+            "      gap: 12px;",
+            "      margin: 14px 0;",
+            "    }",
+            "    .designer-grid label { display: grid; gap: 6px; font-weight: 700; }",
+            "    .designer-grid textarea {",
+            "      width: 100%;",
+            "      min-height: 132px;",
+            "      resize: vertical;",
+            "      border: 1px solid var(--line);",
+            "      border-radius: 8px;",
+            "      padding: 10px;",
+            "      background: #fff;",
+            "      color: var(--ink);",
+            "      font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;",
+            "    }",
+            "    .designer-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px; }",
+            "    .button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }",
+            "    @media (max-width: 820px) { .designer-grid { grid-template-columns: 1fr; } }",
         ]
     )
     (report_dir / "taxonomy.html").write_text(page_shell("分类治理", body, extra_css=taxonomy_css), encoding="utf-8")
@@ -4002,6 +4295,7 @@ def render_timeline(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="collections.html">集合视图</a>
+    <a class="stat" href="related.html">关联网络</a>
     <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="lines/index.html">研究线</a>
@@ -4311,6 +4605,7 @@ def render_matrix(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="matrix.html">研究矩阵</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="collections.html">集合视图</a>
+    <a class="stat" href="related.html">关联网络</a>
     <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="lines/index.html">研究线</a>
@@ -4623,6 +4918,7 @@ def render_gaps(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <div class="stats">
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="collections.html">集合视图</a>
+    <a class="stat" href="related.html">关联网络</a>
     <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="matrix.html">研究矩阵</a>
@@ -4729,6 +5025,7 @@ def render_line_pages(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="../review.html">复习计划</a>
     <a class="stat" href="../dashboard.html">管理控制台</a>
     <a class="stat" href="../collections.html">集合视图</a>
+    <a class="stat" href="../related.html">关联网络</a>
     <a class="stat" href="../gaps.html">研究缺口</a>
     <a class="stat" href="../taxonomy.html">分类治理</a>
     <a class="stat" href="../timeline.html">时间轴</a>
@@ -4755,6 +5052,7 @@ def render_line_pages(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="../review.html">复习计划</a>
     <a class="stat" href="../dashboard.html">管理控制台</a>
     <a class="stat" href="../collections.html">集合视图</a>
+    <a class="stat" href="../related.html">关联网络</a>
     <a class="stat" href="../gaps.html">研究缺口</a>
     <a class="stat" href="../taxonomy.html">分类治理</a>
     <a class="stat" href="../timeline.html">时间轴</a>
@@ -4834,6 +5132,7 @@ def render_tags(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="collections.html">集合视图</a>
+    <a class="stat" href="related.html">关联网络</a>
     <a class="stat" href="gaps.html">研究缺口</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
     <span class="stat">分类 {len(grouped)}</span>
@@ -4863,6 +5162,7 @@ def build_wiki(report_dir: Path) -> int:
     render_quality(report_dir, papers, inbox_items)
     render_dashboard(report_dir, papers)
     render_collections(report_dir, papers)
+    render_related(report_dir, papers)
     render_taxonomy(report_dir, papers)
     render_timeline(report_dir, papers)
     render_matrix(report_dir, papers)

@@ -4,7 +4,7 @@ AutoPaperReader 是一个自动化「找论文 -> 读论文 -> 写报告」的 a
 
 它的目标是把一篇论文从检索、下载源码、分析论文、分析配套代码，到最终输出结构化中文阅读报告的流程串起来，并把产物（包括 Markdown 报告和 HTML 展示网页）统一组织到固定目录中。
 
-项目还会把这些逐篇报告汇总成一个轻量动态 wiki：`docs/index.html` 提供全文搜索、研究线、分类/状态/代码/重要性/复习筛选、排序、分页和可分享 URL 状态；`docs/library.html` 提供适合大量论文批量管理的密集表格视图；`docs/board.html` 提供可拖拽状态看板；`docs/inbox.html` 提供候选论文待处理池；`docs/quality.html` 提供质量治理和 taxonomy drift 门禁；`docs/review.html` 提供复习队列和建议复习日期；`docs/dashboard.html` 提供分类覆盖、研究线健康度和待处理队列；`docs/collections.html` 提供共享视图、智能队列和研究线集合入口；`docs/gaps.html` 提供研究缺口和下一步行动建议；`docs/taxonomy.html` 提供分类治理、状态矩阵和研究线角色矩阵；`docs/timeline.html` 提供按年份和研究线浏览的路线时间轴；`docs/matrix.html` 提供研究线 x 年份覆盖矩阵；`docs/lines/index.html` 提供研究线入口；`docs/tags.html` 提供分类总览；`docs/papers.json` 提供机器可读索引；`docs/search_index.json` 提供正文检索索引；`docs/stats.json` 提供机器可读运营指标；`docs/quality.json` 提供元数据质量与运营队列报告；`docs/review.json` 提供机器可读复习计划。
+项目还会把这些逐篇报告汇总成一个轻量动态 wiki：`docs/index.html` 提供全文搜索、研究线、分类/状态/代码/重要性/复习筛选、排序、分页和可分享 URL 状态；`docs/library.html` 提供适合大量论文批量管理的密集表格视图；`docs/board.html` 提供可拖拽状态看板；`docs/inbox.html` 提供候选论文待处理池；`docs/quality.html` 提供质量治理和 taxonomy drift 门禁；`docs/review.html` 提供复习队列和建议复习日期；`docs/dashboard.html` 提供分类覆盖、研究线健康度和待处理队列；`docs/collections.html` 提供共享视图、智能队列和研究线集合入口；`docs/related.html` 提供标签共现和相似论文关系发现；`docs/gaps.html` 提供研究缺口和下一步行动建议；`docs/taxonomy.html` 提供分类治理、状态矩阵和研究线角色矩阵；`docs/timeline.html` 提供按年份和研究线浏览的路线时间轴；`docs/matrix.html` 提供研究线 x 年份覆盖矩阵；`docs/lines/index.html` 提供研究线入口；`docs/tags.html` 提供分类总览；`docs/papers.json` 提供机器可读索引；`docs/search_index.json` 提供正文检索索引；`docs/stats.json` 提供机器可读运营指标；`docs/quality.json` 提供元数据质量与运营队列报告；`docs/review.json` 提供机器可读复习计划。
 
 **注：建议开启 Agent Teams 特性 `export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`**
 
@@ -38,6 +38,7 @@ paper_reader/
 │   ├── review.html
 │   ├── dashboard.html
 │   ├── collections.html
+│   ├── related.html
 │   ├── gaps.html
 │   ├── taxonomy.html
 │   ├── timeline.html
@@ -124,8 +125,9 @@ paper_reader/
 - `docs/review.html`：复习计划页，展示待复习、需建计划、已计划和高优先级队列
 - `docs/dashboard.html`：管理控制台，展示分类覆盖、研究线健康度、待复习和待补分类队列
 - `docs/collections.html`：集合视图页，集中展示共享筛选视图、智能队列和研究线集合入口
+- `docs/related.html`：关联网络页，展示标签共现、相似论文对和孤岛论文，帮助发现潜在研究簇
 - `docs/gaps.html`：研究缺口页，自动诊断研究线缺角色、缺分类、缺复习、缺代码观察和后续工作空档
-- `docs/taxonomy.html`：分类治理页，展示 domain/track/problem 层级、状态矩阵、研究线角色矩阵和治理队列
+- `docs/taxonomy.html`：分类治理页，展示 domain/track/problem 层级、状态矩阵、研究线角色矩阵、状态工作流设计器和治理队列
 - `docs/timeline.html`：研究路线时间轴，按年份、研究线、方向、角色、状态和重要性筛选论文演进
 - `docs/matrix.html`：研究线年份矩阵，按 research line × year 查看覆盖密度，点击格子查看论文清单
 - `docs/lines/index.html`：研究线总览
@@ -178,7 +180,7 @@ has_code: true
 
 分类建议见 [`docs/guides/taxonomy.md`](docs/guides/taxonomy.md)。核心原则是：`domains/tracks/problems` 管结构层级，`topics/methods` 管交叉筛选，`research_line/line_role` 管研究脉络，`status/reading_stage/review_stage` 管个人阅读状态。
 
-标签别名、研究线角色排序、阅读状态、阅读阶段和复习阶段可在 [`docs/guides/taxonomy.json`](docs/guides/taxonomy.json) 里自定义；修改后运行 `python3 scripts/build_wiki.py docs` 即可刷新筛选项、论文库批量下拉框和状态看板列。`docs/taxonomy.html` 会展示当前状态工作流配置和可复制的 JSON 片段；`docs/board.html` 还支持先新增临时状态列并导出 CSV，用来试跑一套新流程。构建后的 `docs/papers.json` 和 `docs/stats.json` 会把这些可选状态写入 `controls`，方便后续页面或桌面软件动态读取。
+标签别名、研究线角色排序、阅读状态、阅读阶段和复习阶段可在 [`docs/guides/taxonomy.json`](docs/guides/taxonomy.json) 里自定义；修改后运行 `python3 scripts/build_wiki.py docs` 即可刷新筛选项、论文库批量下拉框和状态看板列。`docs/taxonomy.html` 会展示当前状态工作流配置，并提供浏览器内状态工作流设计器，可以先编辑候选状态、复制或下载 `taxonomy_status_workflow.json` 片段，再合并回 `taxonomy.json`；`docs/board.html` 还支持先新增临时状态列并导出 CSV，用来试跑一套新流程。构建后的 `docs/papers.json` 和 `docs/stats.json` 会把这些可选状态写入 `controls`，方便后续页面或桌面软件动态读取。
 
 报告 frontmatter 的字段类型、必填项、评分范围和日期格式由 [`docs/guides/metadata.schema.json`](docs/guides/metadata.schema.json) 描述。`python3 scripts/validate_wiki.py docs --strict-taxonomy` 会同时校验 schema、报告元数据、分类漂移和生成页面，适合作为发布或开源协作前的质量门禁。
 

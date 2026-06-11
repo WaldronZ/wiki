@@ -174,6 +174,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "review.html",
                 "dashboard.html",
                 "collections.html",
+                "related.html",
                 "taxonomy.html",
                 "timeline.html",
                 "matrix.html",
@@ -256,8 +257,15 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("重点队列", collections_html)
             self.assertIn("智能集合", collections_html)
             self.assertIn("需建复习计划", collections_html)
+            related_html = (report_dir / "related.html").read_text(encoding="utf-8")
+            self.assertIn("关联网络", related_html)
+            self.assertIn("标签共现", related_html)
+            self.assertIn("相似论文", related_html)
+            self.assertIn("LLM Serving", related_html)
             taxonomy_html = (report_dir / "taxonomy.html").read_text(encoding="utf-8")
             self.assertIn("状态工作流配置", taxonomy_html)
+            self.assertIn("状态工作流设计器", taxonomy_html)
+            self.assertIn("taxonomy_status_workflow.json", taxonomy_html)
             self.assertIn("&quot;status_values&quot;: [", taxonomy_html)
             self.assertIn("triaged", taxonomy_html)
             timeline_html = (report_dir / "timeline.html").read_text(encoding="utf-8")
