@@ -21,6 +21,8 @@ function htmlFiles() {
     "dashboard.html",
     "release.html",
     "collections.html",
+    "balance.html",
+    "facets.html",
     "related.html",
     "taxonomy.html",
     "timeline.html",

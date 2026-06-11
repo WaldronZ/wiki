@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>研究线</title>
+  <title>分类均衡复盘</title>
   <style>
     :root {
       color-scheme: light;
@@ -350,6 +350,62 @@
       .data-table { display: block; overflow-x: auto; }
       header { padding-top: 28px; }
     }
+
+    .balance-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(280px, .7fr);
+      gap: 16px;
+      align-items: start;
+      margin-bottom: 24px;
+    }
+    .balance-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 16px;
+    }
+    .balance-panel h2 {
+      margin: 0 0 8px;
+      font-size: 20px;
+      line-height: 1.25;
+    }
+    .balance-panel p { margin: 0; color: var(--muted); }
+    .balance-meter {
+      width: 120px;
+      height: 8px;
+      border-radius: 999px;
+      background: #eadfce;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+    .balance-meter span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--accent);
+    }
+    .balance-controls {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) minmax(140px, 190px) minmax(160px, 210px) repeat(3, auto);
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .balance-controls input,
+    .balance-controls select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 10px 12px;
+      color: var(--text);
+      font: inherit;
+    }
+    @media (max-width: 900px) {
+      .balance-hero { grid-template-columns: 1fr; }
+      .balance-controls { grid-template-columns: 1fr; }
+    }
+    
   </style>
 </head>
 <body>
@@ -366,32 +422,147 @@
 </div>
 
 <header class="shell">
-  <div class="eyebrow">AutoPaperReader Wiki</div>
-  <h1>研究线</h1>
-  <p class="lead">研究线把大量论文组织成脉络，而不是孤立标签。每条线都可以进入详情页，按论文角色和重要性浏览。</p>
+  <div class="eyebrow">Taxonomy Balance</div>
+  <h1>分类均衡复盘</h1>
+  <p class="lead">把每个分类维度的健康度、长尾、过载和空候选放到一张表里，适合论文库增长后定期判断哪些标签该合并、拆分或清理。</p>
   <div class="stats">
-    <a class="stat" href="../index.html">返回首页</a>
-    <a class="stat" href="../library.html">论文库表格</a>
-    <a class="stat" href="../review.html">复习计划</a>
-    <a class="stat" href="../dashboard.html">管理控制台</a>
-    <a class="stat" href="../collections.html">集合视图</a>
-    <a class="stat" href="../related.html">关联网络</a>
-    <a class="stat" href="../gaps.html">研究缺口</a>
-    <a class="stat" href="../taxonomy.html">分类治理</a>
-    <a class="stat" href="../timeline.html">时间轴</a>
-    <a class="stat" href="../matrix.html">研究矩阵</a>
-    <a class="stat" href="../tags.html">分类总览</a>
-    <span class="stat">研究线 2</span>
+    <a class="stat" href="facets.html">分类工作台</a>
+    <a class="stat" href="quality.html">质量治理</a>
+    <a class="stat" href="taxonomy.html">分类治理</a>
+    <a class="stat" href="taxonomy_actions.json">治理任务 JSON</a>
+    <a class="stat" href="stats.json">Stats JSON</a>
+    <span class="stat">均衡分 21.3</span>
+    <span class="stat">最弱维度 结构域</span>
     <span class="stat">论文 5</span>
   </div>
 </header>
 <main class="shell">
-  <div class="line-grid"><section class="line-card"><h2><a href="parallel-decoding-with-diffusion-models.html">Parallel Decoding with Diffusion Models</a> <span class="meta">3</span></h2><div class="card-flags"><span class="flag">foundation</span><span class="flag">variant</span><span class="flag">followup</span></div><div class="chips"><span class="chip">Diffusion Language Models 3</span><span class="chip">Speculative Decoding 3</span><span class="chip">LLM Serving 2</span><span class="chip">Parallel Decoding 2</span><span class="chip">LLM Inference 2</span><span class="chip">LLM 1</span></div></section><section class="line-card"><h2><a href="efficient-attention-kernels.html">Efficient Attention Kernels</a> <span class="meta">2</span></h2><div class="card-flags"><span class="flag">foundation</span><span class="flag">system</span></div><div class="chips"><span class="chip">Efficient Attention 1</span><span class="chip">GPU Kernel Optimization 1</span><span class="chip">Long Context 1</span><span class="chip">Transformer 1</span><span class="chip">Attention Kernels 1</span><span class="chip">GPU Systems 1</span></div></section></div>
+  <section class="balance-hero">
+    <div class="metric-grid">
+      <section class="metric-card"><span>平均均衡分</span><strong>21.3</strong><span>越高代表越少默认桶和极端长尾</span></section>
+      <section class="metric-card"><span>长尾标签</span><strong>42</strong><span>只命中 1 篇论文</span></section>
+      <section class="metric-card"><span>过载标签</span><strong>3</strong><span>覆盖比例过高</span></section>
+      <section class="metric-card"><span>空候选</span><strong>10</strong><span>配置但未使用</span></section>
+    </div>
+    <aside class="balance-panel">
+      <h2>治理任务摘要</h2>
+      <p>长尾合并 42 项，过载拆分 3 项，空候选 10 项，观察 0 项。</p>
+    </aside>
+  </section>
+  <section>
+    <h2 class="section-title">维度健康度</h2>
+    <div class="balance-controls">
+      <input id="balanceSearch" type="search" placeholder="搜索维度、最大标签或治理建议">
+      <select id="balanceRisk"><option value="">全部风险</option><option value="high">high</option><option value="medium">medium</option><option value="low">low</option></select>
+      <select id="balanceSort"><option value="risk">风险优先</option><option value="score">均衡分低到高</option><option value="singletons">长尾多到少</option><option value="overloaded">过载多到少</option><option value="unused">空候选多到少</option></select>
+      <strong id="balanceCount">10 项</strong>
+      <button id="downloadBalanceCsv" class="button" type="button">下载当前 CSV</button>
+      <button id="copyBalanceMarkdown" class="button" type="button">复制复盘清单</button>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table"><thead><tr><th>维度</th><th>均衡分</th><th>风险</th><th>使用 / 配置</th><th>长尾</th><th>过载</th><th>空候选</th><th>最大标签</th><th>建议</th></tr></thead><tbody id="balanceRows"><tr data-label="结构域" data-english="Domain" data-risk="high" data-score="0" data-singletons="0" data-overloaded="1" data-unused="0" data-search="结构域 domain llm systems high 拆分过载标签"><td><a href="facets.html">结构域</a><div class="meta">Domain</div></td><td><strong>0</strong><div class="balance-meter"><span style="width:0%"></span></div></td><td><span class="flag">high</span></td><td>1 / 1<div class="meta">effective 1.0</div></td><td>0</td><td>1</td><td>0</td><td><a href="library.html?domain=LLM+Systems">LLM Systems</a><div class="meta">5 篇 / 100%</div></td><td>拆分过载标签</td></tr><tr data-label="方向" data-english="Track" data-risk="high" data-score="35" data-singletons="1" data-overloaded="0" data-unused="0" data-search="方向 track parallel decoding high 合并长尾标签"><td><a href="facets.html">方向</a><div class="meta">Track</div></td><td><strong>35</strong><div class="balance-meter"><span style="width:35%"></span></div></td><td><span class="flag">high</span></td><td>4 / 4<div class="meta">effective 3.71</div></td><td>1</td><td>0</td><td>0</td><td><a href="library.html?track=Parallel+Decoding">Parallel Decoding</a><div class="meta">3 篇 / 60%</div></td><td>合并长尾标签</td></tr><tr data-label="问题" data-english="Problem" data-risk="high" data-score="40" data-singletons="5" data-overloaded="0" data-unused="0" data-search="问题 problem parallel diffusion decoding high 合并长尾标签"><td><a href="facets.html">问题</a><div class="meta">Problem</div></td><td><strong>40</strong><div class="balance-meter"><span style="width:40%"></span></div></td><td><span class="flag">high</span></td><td>5 / 5<div class="meta">effective 5.0</div></td><td>5</td><td>0</td><td>0</td><td><a href="library.html?problem=Parallel+Diffusion+Decoding">Parallel Diffusion Decoding</a><div class="meta">1 篇 / 20%</div></td><td>合并长尾标签</td></tr><tr data-label="主题" data-english="Topic" data-risk="high" data-score="29" data-singletons="8" data-overloaded="0" data-unused="0" data-search="主题 topic speculative decoding high 合并长尾标签"><td><a href="facets.html">主题</a><div class="meta">Topic</div></td><td><strong>29</strong><div class="balance-meter"><span style="width:29%"></span></div></td><td><span class="flag">high</span></td><td>14 / 14<div class="meta">effective 12.49</div></td><td>8</td><td>0</td><td>0</td><td><a href="library.html?topic=Speculative+Decoding">Speculative Decoding</a><div class="meta">3 篇 / 60%</div></td><td>合并长尾标签</td></tr><tr data-label="方法" data-english="Method" data-risk="high" data-score="31" data-singletons="25" data-overloaded="0" data-unused="0" data-search="方法 method flashattention high 合并长尾标签"><td><a href="facets.html">方法</a><div class="meta">Method</div></td><td><strong>31</strong><div class="balance-meter"><span style="width:31%"></span></div></td><td><span class="flag">high</span></td><td>26 / 26<div class="meta">effective 25.65</div></td><td>25</td><td>0</td><td>0</td><td><a href="library.html?method=FlashAttention">FlashAttention</a><div class="meta">2 篇 / 40%</div></td><td>合并长尾标签</td></tr><tr data-label="研究线" data-english="Research line" data-risk="high" data-score="40" data-singletons="0" data-overloaded="0" data-unused="0" data-search="研究线 research line parallel decoding with diffusion models high 保持观察"><td><a href="facets.html">研究线</a><div class="meta">Research line</div></td><td><strong>40</strong><div class="balance-meter"><span style="width:40%"></span></div></td><td><span class="flag">high</span></td><td>2 / 2<div class="meta">effective 1.96</div></td><td>0</td><td>0</td><td>0</td><td><a href="library.html?line=Parallel+Decoding+with+Diffusion+Models">Parallel Decoding with Diffusion Models</a><div class="meta">3 篇 / 60%</div></td><td>保持观察</td></tr><tr data-label="研究线角色" data-english="Line role" data-risk="high" data-score="38" data-singletons="3" data-overloaded="0" data-unused="0" data-search="研究线角色 line role foundation high 合并长尾标签"><td><a href="facets.html">研究线角色</a><div class="meta">Line role</div></td><td><strong>38</strong><div class="balance-meter"><span style="width:38%"></span></div></td><td><span class="flag">high</span></td><td>4 / 4<div class="meta">effective 3.79</div></td><td>3</td><td>0</td><td>0</td><td><a href="library.html?role=foundation">foundation</a><div class="meta">2 篇 / 40%</div></td><td>合并长尾标签</td></tr><tr data-label="阅读状态" data-english="Status" data-risk="high" data-score="0" data-singletons="0" data-overloaded="1" data-unused="4" data-search="阅读状态 status read high 拆分过载标签；清理空候选"><td><a href="facets.html">阅读状态</a><div class="meta">Status</div></td><td><strong>0</strong><div class="balance-meter"><span style="width:0%"></span></div></td><td><span class="flag">high</span></td><td>1 / 5<div class="meta">effective 1.0</div></td><td>0</td><td>1</td><td>4</td><td><a href="library.html?status=read">read</a><div class="meta">5 篇 / 100%</div></td><td>拆分过载标签；清理空候选</td></tr><tr data-label="阅读阶段" data-english="Reading stage" data-risk="high" data-score="0" data-singletons="0" data-overloaded="1" data-unused="3" data-search="阅读阶段 reading stage deep_read high 拆分过载标签；清理空候选"><td><a href="facets.html">阅读阶段</a><div class="meta">Reading stage</div></td><td><strong>0</strong><div class="balance-meter"><span style="width:0%"></span></div></td><td><span class="flag">high</span></td><td>1 / 4<div class="meta">effective 1.0</div></td><td>0</td><td>1</td><td>3</td><td><a href="library.html?stage=deep_read">deep_read</a><div class="meta">5 篇 / 100%</div></td><td>拆分过载标签；清理空候选</td></tr><tr data-label="复习阶段" data-english="Review stage" data-risk="high" data-score="0" data-singletons="0" data-overloaded="0" data-unused="3" data-search="复习阶段 review stage  high 清理空候选"><td><a href="facets.html">复习阶段</a><div class="meta">Review stage</div></td><td><strong>0</strong><div class="balance-meter"><span style="width:0%"></span></div></td><td><span class="flag">high</span></td><td>0 / 3<div class="meta">effective 0</div></td><td>0</td><td>0</td><td>3</td><td><a href="library.html">-</a><div class="meta">0 篇 / 0%</div></td><td>清理空候选</td></tr></tbody></table>
+    </div>
+  </section>
 </main>
+<script>
+const balanceSearch = document.querySelector("#balanceSearch");
+const balanceRisk = document.querySelector("#balanceRisk");
+const balanceSort = document.querySelector("#balanceSort");
+const balanceCount = document.querySelector("#balanceCount");
+const balanceBody = document.querySelector("#balanceRows");
+const downloadBalanceCsv = document.querySelector("#downloadBalanceCsv");
+const copyBalanceMarkdown = document.querySelector("#copyBalanceMarkdown");
+const balanceRows = Array.from(document.querySelectorAll("#balanceRows tr"));
+const riskRank = { high: 0, medium: 1, low: 2 };
+
+function visibleBalanceRows() {
+  return balanceRows.filter(row => !row.hidden);
+}
+
+function balanceCsvCell(value) {
+  const text = String(value ?? "");
+  return (text.includes(",") || text.includes('"') || text.includes("\n"))
+    ? `"${text.replaceAll('"', '""')}"`
+    : text;
+}
+
+function rowMetric(row, key) {
+  return Number(row.dataset[key] || 0);
+}
+
+function sortBalanceRows(rows) {
+  const mode = balanceSort.value;
+  return [...rows].sort((a, b) => {
+    if (mode === "score") return rowMetric(a, "score") - rowMetric(b, "score") || a.dataset.label.localeCompare(b.dataset.label);
+    if (mode === "singletons") return rowMetric(b, "singletons") - rowMetric(a, "singletons") || a.dataset.label.localeCompare(b.dataset.label);
+    if (mode === "overloaded") return rowMetric(b, "overloaded") - rowMetric(a, "overloaded") || a.dataset.label.localeCompare(b.dataset.label);
+    if (mode === "unused") return rowMetric(b, "unused") - rowMetric(a, "unused") || a.dataset.label.localeCompare(b.dataset.label);
+    return (riskRank[a.dataset.risk] ?? 9) - (riskRank[b.dataset.risk] ?? 9) || rowMetric(a, "score") - rowMetric(b, "score");
+  });
+}
+
+function renderBalanceRows() {
+  const q = balanceSearch.value.trim().toLowerCase();
+  const risk = balanceRisk.value;
+  let visible = 0;
+  balanceRows.forEach(row => {
+    const hit = (!q || row.dataset.search.includes(q)) && (!risk || row.dataset.risk === risk);
+    row.hidden = !hit;
+    if (hit) visible += 1;
+  });
+  sortBalanceRows(balanceRows).forEach(row => balanceBody.appendChild(row));
+  balanceCount.textContent = `${visible} / ${balanceRows.length} 项`;
+}
+
+function downloadCurrentBalanceCsv() {
+  const rows = visibleBalanceRows();
+  if (!rows.length) {
+    window.alert("当前筛选结果为空。");
+    return;
+  }
+  const header = ["label", "english", "risk", "score", "singletons", "overloaded", "unused"];
+  const body = rows.map(row => [row.dataset.label, row.dataset.english, row.dataset.risk, row.dataset.score, row.dataset.singletons, row.dataset.overloaded, row.dataset.unused]);
+  const csv = [header, ...body].map(row => row.map(balanceCsvCell).join(",")).join("\n") + "\n";
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "taxonomy_balance_filtered.csv";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+async function copyBalanceMarkdownQueue() {
+  const rows = visibleBalanceRows();
+  if (!rows.length) {
+    window.alert("当前筛选结果为空。");
+    return;
+  }
+  const lines = ["# Taxonomy Balance Review", ""];
+  rows.forEach(row => {
+    lines.push(`- [ ] ${row.dataset.risk} / score ${row.dataset.score} / ${row.dataset.label}`);
+    lines.push(`  - Long-tail: ${row.dataset.singletons}, overloaded: ${row.dataset.overloaded}, unused: ${row.dataset.unused}`);
+  });
+  const text = lines.join("\n") + "\n";
+  try {
+    await navigator.clipboard.writeText(text);
+    window.alert("已复制。");
+  } catch {
+    window.prompt("复制复盘清单", text);
+  }
+}
+
+[balanceSearch, balanceRisk, balanceSort].forEach(control => control.addEventListener("input", renderBalanceRows));
+downloadBalanceCsv.addEventListener("click", downloadCurrentBalanceCsv);
+copyBalanceMarkdown.addEventListener("click", copyBalanceMarkdownQueue);
+renderBalanceRows();
+</script>
 
 <script>
 (() => {
-  const prefix = "../";
+  const prefix = "";
   const openButton = document.querySelector("#quickOpen");
   const panel = document.querySelector("#quickPanel");
   const search = document.querySelector("#quickSearch");

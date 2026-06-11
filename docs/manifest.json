@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T02:05:38",
+  "generated_at": "2026-06-12T02:10:36",
   "name": "AutoPaperReader Wiki",
   "count": 5,
   "publish_ready": false,
@@ -409,6 +409,12 @@
       "description": "共享视图、智能集合、研究线入口"
     },
     {
+      "title": "分类均衡",
+      "href": "balance.html",
+      "kind": "ops",
+      "description": "分类维度健康度、长尾和过载复盘"
+    },
+    {
       "title": "分类工作台",
       "href": "facets.html",
       "kind": "ops",
@@ -544,8 +550,8 @@
       "description": "卡片检索、筛选、研究线概览",
       "exists": true,
       "status": "ok",
-      "size_bytes": 246141,
-      "sha256": "6dd31b4d6d0b799f06382f6f0e9875fb5408c95ecce534dd54601e3d51889afe",
+      "size_bytes": 246264,
+      "sha256": "ed2c6311900c0c9a4fc732d4220cc3df01bd18ced4f6b5a7a60651414dd12281",
       "hash_mode": "normalized"
     },
     {
@@ -554,8 +560,8 @@
       "description": "密集筛选、列管理、批量更新",
       "exists": true,
       "status": "ok",
-      "size_bytes": 107984,
-      "sha256": "205a52b6d2f68a82523377ccbf2fba16a72a33286d4c48d6b5f0b8da94f4e1b2",
+      "size_bytes": 108107,
+      "sha256": "71c7f31600746058efba4cefc6726ea30088edc82780b8da1447840b84f605c1",
       "hash_mode": "raw"
     },
     {
@@ -564,8 +570,8 @@
       "description": "覆盖率、队列和运营指标",
       "exists": true,
       "status": "ok",
-      "size_bytes": 32557,
-      "sha256": "0b9b2049c6c73b95a33a029d4718467459e5744ed334bc65826ad8aab8238355",
+      "size_bytes": 32680,
+      "sha256": "71ef071a6ad08dcc982a5ba074808a4194c24d843663ff0668baaedddfb0c45f",
       "hash_mode": "normalized"
     },
     {
@@ -574,8 +580,8 @@
       "description": "页面入口、数据文件、质量状态",
       "exists": true,
       "status": "ok",
-      "size_bytes": 50320,
-      "sha256": "6fb7fe278b9cd64cd45fb4562f2d824013a27710912fa124f9c86ff8be0d1c40",
+      "size_bytes": 50842,
+      "sha256": "502922c06d919711dad9eb3cccc25a7b88b5848ac64d0c7741e88bc101dc2ee3",
       "hash_mode": "raw"
     },
     {
@@ -584,9 +590,19 @@
       "description": "共享视图、智能集合、研究线入口",
       "exists": true,
       "status": "ok",
-      "size_bytes": 31268,
-      "sha256": "64dddf563869a739f53f5bee8a64aabdf97b5040d02abf2b38c3e3ca82a221b1",
+      "size_bytes": 31391,
+      "sha256": "2c947f06525ea5059ee5e49f112d4e7ae691cc03219e9a286af3312dbc049d46",
       "hash_mode": "normalized"
+    },
+    {
+      "href": "balance.html",
+      "kind": "page",
+      "description": "分类维度健康度、长尾和过载复盘",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 39058,
+      "sha256": "d05998de5e6897705e9d3b1d7fbaba7396ea05979d7347a4cbbacb92ad531702",
+      "hash_mode": "raw"
     },
     {
       "href": "facets.html",
@@ -594,8 +610,8 @@
       "description": "标签规模、长尾和过载分类",
       "exists": true,
       "status": "ok",
-      "size_bytes": 90236,
-      "sha256": "8ff417ac509afe4139607f2d281dd001e1ef857e8598494d3eb64d337f7c167c",
+      "size_bytes": 90359,
+      "sha256": "1dc2ae2c4ad13ca433b17f183b3836674d519c0a8cab18b0558909066b71e28e",
       "hash_mode": "raw"
     },
     {
@@ -604,8 +620,8 @@
       "description": "标签共现、相似论文、孤岛论文",
       "exists": true,
       "status": "ok",
-      "size_bytes": 44513,
-      "sha256": "aa9e41641524ff1d5ce694d9c20d83c84a30fd8333df17b39059b5a379ce756b",
+      "size_bytes": 44636,
+      "sha256": "7e7df117128b2587415484e03071dd91fd8f16df5b2061c28aaf30be324c2657",
       "hash_mode": "raw"
     },
     {
@@ -614,8 +630,8 @@
       "description": "下一步行动和研究线缺口",
       "exists": true,
       "status": "ok",
-      "size_bytes": 32701,
-      "sha256": "b63fba38dca44a1c57f2034549c94254a84b946f70518d0859c52ac26ccf64d1",
+      "size_bytes": 32824,
+      "sha256": "30ecde37dbdbf18a7c2c537986382b26e90b43c2af1bc263557a9f68c1e25c73",
       "hash_mode": "raw"
     },
     {
@@ -624,8 +640,8 @@
       "description": "拖拽式状态流和 CSV patch",
       "exists": true,
       "status": "ok",
-      "size_bytes": 45931,
-      "sha256": "443123b15ccf268940a540e7ced8b3a89f55a73b2517d58f46ee301c813b4694",
+      "size_bytes": 46054,
+      "sha256": "725fcb8a8fcc4289883890f66a573a1d5b79821c91214f8bae2d737221362fe0",
       "hash_mode": "raw"
     },
     {
@@ -634,8 +650,8 @@
       "description": "候选论文队列和去重提示",
       "exists": true,
       "status": "ok",
-      "size_bytes": 30909,
-      "sha256": "d9d63c1dbe065fded4b704c8d8037ad0b98f67356fc8837642efad0cff99d34b",
+      "size_bytes": 31032,
+      "sha256": "40e3b756a67669a4f13d07954dcbb3244345bf0810f4964b2a26e4b7069823b9",
       "hash_mode": "raw"
     },
     {
@@ -644,8 +660,8 @@
       "description": "待复习、需建计划、建议日期",
       "exists": true,
       "status": "ok",
-      "size_bytes": 33059,
-      "sha256": "4f7ce7be62e9834f88d379ea5d5f97ab0859f9194e358afde297497c2a1f86bb",
+      "size_bytes": 33182,
+      "sha256": "2df917ccf6a650a1dba3da67d4ee400599d94c3ee5960b397ade0f9a4daf8469",
       "hash_mode": "raw"
     },
     {
@@ -654,8 +670,8 @@
       "description": "弱元数据、别名建议、taxonomy drift",
       "exists": true,
       "status": "ok",
-      "size_bytes": 36211,
-      "sha256": "aff1a8c1b49f79de52bd52f0ef46d78d13fd6f3f19e716c4108f81eaf1de30ed",
+      "size_bytes": 36334,
+      "sha256": "68d4013d1104307878c689fe13fa62fcef0155195e49446c37901a61dc020504",
       "hash_mode": "normalized"
     },
     {
@@ -664,8 +680,8 @@
       "description": "分类矩阵、状态工作流、治理队列",
       "exists": true,
       "status": "ok",
-      "size_bytes": 57112,
-      "sha256": "e2bb9e94570fa2aa714e77660f39d048151cea9dd1973501f77d1bbda72d7cc8",
+      "size_bytes": 57235,
+      "sha256": "0d0a8e5bd5a36e19688e38cc1e6c165cdeda9c0b235802d8fdf2ebe63cff691b",
       "hash_mode": "raw"
     },
     {
@@ -674,8 +690,8 @@
       "description": "按年份和研究线浏览论文演进",
       "exists": true,
       "status": "ok",
-      "size_bytes": 53563,
-      "sha256": "4036e921fb3503805156f15df47b6722c48678e660d848c657c6321ea9baf942",
+      "size_bytes": 53686,
+      "sha256": "08b006b269801f72621e908129b2e711cd6f95129763514031f7609971d9ec39",
       "hash_mode": "raw"
     },
     {
@@ -684,8 +700,8 @@
       "description": "research line x year 覆盖",
       "exists": true,
       "status": "ok",
-      "size_bytes": 47683,
-      "sha256": "e42fcb2a0445105391b7c6fbe75b260c9824d0abd03092b4d44a09d1b646f0a3",
+      "size_bytes": 47806,
+      "sha256": "65ab593f2ce458b8978fa3e9ec72c36c4c0c29f65edebff4c30d98ea3b3f2109",
       "hash_mode": "raw"
     },
     {
@@ -694,8 +710,8 @@
       "description": "按研究脉络组织论文",
       "exists": true,
       "status": "ok",
-      "size_bytes": 26427,
-      "sha256": "7dff6e461e4b3aa3373b5ad2d22aaf1c304ba9e07a5f3cff071324f75400ac25",
+      "size_bytes": 26550,
+      "sha256": "9be43f3a9fd5b5cc2cdfab6842334e5e132592eff89e0d41310cd740287c1a8c",
       "hash_mode": "raw"
     },
     {
@@ -704,8 +720,8 @@
       "description": "按标签聚合论文",
       "exists": true,
       "status": "ok",
-      "size_bytes": 41644,
-      "sha256": "a9c51b92825c5026cec4d325f97cd39395efcbbbfc069c22e1027de7507b21cc",
+      "size_bytes": 41767,
+      "sha256": "54a21c354a69f2b42eb6eae556626441cbd8e309b63a8e4e23184104330b25ee",
       "hash_mode": "raw"
     },
     {

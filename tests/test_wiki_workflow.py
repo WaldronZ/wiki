@@ -200,6 +200,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "dashboard.html",
                 "release.html",
                 "collections.html",
+                "balance.html",
                 "facets.html",
                 "related.html",
                 "taxonomy.html",
@@ -260,6 +261,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("View: 重点队列", index_html)
             self.assertIn("View: Kernel 方向", index_html)
             self.assertIn("Playbook: Release readiness", index_html)
+            self.assertIn('"href": "balance.html"', index_html)
             self.assertIn("Data: manifest.json", index_html)
             self.assertIn("Command: Export taxonomy balance project tasks", index_html)
             self.assertIn("export_taxonomy_balance.py", index_html)
@@ -414,6 +416,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(manifest["count"], 2)
             self.assertTrue(manifest["publish_checks"]["no_duplicate_reports"])
             self.assertIn("release.html", {item["href"] for item in manifest["pages"]})
+            self.assertIn("balance.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("facets.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("taxonomy_actions.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("manifest.json", {item["href"] for item in manifest["data_files"]})
@@ -478,6 +481,14 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("需建复习计划", collections_html)
             self.assertIn("分类偏薄", collections_html)
             self.assertIn("分类过密", collections_html)
+            balance_html = (report_dir / "balance.html").read_text(encoding="utf-8")
+            self.assertIn("分类均衡复盘", balance_html)
+            self.assertIn('id="balanceRows"', balance_html)
+            self.assertIn('id="balanceSort"', balance_html)
+            self.assertIn("taxonomy_balance_filtered.csv", balance_html)
+            self.assertIn("copyBalanceMarkdownQueue", balance_html)
+            self.assertIn("renderBalanceRows", balance_html)
+            self.assertIn("LLM Systems", balance_html)
             facets_html = (report_dir / "facets.html").read_text(encoding="utf-8")
             self.assertIn("分类工作台", facets_html)
             self.assertIn("字段概览", facets_html)

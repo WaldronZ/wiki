@@ -43,6 +43,7 @@ GENERATED_FIXED_PATHS = (
     "dashboard.html",
     "release.html",
     "collections.html",
+    "balance.html",
     "facets.html",
     "related.html",
     "taxonomy.html",
@@ -1283,6 +1284,7 @@ def wiki_pages_manifest() -> list[dict[str, str]]:
         {"title": "管理控制台", "href": "dashboard.html", "kind": "ops", "description": "覆盖率、队列和运营指标"},
         {"title": "发布摘要", "href": "release.html", "kind": "ops", "description": "页面入口、数据文件、质量状态"},
         {"title": "集合视图", "href": "collections.html", "kind": "view", "description": "共享视图、智能集合、研究线入口"},
+        {"title": "分类均衡", "href": "balance.html", "kind": "ops", "description": "分类维度健康度、长尾和过载复盘"},
         {"title": "分类工作台", "href": "facets.html", "kind": "ops", "description": "标签规模、长尾和过载分类"},
         {"title": "关联网络", "href": "related.html", "kind": "analysis", "description": "标签共现、相似论文、孤岛论文"},
         {"title": "研究缺口", "href": "gaps.html", "kind": "ops", "description": "下一步行动和研究线缺口"},
@@ -6118,6 +6120,258 @@ def taxonomy_balance_report(papers: list[dict[str, Any]]) -> list[dict[str, Any]
     return rows
 
 
+def render_balance(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    rows = taxonomy_balance_report(papers)
+    actions = build_taxonomy_actions(papers)
+    avg_score = round(sum(int(row["balance_score"]) for row in rows) / len(rows), 1) if rows else 100
+    weakest = min(rows, key=lambda row: int(row["balance_score"]), default=None)
+    total_singletons = sum(int(row["singleton_count"]) for row in rows)
+    total_overloaded = sum(int(row["overloaded_count"]) for row in rows)
+    total_unused = sum(int(row["unused_count"]) for row in rows)
+
+    def risk_level(row: dict[str, Any]) -> str:
+        score = int(row["balance_score"])
+        if score < 45 or int(row["overloaded_count"]) > 0:
+            return "high"
+        if score < 70 or int(row["singleton_count"]) >= 3 or int(row["unused_count"]) >= 3:
+            return "medium"
+        return "low"
+
+    def action_hint(row: dict[str, Any]) -> str:
+        hints = []
+        if int(row["overloaded_count"]) > 0:
+            hints.append("拆分过载标签")
+        if int(row["singleton_count"]) > 0:
+            hints.append("合并长尾标签")
+        if int(row["unused_count"]) > 0:
+            hints.append("清理空候选")
+        return "；".join(hints) or "保持观察"
+
+    def row_html(row: dict[str, Any]) -> str:
+        risk = risk_level(row)
+        max_href = page_query_href("library.html", **{str(row["query_key"]): str(row["max_value"])}) if row.get("max_value") else "library.html"
+        field_href = page_query_href("facets.html")
+        score = int(row["balance_score"])
+        return (
+            f'<tr data-label="{html.escape(str(row["label"]), quote=True)}" '
+            f'data-english="{html.escape(str(row["english"]), quote=True)}" '
+            f'data-risk="{risk}" data-score="{score}" '
+            f'data-singletons="{row["singleton_count"]}" data-overloaded="{row["overloaded_count"]}" '
+            f'data-unused="{row["unused_count"]}" data-search="{html.escape(" ".join([str(row["label"]), str(row["english"]), str(row["max_value"]), risk, action_hint(row)]).lower(), quote=True)}">'
+            f'<td><a href="{html.escape(field_href)}">{html.escape(str(row["label"]))}</a><div class="meta">{html.escape(str(row["english"]))}</div></td>'
+            f'<td><strong>{score}</strong><div class="balance-meter"><span style="width:{score}%"></span></div></td>'
+            f'<td><span class="flag">{risk}</span></td>'
+            f'<td>{row["used_count"]} / {row["configured_count"]}<div class="meta">effective {row["effective_count"]}</div></td>'
+            f'<td>{row["singleton_count"]}</td>'
+            f'<td>{row["overloaded_count"]}</td>'
+            f'<td>{row["unused_count"]}</td>'
+            f'<td><a href="{html.escape(max_href)}">{html.escape(str(row["max_value"]) or "-")}</a><div class="meta">{row["max_count"]} 篇 / {round(float(row["max_share"]) * 100)}%</div></td>'
+            f"<td>{html.escape(action_hint(row))}</td>"
+            "</tr>"
+        )
+
+    table_rows = "".join(row_html(row) for row in rows)
+    action_summary = actions.get("summary", {})
+    weakest_text = str(weakest["label"]) if weakest else "-"
+    balance_css = """
+    .balance-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(280px, .7fr);
+      gap: 16px;
+      align-items: start;
+      margin-bottom: 24px;
+    }
+    .balance-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 16px;
+    }
+    .balance-panel h2 {
+      margin: 0 0 8px;
+      font-size: 20px;
+      line-height: 1.25;
+    }
+    .balance-panel p { margin: 0; color: var(--muted); }
+    .balance-meter {
+      width: 120px;
+      height: 8px;
+      border-radius: 999px;
+      background: #eadfce;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+    .balance-meter span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--accent);
+    }
+    .balance-controls {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) minmax(140px, 190px) minmax(160px, 210px) repeat(3, auto);
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .balance-controls input,
+    .balance-controls select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 10px 12px;
+      color: var(--text);
+      font: inherit;
+    }
+    @media (max-width: 900px) {
+      .balance-hero { grid-template-columns: 1fr; }
+      .balance-controls { grid-template-columns: 1fr; }
+    }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Taxonomy Balance</div>
+  <h1>分类均衡复盘</h1>
+  <p class="lead">把每个分类维度的健康度、长尾、过载和空候选放到一张表里，适合论文库增长后定期判断哪些标签该合并、拆分或清理。</p>
+  <div class="stats">
+    <a class="stat" href="facets.html">分类工作台</a>
+    <a class="stat" href="quality.html">质量治理</a>
+    <a class="stat" href="taxonomy.html">分类治理</a>
+    <a class="stat" href="taxonomy_actions.json">治理任务 JSON</a>
+    <a class="stat" href="stats.json">Stats JSON</a>
+    <span class="stat">均衡分 {avg_score}</span>
+    <span class="stat">最弱维度 {html.escape(weakest_text)}</span>
+    <span class="stat">论文 {len(papers)}</span>
+  </div>
+</header>
+<main class="shell">
+  <section class="balance-hero">
+    <div class="metric-grid">
+      <section class="metric-card"><span>平均均衡分</span><strong>{avg_score}</strong><span>越高代表越少默认桶和极端长尾</span></section>
+      <section class="metric-card"><span>长尾标签</span><strong>{total_singletons}</strong><span>只命中 1 篇论文</span></section>
+      <section class="metric-card"><span>过载标签</span><strong>{total_overloaded}</strong><span>覆盖比例过高</span></section>
+      <section class="metric-card"><span>空候选</span><strong>{total_unused}</strong><span>配置但未使用</span></section>
+    </div>
+    <aside class="balance-panel">
+      <h2>治理任务摘要</h2>
+      <p>长尾合并 {action_summary.get("merge_candidate", 0)} 项，过载拆分 {action_summary.get("split_candidate", 0)} 项，空候选 {action_summary.get("unused_config", 0)} 项，观察 {action_summary.get("watch", 0)} 项。</p>
+    </aside>
+  </section>
+  <section>
+    <h2 class="section-title">维度健康度</h2>
+    <div class="balance-controls">
+      <input id="balanceSearch" type="search" placeholder="搜索维度、最大标签或治理建议">
+      <select id="balanceRisk"><option value="">全部风险</option><option value="high">high</option><option value="medium">medium</option><option value="low">low</option></select>
+      <select id="balanceSort"><option value="risk">风险优先</option><option value="score">均衡分低到高</option><option value="singletons">长尾多到少</option><option value="overloaded">过载多到少</option><option value="unused">空候选多到少</option></select>
+      <strong id="balanceCount">{len(rows)} 项</strong>
+      <button id="downloadBalanceCsv" class="button" type="button">下载当前 CSV</button>
+      <button id="copyBalanceMarkdown" class="button" type="button">复制复盘清单</button>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table"><thead><tr><th>维度</th><th>均衡分</th><th>风险</th><th>使用 / 配置</th><th>长尾</th><th>过载</th><th>空候选</th><th>最大标签</th><th>建议</th></tr></thead><tbody id="balanceRows">{table_rows}</tbody></table>
+    </div>
+  </section>
+</main>
+<script>
+const balanceSearch = document.querySelector("#balanceSearch");
+const balanceRisk = document.querySelector("#balanceRisk");
+const balanceSort = document.querySelector("#balanceSort");
+const balanceCount = document.querySelector("#balanceCount");
+const balanceBody = document.querySelector("#balanceRows");
+const downloadBalanceCsv = document.querySelector("#downloadBalanceCsv");
+const copyBalanceMarkdown = document.querySelector("#copyBalanceMarkdown");
+const balanceRows = Array.from(document.querySelectorAll("#balanceRows tr"));
+const riskRank = {{ high: 0, medium: 1, low: 2 }};
+
+function visibleBalanceRows() {{
+  return balanceRows.filter(row => !row.hidden);
+}}
+
+function balanceCsvCell(value) {{
+  const text = String(value ?? "");
+  return (text.includes(",") || text.includes('"') || text.includes("\\n"))
+    ? `"${{text.replaceAll('"', '""')}}"`
+    : text;
+}}
+
+function rowMetric(row, key) {{
+  return Number(row.dataset[key] || 0);
+}}
+
+function sortBalanceRows(rows) {{
+  const mode = balanceSort.value;
+  return [...rows].sort((a, b) => {{
+    if (mode === "score") return rowMetric(a, "score") - rowMetric(b, "score") || a.dataset.label.localeCompare(b.dataset.label);
+    if (mode === "singletons") return rowMetric(b, "singletons") - rowMetric(a, "singletons") || a.dataset.label.localeCompare(b.dataset.label);
+    if (mode === "overloaded") return rowMetric(b, "overloaded") - rowMetric(a, "overloaded") || a.dataset.label.localeCompare(b.dataset.label);
+    if (mode === "unused") return rowMetric(b, "unused") - rowMetric(a, "unused") || a.dataset.label.localeCompare(b.dataset.label);
+    return (riskRank[a.dataset.risk] ?? 9) - (riskRank[b.dataset.risk] ?? 9) || rowMetric(a, "score") - rowMetric(b, "score");
+  }});
+}}
+
+function renderBalanceRows() {{
+  const q = balanceSearch.value.trim().toLowerCase();
+  const risk = balanceRisk.value;
+  let visible = 0;
+  balanceRows.forEach(row => {{
+    const hit = (!q || row.dataset.search.includes(q)) && (!risk || row.dataset.risk === risk);
+    row.hidden = !hit;
+    if (hit) visible += 1;
+  }});
+  sortBalanceRows(balanceRows).forEach(row => balanceBody.appendChild(row));
+  balanceCount.textContent = `${{visible}} / ${{balanceRows.length}} 项`;
+}}
+
+function downloadCurrentBalanceCsv() {{
+  const rows = visibleBalanceRows();
+  if (!rows.length) {{
+    window.alert("当前筛选结果为空。");
+    return;
+  }}
+  const header = ["label", "english", "risk", "score", "singletons", "overloaded", "unused"];
+  const body = rows.map(row => [row.dataset.label, row.dataset.english, row.dataset.risk, row.dataset.score, row.dataset.singletons, row.dataset.overloaded, row.dataset.unused]);
+  const csv = [header, ...body].map(row => row.map(balanceCsvCell).join(",")).join("\\n") + "\\n";
+  const blob = new Blob([csv], {{ type: "text/csv;charset=utf-8" }});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "taxonomy_balance_filtered.csv";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}}
+
+async function copyBalanceMarkdownQueue() {{
+  const rows = visibleBalanceRows();
+  if (!rows.length) {{
+    window.alert("当前筛选结果为空。");
+    return;
+  }}
+  const lines = ["# Taxonomy Balance Review", ""];
+  rows.forEach(row => {{
+    lines.push(`- [ ] ${{row.dataset.risk}} / score ${{row.dataset.score}} / ${{row.dataset.label}}`);
+    lines.push(`  - Long-tail: ${{row.dataset.singletons}}, overloaded: ${{row.dataset.overloaded}}, unused: ${{row.dataset.unused}}`);
+  }});
+  const text = lines.join("\\n") + "\\n";
+  try {{
+    await navigator.clipboard.writeText(text);
+    window.alert("已复制。");
+  }} catch {{
+    window.prompt("复制复盘清单", text);
+  }}
+}}
+
+[balanceSearch, balanceRisk, balanceSort].forEach(control => control.addEventListener("input", renderBalanceRows));
+downloadBalanceCsv.addEventListener("click", downloadCurrentBalanceCsv);
+copyBalanceMarkdown.addEventListener("click", copyBalanceMarkdownQueue);
+renderBalanceRows();
+</script>
+"""
+    (report_dir / "balance.html").write_text(page_shell("分类均衡复盘", body, extra_css=balance_css), encoding="utf-8")
+
+
 def taxonomy_action_status(count: int, share: float) -> tuple[str, str]:
     if count == 0:
         return "unused_config", "medium"
@@ -8868,6 +9122,7 @@ def build_wiki(report_dir: Path) -> int:
     render_quality(report_dir, papers, inbox_items)
     render_dashboard(report_dir, papers)
     render_collections(report_dir, papers)
+    render_balance(report_dir, papers)
     render_facets(report_dir, papers)
     render_related(report_dir, papers)
     render_taxonomy(report_dir, papers)
