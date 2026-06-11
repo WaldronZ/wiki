@@ -141,7 +141,7 @@ paper_reader/
 - `scripts/export_collections.py` 用于把 `collections.json` 中的共享视图、智能队列和研究线集合导出成 checklist、审计 CSV 或项目任务 CSV
 - `scripts/export_coverage.py` 用于把 `coverage.json` 中的研究线分类覆盖缺口导出成 checklist、审计 CSV、项目任务 CSV 或可写回的 metadata patch CSV
 - `scripts/export_gaps.py` 用于把 `gaps.json` 中的研究缺口和下一步行动导出成 checklist、审计 CSV 或项目任务 CSV
-- `scripts/export_views.py` 用于把 `views.json` 中的共享视图、系统队列和状态/研究线入口导出成 checklist、审计 CSV 或桌面侧边栏 JSON
+- `scripts/export_views.py` 用于把 `views.json` 中的共享视图、系统队列和状态/研究线入口导出成 checklist、审计 CSV、桌面侧边栏 JSON 或可写回 metadata 的 patch CSV
 - `scripts/export_ownership.py` 用于把 `ownership.json` 中的 owner 工作量、风险队列和研究线责任导出成 checklist、审计 CSV 或项目任务 CSV
 - `scripts/export_roadmap.py` 用于把 `roadmap.json` 中的研究线风险、角色缺口和下一步行动导出成路线 checklist、审计 CSV 或项目任务 CSV
 - `scripts/export_taxonomy_actions.py` 用于把 `taxonomy_actions.json` 导出成 Markdown checklist、审计 CSV 或项目任务 CSV，便于分派分类治理任务
@@ -394,6 +394,7 @@ python3 scripts/export_gaps.py docs --output docs/exports/gaps.md
 python3 scripts/export_gaps.py docs --format project --min-priority 20 --assignee research-owner --output docs/exports/gaps-project.csv
 python3 scripts/export_views.py docs --output docs/exports/views.md
 python3 scripts/export_views.py docs --format sidebar --min-count 1 --output docs/exports/views-sidebar.json
+python3 scripts/export_views.py docs --format patch --view "Attention Kernels" --field status --set-value reading --output docs/exports/views-status-patch.csv
 python3 scripts/export_collections.py docs --output docs/exports/collections.md
 python3 scripts/export_collections.py docs --format project --type smart --min-count 1 --assignee wiki-owner --output docs/exports/collections-project.csv
 python3 scripts/export_ownership.py docs --output docs/exports/ownership.md

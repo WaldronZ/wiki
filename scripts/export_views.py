@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Export view directory entries as Markdown, CSV, or sidebar JSON."""
+"""Export view directory entries as Markdown, CSV, sidebar JSON, or metadata patches."""
 
 from __future__ import annotations
 
@@ -13,6 +13,26 @@ from typing import Any, TextIO
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_REPORT_DIR = ROOT / "docs"
+LIST_FIELDS = {"authors", "domains", "tracks", "problems", "topics", "methods"}
+INT_FIELDS = {"year", "importance", "confidence", "reproducibility"}
+BOOL_FIELDS = {"has_code"}
+SCALAR_FIELDS = {
+    "title",
+    "title_zh",
+    "title_en",
+    "arxiv_id",
+    "arxiv_url",
+    "code_url",
+    "project_url",
+    "research_line",
+    "line_role",
+    "status",
+    "reading_stage",
+    "review_stage",
+    "last_reviewed",
+    "next_review",
+}
+PATCH_FIELDS = LIST_FIELDS | INT_FIELDS | BOOL_FIELDS | SCALAR_FIELDS
 
 FIELDS = [
     "id",
@@ -42,9 +62,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--format",
         "-f",
-        choices=["markdown", "csv", "sidebar"],
+        choices=["markdown", "csv", "sidebar", "patch"],
         default="markdown",
-        help="Output format. Use 'sidebar' for desktop/navigation JSON.",
+        help="Output format. Use 'sidebar' for desktop/navigation JSON, or 'patch' for apply_library_metadata.py CSV.",
     )
     parser.add_argument("--output", "-o", help="Output path. Defaults to stdout.")
     parser.add_argument("--source", action="append", help="Only include this source. Can be repeated.")
@@ -54,6 +74,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--min-count", type=int, default=0, help="Only include views with at least this many papers.")
     parser.add_argument("--include-empty", action="store_true", help="Keep empty views instead of hiding them.")
     parser.add_argument("--top", type=int, default=0, help="Limit to the first N filtered views.")
+    parser.add_argument("--field", help="Metadata field to populate when using --format patch.")
+    parser.add_argument("--set-value", help="Metadata value to write when using --format patch.")
+    parser.add_argument(
+        "--list-mode",
+        choices=["replace", "append", "remove"],
+        default="replace",
+        help="List mode column used by --format patch for list metadata fields.",
+    )
     return parser.parse_args()
 
 
@@ -211,6 +239,36 @@ def render_sidebar(payload: dict[str, Any], rows: list[dict[str, Any]]) -> str:
     return json.dumps(payload_out, ensure_ascii=False, indent=2) + "\n"
 
 
+def render_patch_csv(rows: list[dict[str, Any]], args: argparse.Namespace) -> str:
+    if not args.field or args.set_value is None:
+        raise ValueError("--format patch requires --field and --set-value")
+    field_name = str(args.field).strip()
+    if field_name not in PATCH_FIELDS:
+        raise ValueError(f"unknown editable metadata field for patch: {field_name}")
+
+    from io import StringIO
+
+    slugs: list[str] = []
+    seen: set[str] = set()
+    for view in rows:
+        for raw_slug in view.get("slugs", []):
+            slug = str(raw_slug).strip()
+            if slug and slug not in seen:
+                seen.add(slug)
+                slugs.append(slug)
+
+    fieldnames = ["slug", field_name, "_list_mode"] if field_name in LIST_FIELDS else ["slug", field_name]
+    buffer = StringIO()
+    writer = csv.DictWriter(buffer, fieldnames=fieldnames)
+    writer.writeheader()
+    for slug in slugs:
+        row = {"slug": slug, field_name: args.set_value}
+        if field_name in LIST_FIELDS:
+            row["_list_mode"] = args.list_mode
+        writer.writerow(row)
+    return buffer.getvalue()
+
+
 def write_output(text: str, output_path: str | None, report_dir: Path, stream: TextIO) -> None:
     if not output_path:
         stream.write(text)
@@ -238,6 +296,8 @@ def main() -> int:
             text = render_csv(rows)
         elif args.format == "sidebar":
             text = render_sidebar(payload, rows)
+        elif args.format == "patch":
+            text = render_patch_csv(rows, args)
         else:
             text = render_markdown(payload, rows)
         write_output(text, args.output, report_dir, sys.stdout)

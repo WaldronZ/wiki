@@ -897,6 +897,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("python3 scripts/export_coverage.py docs --format project --risk high --risk medium --output docs/exports/coverage-project.csv", quality_html)
             self.assertIn("python3 scripts/export_gaps.py docs --format project --min-priority 20 --output docs/exports/gaps-project.csv", quality_html)
             self.assertIn("python3 scripts/export_views.py docs --format sidebar --min-count 1 --output docs/exports/views-sidebar.json", quality_html)
+            self.assertIn("python3 scripts/export_views.py docs --format patch --view &lt;view_id_or_name&gt; --field status --set-value reading --output docs/exports/views-status-patch.csv", quality_html)
             self.assertIn("python3 scripts/export_collections.py docs --format project --output docs/exports/collections-project.csv", quality_html)
             self.assertIn("python3 scripts/export_ownership.py docs --format project --only-open-queues --output docs/exports/ownership-project.csv", quality_html)
             self.assertIn("python3 scripts/export_roadmap.py docs --format project --output docs/exports/roadmap-project.csv", quality_html)
@@ -1230,6 +1231,26 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertTrue(sidebar["groups"])
             self.assertTrue(any(item["label"] == "Kernel 方向" for group in sidebar["groups"] for item in group["items"]))
 
+            views_patch_path = report_dir / "exports" / "views-status-patch.csv"
+            self.run_cmd(
+                "scripts/export_views.py",
+                str(report_dir),
+                "--format",
+                "patch",
+                "--view",
+                "Kernel 方向",
+                "--field",
+                "status",
+                "--set-value",
+                "reading",
+                "--output",
+                str(views_patch_path),
+            )
+            view_patch_rows = list(csv.DictReader(views_patch_path.read_text(encoding="utf-8").splitlines()))
+            self.assertTrue(view_patch_rows)
+            self.assertIn("slug", view_patch_rows[0])
+            self.assertTrue(all(row["status"] == "reading" for row in view_patch_rows))
+
             unsafe_views_export = self.run_cmd(
                 "scripts/export_views.py",
                 str(report_dir),
@@ -1539,6 +1560,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("python3 scripts/export_coverage.py docs --output docs/exports/coverage.md", manifest["commands"])
             self.assertIn("python3 scripts/export_gaps.py docs --output docs/exports/gaps.md", manifest["commands"])
             self.assertIn("python3 scripts/export_views.py docs --output docs/exports/views.md", manifest["commands"])
+            self.assertIn("python3 scripts/export_views.py docs --format patch --view <view_id_or_name> --field status --set-value reading --output docs/exports/views-status-patch.csv", manifest["commands"])
             self.assertIn("python3 scripts/export_taxonomy_registry.py docs --output docs/exports/taxonomy-registry.md", manifest["commands"])
             self.assertIn("python3 scripts/export_taxonomy_load.py docs --format csv --output docs/exports/taxonomy-load.csv", manifest["commands"])
             self.assertIn("python3 scripts/export_collections.py docs --output docs/exports/collections.md", manifest["commands"])
@@ -1570,6 +1592,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(recipe_by_id["gaps_project"]["output"], "docs/exports/gaps-project.csv")
             self.assertEqual(recipe_by_id["views_markdown"]["output"], "docs/exports/views.md")
             self.assertEqual(recipe_by_id["views_sidebar"]["output"], "docs/exports/views-sidebar.json")
+            self.assertEqual(recipe_by_id["views_status_patch"]["output"], "docs/exports/views-status-patch.csv")
             self.assertEqual(recipe_by_id["collections_markdown"]["output"], "docs/exports/collections.md")
             self.assertEqual(recipe_by_id["collections_project"]["kind"], "export")
             self.assertEqual(recipe_by_id["ownership_markdown"]["output"], "docs/exports/ownership.md")

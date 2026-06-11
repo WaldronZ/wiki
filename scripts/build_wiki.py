@@ -4336,6 +4336,14 @@ def command_recipes_manifest() -> list[dict[str, Any]]:
             "mutates": False,
         },
         {
+            "id": "views_status_patch",
+            "kind": "export",
+            "label": "Export view status patch",
+            "command": "python3 scripts/export_views.py docs --format patch --view <view_id_or_name> --field status --set-value reading --output docs/exports/views-status-patch.csv",
+            "output": "docs/exports/views-status-patch.csv",
+            "mutates": False,
+        },
+        {
             "id": "collections_project",
             "kind": "export",
             "label": "Export collection project tasks",
@@ -13852,6 +13860,7 @@ def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
         ("导出研究缺口项目任务", "python3 scripts/export_gaps.py docs --format project --min-priority 20 --output docs/exports/gaps-project.csv"),
         ("导出视图目录清单", "python3 scripts/export_views.py docs --output docs/exports/views.md"),
         ("导出桌面侧边栏视图", "python3 scripts/export_views.py docs --format sidebar --min-count 1 --output docs/exports/views-sidebar.json"),
+        ("导出视图状态 patch", "python3 scripts/export_views.py docs --format patch --view <view_id_or_name> --field status --set-value reading --output docs/exports/views-status-patch.csv"),
         ("导出集合清单", "python3 scripts/export_collections.py docs --output docs/exports/collections.md"),
         ("导出集合项目任务", "python3 scripts/export_collections.py docs --format project --output docs/exports/collections-project.csv"),
         ("导出 Owner 工作量", "python3 scripts/export_ownership.py docs --output docs/exports/ownership.md"),
