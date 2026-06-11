@@ -1932,7 +1932,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     if missing_manifest_files:
         errors.append(f"manifest.json data_files missing entries: {', '.join(missing_manifest_files)}")
     manifest_contract_files = {str(item.get("href") or "") for item in manifest_data.get("contract_files", []) if isinstance(item, dict)}
-    expected_contract_files = {"guides/metadata.schema.json", "guides/taxonomy.json", "guides/views.schema.json"}
+    expected_contract_files = {"guides/metadata.schema.json", "guides/taxonomy.json", "guides/status.schema.json", "guides/views.schema.json"}
     missing_contract_files = sorted(expected_contract_files - manifest_contract_files)
     if missing_contract_files:
         errors.append(f"manifest.json contract_files missing entries: {', '.join(missing_contract_files)}")
@@ -2324,6 +2324,65 @@ def validate_views_schema_contract(report_dir: Path, errors: list[str], warnings
         errors.append("guides/views.schema.json: kind enum must include shared, queue, research_line, workflow_status")
 
 
+def validate_status_schema_contract(report_dir: Path, errors: list[str], warnings: list[str]) -> None:
+    schema_path = report_dir / "guides" / "status.schema.json"
+    if not schema_path.exists():
+        warnings.append("guides/status.schema.json missing; external status-selector schema hints are unavailable")
+        return
+
+    try:
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        errors.append(f"guides/status.schema.json: invalid JSON: {exc}")
+        return
+
+    if not isinstance(schema, dict):
+        errors.append("guides/status.schema.json: root must be an object")
+        return
+    if not isinstance(schema.get("$schema"), str) or not schema.get("$schema", "").strip():
+        errors.append("guides/status.schema.json: $schema must be a non-empty string")
+    if schema.get("type") != "object":
+        errors.append("guides/status.schema.json: type must be object")
+    properties = schema.get("properties")
+    if not isinstance(properties, dict):
+        errors.append("guides/status.schema.json: properties must be an object")
+        properties = {}
+    for key in ("workflows", "papers", "defaults", "links", "commands"):
+        if key not in properties:
+            errors.append(f"guides/status.schema.json: properties.{key} is required")
+    defs = schema.get("$defs")
+    if not isinstance(defs, dict):
+        errors.append("guides/status.schema.json: $defs must be an object")
+        defs = {}
+    workflow_def = defs.get("workflow")
+    if not isinstance(workflow_def, dict):
+        errors.append("guides/status.schema.json: $defs.workflow is required")
+        return
+    workflow_required = set(workflow_def.get("required") or [])
+    for key in ("name", "active", "status_values", "reading_stage_values", "review_stage_values", "fields"):
+        if key not in workflow_required:
+            errors.append(f"guides/status.schema.json: $defs.workflow.required missing {key}")
+    field_def = defs.get("status_field")
+    if not isinstance(field_def, dict):
+        errors.append("guides/status.schema.json: $defs.status_field is required")
+        return
+    field_properties = field_def.get("properties")
+    if not isinstance(field_properties, dict):
+        errors.append("guides/status.schema.json: $defs.status_field.properties must be an object")
+        return
+    field_enum = set((field_properties.get("field") or {}).get("enum") or [])
+    if not {"status", "reading_stage", "review_stage"}.issubset(field_enum):
+        errors.append("guides/status.schema.json: status field enum must include status, reading_stage, review_stage")
+    paper_def = defs.get("status_paper")
+    if not isinstance(paper_def, dict):
+        errors.append("guides/status.schema.json: $defs.status_paper is required")
+        return
+    paper_required = set(paper_def.get("required") or [])
+    for key in ("slug", "status", "reading_stage", "review_stage", "href"):
+        if key not in paper_required:
+            errors.append(f"guides/status.schema.json: $defs.status_paper.required missing {key}")
+
+
 def validate_string_list(value: Any, label: str, errors: list[str], allow_none: bool) -> None:
     if value is None and allow_none:
         return
@@ -2451,6 +2510,7 @@ def main() -> int:
         inbox_schema = load_inbox_schema(report_dir, errors, warnings)
         reports = validate_reports(report_dir, schema, errors, warnings)
         validate_taxonomy_schema_contract(report_dir, errors, warnings)
+        validate_status_schema_contract(report_dir, errors, warnings)
         validate_views_schema_contract(report_dir, errors, warnings)
         config = validate_taxonomy_config(report_dir, errors, warnings)
         validate_controlled_taxonomy(reports, config, errors, warnings, args.strict_taxonomy)

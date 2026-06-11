@@ -1,0 +1,256 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/autopaperreader/status.schema.json",
+  "title": "AutoPaperReader Status Selector",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "generated_at",
+    "count",
+    "active_status_workflow",
+    "workflow_count",
+    "workflows",
+    "papers",
+    "defaults",
+    "links",
+    "commands"
+  ],
+  "properties": {
+    "generated_at": {
+      "type": "string",
+      "description": "ISO timestamp when the status selector payload was generated."
+    },
+    "count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of reports represented by the wiki."
+    },
+    "active_status_workflow": {
+      "type": "string",
+      "minLength": 1
+    },
+    "workflow_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "workflows": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/workflow"
+      }
+    },
+    "papers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/status_paper"
+      }
+    },
+    "defaults": {
+      "type": "object",
+      "required": [
+        "workflow",
+        "status",
+        "reading_stage",
+        "review_stage"
+      ],
+      "properties": {
+        "workflow": { "type": "string" },
+        "status": { "type": "string" },
+        "reading_stage": { "type": "string" },
+        "review_stage": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "links": {
+      "type": "object",
+      "required": [
+        "index",
+        "library",
+        "board",
+        "workflow",
+        "taxonomy"
+      ],
+      "properties": {
+        "index": { "type": "string" },
+        "library": { "type": "string" },
+        "board": { "type": "string" },
+        "workflow": { "type": "string" },
+        "taxonomy": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "commands": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "definition": {
+      "type": "object",
+      "properties": {
+        "description": { "type": "string" },
+        "owner": { "type": "string" },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "watch",
+            "deprecated"
+          ]
+        },
+        "note": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "status_value": {
+      "type": "object",
+      "required": [
+        "value",
+        "count",
+        "configured",
+        "href"
+      ],
+      "properties": {
+        "value": { "type": "string" },
+        "count": { "type": "integer", "minimum": 0 },
+        "configured": { "type": "boolean" },
+        "definition": { "$ref": "#/$defs/definition" },
+        "definition_status": { "type": "string" },
+        "description": { "type": "string" },
+        "owner_name": { "type": "string" },
+        "href": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "status_field": {
+      "type": "object",
+      "required": [
+        "field",
+        "label",
+        "configured_count",
+        "used_configured_count",
+        "defined_count",
+        "deprecated_count",
+        "empty_count",
+        "empty_slugs",
+        "values",
+        "unconfigured"
+      ],
+      "properties": {
+        "field": {
+          "type": "string",
+          "enum": [
+            "status",
+            "reading_stage",
+            "review_stage"
+          ]
+        },
+        "label": { "type": "string" },
+        "configured_count": { "type": "integer", "minimum": 0 },
+        "used_configured_count": { "type": "integer", "minimum": 0 },
+        "defined_count": { "type": "integer", "minimum": 0 },
+        "deprecated_count": { "type": "integer", "minimum": 0 },
+        "empty_count": { "type": "integer", "minimum": 0 },
+        "empty_slugs": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "values": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/status_value" }
+        },
+        "unconfigured": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/status_value" }
+        }
+      },
+      "additionalProperties": true
+    },
+    "workflow": {
+      "type": "object",
+      "required": [
+        "name",
+        "active",
+        "status_values",
+        "reading_stage_values",
+        "review_stage_values",
+        "fields",
+        "unconfigured_total",
+        "empty_total",
+        "definition_total",
+        "deprecated_total",
+        "board_href",
+        "library_href"
+      ],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "active": { "type": "boolean" },
+        "status_values": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "reading_stage_values": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "review_stage_values": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "fields": {
+          "type": "object",
+          "required": [
+            "status",
+            "reading_stage",
+            "review_stage"
+          ],
+          "properties": {
+            "status": { "$ref": "#/$defs/status_field" },
+            "reading_stage": { "$ref": "#/$defs/status_field" },
+            "review_stage": { "$ref": "#/$defs/status_field" }
+          },
+          "additionalProperties": true
+        },
+        "unconfigured_total": { "type": "integer", "minimum": 0 },
+        "empty_total": { "type": "integer", "minimum": 0 },
+        "definition_total": { "type": "integer", "minimum": 0 },
+        "deprecated_total": { "type": "integer", "minimum": 0 },
+        "board_href": { "type": "string" },
+        "library_href": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "status_paper": {
+      "type": "object",
+      "required": [
+        "slug",
+        "title",
+        "title_zh",
+        "research_line",
+        "line_role",
+        "status",
+        "reading_stage",
+        "review_stage",
+        "importance",
+        "has_code",
+        "href"
+      ],
+      "properties": {
+        "slug": { "type": "string", "minLength": 1 },
+        "title": { "type": "string" },
+        "title_zh": { "type": "string" },
+        "research_line": { "type": "string" },
+        "line_role": { "type": "string" },
+        "status": { "type": "string" },
+        "reading_stage": { "type": "string" },
+        "review_stage": { "type": "string" },
+        "importance": { "type": ["integer", "string"] },
+        "has_code": { "type": "boolean" },
+        "href": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  }
+}

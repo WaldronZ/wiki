@@ -96,6 +96,7 @@ paper_reader/
 │   │   ├── metadata.schema.json
 │   │   ├── inbox.schema.json
 │   │   ├── taxonomy.schema.json
+│   │   ├── status.schema.json
 │   │   └── views.schema.json
 │   └── .gitkeep
 ├── scripts/
@@ -265,6 +266,7 @@ paper_reader/
 - `docs/guides/metadata.schema.json`：报告 frontmatter 字段契约，用于校验类型、日期格式和评分范围
 - `docs/guides/inbox.schema.json`：候选论文 `inbox.csv` 字段契约，用于校验批量 intake 的必填列、状态、优先级和日期格式
 - `docs/guides/taxonomy.schema.json`：`taxonomy.json` 配置契约，用于编辑器提示和开源协作中的配置审查
+- `docs/guides/status.schema.json`：`status.json` 状态选择器契约，用于桌面端/DMG/外部脚本读取 workflow、状态候选、论文快照和写回命令
 - `docs/guides/views.schema.json`：`views.json` 视图目录契约，用于桌面端/DMG/外部脚本读取共享队列、命中 slug 和批量管理入口
 
 ## Wiki 分类
