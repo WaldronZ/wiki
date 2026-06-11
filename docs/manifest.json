@@ -514,6 +514,88 @@
       "description": "发布摘要和页面入口清单"
     }
   ],
+  "command_recipes": [
+    {
+      "id": "build_wiki",
+      "kind": "build",
+      "label": "Build wiki",
+      "command": "python3 scripts/build_wiki.py docs",
+      "output": "docs/",
+      "mutates": true
+    },
+    {
+      "id": "quality_gate",
+      "kind": "check",
+      "label": "Quality gate",
+      "command": "python3 scripts/check_quality.py docs",
+      "output": "",
+      "mutates": false
+    },
+    {
+      "id": "strict_validate",
+      "kind": "check",
+      "label": "Strict validation",
+      "command": "python3 scripts/validate_wiki.py docs --strict-taxonomy",
+      "output": "",
+      "mutates": false
+    },
+    {
+      "id": "apply_metadata",
+      "kind": "writeback",
+      "label": "Apply edited metadata CSV",
+      "command": "python3 scripts/apply_library_metadata.py docs --input <csv> --write",
+      "output": "docs/*.md",
+      "mutates": true
+    },
+    {
+      "id": "apply_aliases",
+      "kind": "writeback",
+      "label": "Apply taxonomy aliases",
+      "command": "python3 scripts/apply_taxonomy_aliases.py docs --write",
+      "output": "docs/guides/taxonomy.json",
+      "mutates": true
+    },
+    {
+      "id": "taxonomy_actions_markdown",
+      "kind": "export",
+      "label": "Export taxonomy actions checklist",
+      "command": "python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md",
+      "output": "docs/exports/taxonomy-actions.md",
+      "mutates": false
+    },
+    {
+      "id": "taxonomy_actions_project",
+      "kind": "export",
+      "label": "Export taxonomy action project tasks",
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
+      "output": "docs/exports/taxonomy-project.csv",
+      "mutates": false
+    },
+    {
+      "id": "taxonomy_balance_project",
+      "kind": "export",
+      "label": "Export taxonomy balance project tasks",
+      "command": "python3 scripts/export_taxonomy_balance.py docs --format project --max-score 50 --output docs/exports/taxonomy-balance-project.csv",
+      "output": "docs/exports/taxonomy-balance-project.csv",
+      "mutates": false
+    },
+    {
+      "id": "taxonomy_load_csv",
+      "kind": "export",
+      "label": "Export taxonomy load audit CSV",
+      "command": "python3 scripts/export_taxonomy_load.py docs --format csv --output docs/exports/taxonomy-load.csv",
+      "output": "docs/exports/taxonomy-load.csv",
+      "mutates": false
+    },
+    {
+      "id": "taxonomy_load_patch",
+      "kind": "export",
+      "label": "Export taxonomy load patch CSV",
+      "command": "python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv",
+      "output": "docs/exports/taxonomy-load-patch.csv",
+      "mutates": false
+    }
+  ],
   "commands": [
     "python3 scripts/build_wiki.py docs",
     "python3 scripts/check_quality.py docs",

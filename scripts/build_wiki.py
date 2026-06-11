@@ -1309,12 +1309,98 @@ def data_files_manifest() -> list[dict[str, str]]:
     ]
 
 
+def command_recipes_manifest() -> list[dict[str, Any]]:
+    return [
+        {
+            "id": "build_wiki",
+            "kind": "build",
+            "label": "Build wiki",
+            "command": "python3 scripts/build_wiki.py docs",
+            "output": "docs/",
+            "mutates": True,
+        },
+        {
+            "id": "quality_gate",
+            "kind": "check",
+            "label": "Quality gate",
+            "command": "python3 scripts/check_quality.py docs",
+            "output": "",
+            "mutates": False,
+        },
+        {
+            "id": "strict_validate",
+            "kind": "check",
+            "label": "Strict validation",
+            "command": "python3 scripts/validate_wiki.py docs --strict-taxonomy",
+            "output": "",
+            "mutates": False,
+        },
+        {
+            "id": "apply_metadata",
+            "kind": "writeback",
+            "label": "Apply edited metadata CSV",
+            "command": "python3 scripts/apply_library_metadata.py docs --input <csv> --write",
+            "output": "docs/*.md",
+            "mutates": True,
+        },
+        {
+            "id": "apply_aliases",
+            "kind": "writeback",
+            "label": "Apply taxonomy aliases",
+            "command": "python3 scripts/apply_taxonomy_aliases.py docs --write",
+            "output": "docs/guides/taxonomy.json",
+            "mutates": True,
+        },
+        {
+            "id": "taxonomy_actions_markdown",
+            "kind": "export",
+            "label": "Export taxonomy actions checklist",
+            "command": "python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md",
+            "output": "docs/exports/taxonomy-actions.md",
+            "mutates": False,
+        },
+        {
+            "id": "taxonomy_actions_project",
+            "kind": "export",
+            "label": "Export taxonomy action project tasks",
+            "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
+            "output": "docs/exports/taxonomy-project.csv",
+            "mutates": False,
+        },
+        {
+            "id": "taxonomy_balance_project",
+            "kind": "export",
+            "label": "Export taxonomy balance project tasks",
+            "command": "python3 scripts/export_taxonomy_balance.py docs --format project --max-score 50 --output docs/exports/taxonomy-balance-project.csv",
+            "output": "docs/exports/taxonomy-balance-project.csv",
+            "mutates": False,
+        },
+        {
+            "id": "taxonomy_load_csv",
+            "kind": "export",
+            "label": "Export taxonomy load audit CSV",
+            "command": "python3 scripts/export_taxonomy_load.py docs --format csv --output docs/exports/taxonomy-load.csv",
+            "output": "docs/exports/taxonomy-load.csv",
+            "mutates": False,
+        },
+        {
+            "id": "taxonomy_load_patch",
+            "kind": "export",
+            "label": "Export taxonomy load patch CSV",
+            "command": "python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv",
+            "output": "docs/exports/taxonomy-load-patch.csv",
+            "mutates": False,
+        },
+    ]
+
+
 def build_manifest(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> dict[str, Any]:
     quality = build_quality_report(papers)
     review = build_review_plan(papers)
     stats = build_stats_report(papers)
     pages = wiki_pages_manifest()
     data_files = data_files_manifest()
+    command_recipes = command_recipes_manifest()
     quality_queues = {name: len(slugs) for name, slugs in quality["queues"].items()}
     review_queues = {name: len(slugs) for name, slugs in review["queues"].items()}
     publish_checks = {
@@ -1345,18 +1431,8 @@ def build_manifest(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
         "controls": control_options(),
         "pages": pages,
         "data_files": data_files,
-        "commands": [
-            "python3 scripts/build_wiki.py docs",
-            "python3 scripts/check_quality.py docs",
-            "python3 scripts/validate_wiki.py docs --strict-taxonomy",
-            "python3 scripts/apply_library_metadata.py docs --input <csv> --write",
-            "python3 scripts/apply_taxonomy_aliases.py docs --write",
-            "python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md",
-            "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
-            "python3 scripts/export_taxonomy_balance.py docs --format project --max-score 50 --output docs/exports/taxonomy-balance-project.csv",
-            "python3 scripts/export_taxonomy_load.py docs --format csv --output docs/exports/taxonomy-load.csv",
-            "python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv",
-        ],
+        "command_recipes": command_recipes,
+        "commands": [recipe["command"] for recipe in command_recipes],
     }
 
 
@@ -4560,6 +4636,16 @@ def render_release(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
         for group, queues in manifest["queue_sizes"].items()
         for name, count in queues.items()
     )
+    recipe_rows = "".join(
+        "<tr>"
+        f"<td>{html.escape(str(recipe['label']))}<div class=\"meta\">{html.escape(str(recipe['id']))}</div></td>"
+        f"<td>{html.escape(str(recipe['kind']))}</td>"
+        f"<td>{html.escape(str(recipe.get('output') or '-'))}</td>"
+        f"<td><span class=\"flag\">{'writes' if recipe.get('mutates') else 'read-only'}</span></td>"
+        f"<td><code>{html.escape(str(recipe['command']))}</code></td>"
+        "</tr>"
+        for recipe in manifest["command_recipes"]
+    )
     command_html = "\n".join(html.escape(command) for command in manifest["commands"])
     line_rows = "".join(
         "<tr>"
@@ -4618,6 +4704,10 @@ def render_release(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
   <section>
     <h2 class="section-title">推荐命令</h2>
     <pre class="config-snippet"><code>{command_html}</code></pre>
+  </section>
+  <section>
+    <h2 class="section-title">命令 Recipes</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>命令</th><th>类型</th><th>输出</th><th>写入</th><th>CLI</th></tr></thead><tbody>{recipe_rows}</tbody></table></div>
   </section>
 </main>
 """

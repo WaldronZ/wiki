@@ -155,7 +155,7 @@ paper_reader/
 - `docs/quality.json`：元数据质量报告，列出缺分类、标签别名建议、taxonomy drift、库内重复报告、缺复习计划、待复习、缺代码观察等队列
 - `docs/review.json`：机器可读复习计划，给出 suggested_next_review 和优先级
 - `docs/taxonomy_actions.json`：机器可读分类治理任务，列出长尾合并候选、过载拆分候选、空候选状态和关注项
-- `docs/manifest.json`：机器可读发布清单，包含页面入口、数据文件、质量状态、重复报告发布门禁、队列规模和常用命令
+- `docs/manifest.json`：机器可读发布清单，包含页面入口、数据文件、质量状态、重复报告发布门禁、队列规模、常用命令和可供桌面软件读取的 command recipes
 - `docs/guides/metadata.schema.json`：报告 frontmatter 字段契约，用于校验类型、日期格式和评分范围
 
 ## Wiki 分类
