@@ -89,11 +89,16 @@ Beta report body.
 
 
 class WikiWorkflowTest(unittest.TestCase):
-    def run_cmd(self, *args: str, cwd: Path = ROOT) -> subprocess.CompletedProcess[str]:
+    def run_cmd(
+        self,
+        *args: str,
+        cwd: Path = ROOT,
+        check: bool = True,
+    ) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
             [sys.executable, *args],
             cwd=cwd,
-            check=True,
+            check=check,
             text=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -184,6 +189,28 @@ class WikiWorkflowTest(unittest.TestCase):
             self.run_cmd("scripts/validate_wiki.py", str(report_dir))
             review_after = json.loads((report_dir / "review.json").read_text(encoding="utf-8"))
             self.assertEqual(review_after["queues"]["needs_plan"], [])
+
+    def test_invalid_taxonomy_config_fails_validation(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_name:
+            report_dir = self.make_report_dir(Path(tmp_name))
+            self.run_cmd("scripts/build_wiki.py", str(report_dir))
+
+            (report_dir / "guides" / "taxonomy.json").write_text(
+                json.dumps(
+                    {
+                        "label_aliases": {"": "Broken", "ok": ""},
+                        "role_order": ["foundation", "foundation", ""],
+                        "status_values": "read",
+                    }
+                ),
+                encoding="utf-8",
+            )
+            result = self.run_cmd("scripts/validate_wiki.py", str(report_dir), check=False)
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("guides/taxonomy.json", result.stderr)
+            self.assertIn("duplicate value", result.stderr)
+            self.assertIn("status_values must be a list", result.stderr)
 
 
 if __name__ == "__main__":

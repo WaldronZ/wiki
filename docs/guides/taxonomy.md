@@ -96,3 +96,9 @@ has_code: true
 ```
 
 `role_order` 会影响研究线详情页和首页研究线概览中的论文排序。`status_values`、`reading_stage_values` 和 `review_stage_values` 目前主要作为团队约定文档；首页筛选项仍会从实际报告数据中动态生成。
+
+`python3 scripts/validate_wiki.py docs` 会校验 `taxonomy.json` 的基本结构：
+
+- `label_aliases` 必须是 object，key 和 value 都是非空字符串。
+- `role_order`、`status_values`、`reading_stage_values`、`review_stage_values` 必须是字符串列表。
+- 列表里不能有重复值或空值。

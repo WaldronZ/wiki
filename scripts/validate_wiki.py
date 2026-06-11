@@ -55,6 +55,13 @@ REQUIRED_PAGES = {
     "lines/index.html",
 }
 
+TAXONOMY_CONFIG_LIST_FIELDS = {
+    "role_order",
+    "status_values",
+    "reading_stage_values",
+    "review_stage_values",
+}
+
 
 class LinkParser(HTMLParser):
     def __init__(self) -> None:
@@ -297,6 +304,54 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         errors.append(f"papers.json taxonomy missing keys: {', '.join(missing_taxonomy)}")
 
 
+def validate_taxonomy_config(report_dir: Path, errors: list[str], warnings: list[str]) -> None:
+    config_path = report_dir / "guides" / "taxonomy.json"
+    if not config_path.exists():
+        return
+
+    try:
+        config = json.loads(config_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        errors.append(f"guides/taxonomy.json: invalid JSON: {exc}")
+        return
+
+    if not isinstance(config, dict):
+        errors.append("guides/taxonomy.json: root must be an object")
+        return
+
+    known_fields = {"label_aliases", *TAXONOMY_CONFIG_LIST_FIELDS}
+    unknown_fields = sorted(set(config) - known_fields)
+    if unknown_fields:
+        warnings.append(f"guides/taxonomy.json: unknown fields ignored: {', '.join(unknown_fields)}")
+
+    aliases = config.get("label_aliases", {})
+    if aliases is not None and not isinstance(aliases, dict):
+        errors.append("guides/taxonomy.json: label_aliases must be an object")
+    elif isinstance(aliases, dict):
+        for alias, canonical in aliases.items():
+            if not isinstance(alias, str) or not alias.strip():
+                errors.append("guides/taxonomy.json: label_aliases keys must be non-empty strings")
+            if not isinstance(canonical, str) or not canonical.strip():
+                errors.append(f"guides/taxonomy.json: alias '{alias}' must map to a non-empty string")
+
+    for field in TAXONOMY_CONFIG_LIST_FIELDS:
+        values = config.get(field, [])
+        if values is None:
+            continue
+        if not isinstance(values, list):
+            errors.append(f"guides/taxonomy.json: {field} must be a list")
+            continue
+        seen: set[str] = set()
+        for value in values:
+            if not isinstance(value, str) or not value.strip():
+                errors.append(f"guides/taxonomy.json: {field} values must be non-empty strings")
+                continue
+            normalized = value.strip().lower()
+            if normalized in seen:
+                errors.append(f"guides/taxonomy.json: {field} has duplicate value '{value}'")
+            seen.add(normalized)
+
+
 def validate_pages(report_dir: Path, reports: dict[str, dict[str, Any]], errors: list[str]) -> None:
     for page in REQUIRED_PAGES:
         if not (report_dir / page).exists():
@@ -358,6 +413,7 @@ def main() -> int:
         errors.append(f"report directory does not exist: {report_dir}")
     else:
         reports = validate_reports(report_dir, errors, warnings)
+        validate_taxonomy_config(report_dir, errors, warnings)
         validate_json(report_dir, reports, errors)
         validate_pages(report_dir, reports, errors)
 
