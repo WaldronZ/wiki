@@ -2325,6 +2325,11 @@ def render_value_options(values: list[str]) -> str:
     )
 
 
+def render_datalist_options(values: dict[str, int] | list[str]) -> str:
+    names = values.keys() if isinstance(values, dict) else values
+    return "".join(f'<option value="{html.escape(str(value))}"></option>' for value in names)
+
+
 def render_card(paper: dict[str, Any]) -> str:
     link = paper["html_path"] or paper["md_path"]
     authors = ", ".join(paper.get("authors", [])[:4])
@@ -2488,6 +2493,37 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     }
     .bulk-panel .bulk-count { color: var(--muted); font-weight: 700; white-space: nowrap; }
     .bulk-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .bulk-taxonomy {
+      grid-column: 1 / -1;
+      border-top: 1px solid var(--line);
+      padding-top: 10px;
+    }
+    .bulk-taxonomy summary {
+      cursor: pointer;
+      color: var(--accent);
+      font-weight: 800;
+    }
+    .bulk-taxonomy-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .bulk-taxonomy-grid label {
+      display: grid;
+      gap: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .bulk-taxonomy-grid input,
+    .bulk-taxonomy-grid select { width: 100%; }
+    .bulk-hint {
+      grid-column: 1 / -1;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
     .row-check, .header-check { width: 18px; min-height: 18px; padding: 0; }
     .column-panel { position: relative; }
     .column-panel summary { list-style: none; cursor: pointer; }
@@ -2607,7 +2643,26 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       <button id="clearSelected" class="button" type="button">清除选择</button>
       <button id="downloadPatch" class="button" type="button">下载 CSV</button>
     </div>
+    <details class="bulk-taxonomy">
+      <summary>批量分类字段</summary>
+      <div class="bulk-taxonomy-grid">
+        <label><span>研究线</span><input id="bulkResearchLine" list="researchLineOptions" type="text" placeholder="Research line"></label>
+        <label><span>研究线角色</span><select id="bulkLineRole"><option value="">角色</option>{render_value_options(controls["line_role"])}</select></label>
+        <label><span>Domain</span><input id="bulkDomains" list="domainOptions" type="text" placeholder="多个值用 ; 分隔"></label>
+        <label><span>Track</span><input id="bulkTracks" list="trackOptions" type="text" placeholder="多个值用 ; 分隔"></label>
+        <label><span>Problem</span><input id="bulkProblems" list="problemOptions" type="text" placeholder="多个值用 ; 分隔"></label>
+        <label><span>Topics</span><input id="bulkTopics" list="topicOptions" type="text" placeholder="多个值用 ; 分隔"></label>
+        <label><span>Methods</span><input id="bulkMethods" list="methodOptions" type="text" placeholder="多个值用 ; 分隔"></label>
+        <div class="bulk-hint">这些字段会替换所选论文 frontmatter 中的对应值；下载后先 dry-run，再用 --write 写回。</div>
+      </div>
+    </details>
   </div>
+  <datalist id="researchLineOptions">{render_datalist_options(taxonomy["research_lines"])}</datalist>
+  <datalist id="domainOptions">{render_datalist_options(taxonomy["domains"])}</datalist>
+  <datalist id="trackOptions">{render_datalist_options(taxonomy["tracks"])}</datalist>
+  <datalist id="problemOptions">{render_datalist_options(taxonomy["problems"])}</datalist>
+  <datalist id="topicOptions">{render_datalist_options(taxonomy["topics"])}</datalist>
+  <datalist id="methodOptions">{render_datalist_options(taxonomy["methods"])}</datalist>
   <div class="table-wrap">
     <table class="library-table" data-density="normal">
       <thead>
@@ -2656,6 +2711,13 @@ const bulkStatus = document.querySelector("#bulkStatus");
 const bulkStage = document.querySelector("#bulkStage");
 const bulkReviewStage = document.querySelector("#bulkReviewStage");
 const bulkNextReview = document.querySelector("#bulkNextReview");
+const bulkResearchLine = document.querySelector("#bulkResearchLine");
+const bulkLineRole = document.querySelector("#bulkLineRole");
+const bulkDomains = document.querySelector("#bulkDomains");
+const bulkTracks = document.querySelector("#bulkTracks");
+const bulkProblems = document.querySelector("#bulkProblems");
+const bulkTopics = document.querySelector("#bulkTopics");
+const bulkMethods = document.querySelector("#bulkMethods");
 const selectVisible = document.querySelector("#selectVisible");
 const clearSelected = document.querySelector("#clearSelected");
 const downloadPatch = document.querySelector("#downloadPatch");
@@ -2950,10 +3012,17 @@ function buildPatchRows() {{
     ["reading_stage", bulkStage.value],
     ["review_stage", bulkReviewStage.value],
     ["next_review", bulkNextReview.value],
+    ["research_line", bulkResearchLine.value],
+    ["line_role", bulkLineRole.value],
+    ["domains", bulkDomains.value],
+    ["tracks", bulkTracks.value],
+    ["problems", bulkProblems.value],
+    ["topics", bulkTopics.value],
+    ["methods", bulkMethods.value],
   ].forEach(([field, value]) => {{
-    if (value) {{
+    if (String(value || "").trim()) {{
       fields.push(field);
-      values[field] = value;
+      values[field] = String(value).trim();
     }}
   }});
   const selected = selectedRows();
@@ -2962,7 +3031,7 @@ function buildPatchRows() {{
     return [];
   }}
   if (!fields.length) {{
-    window.alert("请先选择要写入的状态或日期。");
+    window.alert("请先选择要写入的状态、日期或分类字段。");
     return [];
   }}
   return [["slug", ...fields], ...selected.map(row => [row.dataset.slug, ...fields.map(field => values[field])])];

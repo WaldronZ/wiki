@@ -347,6 +347,37 @@
     }
     .bulk-panel .bulk-count { color: var(--muted); font-weight: 700; white-space: nowrap; }
     .bulk-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .bulk-taxonomy {
+      grid-column: 1 / -1;
+      border-top: 1px solid var(--line);
+      padding-top: 10px;
+    }
+    .bulk-taxonomy summary {
+      cursor: pointer;
+      color: var(--accent);
+      font-weight: 800;
+    }
+    .bulk-taxonomy-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .bulk-taxonomy-grid label {
+      display: grid;
+      gap: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .bulk-taxonomy-grid input,
+    .bulk-taxonomy-grid select { width: 100%; }
+    .bulk-hint {
+      grid-column: 1 / -1;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
     .row-check, .header-check { width: 18px; min-height: 18px; padding: 0; }
     .column-panel { position: relative; }
     .column-panel summary { list-style: none; cursor: pointer; }
@@ -483,7 +514,26 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
       <button id="clearSelected" class="button" type="button">清除选择</button>
       <button id="downloadPatch" class="button" type="button">下载 CSV</button>
     </div>
+    <details class="bulk-taxonomy">
+      <summary>批量分类字段</summary>
+      <div class="bulk-taxonomy-grid">
+        <label><span>研究线</span><input id="bulkResearchLine" list="researchLineOptions" type="text" placeholder="Research line"></label>
+        <label><span>研究线角色</span><select id="bulkLineRole"><option value="">角色</option><option value="foundation">foundation</option><option value="baseline">baseline</option><option value="main">main</option><option value="system">system</option><option value="variant">variant</option><option value="followup">followup</option><option value="survey">survey</option></select></label>
+        <label><span>Domain</span><input id="bulkDomains" list="domainOptions" type="text" placeholder="多个值用 ; 分隔"></label>
+        <label><span>Track</span><input id="bulkTracks" list="trackOptions" type="text" placeholder="多个值用 ; 分隔"></label>
+        <label><span>Problem</span><input id="bulkProblems" list="problemOptions" type="text" placeholder="多个值用 ; 分隔"></label>
+        <label><span>Topics</span><input id="bulkTopics" list="topicOptions" type="text" placeholder="多个值用 ; 分隔"></label>
+        <label><span>Methods</span><input id="bulkMethods" list="methodOptions" type="text" placeholder="多个值用 ; 分隔"></label>
+        <div class="bulk-hint">这些字段会替换所选论文 frontmatter 中的对应值；下载后先 dry-run，再用 --write 写回。</div>
+      </div>
+    </details>
   </div>
+  <datalist id="researchLineOptions"><option value="Parallel Decoding with Diffusion Models"></option><option value="Efficient Attention Kernels"></option></datalist>
+  <datalist id="domainOptions"><option value="LLM Systems"></option></datalist>
+  <datalist id="trackOptions"><option value="Inference Acceleration"></option><option value="Parallel Decoding"></option><option value="Attention Kernels"></option><option value="Inference Serving Systems"></option></datalist>
+  <datalist id="problemOptions"><option value="Customizable Attention Serving"></option><option value="Efficient Exact Attention"></option><option value="Lossless Speculative Decoding"></option><option value="Memory-Efficient Parallel Token Generation"></option><option value="Parallel Diffusion Decoding"></option></datalist>
+  <datalist id="topicOptions"><option value="Diffusion Language Models"></option><option value="LLM Serving"></option><option value="Speculative Decoding"></option><option value="KV Cache"></option><option value="LLM Inference"></option><option value="Parallel Decoding"></option><option value="Attention Kernels"></option><option value="Efficient Attention"></option><option value="GPU Kernel Optimization"></option><option value="GPU Systems"></option><option value="Inference Optimization"></option><option value="LLM"></option><option value="Long Context"></option><option value="Transformer"></option></datalist>
+  <datalist id="methodOptions"><option value="FlashAttention"></option><option value="block diffusion"></option><option value="block-sparse attention"></option><option value="composable KV-cache format"></option><option value="CUDA / GPU parallelism"></option><option value="CUDA Graph"></option><option value="dual-view attention"></option><option value="forward KL distillation"></option><option value="gated LoRA"></option><option value="intra-model consensus"></option><option value="introspective consistency"></option><option value="introspective strided decoding"></option><option value="JIT compilation"></option><option value="KV injection"></option><option value="load-balanced scheduling"></option><option value="logit-shifted causal training"></option><option value="masked diffusion"></option><option value="online softmax"></option><option value="p/q acceptance"></option><option value="parallel drafting"></option><option value="SGLang serving"></option><option value="shared KV cache"></option><option value="Speculative Decoding"></option><option value="target hidden features"></option><option value="tiling"></option><option value="work partitioning"></option></datalist>
   <div class="table-wrap">
     <table class="library-table" data-density="normal">
       <thead>
@@ -711,6 +761,13 @@ const bulkStatus = document.querySelector("#bulkStatus");
 const bulkStage = document.querySelector("#bulkStage");
 const bulkReviewStage = document.querySelector("#bulkReviewStage");
 const bulkNextReview = document.querySelector("#bulkNextReview");
+const bulkResearchLine = document.querySelector("#bulkResearchLine");
+const bulkLineRole = document.querySelector("#bulkLineRole");
+const bulkDomains = document.querySelector("#bulkDomains");
+const bulkTracks = document.querySelector("#bulkTracks");
+const bulkProblems = document.querySelector("#bulkProblems");
+const bulkTopics = document.querySelector("#bulkTopics");
+const bulkMethods = document.querySelector("#bulkMethods");
 const selectVisible = document.querySelector("#selectVisible");
 const clearSelected = document.querySelector("#clearSelected");
 const downloadPatch = document.querySelector("#downloadPatch");
@@ -1005,10 +1062,17 @@ function buildPatchRows() {
     ["reading_stage", bulkStage.value],
     ["review_stage", bulkReviewStage.value],
     ["next_review", bulkNextReview.value],
+    ["research_line", bulkResearchLine.value],
+    ["line_role", bulkLineRole.value],
+    ["domains", bulkDomains.value],
+    ["tracks", bulkTracks.value],
+    ["problems", bulkProblems.value],
+    ["topics", bulkTopics.value],
+    ["methods", bulkMethods.value],
   ].forEach(([field, value]) => {
-    if (value) {
+    if (String(value || "").trim()) {
       fields.push(field);
-      values[field] = value;
+      values[field] = String(value).trim();
     }
   });
   const selected = selectedRows();
@@ -1017,7 +1081,7 @@ function buildPatchRows() {
     return [];
   }
   if (!fields.length) {
-    window.alert("请先选择要写入的状态或日期。");
+    window.alert("请先选择要写入的状态、日期或分类字段。");
     return [];
   }
   return [["slug", ...fields], ...selected.map(row => [row.dataset.slug, ...fields.map(field => values[field])])];
