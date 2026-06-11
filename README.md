@@ -22,6 +22,7 @@ AutoPaperReader 是一个自动化「找论文 -> 读论文 -> 写报告」的 a
 ```text
 paper_reader/
 ├── README.md
+├── CONTRIBUTING.md
 ├── LICENSE
 ├── CLAUDE.md
 ├── .claude/
@@ -55,6 +56,8 @@ paper_reader/
 │   ├── apply_library_metadata.py
 │   ├── apply_review_plan.py
 │   ├── build_wiki.py
+│   ├── check_quality.py
+│   ├── check_wiki_js.js
 │   ├── export_library_csv.py
 │   └── render_report_html.py
 └── sources/
@@ -72,6 +75,7 @@ paper_reader/
 - `scripts/apply_review_plan.py` 用于把 `docs/review.json` 的建议复习日期安全写回报告 frontmatter，默认只 dry-run
 - `scripts/export_library_csv.py` 用于把 `papers.json`、`review.json` 和 `quality.json` 合并导出成 CSV，便于用表格工具批量管理
 - `scripts/apply_library_metadata.py` 用于把编辑后的 CSV 分类/状态字段安全写回报告 frontmatter，默认只 dry-run
+- `scripts/check_quality.py` 是本地一键质量门禁，和 GitHub Actions 使用同一组检查
 
 ## 工作流概览
 
@@ -185,7 +189,15 @@ Example Paper,https://arxiv.org/abs/2601.00001,queued,high,LLM Serving;Batching,
 
 刷新后打开 `docs/inbox.html`，可以筛选候选论文、查看疑似重复项，并复制单篇论文的阅读任务给 agent 流程。
 
-检查已提交的 wiki 生成物是否为最新：
+提交前运行完整质量门禁：
+
+```bash
+python3 scripts/check_quality.py docs
+```
+
+这会依次检查脚本语法、已提交 wiki 生成物是否最新、严格验证 metadata / taxonomy / 内部链接、解析 wiki 页面内联 JavaScript，并运行单元测试。开源协作时，`.github/workflows/wiki-quality.yml` 会在 push / pull request 中自动运行同一组门禁。
+
+单独检查已提交的 wiki 生成物是否为最新：
 
 ```bash
 python3 scripts/build_wiki.py docs --check
@@ -204,8 +216,6 @@ python3 scripts/validate_wiki.py docs --strict-taxonomy
 node scripts/check_wiki_js.js docs
 python3 -m unittest discover -s tests
 ```
-
-开源协作时，`.github/workflows/wiki-quality.yml` 会在 push / pull request 中自动运行同一组质量门禁：Python 语法检查、`build_wiki.py --check`、严格 taxonomy / metadata 校验、内联 JS 检查和单元测试。提交前本地先跑完上面几条命令，可以避免生成物和 frontmatter schema 在 CI 才暴露问题。
 
 导出论文库管理表：
 
@@ -239,8 +249,6 @@ python3 scripts/apply_review_plan.py docs
 python3 scripts/apply_review_plan.py docs --write
 python3 scripts/build_wiki.py docs
 ```
-
-仓库也提供 GitHub Actions workflow：每次 push / pull request 会检查脚本语法、确认 wiki 生成物已更新、验证分类/链接、解析 wiki 页面内联 JavaScript，并运行工作流测试。
 
 手动重建某篇报告 HTML：
 
