@@ -133,6 +133,7 @@ paper_reader/
 - `scripts/export_library_csv.py` 用于把 `papers.json`、`review.json` 和 `quality.json` 合并导出成 CSV，便于用表格工具批量管理
 - `scripts/export_reading_list.py` 用于按研究线、状态、方向、主题、方法或重要性导出 Markdown 阅读清单、BibTeX 或链接列表
 - `scripts/export_actions.py` 用于把 `actions.json` 导出成统一 checklist、审计 CSV 或可自定义任务状态的项目任务 CSV
+- `scripts/export_batches.py` 用于把 `batch.json` 中的可执行论文批次导出成 checklist、审计 CSV、项目任务 CSV 或可写回的 metadata patch CSV
 - `scripts/export_collections.py` 用于把 `collections.json` 中的共享视图、智能队列和研究线集合导出成 checklist、审计 CSV 或项目任务 CSV
 - `scripts/export_ownership.py` 用于把 `ownership.json` 中的 owner 工作量、风险队列和研究线责任导出成 checklist、审计 CSV 或项目任务 CSV
 - `scripts/export_roadmap.py` 用于把 `roadmap.json` 中的研究线风险、角色缺口和下一步行动导出成路线 checklist、审计 CSV 或项目任务 CSV
@@ -372,6 +373,9 @@ python3 scripts/export_reading_list.py docs --format links --status read
 ```bash
 python3 scripts/export_actions.py docs --output docs/exports/actions.md
 python3 scripts/export_actions.py docs --format project --group review --severity high --assignee wiki-owner --task-status ready --output docs/exports/actions-project.csv
+python3 scripts/export_batches.py docs --output docs/exports/batches.md
+python3 scripts/export_batches.py docs --format project --severity high --assignee batch-owner --output docs/exports/batches-project.csv
+python3 scripts/export_batches.py docs --format patch --gap review --field review_stage --set-value due --output docs/exports/batches-review-patch.csv
 python3 scripts/export_collections.py docs --output docs/exports/collections.md
 python3 scripts/export_collections.py docs --format project --type smart --min-count 1 --assignee wiki-owner --output docs/exports/collections-project.csv
 python3 scripts/export_ownership.py docs --output docs/exports/ownership.md

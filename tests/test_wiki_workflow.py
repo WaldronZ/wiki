@@ -870,6 +870,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv", quality_html)
             self.assertIn("python3 scripts/export_taxonomy_balance.py docs --format project --max-score 50 --output docs/exports/taxonomy-balance-project.csv", quality_html)
             self.assertIn("python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv", quality_html)
+            self.assertIn("python3 scripts/export_batches.py docs --format patch --gap review --field review_stage --set-value due --output docs/exports/batches-review-patch.csv", quality_html)
             self.assertIn("python3 scripts/export_collections.py docs --format project --output docs/exports/collections-project.csv", quality_html)
             self.assertIn("python3 scripts/export_ownership.py docs --format project --only-open-queues --output docs/exports/ownership-project.csv", quality_html)
             self.assertIn("python3 scripts/export_roadmap.py docs --format project --output docs/exports/roadmap-project.csv", quality_html)
@@ -981,6 +982,73 @@ class WikiWorkflowTest(unittest.TestCase):
             )
             self.assertNotEqual(unsafe_actions_export.returncode, 0)
             self.assertIn("Refusing to write a Markdown export", unsafe_actions_export.stderr)
+
+            batches_export_path = report_dir / "exports" / "batches.md"
+            self.run_cmd(
+                "scripts/export_batches.py",
+                str(report_dir),
+                "--dimension",
+                "research_line",
+                "--min-count",
+                "1",
+                "--output",
+                str(batches_export_path),
+            )
+            batches_export = batches_export_path.read_text(encoding="utf-8")
+            self.assertIn("# AutoPaperReader Paper Batches", batches_export)
+            self.assertIn("LLM Serving", batches_export)
+
+            batches_project_path = report_dir / "exports" / "batches-project.csv"
+            self.run_cmd(
+                "scripts/export_batches.py",
+                str(report_dir),
+                "--format",
+                "project",
+                "--severity",
+                "high",
+                "--assignee",
+                "batch-owner",
+                "--task-status",
+                "ready",
+                "--output",
+                str(batches_project_path),
+            )
+            batch_project_rows = list(csv.DictReader(batches_project_path.read_text(encoding="utf-8").splitlines()))
+            self.assertTrue(batch_project_rows)
+            self.assertEqual(batch_project_rows[0]["status"], "ready")
+            self.assertEqual(batch_project_rows[0]["assignee"], "batch-owner")
+            self.assertIn("batch", batch_project_rows[0]["labels"])
+            self.assertTrue(batch_project_rows[0]["batch_id"])
+
+            batch_patch_path = report_dir / "exports" / "batches-review-patch.csv"
+            self.run_cmd(
+                "scripts/export_batches.py",
+                str(report_dir),
+                "--format",
+                "patch",
+                "--gap",
+                "review",
+                "--field",
+                "review_stage",
+                "--set-value",
+                "due",
+                "--output",
+                str(batch_patch_path),
+            )
+            batch_patch_rows = list(csv.DictReader(batch_patch_path.read_text(encoding="utf-8").splitlines()))
+            self.assertTrue(batch_patch_rows)
+            self.assertIn("review_stage", batch_patch_rows[0])
+            self.assertTrue(all(row["review_stage"] == "due" for row in batch_patch_rows))
+
+            unsafe_batches_export = self.run_cmd(
+                "scripts/export_batches.py",
+                str(report_dir),
+                "--output",
+                str(report_dir / "batches.md"),
+                check=False,
+            )
+            self.assertNotEqual(unsafe_batches_export.returncode, 0)
+            self.assertIn("Refusing to write a Markdown export", unsafe_batches_export.stderr)
 
             collections_export_path = report_dir / "exports" / "collections.md"
             self.run_cmd(
@@ -1265,6 +1333,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("python3 scripts/apply_status_workflow.py docs --input <taxonomy_status_workflow.json> --write", manifest["commands"])
             self.assertIn("python3 scripts/apply_governance_policy.py docs --input <taxonomy_governance_policy.json> --write", manifest["commands"])
             self.assertIn("python3 scripts/export_actions.py docs --output docs/exports/actions.md", manifest["commands"])
+            self.assertIn("python3 scripts/export_batches.py docs --output docs/exports/batches.md", manifest["commands"])
             self.assertIn("python3 scripts/export_taxonomy_registry.py docs --output docs/exports/taxonomy-registry.md", manifest["commands"])
             self.assertIn("python3 scripts/export_taxonomy_load.py docs --format csv --output docs/exports/taxonomy-load.csv", manifest["commands"])
             self.assertIn("python3 scripts/export_collections.py docs --output docs/exports/collections.md", manifest["commands"])
@@ -1286,6 +1355,9 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(recipe_by_id["taxonomy_registry_project"]["output"], "docs/exports/taxonomy-registry-project.csv")
             self.assertEqual(recipe_by_id["taxonomy_balance_project"]["output"], "docs/exports/taxonomy-balance-project.csv")
             self.assertEqual(recipe_by_id["taxonomy_actions_patch"]["output"], "docs/exports/taxonomy-action-patch.csv")
+            self.assertEqual(recipe_by_id["batches_markdown"]["output"], "docs/exports/batches.md")
+            self.assertEqual(recipe_by_id["batches_project"]["output"], "docs/exports/batches-project.csv")
+            self.assertEqual(recipe_by_id["batches_review_patch"]["output"], "docs/exports/batches-review-patch.csv")
             self.assertEqual(recipe_by_id["collections_markdown"]["output"], "docs/exports/collections.md")
             self.assertEqual(recipe_by_id["collections_project"]["kind"], "export")
             self.assertEqual(recipe_by_id["ownership_markdown"]["output"], "docs/exports/ownership.md")

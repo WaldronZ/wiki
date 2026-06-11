@@ -29,6 +29,7 @@ PYTHON_SCRIPTS = [
     "scripts/export_library_csv.py",
     "scripts/export_reading_list.py",
     "scripts/export_actions.py",
+    "scripts/export_batches.py",
     "scripts/export_collections.py",
     "scripts/export_ownership.py",
     "scripts/export_roadmap.py",
