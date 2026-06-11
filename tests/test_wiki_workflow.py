@@ -308,6 +308,17 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertTrue(row_by_slug["2601.00001-alpha-paper"]["suggested_next_review"])
             self.assertTrue(row_by_slug["2601.00001-alpha-paper"]["quality_score"])
 
+            dry_aliases = self.run_cmd("scripts/apply_taxonomy_aliases.py", str(report_dir))
+            self.assertIn("DRY  KV-cache -> KV Cache", dry_aliases.stdout)
+            taxonomy_before = json.loads((report_dir / "guides" / "taxonomy.json").read_text(encoding="utf-8"))
+            self.assertNotIn("KV-cache", taxonomy_before["label_aliases"])
+            self.run_cmd("scripts/apply_taxonomy_aliases.py", str(report_dir), "--write")
+            taxonomy_after = json.loads((report_dir / "guides" / "taxonomy.json").read_text(encoding="utf-8"))
+            self.assertEqual(taxonomy_after["label_aliases"]["KV-cache"], "KV Cache")
+            self.run_cmd("scripts/build_wiki.py", str(report_dir))
+            quality_after_alias = json.loads((report_dir / "quality.json").read_text(encoding="utf-8"))
+            self.assertEqual(quality_after_alias["label_alias_suggestions"], [])
+
             reading_list_path = report_dir / "exports" / "reading-list.md"
             self.run_cmd(
                 "scripts/export_reading_list.py",
