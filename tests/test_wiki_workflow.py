@@ -238,6 +238,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn('id="bulkResearchLine"', library_html)
             self.assertIn('id="bulkDomains"', library_html)
             self.assertIn('id="bulkMethods"', library_html)
+            self.assertIn('id="selectFiltered"', library_html)
+            self.assertIn("currentRankedRows.forEach", library_html)
             self.assertIn("批量分类字段", library_html)
             self.assertIn("metadata_patch.csv", library_html)
             self.assertIn('id="exportMarkdown"', library_html)

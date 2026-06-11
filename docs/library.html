@@ -512,6 +512,7 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
     <input id="bulkNextReview" type="date" aria-label="下次复习日期">
     <div class="bulk-actions">
       <button id="selectVisible" class="button" type="button">选中当前页</button>
+      <button id="selectFiltered" class="button" type="button">选中筛选结果</button>
       <button id="clearSelected" class="button" type="button">清除选择</button>
       <button id="downloadPatch" class="button" type="button">下载 CSV</button>
     </div>
@@ -771,6 +772,7 @@ const bulkProblems = document.querySelector("#bulkProblems");
 const bulkTopics = document.querySelector("#bulkTopics");
 const bulkMethods = document.querySelector("#bulkMethods");
 const selectVisible = document.querySelector("#selectVisible");
+const selectFiltered = document.querySelector("#selectFiltered");
 const clearSelected = document.querySelector("#clearSelected");
 const downloadPatch = document.querySelector("#downloadPatch");
 const libraryTable = document.querySelector(".library-table");
@@ -1210,6 +1212,12 @@ toggleVisible.addEventListener("change", () => {
 });
 selectVisible.addEventListener("click", () => {
   visibleRows().forEach(row => {
+    row.querySelector(".row-check").checked = true;
+  });
+  updateBulkState();
+});
+selectFiltered.addEventListener("click", () => {
+  currentRankedRows.forEach(row => {
     row.querySelector(".row-check").checked = true;
   });
   updateBulkState();
