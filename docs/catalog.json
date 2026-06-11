@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-06-12T03:42:54",
+  "generated_at": "2026-06-12T03:49:19",
   "count": 5,
   "inbox_count": 0,
-  "page_count": 26,
-  "data_file_count": 15,
+  "page_count": 27,
+  "data_file_count": 16,
   "contract_count": 5,
   "pages": [
     {
@@ -103,6 +103,12 @@
       "description": "并排比较候选论文的分类、状态和质量信号"
     },
     {
+      "title": "分类图谱",
+      "href": "taxonomy_map.html",
+      "kind": "analysis",
+      "description": "分类节点、共现边和研究线簇"
+    },
+    {
       "title": "数据目录",
       "href": "catalog.html",
       "kind": "ops",
@@ -200,7 +206,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T03:42:54",
+      "generated_at": "2026-06-12T03:49:19",
       "consumers": [
         "frontend",
         "desktop",
@@ -227,7 +233,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T03:42:54",
+      "generated_at": "2026-06-12T03:49:19",
       "consumers": [
         "search",
         "desktop"
@@ -290,7 +296,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T03:42:54",
+      "generated_at": "2026-06-12T03:49:19",
       "consumers": [
         "dashboard",
         "ops",
@@ -359,7 +365,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T03:42:54",
+      "generated_at": "2026-06-12T03:49:19",
       "consumers": [
         "quality-gate",
         "ops",
@@ -391,7 +397,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T03:42:54",
+      "generated_at": "2026-06-12T03:49:19",
       "consumers": [
         "review",
         "scheduler",
@@ -436,7 +442,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T03:42:54",
+      "generated_at": "2026-06-12T03:49:19",
       "consumers": [
         "freshness",
         "maintenance"
@@ -474,7 +480,7 @@
         }
       ],
       "declared_count": 55,
-      "generated_at": "2026-06-12T03:42:54",
+      "generated_at": "2026-06-12T03:49:19",
       "consumers": [
         "taxonomy",
         "project-management",
@@ -506,7 +512,7 @@
         }
       ],
       "declared_count": 62,
-      "generated_at": "2026-06-12T03:42:54",
+      "generated_at": "2026-06-12T03:49:19",
       "consumers": [
         "tasks",
         "project-management",
@@ -558,7 +564,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T03:42:54",
+      "generated_at": "2026-06-12T03:49:19",
       "consumers": [
         "workflow",
         "desktop",
@@ -596,7 +602,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T03:42:54",
+      "generated_at": "2026-06-12T03:49:19",
       "consumers": [
         "analytics",
         "classification",
@@ -640,7 +646,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T03:42:54",
+      "generated_at": "2026-06-12T03:49:19",
       "consumers": [
         "comparison",
         "curation",
@@ -649,10 +655,78 @@
       "error": ""
     },
     {
+      "href": "taxonomy_map.json",
+      "description": "分类节点、共现边、研究线簇和图谱治理建议",
+      "exists": true,
+      "size_bytes": 104382,
+      "top_level_keys": [
+        "clusters",
+        "count",
+        "edge_specs",
+        "edges",
+        "field_order",
+        "generated_at",
+        "isolated_nodes",
+        "nodes",
+        "recommendations",
+        "slug_titles"
+      ],
+      "collections": [
+        {
+          "key": "field_order",
+          "type": "list",
+          "count": 6
+        },
+        {
+          "key": "edge_specs",
+          "type": "list",
+          "count": 7
+        },
+        {
+          "key": "nodes",
+          "type": "list",
+          "count": 52
+        },
+        {
+          "key": "edges",
+          "type": "list",
+          "count": 194
+        },
+        {
+          "key": "clusters",
+          "type": "list",
+          "count": 2
+        },
+        {
+          "key": "isolated_nodes",
+          "type": "list",
+          "count": 0
+        },
+        {
+          "key": "recommendations",
+          "type": "list",
+          "count": 1
+        },
+        {
+          "key": "slug_titles",
+          "type": "object",
+          "count": 5
+        }
+      ],
+      "declared_count": 5,
+      "generated_at": "2026-06-12T03:49:19",
+      "consumers": [
+        "taxonomy",
+        "graph",
+        "desktop"
+      ],
+      "error": ""
+    },
+    {
       "href": "snapshot.json",
       "description": "当前知识库治理快照和发布基线",
       "exists": true,
-      "size_bytes": 10490,
+      "size_bytes": 10864,
       "top_level_keys": [
         "action_groups",
         "active_status_workflow",
@@ -719,7 +793,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T03:42:54",
+      "generated_at": "2026-06-12T03:49:19",
       "consumers": [
         "release",
         "audit",
@@ -763,7 +837,7 @@
         }
       ],
       "declared_count": 0,
-      "generated_at": "2026-06-12T03:42:54",
+      "generated_at": "2026-06-12T03:49:19",
       "consumers": [
         "intake",
         "dedupe"
@@ -829,12 +903,12 @@
         {
           "key": "pages",
           "type": "list",
-          "count": 26
+          "count": 27
         },
         {
           "key": "data_files",
           "type": "list",
-          "count": 15
+          "count": 16
         },
         {
           "key": "contract_files",
@@ -844,7 +918,7 @@
         {
           "key": "artifact_inventory",
           "type": "list",
-          "count": 46
+          "count": 48
         },
         {
           "key": "command_recipes",
@@ -863,7 +937,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T03:42:54",
+      "generated_at": "2026-06-12T03:49:19",
       "consumers": [
         "release",
         "audit",

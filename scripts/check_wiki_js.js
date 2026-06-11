@@ -18,6 +18,7 @@ function htmlFiles() {
     "workflow.html",
     "pivot.html",
     "compare.html",
+    "taxonomy_map.html",
     "catalog.html",
     "inbox.html",
     "quality.html",

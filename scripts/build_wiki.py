@@ -38,6 +38,7 @@ GENERATED_FIXED_PATHS = (
     "workflow.json",
     "pivot.json",
     "compare.json",
+    "taxonomy_map.json",
     "catalog.json",
     "snapshot.json",
     "manifest.json",
@@ -47,6 +48,7 @@ GENERATED_FIXED_PATHS = (
     "workflow.html",
     "pivot.html",
     "compare.html",
+    "taxonomy_map.html",
     "catalog.html",
     "inbox.html",
     "quality.html",
@@ -1639,6 +1641,186 @@ def write_pivot_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     )
 
 
+TAXONOMY_MAP_FIELDS = [
+    {"key": "research_line", "label": "Research line", "query": "line"},
+    {"key": "domain", "label": "Domain", "query": "domain"},
+    {"key": "track", "label": "Track", "query": "track"},
+    {"key": "problem", "label": "Problem", "query": "problem"},
+    {"key": "topic", "label": "Topic", "query": "topic"},
+    {"key": "method", "label": "Method", "query": "method"},
+]
+
+TAXONOMY_MAP_FIELD_BY_KEY = {field["key"]: field for field in TAXONOMY_MAP_FIELDS}
+
+TAXONOMY_MAP_EDGE_SPECS = [
+    ("research_line", "domain"),
+    ("domain", "track"),
+    ("track", "problem"),
+    ("problem", "topic"),
+    ("topic", "method"),
+    ("research_line", "track"),
+    ("problem", "method"),
+]
+
+
+def taxonomy_map_values(paper: dict[str, Any], field: str) -> list[str]:
+    if field == "research_line":
+        value = str(paper.get("research_line") or "Unassigned").strip()
+        return [value or "Unassigned"]
+    mapping = {
+        "domain": "domains",
+        "track": "tracks",
+        "problem": "problems",
+        "topic": "topics",
+        "method": "methods",
+    }
+    values = [str(value).strip() for value in paper.get(mapping[field], []) if str(value).strip()]
+    return values or ["Unassigned"]
+
+
+def taxonomy_node_id(field: str, value: str) -> str:
+    return f"{field}:{value}"
+
+
+def taxonomy_node_href(field: str, value: str) -> str:
+    if value == "Unassigned":
+        return "library.html"
+    query = str(TAXONOMY_MAP_FIELD_BY_KEY[field]["query"])
+    return page_query_href("library.html", **{query: value})
+
+
+def taxonomy_edge_href(source_field: str, source_value: str, target_field: str, target_value: str) -> str:
+    params: dict[str, str] = {}
+    if source_value != "Unassigned":
+        params[str(TAXONOMY_MAP_FIELD_BY_KEY[source_field]["query"])] = source_value
+    if target_value != "Unassigned":
+        params[str(TAXONOMY_MAP_FIELD_BY_KEY[target_field]["query"])] = target_value
+    return page_query_href("library.html", **params) if params else "library.html"
+
+
+def top_values_for_items(items: list[dict[str, Any]], field: str, limit: int = 6) -> list[dict[str, Any]]:
+    counts: Counter[str] = Counter()
+    for paper in items:
+        for value in taxonomy_map_values(paper, field):
+            if value != "Unassigned":
+                counts[value] += 1
+    return [{"value": value, "count": count} for value, count in counts.most_common(limit)]
+
+
+def build_taxonomy_map_payload(papers: list[dict[str, Any]]) -> dict[str, Any]:
+    node_slugs: dict[tuple[str, str], set[str]] = defaultdict(set)
+    edge_slugs: dict[tuple[str, str, str, str], set[str]] = defaultdict(set)
+    slug_to_title = {str(paper["slug"]): paper.get("title_zh") or paper.get("title") or str(paper["slug"]) for paper in papers}
+
+    for paper in papers:
+        slug = str(paper["slug"])
+        for field in TAXONOMY_MAP_FIELD_BY_KEY:
+            for value in taxonomy_map_values(paper, field):
+                node_slugs[(field, value)].add(slug)
+        for source_field, target_field in TAXONOMY_MAP_EDGE_SPECS:
+            for source_value in taxonomy_map_values(paper, source_field):
+                for target_value in taxonomy_map_values(paper, target_field):
+                    edge_slugs[(source_field, source_value, target_field, target_value)].add(slug)
+
+    nodes = []
+    for (field, value), slugs in sorted(node_slugs.items(), key=lambda item: (item[0][0], -len(item[1]), item[0][1].lower())):
+        nodes.append(
+            {
+                "id": taxonomy_node_id(field, value),
+                "field": field,
+                "label": TAXONOMY_MAP_FIELD_BY_KEY[field]["label"],
+                "value": value,
+                "count": len(slugs),
+                "href": taxonomy_node_href(field, value),
+                "sample_slugs": sorted(slugs)[:8],
+            }
+        )
+
+    edges = []
+    for (source_field, source_value, target_field, target_value), slugs in sorted(
+        edge_slugs.items(),
+        key=lambda item: (-len(item[1]), item[0][0], item[0][2], item[0][1].lower(), item[0][3].lower()),
+    ):
+        if source_value == "Unassigned" and target_value == "Unassigned":
+            continue
+        edges.append(
+            {
+                "source": taxonomy_node_id(source_field, source_value),
+                "target": taxonomy_node_id(target_field, target_value),
+                "source_field": source_field,
+                "source_value": source_value,
+                "target_field": target_field,
+                "target_value": target_value,
+                "count": len(slugs),
+                "href": taxonomy_edge_href(source_field, source_value, target_field, target_value),
+                "sample_slugs": sorted(slugs)[:10],
+            }
+        )
+
+    line_groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for paper in papers:
+        line_groups[str(paper.get("research_line") or "Unassigned")].append(paper)
+    clusters = []
+    for line, items in sorted(line_groups.items(), key=lambda item: (-len(item[1]), item[0].lower())):
+        clusters.append(
+            {
+                "research_line": line,
+                "count": len(items),
+                "href": page_query_href("library.html", line=line) if line != "Unassigned" else "library.html",
+                "top_domains": top_values_for_items(items, "domain"),
+                "top_tracks": top_values_for_items(items, "track"),
+                "top_problems": top_values_for_items(items, "problem"),
+                "top_topics": top_values_for_items(items, "topic"),
+                "top_methods": top_values_for_items(items, "method"),
+                "slugs": sorted(str(paper["slug"]) for paper in items),
+            }
+        )
+
+    isolated_nodes = []
+    connected = {edge["source"] for edge in edges} | {edge["target"] for edge in edges}
+    for node in nodes:
+        if node["id"] not in connected and node["value"] != "Unassigned":
+            isolated_nodes.append(node)
+
+    recommendations = []
+    overloaded_nodes = [node for node in nodes if node["field"] in {"topic", "method", "problem"} and node["count"] >= max(4, len(papers) // 2)]
+    if overloaded_nodes:
+        recommendations.append(
+            f"有 {len(overloaded_nodes)} 个 topic/method/problem 节点覆盖面偏大，可在 taxonomy.html 或 facets.html 中考虑拆分。"
+        )
+    if isolated_nodes:
+        recommendations.append(f"有 {len(isolated_nodes)} 个孤立分类节点，建议检查是否需要合并或补上上游分类。")
+    unassigned_count = len(node_slugs.get(("research_line", "Unassigned"), set()))
+    if unassigned_count:
+        recommendations.append(f"有 {unassigned_count} 篇论文未进入研究线，建议先分配 research_line 再细化下游分类。")
+    if not recommendations:
+        recommendations.append("当前分类图谱连接正常，可以优先从强边和研究线簇继续扩展。")
+
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": len(papers),
+        "field_order": TAXONOMY_MAP_FIELDS,
+        "edge_specs": [
+            {"source_field": source, "target_field": target}
+            for source, target in TAXONOMY_MAP_EDGE_SPECS
+        ],
+        "nodes": nodes,
+        "edges": edges,
+        "clusters": clusters,
+        "isolated_nodes": isolated_nodes,
+        "recommendations": recommendations,
+        "slug_titles": slug_to_title,
+    }
+
+
+def write_taxonomy_map_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_taxonomy_map_payload(papers)
+    (report_dir / "taxonomy_map.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
 COMPARE_FIELDS = [
     {"key": "title_zh", "label": "中文标题", "group": "identity"},
     {"key": "title_en", "label": "英文标题", "group": "identity"},
@@ -1771,6 +1953,7 @@ DATA_CONSUMER_HINTS = {
     "workflow.json": ["workflow", "desktop", "filters"],
     "pivot.json": ["analytics", "classification", "desktop"],
     "compare.json": ["comparison", "curation", "desktop"],
+    "taxonomy_map.json": ["taxonomy", "graph", "desktop"],
     "snapshot.json": ["release", "audit", "desktop"],
     "inbox.json": ["intake", "dedupe"],
     "manifest.json": ["release", "audit", "ci"],
@@ -1936,6 +2119,7 @@ def wiki_pages_manifest() -> list[dict[str, str]]:
         {"title": "工作流中心", "href": "workflow.html", "kind": "workflow", "description": "状态体系对比、分布和漂移审计"},
         {"title": "分类透视表", "href": "pivot.html", "kind": "analysis", "description": "任意两个分类维度交叉分析论文分布"},
         {"title": "论文对比", "href": "compare.html", "kind": "analysis", "description": "并排比较候选论文的分类、状态和质量信号"},
+        {"title": "分类图谱", "href": "taxonomy_map.html", "kind": "analysis", "description": "分类节点、共现边和研究线簇"},
         {"title": "数据目录", "href": "catalog.html", "kind": "ops", "description": "机器数据、页面和契约的接入目录"},
         {"title": "待处理池", "href": "inbox.html", "kind": "workflow", "description": "候选论文队列和去重提示"},
         {"title": "复习计划", "href": "review.html", "kind": "workflow", "description": "待复习、需建计划、建议日期"},
@@ -1962,6 +2146,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "workflow.json", "description": "状态工作流配置、分布和漂移审计"},
         {"href": "pivot.json", "description": "分类透视表维度、论文投影和交叉分布"},
         {"href": "compare.json", "description": "论文对比视图数据和推荐对比集合"},
+        {"href": "taxonomy_map.json", "description": "分类节点、共现边、研究线簇和图谱治理建议"},
         {"href": "catalog.json", "description": "机器数据、页面入口和契约字段目录"},
         {"href": "snapshot.json", "description": "当前知识库治理快照和发布基线"},
         {"href": "inbox.json", "description": "候选论文队列和重复项"},
@@ -6615,6 +6800,259 @@ renderPivot();
 </script>
 """
     (report_dir / "pivot.html").write_text(page_shell("分类透视表", body, extra_css=pivot_css), encoding="utf-8")
+
+
+def render_taxonomy_map(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_taxonomy_map_payload(papers)
+    map_json = json.dumps(payload, ensure_ascii=False).replace("</", "<\\/")
+    field_options = "".join(
+        f'<option value="{html.escape(str(field["key"]), quote=True)}">{html.escape(str(field["label"]))}</option>'
+        for field in payload["field_order"]
+    )
+    recommendation_items = "".join(
+        f"<li>{html.escape(str(item))}</li>"
+        for item in payload["recommendations"]
+    )
+    cluster_card_parts = []
+    for cluster in payload["clusters"]:
+        top_items = (cluster.get("top_tracks") or cluster.get("top_topics") or [])[:5]
+        chips = "".join(
+            f'<span class="chip">{html.escape(str(item["value"]))} · {item["count"]}</span>'
+            for item in top_items
+        )
+        cluster_card_parts.append(
+            '<article class="map-cluster">'
+            f'<h3><a href="{html.escape(str(cluster["href"]))}">{html.escape(str(cluster["research_line"]))}</a></h3>'
+            f'<div class="meta">{cluster["count"]} 篇论文</div>'
+            f'<div class="chips">{chips}</div>'
+            "</article>"
+        )
+    cluster_cards = "".join(cluster_card_parts)
+    map_css = """
+    .map-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .map-layout {
+      display: grid;
+      grid-template-columns: minmax(260px, 360px) minmax(0, 1fr);
+      gap: 16px;
+      align-items: start;
+    }
+    .map-panel {
+      position: sticky;
+      top: 82px;
+      display: grid;
+      gap: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 14px;
+    }
+    .map-panel h2 { margin: 0; font-size: 18px; }
+    .map-recommendations { margin: 0; padding-left: 18px; color: var(--muted); }
+    .map-clusters {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .map-cluster {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 14px;
+    }
+    .map-cluster h3 { margin: 0 0 4px; font-size: 16px; line-height: 1.3; }
+    .map-node-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .map-node {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 12px;
+    }
+    .map-node strong {
+      display: block;
+      line-height: 1.35;
+      margin-bottom: 5px;
+    }
+    .map-node[hidden], .map-edge-row[hidden] { display: none; }
+    .map-table code {
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+    @media (max-width: 940px) {
+      .map-layout { grid-template-columns: 1fr; }
+      .map-panel { position: static; }
+    }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Taxonomy Map</div>
+  <h1>分类图谱</h1>
+  <p class="lead">把 research line、domain、track、problem、topic 和 method 之间的共现关系显式画出来。论文数量变多后，可以用它发现过载节点、孤立标签和应该拆分或合并的分类路径。</p>
+  <div class="stats">
+    <a class="stat" href="taxonomy.html">分类治理</a>
+    <a class="stat" href="facets.html">分类工作台</a>
+    <a class="stat" href="pivot.html">分类透视表</a>
+    <a class="stat" href="coverage.html">覆盖地图</a>
+    <a class="stat" href="taxonomy_map.json">Map JSON</a>
+    <span class="stat">论文 {payload["count"]}</span>
+    <span class="stat">节点 {len(payload["nodes"])}</span>
+    <span class="stat">边 {len(payload["edges"])}</span>
+  </div>
+</header>
+<div class="toolbar">
+  <div class="shell controls">
+    <input id="mapSearch" type="search" placeholder="搜索节点、边、slug">
+    <select id="mapSource"><option value="">全部起点</option>{field_options}</select>
+    <select id="mapTarget"><option value="">全部终点</option>{field_options}</select>
+    <select id="mapMinCount"><option value="1">至少 1 篇</option><option value="2">至少 2 篇</option><option value="3">至少 3 篇</option><option value="5">至少 5 篇</option></select>
+    <button id="downloadMapCsv" class="button" type="button">下载边 CSV</button>
+  </div>
+</div>
+<main class="shell">
+  <section class="map-summary">
+    <section class="metric-card"><span>节点</span><strong>{len(payload["nodes"])}</strong><span>分类值</span></section>
+    <section class="metric-card"><span>边</span><strong>{len(payload["edges"])}</strong><span>论文共现</span></section>
+    <section class="metric-card"><span>研究线簇</span><strong>{len(payload["clusters"])}</strong><span>按 line 聚合</span></section>
+    <section class="metric-card"><span>孤立节点</span><strong>{len(payload["isolated_nodes"])}</strong><span>需复核标签</span></section>
+  </section>
+  <section class="map-clusters">{cluster_cards}</section>
+  <section class="map-layout">
+    <aside class="map-panel">
+      <h2>治理建议</h2>
+      <ol class="map-recommendations">{recommendation_items}</ol>
+      <div class="meta" id="mapResultCount">准备加载图谱</div>
+    </aside>
+    <div>
+      <section>
+        <h2 class="section-title">高频节点</h2>
+        <div id="mapNodeGrid" class="map-node-grid"></div>
+      </section>
+      <section>
+        <h2 class="section-title">共现边</h2>
+        <div class="table-wrap"><table class="data-table map-table"><thead><tr><th>起点</th><th>终点</th><th>论文</th><th>样例</th><th>入口</th></tr></thead><tbody id="mapEdgeRows"></tbody></table></div>
+      </section>
+    </div>
+  </section>
+</main>
+<script>
+const taxonomyMapData = {map_json};
+const mapSearch = document.querySelector("#mapSearch");
+const mapSource = document.querySelector("#mapSource");
+const mapTarget = document.querySelector("#mapTarget");
+const mapMinCount = document.querySelector("#mapMinCount");
+const mapResultCount = document.querySelector("#mapResultCount");
+const mapNodeGrid = document.querySelector("#mapNodeGrid");
+const mapEdgeRows = document.querySelector("#mapEdgeRows");
+const downloadMapCsv = document.querySelector("#downloadMapCsv");
+const mapTitles = taxonomyMapData.slug_titles || {{}};
+
+function mapEscape(value) {{
+  return String(value ?? "").replace(/[&<>"']/g, char => ({{"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}}[char]));
+}}
+
+function mapCsvCell(value) {{
+  const text = String(value ?? "");
+  return (text.includes(",") || text.includes('"') || text.includes("\\n"))
+    ? `"${{text.replaceAll('"', '""')}}"`
+    : text;
+}}
+
+function edgeSearchText(edge) {{
+  return [
+    edge.source_field,
+    edge.source_value,
+    edge.target_field,
+    edge.target_value,
+    ...(edge.sample_slugs || []),
+  ].join(" ").toLowerCase();
+}}
+
+function filteredEdges() {{
+  const q = mapSearch.value.trim().toLowerCase();
+  const minCount = Number(mapMinCount.value || 1);
+  return (taxonomyMapData.edges || []).filter(edge =>
+    edge.count >= minCount
+    && (!mapSource.value || edge.source_field === mapSource.value)
+    && (!mapTarget.value || edge.target_field === mapTarget.value)
+    && (!q || edgeSearchText(edge).includes(q))
+  );
+}}
+
+function filteredNodes(edges) {{
+  const q = mapSearch.value.trim().toLowerCase();
+  const visibleIds = new Set(edges.flatMap(edge => [edge.source, edge.target]));
+  return (taxonomyMapData.nodes || [])
+    .filter(node => visibleIds.has(node.id) && (!q || `${{node.field}} ${{node.value}} ${{(node.sample_slugs || []).join(" ")}}`.toLowerCase().includes(q)))
+    .sort((a, b) => b.count - a.count || a.field.localeCompare(b.field) || a.value.localeCompare(b.value))
+    .slice(0, 24);
+}}
+
+function renderMap() {{
+  const edges = filteredEdges();
+  const nodes = filteredNodes(edges);
+  mapResultCount.textContent = `${{nodes.length}} 个节点 / ${{edges.length}} 条边`;
+  mapNodeGrid.innerHTML = nodes.map(node => `
+    <article class="map-node">
+      <strong><a href="${{mapEscape(node.href)}}">${{mapEscape(node.value)}}</a></strong>
+      <div class="meta">${{mapEscape(node.label)}} · ${{node.count}} 篇</div>
+      <div class="chips">${{(node.sample_slugs || []).slice(0, 3).map(slug => `<span class="chip">${{mapEscape(slug)}}</span>`).join("")}}</div>
+    </article>
+  `).join("") || '<div class="empty">没有匹配节点。</div>';
+  mapEdgeRows.innerHTML = edges.slice(0, 160).map(edge => {{
+    const samples = (edge.sample_slugs || []).slice(0, 4).map(slug => `${{slug}} · ${{mapTitles[slug] || ""}}`).join("; ");
+    return `<tr class="map-edge-row">
+      <td><span class="flag">${{mapEscape(edge.source_field)}}</span><div><a href="${{mapEscape(edge.href)}}">${{mapEscape(edge.source_value)}}</a></div></td>
+      <td><span class="flag">${{mapEscape(edge.target_field)}}</span><div>${{mapEscape(edge.target_value)}}</div></td>
+      <td>${{edge.count}}</td>
+      <td>${{mapEscape(samples || "-")}}</td>
+      <td><a href="${{mapEscape(edge.href)}}">打开队列</a></td>
+    </tr>`;
+  }}).join("") || '<tr><td colspan="5" class="empty">没有匹配边。</td></tr>';
+}}
+
+function downloadVisibleEdges() {{
+  const rows = filteredEdges();
+  if (!rows.length) {{
+    window.alert("当前筛选没有边。");
+    return;
+  }}
+  const header = ["source_field", "source_value", "target_field", "target_value", "count", "sample_slugs", "href"];
+  const csv = [header, ...rows.map(edge => [
+    edge.source_field,
+    edge.source_value,
+    edge.target_field,
+    edge.target_value,
+    edge.count,
+    (edge.sample_slugs || []).join(";"),
+    edge.href,
+  ])].map(row => row.map(mapCsvCell).join(",")).join("\\n") + "\\n";
+  const blob = new Blob([csv], {{ type: "text/csv;charset=utf-8" }});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "taxonomy_map_edges.csv";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}}
+
+[mapSearch, mapSource, mapTarget, mapMinCount].forEach(control => control.addEventListener("input", renderMap));
+downloadMapCsv.addEventListener("click", downloadVisibleEdges);
+renderMap();
+</script>
+"""
+    (report_dir / "taxonomy_map.html").write_text(page_shell("分类图谱", body, extra_css=map_css), encoding="utf-8")
 
 
 def render_compare(report_dir: Path, papers: list[dict[str, Any]]) -> None:
@@ -12353,6 +12791,7 @@ def build_wiki(report_dir: Path) -> int:
     write_workflow_json(report_dir, papers)
     write_pivot_json(report_dir, papers)
     write_compare_json(report_dir, papers)
+    write_taxonomy_map_json(report_dir, papers)
     write_inbox_json(report_dir, inbox_items)
     write_search_index(report_dir, papers)
     render_index(report_dir, papers)
@@ -12361,6 +12800,7 @@ def build_wiki(report_dir: Path) -> int:
     render_workflow(report_dir, papers)
     render_pivot(report_dir, papers)
     render_compare(report_dir, papers)
+    render_taxonomy_map(report_dir, papers)
     render_inbox(report_dir, inbox_items)
     render_review(report_dir, papers)
     render_freshness(report_dir, papers)

@@ -104,6 +104,7 @@ REQUIRED_PAGES = {
     "workflow.html",
     "pivot.html",
     "compare.html",
+    "taxonomy_map.html",
     "catalog.html",
     "inbox.html",
     "quality.html",
@@ -131,6 +132,7 @@ REQUIRED_PAGES = {
     "workflow.json",
     "pivot.json",
     "compare.json",
+    "taxonomy_map.json",
     "catalog.json",
     "snapshot.json",
     "manifest.json",
@@ -551,6 +553,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     workflow_path = report_dir / "workflow.json"
     pivot_path = report_dir / "pivot.json"
     compare_path = report_dir / "compare.json"
+    taxonomy_map_path = report_dir / "taxonomy_map.json"
     catalog_path = report_dir / "catalog.json"
     stats_path = report_dir / "stats.json"
     inbox_path = report_dir / "inbox.json"
@@ -580,6 +583,9 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     if not compare_path.exists():
         errors.append("missing compare.json")
         return
+    if not taxonomy_map_path.exists():
+        errors.append("missing taxonomy_map.json")
+        return
     if not catalog_path.exists():
         errors.append("missing catalog.json")
         return
@@ -604,6 +610,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     workflow_data = json.loads(workflow_path.read_text(encoding="utf-8"))
     pivot_data = json.loads(pivot_path.read_text(encoding="utf-8"))
     compare_data = json.loads(compare_path.read_text(encoding="utf-8"))
+    taxonomy_map_data = json.loads(taxonomy_map_path.read_text(encoding="utf-8"))
     catalog_data = json.loads(catalog_path.read_text(encoding="utf-8"))
     stats_data = json.loads(stats_path.read_text(encoding="utf-8"))
     inbox_data = json.loads(inbox_path.read_text(encoding="utf-8"))
@@ -875,6 +882,58 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         unknown_set_slugs = sorted(set(slugs) - report_slugs)
         if unknown_set_slugs:
             errors.append(f"compare.json suggested_sets[{index}] references unknown slugs: {unknown_set_slugs}")
+
+    if taxonomy_map_data.get("count") != len(report_slugs):
+        errors.append(f"taxonomy_map.json count {taxonomy_map_data.get('count')} != markdown report count {len(report_slugs)}")
+    required_map = {"field_order", "edge_specs", "nodes", "edges", "clusters", "isolated_nodes", "recommendations", "slug_titles"}
+    missing_map = sorted(required_map - set(taxonomy_map_data))
+    if missing_map:
+        errors.append(f"taxonomy_map.json missing keys: {', '.join(missing_map)}")
+    map_nodes = taxonomy_map_data.get("nodes")
+    if not isinstance(map_nodes, list) or not map_nodes:
+        errors.append("taxonomy_map.json nodes must be a non-empty list")
+        map_nodes = []
+    node_ids = {str(node.get("id") or "") for node in map_nodes if isinstance(node, dict)}
+    for index, node in enumerate(map_nodes):
+        if not isinstance(node, dict):
+            errors.append(f"taxonomy_map.json nodes[{index}] must be an object")
+            continue
+        for key in ("id", "field", "value", "count", "href", "sample_slugs"):
+            if key not in node:
+                errors.append(f"taxonomy_map.json nodes[{index}] missing {key}")
+        sample_slugs = node.get("sample_slugs", [])
+        if not isinstance(sample_slugs, list):
+            errors.append(f"taxonomy_map.json nodes[{index}].sample_slugs must be a list")
+            sample_slugs = []
+        unknown_node_slugs = sorted(set(sample_slugs) - report_slugs)
+        if unknown_node_slugs:
+            errors.append(f"taxonomy_map.json nodes[{index}] references unknown slugs: {unknown_node_slugs}")
+    map_edges = taxonomy_map_data.get("edges")
+    if not isinstance(map_edges, list):
+        errors.append("taxonomy_map.json edges must be a list")
+        map_edges = []
+    for index, edge in enumerate(map_edges):
+        if not isinstance(edge, dict):
+            errors.append(f"taxonomy_map.json edges[{index}] must be an object")
+            continue
+        for key in ("source", "target", "source_field", "target_field", "count", "href", "sample_slugs"):
+            if key not in edge:
+                errors.append(f"taxonomy_map.json edges[{index}] missing {key}")
+        if edge.get("source") not in node_ids:
+            errors.append(f"taxonomy_map.json edges[{index}] references unknown source node")
+        if edge.get("target") not in node_ids:
+            errors.append(f"taxonomy_map.json edges[{index}] references unknown target node")
+        sample_slugs = edge.get("sample_slugs", [])
+        if not isinstance(sample_slugs, list):
+            errors.append(f"taxonomy_map.json edges[{index}].sample_slugs must be a list")
+            sample_slugs = []
+        unknown_edge_slugs = sorted(set(sample_slugs) - report_slugs)
+        if unknown_edge_slugs:
+            errors.append(f"taxonomy_map.json edges[{index}] references unknown slugs: {unknown_edge_slugs}")
+    if not isinstance(taxonomy_map_data.get("clusters"), list):
+        errors.append("taxonomy_map.json clusters must be a list")
+    if not isinstance(taxonomy_map_data.get("recommendations"), list):
+        errors.append("taxonomy_map.json recommendations must be a list")
 
     if catalog_data.get("count") != len(report_slugs):
         errors.append(f"catalog.json count {catalog_data.get('count')} != markdown report count {len(report_slugs)}")
