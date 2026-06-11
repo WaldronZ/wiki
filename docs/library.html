@@ -442,6 +442,44 @@
     .library-table[data-density="compact"] .chip { padding: 2px 6px; }
     .library-table[data-density="comfortable"] th,
     .library-table[data-density="comfortable"] td { padding: 14px 12px; }
+    .active-filters {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      min-height: 34px;
+      margin: -4px 0 16px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .active-filter-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      max-width: 280px;
+      min-height: 30px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--chip);
+      color: var(--ink);
+      padding: 0 10px;
+      font: inherit;
+      cursor: pointer;
+    }
+    .active-filter-chip span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .active-filter-chip b {
+      color: var(--muted);
+      font-weight: 750;
+    }
+    .active-filter-chip::after {
+      content: "x";
+      color: var(--muted);
+      font-weight: 850;
+    }
     .library-insights {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
@@ -586,6 +624,7 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
       <button id="resetFilters" class="button" type="button">重置筛选</button>
     </div>
   </div>
+  <div class="active-filters" id="activeFilters" aria-live="polite"></div>
   <div class="bulk-panel">
     <span id="bulkCount" class="bulk-count">已选 0 篇</span>
     <select id="bulkStatus"><option value="">状态</option><option value="unread">unread</option><option value="skimmed">skimmed</option><option value="reading">reading</option><option value="read">read</option><option value="archived">archived</option></select>
@@ -882,6 +921,7 @@ const copySharedView = document.querySelector("#copySharedView");
 const deleteView = document.querySelector("#deleteView");
 const exportSavedViews = document.querySelector("#exportSavedViews");
 const importSavedViews = document.querySelector("#importSavedViews");
+const activeFilters = document.querySelector("#activeFilters");
 const exportMarkdown = document.querySelector("#exportMarkdown");
 const exportCsv = document.querySelector("#exportCsv");
 const exportBibtex = document.querySelector("#exportBibtex");
@@ -949,6 +989,24 @@ const controls = [
   ["sort", sort],
   ["size", pageSize],
 ];
+const controlsByKey = new Map(controls);
+const activeFilterLabels = {
+  q: "搜索",
+  domain: "领域",
+  track: "方向",
+  problem: "问题",
+  topic: "主题",
+  method: "方法",
+  line: "研究线",
+  role: "角色",
+  workflow: "状态体系",
+  status: "状态",
+  stage: "阅读阶段",
+  reviewStage: "复习阶段",
+  code: "代码",
+  importance: "重要性",
+};
+const hiddenActiveFilterKeys = new Set(["sort", "size"]);
 
 function tokens(value) {
   return String(value || "").split("|").filter(Boolean);
@@ -1025,6 +1083,53 @@ function currentState() {
   });
   if (currentPage > 1) state.page = String(currentPage);
   return state;
+}
+
+function cleanOptionLabel(label) {
+  return String(label || "").replace(/\s\(\d+\)$/, "");
+}
+
+function controlDisplayValue(key, el) {
+  if (key === "q") return el.value;
+  const option = el.options && el.selectedIndex >= 0 ? el.options[el.selectedIndex] : null;
+  return cleanOptionLabel(option ? option.textContent : el.value);
+}
+
+function renderActiveFilters() {
+  const state = currentState();
+  const entries = Object.entries(state)
+    .filter(([key]) => controlsByKey.has(key) && !hiddenActiveFilterKeys.has(key));
+  activeFilters.replaceChildren();
+  if (!entries.length) {
+    activeFilters.textContent = "未设置筛选条件";
+    return;
+  }
+  const label = document.createElement("span");
+  label.textContent = "当前筛选";
+  activeFilters.appendChild(label);
+  entries.forEach(([key]) => {
+    const el = controlsByKey.get(key);
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "active-filter-chip";
+    button.dataset.filterKey = key;
+    button.title = `移除${activeFilterLabels[key] || key}筛选`;
+    const name = document.createElement("b");
+    name.textContent = activeFilterLabels[key] || key;
+    const value = document.createElement("span");
+    value.textContent = controlDisplayValue(key, el);
+    button.append(name, value);
+    activeFilters.appendChild(button);
+  });
+}
+
+function clearActiveFilter(key) {
+  const el = controlsByKey.get(key);
+  if (!el) return;
+  el.value = defaultValueFor(key);
+  if (key === "workflow") applyStatusWorkflow();
+  currentPage = 1;
+  render();
 }
 
 function applyState(state) {
@@ -1533,6 +1638,7 @@ function render() {
   });
   const ranked = sortRows(filtered);
   currentRankedRows = ranked;
+  renderActiveFilters();
   updateLibraryInsights(ranked);
   const limit = pageLimit();
   const totalPages = limit === Infinity ? 1 : Math.max(1, Math.ceil(ranked.length / limit));
@@ -1562,6 +1668,10 @@ controls.forEach(([, el]) => el.addEventListener("input", () => {
   currentPage = 1;
   render();
 }));
+activeFilters.addEventListener("click", (event) => {
+  const button = event.target instanceof Element ? event.target.closest("[data-filter-key]") : null;
+  if (button) clearActiveFilter(button.dataset.filterKey);
+});
 resetFilters.addEventListener("click", () => {
   controls.forEach(([key, el]) => {
     el.value = defaultValueFor(key);

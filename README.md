@@ -284,7 +284,7 @@ python3 scripts/apply_library_metadata.py docs --input docs/library.csv --write
 python3 scripts/build_wiki.py docs
 ```
 
-`docs/library.html` 也支持先按 `domains` / `tracks` / `problems` / `topics` / `methods` 等分类维度筛选论文、在多套 `status_workflows` 间动态切换 `status` / `reading_stage` / `review_stage` 的候选项，并实时显示当前筛选结果的状态分布、研究线分布、代码覆盖和复习计划缺口。它还支持按场景隐藏/显示列、切换紧凑/标准/舒适密度、保存并导入/导出常用队列、勾选当前页或一键选中全部筛选结果，批量选择 `status` / `reading_stage` / `review_stage` / `next_review` / `importance`，也可以展开「批量分类字段」为所选论文设置 `research_line` / `line_role` / `domains` / `tracks` / `problems` / `topics` / `methods`。页面会在下载 `metadata_patch.csv` 前显示 patch 摘要、影响字段和样例 slug，并可直接复制 dry-run / writeback 命令；列设置和密度偏好会保存在浏览器本地。也可以把当前筛选和排序结果直接导出为 `reading_list.md`、`library_filtered.csv` 或 `library.bib`。`docs/board.html` 支持把论文卡片拖到新的状态列，然后下载 `status_board_patch.csv`。下载后用同一个写回脚本预览和应用：
+`docs/library.html` 也支持先按 `domains` / `tracks` / `problems` / `topics` / `methods` 等分类维度筛选论文、在多套 `status_workflows` 间动态切换 `status` / `reading_stage` / `review_stage` 的候选项，并实时显示当前筛选结果的状态分布、研究线分布、代码覆盖和复习计划缺口。当前筛选条件会显示成可逐个移除的 chips，方便从复杂队列中快速放宽某个约束。它还支持按场景隐藏/显示列、切换紧凑/标准/舒适密度、保存并导入/导出常用队列、勾选当前页或一键选中全部筛选结果，批量选择 `status` / `reading_stage` / `review_stage` / `next_review` / `importance`，也可以展开「批量分类字段」为所选论文设置 `research_line` / `line_role` / `domains` / `tracks` / `problems` / `topics` / `methods`。页面会在下载 `metadata_patch.csv` 前显示 patch 摘要、影响字段和样例 slug，并可直接复制 dry-run / writeback 命令；列设置和密度偏好会保存在浏览器本地。也可以把当前筛选和排序结果直接导出为 `reading_list.md`、`library_filtered.csv` 或 `library.bib`。`docs/board.html` 支持把论文卡片拖到新的状态列，然后下载 `status_board_patch.csv`。下载后用同一个写回脚本预览和应用：
 
 ```bash
 python3 scripts/apply_library_metadata.py docs --input ~/Downloads/metadata_patch.csv
