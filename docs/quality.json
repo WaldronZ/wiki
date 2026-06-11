@@ -20,6 +20,7 @@
     "due_review": [],
     "no_code_observation": [],
     "taxonomy_drift": [],
+    "duplicate_reports": [],
     "high_importance": [
       "2307.08691-flashattention-2",
       "2604.11035-introspective-dlm"
@@ -103,5 +104,6 @@
     }
   ],
   "taxonomy_drift": [],
-  "label_alias_suggestions": []
+  "label_alias_suggestions": [],
+  "duplicate_reports": []
 }

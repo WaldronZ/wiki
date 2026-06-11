@@ -450,6 +450,16 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
             quality_slugs.update(value)
     quality_issue_slugs = {issue.get("slug") for issue in quality_data.get("issues", [])}
     quality_drift_slugs = {item.get("slug") for item in quality_data.get("taxonomy_drift", [])}
+    duplicate_reports = quality_data.get("duplicate_reports", [])
+    if duplicate_reports is not None and not isinstance(duplicate_reports, list):
+        errors.append("quality.json duplicate_reports must be a list")
+        duplicate_reports = []
+    quality_duplicate_slugs = {
+        slug
+        for item in duplicate_reports
+        if isinstance(item, dict)
+        for slug in item.get("slugs", [])
+    }
     alias_suggestions = quality_data.get("label_alias_suggestions", [])
     if alias_suggestions is not None and not isinstance(alias_suggestions, list):
         errors.append("quality.json label_alias_suggestions must be a list")
@@ -460,12 +470,12 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         if isinstance(item, dict)
         for slug in item.get("slugs", [])
     }
-    unknown_quality_slugs = sorted((quality_slugs | quality_issue_slugs | quality_drift_slugs | quality_alias_slugs) - report_slugs)
+    unknown_quality_slugs = sorted((quality_slugs | quality_issue_slugs | quality_drift_slugs | quality_alias_slugs | quality_duplicate_slugs) - report_slugs)
     if quality_data.get("count") != len(report_slugs):
         errors.append(f"quality.json count {quality_data.get('count')} != markdown report count {len(report_slugs)}")
     if unknown_quality_slugs:
         errors.append(f"quality.json references unknown slugs: {unknown_quality_slugs}")
-    required_quality = {"quality_score", "coverage", "queues", "issues", "taxonomy_drift", "label_alias_suggestions"}
+    required_quality = {"quality_score", "coverage", "queues", "issues", "taxonomy_drift", "label_alias_suggestions", "duplicate_reports"}
     missing_quality = sorted(required_quality - set(quality_data))
     if missing_quality:
         errors.append(f"quality.json missing keys: {', '.join(missing_quality)}")

@@ -125,7 +125,7 @@ paper_reader/
 - `docs/board.html`：状态看板，按自定义 `status` 分列，也可临时新增状态列，拖拽后导出 `status_board_patch.csv`
 - `docs/inbox.csv`：候选论文待处理池源数据，可手动追加 title/link/status/priority/tags/note
 - `docs/inbox.html`：候选论文待处理池，支持筛选、去重提示和复制阅读任务
-- `docs/quality.html`：质量治理页，集中展示弱元数据、标签归一化建议、taxonomy drift 和候选重复项
+- `docs/quality.html`：质量治理页，集中展示弱元数据、标签归一化建议、taxonomy drift 和库内重复报告
 - `docs/review.html`：复习计划页，展示待复习、需建计划、已计划和高优先级队列
 - `docs/dashboard.html`：管理控制台，展示分类覆盖、研究线健康度、待复习和待补分类队列
 - `docs/release.html`：发布摘要页，集中展示发布状态、页面入口、数据文件、队列规模和推荐命令
@@ -142,9 +142,9 @@ paper_reader/
 - `docs/search_index.json`：全文搜索索引
 - `docs/stats.json`：机器可读统计摘要，包含覆盖率、队列规模、研究线和分类分布
 - `docs/inbox.json`：机器可读候选论文队列
-- `docs/quality.json`：元数据质量报告，列出缺分类、标签别名建议、taxonomy drift、缺复习计划、待复习、缺代码观察等队列
+- `docs/quality.json`：元数据质量报告，列出缺分类、标签别名建议、taxonomy drift、库内重复报告、缺复习计划、待复习、缺代码观察等队列
 - `docs/review.json`：机器可读复习计划，给出 suggested_next_review 和优先级
-- `docs/manifest.json`：机器可读发布清单，包含页面入口、数据文件、质量状态、队列规模和常用命令
+- `docs/manifest.json`：机器可读发布清单，包含页面入口、数据文件、质量状态、重复报告发布门禁、队列规模和常用命令
 - `docs/guides/metadata.schema.json`：报告 frontmatter 字段契约，用于校验类型、日期格式和评分范围
 
 ## Wiki 分类

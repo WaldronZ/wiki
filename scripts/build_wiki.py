@@ -901,6 +901,62 @@ def label_alias_suggestions(papers: list[dict[str, Any]]) -> list[dict[str, Any]
     )
 
 
+def normalized_duplicate_key(value: Any) -> str:
+    text = str(value or "").strip().lower()
+    if not text:
+        return ""
+    text = re.sub(r"https?://", "", text)
+    text = re.sub(r"www\.", "", text)
+    text = re.sub(r"[\s_./:-]+", " ", text)
+    text = re.sub(r"[^a-z0-9\u4e00-\u9fff]+", " ", text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def duplicate_report_groups(papers: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    buckets: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+    for paper in papers:
+        candidates = {
+            "arxiv_id": str(paper.get("arxiv_id") or "").split("v")[0].strip().lower(),
+            "title_en": normalized_duplicate_key(paper.get("title_en") or paper.get("title")),
+            "title_zh": normalized_duplicate_key(paper.get("title_zh")),
+            "code_url": normalized_duplicate_key(paper.get("code_url")),
+        }
+        for reason, value in candidates.items():
+            if value:
+                buckets[(reason, value)].append(paper)
+
+    groups: list[dict[str, Any]] = []
+    seen: set[tuple[str, tuple[str, ...]]] = set()
+    for (reason, value), items in buckets.items():
+        unique = {paper["slug"]: paper for paper in items}
+        if len(unique) <= 1:
+            continue
+        slugs = tuple(sorted(unique))
+        fingerprint = (reason, slugs)
+        if fingerprint in seen:
+            continue
+        seen.add(fingerprint)
+        papers_payload = [
+            {
+                "slug": paper["slug"],
+                "title": paper["title"],
+                "title_zh": paper["title_zh"],
+                "arxiv_id": paper.get("arxiv_id") or "",
+                "html_path": paper.get("html_path") or paper.get("md_path"),
+            }
+            for paper in sorted(unique.values(), key=lambda item: item["slug"])
+        ]
+        groups.append(
+            {
+                "reason": reason,
+                "value": value,
+                "slugs": list(slugs),
+                "papers": papers_payload,
+            }
+        )
+    return sorted(groups, key=lambda item: (item["reason"], item["value"]))
+
+
 def paper_quality_issue(paper: dict[str, Any], today: str) -> dict[str, Any]:
     missing_fields: list[str] = []
     weak_fields: list[str] = []
@@ -949,6 +1005,7 @@ def build_quality_report(papers: list[dict[str, Any]]) -> dict[str, Any]:
     issues = [paper_quality_issue(paper, today) for paper in papers]
     taxonomy_drift = taxonomy_drift_items(papers)
     alias_suggestions = label_alias_suggestions(papers)
+    duplicate_groups = duplicate_report_groups(papers)
     papers_with_issues = [
         issue
         for issue in issues
@@ -966,6 +1023,7 @@ def build_quality_report(papers: list[dict[str, Any]]) -> dict[str, Any]:
         "due_review": [issue["slug"] for issue in issues if issue["due_review"]],
         "no_code_observation": [paper["slug"] for paper in papers if not paper.get("has_code")],
         "taxonomy_drift": sorted({item["slug"] for item in taxonomy_drift}),
+        "duplicate_reports": sorted({slug for group in duplicate_groups for slug in group["slugs"]}),
         "high_importance": [
             paper["slug"]
             for paper in sorted(papers, key=lambda p: (-(p.get("importance") or 0), p["title"]))
@@ -987,6 +1045,7 @@ def build_quality_report(papers: list[dict[str, Any]]) -> dict[str, Any]:
         "issues": papers_with_issues,
         "taxonomy_drift": taxonomy_drift,
         "label_alias_suggestions": alias_suggestions,
+        "duplicate_reports": duplicate_groups,
     }
 
 
@@ -1135,6 +1194,7 @@ def build_manifest(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
     publish_checks = {
         "metadata_complete": quality_queues.get("missing_required_metadata", 0) == 0,
         "taxonomy_clean": quality_queues.get("taxonomy_drift", 0) == 0 and not quality["label_alias_suggestions"],
+        "no_duplicate_reports": quality_queues.get("duplicate_reports", 0) == 0,
         "has_review_plan": review_queues.get("needs_plan", 0) == 0,
         "has_generated_pages": all((report_dir / page["href"]).exists() for page in pages if page["href"] != "release.html"),
     }
@@ -3613,11 +3673,28 @@ def render_alias_suggestion_row(item: dict[str, Any]) -> str:
     )
 
 
+def render_duplicate_report_row(item: dict[str, Any]) -> str:
+    paper_links = []
+    for paper in item.get("papers", []):
+        title = paper.get("title_zh") or paper.get("title") or paper.get("slug")
+        href = str(paper.get("html_path") or f"{paper.get('slug')}.html")
+        paper_links.append(f'<a href="{html.escape(href)}">{html.escape(str(title))}</a>')
+    return (
+        "<tr>"
+        f"<td>{html.escape(str(item.get('reason') or ''))}</td>"
+        f"<td>{html.escape(str(item.get('value') or ''))}</td>"
+        f"<td>{', '.join(paper_links)}</td>"
+        f"<td>{html.escape(', '.join(str(slug) for slug in item.get('slugs', [])))}</td>"
+        "</tr>"
+    )
+
+
 def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
     quality = build_quality_report(papers)
     issue_rows = "".join(render_quality_issue_row(issue) for issue in quality["issues"])
     drift_rows = "".join(render_quality_drift_row(item) for item in quality["taxonomy_drift"])
     alias_rows = "".join(render_alias_suggestion_row(item) for item in quality["label_alias_suggestions"])
+    duplicate_report_rows = "".join(render_duplicate_report_row(item) for item in quality["duplicate_reports"])
     duplicate_inbox = [item for item in inbox_items if item.get("duplicate")]
     duplicate_rows = "".join(render_quality_inbox_row(item) for item in duplicate_inbox)
 
@@ -3645,6 +3722,12 @@ def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
         if alias_rows
         else '<div class="empty">暂无标签归一化建议。</div>'
     )
+    duplicate_report_table = (
+        '<table class="data-table"><thead><tr><th>重复依据</th><th>匹配值</th><th>论文</th><th>Slug</th></tr></thead>'
+        f"<tbody>{duplicate_report_rows}</tbody></table>"
+        if duplicate_report_rows
+        else '<div class="empty">暂无库内重复报告。</div>'
+    )
     queue_rows = "".join(
         "<tr>"
         f"<td>{html.escape(name)}</td>"
@@ -3663,6 +3746,7 @@ def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
         ("复习计划", quality["coverage"]["review_plan"], "next_review"),
         ("漂移项", str(len(quality["taxonomy_drift"])), "taxonomy drift"),
         ("别名建议", str(len(quality["label_alias_suggestions"])), "label aliases"),
+        ("库内重复", str(len(quality["duplicate_reports"])), "duplicate reports"),
         ("重复候选", str(len(duplicate_inbox)), "inbox"),
     ]
     metric_html = "".join(
@@ -3705,6 +3789,10 @@ def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
   <section>
     <h2 class="section-title">标签归一化建议</h2>
     <div class="table-wrap">{alias_table}</div>
+  </section>
+  <section>
+    <h2 class="section-title">库内重复报告</h2>
+    <div class="table-wrap">{duplicate_report_table}</div>
   </section>
   <section>
     <h2 class="section-title">候选去重</h2>
@@ -3802,6 +3890,7 @@ def render_release(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
       <section class="metric-card"><span>质量分</span><strong>{manifest["quality_score"]}</strong><span>元数据和复习综合分</span></section>
       <section class="metric-card"><span>分类覆盖</span><strong>{html.escape(str(manifest["coverage"]["taxonomy"]))}</strong><span>必要 taxonomy 字段</span></section>
       <section class="metric-card"><span>代码覆盖</span><strong>{html.escape(str(manifest["coverage"]["code_observation"]))}</strong><span>代码观察或线索</span></section>
+      <section class="metric-card"><span>库内重复</span><strong>{manifest["queue_sizes"]["quality"].get("duplicate_reports", 0)}</strong><span>重复报告组相关论文</span></section>
     </div>
     <div class="table-wrap"><table class="data-table"><thead><tr><th>检查项</th><th>状态</th></tr></thead><tbody>{check_rows}</tbody></table></div>
   </section>

@@ -246,6 +246,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("taxonomy_drift", quality)
             self.assertEqual(quality["taxonomy_drift"], [])
             self.assertEqual(quality["queues"]["taxonomy_drift"], [])
+            self.assertEqual(quality["duplicate_reports"], [])
             self.assertEqual(quality["label_alias_suggestions"][0]["canonical"], "KV Cache")
             self.assertEqual(quality["label_alias_suggestions"][0]["aliases"], {"KV-cache": "KV Cache"})
             quality_html = (report_dir / "quality.html").read_text(encoding="utf-8")
@@ -266,6 +267,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(stats["controls"]["review_stage"], ["fresh", "due", "reviewed"])
             manifest = json.loads((report_dir / "manifest.json").read_text(encoding="utf-8"))
             self.assertEqual(manifest["count"], 2)
+            self.assertTrue(manifest["publish_checks"]["no_duplicate_reports"])
             self.assertIn("release.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("manifest.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("python3 scripts/check_quality.py docs", manifest["commands"])
@@ -418,6 +420,35 @@ class WikiWorkflowTest(unittest.TestCase):
             self.run_cmd("scripts/validate_wiki.py", str(report_dir))
             review_after = json.loads((report_dir / "review.json").read_text(encoding="utf-8"))
             self.assertEqual(review_after["queues"]["needs_plan"], [])
+
+    def test_quality_detects_duplicate_reports(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_name:
+            report_dir = self.make_report_dir(Path(tmp_name))
+            duplicate = REPORT_A.replace("2601.00001-alpha-paper", "2601.00001-alpha-paper-copy")
+            duplicate = duplicate.replace("Alpha 论文", "Alpha 论文副本", 1)
+            (report_dir / "2601.00001-alpha-paper-copy.md").write_text(duplicate, encoding="utf-8")
+            (report_dir / "2601.00001-alpha-paper-copy.html").write_text(
+                "<!doctype html><title>duplicate</title><h1>duplicate</h1>",
+                encoding="utf-8",
+            )
+
+            self.run_cmd("scripts/build_wiki.py", str(report_dir))
+            self.run_cmd("scripts/validate_wiki.py", str(report_dir))
+            quality = json.loads((report_dir / "quality.json").read_text(encoding="utf-8"))
+            self.assertEqual(quality["duplicate_reports"][0]["reason"], "arxiv_id")
+            self.assertEqual(
+                quality["duplicate_reports"][0]["slugs"],
+                ["2601.00001-alpha-paper", "2601.00001-alpha-paper-copy"],
+            )
+            self.assertEqual(
+                quality["queues"]["duplicate_reports"],
+                ["2601.00001-alpha-paper", "2601.00001-alpha-paper-copy"],
+            )
+            manifest = json.loads((report_dir / "manifest.json").read_text(encoding="utf-8"))
+            self.assertFalse(manifest["publish_checks"]["no_duplicate_reports"])
+            quality_html = (report_dir / "quality.html").read_text(encoding="utf-8")
+            self.assertIn("库内重复报告", quality_html)
+            self.assertIn("2601.00001-alpha-paper-copy", quality_html)
 
     def test_invalid_taxonomy_config_fails_validation(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_name:

@@ -71,6 +71,7 @@
       "due_review": 0,
       "no_code_observation": 0,
       "taxonomy_drift": 0,
+      "duplicate_reports": 0,
       "high_importance": 2
     },
     "review": {
