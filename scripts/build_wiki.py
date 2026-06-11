@@ -309,6 +309,29 @@ def public_paper(paper: dict[str, Any]) -> dict[str, Any]:
     return {key: value for key, value in paper.items() if not key.startswith("_")}
 
 
+def slugify_label(value: str) -> str:
+    slug = re.sub(r"[^a-z0-9]+", "-", value.lower())
+    slug = re.sub(r"-+", "-", slug).strip("-")
+    return slug or "untitled"
+
+
+def paper_href(paper: dict[str, Any], prefix: str = "") -> str:
+    return prefix + (paper["html_path"] or paper["md_path"])
+
+
+def role_rank(role: str) -> int:
+    order = {
+        "foundation": 0,
+        "baseline": 1,
+        "main": 2,
+        "system": 3,
+        "variant": 4,
+        "followup": 5,
+        "survey": 6,
+    }
+    return order.get(role, 20)
+
+
 def build_paper(md_path: Path, report_dir: Path) -> dict[str, Any]:
     text = md_path.read_text(encoding="utf-8")
     meta, body = strip_frontmatter(text)
@@ -524,6 +547,15 @@ def page_shell(title: str, body: str, data: dict[str, Any] | None = None) -> str
     .line-card h2 {{ margin: 0 0 8px; font-size: 18px; line-height: 1.25; }}
     .line-card ul {{ margin: 10px 0 0; padding-left: 18px; }}
     .taxonomy-kicker {{ display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 10px; }}
+    .results-bar {{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin: 0 0 16px;
+      color: var(--muted);
+    }}
+    .results-actions {{ display: flex; gap: 10px; flex-wrap: wrap; }}
     .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; }}
     .card {{
       background: var(--panel);
@@ -536,6 +568,24 @@ def page_shell(title: str, body: str, data: dict[str, Any] | None = None) -> str
       flex-direction: column;
     }}
     .card h2 {{ margin: 0 0 8px; font-size: 20px; line-height: 1.25; letter-spacing: 0; }}
+    .line-detail {{ display: grid; gap: 18px; }}
+    .role-section {{
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }}
+    .role-section h2 {{ margin: 0 0 12px; font-size: 20px; }}
+    .paper-row {{
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 14px;
+      padding: 12px 0;
+      border-top: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+    }}
+    .paper-row:first-of-type {{ border-top: 0; }}
+    .paper-row h3 {{ margin: 0 0 4px; font-size: 17px; line-height: 1.3; }}
+    .paper-row .chips {{ margin-top: 8px; padding-top: 0; }}
     .meta {{ color: var(--muted); font-size: 13px; }}
     .essence {{
       margin: 12px 0 0;
@@ -596,6 +646,8 @@ def page_shell(title: str, body: str, data: dict[str, Any] | None = None) -> str
     @media (max-width: 760px) {{
       .controls {{ grid-template-columns: 1fr; }}
       .controls input[type="search"] {{ grid-column: auto; min-width: 0; }}
+      .results-bar {{ align-items: flex-start; flex-direction: column; }}
+      .paper-row {{ grid-template-columns: 1fr; }}
       header {{ padding-top: 28px; }}
     }}
   </style>
@@ -625,17 +677,18 @@ def render_line_overview(papers: list[dict[str, Any]]) -> str:
     for line in sorted(assigned, key=lambda name: (-len(assigned[name]), name.lower())):
         items = sorted(
             assigned[line],
-            key=lambda paper: (paper.get("line_role") != "foundation", -(paper.get("year") or 0)),
+            key=lambda paper: (role_rank(paper.get("line_role", "")), -(paper.get("year") or 0)),
         )
+        line_href = f"lines/{slugify_label(line)}.html"
         paper_items = "".join(
-            f'<li><a href="{html.escape(p["html_path"] or p["md_path"])}">{html.escape(p["title_zh"] or p["title"])}</a>'
+            f'<li><a href="{html.escape(paper_href(p))}">{html.escape(p["title_zh"] or p["title"])}</a>'
             f' <span class="meta">{html.escape(str(p.get("line_role") or p.get("year") or ""))}</span></li>'
             for p in items[:6]
         )
-        roles = sorted({p.get("line_role") for p in items if p.get("line_role")})
+        roles = sorted({p.get("line_role") for p in items if p.get("line_role")}, key=role_rank)
         role_html = "".join(f'<span class="flag">{html.escape(role)}</span>' for role in roles)
         cards.append(
-            f'<section class="line-card"><h2>{html.escape(line)} <span class="meta">{len(items)}</span></h2>'
+            f'<section class="line-card"><h2><a href="{html.escape(line_href)}">{html.escape(line)}</a> <span class="meta">{len(items)}</span></h2>'
             f'<div class="card-flags">{role_html}</div><ul>{paper_items}</ul></section>'
         )
 
@@ -680,6 +733,7 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <span class="stat">研究线 {len(taxonomy["research_lines"])}</span>
     <span class="stat">分类 {len(data["tags"])}</span>
     <span class="stat">最近更新 {html.escape(data["generated_at"])}</span>
+    <a class="stat" href="lines/index.html">研究线</a>
     <a class="stat" href="tags.html">分类总览</a>
     <a class="stat" href="papers.json">JSON 索引</a>
   </div>
@@ -698,15 +752,23 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <select id="importance"><option value="">重要性</option><option value="5">5 星</option><option value="4">4 星及以上</option><option value="3">3 星及以上</option></select>
     <select id="reviewStage"><option value="">复习阶段</option>{render_topic_options(taxonomy["review_stages"])}</select>
     <select id="review"><option value="">复习时间</option><option value="due">待复习</option><option value="none">未设置复习</option></select>
+    <select id="sort"><option value="default">默认排序</option><option value="importance">重要性优先</option><option value="updated">最近更新</option><option value="year">年份新到旧</option><option value="reading">阅读时间短到长</option><option value="title">标题 A-Z</option></select>
   </div>
 </div>
 <main class="shell">
   {line_overview}
+  <div class="results-bar">
+    <strong id="resultCount">显示 {len(papers)} / {len(papers)} 篇</strong>
+    <div class="results-actions">
+      <button id="resetFilters" class="button" type="button">重置筛选</button>
+    </div>
+  </div>
   <div id="cards" class="grid">{cards if papers else empty}</div>
 </main>
 <script>
 const papers = window.PAPER_WIKI.papers;
 const cards = document.querySelector("#cards");
+const resultCount = document.querySelector("#resultCount");
 const search = document.querySelector("#search");
 const domain = document.querySelector("#domain");
 const line = document.querySelector("#line");
@@ -719,6 +781,8 @@ const code = document.querySelector("#code");
 const importance = document.querySelector("#importance");
 const reviewStage = document.querySelector("#reviewStage");
 const review = document.querySelector("#review");
+const sort = document.querySelector("#sort");
+const resetFilters = document.querySelector("#resetFilters");
 const searchTextBySlug = new Map((window.PAPER_WIKI.search_index || []).map(item => [item.slug, item.search_text || ""]));
 
 function esc(value) {{
@@ -754,6 +818,21 @@ function card(p) {{
   </article>`;
 }}
 
+function sortPapers(items) {{
+  const mode = sort.value;
+  const ranked = [...items];
+  const byTitle = p => String(p.title_en || p.title || p.slug || "");
+  ranked.sort((a, b) => {{
+    if (mode === "importance") return Number(b.importance || 0) - Number(a.importance || 0) || Number(b.year || 0) - Number(a.year || 0) || byTitle(a).localeCompare(byTitle(b));
+    if (mode === "updated") return String(b.updated_at || "").localeCompare(String(a.updated_at || "")) || byTitle(a).localeCompare(byTitle(b));
+    if (mode === "year") return Number(b.year || 0) - Number(a.year || 0) || byTitle(a).localeCompare(byTitle(b));
+    if (mode === "reading") return Number(a.reading_time_min || 0) - Number(b.reading_time_min || 0) || byTitle(a).localeCompare(byTitle(b));
+    if (mode === "title") return byTitle(a).localeCompare(byTitle(b));
+    return Number(b.year || 0) - Number(a.year || 0) || String(b.updated_at || "").localeCompare(String(a.updated_at || ""));
+  }});
+  return ranked;
+}}
+
 function render() {{
   const q = search.value.trim().toLowerCase();
   const domainValue = domain.value;
@@ -784,10 +863,19 @@ function render() {{
       (reviewValue === "none" ? !p.next_review : Boolean(p.next_review && p.next_review <= today));
     return (!q || text.includes(q)) && domainHit && lineHit && roleHit && topicHit && methodHit && statusHit && stageHit && codeHit && importanceHit && reviewStageHit && reviewHit;
   }});
-  cards.innerHTML = filtered.length ? filtered.map(card).join("") : `<div class="empty">没有匹配的论文。</div>`;
+  const sorted = sortPapers(filtered);
+  resultCount.textContent = `显示 ${{sorted.length}} / ${{papers.length}} 篇`;
+  cards.innerHTML = sorted.length ? sorted.map(card).join("") : `<div class="empty">没有匹配的论文。</div>`;
 }}
 
-[search, domain, line, role, topic, method, status, stage, code, importance, reviewStage, review].forEach(el => el.addEventListener("input", render));
+const filterControls = [search, domain, line, role, topic, method, status, stage, code, importance, reviewStage, review, sort];
+filterControls.forEach(el => el.addEventListener("input", render));
+resetFilters.addEventListener("click", () => {{
+  filterControls.forEach(el => el.value = "");
+  sort.value = "default";
+  render();
+}});
+render();
 </script>
 """
     (report_dir / "index.html").write_text(page_shell("我的论文知识库", body, data), encoding="utf-8")
@@ -839,6 +927,103 @@ def render_card(paper: dict[str, Any]) -> str:
   <div class="links">{''.join(links)}</div>
   <div class="chips">{tags}</div>
 </article>"""
+
+
+def render_line_pages(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    lines_dir = report_dir / "lines"
+    lines_dir.mkdir(parents=True, exist_ok=True)
+
+    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for paper in papers:
+        line = str(paper.get("research_line") or "").strip()
+        if line and line != "Unassigned":
+            grouped[line].append(paper)
+
+    line_cards = []
+    for line in sorted(grouped, key=lambda name: (-len(grouped[name]), name.lower())):
+        items = sorted(
+            grouped[line],
+            key=lambda paper: (role_rank(paper.get("line_role", "")), -(paper.get("year") or 0), paper["title"]),
+        )
+        filename = f"{slugify_label(line)}.html"
+        roles = sorted({p.get("line_role") for p in items if p.get("line_role")}, key=role_rank)
+        topics = Counter(topic for paper in items for topic in paper.get("topics", []))
+        topic_html = "".join(
+            f'<span class="chip">{html.escape(topic)} {count}</span>'
+            for topic, count in topics.most_common(6)
+        )
+        line_cards.append(
+            f'<section class="line-card"><h2><a href="{html.escape(filename)}">{html.escape(line)}</a> '
+            f'<span class="meta">{len(items)}</span></h2>'
+            f'<div class="card-flags">{"".join(f"<span class=\"flag\">{html.escape(role)}</span>" for role in roles)}</div>'
+            f'<div class="chips">{topic_html}</div></section>'
+        )
+
+        role_groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
+        for paper in items:
+            role_groups[paper.get("line_role") or "unclassified"].append(paper)
+
+        sections = []
+        for role in sorted(role_groups, key=role_rank):
+            rows = []
+            for paper in sorted(role_groups[role], key=lambda item: (-(item.get("importance") or 0), -(item.get("year") or 0), item["title"])):
+                chips = "".join(
+                    f'<span class="chip">{html.escape(value)}</span>'
+                    for value in [*paper.get("topics", [])[:3], *paper.get("methods", [])[:3]]
+                )
+                flags = [
+                    f'{paper.get("year")}' if paper.get("year") else "",
+                    f'重要性 {paper.get("importance")}' if paper.get("importance") else "",
+                    f'状态 {paper.get("status")}' if paper.get("status") else "",
+                    "有代码" if paper.get("has_code") else "",
+                ]
+                flag_html = "".join(f'<span class="flag">{html.escape(flag)}</span>' for flag in flags if flag)
+                rows.append(
+                    f'<article class="paper-row"><div><h3><a href="{html.escape(paper_href(paper, "../"))}">'
+                    f'{html.escape(paper["title_zh"] or paper["title"])}</a></h3>'
+                    f'<div class="meta">{html.escape(paper.get("title_en") or "")}</div>'
+                    f'<div class="chips">{chips}</div></div><div class="card-flags">{flag_html}</div></article>'
+                )
+            sections.append(
+                f'<section class="role-section"><h2>{html.escape(role)} <span class="meta">{len(role_groups[role])}</span></h2>'
+                f'{"".join(rows)}</section>'
+            )
+
+        body = f"""
+<header class="shell">
+  <div class="eyebrow">Research Line</div>
+  <h1>{html.escape(line)}</h1>
+  <p class="lead">按论文在该研究线中的角色组织：foundation、baseline、main、system、variant、followup 等角色来自 frontmatter，可按你的分类习惯自由扩展。</p>
+  <div class="stats">
+    <a class="stat" href="../index.html">返回首页</a>
+    <a class="stat" href="index.html">全部研究线</a>
+    <span class="stat">论文 {len(items)}</span>
+    <span class="stat">角色 {len(role_groups)}</span>
+  </div>
+</header>
+<main class="shell">
+  <div class="line-detail">{''.join(sections)}</div>
+</main>
+"""
+        (lines_dir / filename).write_text(page_shell(line, body), encoding="utf-8")
+
+    index_body = f"""
+<header class="shell">
+  <div class="eyebrow">AutoPaperReader Wiki</div>
+  <h1>研究线</h1>
+  <p class="lead">研究线把大量论文组织成脉络，而不是孤立标签。每条线都可以进入详情页，按论文角色和重要性浏览。</p>
+  <div class="stats">
+    <a class="stat" href="../index.html">返回首页</a>
+    <a class="stat" href="../tags.html">分类总览</a>
+    <span class="stat">研究线 {len(grouped)}</span>
+    <span class="stat">论文 {sum(len(items) for items in grouped.values())}</span>
+  </div>
+</header>
+<main class="shell">
+  <div class="line-grid">{''.join(line_cards) if line_cards else '<div class="empty">还没有研究线。</div>'}</div>
+</main>
+"""
+    (lines_dir / "index.html").write_text(page_shell("研究线", index_body), encoding="utf-8")
 
 
 def render_tags(report_dir: Path, papers: list[dict[str, Any]]) -> None:
@@ -914,6 +1099,7 @@ def main() -> None:
     write_json(report_dir, papers)
     write_search_index(report_dir, papers)
     render_index(report_dir, papers)
+    render_line_pages(report_dir, papers)
     render_tags(report_dir, papers)
     rel = report_dir.relative_to(ROOT) if report_dir.is_relative_to(ROOT) else report_dir
     print(f"Built wiki for {len(papers)} papers in {rel}")

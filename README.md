@@ -4,7 +4,7 @@ AutoPaperReader 是一个自动化「找论文 -> 读论文 -> 写报告」的 a
 
 它的目标是把一篇论文从检索、下载源码、分析论文、分析配套代码，到最终输出结构化中文阅读报告的流程串起来，并把产物（包括 Markdown 报告和 HTML 展示网页）统一组织到固定目录中。
 
-项目还会把这些逐篇报告汇总成一个轻量动态 wiki：`docs/index.html` 提供全文搜索、分类/代码/重要性/复习筛选和论文卡片，`docs/tags.html` 提供分类总览，`docs/papers.json` 提供机器可读索引，`docs/search_index.json` 提供正文检索索引。
+项目还会把这些逐篇报告汇总成一个轻量动态 wiki：`docs/index.html` 提供全文搜索、研究线、分类/状态/代码/重要性/复习筛选、排序和论文卡片；`docs/lines/index.html` 提供研究线入口；`docs/tags.html` 提供分类总览；`docs/papers.json` 提供机器可读索引；`docs/search_index.json` 提供正文检索索引。
 
 **注：建议开启 Agent Teams 特性 `export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`**
 
@@ -30,9 +30,13 @@ paper_reader/
 │       └── code-analyst.md
 ├── docs/
 │   ├── index.html
+│   ├── lines/
+│   │   └── index.html
 │   ├── tags.html
 │   ├── papers.json
 │   ├── search_index.json
+│   ├── guides/
+│   │   └── taxonomy.md
 │   └── .gitkeep
 ├── scripts/
 │   ├── build_wiki.py
@@ -46,7 +50,7 @@ paper_reader/
 - `CLAUDE.md` 是主线 agent 的工作流说明
 - `.claude/agents/` 存放子 agent 的执行规范
 - `sources/` 用于存放单篇论文的源码与代码仓库
-- `docs/` 用于存放论文阅读报告
+- `docs/` 用于存放论文阅读报告和静态 wiki
 - `scripts/build_wiki.py` 用于扫描报告并生成 wiki 汇总页
 - `scripts/render_report_html.py` 是稳定 HTML 渲染兜底脚本，用于修复公式裸露、图片破图等展示问题
 
@@ -83,6 +87,8 @@ paper_reader/
 - `docs/<slug>.md`：阅读报告
 - `docs/<slug>.html`：单篇阅读报告 HTML
 - `docs/index.html`：wiki 首页
+- `docs/lines/index.html`：研究线总览
+- `docs/lines/<research-line>.html`：单条研究线详情页
 - `docs/tags.html`：分类总览
 - `docs/papers.json`：论文索引数据
 - `docs/search_index.json`：全文搜索索引
@@ -101,17 +107,30 @@ arxiv_id: "1706.03762"
 year: 2017
 authors:
   - Vaswani et al.
+domains:
+  - LLM Systems
+tracks:
+  - Attention Kernels
+problems:
+  - Efficient Sequence Modeling
 topics:
   - Transformer
 methods:
   - self-attention
+research_line: Transformer Architecture
+line_role: foundation
 status: read
+reading_stage: deep_read
 importance: 5
+confidence: 5
+reproducibility: 4
 has_code: true
 ---
 ```
 
 如果报告缺少 frontmatter，`scripts/build_wiki.py` 会从标题、正文、arxiv id 和关键词中做兜底推断。
+
+分类建议见 [`docs/guides/taxonomy.md`](docs/guides/taxonomy.md)。核心原则是：`domains/tracks/problems` 管结构层级，`topics/methods` 管交叉筛选，`research_line/line_role` 管研究脉络，`status/reading_stage/review_stage` 管个人阅读状态。
 
 手动刷新 wiki：
 
