@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T05:43:09",
+  "generated_at": "2026-06-12T05:51:59",
   "count": 5,
   "inbox_count": 0,
   "readiness_score": "100%",
@@ -250,6 +250,7 @@
     }
   ],
   "bootstrap_files": [
+    "command.json",
     "onboarding.json",
     "catalog.json",
     "manifest.json",

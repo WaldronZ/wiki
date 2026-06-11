@@ -99,6 +99,7 @@ DEFAULT_INBOX_SCHEMA: dict[str, Any] = {
 
 REQUIRED_PAGES = {
     "index.html",
+    "command.html",
     "library.html",
     "board.html",
     "workflow.html",
@@ -141,6 +142,8 @@ REQUIRED_PAGES = {
     "review.json",
     "freshness.json",
     "taxonomy_actions.json",
+    "actions.json",
+    "command.json",
     "workflow.json",
     "status.json",
     "pivot.json",
@@ -570,6 +573,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     quality_path = report_dir / "quality.json"
     review_path = report_dir / "review.json"
     taxonomy_actions_path = report_dir / "taxonomy_actions.json"
+    command_path = report_dir / "command.json"
     workflow_path = report_dir / "workflow.json"
     status_path = report_dir / "status.json"
     pivot_path = report_dir / "pivot.json"
@@ -603,6 +607,9 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         return
     if not taxonomy_actions_path.exists():
         errors.append("missing taxonomy_actions.json")
+        return
+    if not command_path.exists():
+        errors.append("missing command.json")
         return
     if not workflow_path.exists():
         errors.append("missing workflow.json")
@@ -667,6 +674,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     quality_data = json.loads(quality_path.read_text(encoding="utf-8"))
     review_data = json.loads(review_path.read_text(encoding="utf-8"))
     taxonomy_actions_data = json.loads(taxonomy_actions_path.read_text(encoding="utf-8"))
+    command_data = json.loads(command_path.read_text(encoding="utf-8"))
     workflow_data = json.loads(workflow_path.read_text(encoding="utf-8"))
     status_data = json.loads(status_path.read_text(encoding="utf-8"))
     pivot_data = json.loads(pivot_path.read_text(encoding="utf-8"))
@@ -810,6 +818,34 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     missing_taxonomy_actions = sorted(required_taxonomy_actions - set(taxonomy_actions_data))
     if missing_taxonomy_actions:
         errors.append(f"taxonomy_actions.json missing keys: {', '.join(missing_taxonomy_actions)}")
+
+    if command_data.get("count") != len(report_slugs):
+        errors.append(f"command.json count {command_data.get('count')} != markdown report count {len(report_slugs)}")
+    required_command = {"lane_count", "lanes", "summary", "recommended_next", "links"}
+    missing_command = sorted(required_command - set(command_data))
+    if missing_command:
+        errors.append(f"command.json missing keys: {', '.join(missing_command)}")
+    command_lanes = command_data.get("lanes")
+    if not isinstance(command_lanes, list):
+        errors.append("command.json lanes must be a list")
+        command_lanes = []
+    elif command_data.get("lane_count") != len(command_lanes):
+        errors.append("command.json lane_count must match lanes length")
+    for index, lane in enumerate(command_lanes):
+        if not isinstance(lane, dict):
+            errors.append(f"command.json lanes[{index}] must be an object")
+            continue
+        for key in ("id", "title", "primary_href", "pages", "data_files", "commands", "metrics", "next_actions"):
+            if key not in lane:
+                errors.append(f"command.json lanes[{index}] missing {key}")
+        if not isinstance(lane.get("pages"), list):
+            errors.append(f"command.json lanes[{index}].pages must be a list")
+        if not isinstance(lane.get("data_files"), list):
+            errors.append(f"command.json lanes[{index}].data_files must be a list")
+        if not isinstance(lane.get("commands"), list):
+            errors.append(f"command.json lanes[{index}].commands must be a list")
+    if not isinstance(command_data.get("recommended_next"), list):
+        errors.append("command.json recommended_next must be a list")
 
     if workflow_data.get("count") != len(report_slugs):
         errors.append(f"workflow.json count {workflow_data.get('count')} != markdown report count {len(report_slugs)}")

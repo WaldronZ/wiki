@@ -38,6 +38,7 @@ function htmlFiles() {
     "release.html",
     "snapshot.html",
     "actions.html",
+    "command.html",
     "collections.html",
     "balance.html",
     "coverage.html",

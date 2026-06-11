@@ -38,6 +38,7 @@ GENERATED_FIXED_PATHS = (
     "freshness.json",
     "taxonomy_actions.json",
     "actions.json",
+    "command.json",
     "workflow.json",
     "status.json",
     "pivot.json",
@@ -77,6 +78,7 @@ GENERATED_FIXED_PATHS = (
     "dashboard.html",
     "release.html",
     "actions.html",
+    "command.html",
     "snapshot.html",
     "collections.html",
     "balance.html",
@@ -3379,6 +3381,7 @@ DATA_CONSUMER_HINTS = {
     "freshness.json": ["freshness", "maintenance"],
     "taxonomy_actions.json": ["taxonomy", "project-management", "writeback"],
     "actions.json": ["tasks", "project-management", "exports"],
+    "command.json": ["command-center", "desktop", "navigation", "ops"],
     "workflow.json": ["workflow", "desktop", "filters"],
     "status.json": ["workflow", "runtime-selector", "desktop"],
     "pivot.json": ["analytics", "classification", "desktop"],
@@ -3509,7 +3512,7 @@ def build_catalog_payload(report_dir: Path, papers: list[dict[str, Any]], inbox_
         "data_resources": data_resources,
         "contracts": contracts,
         "integration_recipes": integration_recipes,
-        "recommended_bootstrap_files": ["catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json"],
+        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json"],
     }
 
 
@@ -3533,7 +3536,7 @@ def write_catalog_placeholders(report_dir: Path) -> None:
         "data_resources": [],
         "contracts": [],
         "integration_recipes": [],
-        "recommended_bootstrap_files": ["catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json"],
+        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json"],
     }
     (report_dir / "catalog.json").write_text(
         json.dumps(payload, ensure_ascii=False, indent=2),
@@ -3684,7 +3687,7 @@ def build_onboarding_payload(report_dir: Path, papers: list[dict[str, Any]], inb
         "contribution_paths": contribution_paths,
         "command_groups": command_groups,
         "contracts": contract_files_manifest(),
-        "bootstrap_files": ["onboarding.json", "catalog.json", "manifest.json", "papers.json", "intake.json", "routing.json", "quality.json"],
+        "bootstrap_files": ["command.json", "onboarding.json", "catalog.json", "manifest.json", "papers.json", "intake.json", "routing.json", "quality.json"],
         "core_pages": [
             item
             for item in wiki_pages_manifest()
@@ -3712,6 +3715,7 @@ def write_onboarding_json(report_dir: Path, papers: list[dict[str, Any]], inbox_
 def wiki_pages_manifest() -> list[dict[str, str]]:
     return [
         {"title": "首页", "href": "index.html", "kind": "view", "description": "卡片检索、筛选、研究线概览"},
+        {"title": "命令中心", "href": "command.html", "kind": "ops", "description": "按使用场景组织入口、队列、数据和命令"},
         {"title": "论文库表格", "href": "library.html", "kind": "view", "description": "密集筛选、列管理、批量更新"},
         {"title": "管理控制台", "href": "dashboard.html", "kind": "ops", "description": "覆盖率、队列和运营指标"},
         {"title": "发布摘要", "href": "release.html", "kind": "ops", "description": "页面入口、数据文件、质量状态"},
@@ -3761,6 +3765,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "freshness.json", "description": "报告新鲜度、过期分析和研究线维护队列"},
         {"href": "taxonomy_actions.json", "description": "分类长尾、过载和空候选治理任务"},
         {"href": "actions.json", "description": "统一行动队列，汇总质量、复习、分类和 inbox 任务"},
+        {"href": "command.json", "description": "场景化命令中心，组织页面入口、队列、数据和推荐命令"},
         {"href": "workflow.json", "description": "状态工作流配置、分布和漂移审计"},
         {"href": "status.json", "description": "运行时状态选择器、状态字段选项和论文状态快照"},
         {"href": "pivot.json", "description": "分类透视表维度、论文投影和交叉分布"},
@@ -4775,6 +4780,513 @@ def write_actions_json(report_dir: Path, papers: list[dict[str, Any]], inbox_ite
         json.dumps(payload, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
+
+
+def command_recipe_map() -> dict[str, dict[str, Any]]:
+    return {str(recipe["id"]): recipe for recipe in command_recipes_manifest()}
+
+
+def command_lane(
+    lane_id: str,
+    title: str,
+    description: str,
+    primary_href: str,
+    pages: list[str],
+    data: list[str],
+    command_ids: list[str],
+    metrics: list[dict[str, Any]],
+    next_actions: list[str],
+    persona: str,
+) -> dict[str, Any]:
+    recipes = command_recipe_map()
+    page_lookup = {item["href"]: item for item in wiki_pages_manifest()}
+    data_lookup = {item["href"]: item for item in data_files_manifest()}
+    return {
+        "id": lane_id,
+        "title": title,
+        "description": description,
+        "persona": persona,
+        "primary_href": primary_href,
+        "pages": [page_lookup[href] for href in pages if href in page_lookup],
+        "data_files": [data_lookup[href] for href in data if href in data_lookup],
+        "commands": [recipes[recipe_id] for recipe_id in command_ids if recipe_id in recipes],
+        "metrics": metrics,
+        "next_actions": [action for action in next_actions if action],
+    }
+
+
+def build_command_center_payload(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> dict[str, Any]:
+    quality = build_quality_report(papers)
+    review = build_review_plan(papers)
+    freshness = build_freshness_report(papers)
+    actions = build_action_center(papers, inbox_items)
+    workflow = build_workflow_payload(papers)
+    registry = build_registry_report(papers)
+    stats = build_stats_report(papers)
+    manifest = build_manifest(report_dir, papers, inbox_items, finalized=False)
+    release_ready = all(
+        passed
+        for name, passed in manifest["publish_checks"].items()
+        if name not in {"has_generated_pages", "artifacts_present"}
+    )
+    high_actions = int(actions["summary"]["severity"].get("high", 0))
+    medium_actions = int(actions["summary"]["severity"].get("medium", 0))
+    needs_plan = len(review["queues"].get("needs_plan", []))
+    due_review = len(review["queues"].get("due", []))
+    stale_reports = len(freshness["queues"].get("stale", []))
+    inbox_duplicates = sum(1 for item in inbox_items if item.get("duplicate"))
+    active_workflow = next((item for item in workflow["workflows"] if item.get("active")), workflow["workflows"][0] if workflow["workflows"] else {})
+    registry_high = int(registry["summary"].get("high", 0))
+    registry_medium = int(registry["summary"].get("medium", 0))
+
+    lanes = [
+        command_lane(
+            "daily_reading",
+            "Daily Reading",
+            "日常阅读、筛选、复习和状态推进。适合每天打开的主工作区。",
+            "library.html",
+            ["index.html", "library.html", "collections.html", "review.html", "board.html", "status.html"],
+            ["papers.json", "search_index.json", "review.json", "status.json"],
+            ["actions_markdown", "actions_project"],
+            [
+                {"label": "论文", "value": len(papers), "hint": "library size"},
+                {"label": "待复习", "value": due_review, "hint": "due review"},
+                {"label": "缺计划", "value": needs_plan, "hint": "needs next_review"},
+            ],
+            [
+                "打开 library.html 继续密集筛选和批量编辑。",
+                "处理 review.json 中 due 或 needs_plan 的论文。",
+                "用 board.html 把正在读的论文拖到下一状态。",
+            ],
+            "reader",
+        ),
+        command_lane(
+            "paper_intake",
+            "Paper Intake",
+            "批量导入论文链接，先去重、路由，再进入正式阅读队列。",
+            "intake.html",
+            ["intake.html", "routing.html", "inbox.html", "dedupe.html", "library.html"],
+            ["intake.json", "inbox.json", "dedupe.json", "routing.json"],
+            ["apply_inbox_dry_run", "apply_inbox", "build_wiki"],
+            [
+                {"label": "候选", "value": len(inbox_items), "hint": "inbox items"},
+                {"label": "重复", "value": inbox_duplicates, "hint": "candidate duplicates"},
+                {"label": "路由画像", "value": len(stats["taxonomy"]["research_lines"]), "hint": "research lines"},
+            ],
+            [
+                "在 intake.html 粘贴一批新论文链接并导出候选 CSV。",
+                "用 routing.html 给标题/摘要生成初始分类建议。",
+                "写回 inbox.csv 前先执行 dry-run 命令。",
+            ],
+            "curator",
+        ),
+        command_lane(
+            "taxonomy_governance",
+            "Taxonomy Governance",
+            "管理 domain/track/problem/topic/method、研究线 owner、标签定义和分类漂移。",
+            "registry.html",
+            ["registry.html", "facets.html", "taxonomy.html", "balance.html", "coverage.html", "ownership.html"],
+            ["registry.json", "taxonomy_actions.json", "quality.json", "ownership.json"],
+            ["taxonomy_registry_project", "taxonomy_actions_project", "taxonomy_balance_project", "quality_gate"],
+            [
+                {"label": "高风险标签", "value": registry_high, "hint": "registry high"},
+                {"label": "中风险标签", "value": registry_medium, "hint": "registry medium"},
+                {"label": "分类任务", "value": actions["summary"]["groups"].get("taxonomy", 0), "hint": "taxonomy actions"},
+            ],
+            [
+                "从 registry.html 处理 overloaded、deprecated 或 undefined 标签。",
+                "用 facets.html 找长尾和过载分类，导出 project CSV 分派。",
+                "修改 taxonomy.json 后运行 strict validation。",
+            ],
+            "maintainer",
+        ),
+        command_lane(
+            "workflow_status",
+            "Workflow & Status",
+            "维护多套 status_workflows、状态定义和看板列，让个人阅读流与研究实现流共存。",
+            "workflow.html",
+            ["workflow.html", "status.html", "board.html", "library.html", "taxonomy.html"],
+            ["workflow.json", "status.json", "papers.json"],
+            ["apply_status_workflow_dry_run", "apply_status_workflow", "build_wiki", "strict_validate"],
+            [
+                {"label": "Workflow", "value": workflow["workflow_count"], "hint": "named workflows"},
+                {"label": "Active", "value": workflow["active_status_workflow"], "hint": "current default"},
+                {"label": "未配置值", "value": active_workflow.get("unconfigured_total", 0), "hint": "active drift"},
+            ],
+            [
+                "在 status.html 试选 workflow/status 并复制共享视图。",
+                "在 taxonomy.html 设计新 workflow，再用 apply_status_workflow dry-run。",
+                "检查 workflow.json 的 unconfigured 值，决定迁移或保留。",
+            ],
+            "operator",
+        ),
+        command_lane(
+            "research_synthesis",
+            "Research Synthesis",
+            "围绕研究线、年份、相似论文和缺口做综述、路线图与论文比较。",
+            "roadmap.html",
+            ["roadmap.html", "timeline.html", "matrix.html", "pivot.html", "compare.html", "related.html", "gaps.html", "clusters.html"],
+            ["roadmap.json", "compare.json", "pivot.json", "taxonomy_map.json", "clusters.json"],
+            ["actions_markdown"],
+            [
+                {"label": "研究线", "value": len(stats["taxonomy"]["research_lines"]), "hint": "lines"},
+                {"label": "高优先级", "value": len([paper for paper in papers if int(paper.get("importance") or 0) >= 5]), "hint": "importance >= 5"},
+                {"label": "缺口任务", "value": actions["summary"]["groups"].get("freshness", 0), "hint": "freshness/synthesis"},
+            ],
+            [
+                "用 roadmap.html 看每条研究线的阶段覆盖和下一步。",
+                "用 compare.html 对比同一研究线或同一方向的关键论文。",
+                "用 gaps.html 发现下一批阅读或补报告目标。",
+            ],
+            "researcher",
+        ),
+        command_lane(
+            "release_open_source",
+            "Release & Open Source",
+            "发布前检查、贡献者上手、机器数据目录和可复现质量门。",
+            "release.html",
+            ["command.html", "release.html", "snapshot.html", "onboarding.html", "catalog.html", "quality.html", "actions.html"],
+            ["command.json", "manifest.json", "snapshot.json", "catalog.json", "onboarding.json", "actions.json"],
+            ["build_wiki", "strict_validate", "quality_gate"],
+            [
+                {"label": "发布状态", "value": "ready" if release_ready else "needs work", "hint": "quality readiness"},
+                {"label": "质量分", "value": manifest["quality_score"], "hint": "quality score"},
+                {"label": "High action", "value": high_actions, "hint": "blocking work"},
+            ],
+            [
+                "打开 release.html 检查 publish_ready 和 artifact inventory。",
+                "在 onboarding.html 查看贡献路径和本地质量门。",
+                "用 catalog.json / command.json 作为桌面软件或 DMG 封装入口。",
+            ],
+            "contributor",
+        ),
+    ]
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": len(papers),
+        "inbox_count": len(inbox_items),
+        "lane_count": len(lanes),
+        "active_status_workflow": workflow["active_status_workflow"],
+        "quality_score": quality["quality_score"],
+            "publish_ready": release_ready,
+        "summary": {
+            "papers": len(papers),
+            "actions": actions["count"],
+            "high_actions": high_actions,
+            "medium_actions": medium_actions,
+            "due_review": due_review,
+            "needs_review_plan": needs_plan,
+            "stale_reports": stale_reports,
+            "taxonomy_registry_high": registry_high,
+            "taxonomy_registry_medium": registry_medium,
+            "workflow_count": workflow["workflow_count"],
+            "inbox_count": len(inbox_items),
+        },
+        "lanes": lanes,
+        "recommended_next": [
+            {
+                "label": "处理高优先级行动",
+                "href": "actions.html?severity=high",
+                "count": high_actions,
+                "reason": "高优先级队列会阻碍发布或长期维护。",
+            },
+            {
+                "label": "补复习计划",
+                "href": "review.html",
+                "count": needs_plan,
+                "reason": "缺 next_review 的论文会从长期知识库里慢慢失焦。",
+            },
+            {
+                "label": "治理标签注册表",
+                "href": "registry.html?severity=high",
+                "count": registry_high,
+                "reason": "标签定义、alias 和过载桶决定大库检索质量。",
+            },
+            {
+                "label": "发布前质量门",
+                "href": "release.html",
+                "count": 0 if release_ready else 1,
+                "reason": "开源前确认生成物、数据契约和质量门一致。",
+            },
+        ],
+        "links": {
+            "library": "library.html",
+            "actions": "actions.html",
+            "registry": "registry.html",
+            "workflow": "workflow.html",
+            "release": "release.html",
+            "catalog": "catalog.html",
+            "manifest": "manifest.json",
+        },
+    }
+
+
+def write_command_json(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
+    payload = build_command_center_payload(report_dir, papers, inbox_items)
+    (report_dir / "command.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
+def render_command_lane(lane: dict[str, Any]) -> str:
+    metrics = "".join(
+        f'<span class="command-metric"><strong>{html.escape(str(item.get("value", "")))}</strong>'
+        f'<span>{html.escape(str(item.get("label", "")))}</span>'
+        f'<em>{html.escape(str(item.get("hint", "")))}</em></span>'
+        for item in lane.get("metrics", [])
+    )
+    pages = "".join(
+        f'<a class="chip" href="{html.escape(str(page["href"]))}">{html.escape(str(page["title"]))}</a>'
+        for page in lane.get("pages", [])
+    )
+    data_files = "".join(
+        f'<a class="chip" href="{html.escape(str(item["href"]))}">{html.escape(str(item["href"]))}</a>'
+        for item in lane.get("data_files", [])
+    )
+    commands = "".join(
+        f'<button class="button copy-command-lane" type="button" data-command="{html.escape(str(command["command"]), quote=True)}">{html.escape(str(command["label"]))}</button>'
+        for command in lane.get("commands", [])
+    )
+    next_actions = "".join(f'<li>{html.escape(str(action))}</li>' for action in lane.get("next_actions", []))
+    search = " ".join(
+        [
+            str(lane.get("id", "")),
+            str(lane.get("title", "")),
+            str(lane.get("description", "")),
+            str(lane.get("persona", "")),
+            " ".join(str(page.get("title", "")) for page in lane.get("pages", [])),
+            " ".join(str(item.get("href", "")) for item in lane.get("data_files", [])),
+        ]
+    ).lower()
+    lane_commands = "\n".join(str(command.get("command") or "") for command in lane.get("commands", []) if command.get("command"))
+    return f"""
+<article class="command-lane" data-persona="{html.escape(str(lane.get("persona") or ""), quote=True)}" data-search="{html.escape(search, quote=True)}">
+  <div class="command-lane-head">
+    <div>
+      <span class="flag">{html.escape(str(lane.get("persona") or ""))}</span>
+      <h2>{html.escape(str(lane.get("title") or ""))}</h2>
+      <p>{html.escape(str(lane.get("description") or ""))}</p>
+    </div>
+    <a class="button primary" href="{html.escape(str(lane.get("primary_href") or "index.html"))}">进入</a>
+  </div>
+  <div class="command-metrics">{metrics}</div>
+  <div class="command-grid">
+    <section><h3>入口</h3><div class="chips">{pages}</div></section>
+    <section><h3>数据</h3><div class="chips">{data_files}</div></section>
+    <section><h3>下一步</h3><ol>{next_actions}</ol></section>
+    <section><h3>命令</h3><div class="command-stack">{commands}<button class="button copy-command-lane" type="button" data-command="{html.escape(lane_commands, quote=True)}">复制本组</button></div></section>
+  </div>
+</article>"""
+
+
+def render_command(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
+    payload = build_command_center_payload(report_dir, papers, inbox_items)
+    lanes = payload["lanes"]
+    lane_html = "".join(render_command_lane(lane) for lane in lanes)
+    persona_options = "".join(
+        f'<option value="{html.escape(persona, quote=True)}">{html.escape(persona)}</option>'
+        for persona in sorted({str(lane.get("persona") or "") for lane in lanes if lane.get("persona")})
+    )
+    next_rows = "".join(
+        "<tr>"
+        f'<td><a href="{html.escape(str(item["href"]))}">{html.escape(str(item["label"]))}</a></td>'
+        f"<td>{html.escape(str(item['count']))}</td>"
+        f"<td>{html.escape(str(item['reason']))}</td>"
+        "</tr>"
+        for item in payload["recommended_next"]
+    )
+    payload_json = json.dumps(payload, ensure_ascii=False).replace("</", "<\\/")
+    command_css = """
+    .command-toolbar {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) minmax(160px, 220px) auto auto;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .command-toolbar input,
+    .command-toolbar select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--ink);
+      padding: 10px 12px;
+      font: inherit;
+    }
+    .command-lanes {
+      display: grid;
+      gap: 14px;
+    }
+    .command-lane {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 16px;
+    }
+    .command-lane[hidden] { display: none; }
+    .command-lane-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: start;
+    }
+    .command-lane h2 {
+      margin: 6px 0 6px;
+      font-size: 22px;
+      letter-spacing: 0;
+    }
+    .command-lane p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    .command-metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 8px;
+      margin: 14px 0;
+    }
+    .command-metric {
+      display: grid;
+      gap: 2px;
+      min-height: 76px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      background: color-mix(in srgb, var(--panel) 86%, white);
+    }
+    .command-metric strong { font-size: 20px; }
+    .command-metric span { color: var(--ink); font-size: 13px; }
+    .command-metric em { color: var(--muted); font-size: 12px; font-style: normal; }
+    .command-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .command-grid h3 {
+      margin: 0 0 8px;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0;
+      color: var(--muted);
+    }
+    .command-grid ol {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .command-stack {
+      display: grid;
+      gap: 8px;
+    }
+    .command-stack .button {
+      justify-content: start;
+      text-align: left;
+    }
+    @media (max-width: 980px) {
+      .command-toolbar { grid-template-columns: 1fr; }
+      .command-lane-head { flex-direction: column; }
+      .command-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      .command-grid { grid-template-columns: 1fr; }
+    }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Command Center</div>
+  <h1>命令中心</h1>
+  <p class="lead">把论文阅读、批量导入、分类治理、状态工作流、研究综合和开源发布组织成可执行场景。适合功能变多以后作为第一层操作入口。</p>
+  <div class="stats">
+    <a class="stat" href="command.json">Command JSON</a>
+    <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="actions.html">行动中心</a>
+    <a class="stat" href="registry.html">标签注册表</a>
+    <a class="stat" href="release.html">发布摘要</a>
+    <span class="stat">论文 {payload["count"]}</span>
+    <span class="stat">场景 {payload["lane_count"]}</span>
+    <span class="stat">质量分 {payload["quality_score"]}</span>
+  </div>
+</header>
+<main class="shell">
+  <section class="metric-grid">
+    <section class="metric-card"><span>行动队列</span><strong>{payload["summary"]["actions"]}</strong><span>actions.json</span></section>
+    <section class="metric-card"><span>High</span><strong>{payload["summary"]["high_actions"]}</strong><span>优先处理</span></section>
+    <section class="metric-card"><span>待复习</span><strong>{payload["summary"]["due_review"]}</strong><span>review.json</span></section>
+    <section class="metric-card"><span>Workflow</span><strong>{payload["summary"]["workflow_count"]}</strong><span>{html.escape(str(payload["active_status_workflow"]))}</span></section>
+  </section>
+  <section>
+    <h2 class="section-title">推荐下一步</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>行动</th><th>数量</th><th>原因</th></tr></thead><tbody>{next_rows}</tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">场景入口</h2>
+    <div class="command-toolbar">
+      <input id="commandSearch" type="search" placeholder="搜索 reading、intake、taxonomy、release、页面或数据">
+      <select id="commandPersona"><option value="">全部角色</option>{persona_options}</select>
+      <strong id="commandVisible">{len(lanes)} / {len(lanes)} 场景</strong>
+      <button class="button" id="copyCommandBootstrap" type="button">复制接入 JSON</button>
+    </div>
+    <div class="command-lanes" id="commandLanes">{lane_html}</div>
+  </section>
+</main>
+<script>
+const commandPayload = {payload_json};
+const commandSearch = document.querySelector("#commandSearch");
+const commandPersona = document.querySelector("#commandPersona");
+const commandVisible = document.querySelector("#commandVisible");
+const commandLanes = Array.from(document.querySelectorAll(".command-lane"));
+
+function renderCommandLanes() {{
+  const query = (commandSearch.value || "").trim().toLowerCase();
+  const persona = commandPersona.value;
+  let visible = 0;
+  commandLanes.forEach(lane => {{
+    const hit = (!query || lane.dataset.search.includes(query)) && (!persona || lane.dataset.persona === persona);
+    lane.hidden = !hit;
+    if (hit) visible += 1;
+  }});
+  commandVisible.textContent = `${{visible}} / ${{commandLanes.length}} 场景`;
+}}
+
+async function copyCommandText(text, button) {{
+  try {{
+    await navigator.clipboard.writeText(text);
+    const old = button.textContent;
+    button.textContent = "已复制";
+    setTimeout(() => button.textContent = old, 1200);
+  }} catch (error) {{
+    window.prompt("复制内容", text);
+  }}
+}}
+
+document.querySelectorAll(".copy-command-lane").forEach(button => {{
+  button.addEventListener("click", () => copyCommandText(button.dataset.command || "", button));
+}});
+document.querySelector("#copyCommandBootstrap").addEventListener("click", event => {{
+  const bootstrap = {{
+    generated_at: commandPayload.generated_at,
+    entry: "command.html",
+    data: "command.json",
+    lanes: commandPayload.lanes.map(lane => ({{
+      id: lane.id,
+      title: lane.title,
+      primary_href: lane.primary_href,
+      persona: lane.persona,
+      pages: lane.pages.map(page => page.href),
+      data_files: lane.data_files.map(file => file.href),
+    }})),
+  }};
+  copyCommandText(JSON.stringify(bootstrap, null, 2), event.currentTarget);
+}});
+[commandSearch, commandPersona].forEach(control => control.addEventListener("input", renderCommandLanes));
+renderCommandLanes();
+</script>
+"""
+    (report_dir / "command.html").write_text(page_shell("命令中心", body, data=payload, extra_css=command_css), encoding="utf-8")
 
 
 def write_search_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
@@ -17335,6 +17847,7 @@ def build_wiki(report_dir: Path) -> int:
     write_freshness_json(report_dir, papers)
     write_taxonomy_actions_json(report_dir, papers)
     write_actions_json(report_dir, papers, inbox_items)
+    write_command_json(report_dir, papers, inbox_items)
     write_stats_json(report_dir, papers)
     write_workflow_json(report_dir, papers)
     write_status_json(report_dir, papers)
@@ -17374,6 +17887,7 @@ def build_wiki(report_dir: Path) -> int:
     render_freshness(report_dir, papers)
     render_quality(report_dir, papers, inbox_items)
     render_actions(report_dir, papers, inbox_items)
+    render_command(report_dir, papers, inbox_items)
     render_dashboard(report_dir, papers)
     render_collections(report_dir, papers)
     render_balance(report_dir, papers)

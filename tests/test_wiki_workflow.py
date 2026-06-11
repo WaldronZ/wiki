@@ -284,6 +284,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "freshness.html",
                 "dashboard.html",
                 "release.html",
+                "command.html",
                 "snapshot.html",
                 "actions.html",
                 "collections.html",
@@ -305,6 +306,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "freshness.json",
                 "taxonomy_actions.json",
                 "actions.json",
+                "command.json",
                 "workflow.json",
                 "status.json",
                 "pivot.json",
@@ -702,6 +704,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("ownership.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("routing.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("onboarding.json", {item["href"] for item in catalog["data_resources"]})
+            self.assertIn("command.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("status.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("intake.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("dedupe.json", {item["href"] for item in catalog["data_resources"]})
@@ -710,6 +713,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("intake.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("dedupe.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("registry.html", {item["href"] for item in catalog["pages"]})
+            self.assertIn("command.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("roadmap.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("index.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("guides/taxonomy.json", {item["href"] for item in catalog["contracts"]})
@@ -837,6 +841,14 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("taxonomy", actions["summary"]["groups"])
             self.assertTrue(any(item["source"] == "taxonomy_actions.json" for item in actions["actions"]))
             self.assertTrue(any(item["source"] == "review.json" for item in actions["actions"]))
+            command = json.loads((report_dir / "command.json").read_text(encoding="utf-8"))
+            self.assertEqual(command["count"], 2)
+            self.assertEqual(command["lane_count"], 6)
+            self.assertIn("daily_reading", {item["id"] for item in command["lanes"]})
+            self.assertIn("taxonomy_governance", {item["id"] for item in command["lanes"]})
+            release_lane = next(item for item in command["lanes"] if item["id"] == "release_open_source")
+            self.assertIn("command.json", {item["href"] for item in release_lane["data_files"]})
+            self.assertTrue(command["recommended_next"])
 
             snapshot = json.loads((report_dir / "snapshot.json").read_text(encoding="utf-8"))
             self.assertEqual(snapshot["count"], 2)
@@ -930,6 +942,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(manifest["count"], 2)
             self.assertEqual(manifest["controls"]["governance_policy"]["taxonomy_load"]["min_tags"], 5)
             self.assertTrue(manifest["publish_checks"]["no_duplicate_reports"])
+            self.assertIn("command.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("release.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("snapshot.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("workflow.html", {item["href"] for item in manifest["pages"]})
@@ -954,6 +967,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("facets.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("taxonomy_actions.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("actions.json", {item["href"] for item in manifest["data_files"]})
+            self.assertIn("command.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("workflow.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("status.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("pivot.json", {item["href"] for item in manifest["data_files"]})
@@ -978,6 +992,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("guides/taxonomy.schema.json", {item["href"] for item in manifest["contract_files"]})
             artifact_by_href = {item["href"]: item for item in manifest["artifact_inventory"]}
             self.assertEqual(artifact_by_href["index.html"]["status"], "ok")
+            self.assertEqual(artifact_by_href["command.html"]["status"], "ok")
+            self.assertEqual(artifact_by_href["command.json"]["status"], "ok")
             self.assertRegex(artifact_by_href["index.html"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertGreater(artifact_by_href["index.html"]["size_bytes"], 0)
             self.assertEqual(artifact_by_href["guides/report.template.md"]["kind"], "contract")
@@ -1129,6 +1145,14 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("renderActionRows", actions_html)
             self.assertIn("review.json", actions_html)
             self.assertIn("taxonomy_actions.json", actions_html)
+            command_html = (report_dir / "command.html").read_text(encoding="utf-8")
+            self.assertIn("命令中心", command_html)
+            self.assertIn("Command JSON", command_html)
+            self.assertIn("Daily Reading", command_html)
+            self.assertIn("Taxonomy Governance", command_html)
+            self.assertIn('id="commandSearch"', command_html)
+            self.assertIn('id="copyCommandBootstrap"', command_html)
+            self.assertIn("renderCommandLanes", command_html)
             dashboard_html = (report_dir / "dashboard.html").read_text(encoding="utf-8")
             self.assertIn("分类均衡度", dashboard_html)
             self.assertIn("均衡分", dashboard_html)
