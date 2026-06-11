@@ -112,6 +112,7 @@ REQUIRED_PAGES = {
     "routing.html",
     "onboarding.html",
     "catalog.html",
+    "intake.html",
     "inbox.html",
     "quality.html",
     "review.html",
@@ -147,6 +148,7 @@ REQUIRED_PAGES = {
     "onboarding.json",
     "catalog.json",
     "snapshot.json",
+    "intake.json",
     "manifest.json",
     "lines/index.html",
 }
@@ -574,6 +576,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     onboarding_path = report_dir / "onboarding.json"
     catalog_path = report_dir / "catalog.json"
     stats_path = report_dir / "stats.json"
+    intake_path = report_dir / "intake.json"
     inbox_path = report_dir / "inbox.json"
     snapshot_path = report_dir / "snapshot.json"
     manifest_path = report_dir / "manifest.json"
@@ -628,6 +631,9 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     if not stats_path.exists():
         errors.append("missing stats.json")
         return
+    if not intake_path.exists():
+        errors.append("missing intake.json")
+        return
     if not inbox_path.exists():
         errors.append("missing inbox.json")
         return
@@ -655,6 +661,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     onboarding_data = json.loads(onboarding_path.read_text(encoding="utf-8"))
     catalog_data = json.loads(catalog_path.read_text(encoding="utf-8"))
     stats_data = json.loads(stats_path.read_text(encoding="utf-8"))
+    intake_data = json.loads(intake_path.read_text(encoding="utf-8"))
     inbox_data = json.loads(inbox_path.read_text(encoding="utf-8"))
     snapshot_data = json.loads(snapshot_path.read_text(encoding="utf-8"))
     manifest_data = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -1258,6 +1265,52 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     bootstrap_files = onboarding_data.get("bootstrap_files")
     if not isinstance(bootstrap_files, list) or "onboarding.json" not in bootstrap_files:
         errors.append("onboarding.json bootstrap_files must include onboarding.json")
+
+    if intake_data.get("count") != len(report_slugs):
+        errors.append(f"intake.json count {intake_data.get('count')} != markdown report count {len(report_slugs)}")
+    required_intake = {"existing_papers", "inbox_items", "csv_columns", "defaults", "statuses", "patterns", "commands", "links"}
+    missing_intake = sorted(required_intake - set(intake_data))
+    if missing_intake:
+        errors.append(f"intake.json missing keys: {', '.join(missing_intake)}")
+    intake_existing = intake_data.get("existing_papers")
+    if not isinstance(intake_existing, list):
+        errors.append("intake.json existing_papers must be a list")
+        intake_existing = []
+    intake_slugs = {item.get("slug") for item in intake_existing if isinstance(item, dict)}
+    if intake_slugs != report_slugs:
+        errors.append(
+            "intake.json existing_papers slugs do not match markdown reports: "
+            f"missing={sorted(report_slugs - intake_slugs)}, extra={sorted(intake_slugs - report_slugs)}"
+        )
+    for index, item in enumerate(intake_existing):
+        if not isinstance(item, dict):
+            errors.append(f"intake.json existing_papers[{index}] must be an object")
+            continue
+        for key in ("slug", "title", "arxiv_key", "title_keys", "link_keys", "href"):
+            if key not in item:
+                errors.append(f"intake.json existing_papers[{index}] missing {key}")
+        if not isinstance(item.get("title_keys"), list):
+            errors.append(f"intake.json existing_papers[{index}].title_keys must be a list")
+        if not isinstance(item.get("link_keys"), list):
+            errors.append(f"intake.json existing_papers[{index}].link_keys must be a list")
+    intake_items = intake_data.get("inbox_items")
+    if not isinstance(intake_items, list):
+        errors.append("intake.json inbox_items must be a list")
+        intake_items = []
+    inbox_items_payload = inbox_data.get("items")
+    if isinstance(inbox_items_payload, list) and intake_data.get("inbox_count") != len(inbox_items_payload):
+        errors.append("intake.json inbox_count must match inbox.json items length")
+    csv_columns = intake_data.get("csv_columns")
+    if not isinstance(csv_columns, list) or not {"title", "link"}.issubset(set(csv_columns)):
+        errors.append("intake.json csv_columns must include title and link")
+    defaults = intake_data.get("defaults")
+    if not isinstance(defaults, dict) or not {"status", "priority", "added_at"}.issubset(defaults):
+        errors.append("intake.json defaults must include status, priority, and added_at")
+    if not isinstance(intake_data.get("commands"), list) or not any("apply_inbox_items.py" in str(command) for command in intake_data.get("commands", [])):
+        errors.append("intake.json commands must include apply_inbox_items.py")
+    links = intake_data.get("links")
+    if not isinstance(links, dict) or not {"inbox", "routing", "schema"}.issubset(links):
+        errors.append("intake.json links must include inbox, routing, and schema")
 
     if catalog_data.get("count") != len(report_slugs):
         errors.append(f"catalog.json count {catalog_data.get('count')} != markdown report count {len(report_slugs)}")

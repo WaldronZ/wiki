@@ -244,6 +244,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "routing.html",
                 "onboarding.html",
                 "catalog.html",
+                "intake.html",
                 "inbox.html",
                 "quality.html",
                 "review.html",
@@ -282,6 +283,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "routing.json",
                 "onboarding.json",
                 "catalog.json",
+                "intake.json",
                 "snapshot.json",
                 "manifest.json",
                 "lines/index.html",
@@ -341,6 +343,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn('"href": "routing.html"', index_html)
             self.assertIn('"href": "onboarding.html"', index_html)
             self.assertIn('"href": "catalog.html"', index_html)
+            self.assertIn('"href": "intake.html"', index_html)
             self.assertIn('"href": "balance.html"', index_html)
             self.assertIn('"href": "coverage.html"', index_html)
             self.assertIn("Data: manifest.json", index_html)
@@ -355,6 +358,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("Data: routing.json", index_html)
             self.assertIn("Data: onboarding.json", index_html)
             self.assertIn("Data: catalog.json", index_html)
+            self.assertIn("Data: intake.json", index_html)
             self.assertIn("Data: snapshot.json", index_html)
             self.assertIn('"href": "snapshot.html"', index_html)
             self.assertIn("Command: Export taxonomy balance project tasks", index_html)
@@ -590,12 +594,34 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertTrue(onboarding["readiness_checks"])
             self.assertTrue(onboarding["contribution_paths"])
             self.assertIn("onboarding.json", onboarding["bootstrap_files"])
+            self.assertIn("intake.json", onboarding["bootstrap_files"])
+            paper_intake = next(item for item in onboarding["contribution_paths"] if item["id"] == "paper-intake")
+            self.assertEqual(paper_intake["entry"], "intake.html")
+            self.assertIn("intake.html", paper_intake["recommended_pages"])
             self.assertTrue(any(item["id"] == "taxonomy-governance" for item in onboarding["contribution_paths"]))
             onboarding_html = (report_dir / "onboarding.html").read_text(encoding="utf-8")
             self.assertIn("开源上手控制台", onboarding_html)
             self.assertIn("Onboarding JSON", onboarding_html)
             self.assertIn('id="onboardingSearch"', onboarding_html)
             self.assertIn("python3 scripts/check_quality.py docs", onboarding_html)
+            intake = json.loads((report_dir / "intake.json").read_text(encoding="utf-8"))
+            self.assertEqual(intake["count"], 2)
+            self.assertEqual(intake["inbox_count"], 2)
+            self.assertEqual({item["slug"] for item in intake["existing_papers"]}, {"2601.00001-alpha-paper", "2501.00002-beta-paper"})
+            self.assertIn("2601.00001", {item["arxiv_key"] for item in intake["existing_papers"]})
+            self.assertIn("title", intake["csv_columns"])
+            self.assertIn("link", intake["csv_columns"])
+            self.assertEqual(intake["defaults"]["status"], "queued")
+            self.assertIn("new_candidate", intake["statuses"])
+            self.assertTrue(any("apply_inbox_items.py" in command for command in intake["commands"]))
+            intake_html = (report_dir / "intake.html").read_text(encoding="utf-8")
+            self.assertIn("批量导入", intake_html)
+            self.assertIn("Intake JSON", intake_html)
+            self.assertIn('id="intakePaste"', intake_html)
+            self.assertIn('id="parseIntake"', intake_html)
+            self.assertIn("candidate_inbox.csv", intake_html)
+            self.assertIn("function parseIntakeLines", intake_html)
+            self.assertIn("library_duplicate", intake_html)
             catalog = json.loads((report_dir / "catalog.json").read_text(encoding="utf-8"))
             self.assertEqual(catalog["count"], 2)
             self.assertIn("papers.json", {item["href"] for item in catalog["data_resources"]})
@@ -607,7 +633,9 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("routing.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("onboarding.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("status.json", {item["href"] for item in catalog["data_resources"]})
+            self.assertIn("intake.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("status.html", {item["href"] for item in catalog["pages"]})
+            self.assertIn("intake.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("index.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("guides/taxonomy.json", {item["href"] for item in catalog["contracts"]})
             self.assertTrue(catalog["integration_recipes"])
@@ -799,6 +827,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("routing.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("onboarding.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("catalog.html", {item["href"] for item in manifest["pages"]})
+            self.assertIn("intake.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("actions.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("freshness.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("balance.html", {item["href"] for item in manifest["pages"]})
@@ -818,6 +847,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("onboarding.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("catalog.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("snapshot.json", {item["href"] for item in manifest["data_files"]})
+            self.assertIn("intake.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("freshness.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("manifest.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("guides/report.template.md", {item["href"] for item in manifest["contract_files"]})
@@ -840,6 +870,10 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertRegex(artifact_by_href["status.html"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["status.json"]["status"], "ok")
             self.assertRegex(artifact_by_href["status.json"]["sha256"], r"^[0-9a-f]{64}$")
+            self.assertEqual(artifact_by_href["intake.html"]["status"], "ok")
+            self.assertRegex(artifact_by_href["intake.html"]["sha256"], r"^[0-9a-f]{64}$")
+            self.assertEqual(artifact_by_href["intake.json"]["status"], "ok")
+            self.assertRegex(artifact_by_href["intake.json"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["pivot.html"]["status"], "ok")
             self.assertRegex(artifact_by_href["pivot.html"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["pivot.json"]["status"], "ok")

@@ -29,6 +29,7 @@ GENERATED_FIXED_PATHS = (
     "papers.json",
     "search_index.json",
     "stats.json",
+    "intake.json",
     "inbox.json",
     "quality.json",
     "review.json",
@@ -62,6 +63,7 @@ GENERATED_FIXED_PATHS = (
     "routing.html",
     "onboarding.html",
     "catalog.html",
+    "intake.html",
     "inbox.html",
     "quality.html",
     "review.html",
@@ -497,6 +499,121 @@ def write_inbox_json(report_dir: Path, items: list[dict[str, Any]]) -> None:
         "items": items,
     }
     (report_dir / "inbox.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
+def normalize_intake_key(value: str) -> str:
+    text = str(value or "").lower()
+    text = URL_RE.sub(" ", text)
+    text = ARXIV_RE.sub(" ", text)
+    text = re.sub(r"[^a-z0-9\u4e00-\u9fff]+", " ", text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def normalize_intake_link(value: str) -> str:
+    return str(value or "").strip().rstrip("/").lower()
+
+
+def intake_arxiv_key(value: str) -> str:
+    match = ARXIV_RE.search(str(value or ""))
+    return match.group(1) if match else ""
+
+
+def intake_existing_paper(paper: dict[str, Any]) -> dict[str, Any]:
+    title_values = [
+        str(paper.get(key) or "")
+        for key in ("title", "title_zh", "title_en")
+        if paper.get(key)
+    ]
+    links = [
+        str(paper.get(key) or "")
+        for key in ("arxiv_url", "html_path", "md_path", "code_url")
+        if paper.get(key)
+    ]
+    arxiv_id = str(paper.get("arxiv_id") or "")
+    if arxiv_id:
+        links.append(f"https://arxiv.org/abs/{arxiv_id}")
+    return {
+        "slug": paper["slug"],
+        "title": paper.get("title") or paper["slug"],
+        "title_zh": paper.get("title_zh") or "",
+        "title_en": paper.get("title_en") or "",
+        "arxiv_id": arxiv_id,
+        "arxiv_key": arxiv_id.split("v")[0] if arxiv_id else "",
+        "title_keys": sorted({normalize_intake_key(value) for value in title_values if normalize_intake_key(value)}),
+        "link_keys": sorted({normalize_intake_link(value) for value in links if normalize_intake_link(value)}),
+        "href": paper_href(paper),
+        "research_line": paper.get("research_line") or "Unassigned",
+        "status": paper.get("status") or "",
+        "year": paper.get("year") or "",
+    }
+
+
+def intake_existing_inbox_item(item: dict[str, Any]) -> dict[str, Any]:
+    title = str(item.get("title") or "")
+    link = str(item.get("link") or "")
+    arxiv_id = str(item.get("arxiv_id") or intake_arxiv_key(link))
+    return {
+        "id": item.get("id") or "",
+        "title": title,
+        "link": link,
+        "arxiv_id": arxiv_id,
+        "arxiv_key": arxiv_id.split("v")[0] if arxiv_id else "",
+        "title_key": normalize_intake_key(title),
+        "link_key": normalize_intake_link(link),
+        "status": item.get("status") or "queued",
+        "priority": item.get("priority") or "normal",
+        "tags": item.get("tags") or [],
+        "duplicate": bool(item.get("duplicate")),
+    }
+
+
+def build_intake_payload(papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> dict[str, Any]:
+    csv_columns = ["title", "link", "status", "priority", "tags", "note", "added_at"]
+    today = dt.date.today().isoformat()
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": len(papers),
+        "inbox_count": len(inbox_items),
+        "existing_papers": [intake_existing_paper(paper) for paper in papers],
+        "inbox_items": [intake_existing_inbox_item(item) for item in inbox_items],
+        "csv_columns": csv_columns,
+        "defaults": {
+            "status": "queued",
+            "priority": "normal",
+            "tags": "",
+            "note": "",
+            "added_at": today,
+        },
+        "statuses": ["new_candidate", "library_duplicate", "inbox_duplicate", "paste_duplicate"],
+        "patterns": {
+            "arxiv_id": ARXIV_RE.pattern,
+            "url": URL_RE.pattern,
+        },
+        "examples": [
+            "https://arxiv.org/abs/1706.03762",
+            "2307.08691 FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning",
+            "Paper title | https://arxiv.org/abs/0000.00000",
+        ],
+        "commands": [
+            "python3 scripts/apply_inbox_items.py docs --input <candidate_inbox.csv>",
+            "python3 scripts/apply_inbox_items.py docs --input <candidate_inbox.csv> --write",
+            "python3 scripts/build_wiki.py docs",
+        ],
+        "links": {
+            "inbox": "inbox.html",
+            "routing": "routing.html",
+            "quality": "quality.html",
+            "schema": "guides/inbox.schema.json",
+        },
+    }
+
+
+def write_intake_json(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
+    payload = build_intake_payload(papers, inbox_items)
+    (report_dir / "intake.json").write_text(
         json.dumps(payload, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
@@ -2827,6 +2944,7 @@ DATA_CONSUMER_HINTS = {
     "routing.json": ["taxonomy", "intake", "classification"],
     "onboarding.json": ["open-source", "contributors", "desktop"],
     "snapshot.json": ["release", "audit", "desktop"],
+    "intake.json": ["intake", "dedupe", "bulk-import"],
     "inbox.json": ["intake", "dedupe"],
     "manifest.json": ["release", "audit", "ci"],
 }
@@ -3010,20 +3128,27 @@ def build_onboarding_payload(report_dir: Path, papers: list[dict[str, Any]], inb
         },
         {
             "order": 2,
+            "title": "Batch candidate links before triage",
+            "href": "intake.html",
+            "command": "",
+            "why": "Paste many links, dedupe them against the library and inbox, then export a candidate CSV.",
+        },
+        {
+            "order": 3,
             "title": "Route a new paper before writing metadata",
             "href": "routing.html",
             "command": "",
             "why": "Use title and abstract to pick an initial research line and taxonomy labels.",
         },
         {
-            "order": 3,
+            "order": 4,
             "title": "Edit or review papers in the dense library",
             "href": "library.html",
             "command": "",
             "why": "Filter, select, export metadata patches, and manage status workflows.",
         },
         {
-            "order": 4,
+            "order": 5,
             "title": "Run the local quality gate",
             "href": "quality.html",
             "command": "python3 scripts/check_quality.py docs",
@@ -3034,10 +3159,10 @@ def build_onboarding_payload(report_dir: Path, papers: list[dict[str, Any]], inb
         {
             "id": "paper-intake",
             "title": "Add or triage candidate papers",
-            "entry": "inbox.html",
+            "entry": "intake.html",
             "issue_template": ".github/ISSUE_TEMPLATE/paper-intake.yml",
             "contract": "guides/inbox.schema.json",
-            "recommended_pages": ["routing.html", "inbox.html", "library.html"],
+            "recommended_pages": ["intake.html", "routing.html", "inbox.html", "library.html"],
             "commands": [
                 "python3 scripts/apply_inbox_items.py docs --input <candidate_csv>",
                 "python3 scripts/apply_inbox_items.py docs --input <candidate_csv> --write",
@@ -3102,17 +3227,18 @@ def build_onboarding_payload(report_dir: Path, papers: list[dict[str, Any]], inb
         "contribution_paths": contribution_paths,
         "command_groups": command_groups,
         "contracts": contract_files_manifest(),
-        "bootstrap_files": ["onboarding.json", "catalog.json", "manifest.json", "papers.json", "routing.json", "quality.json"],
+        "bootstrap_files": ["onboarding.json", "catalog.json", "manifest.json", "papers.json", "intake.json", "routing.json", "quality.json"],
         "core_pages": [
             item
             for item in wiki_pages_manifest()
-            if item["href"] in {"onboarding.html", "routing.html", "library.html", "quality.html", "taxonomy.html", "release.html", "catalog.html"}
+            if item["href"] in {"onboarding.html", "intake.html", "routing.html", "library.html", "quality.html", "taxonomy.html", "release.html", "catalog.html"}
         ],
         "links": {
             "catalog": "catalog.html",
             "manifest": "manifest.json",
             "release": "release.html",
             "quality": "quality.html",
+            "intake": "intake.html",
             "routing": "routing.html",
         },
     }
@@ -3152,6 +3278,7 @@ def wiki_pages_manifest() -> list[dict[str, str]]:
         {"title": "分类路由器", "href": "routing.html", "kind": "workflow", "description": "新论文研究线和标签推荐"},
         {"title": "开源上手", "href": "onboarding.html", "kind": "ops", "description": "贡献路径、质量门和数据契约"},
         {"title": "数据目录", "href": "catalog.html", "kind": "ops", "description": "机器数据、页面和契约的接入目录"},
+        {"title": "批量导入", "href": "intake.html", "kind": "workflow", "description": "批量粘贴论文链接、去重并导出 inbox CSV"},
         {"title": "待处理池", "href": "inbox.html", "kind": "workflow", "description": "候选论文队列和去重提示"},
         {"title": "复习计划", "href": "review.html", "kind": "workflow", "description": "待复习、需建计划、建议日期"},
         {"title": "时效治理", "href": "freshness.html", "kind": "ops", "description": "报告新鲜度、过期分析和研究线维护"},
@@ -3186,6 +3313,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "onboarding.json", "description": "开源贡献路径、质量门和数据契约清单"},
         {"href": "catalog.json", "description": "机器数据、页面入口和契约字段目录"},
         {"href": "snapshot.json", "description": "当前知识库治理快照和发布基线"},
+        {"href": "intake.json", "description": "批量导入去重索引、默认字段和 inbox CSV 契约"},
         {"href": "inbox.json", "description": "候选论文队列和重复项"},
         {"href": "manifest.json", "description": "发布摘要和页面入口清单"},
     ]
@@ -10028,6 +10156,354 @@ def render_catalog(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
     (report_dir / "catalog.html").write_text(page_shell("数据目录", body, extra_css=catalog_css), encoding="utf-8")
 
 
+def render_intake(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
+    payload = build_intake_payload(papers, inbox_items)
+    intake_json = json.dumps(payload, ensure_ascii=False).replace("</", "<\\/")
+    examples = "\n".join(payload["examples"])
+    command_buttons = "".join(
+        f'<button class="button copy-intake-command" type="button" data-command="{html.escape(command, quote=True)}">{html.escape(command.split()[1] if len(command.split()) > 1 else command)}</button>'
+        for command in payload["commands"]
+    )
+    intake_css = """
+    .intake-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
+      gap: 16px;
+      align-items: start;
+    }
+    .intake-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 14px;
+    }
+    .intake-panel textarea {
+      width: 100%;
+      min-height: 260px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--ink);
+      padding: 12px;
+      font: 14px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .intake-fields {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .intake-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .intake-summary {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .intake-summary .metric-card { min-height: 102px; }
+    .intake-status-new_candidate { color: #1f6f4a; font-weight: 700; }
+    .intake-status-library_duplicate,
+    .intake-status-inbox_duplicate,
+    .intake-status-paste_duplicate { color: #8a5d3b; font-weight: 700; }
+    @media (max-width: 920px) { .intake-layout { grid-template-columns: 1fr; } }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Bulk Intake</div>
+  <h1>批量导入</h1>
+  <p class="lead">把一批论文链接、arXiv id 或标题先放进 intake，浏览器会和当前论文库及 inbox 做去重，导出可写入 `docs/inbox.csv` 的候选 CSV。</p>
+  <div class="stats">
+    <a class="stat" href="intake.json">Intake JSON</a>
+    <a class="stat" href="inbox.html">待处理池</a>
+    <a class="stat" href="routing.html">分类路由器</a>
+    <a class="stat" href="quality.html">质量治理</a>
+    <a class="stat" href="guides/inbox.schema.json">Inbox Schema</a>
+    <span class="stat">论文 {payload["count"]}</span>
+    <span class="stat">Inbox {payload["inbox_count"]}</span>
+  </div>
+</header>
+<main class="shell">
+  <section class="intake-layout">
+    <div class="intake-panel">
+      <textarea id="intakePaste" spellcheck="false" placeholder="{html.escape(examples, quote=True)}"></textarea>
+      <div class="intake-fields">
+        <input id="intakeTags" placeholder="tags">
+        <input id="intakeNote" placeholder="note">
+        <select id="intakePriority">
+          <option value="normal">normal</option>
+          <option value="high">high</option>
+          <option value="medium">medium</option>
+          <option value="low">low</option>
+        </select>
+        <input id="intakeAddedAt" type="date" value="{html.escape(str(payload["defaults"]["added_at"]), quote=True)}">
+      </div>
+      <div class="intake-actions">
+        <button class="button primary" type="button" id="parseIntake">解析去重</button>
+        <button class="button" type="button" id="downloadIntakeCsv">下载候选 CSV</button>
+        <button class="button" type="button" id="copyIntakeCsv">复制候选 CSV</button>
+        <button class="button" type="button" id="copyIntakeCommand">复制写入命令</button>
+        <button class="button" type="button" id="clearIntake">清空</button>
+      </div>
+    </div>
+    <aside class="intake-panel">
+      <h2 class="section-title">导入概览</h2>
+      <div class="intake-summary">
+        <section class="metric-card"><span>解析</span><strong id="intakeTotal">0</strong><span>有效输入</span></section>
+        <section class="metric-card"><span>新候选</span><strong id="intakeNew">0</strong><span>可导出</span></section>
+        <section class="metric-card"><span>库内重复</span><strong id="intakeLibraryDup">0</strong><span>已读或已有报告</span></section>
+        <section class="metric-card"><span>队列重复</span><strong id="intakeInboxDup">0</strong><span>已在 inbox</span></section>
+      </div>
+      <h2 class="section-title">命令</h2>
+      <div class="bulk-actions">{command_buttons}</div>
+      <p class="meta">CSV 文件名固定为 candidate_inbox.csv；先 dry-run，再加 --write 合并。</p>
+    </aside>
+  </section>
+  <section>
+    <h2 class="section-title">候选明细</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>状态</th><th>标题</th><th>链接</th><th>匹配</th><th>备注</th></tr></thead><tbody id="intakeRows"><tr><td colspan="5" class="empty">等待输入。</td></tr></tbody></table></div>
+  </section>
+</main>
+<script>
+const intakePayload = {intake_json};
+const intakePaste = document.querySelector("#intakePaste");
+const intakeTags = document.querySelector("#intakeTags");
+const intakeNote = document.querySelector("#intakeNote");
+const intakePriority = document.querySelector("#intakePriority");
+const intakeAddedAt = document.querySelector("#intakeAddedAt");
+const intakeRows = document.querySelector("#intakeRows");
+const intakeTotal = document.querySelector("#intakeTotal");
+const intakeNew = document.querySelector("#intakeNew");
+const intakeLibraryDup = document.querySelector("#intakeLibraryDup");
+const intakeInboxDup = document.querySelector("#intakeInboxDup");
+let intakeResults = [];
+const arxivPattern = /\\b(\\d{{4}}\\.\\d{{4,5}})(?:v\\d+)?\\b/i;
+const urlPattern = /https?:\\/\\/[^\\s\\])<>"']+/i;
+
+function escapeHtml(value) {{
+  return String(value ?? "").replace(/[&<>"']/g, char => ({{ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }}[char]));
+}}
+
+function csvCell(value) {{
+  const text = String(value ?? "");
+  return (text.includes(",") || text.includes('"') || text.includes("\\n"))
+    ? `"${{text.replaceAll('"', '""')}}"`
+    : text;
+}}
+
+function normalizeLink(value) {{
+  return String(value || "").trim().replace(/\\/+$/, "").toLowerCase();
+}}
+
+function normalizeTitleKey(value) {{
+  return String(value || "")
+    .toLowerCase()
+    .replace(/https?:\\/\\/[^\\s\\])<>"']+/g, " ")
+    .replace(/\\b\\d{{4}}\\.\\d{{4,5}}(?:v\\d+)?\\b/g, " ")
+    .replace(/[^a-z0-9\\u4e00-\\u9fff]+/g, " ")
+    .replace(/\\s+/g, " ")
+    .trim();
+}}
+
+function arxivKey(value) {{
+  const match = String(value || "").match(arxivPattern);
+  return match ? match[1] : "";
+}}
+
+const libraryArxiv = new Set((intakePayload.existing_papers || []).map(item => item.arxiv_key).filter(Boolean));
+const libraryTitles = new Map();
+const libraryLinks = new Map();
+(intakePayload.existing_papers || []).forEach(item => {{
+  (item.title_keys || []).forEach(key => libraryTitles.set(key, item));
+  (item.link_keys || []).forEach(key => libraryLinks.set(key, item));
+}});
+const inboxArxiv = new Set((intakePayload.inbox_items || []).map(item => item.arxiv_key).filter(Boolean));
+const inboxTitles = new Map();
+const inboxLinks = new Map();
+(intakePayload.inbox_items || []).forEach(item => {{
+  if (item.title_key) inboxTitles.set(item.title_key, item);
+  if (item.link_key) inboxLinks.set(item.link_key, item);
+}});
+
+function parseLine(line) {{
+  const text = line.trim();
+  if (!text) return null;
+  const linkMatch = text.match(urlPattern);
+  const link = linkMatch ? linkMatch[0].replace(/[.,;]+$/, "") : "";
+  const arxiv = arxivKey(text);
+  let title = text;
+  if (link) title = title.replace(link, " ");
+  title = title.replace(/[|,;]+/g, " ").replace(/\\s+/g, " ").trim();
+  if (!title || title === arxiv) title = arxiv || link;
+  return {{
+    raw: text,
+    title,
+    link: link || (arxiv ? `https://arxiv.org/abs/${{arxiv}}` : ""),
+    arxiv_key: arxiv,
+    title_key: normalizeTitleKey(title),
+    link_key: normalizeLink(link || (arxiv ? `https://arxiv.org/abs/${{arxiv}}` : "")),
+  }};
+}}
+
+function classifyCandidate(candidate, seen) {{
+  const seenKey = candidate.arxiv_key || candidate.link_key || candidate.title_key || candidate.raw.toLowerCase();
+  if (seen.has(seenKey)) {{
+    return {{ status: "paste_duplicate", match: seenKey, note: "same paste batch" }};
+  }}
+  seen.add(seenKey);
+  if (candidate.arxiv_key && libraryArxiv.has(candidate.arxiv_key)) {{
+    return {{ status: "library_duplicate", match: candidate.arxiv_key, note: "arxiv already in library" }};
+  }}
+  if (candidate.link_key && libraryLinks.has(candidate.link_key)) {{
+    return {{ status: "library_duplicate", match: candidate.link_key, note: "link already in library" }};
+  }}
+  if (candidate.title_key && libraryTitles.has(candidate.title_key)) {{
+    return {{ status: "library_duplicate", match: candidate.title_key, note: "title already in library" }};
+  }}
+  if (candidate.arxiv_key && inboxArxiv.has(candidate.arxiv_key)) {{
+    return {{ status: "inbox_duplicate", match: candidate.arxiv_key, note: "arxiv already in inbox" }};
+  }}
+  if (candidate.link_key && inboxLinks.has(candidate.link_key)) {{
+    return {{ status: "inbox_duplicate", match: candidate.link_key, note: "link already in inbox" }};
+  }}
+  if (candidate.title_key && inboxTitles.has(candidate.title_key)) {{
+    return {{ status: "inbox_duplicate", match: candidate.title_key, note: "title already in inbox" }};
+  }}
+  return {{ status: "new_candidate", match: "", note: "ready for inbox" }};
+}}
+
+function parseIntakeLines() {{
+  const seen = new Set();
+  return intakePaste.value
+    .split(/\\n+/)
+    .map(parseLine)
+    .filter(Boolean)
+    .map(candidate => ({{ ...candidate, ...classifyCandidate(candidate, seen) }}));
+}}
+
+function rowsToCsv(rows) {{
+  const header = intakePayload.csv_columns || ["title", "link", "status", "priority", "tags", "note", "added_at"];
+  const values = rows.map(row => ({{
+    title: row.title,
+    link: row.link,
+    status: intakePayload.defaults?.status || "queued",
+    priority: intakePriority.value || intakePayload.defaults?.priority || "normal",
+    tags: intakeTags.value.trim(),
+    note: intakeNote.value.trim(),
+    added_at: intakeAddedAt.value || intakePayload.defaults?.added_at || "",
+  }}));
+  return [header, ...values.map(item => header.map(key => item[key] || ""))]
+    .map(row => row.map(csvCell).join(","))
+    .join("\\n") + "\\n";
+}}
+
+function candidateRows() {{
+  return intakeResults.filter(row => row.status === "new_candidate");
+}}
+
+function renderIntakeRows() {{
+  intakeRows.replaceChildren();
+  if (!intakeResults.length) {{
+    const empty = document.createElement("tr");
+    empty.innerHTML = `<td colspan="5" class="empty">等待输入。</td>`;
+    intakeRows.appendChild(empty);
+    return;
+  }}
+  intakeResults.forEach(row => {{
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td class="intake-status-${{escapeHtml(row.status)}}">${{escapeHtml(row.status)}}</td>
+      <td><strong>${{escapeHtml(row.title)}}</strong><div class="meta">${{escapeHtml(row.arxiv_key || "")}}</div></td>
+      <td>${{row.link ? `<a href="${{escapeHtml(row.link)}}">${{escapeHtml(row.link)}}</a>` : ""}}</td>
+      <td>${{escapeHtml(row.match || "")}}</td>
+      <td>${{escapeHtml(row.note || "")}}</td>
+    `;
+    intakeRows.appendChild(tr);
+  }});
+}}
+
+function renderIntake() {{
+  intakeResults = parseIntakeLines();
+  const counts = intakeResults.reduce((acc, row) => {{
+    acc[row.status] = (acc[row.status] || 0) + 1;
+    return acc;
+  }}, {{}});
+  intakeTotal.textContent = String(intakeResults.length);
+  intakeNew.textContent = String(counts.new_candidate || 0);
+  intakeLibraryDup.textContent = String(counts.library_duplicate || 0);
+  intakeInboxDup.textContent = String((counts.inbox_duplicate || 0) + (counts.paste_duplicate || 0));
+  renderIntakeRows();
+}}
+
+function downloadText(filename, text, type) {{
+  const blob = new Blob([text], {{ type }});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}}
+
+async function copyText(text, fallbackTitle) {{
+  try {{
+    await navigator.clipboard.writeText(text);
+    return true;
+  }} catch {{
+    window.prompt(fallbackTitle, text);
+    return false;
+  }}
+}}
+
+document.querySelector("#parseIntake").addEventListener("click", renderIntake);
+document.querySelector("#downloadIntakeCsv").addEventListener("click", () => {{
+  renderIntake();
+  const rows = candidateRows();
+  if (!rows.length) {{
+    window.alert("没有可导出的新候选。");
+    return;
+  }}
+  downloadText("candidate_inbox.csv", rowsToCsv(rows), "text/csv;charset=utf-8");
+}});
+document.querySelector("#copyIntakeCsv").addEventListener("click", async () => {{
+  renderIntake();
+  const rows = candidateRows();
+  if (!rows.length) {{
+    window.alert("没有可复制的新候选。");
+    return;
+  }}
+  await copyText(rowsToCsv(rows), "复制候选 CSV");
+}});
+document.querySelector("#copyIntakeCommand").addEventListener("click", async () => {{
+  await copyText("python3 scripts/apply_inbox_items.py docs --input candidate_inbox.csv", "复制写入命令");
+}});
+document.querySelector("#clearIntake").addEventListener("click", () => {{
+  intakePaste.value = "";
+  renderIntake();
+}});
+document.querySelectorAll(".copy-intake-command").forEach(button => {{
+  button.dataset.label = button.textContent;
+  button.addEventListener("click", async () => {{
+    const copied = await copyText(button.dataset.command || "", "复制命令");
+    if (copied) {{
+      button.textContent = "已复制";
+      setTimeout(() => button.textContent = button.dataset.label, 1200);
+    }}
+  }});
+}});
+intakePaste.addEventListener("input", renderIntake);
+renderIntake();
+</script>
+"""
+    (report_dir / "intake.html").write_text(page_shell("批量导入", body, extra_css=intake_css), encoding="utf-8")
+
+
 def render_inbox_row(item: dict[str, Any]) -> str:
     tags = "".join(f'<span class="chip">{html.escape(tag)}</span>' for tag in item.get("tags", []))
     link = str(item.get("link") or "")
@@ -15328,6 +15804,7 @@ def build_wiki(report_dir: Path) -> int:
     write_taxonomy_map_json(report_dir, papers)
     write_clusters_json(report_dir, papers)
     write_inbox_json(report_dir, inbox_items)
+    write_intake_json(report_dir, papers, inbox_items)
     write_search_index(report_dir, papers)
     write_scale_json(report_dir, papers, inbox_items)
     write_ownership_json(report_dir, papers)
@@ -15346,6 +15823,7 @@ def build_wiki(report_dir: Path) -> int:
     render_ownership(report_dir, papers)
     render_routing(report_dir, papers)
     render_onboarding(report_dir, papers, inbox_items)
+    render_intake(report_dir, papers, inbox_items)
     render_inbox(report_dir, inbox_items)
     render_review(report_dir, papers)
     render_freshness(report_dir, papers)

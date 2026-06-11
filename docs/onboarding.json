@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T04:45:49",
+  "generated_at": "2026-06-12T04:54:17",
   "count": 5,
   "inbox_count": 0,
   "readiness_score": "100%",
@@ -95,20 +95,27 @@
     },
     {
       "order": 2,
+      "title": "Batch candidate links before triage",
+      "href": "intake.html",
+      "command": "",
+      "why": "Paste many links, dedupe them against the library and inbox, then export a candidate CSV."
+    },
+    {
+      "order": 3,
       "title": "Route a new paper before writing metadata",
       "href": "routing.html",
       "command": "",
       "why": "Use title and abstract to pick an initial research line and taxonomy labels."
     },
     {
-      "order": 3,
+      "order": 4,
       "title": "Edit or review papers in the dense library",
       "href": "library.html",
       "command": "",
       "why": "Filter, select, export metadata patches, and manage status workflows."
     },
     {
-      "order": 4,
+      "order": 5,
       "title": "Run the local quality gate",
       "href": "quality.html",
       "command": "python3 scripts/check_quality.py docs",
@@ -119,10 +126,11 @@
     {
       "id": "paper-intake",
       "title": "Add or triage candidate papers",
-      "entry": "inbox.html",
+      "entry": "intake.html",
       "issue_template": ".github/ISSUE_TEMPLATE/paper-intake.yml",
       "contract": "guides/inbox.schema.json",
       "recommended_pages": [
+        "intake.html",
         "routing.html",
         "inbox.html",
         "library.html"
@@ -239,6 +247,7 @@
     "catalog.json",
     "manifest.json",
     "papers.json",
+    "intake.json",
     "routing.json",
     "quality.json"
   ],
@@ -274,6 +283,12 @@
       "description": "机器数据、页面和契约的接入目录"
     },
     {
+      "title": "批量导入",
+      "href": "intake.html",
+      "kind": "workflow",
+      "description": "批量粘贴论文链接、去重并导出 inbox CSV"
+    },
+    {
       "title": "质量治理",
       "href": "quality.html",
       "kind": "ops",
@@ -291,6 +306,7 @@
     "manifest": "manifest.json",
     "release": "release.html",
     "quality": "quality.html",
+    "intake": "intake.html",
     "routing": "routing.html"
   }
 }
