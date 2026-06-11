@@ -102,6 +102,7 @@ REQUIRED_PAGES = {
     "library.html",
     "board.html",
     "workflow.html",
+    "pivot.html",
     "inbox.html",
     "quality.html",
     "review.html",
@@ -126,6 +127,7 @@ REQUIRED_PAGES = {
     "freshness.json",
     "taxonomy_actions.json",
     "workflow.json",
+    "pivot.json",
     "snapshot.json",
     "manifest.json",
     "lines/index.html",
@@ -543,6 +545,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     review_path = report_dir / "review.json"
     taxonomy_actions_path = report_dir / "taxonomy_actions.json"
     workflow_path = report_dir / "workflow.json"
+    pivot_path = report_dir / "pivot.json"
     stats_path = report_dir / "stats.json"
     inbox_path = report_dir / "inbox.json"
     snapshot_path = report_dir / "snapshot.json"
@@ -565,6 +568,9 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     if not workflow_path.exists():
         errors.append("missing workflow.json")
         return
+    if not pivot_path.exists():
+        errors.append("missing pivot.json")
+        return
     if not stats_path.exists():
         errors.append("missing stats.json")
         return
@@ -584,6 +590,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     review_data = json.loads(review_path.read_text(encoding="utf-8"))
     taxonomy_actions_data = json.loads(taxonomy_actions_path.read_text(encoding="utf-8"))
     workflow_data = json.loads(workflow_path.read_text(encoding="utf-8"))
+    pivot_data = json.loads(pivot_path.read_text(encoding="utf-8"))
     stats_data = json.loads(stats_path.read_text(encoding="utf-8"))
     inbox_data = json.loads(inbox_path.read_text(encoding="utf-8"))
     snapshot_data = json.loads(snapshot_path.read_text(encoding="utf-8"))
@@ -759,6 +766,61 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         errors.append("workflow.json active_unconfigured must be a list")
     if not isinstance(workflow_data.get("shared_workflow_views"), list):
         errors.append("workflow.json shared_workflow_views must be a list")
+
+    if pivot_data.get("count") != len(report_slugs):
+        errors.append(f"pivot.json count {pivot_data.get('count')} != markdown report count {len(report_slugs)}")
+    required_pivot = {"dimensions", "papers", "presets"}
+    missing_pivot = sorted(required_pivot - set(pivot_data))
+    if missing_pivot:
+        errors.append(f"pivot.json missing keys: {', '.join(missing_pivot)}")
+    pivot_dimensions = pivot_data.get("dimensions")
+    if not isinstance(pivot_dimensions, list) or not pivot_dimensions:
+        errors.append("pivot.json dimensions must be a non-empty list")
+    else:
+        dimension_keys = {str(item.get("key") or "") for item in pivot_dimensions if isinstance(item, dict)}
+        for key in ("research_line", "domain", "track", "problem", "topic", "method", "status", "year"):
+            if key not in dimension_keys:
+                errors.append(f"pivot.json dimensions missing {key}")
+    pivot_papers = pivot_data.get("papers")
+    if not isinstance(pivot_papers, list):
+        errors.append("pivot.json papers must be a list")
+        pivot_papers = []
+    pivot_slugs = {item.get("slug") for item in pivot_papers if isinstance(item, dict)}
+    if pivot_slugs != report_slugs:
+        errors.append(
+            "pivot.json paper slugs do not match markdown reports: "
+            f"missing={sorted(report_slugs - pivot_slugs)}, extra={sorted(pivot_slugs - report_slugs)}"
+        )
+    for index, item in enumerate(pivot_papers):
+        if not isinstance(item, dict):
+            errors.append(f"pivot.json papers[{index}] must be an object")
+            continue
+        if not isinstance(item.get("dimensions"), dict):
+            errors.append(f"pivot.json papers[{index}].dimensions must be an object")
+    pivot_presets = pivot_data.get("presets")
+    if not isinstance(pivot_presets, list):
+        errors.append("pivot.json presets must be a list")
+        pivot_presets = []
+    for index, preset in enumerate(pivot_presets):
+        if not isinstance(preset, dict):
+            errors.append(f"pivot.json presets[{index}] must be an object")
+            continue
+        for key in ("row_dimension", "column_dimension", "rows", "columns", "cells"):
+            if key not in preset:
+                errors.append(f"pivot.json presets[{index}] missing {key}")
+        cells = preset.get("cells", [])
+        if not isinstance(cells, list):
+            errors.append(f"pivot.json presets[{index}].cells must be a list")
+            cells = []
+        cell_slugs = {
+            slug
+            for cell in cells
+            if isinstance(cell, dict)
+            for slug in cell.get("slugs", [])
+        }
+        unknown_cell_slugs = sorted(cell_slugs - report_slugs)
+        if unknown_cell_slugs:
+            errors.append(f"pivot.json presets[{index}] references unknown slugs: {unknown_cell_slugs}")
 
     if stats_data.get("count") != len(report_slugs):
         errors.append(f"stats.json count {stats_data.get('count')} != markdown report count {len(report_slugs)}")

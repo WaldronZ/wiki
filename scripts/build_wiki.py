@@ -36,12 +36,14 @@ GENERATED_FIXED_PATHS = (
     "taxonomy_actions.json",
     "actions.json",
     "workflow.json",
+    "pivot.json",
     "snapshot.json",
     "manifest.json",
     "index.html",
     "library.html",
     "board.html",
     "workflow.html",
+    "pivot.html",
     "inbox.html",
     "quality.html",
     "review.html",
@@ -1517,6 +1519,122 @@ def write_workflow_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     )
 
 
+PIVOT_DIMENSIONS = {
+    "research_line": {"label": "研究线", "query": "line", "multi": False},
+    "domain": {"label": "Domain", "query": "domain", "multi": True, "paper_key": "domains"},
+    "track": {"label": "Track", "query": "track", "multi": True, "paper_key": "tracks"},
+    "problem": {"label": "Problem", "query": "problem", "multi": True, "paper_key": "problems"},
+    "topic": {"label": "Topic", "query": "topic", "multi": True, "paper_key": "topics"},
+    "method": {"label": "Method", "query": "method", "multi": True, "paper_key": "methods"},
+    "status": {"label": "Status", "query": "status", "multi": False},
+    "reading_stage": {"label": "Reading Stage", "query": "stage", "multi": False},
+    "review_stage": {"label": "Review Stage", "query": "reviewStage", "multi": False},
+    "year": {"label": "Year", "query": "year", "multi": False},
+    "importance": {"label": "Importance", "query": "importance", "multi": False},
+    "has_code": {"label": "Code", "query": "code", "multi": False},
+}
+
+
+def paper_dimension_values(paper: dict[str, Any], dimension: str) -> list[str]:
+    spec = PIVOT_DIMENSIONS[dimension]
+    if spec.get("multi"):
+        values = [str(value).strip() for value in paper.get(str(spec.get("paper_key") or dimension), []) if str(value).strip()]
+    elif dimension == "year":
+        values = [str(paper.get("year") or "unknown")]
+    elif dimension == "importance":
+        values = [str(paper.get("importance") or "unknown")]
+    elif dimension == "has_code":
+        values = ["yes" if paper.get("has_code") else "no"]
+    else:
+        values = [str(paper.get(dimension) or "").strip()]
+    values = [value for value in values if value and value != "Unassigned"]
+    return values or ["Unassigned"]
+
+
+def build_pivot_matrix(papers: list[dict[str, Any]], row_dimension: str, column_dimension: str, limit: int = 12) -> dict[str, Any]:
+    cells: dict[tuple[str, str], set[str]] = defaultdict(set)
+    row_counts: Counter[str] = Counter()
+    column_counts: Counter[str] = Counter()
+    for paper in papers:
+        row_values = paper_dimension_values(paper, row_dimension)
+        column_values = paper_dimension_values(paper, column_dimension)
+        for row in row_values:
+            row_counts[row] += 1
+        for column in column_values:
+            column_counts[column] += 1
+        for row in row_values:
+            for column in column_values:
+                cells[(row, column)].add(str(paper["slug"]))
+
+    rows = [value for value, _ in row_counts.most_common(limit)]
+    columns = [value for value, _ in column_counts.most_common(limit)]
+    cell_payload = [
+        {
+            "row": row,
+            "column": column,
+            "count": len(slugs),
+            "slugs": sorted(slugs),
+        }
+        for (row, column), slugs in sorted(cells.items(), key=lambda item: (-len(item[1]), item[0][0].lower(), item[0][1].lower()))
+        if row in rows and column in columns
+    ]
+    return {
+        "row_dimension": row_dimension,
+        "column_dimension": column_dimension,
+        "rows": [{"value": value, "count": int(row_counts[value])} for value in rows],
+        "columns": [{"value": value, "count": int(column_counts[value])} for value in columns],
+        "cells": cell_payload,
+        "non_empty_cells": len(cell_payload),
+    }
+
+
+def build_pivot_payload(papers: list[dict[str, Any]]) -> dict[str, Any]:
+    paper_payload = []
+    for paper in papers:
+        dimensions = {
+            name: paper_dimension_values(paper, name)
+            for name in PIVOT_DIMENSIONS
+        }
+        paper_payload.append(
+            {
+                "slug": paper["slug"],
+                "title": paper.get("title") or "",
+                "title_zh": paper.get("title_zh") or paper.get("title") or "",
+                "href": paper.get("html_path") or paper.get("md_path") or "",
+                "dimensions": dimensions,
+            }
+        )
+    presets = [
+        ("research_line", "method"),
+        ("track", "status"),
+        ("year", "topic"),
+        ("domain", "problem"),
+    ]
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": len(papers),
+        "dimensions": [
+            {
+                "key": key,
+                "label": str(spec["label"]),
+                "query": str(spec["query"]),
+                "multi": bool(spec.get("multi")),
+            }
+            for key, spec in PIVOT_DIMENSIONS.items()
+        ],
+        "papers": paper_payload,
+        "presets": [build_pivot_matrix(papers, row, column) for row, column in presets],
+    }
+
+
+def write_pivot_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_pivot_payload(papers)
+    (report_dir / "pivot.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
 def wiki_pages_manifest() -> list[dict[str, str]]:
     return [
         {"title": "首页", "href": "index.html", "kind": "view", "description": "卡片检索、筛选、研究线概览"},
@@ -1533,6 +1651,7 @@ def wiki_pages_manifest() -> list[dict[str, str]]:
         {"title": "研究缺口", "href": "gaps.html", "kind": "ops", "description": "下一步行动和研究线缺口"},
         {"title": "状态看板", "href": "board.html", "kind": "workflow", "description": "拖拽式状态流和 CSV patch"},
         {"title": "工作流中心", "href": "workflow.html", "kind": "workflow", "description": "状态体系对比、分布和漂移审计"},
+        {"title": "分类透视表", "href": "pivot.html", "kind": "analysis", "description": "任意两个分类维度交叉分析论文分布"},
         {"title": "待处理池", "href": "inbox.html", "kind": "workflow", "description": "候选论文队列和去重提示"},
         {"title": "复习计划", "href": "review.html", "kind": "workflow", "description": "待复习、需建计划、建议日期"},
         {"title": "时效治理", "href": "freshness.html", "kind": "ops", "description": "报告新鲜度、过期分析和研究线维护"},
@@ -1556,6 +1675,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "taxonomy_actions.json", "description": "分类长尾、过载和空候选治理任务"},
         {"href": "actions.json", "description": "统一行动队列，汇总质量、复习、分类和 inbox 任务"},
         {"href": "workflow.json", "description": "状态工作流配置、分布和漂移审计"},
+        {"href": "pivot.json", "description": "分类透视表维度、论文投影和交叉分布"},
         {"href": "snapshot.json", "description": "当前知识库治理快照和发布基线"},
         {"href": "inbox.json", "description": "候选论文队列和重复项"},
         {"href": "manifest.json", "description": "发布摘要和页面入口清单"},
@@ -5890,6 +6010,285 @@ document.querySelectorAll(".copy-workflow-command").forEach(button => {{
 </script>
 """
     (report_dir / "workflow.html").write_text(page_shell("工作流中心", body, extra_css=workflow_css), encoding="utf-8")
+
+
+def render_pivot(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_pivot_payload(papers)
+    dimension_options = "".join(
+        f'<option value="{html.escape(str(item["key"]), quote=True)}">{html.escape(str(item["label"]))}</option>'
+        for item in payload["dimensions"]
+    )
+    preset_rows = "".join(
+        "<tr>"
+        f"<td>{html.escape(str(matrix['row_dimension']))} x {html.escape(str(matrix['column_dimension']))}</td>"
+        f"<td>{len(matrix['rows'])}</td>"
+        f"<td>{len(matrix['columns'])}</td>"
+        f"<td>{matrix['non_empty_cells']}</td>"
+        "</tr>"
+        for matrix in payload["presets"]
+    )
+    pivot_json = json.dumps(payload, ensure_ascii=False)
+    pivot_css = """
+    .pivot-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+      gap: 16px;
+      align-items: start;
+    }
+    .pivot-table-wrap {
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      max-height: 68vh;
+    }
+    .pivot-table {
+      width: max-content;
+      min-width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .pivot-table th,
+    .pivot-table td {
+      border-bottom: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      padding: 8px;
+      vertical-align: top;
+      min-width: 76px;
+    }
+    .pivot-table th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: var(--panel);
+      text-align: left;
+    }
+    .pivot-table th:first-child {
+      left: 0;
+      z-index: 2;
+    }
+    .pivot-row-header {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      background: var(--panel);
+      min-width: 180px;
+      max-width: 260px;
+    }
+    .pivot-cell {
+      width: 100%;
+      min-height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--ink);
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .pivot-cell.empty {
+      color: var(--muted);
+      background: transparent;
+      cursor: default;
+    }
+    .pivot-cell.active {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(47, 111, 115, .16);
+    }
+    .pivot-detail {
+      position: sticky;
+      top: 82px;
+      display: grid;
+      gap: 12px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+    .pivot-detail h2 { margin: 0; font-size: 18px; }
+    .pivot-paper-list {
+      display: grid;
+      gap: 10px;
+      max-height: 56vh;
+      overflow: auto;
+    }
+    .pivot-paper {
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--bg);
+    }
+    .pivot-paper h3 { margin: 0 0 4px; font-size: 14px; line-height: 1.35; }
+    @media (max-width: 960px) {
+      .pivot-layout { grid-template-columns: 1fr; }
+      .pivot-detail { position: static; }
+    }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Classification Pivot</div>
+  <h1>分类透视表</h1>
+  <p class="lead">把任意两个分类或状态维度交叉成矩阵，快速查看论文集中在哪些组合里。适合大量论文下发现过载方向、空白组合和需要拆分的分类。</p>
+  <div class="stats">
+    <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="coverage.html">覆盖地图</a>
+    <a class="stat" href="balance.html">分类均衡</a>
+    <a class="stat" href="facets.html">分类工作台</a>
+    <a class="stat" href="related.html">关联网络</a>
+    <a class="stat" href="pivot.json">Pivot JSON</a>
+    <span class="stat">论文 {payload["count"]}</span>
+    <span class="stat">维度 {len(payload["dimensions"])}</span>
+  </div>
+</header>
+<div class="toolbar">
+  <div class="shell controls">
+    <select id="pivotRowDim" aria-label="行维度">{dimension_options}</select>
+    <select id="pivotColDim" aria-label="列维度">{dimension_options}</select>
+    <input id="pivotSearch" type="search" placeholder="筛选行/列值">
+    <select id="pivotMinCount"><option value="1">显示非空格子</option><option value="2">至少 2 篇</option><option value="3">至少 3 篇</option><option value="5">至少 5 篇</option></select>
+    <select id="pivotLimit"><option value="8">Top 8</option><option value="12" selected>Top 12</option><option value="20">Top 20</option><option value="40">Top 40</option></select>
+  </div>
+</div>
+<main class="shell">
+  <section>
+    <h2 class="section-title">预设矩阵</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>矩阵</th><th>行</th><th>列</th><th>非空格子</th></tr></thead><tbody>{preset_rows}</tbody></table></div>
+  </section>
+  <section class="pivot-layout">
+    <div>
+      <div class="results-bar"><strong id="pivotCount">准备生成矩阵</strong><button id="pivotSwap" class="button" type="button">交换行列</button></div>
+      <div class="pivot-table-wrap" id="pivotTableWrap"></div>
+    </div>
+    <aside class="pivot-detail" aria-live="polite">
+      <h2 id="pivotDetailTitle">选择一个格子</h2>
+      <p id="pivotDetailMeta" class="meta">点击非空格子查看论文列表。</p>
+      <div id="pivotPaperList" class="pivot-paper-list"></div>
+    </aside>
+  </section>
+</main>
+<script>
+const pivotData = {pivot_json};
+const rowDimSelect = document.querySelector("#pivotRowDim");
+const colDimSelect = document.querySelector("#pivotColDim");
+const pivotSearch = document.querySelector("#pivotSearch");
+const pivotMinCount = document.querySelector("#pivotMinCount");
+const pivotLimit = document.querySelector("#pivotLimit");
+const pivotSwap = document.querySelector("#pivotSwap");
+const pivotTableWrap = document.querySelector("#pivotTableWrap");
+const pivotCount = document.querySelector("#pivotCount");
+const pivotDetailTitle = document.querySelector("#pivotDetailTitle");
+const pivotDetailMeta = document.querySelector("#pivotDetailMeta");
+const pivotPaperList = document.querySelector("#pivotPaperList");
+const pivotPapersBySlug = new Map(pivotData.papers.map(paper => [paper.slug, paper]));
+const dimensionByKey = new Map(pivotData.dimensions.map(item => [item.key, item]));
+let activePivotCell = null;
+
+function pivotValues(paper, dimension) {{
+  return (paper.dimensions && Array.isArray(paper.dimensions[dimension])) ? paper.dimensions[dimension] : ["Unassigned"];
+}}
+
+function countDimensionValues(dimension) {{
+  const counts = new Map();
+  pivotData.papers.forEach(paper => {{
+    pivotValues(paper, dimension).forEach(value => counts.set(value, (counts.get(value) || 0) + 1));
+  }});
+  return counts;
+}}
+
+function sortedValues(counts, limit, q) {{
+  return Array.from(counts.entries())
+    .filter(([value]) => !q || String(value).toLowerCase().includes(q))
+    .sort((a, b) => b[1] - a[1] || String(a[0]).localeCompare(String(b[0])))
+    .slice(0, limit)
+    .map(([value]) => value);
+}}
+
+function escapePivotHtml(value) {{
+  return String(value ?? "").replace(/[&<>"']/g, char => ({{"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}}[char]));
+}}
+
+function buildPivot(rowDim, colDim, limit, q) {{
+  const rowCounts = countDimensionValues(rowDim);
+  const colCounts = countDimensionValues(colDim);
+  const rows = sortedValues(rowCounts, limit, q);
+  const cols = sortedValues(colCounts, limit, q);
+  const cells = new Map();
+  pivotData.papers.forEach(paper => {{
+    pivotValues(paper, rowDim).forEach(row => {{
+      if (!rows.includes(row)) return;
+      pivotValues(paper, colDim).forEach(col => {{
+        if (!cols.includes(col)) return;
+        const key = `${{row}}\\u0000${{col}}`;
+        if (!cells.has(key)) cells.set(key, new Set());
+        cells.get(key).add(paper.slug);
+      }});
+    }});
+  }});
+  return {{ rows, cols, cells, rowCounts, colCounts }};
+}}
+
+function renderPivotDetail(row, col, slugs) {{
+  document.querySelectorAll(".pivot-cell").forEach(cell => cell.classList.toggle("active", cell === activePivotCell));
+  const rowLabel = dimensionByKey.get(rowDimSelect.value)?.label || rowDimSelect.value;
+  const colLabel = dimensionByKey.get(colDimSelect.value)?.label || colDimSelect.value;
+  pivotDetailTitle.textContent = `${{rowLabel}}: ${{row}} / ${{colLabel}}: ${{col}}`;
+  pivotDetailMeta.textContent = `${{slugs.length}} 篇论文`;
+  if (!slugs.length) {{
+    pivotPaperList.innerHTML = '<div class="empty">这个组合还没有论文。</div>';
+    return;
+  }}
+  pivotPaperList.innerHTML = slugs
+    .map(slug => pivotPapersBySlug.get(slug))
+    .filter(Boolean)
+    .map(paper => `<article class="pivot-paper"><h3><a href="${{escapePivotHtml(paper.href)}}">${{escapePivotHtml(paper.title_zh || paper.title || paper.slug)}}</a></h3><div class="meta">${{escapePivotHtml(paper.slug)}}</div></article>`)
+    .join("");
+}}
+
+function renderPivot() {{
+  const rowDim = rowDimSelect.value;
+  const colDim = colDimSelect.value;
+  const limit = Number(pivotLimit.value || 12);
+  const minCount = Number(pivotMinCount.value || 1);
+  const q = pivotSearch.value.trim().toLowerCase();
+  const rowLabel = dimensionByKey.get(rowDim)?.label || rowDim;
+  const colLabel = dimensionByKey.get(colDim)?.label || colDim;
+  const matrix = buildPivot(rowDim, colDim, limit, q);
+  let visibleCells = 0;
+  const head = `<thead><tr><th>${{escapePivotHtml(rowLabel)}} \\\\ ${{escapePivotHtml(colLabel)}}</th>${{matrix.cols.map(col => `<th>${{escapePivotHtml(col)}}<div class="meta">${{matrix.colCounts.get(col) || 0}}</div></th>`).join("")}}</tr></thead>`;
+  const body = matrix.rows.map(row => {{
+    const cells = matrix.cols.map(col => {{
+      const key = `${{row}}\\u0000${{col}}`;
+      const slugs = Array.from(matrix.cells.get(key) || []);
+      const count = slugs.length;
+      if (count < minCount) return '<td><button class="pivot-cell empty" type="button" disabled>0</button></td>';
+      visibleCells += 1;
+      return `<td><button class="pivot-cell" type="button" data-row="${{escapePivotHtml(row)}}" data-col="${{escapePivotHtml(col)}}" data-slugs="${{escapePivotHtml(slugs.join("|"))}}">${{count}}</button></td>`;
+    }}).join("");
+    return `<tr><th class="pivot-row-header">${{escapePivotHtml(row)}}<div class="meta">${{matrix.rowCounts.get(row) || 0}}</div></th>${{cells}}</tr>`;
+  }}).join("");
+  pivotTableWrap.innerHTML = `<table class="pivot-table">${{head}}<tbody>${{body || '<tr><td class="empty">没有匹配的行列值。</td></tr>'}}</tbody></table>`;
+  pivotCount.textContent = `${{matrix.rows.length}} 行 x ${{matrix.cols.length}} 列，${{visibleCells}} 个非空格子`;
+  activePivotCell = null;
+  pivotTableWrap.querySelectorAll(".pivot-cell:not(.empty)").forEach(button => {{
+    button.addEventListener("click", () => {{
+      activePivotCell = button;
+      renderPivotDetail(button.dataset.row || "", button.dataset.col || "", (button.dataset.slugs || "").split("|").filter(Boolean));
+    }});
+  }});
+}}
+
+rowDimSelect.value = "research_line";
+colDimSelect.value = "method";
+[rowDimSelect, colDimSelect, pivotSearch, pivotMinCount, pivotLimit].forEach(control => control.addEventListener("input", renderPivot));
+pivotSwap.addEventListener("click", () => {{
+  const row = rowDimSelect.value;
+  rowDimSelect.value = colDimSelect.value;
+  colDimSelect.value = row;
+  renderPivot();
+}});
+renderPivot();
+</script>
+"""
+    (report_dir / "pivot.html").write_text(page_shell("分类透视表", body, extra_css=pivot_css), encoding="utf-8")
 
 
 def render_inbox_row(item: dict[str, Any]) -> str:
@@ -11173,12 +11572,14 @@ def build_wiki(report_dir: Path) -> int:
     write_actions_json(report_dir, papers, inbox_items)
     write_stats_json(report_dir, papers)
     write_workflow_json(report_dir, papers)
+    write_pivot_json(report_dir, papers)
     write_inbox_json(report_dir, inbox_items)
     write_search_index(report_dir, papers)
     render_index(report_dir, papers)
     render_library(report_dir, papers)
     render_board(report_dir, papers)
     render_workflow(report_dir, papers)
+    render_pivot(report_dir, papers)
     render_inbox(report_dir, inbox_items)
     render_review(report_dir, papers)
     render_freshness(report_dir, papers)

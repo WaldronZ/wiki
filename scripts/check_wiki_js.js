@@ -16,6 +16,7 @@ function htmlFiles() {
     "library.html",
     "board.html",
     "workflow.html",
+    "pivot.html",
     "inbox.html",
     "quality.html",
     "review.html",

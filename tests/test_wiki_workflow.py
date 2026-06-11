@@ -221,6 +221,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "library.html",
                 "board.html",
                 "workflow.html",
+                "pivot.html",
                 "inbox.html",
                 "quality.html",
                 "review.html",
@@ -249,6 +250,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "taxonomy_actions.json",
                 "actions.json",
                 "workflow.json",
+                "pivot.json",
                 "snapshot.json",
                 "manifest.json",
                 "lines/index.html",
@@ -298,10 +300,12 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("Playbook: Release readiness", index_html)
             self.assertIn('"href": "actions.html"', index_html)
             self.assertIn('"href": "workflow.html"', index_html)
+            self.assertIn('"href": "pivot.html"', index_html)
             self.assertIn('"href": "balance.html"', index_html)
             self.assertIn('"href": "coverage.html"', index_html)
             self.assertIn("Data: manifest.json", index_html)
             self.assertIn("Data: workflow.json", index_html)
+            self.assertIn("Data: pivot.json", index_html)
             self.assertIn("Data: snapshot.json", index_html)
             self.assertIn('"href": "snapshot.html"', index_html)
             self.assertIn("Command: Export taxonomy balance project tasks", index_html)
@@ -407,6 +411,22 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("Workflow 对比", workflow_html)
             self.assertIn("当前 Drift", workflow_html)
             self.assertIn("状态工作流配置、分布和漂移审计", workflow_html)
+            pivot = json.loads((report_dir / "pivot.json").read_text(encoding="utf-8"))
+            self.assertEqual(pivot["count"], 2)
+            self.assertIn("research_line", {item["key"] for item in pivot["dimensions"]})
+            self.assertIn("method", {item["key"] for item in pivot["dimensions"]})
+            self.assertEqual({item["slug"] for item in pivot["papers"]}, {"2601.00001-alpha-paper", "2501.00002-beta-paper"})
+            first_pivot_paper = next(item for item in pivot["papers"] if item["slug"] == "2601.00001-alpha-paper")
+            self.assertIn("LLM Serving", first_pivot_paper["dimensions"]["research_line"])
+            preset_names = {(item["row_dimension"], item["column_dimension"]) for item in pivot["presets"]}
+            self.assertIn(("research_line", "method"), preset_names)
+            self.assertTrue(any(cell["count"] >= 1 for preset in pivot["presets"] for cell in preset["cells"]))
+            pivot_html = (report_dir / "pivot.html").read_text(encoding="utf-8")
+            self.assertIn("分类透视表", pivot_html)
+            self.assertIn("Pivot JSON", pivot_html)
+            self.assertIn('id="pivotRowDim"', pivot_html)
+            self.assertIn('id="pivotColDim"', pivot_html)
+            self.assertIn("Classification Pivot", pivot_html)
             inbox = json.loads((report_dir / "inbox.json").read_text(encoding="utf-8"))
             self.assertEqual(inbox["count"], 2)
             self.assertEqual(inbox["statuses"]["queued"], 2)
@@ -574,6 +594,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("release.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("snapshot.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("workflow.html", {item["href"] for item in manifest["pages"]})
+            self.assertIn("pivot.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("actions.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("freshness.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("balance.html", {item["href"] for item in manifest["pages"]})
@@ -582,6 +603,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("taxonomy_actions.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("actions.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("workflow.json", {item["href"] for item in manifest["data_files"]})
+            self.assertIn("pivot.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("snapshot.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("freshness.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("manifest.json", {item["href"] for item in manifest["data_files"]})
@@ -601,6 +623,10 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertRegex(artifact_by_href["workflow.html"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["workflow.json"]["status"], "ok")
             self.assertRegex(artifact_by_href["workflow.json"]["sha256"], r"^[0-9a-f]{64}$")
+            self.assertEqual(artifact_by_href["pivot.html"]["status"], "ok")
+            self.assertRegex(artifact_by_href["pivot.html"]["sha256"], r"^[0-9a-f]{64}$")
+            self.assertEqual(artifact_by_href["pivot.json"]["status"], "ok")
+            self.assertRegex(artifact_by_href["pivot.json"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["snapshot.html"]["status"], "ok")
             self.assertRegex(artifact_by_href["snapshot.html"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["snapshot.json"]["status"], "ok")
@@ -657,6 +683,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("freshness.json", release_html)
             self.assertIn("workflow.html", release_html)
             self.assertIn("workflow.json", release_html)
+            self.assertIn("pivot.html", release_html)
+            self.assertIn("pivot.json", release_html)
             self.assertIn("snapshot.html", release_html)
             self.assertIn("snapshot.json", release_html)
             self.assertIn("guides/metadata.schema.json", release_html)
