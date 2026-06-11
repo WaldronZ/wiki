@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>研究线分类覆盖地图</title>
+  <title>研究簇驾驶舱</title>
   <style>
     :root {
       color-scheme: light;
@@ -351,50 +351,34 @@
       header { padding-top: 28px; }
     }
 
-    .coverage-top {
+    .cluster-summary {
       display: grid;
-      gap: 3px;
-      margin-top: 4px;
-      font-size: 12px;
-      line-height: 1.35;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
     }
-    .coverage-controls {
-      display: grid;
-      grid-template-columns: minmax(220px, 1fr) minmax(140px, 190px) minmax(160px, 210px) repeat(3, auto);
+    .cluster-controls {
+      display: flex;
       gap: 10px;
-      align-items: center;
+      flex-wrap: wrap;
       margin-bottom: 12px;
     }
-    .coverage-controls input,
-    .coverage-controls select {
-      width: 100%;
+    .cluster-tags, .cluster-papers {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .cluster-chip, .cluster-papers a {
       border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-      padding: 10px 12px;
-      color: var(--text);
-      font: inherit;
-    }
-    .coverage-table {
-      min-width: 1180px;
-    }
-    .balance-meter {
-      width: 120px;
-      height: 8px;
       border-radius: 999px;
-      background: #eadfce;
-      overflow: hidden;
-      margin-top: 6px;
+      padding: 3px 7px;
+      background: var(--panel);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 12px;
     }
-    .balance-meter span {
-      display: block;
-      height: 100%;
-      border-radius: inherit;
-      background: var(--accent);
-    }
-    @media (max-width: 900px) {
-      .coverage-controls { grid-template-columns: 1fr; }
-    }
+    .cluster-row[hidden] { display: none; }
+    .cluster-table td { vertical-align: top; }
     
   </style>
 </head>
@@ -412,165 +396,111 @@
 </div>
 
 <header class="shell">
-  <div class="eyebrow">Coverage Map</div>
-  <h1>研究线分类覆盖地图</h1>
-  <p class="lead">按研究线检查 domain、track、problem、topic、method 和角色是否覆盖完整，并显示每条线的维护 owner。适合在论文数量变多后，把补分类任务分派到具体研究线。</p>
+  <div class="eyebrow">Research Clusters</div>
+  <h1>研究簇驾驶舱</h1>
+  <p class="lead">按研究线聚合论文簇，显示 owner、角色/状态分布、top taxonomy labels、代表论文和拆分候选。适合在论文数量增长后判断哪些方向需要拆分、合并或补充分类。</p>
   <div class="stats">
-    <a class="stat" href="library.html">论文库表格</a>
-    <a class="stat" href="balance.html">分类均衡</a>
-    <a class="stat" href="facets.html">分类工作台</a>
-    <a class="stat" href="quality.html">质量治理</a>
-    <a class="stat" href="lines/index.html">研究线</a>
-    <span class="stat">研究线 2</span>
-    <span class="stat">平均覆盖 100.0</span>
-    <span class="stat">高风险 0</span>
-    <span class="stat">缺口 0</span>
+    <a class="stat" href="clusters.json">Clusters JSON</a>
+    <a class="stat" href="routing.html">分类路由器</a>
+    <a class="stat" href="taxonomy_map.html">分类图谱</a>
+    <a class="stat" href="coverage.html">覆盖地图</a>
+    <a class="stat" href="ownership.html">Owner 工作台</a>
+    <span class="stat">论文 5</span>
+    <span class="stat">簇 2</span>
   </div>
 </header>
 <main class="shell">
-  <section class="metric-grid">
-    <section class="metric-card"><span>平均覆盖分</span><strong>100.0</strong><span>跨研究线和字段的完整度</span></section>
-    <section class="metric-card"><span>高风险研究线</span><strong>0</strong><span>优先补 taxonomy</span></section>
-    <section class="metric-card"><span>字段缺口</span><strong>0</strong><span>paper-field 级缺失</span></section>
-    <section class="metric-card"><span>研究线</span><strong>2</strong><span>含 Unassigned</span></section>
+  <section class="cluster-summary">
+    <section class="metric-card"><span>研究簇</span><strong>2</strong><span>按 research_line 聚合</span></section>
+    <section class="metric-card"><span>最大簇占比</span><strong>60%</strong><span>过高时考虑拆分</span></section>
+    <section class="metric-card"><span>高风险簇</span><strong>0</strong><span>优先治理</span></section>
+    <section class="metric-card"><span>中风险簇</span><strong>0</strong><span>关注演化</span></section>
   </section>
   <section>
-    <h2 class="section-title">覆盖明细</h2>
-    <div class="coverage-controls">
-      <input id="coverageSearch" type="search" placeholder="搜索研究线或字段">
-      <select id="coverageRisk"><option value="">全部风险</option><option value="high">high</option><option value="medium">medium</option><option value="low">low</option></select>
-      <select id="coverageSort"><option value="risk">风险优先</option><option value="score">覆盖分低到高</option><option value="missing">缺口多到少</option><option value="count">论文多到少</option><option value="line">研究线 A-Z</option></select>
-      <strong id="coverageCount">2 条</strong>
-      <button id="downloadCoverageCsv" class="button" type="button">下载当前 CSV</button>
-      <button id="copyCoverageMarkdown" class="button" type="button">复制治理清单</button>
+    <h2 class="section-title">治理建议</h2>
+    <ul><li>优先检查大簇的 split_candidates，把宽泛研究线拆成更稳定的子方向。</li></ul>
+  </section>
+  <section>
+    <h2 class="section-title">研究簇</h2>
+    <div class="cluster-controls">
+      <input id="clusterSearch" type="search" placeholder="搜索研究线、标签、owner">
+      <select id="clusterRisk"><option value="">全部风险</option><option value="high">高</option><option value="medium">中</option><option value="low">低</option></select>
+      <select id="clusterOwner"><option value="">全部 owner</option><option value="decoding-owner">decoding-owner</option><option value="kernel-owner">kernel-owner</option></select>
+      <button id="downloadClustersCsv" class="button" type="button">下载 CSV</button>
+      <button id="copyClusterPlan" class="button" type="button">复制治理计划</button>
+      <span class="stat" id="clusterCount">0 clusters</span>
     </div>
-    <div class="table-wrap">
-      <table class="data-table coverage-table"><thead><tr><th>研究线</th><th>Owner</th><th>覆盖分</th><th>风险</th><th>Domain</th><th>Track</th><th>Problem</th><th>Topic</th><th>Method</th><th>Role</th></tr></thead><tbody id="coverageRows"><tr data-line="Parallel Decoding with Diffusion Models" data-risk="low" data-score="100" data-missing="0" data-count="3" data-search="parallel decoding with diffusion models low decoding-owner generation domain track problem topic method role"><td><a href="lines/parallel-decoding-with-diffusion-models.html">Parallel Decoding with Diffusion Models</a><div class="meta">3 篇</div></td><td>decoding-owner<div class="meta">generation</div></td><td><strong>100</strong><div class="balance-meter"><span style="width:100%"></span></div></td><td><span class="flag">low</span><div class="meta">缺口 0</div></td><td data-missing="0" data-coverage="100"><strong>100%</strong><div class="meta">缺 0 / 唯一 1</div><div class="coverage-top"><a href="library.html?line=Parallel+Decoding+with+Diffusion+Models&amp;domain=LLM+Systems">LLM Systems</a> <span class="meta">3</span></div></td><td data-missing="0" data-coverage="100"><strong>100%</strong><div class="meta">缺 0 / 唯一 2</div><div class="coverage-top"><a href="library.html?line=Parallel+Decoding+with+Diffusion+Models&amp;track=Inference+Acceleration">Inference Acceleration</a> <span class="meta">3</span>, <a href="library.html?line=Parallel+Decoding+with+Diffusion+Models&amp;track=Parallel+Decoding">Parallel Decoding</a> <span class="meta">3</span></div></td><td data-missing="0" data-coverage="100"><strong>100%</strong><div class="meta">缺 0 / 唯一 3</div><div class="coverage-top"><a href="library.html?line=Parallel+Decoding+with+Diffusion+Models&amp;problem=Lossless+Speculative+Decoding">Lossless Speculative Decoding</a> <span class="meta">1</span>, <a href="library.html?line=Parallel+Decoding+with+Diffusion+Models&amp;problem=Parallel+Diffusion+Decoding">Parallel Diffusion Decoding</a> <span class="meta">1</span></div></td><td data-missing="0" data-coverage="100"><strong>100%</strong><div class="meta">缺 0 / 唯一 7</div><div class="coverage-top"><a href="library.html?line=Parallel+Decoding+with+Diffusion+Models&amp;topic=Diffusion+Language+Models">Diffusion Language Models</a> <span class="meta">3</span>, <a href="library.html?line=Parallel+Decoding+with+Diffusion+Models&amp;topic=Speculative+Decoding">Speculative Decoding</a> <span class="meta">3</span></div></td><td data-missing="0" data-coverage="100"><strong>100%</strong><div class="meta">缺 0 / 唯一 16</div><div class="coverage-top"><a href="library.html?line=Parallel+Decoding+with+Diffusion+Models&amp;method=block+diffusion">block diffusion</a> <span class="meta">1</span>, <a href="library.html?line=Parallel+Decoding+with+Diffusion+Models&amp;method=KV+injection">KV injection</a> <span class="meta">1</span></div></td><td data-missing="0" data-coverage="100"><strong>100%</strong><div class="meta">缺 0 / 唯一 3</div><div class="coverage-top"><a href="library.html?line=Parallel+Decoding+with+Diffusion+Models&amp;role=followup">followup</a> <span class="meta">1</span>, <a href="library.html?line=Parallel+Decoding+with+Diffusion+Models&amp;role=foundation">foundation</a> <span class="meta">1</span></div></td></tr><tr data-line="Efficient Attention Kernels" data-risk="low" data-score="100" data-missing="0" data-count="2" data-search="efficient attention kernels low kernel-owner systems domain track problem topic method role"><td><a href="lines/efficient-attention-kernels.html">Efficient Attention Kernels</a><div class="meta">2 篇</div></td><td>kernel-owner<div class="meta">systems</div></td><td><strong>100</strong><div class="balance-meter"><span style="width:100%"></span></div></td><td><span class="flag">low</span><div class="meta">缺口 0</div></td><td data-missing="0" data-coverage="100"><strong>100%</strong><div class="meta">缺 0 / 唯一 1</div><div class="coverage-top"><a href="library.html?line=Efficient+Attention+Kernels&amp;domain=LLM+Systems">LLM Systems</a> <span class="meta">2</span></div></td><td data-missing="0" data-coverage="100"><strong>100%</strong><div class="meta">缺 0 / 唯一 2</div><div class="coverage-top"><a href="library.html?line=Efficient+Attention+Kernels&amp;track=Attention+Kernels">Attention Kernels</a> <span class="meta">2</span>, <a href="library.html?line=Efficient+Attention+Kernels&amp;track=Inference+Serving+Systems">Inference Serving Systems</a> <span class="meta">1</span></div></td><td data-missing="0" data-coverage="100"><strong>100%</strong><div class="meta">缺 0 / 唯一 2</div><div class="coverage-top"><a href="library.html?line=Efficient+Attention+Kernels&amp;problem=Customizable+Attention+Serving">Customizable Attention Serving</a> <span class="meta">1</span>, <a href="library.html?line=Efficient+Attention+Kernels&amp;problem=Efficient+Exact+Attention">Efficient Exact Attention</a> <span class="meta">1</span></div></td><td data-missing="0" data-coverage="100"><strong>100%</strong><div class="meta">缺 0 / 唯一 9</div><div class="coverage-top"><a href="library.html?line=Efficient+Attention+Kernels&amp;topic=Attention+Kernels">Attention Kernels</a> <span class="meta">1</span>, <a href="library.html?line=Efficient+Attention+Kernels&amp;topic=GPU+Systems">GPU Systems</a> <span class="meta">1</span></div></td><td data-missing="0" data-coverage="100"><strong>100%</strong><div class="meta">缺 0 / 唯一 10</div><div class="coverage-top"><a href="library.html?line=Efficient+Attention+Kernels&amp;method=FlashAttention">FlashAttention</a> <span class="meta">2</span>, <a href="library.html?line=Efficient+Attention+Kernels&amp;method=block-sparse+attention">block-sparse attention</a> <span class="meta">1</span></div></td><td data-missing="0" data-coverage="100"><strong>100%</strong><div class="meta">缺 0 / 唯一 2</div><div class="coverage-top"><a href="library.html?line=Efficient+Attention+Kernels&amp;role=system">system</a> <span class="meta">1</span>, <a href="library.html?line=Efficient+Attention+Kernels&amp;role=foundation">foundation</a> <span class="meta">1</span></div></td></tr></tbody></table>
-    </div>
+    <div class="table-wrap"><table class="data-table cluster-table"><thead><tr><th>风险</th><th>研究簇</th><th>论文</th><th>年份</th><th>角色 / 状态</th><th>Top labels</th><th>拆分候选</th><th>代表论文</th></tr></thead><tbody id="clusterRows"><tr class="cluster-row" data-risk="low" data-owner="decoding-owner" data-search="parallel decoding with diffusion models decoding-owner generation topics:llm inference (2); topics:llm serving (2); topics:parallel decoding (2) read:3 followup:1, foundation:1, variant:1 llm systems inference acceleration parallel decoding lossless speculative decoding parallel diffusion decoding memory-efficient parallel token generation diffusion language models speculative decoding llm inference llm serving parallel decoding llm kv cache block diffusion kv injection parallel drafting speculative decoding target hidden features gated lora introspective consistency introspective strided decoding"><td><span class="flag">低</span><div class="meta">healthy cluster</div></td><td><a href="lines/parallel-decoding-with-diffusion-models.html"><strong>Parallel Decoding with Diffusion Models</strong></a><div class="meta">decoding-owner</div></td><td>3<div class="meta">60%</div></td><td>[2026, 2026]</td><td>followup:1, foundation:1, variant:1<div class="meta">read:3</div></td><td><div><span class="meta">domains</span><div class="cluster-tags"><span class="cluster-chip">LLM Systems 3</span></div></div><div><span class="meta">tracks</span><div class="cluster-tags"><span class="cluster-chip">Inference Acceleration 3</span><span class="cluster-chip">Parallel Decoding 3</span></div></div><div><span class="meta">problems</span><div class="cluster-tags"><span class="cluster-chip">Lossless Speculative Decoding 1</span><span class="cluster-chip">Parallel Diffusion Decoding 1</span><span class="cluster-chip">Memory-Efficient Parallel Token Generation 1</span></div></div><div><span class="meta">topics</span><div class="cluster-tags"><span class="cluster-chip">Diffusion Language Models 3</span><span class="cluster-chip">Speculative Decoding 3</span><span class="cluster-chip">LLM Inference 2</span><span class="cluster-chip">LLM Serving 2</span></div></div><div><span class="meta">methods</span><div class="cluster-tags"><span class="cluster-chip">block diffusion 1</span><span class="cluster-chip">KV injection 1</span><span class="cluster-chip">parallel drafting 1</span><span class="cluster-chip">Speculative Decoding 1</span></div></div></td><td>topics:LLM Inference (2); topics:LLM Serving (2); topics:Parallel Decoding (2)</td><td><div class="cluster-papers"><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></div></td></tr><tr class="cluster-row" data-risk="low" data-owner="kernel-owner" data-search="efficient attention kernels kernel-owner systems  read:2 system:1, foundation:1 llm systems attention kernels inference serving systems customizable attention serving efficient exact attention attention kernels gpu systems inference optimization kv cache llm serving efficient attention gpu kernel optimization long context flashattention block-sparse attention composable kv-cache format cuda graph jit compilation load-balanced scheduling cuda / gpu parallelism online softmax"><td><span class="flag">低</span><div class="meta">healthy cluster</div></td><td><a href="lines/efficient-attention-kernels.html"><strong>Efficient Attention Kernels</strong></a><div class="meta">kernel-owner</div></td><td>2<div class="meta">40%</div></td><td>[2023, 2025]</td><td>system:1, foundation:1<div class="meta">read:2</div></td><td><div><span class="meta">domains</span><div class="cluster-tags"><span class="cluster-chip">LLM Systems 2</span></div></div><div><span class="meta">tracks</span><div class="cluster-tags"><span class="cluster-chip">Attention Kernels 2</span><span class="cluster-chip">Inference Serving Systems 1</span></div></div><div><span class="meta">problems</span><div class="cluster-tags"><span class="cluster-chip">Customizable Attention Serving 1</span><span class="cluster-chip">Efficient Exact Attention 1</span></div></div><div><span class="meta">topics</span><div class="cluster-tags"><span class="cluster-chip">Attention Kernels 1</span><span class="cluster-chip">GPU Systems 1</span><span class="cluster-chip">Inference Optimization 1</span><span class="cluster-chip">KV Cache 1</span></div></div><div><span class="meta">methods</span><div class="cluster-tags"><span class="cluster-chip">FlashAttention 2</span><span class="cluster-chip">block-sparse attention 1</span><span class="cluster-chip">composable KV-cache format 1</span><span class="cluster-chip">CUDA Graph 1</span></div></div></td><td>-</td><td><div class="cluster-papers"><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></div></td></tr></tbody></table></div>
   </section>
 </main>
 <script>
-const coverageData = [{"line": "Parallel Decoding with Diffusion Models", "href": "lines/parallel-decoding-with-diffusion-models.html", "count": 3, "owner": "decoding-owner", "team": "generation", "cadence": "biweekly", "score": 100, "risk": "low", "missing_total": 0, "fields": [{"field": "domains", "label": "Domain", "query_key": "domain", "coverage": 100, "missing": 0, "unique": 1, "top_values": [{"value": "LLM Systems", "count": 3}]}, {"field": "tracks", "label": "Track", "query_key": "track", "coverage": 100, "missing": 0, "unique": 2, "top_values": [{"value": "Inference Acceleration", "count": 3}, {"value": "Parallel Decoding", "count": 3}]}, {"field": "problems", "label": "Problem", "query_key": "problem", "coverage": 100, "missing": 0, "unique": 3, "top_values": [{"value": "Lossless Speculative Decoding", "count": 1}, {"value": "Parallel Diffusion Decoding", "count": 1}, {"value": "Memory-Efficient Parallel Token Generation", "count": 1}]}, {"field": "topics", "label": "Topic", "query_key": "topic", "coverage": 100, "missing": 0, "unique": 7, "top_values": [{"value": "Diffusion Language Models", "count": 3}, {"value": "Speculative Decoding", "count": 3}, {"value": "LLM Inference", "count": 2}, {"value": "LLM Serving", "count": 2}]}, {"field": "methods", "label": "Method", "query_key": "method", "coverage": 100, "missing": 0, "unique": 16, "top_values": [{"value": "block diffusion", "count": 1}, {"value": "KV injection", "count": 1}, {"value": "parallel drafting", "count": 1}, {"value": "Speculative Decoding", "count": 1}]}, {"field": "line_role", "label": "Role", "query_key": "role", "coverage": 100, "missing": 0, "unique": 3, "top_values": [{"value": "followup", "count": 1}, {"value": "foundation", "count": 1}, {"value": "variant", "count": 1}]}]}, {"line": "Efficient Attention Kernels", "href": "lines/efficient-attention-kernels.html", "count": 2, "owner": "kernel-owner", "team": "systems", "cadence": "monthly", "score": 100, "risk": "low", "missing_total": 0, "fields": [{"field": "domains", "label": "Domain", "query_key": "domain", "coverage": 100, "missing": 0, "unique": 1, "top_values": [{"value": "LLM Systems", "count": 2}]}, {"field": "tracks", "label": "Track", "query_key": "track", "coverage": 100, "missing": 0, "unique": 2, "top_values": [{"value": "Attention Kernels", "count": 2}, {"value": "Inference Serving Systems", "count": 1}]}, {"field": "problems", "label": "Problem", "query_key": "problem", "coverage": 100, "missing": 0, "unique": 2, "top_values": [{"value": "Customizable Attention Serving", "count": 1}, {"value": "Efficient Exact Attention", "count": 1}]}, {"field": "topics", "label": "Topic", "query_key": "topic", "coverage": 100, "missing": 0, "unique": 9, "top_values": [{"value": "Attention Kernels", "count": 1}, {"value": "GPU Systems", "count": 1}, {"value": "Inference Optimization", "count": 1}, {"value": "KV Cache", "count": 1}]}, {"field": "methods", "label": "Method", "query_key": "method", "coverage": 100, "missing": 0, "unique": 10, "top_values": [{"value": "FlashAttention", "count": 2}, {"value": "block-sparse attention", "count": 1}, {"value": "composable KV-cache format", "count": 1}, {"value": "CUDA Graph", "count": 1}]}, {"field": "line_role", "label": "Role", "query_key": "role", "coverage": 100, "missing": 0, "unique": 2, "top_values": [{"value": "system", "count": 1}, {"value": "foundation", "count": 1}]}]}];
-const coverageSearch = document.querySelector("#coverageSearch");
-const coverageRisk = document.querySelector("#coverageRisk");
-const coverageSort = document.querySelector("#coverageSort");
-const coverageCount = document.querySelector("#coverageCount");
-const coverageBody = document.querySelector("#coverageRows");
-const coverageRows = Array.from(document.querySelectorAll("#coverageRows tr"));
-const downloadCoverageCsv = document.querySelector("#downloadCoverageCsv");
-const copyCoverageMarkdown = document.querySelector("#copyCoverageMarkdown");
-const coverageRiskRank = { high: 0, medium: 1, low: 2 };
+const clusterRows = Array.from(document.querySelectorAll("#clusterRows tr"));
+const clusterSearch = document.querySelector("#clusterSearch");
+const clusterRisk = document.querySelector("#clusterRisk");
+const clusterOwner = document.querySelector("#clusterOwner");
+const clusterCount = document.querySelector("#clusterCount");
+const downloadClustersCsv = document.querySelector("#downloadClustersCsv");
+const copyClusterPlan = document.querySelector("#copyClusterPlan");
 
-function visibleCoverageRows() {
-  return coverageRows.filter(row => !row.hidden);
-}
-
-function coverageCsvCell(value) {
+function clusterCsvCell(value) {
   const text = String(value ?? "");
   return (text.includes(",") || text.includes('"') || text.includes("\n"))
     ? `"${text.replaceAll('"', '""')}"`
     : text;
 }
 
-function coverageMetric(row, key) {
-  return Number(row.dataset[key] || 0);
+function visibleClusterRows() {
+  return clusterRows.filter(row => !row.hidden);
 }
 
-function sortCoverageRows(rows) {
-  const mode = coverageSort.value;
-  return [...rows].sort((a, b) => {
-    if (mode === "score") return coverageMetric(a, "score") - coverageMetric(b, "score") || a.dataset.line.localeCompare(b.dataset.line);
-    if (mode === "missing") return coverageMetric(b, "missing") - coverageMetric(a, "missing") || a.dataset.line.localeCompare(b.dataset.line);
-    if (mode === "count") return coverageMetric(b, "count") - coverageMetric(a, "count") || a.dataset.line.localeCompare(b.dataset.line);
-    if (mode === "line") return a.dataset.line.localeCompare(b.dataset.line);
-    return (coverageRiskRank[a.dataset.risk] ?? 9) - (coverageRiskRank[b.dataset.risk] ?? 9) || coverageMetric(a, "score") - coverageMetric(b, "score");
+function renderClusterRows() {
+  const q = clusterSearch.value.trim().toLowerCase();
+  const risk = clusterRisk.value;
+  const owner = clusterOwner.value;
+  clusterRows.forEach(row => {
+    const hitSearch = !q || (row.dataset.search || "").includes(q);
+    const hitRisk = !risk || row.dataset.risk === risk;
+    const hitOwner = !owner || row.dataset.owner === owner;
+    row.hidden = !(hitSearch && hitRisk && hitOwner);
   });
+  clusterCount.textContent = `${visibleClusterRows().length} clusters`;
 }
 
-function renderCoverageRows() {
-  const q = coverageSearch.value.trim().toLowerCase();
-  const risk = coverageRisk.value;
-  let visible = 0;
-  coverageRows.forEach(row => {
-    const hit = (!q || row.dataset.search.includes(q)) && (!risk || row.dataset.risk === risk);
-    row.hidden = !hit;
-    if (hit) visible += 1;
-  });
-  sortCoverageRows(coverageRows).forEach(row => coverageBody.appendChild(row));
-  coverageCount.textContent = `${visible} / ${coverageRows.length} 条`;
-}
-
-function filteredCoverageData() {
-  const visibleLines = new Set(visibleCoverageRows().map(row => row.dataset.line));
-  return coverageData.filter(row => visibleLines.has(row.line));
-}
-
-function downloadCoverageRows() {
-  const rows = filteredCoverageData();
-  if (!rows.length) {
-    window.alert("当前筛选结果为空。");
-    return;
-  }
-  const header = ["research_line", "owner", "team", "cadence", "papers", "score", "risk", "missing_total", "field", "coverage", "missing", "unique", "top_values"];
-  const flat = [];
-  rows.forEach(row => {
-    row.fields.forEach(field => {
-      flat.push([
-        row.line,
-        row.owner || "",
-        row.team || "",
-        row.cadence || "",
-        row.count,
-        row.score,
-        row.risk,
-        row.missing_total,
-        field.label,
-        field.coverage,
-        field.missing,
-        field.unique,
-        (field.top_values || []).map(item => `${item.value}:${item.count}`).join("; "),
-      ]);
-    });
-  });
-  const csv = [header, ...flat].map(row => row.map(coverageCsvCell).join(",")).join("\n") + "\n";
+function downloadClusters() {
+  const header = ["risk", "cluster", "papers", "years", "roles_status", "labels", "split_candidates", "representatives"];
+  const rows = visibleClusterRows().map(row => Array.from(row.children).map(cell => cell.textContent.trim().replace(/\s+/g, " ")));
+  if (!rows.length) return;
+  const csv = [header, ...rows].map(row => row.map(clusterCsvCell).join(",")).join("\n") + "\n";
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = "research_line_coverage.csv";
+  link.download = "research_clusters.csv";
   document.body.appendChild(link);
   link.click();
   link.remove();
   URL.revokeObjectURL(url);
 }
 
-async function copyCoverageQueue() {
-  const rows = filteredCoverageData();
-  if (!rows.length) {
-    window.alert("当前筛选结果为空。");
-    return;
-  }
-  const lines = ["# Research Line Coverage Review", ""];
-  rows.forEach(row => {
-    const weak = row.fields.filter(field => field.missing > 0 || field.coverage < 100);
-    lines.push(`- [ ] ${row.risk} / score ${row.score} / ${row.line}`);
-    if (row.owner || row.team) lines.push(`  - Owner: ${row.owner || "Unassigned"}${row.team ? " / " + row.team : ""}`);
-    lines.push(`  - Papers: ${row.count}, missing slots: ${row.missing_total}`);
-    weak.forEach(field => lines.push(`  - ${field.label}: ${field.coverage}%, missing ${field.missing}, unique ${field.unique}`));
+async function copyPlan() {
+  const lines = visibleClusterRows().map(row => {
+    const cells = Array.from(row.children).map(cell => cell.textContent.trim().replace(/\s+/g, " "));
+    return `- [ ] ${cells[1]}: risk=${cells[0]}, papers=${cells[2]}, split=${cells[6]}`;
   });
-  const text = lines.join("\n") + "\n";
+  const text = lines.join("\n");
   try {
     await navigator.clipboard.writeText(text);
-    window.alert("已复制。");
-  } catch {
-    window.prompt("复制治理清单", text);
+    copyClusterPlan.textContent = "已复制";
+    setTimeout(() => copyClusterPlan.textContent = "复制治理计划", 1200);
+  } catch (error) {
+    window.prompt("复制治理计划", text);
   }
 }
 
-[coverageSearch, coverageRisk, coverageSort].forEach(control => control.addEventListener("input", renderCoverageRows));
-downloadCoverageCsv.addEventListener("click", downloadCoverageRows);
-copyCoverageMarkdown.addEventListener("click", copyCoverageQueue);
-renderCoverageRows();
+[clusterSearch, clusterRisk, clusterOwner].forEach(control => control.addEventListener("input", renderClusterRows));
+downloadClustersCsv.addEventListener("click", downloadClusters);
+copyClusterPlan.addEventListener("click", copyPlan);
+renderClusterRows();
 </script>
 
 <script>

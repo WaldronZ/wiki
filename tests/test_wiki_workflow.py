@@ -237,6 +237,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "pivot.html",
                 "compare.html",
                 "taxonomy_map.html",
+                "clusters.html",
                 "scale.html",
                 "ownership.html",
                 "routing.html",
@@ -273,6 +274,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "pivot.json",
                 "compare.json",
                 "taxonomy_map.json",
+                "clusters.json",
                 "scale.json",
                 "ownership.json",
                 "routing.json",
@@ -330,6 +332,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn('"href": "pivot.html"', index_html)
             self.assertIn('"href": "compare.html"', index_html)
             self.assertIn('"href": "taxonomy_map.html"', index_html)
+            self.assertIn('"href": "clusters.html"', index_html)
             self.assertIn('"href": "scale.html"', index_html)
             self.assertIn('"href": "ownership.html"', index_html)
             self.assertIn('"href": "routing.html"', index_html)
@@ -342,6 +345,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("Data: pivot.json", index_html)
             self.assertIn("Data: compare.json", index_html)
             self.assertIn("Data: taxonomy_map.json", index_html)
+            self.assertIn("Data: clusters.json", index_html)
             self.assertIn("Data: scale.json", index_html)
             self.assertIn("Data: ownership.json", index_html)
             self.assertIn("Data: routing.json", index_html)
@@ -497,6 +501,19 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("Map JSON", taxonomy_map_html)
             self.assertIn('id="mapSearch"', taxonomy_map_html)
             self.assertIn("taxonomy_map_edges.csv", taxonomy_map_html)
+            clusters = json.loads((report_dir / "clusters.json").read_text(encoding="utf-8"))
+            self.assertEqual(clusters["count"], 2)
+            self.assertEqual(clusters["cluster_count"], 2)
+            self.assertTrue(clusters["clusters"])
+            self.assertIn("LLM Serving", {item["name"] for item in clusters["clusters"]})
+            serving_cluster = next(item for item in clusters["clusters"] if item["name"] == "LLM Serving")
+            self.assertIn("representative_slugs", serving_cluster)
+            self.assertIn(serving_cluster["risk"], {"high", "medium", "low"})
+            clusters_html = (report_dir / "clusters.html").read_text(encoding="utf-8")
+            self.assertIn("研究簇驾驶舱", clusters_html)
+            self.assertIn("Clusters JSON", clusters_html)
+            self.assertIn('id="clusterSearch"', clusters_html)
+            self.assertIn("research_clusters.csv", clusters_html)
             scale = json.loads((report_dir / "scale.json").read_text(encoding="utf-8"))
             self.assertEqual(scale["count"], 2)
             self.assertIn(scale["readiness_label"], {"ready", "watch", "needs_governance"})
@@ -560,6 +577,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("papers.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("catalog.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("taxonomy_map.json", {item["href"] for item in catalog["data_resources"]})
+            self.assertIn("clusters.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("scale.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("ownership.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("routing.json", {item["href"] for item in catalog["data_resources"]})
@@ -748,6 +766,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("pivot.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("compare.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("taxonomy_map.html", {item["href"] for item in manifest["pages"]})
+            self.assertIn("clusters.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("scale.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("ownership.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("routing.html", {item["href"] for item in manifest["pages"]})
@@ -764,6 +783,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("pivot.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("compare.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("taxonomy_map.json", {item["href"] for item in manifest["data_files"]})
+            self.assertIn("clusters.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("scale.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("ownership.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("routing.json", {item["href"] for item in manifest["data_files"]})

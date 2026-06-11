@@ -1,0 +1,356 @@
+{
+  "generated_at": "2026-06-12T04:36:20",
+  "count": 5,
+  "cluster_count": 2,
+  "largest_cluster_share": 0.6,
+  "clusters": [
+    {
+      "id": "parallel-decoding-with-diffusion-models",
+      "name": "Parallel Decoding with Diffusion Models",
+      "research_line": "Parallel Decoding with Diffusion Models",
+      "href": "lines/parallel-decoding-with-diffusion-models.html",
+      "count": 3,
+      "share": 0.6,
+      "risk": "low",
+      "risk_reasons": [
+        "healthy cluster"
+      ],
+      "owner": "decoding-owner",
+      "team": "generation",
+      "cadence": "biweekly",
+      "year_span": [
+        2026,
+        2026
+      ],
+      "status_counts": [
+        {
+          "value": "read",
+          "count": 3
+        }
+      ],
+      "role_counts": [
+        {
+          "value": "followup",
+          "count": 1
+        },
+        {
+          "value": "foundation",
+          "count": 1
+        },
+        {
+          "value": "variant",
+          "count": 1
+        }
+      ],
+      "top_labels": {
+        "domains": [
+          {
+            "value": "LLM Systems",
+            "count": 3
+          }
+        ],
+        "tracks": [
+          {
+            "value": "Inference Acceleration",
+            "count": 3
+          },
+          {
+            "value": "Parallel Decoding",
+            "count": 3
+          }
+        ],
+        "problems": [
+          {
+            "value": "Lossless Speculative Decoding",
+            "count": 1
+          },
+          {
+            "value": "Parallel Diffusion Decoding",
+            "count": 1
+          },
+          {
+            "value": "Memory-Efficient Parallel Token Generation",
+            "count": 1
+          }
+        ],
+        "topics": [
+          {
+            "value": "Diffusion Language Models",
+            "count": 3
+          },
+          {
+            "value": "Speculative Decoding",
+            "count": 3
+          },
+          {
+            "value": "LLM Inference",
+            "count": 2
+          },
+          {
+            "value": "LLM Serving",
+            "count": 2
+          },
+          {
+            "value": "Parallel Decoding",
+            "count": 2
+          },
+          {
+            "value": "LLM",
+            "count": 1
+          },
+          {
+            "value": "KV Cache",
+            "count": 1
+          }
+        ],
+        "methods": [
+          {
+            "value": "block diffusion",
+            "count": 1
+          },
+          {
+            "value": "KV injection",
+            "count": 1
+          },
+          {
+            "value": "parallel drafting",
+            "count": 1
+          },
+          {
+            "value": "Speculative Decoding",
+            "count": 1
+          },
+          {
+            "value": "target hidden features",
+            "count": 1
+          },
+          {
+            "value": "gated LoRA",
+            "count": 1
+          },
+          {
+            "value": "introspective consistency",
+            "count": 1
+          },
+          {
+            "value": "introspective strided decoding",
+            "count": 1
+          }
+        ]
+      },
+      "split_candidates": [
+        {
+          "field": "topics",
+          "value": "LLM Inference",
+          "count": 2,
+          "share": 0.667,
+          "href": "library.html?topic=LLM+Inference"
+        },
+        {
+          "field": "topics",
+          "value": "LLM Serving",
+          "count": 2,
+          "share": 0.667,
+          "href": "library.html?topic=LLM+Serving"
+        },
+        {
+          "field": "topics",
+          "value": "Parallel Decoding",
+          "count": 2,
+          "share": 0.667,
+          "href": "library.html?topic=Parallel+Decoding"
+        }
+      ],
+      "representative_slugs": [
+        "2604.11035-introspective-dlm",
+        "2602.06036-dflash",
+        "2605.12825-orthrus"
+      ],
+      "representative_papers": [
+        {
+          "slug": "2604.11035-introspective-dlm",
+          "title": "内省式扩散语言模型",
+          "href": "2604.11035-introspective-dlm.html",
+          "importance": 5,
+          "year": 2026
+        },
+        {
+          "slug": "2602.06036-dflash",
+          "title": "DFlash：用于快速 speculative decoding 的块扩散方法",
+          "href": "2602.06036-dflash.html",
+          "importance": 4,
+          "year": 2026
+        },
+        {
+          "slug": "2605.12825-orthrus",
+          "title": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+          "href": "2605.12825-orthrus.html",
+          "importance": 4,
+          "year": 2026
+        }
+      ]
+    },
+    {
+      "id": "efficient-attention-kernels",
+      "name": "Efficient Attention Kernels",
+      "research_line": "Efficient Attention Kernels",
+      "href": "lines/efficient-attention-kernels.html",
+      "count": 2,
+      "share": 0.4,
+      "risk": "low",
+      "risk_reasons": [
+        "healthy cluster"
+      ],
+      "owner": "kernel-owner",
+      "team": "systems",
+      "cadence": "monthly",
+      "year_span": [
+        2023,
+        2025
+      ],
+      "status_counts": [
+        {
+          "value": "read",
+          "count": 2
+        }
+      ],
+      "role_counts": [
+        {
+          "value": "system",
+          "count": 1
+        },
+        {
+          "value": "foundation",
+          "count": 1
+        }
+      ],
+      "top_labels": {
+        "domains": [
+          {
+            "value": "LLM Systems",
+            "count": 2
+          }
+        ],
+        "tracks": [
+          {
+            "value": "Attention Kernels",
+            "count": 2
+          },
+          {
+            "value": "Inference Serving Systems",
+            "count": 1
+          }
+        ],
+        "problems": [
+          {
+            "value": "Customizable Attention Serving",
+            "count": 1
+          },
+          {
+            "value": "Efficient Exact Attention",
+            "count": 1
+          }
+        ],
+        "topics": [
+          {
+            "value": "Attention Kernels",
+            "count": 1
+          },
+          {
+            "value": "GPU Systems",
+            "count": 1
+          },
+          {
+            "value": "Inference Optimization",
+            "count": 1
+          },
+          {
+            "value": "KV Cache",
+            "count": 1
+          },
+          {
+            "value": "LLM Serving",
+            "count": 1
+          },
+          {
+            "value": "Efficient Attention",
+            "count": 1
+          },
+          {
+            "value": "GPU Kernel Optimization",
+            "count": 1
+          },
+          {
+            "value": "Long Context",
+            "count": 1
+          }
+        ],
+        "methods": [
+          {
+            "value": "FlashAttention",
+            "count": 2
+          },
+          {
+            "value": "block-sparse attention",
+            "count": 1
+          },
+          {
+            "value": "composable KV-cache format",
+            "count": 1
+          },
+          {
+            "value": "CUDA Graph",
+            "count": 1
+          },
+          {
+            "value": "JIT compilation",
+            "count": 1
+          },
+          {
+            "value": "load-balanced scheduling",
+            "count": 1
+          },
+          {
+            "value": "CUDA / GPU parallelism",
+            "count": 1
+          },
+          {
+            "value": "online softmax",
+            "count": 1
+          }
+        ]
+      },
+      "split_candidates": [],
+      "representative_slugs": [
+        "2307.08691-flashattention-2",
+        "2501.01005-flashinfer"
+      ],
+      "representative_papers": [
+        {
+          "slug": "2307.08691-flashattention-2",
+          "title": "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
+          "href": "2307.08691-flashattention-2.html",
+          "importance": 5,
+          "year": 2023
+        },
+        {
+          "slug": "2501.01005-flashinfer",
+          "title": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
+          "href": "2501.01005-flashinfer.html",
+          "importance": 4,
+          "year": 2025
+        }
+      ]
+    }
+  ],
+  "recommendations": [
+    "优先检查大簇的 split_candidates，把宽泛研究线拆成更稳定的子方向。"
+  ],
+  "links": {
+    "routing": "routing.html",
+    "taxonomy_map": "taxonomy_map.html",
+    "coverage": "coverage.html",
+    "balance": "balance.html",
+    "ownership": "ownership.html"
+  }
+}

@@ -39,6 +39,7 @@ GENERATED_FIXED_PATHS = (
     "pivot.json",
     "compare.json",
     "taxonomy_map.json",
+    "clusters.json",
     "scale.json",
     "ownership.json",
     "routing.json",
@@ -53,6 +54,7 @@ GENERATED_FIXED_PATHS = (
     "pivot.html",
     "compare.html",
     "taxonomy_map.html",
+    "clusters.html",
     "scale.html",
     "ownership.html",
     "routing.html",
@@ -1873,6 +1875,142 @@ def write_taxonomy_map_json(report_dir: Path, papers: list[dict[str, Any]]) -> N
     )
 
 
+CLUSTER_LABEL_FIELDS = ("domains", "tracks", "problems", "topics", "methods")
+
+
+def cluster_label_counter(items: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for field in CLUSTER_LABEL_FIELDS:
+        counter = Counter(value for paper in items for value in paper.get(field, []) or [])
+        grouped[field] = [{"value": value, "count": count} for value, count in counter.most_common(8)]
+    return grouped
+
+
+def cluster_split_candidates(items: list[dict[str, Any]], cluster_count: int) -> list[dict[str, Any]]:
+    candidates = []
+    for field in ("tracks", "problems", "topics", "methods"):
+        counter = Counter(value for paper in items for value in paper.get(field, []) or [])
+        for value, count in counter.most_common(5):
+            if count <= 1 or count == cluster_count:
+                continue
+            share = round(count / cluster_count, 3) if cluster_count else 0
+            candidates.append(
+                {
+                    "field": field,
+                    "value": value,
+                    "count": count,
+                    "share": share,
+                    "href": routing_label_href(field, value),
+                }
+            )
+    return sorted(candidates, key=lambda item: (-int(item["count"]), str(item["field"]), str(item["value"])))[:8]
+
+
+def cluster_risk(cluster_count: int, total: int, split_candidates: list[dict[str, Any]], role_count: int) -> tuple[str, list[str]]:
+    reasons = []
+    share = cluster_count / total if total else 0
+    if cluster_count == 1:
+        reasons.append("single-paper cluster")
+    if share >= 0.5 and cluster_count >= 8:
+        reasons.append("dominates library")
+    if cluster_count >= 4 and split_candidates:
+        reasons.append("split candidates available")
+    if role_count <= 1 and cluster_count >= 3:
+        reasons.append("thin line roles")
+    if any("dominates" in reason for reason in reasons):
+        return "high", reasons
+    if reasons:
+        return "medium", reasons
+    return "low", ["healthy cluster"]
+
+
+def build_clusters_payload(papers: list[dict[str, Any]]) -> dict[str, Any]:
+    total = len(papers)
+    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for paper in papers:
+        line = str(paper.get("research_line") or "Unassigned").strip() or "Unassigned"
+        grouped[line].append(paper)
+
+    clusters = []
+    for line, items in sorted(grouped.items(), key=lambda item: (-len(item[1]), item[0].lower())):
+        years = sorted(int(paper.get("year") or 0) for paper in items if paper.get("year"))
+        statuses = Counter(str(paper.get("status") or "unknown") for paper in items)
+        roles = Counter(str(paper.get("line_role") or "unclassified") for paper in items)
+        labels = cluster_label_counter(items)
+        splits = cluster_split_candidates(items, len(items))
+        risk, reasons = cluster_risk(len(items), total, splits, len(roles))
+        owner = research_line_owner(line)
+        representatives = sorted(
+            items,
+            key=lambda paper: (-(int(paper.get("importance") or 0)), -(paper.get("year") or 0), paper["title"]),
+        )[:6]
+        clusters.append(
+            {
+                "id": slugify_label(line),
+                "name": line,
+                "research_line": line,
+                "href": f"lines/{slugify_label(line)}.html" if line != "Unassigned" else page_query_href("library.html", line=line),
+                "count": len(items),
+                "share": round(len(items) / total, 3) if total else 0,
+                "risk": risk,
+                "risk_reasons": reasons,
+                "owner": owner.get("owner", ""),
+                "team": owner.get("team", ""),
+                "cadence": owner.get("cadence", ""),
+                "year_span": [years[0], years[-1]] if years else [],
+                "status_counts": [{"value": value, "count": count} for value, count in statuses.most_common()],
+                "role_counts": [{"value": value, "count": count} for value, count in roles.most_common()],
+                "top_labels": labels,
+                "split_candidates": splits,
+                "representative_slugs": [paper["slug"] for paper in representatives],
+                "representative_papers": [
+                    {
+                        "slug": paper["slug"],
+                        "title": paper.get("title_zh") or paper.get("title") or paper["slug"],
+                        "href": paper_href(paper),
+                        "importance": paper.get("importance") or "",
+                        "year": paper.get("year") or "",
+                    }
+                    for paper in representatives
+                ],
+            }
+        )
+
+    singleton_clusters = [cluster for cluster in clusters if int(cluster["count"]) == 1]
+    large_clusters = [cluster for cluster in clusters if float(cluster["share"]) >= 0.35 and int(cluster["count"]) >= 3]
+    recommendations = []
+    if large_clusters:
+        recommendations.append("优先检查大簇的 split_candidates，把宽泛研究线拆成更稳定的子方向。")
+    if singleton_clusters:
+        recommendations.append("单论文簇需要判断是新兴方向、临时分类，还是应该并入已有研究线。")
+    if not recommendations:
+        recommendations.append("当前研究簇分布较稳，可以继续用 routing.html 给新论文分配到现有簇。")
+
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": total,
+        "cluster_count": len(clusters),
+        "largest_cluster_share": max((float(cluster["share"]) for cluster in clusters), default=0),
+        "clusters": clusters,
+        "recommendations": recommendations,
+        "links": {
+            "routing": "routing.html",
+            "taxonomy_map": "taxonomy_map.html",
+            "coverage": "coverage.html",
+            "balance": "balance.html",
+            "ownership": "ownership.html",
+        },
+    }
+
+
+def write_clusters_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_clusters_payload(papers)
+    (report_dir / "clusters.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
 SCALE_CORE_RESOURCES = [
     "papers.json",
     "search_index.json",
@@ -2625,6 +2763,7 @@ DATA_CONSUMER_HINTS = {
     "pivot.json": ["analytics", "classification", "desktop"],
     "compare.json": ["comparison", "curation", "desktop"],
     "taxonomy_map.json": ["taxonomy", "graph", "desktop"],
+    "clusters.json": ["taxonomy", "clusters", "curation"],
     "scale.json": ["ops", "capacity-planning", "desktop"],
     "ownership.json": ["ops", "owners", "project-management"],
     "routing.json": ["taxonomy", "intake", "classification"],
@@ -2948,6 +3087,7 @@ def wiki_pages_manifest() -> list[dict[str, str]]:
         {"title": "分类透视表", "href": "pivot.html", "kind": "analysis", "description": "任意两个分类维度交叉分析论文分布"},
         {"title": "论文对比", "href": "compare.html", "kind": "analysis", "description": "并排比较候选论文的分类、状态和质量信号"},
         {"title": "分类图谱", "href": "taxonomy_map.html", "kind": "analysis", "description": "分类节点、共现边和研究线簇"},
+        {"title": "研究簇", "href": "clusters.html", "kind": "analysis", "description": "研究线簇、拆分候选和代表论文"},
         {"title": "规模就绪", "href": "scale.html", "kind": "ops", "description": "大规模论文库容量、风险和扩展建议"},
         {"title": "Owner 工作台", "href": "ownership.html", "kind": "ops", "description": "研究线 owner、工作量和治理队列"},
         {"title": "分类路由器", "href": "routing.html", "kind": "workflow", "description": "新论文研究线和标签推荐"},
@@ -2979,6 +3119,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "pivot.json", "description": "分类透视表维度、论文投影和交叉分布"},
         {"href": "compare.json", "description": "论文对比视图数据和推荐对比集合"},
         {"href": "taxonomy_map.json", "description": "分类节点、共现边、研究线簇和图谱治理建议"},
+        {"href": "clusters.json", "description": "研究线簇、拆分候选和代表论文"},
         {"href": "scale.json", "description": "规模就绪评分、容量投影和大库治理风险"},
         {"href": "ownership.json", "description": "研究线 owner、工作量和治理队列"},
         {"href": "routing.json", "description": "新论文分类路由画像和推荐权重"},
@@ -8234,6 +8375,211 @@ renderCompare();
 </script>
 """
     (report_dir / "compare.html").write_text(page_shell("论文对比", body, extra_css=compare_css), encoding="utf-8")
+
+
+def render_cluster_label_group(labels: dict[str, list[dict[str, Any]]]) -> str:
+    parts = []
+    for field in ("domains", "tracks", "problems", "topics", "methods"):
+        values = labels.get(field, [])[:4] if isinstance(labels, dict) else []
+        if not values:
+            continue
+        chips = "".join(
+            f'<span class="cluster-chip">{html.escape(str(item.get("value") or ""))} {html.escape(str(item.get("count") or ""))}</span>'
+            for item in values
+        )
+        parts.append(f'<div><span class="meta">{html.escape(field)}</span><div class="cluster-tags">{chips}</div></div>')
+    return "".join(parts) or '<span class="meta">-</span>'
+
+
+def render_cluster_papers(papers: list[dict[str, Any]]) -> str:
+    if not papers:
+        return '<span class="meta">-</span>'
+    return '<div class="cluster-papers">' + "".join(
+        f'<a href="{html.escape(str(paper.get("href") or ""))}">{html.escape(str(paper.get("title") or paper.get("slug") or ""))}</a>'
+        for paper in papers[:5]
+    ) + "</div>"
+
+
+def render_clusters(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_clusters_payload(papers)
+    risk_label = {"high": "高", "medium": "中", "low": "低"}
+    cluster_rows = []
+    for cluster in payload["clusters"]:
+        split_text = "; ".join(
+            f"{item['field']}:{item['value']} ({item['count']})"
+            for item in cluster.get("split_candidates", [])[:5]
+        )
+        status_text = ", ".join(f"{item['value']}:{item['count']}" for item in cluster.get("status_counts", []))
+        role_text = ", ".join(f"{item['value']}:{item['count']}" for item in cluster.get("role_counts", []))
+        search_text = " ".join(
+            [
+                str(cluster.get("name") or ""),
+                str(cluster.get("owner") or ""),
+                str(cluster.get("team") or ""),
+                split_text,
+                status_text,
+                role_text,
+                " ".join(str(item.get("value") or "") for values in cluster.get("top_labels", {}).values() for item in values),
+            ]
+        ).lower()
+        cluster_rows.append(
+            "<tr class=\"cluster-row\" "
+            f"data-risk=\"{html.escape(str(cluster.get('risk') or ''), quote=True)}\" "
+            f"data-owner=\"{html.escape(str(cluster.get('owner') or ''), quote=True)}\" "
+            f"data-search=\"{html.escape(search_text, quote=True)}\">"
+            f"<td><span class=\"flag\">{html.escape(risk_label.get(str(cluster.get('risk')), str(cluster.get('risk') or '-')))}</span><div class=\"meta\">{html.escape(', '.join(cluster.get('risk_reasons', [])[:3]))}</div></td>"
+            f"<td><a href=\"{html.escape(str(cluster.get('href') or 'library.html'))}\"><strong>{html.escape(str(cluster.get('name') or 'Unassigned'))}</strong></a><div class=\"meta\">{html.escape(str(cluster.get('owner') or cluster.get('team') or 'Unassigned'))}</div></td>"
+            f"<td>{cluster.get('count', 0)}<div class=\"meta\">{float(cluster.get('share') or 0):.0%}</div></td>"
+            f"<td>{html.escape(str(cluster.get('year_span') or '-'))}</td>"
+            f"<td>{html.escape(role_text or '-')}<div class=\"meta\">{html.escape(status_text or '-')}</div></td>"
+            f"<td>{render_cluster_label_group(cluster.get('top_labels', {}))}</td>"
+            f"<td>{html.escape(split_text or '-')}</td>"
+            f"<td>{render_cluster_papers(cluster.get('representative_papers', []))}</td>"
+            "</tr>"
+        )
+    owner_values = sorted({str(cluster.get("owner") or "") for cluster in payload["clusters"] if cluster.get("owner")})
+    owner_options = "".join(f'<option value="{html.escape(owner)}">{html.escape(owner)}</option>' for owner in owner_values)
+    recommendations = "".join(f"<li>{html.escape(item)}</li>" for item in payload["recommendations"])
+    clusters_css = """
+    .cluster-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .cluster-controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .cluster-tags, .cluster-papers {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .cluster-chip, .cluster-papers a {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 3px 7px;
+      background: var(--panel);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 12px;
+    }
+    .cluster-row[hidden] { display: none; }
+    .cluster-table td { vertical-align: top; }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Research Clusters</div>
+  <h1>研究簇驾驶舱</h1>
+  <p class="lead">按研究线聚合论文簇，显示 owner、角色/状态分布、top taxonomy labels、代表论文和拆分候选。适合在论文数量增长后判断哪些方向需要拆分、合并或补充分类。</p>
+  <div class="stats">
+    <a class="stat" href="clusters.json">Clusters JSON</a>
+    <a class="stat" href="routing.html">分类路由器</a>
+    <a class="stat" href="taxonomy_map.html">分类图谱</a>
+    <a class="stat" href="coverage.html">覆盖地图</a>
+    <a class="stat" href="ownership.html">Owner 工作台</a>
+    <span class="stat">论文 {payload["count"]}</span>
+    <span class="stat">簇 {payload["cluster_count"]}</span>
+  </div>
+</header>
+<main class="shell">
+  <section class="cluster-summary">
+    <section class="metric-card"><span>研究簇</span><strong>{payload["cluster_count"]}</strong><span>按 research_line 聚合</span></section>
+    <section class="metric-card"><span>最大簇占比</span><strong>{float(payload["largest_cluster_share"]):.0%}</strong><span>过高时考虑拆分</span></section>
+    <section class="metric-card"><span>高风险簇</span><strong>{sum(1 for cluster in payload["clusters"] if cluster.get("risk") == "high")}</strong><span>优先治理</span></section>
+    <section class="metric-card"><span>中风险簇</span><strong>{sum(1 for cluster in payload["clusters"] if cluster.get("risk") == "medium")}</strong><span>关注演化</span></section>
+  </section>
+  <section>
+    <h2 class="section-title">治理建议</h2>
+    <ul>{recommendations}</ul>
+  </section>
+  <section>
+    <h2 class="section-title">研究簇</h2>
+    <div class="cluster-controls">
+      <input id="clusterSearch" type="search" placeholder="搜索研究线、标签、owner">
+      <select id="clusterRisk"><option value="">全部风险</option><option value="high">高</option><option value="medium">中</option><option value="low">低</option></select>
+      <select id="clusterOwner"><option value="">全部 owner</option>{owner_options}</select>
+      <button id="downloadClustersCsv" class="button" type="button">下载 CSV</button>
+      <button id="copyClusterPlan" class="button" type="button">复制治理计划</button>
+      <span class="stat" id="clusterCount">0 clusters</span>
+    </div>
+    <div class="table-wrap"><table class="data-table cluster-table"><thead><tr><th>风险</th><th>研究簇</th><th>论文</th><th>年份</th><th>角色 / 状态</th><th>Top labels</th><th>拆分候选</th><th>代表论文</th></tr></thead><tbody id="clusterRows">{"".join(cluster_rows)}</tbody></table></div>
+  </section>
+</main>
+<script>
+const clusterRows = Array.from(document.querySelectorAll("#clusterRows tr"));
+const clusterSearch = document.querySelector("#clusterSearch");
+const clusterRisk = document.querySelector("#clusterRisk");
+const clusterOwner = document.querySelector("#clusterOwner");
+const clusterCount = document.querySelector("#clusterCount");
+const downloadClustersCsv = document.querySelector("#downloadClustersCsv");
+const copyClusterPlan = document.querySelector("#copyClusterPlan");
+
+function clusterCsvCell(value) {{
+  const text = String(value ?? "");
+  return (text.includes(",") || text.includes('"') || text.includes("\\n"))
+    ? `"${{text.replaceAll('"', '""')}}"`
+    : text;
+}}
+
+function visibleClusterRows() {{
+  return clusterRows.filter(row => !row.hidden);
+}}
+
+function renderClusterRows() {{
+  const q = clusterSearch.value.trim().toLowerCase();
+  const risk = clusterRisk.value;
+  const owner = clusterOwner.value;
+  clusterRows.forEach(row => {{
+    const hitSearch = !q || (row.dataset.search || "").includes(q);
+    const hitRisk = !risk || row.dataset.risk === risk;
+    const hitOwner = !owner || row.dataset.owner === owner;
+    row.hidden = !(hitSearch && hitRisk && hitOwner);
+  }});
+  clusterCount.textContent = `${{visibleClusterRows().length}} clusters`;
+}}
+
+function downloadClusters() {{
+  const header = ["risk", "cluster", "papers", "years", "roles_status", "labels", "split_candidates", "representatives"];
+  const rows = visibleClusterRows().map(row => Array.from(row.children).map(cell => cell.textContent.trim().replace(/\\s+/g, " ")));
+  if (!rows.length) return;
+  const csv = [header, ...rows].map(row => row.map(clusterCsvCell).join(",")).join("\\n") + "\\n";
+  const blob = new Blob([csv], {{ type: "text/csv;charset=utf-8" }});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "research_clusters.csv";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}}
+
+async function copyPlan() {{
+  const lines = visibleClusterRows().map(row => {{
+    const cells = Array.from(row.children).map(cell => cell.textContent.trim().replace(/\\s+/g, " "));
+    return `- [ ] ${{cells[1]}}: risk=${{cells[0]}}, papers=${{cells[2]}}, split=${{cells[6]}}`;
+  }});
+  const text = lines.join("\\n");
+  try {{
+    await navigator.clipboard.writeText(text);
+    copyClusterPlan.textContent = "已复制";
+    setTimeout(() => copyClusterPlan.textContent = "复制治理计划", 1200);
+  }} catch (error) {{
+    window.prompt("复制治理计划", text);
+  }}
+}}
+
+[clusterSearch, clusterRisk, clusterOwner].forEach(control => control.addEventListener("input", renderClusterRows));
+downloadClustersCsv.addEventListener("click", downloadClusters);
+copyClusterPlan.addEventListener("click", copyPlan);
+renderClusterRows();
+</script>
+"""
+    (report_dir / "clusters.html").write_text(page_shell("研究簇驾驶舱", body, extra_css=clusters_css), encoding="utf-8")
 
 
 def render_scale(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
@@ -14616,6 +14962,7 @@ def build_wiki(report_dir: Path) -> int:
     write_pivot_json(report_dir, papers)
     write_compare_json(report_dir, papers)
     write_taxonomy_map_json(report_dir, papers)
+    write_clusters_json(report_dir, papers)
     write_inbox_json(report_dir, inbox_items)
     write_search_index(report_dir, papers)
     write_scale_json(report_dir, papers, inbox_items)
@@ -14629,6 +14976,7 @@ def build_wiki(report_dir: Path) -> int:
     render_pivot(report_dir, papers)
     render_compare(report_dir, papers)
     render_taxonomy_map(report_dir, papers)
+    render_clusters(report_dir, papers)
     render_scale(report_dir, papers, inbox_items)
     render_ownership(report_dir, papers)
     render_routing(report_dir, papers)

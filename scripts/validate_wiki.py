@@ -105,6 +105,7 @@ REQUIRED_PAGES = {
     "pivot.html",
     "compare.html",
     "taxonomy_map.html",
+    "clusters.html",
     "scale.html",
     "ownership.html",
     "routing.html",
@@ -137,6 +138,7 @@ REQUIRED_PAGES = {
     "pivot.json",
     "compare.json",
     "taxonomy_map.json",
+    "clusters.json",
     "scale.json",
     "ownership.json",
     "routing.json",
@@ -562,6 +564,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     pivot_path = report_dir / "pivot.json"
     compare_path = report_dir / "compare.json"
     taxonomy_map_path = report_dir / "taxonomy_map.json"
+    clusters_path = report_dir / "clusters.json"
     scale_path = report_dir / "scale.json"
     ownership_path = report_dir / "ownership.json"
     routing_path = report_dir / "routing.json"
@@ -597,6 +600,9 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         return
     if not taxonomy_map_path.exists():
         errors.append("missing taxonomy_map.json")
+        return
+    if not clusters_path.exists():
+        errors.append("missing clusters.json")
         return
     if not scale_path.exists():
         errors.append("missing scale.json")
@@ -635,6 +641,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     pivot_data = json.loads(pivot_path.read_text(encoding="utf-8"))
     compare_data = json.loads(compare_path.read_text(encoding="utf-8"))
     taxonomy_map_data = json.loads(taxonomy_map_path.read_text(encoding="utf-8"))
+    clusters_data = json.loads(clusters_path.read_text(encoding="utf-8"))
     scale_data = json.loads(scale_path.read_text(encoding="utf-8"))
     ownership_data = json.loads(ownership_path.read_text(encoding="utf-8"))
     routing_data = json.loads(routing_path.read_text(encoding="utf-8"))
@@ -962,6 +969,43 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         errors.append("taxonomy_map.json clusters must be a list")
     if not isinstance(taxonomy_map_data.get("recommendations"), list):
         errors.append("taxonomy_map.json recommendations must be a list")
+
+    if clusters_data.get("count") != len(report_slugs):
+        errors.append(f"clusters.json count {clusters_data.get('count')} != markdown report count {len(report_slugs)}")
+    required_clusters = {"cluster_count", "largest_cluster_share", "clusters", "recommendations", "links"}
+    missing_clusters = sorted(required_clusters - set(clusters_data))
+    if missing_clusters:
+        errors.append(f"clusters.json missing keys: {', '.join(missing_clusters)}")
+    cluster_items = clusters_data.get("clusters")
+    if not isinstance(cluster_items, list):
+        errors.append("clusters.json clusters must be a list")
+        cluster_items = []
+    if clusters_data.get("cluster_count") != len(cluster_items):
+        errors.append("clusters.json cluster_count must match clusters length")
+    valid_cluster_risks = {"high", "medium", "low"}
+    for index, cluster in enumerate(cluster_items):
+        if not isinstance(cluster, dict):
+            errors.append(f"clusters.json clusters[{index}] must be an object")
+            continue
+        for key in ("id", "name", "href", "count", "share", "risk", "top_labels", "representative_slugs"):
+            if key not in cluster:
+                errors.append(f"clusters.json clusters[{index}] missing {key}")
+        if cluster.get("risk") not in valid_cluster_risks:
+            errors.append(f"clusters.json clusters[{index}].risk has invalid value")
+        if not isinstance(cluster.get("top_labels"), dict):
+            errors.append(f"clusters.json clusters[{index}].top_labels must be an object")
+        representative_slugs = cluster.get("representative_slugs", [])
+        if not isinstance(representative_slugs, list):
+            errors.append(f"clusters.json clusters[{index}].representative_slugs must be a list")
+            representative_slugs = []
+        unknown_cluster_slugs = sorted(set(representative_slugs) - report_slugs)
+        if unknown_cluster_slugs:
+            errors.append(f"clusters.json clusters[{index}] references unknown slugs: {unknown_cluster_slugs}")
+        split_candidates = cluster.get("split_candidates", [])
+        if not isinstance(split_candidates, list):
+            errors.append(f"clusters.json clusters[{index}].split_candidates must be a list")
+    if not isinstance(clusters_data.get("recommendations"), list):
+        errors.append("clusters.json recommendations must be a list")
 
     if scale_data.get("count") != len(report_slugs):
         errors.append(f"scale.json count {scale_data.get('count')} != markdown report count {len(report_slugs)}")
