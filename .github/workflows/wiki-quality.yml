@@ -1,0 +1,47 @@
+name: Wiki Quality
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  validate:
+    name: Validate generated wiki
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Compile scripts
+        run: |
+          python -m py_compile \
+            scripts/build_wiki.py \
+            scripts/render_report_html.py \
+            scripts/validate_wiki.py \
+            scripts/apply_review_plan.py \
+            scripts/apply_library_metadata.py \
+            scripts/export_library_csv.py
+
+      - name: Check generated wiki artifacts
+        run: python scripts/build_wiki.py docs --check
+
+      - name: Validate wiki metadata and links
+        run: python scripts/validate_wiki.py docs --strict-taxonomy
+
+      - name: Check inline wiki scripts
+        run: node scripts/check_wiki_js.js docs
+
+      - name: Run tests
+        run: python -m unittest discover -s tests

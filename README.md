@@ -205,6 +205,8 @@ node scripts/check_wiki_js.js docs
 python3 -m unittest discover -s tests
 ```
 
+开源协作时，`.github/workflows/wiki-quality.yml` 会在 push / pull request 中自动运行同一组质量门禁：Python 语法检查、`build_wiki.py --check`、严格 taxonomy / metadata 校验、内联 JS 检查和单元测试。提交前本地先跑完上面几条命令，可以避免生成物和 frontmatter schema 在 CI 才暴露问题。
+
 导出论文库管理表：
 
 ```bash
