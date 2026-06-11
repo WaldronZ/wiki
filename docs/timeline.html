@@ -681,6 +681,40 @@ renderTimeline();
     kind: "page",
   }));
 
+  const dataFiles = [
+    ["Data: papers.json", "papers.json", "论文索引、taxonomy 聚合、前端 controls"],
+    ["Data: search_index.json", "search_index.json", "正文全文检索索引"],
+    ["Data: stats.json", "stats.json", "运营统计、分类均衡和队列规模"],
+    ["Data: quality.json", "quality.json", "质量问题、taxonomy load 和 drift"],
+    ["Data: review.json", "review.json", "复习计划和建议日期"],
+    ["Data: taxonomy_actions.json", "taxonomy_actions.json", "可分派分类治理任务"],
+    ["Data: inbox.json", "inbox.json", "候选论文队列和重复项"],
+    ["Data: manifest.json", "manifest.json", "发布状态、入口清单和 command recipes"],
+  ].map(([title, href, meta]) => ({
+    title,
+    href: prefix + href,
+    meta,
+    kind: "data",
+  }));
+
+  const commands = [
+    ["Command: Build wiki", "release.html", "python3 scripts/build_wiki.py docs"],
+    ["Command: Quality gate", "release.html", "python3 scripts/check_quality.py docs"],
+    ["Command: Strict validation", "release.html", "python3 scripts/validate_wiki.py docs --strict-taxonomy"],
+    ["Command: Apply metadata CSV", "release.html", "python3 scripts/apply_library_metadata.py docs --input <csv> --write"],
+    ["Command: Apply taxonomy aliases", "release.html", "python3 scripts/apply_taxonomy_aliases.py docs --write"],
+    ["Command: taxonomy_actions_markdown", "release.html", "python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md"],
+    ["Command: taxonomy_actions_project", "release.html", "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"],
+    ["Command: taxonomy_balance_project", "release.html", "python3 scripts/export_taxonomy_balance.py docs --format project --max-score 50 --output docs/exports/taxonomy-balance-project.csv"],
+    ["Command: taxonomy_load_csv", "release.html", "python3 scripts/export_taxonomy_load.py docs --format csv --output docs/exports/taxonomy-load.csv"],
+    ["Command: taxonomy_load_patch", "release.html", "python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv"],
+  ].map(([title, href, meta]) => ({
+    title,
+    href: prefix + href,
+    meta,
+    kind: "command",
+  }));
+
   const dataPapers = (window.PAPER_WIKI && Array.isArray(window.PAPER_WIKI.papers))
     ? window.PAPER_WIKI.papers.map((paper) => ({
         title: paper.title_zh || paper.title || paper.slug,
@@ -697,7 +731,7 @@ renderTimeline();
   })).filter((item) => item.href);
   const paperMap = new Map([...dataPapers, ...rowPapers].map((item) => [item.href, item]));
   const papers = Array.from(paperMap.values());
-  const entries = [...pages, ...papers];
+  const entries = [...pages, ...dataFiles, ...commands, ...papers];
   let activeIndex = 0;
 
   function score(entry, query) {

@@ -237,6 +237,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn('sharedViewPayload("index")', index_html)
             self.assertIn('id="quickOpen"', index_html)
             self.assertIn("快速跳转", index_html)
+            self.assertIn("Data: manifest.json", index_html)
+            self.assertIn("Command: taxonomy_balance_project", index_html)
             library_html = (report_dir / "library.html").read_text(encoding="utf-8")
             self.assertIn('"shared_views": [{"name": "重点队列"', library_html)
             self.assertIn("Kernel 方向", library_html)
