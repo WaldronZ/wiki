@@ -144,8 +144,8 @@ paper_reader/
 - `docs/related.html`：关联网络页，展示标签共现、相似论文对和孤岛论文，帮助发现潜在研究簇
 - `docs/gaps.html`：研究缺口页，自动诊断研究线缺角色、缺分类、分类粒度、缺复习、缺代码观察和后续工作空档
 - `docs/taxonomy.html`：分类治理页，展示 domain/track/problem 层级、状态矩阵、研究线角色矩阵、状态工作流设计器、分类变更预览和治理队列
-- `docs/timeline.html`：研究路线时间轴，按年份、研究线、方向、角色、状态和重要性筛选论文演进
-- `docs/matrix.html`：研究线年份矩阵，按 research line × year 查看覆盖密度，点击格子查看论文清单
+- `docs/timeline.html`：研究路线时间轴，按年份、研究线、方向、角色、状态体系和重要性筛选论文演进
+- `docs/matrix.html`：研究线年份矩阵，按 research line × year 查看覆盖密度，可切换状态体系筛选研究线，点击格子查看论文清单
 - `docs/lines/index.html`：研究线总览
 - `docs/lines/<research-line>.html`：单条研究线详情页
 - `docs/tags.html`：分类总览
@@ -199,7 +199,7 @@ has_code: true
 
 分类建议见 [`docs/guides/taxonomy.md`](docs/guides/taxonomy.md)。核心原则是：`domains/tracks/problems` 管结构层级，`topics/methods` 管交叉筛选，`research_line/line_role` 管研究脉络，`status/reading_stage/review_stage` 管个人阅读状态。
 
-标签别名、研究线角色排序、阅读状态、阅读阶段和复习阶段可在 [`docs/guides/taxonomy.json`](docs/guides/taxonomy.json) 里自定义；修改后运行 `python3 scripts/build_wiki.py docs` 即可刷新筛选项、论文库批量下拉框和状态看板列。状态体系既支持根层 `status_values` 这种简单配置，也支持 `status_workflows` 保存多套命名流程，并用 `active_status_workflow` 选择当前默认启用的一套。`docs/taxonomy.html` 会展示当前状态工作流配置，并提供浏览器内状态工作流设计器，可以载入已有 workflow、编辑候选状态、复制或下载保留全部 workflow 的 `taxonomy_status_workflow.json` 片段，再合并回 `taxonomy.json`；`docs/board.html` 会读取全部命名 workflow，允许在看板里动态切换状态列，也支持新增临时状态列并导出 CSV，用来试跑一套新流程。构建后的 `docs/papers.json`、`docs/stats.json` 和 `docs/manifest.json` 会把当前启用状态与全部状态 workflow 写入 `controls`，方便后续页面或桌面软件动态读取。
+标签别名、研究线角色排序、阅读状态、阅读阶段和复习阶段可在 [`docs/guides/taxonomy.json`](docs/guides/taxonomy.json) 里自定义；修改后运行 `python3 scripts/build_wiki.py docs` 即可刷新筛选项、论文库批量下拉框和状态看板列。状态体系既支持根层 `status_values` 这种简单配置，也支持 `status_workflows` 保存多套命名流程，并用 `active_status_workflow` 选择当前默认启用的一套。`docs/taxonomy.html` 会展示当前状态工作流配置，并提供浏览器内状态工作流设计器，可以载入已有 workflow、编辑候选状态、复制或下载保留全部 workflow 的 `taxonomy_status_workflow.json` 片段，再合并回 `taxonomy.json`；`docs/index.html`、`docs/library.html`、`docs/timeline.html`、`docs/matrix.html` 和 `docs/board.html` 会读取全部命名 workflow，允许在不同浏览视图里动态切换状态语义；看板也支持新增临时状态列并导出 CSV，用来试跑一套新流程。构建后的 `docs/papers.json`、`docs/stats.json` 和 `docs/manifest.json` 会把当前启用状态与全部状态 workflow 写入 `controls`，方便后续页面或桌面软件动态读取。
 
 报告 frontmatter 的字段类型、必填项、评分范围和日期格式由 [`docs/guides/metadata.schema.json`](docs/guides/metadata.schema.json) 描述；候选论文 CSV 的字段契约由 [`docs/guides/inbox.schema.json`](docs/guides/inbox.schema.json) 描述。`python3 scripts/validate_wiki.py docs --strict-taxonomy` 会同时校验 schema、报告元数据、inbox CSV、分类漂移和生成页面，适合作为发布或开源协作前的质量门禁。
 

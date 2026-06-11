@@ -7346,6 +7346,8 @@ def render_timeline_item(paper: dict[str, Any]) -> str:
 
 def render_timeline(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     taxonomy = taxonomy_counts(papers)
+    controls = control_options()
+    timeline_controls = {key: value for key, value in controls.items() if key != "shared_views"}
     years = sorted(
         {str(paper.get("year") or "unknown") for paper in papers},
         key=lambda value: int(value) if value.isdigit() else -1,
@@ -7497,6 +7499,7 @@ def render_timeline(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <select id="timelineLine"><option value="">全部研究线</option>{render_topic_options(taxonomy["research_lines"])}</select>
     <select id="timelineTrack"><option value="">全部方向</option>{render_topic_options(taxonomy["tracks"])}</select>
     <select id="timelineRole"><option value="">全部角色</option>{render_topic_options(taxonomy["line_roles"])}</select>
+    <select id="timelineWorkflow" aria-label="状态体系"></select>
     <select id="timelineStatus"><option value="">全部状态</option>{render_topic_options(taxonomy["statuses"])}</select>
     <select id="timelineStage"><option value="">阅读阶段</option>{render_topic_options(taxonomy["reading_stages"])}</select>
     <select id="timelineCode"><option value="">代码状态</option><option value="yes">有代码</option><option value="no">无代码</option></select>
@@ -7522,16 +7525,73 @@ const timelineSearch = document.querySelector("#timelineSearch");
 const timelineLine = document.querySelector("#timelineLine");
 const timelineTrack = document.querySelector("#timelineTrack");
 const timelineRole = document.querySelector("#timelineRole");
+const timelineWorkflow = document.querySelector("#timelineWorkflow");
 const timelineStatus = document.querySelector("#timelineStatus");
 const timelineStage = document.querySelector("#timelineStage");
 const timelineCode = document.querySelector("#timelineCode");
 const timelineImportance = document.querySelector("#timelineImportance");
 const timelineCount = document.querySelector("#timelineCount");
 const timelineReset = document.querySelector("#timelineReset");
-const timelineControls = [timelineSearch, timelineLine, timelineTrack, timelineRole, timelineStatus, timelineStage, timelineCode, timelineImportance];
+const wikiControls = window.PAPER_WIKI.controls || {{}};
+const statusWorkflows = wikiControls.status_workflows || {{}};
+const activeStatusWorkflow = wikiControls.active_status_workflow || Object.keys(statusWorkflows)[0] || "default";
+const fallbackStatusValues = Array.isArray(wikiControls.status) ? wikiControls.status : [];
+const fallbackStageValues = Array.isArray(wikiControls.reading_stage) ? wikiControls.reading_stage : [];
+const observedStatusValues = Array.from(new Set(timelineItems.map(item => item.dataset.status).filter(Boolean)));
+const observedStageValues = Array.from(new Set(timelineItems.map(item => item.dataset.stage).filter(Boolean)));
+const timelineControls = [timelineSearch, timelineLine, timelineTrack, timelineRole, timelineWorkflow, timelineStatus, timelineStage, timelineCode, timelineImportance];
 
 function timelineTokens(value) {{
   return String(value || "").split("|").filter(Boolean);
+}}
+
+function orderedUnique(values) {{
+  return Array.from(new Set(values.map(value => String(value || "").trim()).filter(Boolean)));
+}}
+
+function workflowValuesFor(name, key, fallbackValues, observedValues) {{
+  const workflow = statusWorkflows[name] || {{}};
+  const configured = Array.isArray(workflow[key]) ? workflow[key] : fallbackValues;
+  return orderedUnique([...configured, ...observedValues]);
+}}
+
+function timelineValueCount(datasetKey, value) {{
+  return timelineItems.filter(item => item.dataset[datasetKey] === value).length;
+}}
+
+function replaceWorkflowOptions(select, placeholder, values, datasetKey) {{
+  const current = select.value;
+  select.replaceChildren(new Option(placeholder, ""));
+  values.forEach(value => {{
+    select.appendChild(new Option(`${{value}} (${{timelineValueCount(datasetKey, value)}})`, value));
+  }});
+  select.value = values.includes(current) ? current : "";
+}}
+
+function populateTimelineWorkflowOptions() {{
+  const names = Object.keys(statusWorkflows);
+  const workflowNames = names.length ? names : [activeStatusWorkflow];
+  timelineWorkflow.replaceChildren(...workflowNames.map(name => {{
+    const label = name === activeStatusWorkflow ? `${{name}} (默认)` : name;
+    return new Option(label, name);
+  }}));
+  timelineWorkflow.value = workflowNames.includes(activeStatusWorkflow) ? activeStatusWorkflow : workflowNames[0] || "";
+}}
+
+function applyTimelineWorkflow() {{
+  const workflowName = timelineWorkflow.value || activeStatusWorkflow;
+  replaceWorkflowOptions(
+    timelineStatus,
+    "全部状态",
+    workflowValuesFor(workflowName, "status_values", fallbackStatusValues, observedStatusValues),
+    "status"
+  );
+  replaceWorkflowOptions(
+    timelineStage,
+    "阅读阶段",
+    workflowValuesFor(workflowName, "reading_stage_values", fallbackStageValues, observedStageValues),
+    "stage"
+  );
 }}
 
 function renderTimeline() {{
@@ -7558,20 +7618,32 @@ function renderTimeline() {{
   timelineCount.textContent = `显示 ${{visible}} / ${{timelineItems.length}} 篇`;
 }}
 
-timelineControls.forEach(control => control.addEventListener("input", renderTimeline));
+timelineControls.forEach(control => control.addEventListener("input", () => {{
+  if (control === timelineWorkflow) applyTimelineWorkflow();
+  renderTimeline();
+}}));
 timelineReset.addEventListener("click", () => {{
   timelineControls.forEach(control => {{
     control.value = "";
   }});
+  timelineWorkflow.value = activeStatusWorkflow;
+  applyTimelineWorkflow();
   renderTimeline();
 }});
+populateTimelineWorkflowOptions();
+applyTimelineWorkflow();
 renderTimeline();
 </script>
 """
-    (report_dir / "timeline.html").write_text(page_shell("研究路线时间轴", body, extra_css=timeline_css), encoding="utf-8")
+    (report_dir / "timeline.html").write_text(
+        page_shell("研究路线时间轴", body, {"controls": timeline_controls}, timeline_css),
+        encoding="utf-8",
+    )
 
 
 def render_matrix(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    controls = control_options()
+    matrix_controls = {key: value for key, value in controls.items() if key != "shared_views"}
     grouped: dict[str, dict[str, list[dict[str, Any]]]] = defaultdict(lambda: defaultdict(list))
     for paper in papers:
         line = str(paper.get("research_line") or "Unassigned")
@@ -7778,7 +7850,7 @@ def render_matrix(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       .matrix-detail { position: static; }
     }
     """
-    data = {"papers": matrix_items}
+    data = {"papers": matrix_items, "controls": matrix_controls}
     body = f"""
 <header class="shell">
   <div class="eyebrow">Research Matrix</div>
@@ -7804,6 +7876,7 @@ def render_matrix(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <div class="shell controls">
     <input id="matrixSearch" type="search" placeholder="搜索研究线">
     <select id="matrixTrack"><option value="">全部方向</option>{render_topic_options(taxonomy["tracks"])}</select>
+    <select id="matrixWorkflow" aria-label="状态体系"></select>
     <select id="matrixStatus"><option value="">全部状态</option>{render_topic_options(taxonomy["statuses"])}</select>
     <select id="matrixImportance"><option value="">重要性</option><option value="5">含 5 星</option><option value="4">含 4 星及以上</option><option value="3">含 3 星及以上</option></select>
   </div>
@@ -7832,6 +7905,7 @@ const matrixRows = Array.from(document.querySelectorAll(".matrix-row"));
 const matrixCells = Array.from(document.querySelectorAll(".matrix-cell"));
 const matrixSearch = document.querySelector("#matrixSearch");
 const matrixTrack = document.querySelector("#matrixTrack");
+const matrixWorkflow = document.querySelector("#matrixWorkflow");
 const matrixStatus = document.querySelector("#matrixStatus");
 const matrixImportance = document.querySelector("#matrixImportance");
 const matrixReset = document.querySelector("#matrixReset");
@@ -7840,6 +7914,11 @@ const matrixDetailTitle = document.querySelector("#matrixDetailTitle");
 const matrixDetailMeta = document.querySelector("#matrixDetailMeta");
 const matrixDetailList = document.querySelector("#matrixDetailList");
 const matrixPapers = window.PAPER_WIKI.papers || [];
+const matrixControls = window.PAPER_WIKI.controls || {{}};
+const matrixWorkflows = matrixControls.status_workflows || {{}};
+const activeMatrixWorkflow = matrixControls.active_status_workflow || Object.keys(matrixWorkflows)[0] || "default";
+const fallbackMatrixStatuses = Array.isArray(matrixControls.status) ? matrixControls.status : [];
+const observedMatrixStatuses = Array.from(new Set(matrixPapers.map(paper => paper.status).filter(Boolean)));
 
 function matrixTokens(value) {{
   return String(value || "").split("|").filter(Boolean);
@@ -7847,6 +7926,37 @@ function matrixTokens(value) {{
 
 function esc(value) {{
   return String(value ?? "").replace(/[&<>"']/g, char => ({{ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }}[char]));
+}}
+
+function orderedMatrixValues(values) {{
+  return Array.from(new Set(values.map(value => String(value || "").trim()).filter(Boolean)));
+}}
+
+function matrixWorkflowValues(name) {{
+  const workflow = matrixWorkflows[name] || {{}};
+  const configured = Array.isArray(workflow.status_values) ? workflow.status_values : fallbackMatrixStatuses;
+  return orderedMatrixValues([...configured, ...observedMatrixStatuses]);
+}}
+
+function populateMatrixWorkflowOptions() {{
+  const names = Object.keys(matrixWorkflows);
+  const workflowNames = names.length ? names : [activeMatrixWorkflow];
+  matrixWorkflow.replaceChildren(...workflowNames.map(name => {{
+    const label = name === activeMatrixWorkflow ? `${{name}} (默认)` : name;
+    return new Option(label, name);
+  }}));
+  matrixWorkflow.value = workflowNames.includes(activeMatrixWorkflow) ? activeMatrixWorkflow : workflowNames[0] || "";
+}}
+
+function applyMatrixWorkflow() {{
+  const current = matrixStatus.value;
+  const values = matrixWorkflowValues(matrixWorkflow.value || activeMatrixWorkflow);
+  matrixStatus.replaceChildren(new Option("全部状态", ""));
+  values.forEach(value => {{
+    const count = matrixPapers.filter(paper => paper.status === value).length;
+    matrixStatus.appendChild(new Option(`${{value}} (${{count}})`, value));
+  }});
+  matrixStatus.value = values.includes(current) ? current : "";
 }}
 
 function renderMatrixFilters() {{
@@ -7885,14 +7995,21 @@ function renderMatrixDetail(line, year) {{
   }}).join("");
 }}
 
-[matrixSearch, matrixTrack, matrixStatus, matrixImportance].forEach(control => control.addEventListener("input", renderMatrixFilters));
+[matrixSearch, matrixTrack, matrixWorkflow, matrixStatus, matrixImportance].forEach(control => control.addEventListener("input", () => {{
+  if (control === matrixWorkflow) applyMatrixWorkflow();
+  renderMatrixFilters();
+}}));
 matrixReset.addEventListener("click", () => {{
   [matrixSearch, matrixTrack, matrixStatus, matrixImportance].forEach(control => {{
     control.value = "";
   }});
+  matrixWorkflow.value = activeMatrixWorkflow;
+  applyMatrixWorkflow();
   renderMatrixFilters();
 }});
 matrixCells.forEach(cell => cell.addEventListener("click", () => renderMatrixDetail(cell.dataset.line, cell.dataset.year)));
+populateMatrixWorkflowOptions();
+applyMatrixWorkflow();
 renderMatrixFilters();
 const firstNonEmpty = matrixCells.find(cell => Number(cell.dataset.count || 0) > 0);
 if (firstNonEmpty) renderMatrixDetail(firstNonEmpty.dataset.line, firstNonEmpty.dataset.year);

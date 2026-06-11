@@ -433,6 +433,9 @@
   </style>
 </head>
 <body>
+<script>
+window.PAPER_WIKI = {"controls": {"active_status_workflow": "personal", "status": ["unread", "skimmed", "reading", "read", "archived"], "reading_stage": ["skim", "normal_read", "deep_read", "code_checked"], "review_stage": ["fresh", "due", "reviewed"], "status_workflows": {"personal": {"status_values": ["unread", "skimmed", "reading", "read", "archived"], "reading_stage_values": ["skim", "normal_read", "deep_read", "code_checked"], "review_stage_values": ["fresh", "due", "reviewed"]}, "research": {"status_values": ["inbox", "triaged", "reading", "implemented", "cited", "archived"], "reading_stage_values": ["skim", "normal_read", "deep_read", "code_checked", "reproduced"], "review_stage_values": ["fresh", "due", "reviewed", "evergreen"]}}, "line_role": ["foundation", "baseline", "main", "system", "variant", "followup", "survey"]}};
+</script>
 
 <button class="button quick-open" type="button" id="quickOpen">快速跳转</button>
 <div class="quick-panel" id="quickPanel" hidden>
@@ -471,6 +474,7 @@
     <select id="timelineLine"><option value="">全部研究线</option><option value="Parallel Decoding with Diffusion Models">Parallel Decoding with Diffusion Models (3)</option><option value="Efficient Attention Kernels">Efficient Attention Kernels (2)</option></select>
     <select id="timelineTrack"><option value="">全部方向</option><option value="Inference Acceleration">Inference Acceleration (3)</option><option value="Parallel Decoding">Parallel Decoding (3)</option><option value="Attention Kernels">Attention Kernels (2)</option><option value="Inference Serving Systems">Inference Serving Systems (1)</option></select>
     <select id="timelineRole"><option value="">全部角色</option><option value="foundation">foundation (2)</option><option value="followup">followup (1)</option><option value="system">system (1)</option><option value="variant">variant (1)</option></select>
+    <select id="timelineWorkflow" aria-label="状态体系"></select>
     <select id="timelineStatus"><option value="">全部状态</option><option value="read">read (5)</option><option value="archived">archived (0)</option><option value="reading">reading (0)</option><option value="skimmed">skimmed (0)</option><option value="unread">unread (0)</option></select>
     <select id="timelineStage"><option value="">阅读阶段</option><option value="deep_read">deep_read (5)</option><option value="code_checked">code_checked (0)</option><option value="normal_read">normal_read (0)</option><option value="skim">skim (0)</option></select>
     <select id="timelineCode"><option value="">代码状态</option><option value="yes">有代码</option><option value="no">无代码</option></select>
@@ -600,16 +604,73 @@ const timelineSearch = document.querySelector("#timelineSearch");
 const timelineLine = document.querySelector("#timelineLine");
 const timelineTrack = document.querySelector("#timelineTrack");
 const timelineRole = document.querySelector("#timelineRole");
+const timelineWorkflow = document.querySelector("#timelineWorkflow");
 const timelineStatus = document.querySelector("#timelineStatus");
 const timelineStage = document.querySelector("#timelineStage");
 const timelineCode = document.querySelector("#timelineCode");
 const timelineImportance = document.querySelector("#timelineImportance");
 const timelineCount = document.querySelector("#timelineCount");
 const timelineReset = document.querySelector("#timelineReset");
-const timelineControls = [timelineSearch, timelineLine, timelineTrack, timelineRole, timelineStatus, timelineStage, timelineCode, timelineImportance];
+const wikiControls = window.PAPER_WIKI.controls || {};
+const statusWorkflows = wikiControls.status_workflows || {};
+const activeStatusWorkflow = wikiControls.active_status_workflow || Object.keys(statusWorkflows)[0] || "default";
+const fallbackStatusValues = Array.isArray(wikiControls.status) ? wikiControls.status : [];
+const fallbackStageValues = Array.isArray(wikiControls.reading_stage) ? wikiControls.reading_stage : [];
+const observedStatusValues = Array.from(new Set(timelineItems.map(item => item.dataset.status).filter(Boolean)));
+const observedStageValues = Array.from(new Set(timelineItems.map(item => item.dataset.stage).filter(Boolean)));
+const timelineControls = [timelineSearch, timelineLine, timelineTrack, timelineRole, timelineWorkflow, timelineStatus, timelineStage, timelineCode, timelineImportance];
 
 function timelineTokens(value) {
   return String(value || "").split("|").filter(Boolean);
+}
+
+function orderedUnique(values) {
+  return Array.from(new Set(values.map(value => String(value || "").trim()).filter(Boolean)));
+}
+
+function workflowValuesFor(name, key, fallbackValues, observedValues) {
+  const workflow = statusWorkflows[name] || {};
+  const configured = Array.isArray(workflow[key]) ? workflow[key] : fallbackValues;
+  return orderedUnique([...configured, ...observedValues]);
+}
+
+function timelineValueCount(datasetKey, value) {
+  return timelineItems.filter(item => item.dataset[datasetKey] === value).length;
+}
+
+function replaceWorkflowOptions(select, placeholder, values, datasetKey) {
+  const current = select.value;
+  select.replaceChildren(new Option(placeholder, ""));
+  values.forEach(value => {
+    select.appendChild(new Option(`${value} (${timelineValueCount(datasetKey, value)})`, value));
+  });
+  select.value = values.includes(current) ? current : "";
+}
+
+function populateTimelineWorkflowOptions() {
+  const names = Object.keys(statusWorkflows);
+  const workflowNames = names.length ? names : [activeStatusWorkflow];
+  timelineWorkflow.replaceChildren(...workflowNames.map(name => {
+    const label = name === activeStatusWorkflow ? `${name} (默认)` : name;
+    return new Option(label, name);
+  }));
+  timelineWorkflow.value = workflowNames.includes(activeStatusWorkflow) ? activeStatusWorkflow : workflowNames[0] || "";
+}
+
+function applyTimelineWorkflow() {
+  const workflowName = timelineWorkflow.value || activeStatusWorkflow;
+  replaceWorkflowOptions(
+    timelineStatus,
+    "全部状态",
+    workflowValuesFor(workflowName, "status_values", fallbackStatusValues, observedStatusValues),
+    "status"
+  );
+  replaceWorkflowOptions(
+    timelineStage,
+    "阅读阶段",
+    workflowValuesFor(workflowName, "reading_stage_values", fallbackStageValues, observedStageValues),
+    "stage"
+  );
 }
 
 function renderTimeline() {
@@ -636,13 +697,20 @@ function renderTimeline() {
   timelineCount.textContent = `显示 ${visible} / ${timelineItems.length} 篇`;
 }
 
-timelineControls.forEach(control => control.addEventListener("input", renderTimeline));
+timelineControls.forEach(control => control.addEventListener("input", () => {
+  if (control === timelineWorkflow) applyTimelineWorkflow();
+  renderTimeline();
+}));
 timelineReset.addEventListener("click", () => {
   timelineControls.forEach(control => {
     control.value = "";
   });
+  timelineWorkflow.value = activeStatusWorkflow;
+  applyTimelineWorkflow();
   renderTimeline();
 });
+populateTimelineWorkflowOptions();
+applyTimelineWorkflow();
 renderTimeline();
 </script>
 
