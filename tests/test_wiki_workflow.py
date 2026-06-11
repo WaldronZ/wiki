@@ -312,6 +312,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "status.json",
                 "batch.json",
                 "collections.json",
+                "coverage.json",
                 "pivot.json",
                 "compare.json",
                 "taxonomy_map.json",
@@ -871,6 +872,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("python3 scripts/export_taxonomy_balance.py docs --format project --max-score 50 --output docs/exports/taxonomy-balance-project.csv", quality_html)
             self.assertIn("python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv", quality_html)
             self.assertIn("python3 scripts/export_batches.py docs --format patch --gap review --field review_stage --set-value due --output docs/exports/batches-review-patch.csv", quality_html)
+            self.assertIn("python3 scripts/export_coverage.py docs --format project --risk high --risk medium --output docs/exports/coverage-project.csv", quality_html)
             self.assertIn("python3 scripts/export_collections.py docs --format project --output docs/exports/collections-project.csv", quality_html)
             self.assertIn("python3 scripts/export_ownership.py docs --format project --only-open-queues --output docs/exports/ownership-project.csv", quality_html)
             self.assertIn("python3 scripts/export_roadmap.py docs --format project --output docs/exports/roadmap-project.csv", quality_html)
@@ -1049,6 +1051,70 @@ class WikiWorkflowTest(unittest.TestCase):
             )
             self.assertNotEqual(unsafe_batches_export.returncode, 0)
             self.assertIn("Refusing to write a Markdown export", unsafe_batches_export.stderr)
+
+            coverage_export_path = report_dir / "exports" / "coverage.md"
+            self.run_cmd(
+                "scripts/export_coverage.py",
+                str(report_dir),
+                "--min-missing",
+                "0",
+                "--max-score",
+                "100",
+                "--output",
+                str(coverage_export_path),
+            )
+            coverage_export = coverage_export_path.read_text(encoding="utf-8")
+            self.assertIn("# AutoPaperReader Coverage Gaps", coverage_export)
+            self.assertIn("LLM Serving", coverage_export)
+
+            coverage_project_path = report_dir / "exports" / "coverage-project.csv"
+            self.run_cmd(
+                "scripts/export_coverage.py",
+                str(report_dir),
+                "--format",
+                "project",
+                "--field",
+                "topics",
+                "--min-missing",
+                "0",
+                "--task-status",
+                "ready",
+                "--output",
+                str(coverage_project_path),
+            )
+            coverage_project_rows = list(csv.DictReader(coverage_project_path.read_text(encoding="utf-8").splitlines()))
+            self.assertTrue(coverage_project_rows)
+            self.assertEqual(coverage_project_rows[0]["status"], "ready")
+            self.assertEqual(coverage_project_rows[0]["field"], "topics")
+            self.assertIn("coverage", coverage_project_rows[0]["labels"])
+
+            coverage_patch_path = report_dir / "exports" / "coverage-topic-patch.csv"
+            self.run_cmd(
+                "scripts/export_coverage.py",
+                str(report_dir),
+                "--format",
+                "patch",
+                "--field",
+                "topics",
+                "--min-missing",
+                "0",
+                "--set-value",
+                "LLM Serving",
+                "--output",
+                str(coverage_patch_path),
+            )
+            coverage_patch_text = coverage_patch_path.read_text(encoding="utf-8")
+            self.assertTrue(coverage_patch_text.startswith("slug,topics,_list_mode"))
+
+            unsafe_coverage_export = self.run_cmd(
+                "scripts/export_coverage.py",
+                str(report_dir),
+                "--output",
+                str(report_dir / "coverage.md"),
+                check=False,
+            )
+            self.assertNotEqual(unsafe_coverage_export.returncode, 0)
+            self.assertIn("Refusing to write a Markdown export", unsafe_coverage_export.stderr)
 
             collections_export_path = report_dir / "exports" / "collections.md"
             self.run_cmd(
@@ -1243,6 +1309,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("status.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("batch.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("collections.json", {item["href"] for item in manifest["data_files"]})
+            self.assertIn("coverage.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("pivot.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("compare.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("taxonomy_map.json", {item["href"] for item in manifest["data_files"]})
@@ -1285,6 +1352,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertRegex(artifact_by_href["batch.html"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["batch.json"]["status"], "ok")
             self.assertRegex(artifact_by_href["batch.json"]["sha256"], r"^[0-9a-f]{64}$")
+            self.assertEqual(artifact_by_href["coverage.json"]["status"], "ok")
+            self.assertRegex(artifact_by_href["coverage.json"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["intake.html"]["status"], "ok")
             self.assertRegex(artifact_by_href["intake.html"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["intake.json"]["status"], "ok")
@@ -1334,6 +1403,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("python3 scripts/apply_governance_policy.py docs --input <taxonomy_governance_policy.json> --write", manifest["commands"])
             self.assertIn("python3 scripts/export_actions.py docs --output docs/exports/actions.md", manifest["commands"])
             self.assertIn("python3 scripts/export_batches.py docs --output docs/exports/batches.md", manifest["commands"])
+            self.assertIn("python3 scripts/export_coverage.py docs --output docs/exports/coverage.md", manifest["commands"])
             self.assertIn("python3 scripts/export_taxonomy_registry.py docs --output docs/exports/taxonomy-registry.md", manifest["commands"])
             self.assertIn("python3 scripts/export_taxonomy_load.py docs --format csv --output docs/exports/taxonomy-load.csv", manifest["commands"])
             self.assertIn("python3 scripts/export_collections.py docs --output docs/exports/collections.md", manifest["commands"])
@@ -1358,6 +1428,9 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(recipe_by_id["batches_markdown"]["output"], "docs/exports/batches.md")
             self.assertEqual(recipe_by_id["batches_project"]["output"], "docs/exports/batches-project.csv")
             self.assertEqual(recipe_by_id["batches_review_patch"]["output"], "docs/exports/batches-review-patch.csv")
+            self.assertEqual(recipe_by_id["coverage_markdown"]["output"], "docs/exports/coverage.md")
+            self.assertEqual(recipe_by_id["coverage_project"]["output"], "docs/exports/coverage-project.csv")
+            self.assertEqual(recipe_by_id["coverage_topic_patch"]["output"], "docs/exports/coverage-topic-patch.csv")
             self.assertEqual(recipe_by_id["collections_markdown"]["output"], "docs/exports/collections.md")
             self.assertEqual(recipe_by_id["collections_project"]["kind"], "export")
             self.assertEqual(recipe_by_id["ownership_markdown"]["output"], "docs/exports/ownership.md")
@@ -1477,6 +1550,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("LLM Systems", balance_html)
             coverage_html = (report_dir / "coverage.html").read_text(encoding="utf-8")
             self.assertIn("研究线分类覆盖地图", coverage_html)
+            self.assertIn("Coverage JSON", coverage_html)
             self.assertIn("Owner", coverage_html)
             self.assertIn("serving-owner", coverage_html)
             self.assertIn('id="coverageRows"', coverage_html)

@@ -31,6 +31,7 @@ PYTHON_SCRIPTS = [
     "scripts/export_actions.py",
     "scripts/export_batches.py",
     "scripts/export_collections.py",
+    "scripts/export_coverage.py",
     "scripts/export_ownership.py",
     "scripts/export_roadmap.py",
     "scripts/export_taxonomy_actions.py",

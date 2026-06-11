@@ -149,6 +149,7 @@ REQUIRED_PAGES = {
     "status.json",
     "batch.json",
     "collections.json",
+    "coverage.json",
     "pivot.json",
     "compare.json",
     "taxonomy_map.json",
@@ -581,6 +582,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     status_path = report_dir / "status.json"
     batch_path = report_dir / "batch.json"
     collections_path = report_dir / "collections.json"
+    coverage_path = report_dir / "coverage.json"
     pivot_path = report_dir / "pivot.json"
     compare_path = report_dir / "compare.json"
     taxonomy_map_path = report_dir / "taxonomy_map.json"
@@ -627,6 +629,9 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         return
     if not collections_path.exists():
         errors.append("missing collections.json")
+        return
+    if not coverage_path.exists():
+        errors.append("missing coverage.json")
         return
     if not pivot_path.exists():
         errors.append("missing pivot.json")
@@ -690,6 +695,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     status_data = json.loads(status_path.read_text(encoding="utf-8"))
     batch_data = json.loads(batch_path.read_text(encoding="utf-8"))
     collections_data = json.loads(collections_path.read_text(encoding="utf-8"))
+    coverage_data = json.loads(coverage_path.read_text(encoding="utf-8"))
     pivot_data = json.loads(pivot_path.read_text(encoding="utf-8"))
     compare_data = json.loads(compare_path.read_text(encoding="utf-8"))
     taxonomy_map_data = json.loads(taxonomy_map_path.read_text(encoding="utf-8"))
@@ -1023,6 +1029,68 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
             unknown_sample_slugs = [slug for slug in sample_slugs if slug and slug not in report_slugs]
             if unknown_sample_slugs:
                 errors.append(f"collections.json {group_key}[{index}] references unknown sample paper slugs: {unknown_sample_slugs}")
+
+    if coverage_data.get("count") != len(report_slugs):
+        errors.append(f"coverage.json count {coverage_data.get('count')} != markdown report count {len(report_slugs)}")
+    required_coverage = {"line_count", "field_count", "avg_score", "risk_counts", "weak_line_count", "total_missing", "fields", "coverage", "links"}
+    missing_coverage = sorted(required_coverage - set(coverage_data))
+    if missing_coverage:
+        errors.append(f"coverage.json missing keys: {', '.join(missing_coverage)}")
+    coverage_fields = coverage_data.get("fields")
+    if not isinstance(coverage_fields, list) or not coverage_fields:
+        errors.append("coverage.json fields must be a non-empty list")
+        coverage_field_names = set()
+    else:
+        if coverage_data.get("field_count") != len(coverage_fields):
+            errors.append("coverage.json field_count must match fields length")
+        coverage_field_names = {str(field.get("field") or "") for field in coverage_fields if isinstance(field, dict)}
+        for index, field in enumerate(coverage_fields):
+            if not isinstance(field, dict):
+                errors.append(f"coverage.json fields[{index}] must be an object")
+                continue
+            for key in ("field", "label", "query_key", "multi"):
+                if key not in field:
+                    errors.append(f"coverage.json fields[{index}] missing {key}")
+    coverage_rows = coverage_data.get("coverage")
+    if not isinstance(coverage_rows, list):
+        errors.append("coverage.json coverage must be a list")
+        coverage_rows = []
+    elif coverage_data.get("line_count") != len(coverage_rows):
+        errors.append("coverage.json line_count must match coverage length")
+    valid_coverage_risks = {"high", "medium", "low"}
+    for index, row in enumerate(coverage_rows):
+        if not isinstance(row, dict):
+            errors.append(f"coverage.json coverage[{index}] must be an object")
+            continue
+        for key in ("line", "href", "count", "score", "risk", "missing_total", "fields"):
+            if key not in row:
+                errors.append(f"coverage.json coverage[{index}] missing {key}")
+        if row.get("risk") not in valid_coverage_risks:
+            errors.append(f"coverage.json coverage[{index}].risk has invalid value")
+        if not isinstance(row.get("fields"), list):
+            errors.append(f"coverage.json coverage[{index}].fields must be a list")
+            continue
+        row_field_names = {str(field.get("field") or "") for field in row.get("fields", []) if isinstance(field, dict)}
+        if coverage_field_names and row_field_names != coverage_field_names:
+            errors.append(f"coverage.json coverage[{index}].fields must match fields contract")
+        for field_index, field in enumerate(row.get("fields", [])):
+            if not isinstance(field, dict):
+                errors.append(f"coverage.json coverage[{index}].fields[{field_index}] must be an object")
+                continue
+            for key in ("field", "label", "query_key", "coverage", "missing", "missing_slugs", "unique", "top_values"):
+                if key not in field:
+                    errors.append(f"coverage.json coverage[{index}].fields[{field_index}] missing {key}")
+            if not isinstance(field.get("missing_slugs"), list):
+                errors.append(f"coverage.json coverage[{index}].fields[{field_index}].missing_slugs must be a list")
+            else:
+                unknown_missing_slugs = sorted(str(slug) for slug in field.get("missing_slugs", []) if str(slug) not in report_slugs)
+                if unknown_missing_slugs:
+                    errors.append(f"coverage.json coverage[{index}].fields[{field_index}] references unknown missing slugs: {unknown_missing_slugs}")
+            if not isinstance(field.get("top_values"), list):
+                errors.append(f"coverage.json coverage[{index}].fields[{field_index}].top_values must be a list")
+    coverage_links = coverage_data.get("links")
+    if not isinstance(coverage_links, dict) or not {"html", "library", "balance", "facets", "quality", "lines"}.issubset(coverage_links):
+        errors.append("coverage.json links must include html, library, balance, facets, quality, and lines")
 
     if pivot_data.get("count") != len(report_slugs):
         errors.append(f"pivot.json count {pivot_data.get('count')} != markdown report count {len(report_slugs)}")

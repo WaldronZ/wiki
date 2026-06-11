@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T06:43:02",
+  "generated_at": "2026-06-12T06:51:21",
   "snapshot_id": "89f0dcec1638050c",
   "name": "AutoPaperReader Wiki",
   "count": 5,
@@ -121,229 +121,229 @@
     }
   ],
   "artifact_summary": {
-    "count": 69,
+    "count": 70,
     "missing": [],
     "hashes": [
       {
         "href": "index.html",
         "kind": "page",
-        "sha256": "09ffecab8fc36266f9eaec67faa3d6991598e41d41a39d59c9b5e4f0ec050160",
+        "sha256": "17c61e79477690f9814d78708777439bf027b8f2ecfb3faf563d34bb4ea2745a",
         "status": "ok"
       },
       {
         "href": "command.html",
         "kind": "page",
-        "sha256": "98fee9c4d522b656be4f59d924279f6fd1ed0b400488376f5c8f7dcfe915ce96",
+        "sha256": "8d84225ebe5cb323466972f02c3401fe28a06aae39d64b45cac91f28b9a8dd7c",
         "status": "ok"
       },
       {
         "href": "library.html",
         "kind": "page",
-        "sha256": "50349ff4fb2fb93b0cb9c1d5aff31f8c7decefbcccfb1fc6bb428b68a257c0d2",
+        "sha256": "20a7550c95d8b36b692b1f66b34b02491e17d2886cd58e3c75ab4bf5ef5b4aac",
         "status": "ok"
       },
       {
         "href": "dashboard.html",
         "kind": "page",
-        "sha256": "dce3c72be9addcc8e6190b83ce56fba82a6f96813e58ae6c2fed3c9ed4215af0",
+        "sha256": "23275e42dd170f74878e05df2cb03f319789d621ed1a6c170436feceed2ef25c",
         "status": "ok"
       },
       {
         "href": "actions.html",
         "kind": "page",
-        "sha256": "eb8b93f50873fd6adbe52c273ae7ff6761ca9725071ca410daf23523cef5f511",
+        "sha256": "c2d18dd69609a36ed0cb74775e56313b04c423b1950019fce392e5032c32d8cc",
         "status": "ok"
       },
       {
         "href": "collections.html",
         "kind": "page",
-        "sha256": "4faba703097ad78bb225e786be3e9502801763787cb029860333dd0d7ad464a6",
+        "sha256": "8af2d48450348d478e55f3bfc9b6881b3bd3f5fcbddabfb60d842fbf5a11ec6c",
         "status": "ok"
       },
       {
         "href": "balance.html",
         "kind": "page",
-        "sha256": "44fdec309ab7e60ffe20f586c7a246274ecf0d9c969e01e4c5ecb32428c8e96c",
+        "sha256": "ace1c5372c21f5f4fec68d81ce55c881e200beac439bfaabc3cb09c9080c22be",
         "status": "ok"
       },
       {
         "href": "coverage.html",
         "kind": "page",
-        "sha256": "7b291d4dc30445a130eb50139fc0c10b4bef6345f65a529f5e0bc93749c9adee",
+        "sha256": "6f817d8eb5b290725a6888380652fc71e4e27bc58a42758069c90c092fc8abd2",
         "status": "ok"
       },
       {
         "href": "facets.html",
         "kind": "page",
-        "sha256": "9c8f3ed097eec7c2c6efd869bf4cd91f67d49d73e49cbabd3f81943912eab9df",
+        "sha256": "66314bc2cfdef61419967b8eb6d75fa27b2692dd2dd25e48758e891b3f7083ae",
         "status": "ok"
       },
       {
         "href": "related.html",
         "kind": "page",
-        "sha256": "310e77d1770cae365b692373d60614ffafe158e7d86ee2d7df031b83c1368fa4",
+        "sha256": "1f5206e7eb815c6f606177d73727a0dc9827784dfbdc668ac8e83a8a81559933",
         "status": "ok"
       },
       {
         "href": "gaps.html",
         "kind": "page",
-        "sha256": "6fe350e8ba1bcbce0be5dfd68f236f9cf985189fb34aacc5264e79d74282c240",
+        "sha256": "b800bffb967d91c5bd1554e1f213551d1de6118c57cec34a954789e5c59d97eb",
         "status": "ok"
       },
       {
         "href": "board.html",
         "kind": "page",
-        "sha256": "9a317461b02db1ff1778cde26189067e4f80e3ecc932f3e597881d172dbb3148",
+        "sha256": "26f9297d223f3fb5e9d5722c71c4043beba9bf914a7dd7d6ba13fd0f9995f582",
         "status": "ok"
       },
       {
         "href": "workflow.html",
         "kind": "page",
-        "sha256": "ecfe35a16c3ba601035cb9bf683ab527622945c0ba9004aef5735e5d1fe79556",
+        "sha256": "69db7622066f336db8ce71e296e2c1e8f7926d4ba2855bff123c7b5cb7f8c065",
         "status": "ok"
       },
       {
         "href": "status.html",
         "kind": "page",
-        "sha256": "9eb54306dcd4677faa37a29b43b85355be124726aa5ea5dbc64435c5725a65ef",
+        "sha256": "47a0065f4e964c6df9e4a1ddd4f60d60c18380c76c444c9d2a386061f0434e58",
         "status": "ok"
       },
       {
         "href": "batch.html",
         "kind": "page",
-        "sha256": "94d72f6be33a6c461e3217323734c18bff14a6c2c862947fd69f3db7c92fdfda",
+        "sha256": "b0fbf7ab330f7eb0b5df4d07fc05c07daebe2ddaa512e83cff2b349528db168d",
         "status": "ok"
       },
       {
         "href": "pivot.html",
         "kind": "page",
-        "sha256": "8c47234bf0e459ca30f2594a455af0a41c54c27a13f307cb7f97cba3b5ab3dbb",
+        "sha256": "c31c9e69c354473c7afcadc76665fb019eff06dc21dbc9b8180b3d43d0862654",
         "status": "ok"
       },
       {
         "href": "compare.html",
         "kind": "page",
-        "sha256": "c5e93631bd443e76e6f86ca0ee07435a686766f10fdc2f6ca37b6edd59ef8163",
+        "sha256": "a7868c9120de30ef94a1ec126bcabd9036a60002453ff2cf2ca7f5bc669bcfa4",
         "status": "ok"
       },
       {
         "href": "taxonomy_map.html",
         "kind": "page",
-        "sha256": "8afb1d99f0778f54120e2593b04ddc32282a2931f0abf31937bb17080455ed5e",
+        "sha256": "10d05808642179e0b97a0144c97fba41ed95e4eddf3ffc509018771cd37d54d7",
         "status": "ok"
       },
       {
         "href": "clusters.html",
         "kind": "page",
-        "sha256": "230fd3cf7b95bb3e08b3e79432c812d0af4f2f1a209a07b157f270a0210147b9",
+        "sha256": "c7224407014798957baea17f3116044ba1271e0d93e30610e9a4445c8cd12717",
         "status": "ok"
       },
       {
         "href": "roadmap.html",
         "kind": "page",
-        "sha256": "bb4ec5f90b9b5da509987bd47c0e23d8d430a9c233b3172bac5fb24b814e79c0",
+        "sha256": "987fb82f4bf5459382618a659eeef3358998f837dda4126695dd43a6359bad6f",
         "status": "ok"
       },
       {
         "href": "scale.html",
         "kind": "page",
-        "sha256": "b06200de7d61f91a67383a981e111f37ba22b970544d0f562f4f54c03ead1870",
+        "sha256": "36fb9221ac4f613b5231516928cbecfe69a14f23dbbcf0db8fe8348d379f549c",
         "status": "ok"
       },
       {
         "href": "ownership.html",
         "kind": "page",
-        "sha256": "0d40204f8b2571b95f04f450fa6bf657511a2081b821f8e05c8c33c20769ef53",
+        "sha256": "2a24fb3960eda344b6a3dcbc5a198bf1a7df346b7971ac1b2321a091aaa5377d",
         "status": "ok"
       },
       {
         "href": "routing.html",
         "kind": "page",
-        "sha256": "7e66cd4e9c0769bb6bd82ce2a0af7e72065972431a7e78ab63e89d9b6d5713db",
+        "sha256": "34255a6eb2dfc62fd40b20420c19a5ce9d06f7d45dcaa149b50de8552d1b77d6",
         "status": "ok"
       },
       {
         "href": "onboarding.html",
         "kind": "page",
-        "sha256": "0cc6d6abb2c1b5c6ad8f50873847938c56de9c5fa33a821661fbd8388f63b945",
+        "sha256": "df575b39bd84477acb8c5aabdde9c79517c961b23c00dc882ec3c158a7457b97",
         "status": "ok"
       },
       {
         "href": "catalog.html",
         "kind": "page",
-        "sha256": "905d256041e29ecc88bf56edbc3de91690926bd5a1c37e5ea7a15238143aa894",
+        "sha256": "fa8cd0c6eb8f55a3168d314be8eb07d19003e9b8de3ada405fa4ed878cad85d7",
         "status": "ok"
       },
       {
         "href": "intake.html",
         "kind": "page",
-        "sha256": "22315f2d7112fd87a4f241a5c4a88bb9a82fdf96db3f4037586072703924cec1",
+        "sha256": "a6f390d9f5d9f1714c0e14b5d71cab675a2f186ab5d6e6c16e7e9a29823b2fa4",
         "status": "ok"
       },
       {
         "href": "inbox.html",
         "kind": "page",
-        "sha256": "2415cf49b9542738747e716b5e839ccf4026de9117784c9c6136b67e17ed2eec",
+        "sha256": "d9235cfe20aa13c79e2dcd214845f09837c0f7bc47ef09dd398560d3161923da",
         "status": "ok"
       },
       {
         "href": "dedupe.html",
         "kind": "page",
-        "sha256": "4c2dd0ddfe2fbce431997407c7f6233316f131e0604730313fe56ce3dfcce929",
+        "sha256": "c3af14db9e32650a3b919a0a5a04e79b933bed8afb1666514365437c8c48d866",
         "status": "ok"
       },
       {
         "href": "registry.html",
         "kind": "page",
-        "sha256": "98a25dfc871803a1a2287efa038e6536ebd98406272ef4dba142c43e1666e783",
+        "sha256": "bb456276c7547c1ad0b861a2301338c9664a616f78ed00e9c0590b17d72abb3a",
         "status": "ok"
       },
       {
         "href": "review.html",
         "kind": "page",
-        "sha256": "035b9a31e76c3b7d4639284cdbbfc5f955fcb5324672a87f6cb34d35b07cff6e",
+        "sha256": "9396743acc09e1c06138db029a24a5d2722bc68c34ef419c747d9832e7d33218",
         "status": "ok"
       },
       {
         "href": "freshness.html",
         "kind": "page",
-        "sha256": "6a7602cb20a03ca4c0b973c9365d0de99afe25a2c94152d357037a05a6525a14",
+        "sha256": "73d691a33754058433018529a24d48e336f1939e5b8ef1f5356d3c56de5cfbf0",
         "status": "ok"
       },
       {
         "href": "quality.html",
         "kind": "page",
-        "sha256": "3afb91ef779b20d9fcf29b4f9e92856dc2b6c4f13582086cfa5235d84c93d99f",
+        "sha256": "24dff0aed6b86739abf8c3fa26ebc09e527fad1d4e48400bc37e73222bb71236",
         "status": "ok"
       },
       {
         "href": "taxonomy.html",
         "kind": "page",
-        "sha256": "5cd7bdab250c32f0056f3564f41c925c56bffc8111ea494a2ee5c3a9b9e63573",
+        "sha256": "618366edec0e1d9eae70a54e9f8cba8930923ba1fb1c4064efc9948340f1d283",
         "status": "ok"
       },
       {
         "href": "timeline.html",
         "kind": "page",
-        "sha256": "8ef358a11bdee69eefa0b1c0526ea4209b653d6dd0eba1e508293c19962b10ad",
+        "sha256": "8398c7134f781cfa2965b075e57db9be8681457b250c126c26eab22b82635ed4",
         "status": "ok"
       },
       {
         "href": "matrix.html",
         "kind": "page",
-        "sha256": "fde4dbb46f0a73a6f6a6236d86e0e60cd74b181ce30af32f0aded99bb77898d9",
+        "sha256": "5770434f74828a4a424c5692098c6a554124cfecd1c193f7e780d4785cd6c6b5",
         "status": "ok"
       },
       {
         "href": "lines/index.html",
         "kind": "page",
-        "sha256": "3ff943b4d38a4cbd1f22c1474bf030f89fc74b071317536b558c29401a450c58",
+        "sha256": "6adeef54467e98b99991d7550f050ac16bc1380a724c02227ce5a8e0a8e3ba07",
         "status": "ok"
       },
       {
         "href": "tags.html",
         "kind": "page",
-        "sha256": "74494b19274d2afe73836e7a3362d8d73fc9b810d823400b68414f0893a96ac8",
+        "sha256": "d50c107889f0548527f0225fd58489d7ebbbc2a691f7738e0fdde9d292dceb60",
         "status": "ok"
       },
       {
@@ -425,6 +425,12 @@
         "status": "ok"
       },
       {
+        "href": "coverage.json",
+        "kind": "data",
+        "sha256": "37f6a9709cbfbbe966f406aec574bc572590c09338ceecb2bf34bc887bddd47d",
+        "status": "ok"
+      },
+      {
         "href": "pivot.json",
         "kind": "data",
         "sha256": "0e2de211e6e68b71e3ce9b34e6ae3127145dcefd5946cb276b644e5f6d7033e1",
@@ -475,13 +481,13 @@
       {
         "href": "onboarding.json",
         "kind": "data",
-        "sha256": "52ca330432c519452550b1b5c89f2b3cd16d72fac37cd7762ed3d67dbc35d32a",
+        "sha256": "3bceebacde1e376b9225c27396cdf56d8beb3c568918866adacc03e74e5022e1",
         "status": "ok"
       },
       {
         "href": "catalog.json",
         "kind": "data",
-        "sha256": "45258f96febee6216e639552de0d20781d9963ce34d335b02fbe45705b37f957",
+        "sha256": "c3e4fcc8911b78f612aae3ec8ea166ff47dd400718f93570c7bc1ad935af83fc",
         "status": "ok"
       },
       {

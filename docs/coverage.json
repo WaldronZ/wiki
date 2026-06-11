@@ -1,0 +1,346 @@
+{
+  "generated_at": "2026-06-12T06:51:21",
+  "count": 5,
+  "line_count": 2,
+  "field_count": 6,
+  "avg_score": 100.0,
+  "risk_counts": {
+    "low": 2
+  },
+  "weak_line_count": 0,
+  "total_missing": 0,
+  "fields": [
+    {
+      "field": "domains",
+      "label": "Domain",
+      "query_key": "domain",
+      "multi": true
+    },
+    {
+      "field": "tracks",
+      "label": "Track",
+      "query_key": "track",
+      "multi": true
+    },
+    {
+      "field": "problems",
+      "label": "Problem",
+      "query_key": "problem",
+      "multi": true
+    },
+    {
+      "field": "topics",
+      "label": "Topic",
+      "query_key": "topic",
+      "multi": true
+    },
+    {
+      "field": "methods",
+      "label": "Method",
+      "query_key": "method",
+      "multi": true
+    },
+    {
+      "field": "line_role",
+      "label": "Role",
+      "query_key": "role",
+      "multi": false
+    }
+  ],
+  "coverage": [
+    {
+      "line": "Parallel Decoding with Diffusion Models",
+      "href": "lines/parallel-decoding-with-diffusion-models.html",
+      "count": 3,
+      "owner": "decoding-owner",
+      "team": "generation",
+      "cadence": "biweekly",
+      "score": 100,
+      "risk": "low",
+      "missing_total": 0,
+      "fields": [
+        {
+          "field": "domains",
+          "label": "Domain",
+          "query_key": "domain",
+          "coverage": 100,
+          "missing": 0,
+          "missing_slugs": [],
+          "unique": 1,
+          "top_values": [
+            {
+              "value": "LLM Systems",
+              "count": 3
+            }
+          ]
+        },
+        {
+          "field": "tracks",
+          "label": "Track",
+          "query_key": "track",
+          "coverage": 100,
+          "missing": 0,
+          "missing_slugs": [],
+          "unique": 2,
+          "top_values": [
+            {
+              "value": "Inference Acceleration",
+              "count": 3
+            },
+            {
+              "value": "Parallel Decoding",
+              "count": 3
+            }
+          ]
+        },
+        {
+          "field": "problems",
+          "label": "Problem",
+          "query_key": "problem",
+          "coverage": 100,
+          "missing": 0,
+          "missing_slugs": [],
+          "unique": 3,
+          "top_values": [
+            {
+              "value": "Lossless Speculative Decoding",
+              "count": 1
+            },
+            {
+              "value": "Parallel Diffusion Decoding",
+              "count": 1
+            },
+            {
+              "value": "Memory-Efficient Parallel Token Generation",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "field": "topics",
+          "label": "Topic",
+          "query_key": "topic",
+          "coverage": 100,
+          "missing": 0,
+          "missing_slugs": [],
+          "unique": 7,
+          "top_values": [
+            {
+              "value": "Diffusion Language Models",
+              "count": 3
+            },
+            {
+              "value": "Speculative Decoding",
+              "count": 3
+            },
+            {
+              "value": "LLM Inference",
+              "count": 2
+            },
+            {
+              "value": "LLM Serving",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "field": "methods",
+          "label": "Method",
+          "query_key": "method",
+          "coverage": 100,
+          "missing": 0,
+          "missing_slugs": [],
+          "unique": 16,
+          "top_values": [
+            {
+              "value": "block diffusion",
+              "count": 1
+            },
+            {
+              "value": "KV injection",
+              "count": 1
+            },
+            {
+              "value": "parallel drafting",
+              "count": 1
+            },
+            {
+              "value": "Speculative Decoding",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "field": "line_role",
+          "label": "Role",
+          "query_key": "role",
+          "coverage": 100,
+          "missing": 0,
+          "missing_slugs": [],
+          "unique": 3,
+          "top_values": [
+            {
+              "value": "followup",
+              "count": 1
+            },
+            {
+              "value": "foundation",
+              "count": 1
+            },
+            {
+              "value": "variant",
+              "count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": "Efficient Attention Kernels",
+      "href": "lines/efficient-attention-kernels.html",
+      "count": 2,
+      "owner": "kernel-owner",
+      "team": "systems",
+      "cadence": "monthly",
+      "score": 100,
+      "risk": "low",
+      "missing_total": 0,
+      "fields": [
+        {
+          "field": "domains",
+          "label": "Domain",
+          "query_key": "domain",
+          "coverage": 100,
+          "missing": 0,
+          "missing_slugs": [],
+          "unique": 1,
+          "top_values": [
+            {
+              "value": "LLM Systems",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "field": "tracks",
+          "label": "Track",
+          "query_key": "track",
+          "coverage": 100,
+          "missing": 0,
+          "missing_slugs": [],
+          "unique": 2,
+          "top_values": [
+            {
+              "value": "Attention Kernels",
+              "count": 2
+            },
+            {
+              "value": "Inference Serving Systems",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "field": "problems",
+          "label": "Problem",
+          "query_key": "problem",
+          "coverage": 100,
+          "missing": 0,
+          "missing_slugs": [],
+          "unique": 2,
+          "top_values": [
+            {
+              "value": "Customizable Attention Serving",
+              "count": 1
+            },
+            {
+              "value": "Efficient Exact Attention",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "field": "topics",
+          "label": "Topic",
+          "query_key": "topic",
+          "coverage": 100,
+          "missing": 0,
+          "missing_slugs": [],
+          "unique": 9,
+          "top_values": [
+            {
+              "value": "Attention Kernels",
+              "count": 1
+            },
+            {
+              "value": "GPU Systems",
+              "count": 1
+            },
+            {
+              "value": "Inference Optimization",
+              "count": 1
+            },
+            {
+              "value": "KV Cache",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "field": "methods",
+          "label": "Method",
+          "query_key": "method",
+          "coverage": 100,
+          "missing": 0,
+          "missing_slugs": [],
+          "unique": 10,
+          "top_values": [
+            {
+              "value": "FlashAttention",
+              "count": 2
+            },
+            {
+              "value": "block-sparse attention",
+              "count": 1
+            },
+            {
+              "value": "composable KV-cache format",
+              "count": 1
+            },
+            {
+              "value": "CUDA Graph",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "field": "line_role",
+          "label": "Role",
+          "query_key": "role",
+          "coverage": 100,
+          "missing": 0,
+          "missing_slugs": [],
+          "unique": 2,
+          "top_values": [
+            {
+              "value": "system",
+              "count": 1
+            },
+            {
+              "value": "foundation",
+              "count": 1
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "links": {
+    "html": "coverage.html",
+    "library": "library.html",
+    "balance": "balance.html",
+    "facets": "facets.html",
+    "quality": "quality.html",
+    "lines": "lines/index.html"
+  }
+}

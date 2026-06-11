@@ -135,6 +135,7 @@ paper_reader/
 - `scripts/export_actions.py` 用于把 `actions.json` 导出成统一 checklist、审计 CSV 或可自定义任务状态的项目任务 CSV
 - `scripts/export_batches.py` 用于把 `batch.json` 中的可执行论文批次导出成 checklist、审计 CSV、项目任务 CSV 或可写回的 metadata patch CSV
 - `scripts/export_collections.py` 用于把 `collections.json` 中的共享视图、智能队列和研究线集合导出成 checklist、审计 CSV 或项目任务 CSV
+- `scripts/export_coverage.py` 用于把 `coverage.json` 中的研究线分类覆盖缺口导出成 checklist、审计 CSV、项目任务 CSV 或可写回的 metadata patch CSV
 - `scripts/export_ownership.py` 用于把 `ownership.json` 中的 owner 工作量、风险队列和研究线责任导出成 checklist、审计 CSV 或项目任务 CSV
 - `scripts/export_roadmap.py` 用于把 `roadmap.json` 中的研究线风险、角色缺口和下一步行动导出成路线 checklist、审计 CSV 或项目任务 CSV
 - `scripts/export_taxonomy_actions.py` 用于把 `taxonomy_actions.json` 导出成 Markdown checklist、审计 CSV 或项目任务 CSV，便于分派分类治理任务
@@ -234,6 +235,7 @@ paper_reader/
 - `docs/status.json`：机器可读运行时状态选择契约，包含 workflow 选项、论文状态快照、默认选择、跳转链接和写回命令
 - `docs/batch.json`：机器可读批次规划数据，包含每个批次的风险、缺口、完整 slug 范围、跳转链接和可复制导出命令
 - `docs/collections.json`：机器可读集合视图数据，包含共享视图、智能队列、研究线集合、命中 slug 和样例论文
+- `docs/coverage.json`：机器可读研究线分类覆盖地图，包含每条研究线的字段覆盖率、缺失 slug、owner、风险和跳转入口
 - `docs/pivot.json`：机器可读分类透视表，包含可交叉的维度、每篇论文的维度投影和常用预设矩阵
 - `docs/compare.json`：机器可读论文对比数据，包含对比字段、论文元数据和高优先级/研究线/方向推荐集合
 - `docs/taxonomy_map.json`：机器可读分类图谱，包含分类节点、共现边、研究线簇、孤立节点和治理建议
@@ -376,6 +378,9 @@ python3 scripts/export_actions.py docs --format project --group review --severit
 python3 scripts/export_batches.py docs --output docs/exports/batches.md
 python3 scripts/export_batches.py docs --format project --severity high --assignee batch-owner --output docs/exports/batches-project.csv
 python3 scripts/export_batches.py docs --format patch --gap review --field review_stage --set-value due --output docs/exports/batches-review-patch.csv
+python3 scripts/export_coverage.py docs --output docs/exports/coverage.md
+python3 scripts/export_coverage.py docs --format project --risk high --risk medium --output docs/exports/coverage-project.csv
+python3 scripts/export_coverage.py docs --format patch --field topics --set-value "New Topic" --output docs/exports/coverage-topic-patch.csv
 python3 scripts/export_collections.py docs --output docs/exports/collections.md
 python3 scripts/export_collections.py docs --format project --type smart --min-count 1 --assignee wiki-owner --output docs/exports/collections-project.csv
 python3 scripts/export_ownership.py docs --output docs/exports/ownership.md

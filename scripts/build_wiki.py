@@ -44,6 +44,7 @@ GENERATED_FIXED_PATHS = (
     "status.json",
     "batch.json",
     "collections.json",
+    "coverage.json",
     "pivot.json",
     "compare.json",
     "taxonomy_map.json",
@@ -3588,6 +3589,7 @@ DATA_CONSUMER_HINTS = {
     "status.json": ["workflow", "runtime-selector", "desktop"],
     "batch.json": ["batch-planning", "classification", "ops", "desktop"],
     "collections.json": ["collections", "shared-views", "queues", "desktop"],
+    "coverage.json": ["coverage", "taxonomy", "project-management", "desktop"],
     "pivot.json": ["analytics", "classification", "desktop"],
     "compare.json": ["comparison", "curation", "desktop"],
     "taxonomy_map.json": ["taxonomy", "graph", "desktop"],
@@ -3689,7 +3691,7 @@ def build_catalog_payload(report_dir: Path, papers: list[dict[str, Any]], inbox_
         {
             "name": "Desktop sync bootstrap",
             "command": "read docs/catalog.json, docs/papers.json, docs/search_index.json",
-            "uses": ["catalog.json", "papers.json", "search_index.json", "workflow.json", "batch.json", "collections.json"],
+            "uses": ["catalog.json", "papers.json", "search_index.json", "workflow.json", "batch.json", "collections.json", "coverage.json"],
             "outputs": ["local searchable paper library"],
         },
         {
@@ -3716,7 +3718,7 @@ def build_catalog_payload(report_dir: Path, papers: list[dict[str, Any]], inbox_
         "data_resources": data_resources,
         "contracts": contracts,
         "integration_recipes": integration_recipes,
-        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "batch.json", "collections.json"],
+        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "batch.json", "collections.json", "coverage.json"],
     }
 
 
@@ -3740,7 +3742,7 @@ def write_catalog_placeholders(report_dir: Path) -> None:
         "data_resources": [],
         "contracts": [],
         "integration_recipes": [],
-        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "batch.json", "collections.json"],
+        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "batch.json", "collections.json", "coverage.json"],
     }
     (report_dir / "catalog.json").write_text(
         json.dumps(payload, ensure_ascii=False, indent=2),
@@ -3891,7 +3893,7 @@ def build_onboarding_payload(report_dir: Path, papers: list[dict[str, Any]], inb
         "contribution_paths": contribution_paths,
         "command_groups": command_groups,
         "contracts": contract_files_manifest(),
-        "bootstrap_files": ["command.json", "onboarding.json", "catalog.json", "manifest.json", "papers.json", "batch.json", "collections.json", "intake.json", "routing.json", "quality.json"],
+        "bootstrap_files": ["command.json", "onboarding.json", "catalog.json", "manifest.json", "papers.json", "batch.json", "collections.json", "coverage.json", "intake.json", "routing.json", "quality.json"],
         "core_pages": [
             item
             for item in wiki_pages_manifest()
@@ -3975,6 +3977,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "status.json", "description": "运行时状态选择器、状态字段选项和论文状态快照"},
         {"href": "batch.json", "description": "按分类、状态和治理缺口生成的可执行论文批次"},
         {"href": "collections.json", "description": "共享视图、智能集合和研究线集合的机器可读入口"},
+        {"href": "coverage.json", "description": "研究线分类覆盖、字段缺口、缺失 slug 和 owner 信号"},
         {"href": "pivot.json", "description": "分类透视表维度、论文投影和交叉分布"},
         {"href": "compare.json", "description": "论文对比视图数据和推荐对比集合"},
         {"href": "taxonomy_map.json", "description": "分类节点、共现边、研究线簇和图谱治理建议"},
@@ -4266,6 +4269,30 @@ def command_recipes_manifest() -> list[dict[str, Any]]:
             "label": "Export collection checklist",
             "command": "python3 scripts/export_collections.py docs --output docs/exports/collections.md",
             "output": "docs/exports/collections.md",
+            "mutates": False,
+        },
+        {
+            "id": "coverage_markdown",
+            "kind": "export",
+            "label": "Export coverage gap checklist",
+            "command": "python3 scripts/export_coverage.py docs --output docs/exports/coverage.md",
+            "output": "docs/exports/coverage.md",
+            "mutates": False,
+        },
+        {
+            "id": "coverage_project",
+            "kind": "export",
+            "label": "Export coverage project tasks",
+            "command": "python3 scripts/export_coverage.py docs --format project --risk high --risk medium --output docs/exports/coverage-project.csv",
+            "output": "docs/exports/coverage-project.csv",
+            "mutates": False,
+        },
+        {
+            "id": "coverage_topic_patch",
+            "kind": "export",
+            "label": "Export coverage topic patch",
+            "command": "python3 scripts/export_coverage.py docs --format patch --field topics --set-value <topic> --output docs/exports/coverage-topic-patch.csv",
+            "output": "docs/exports/coverage-topic-patch.csv",
             "mutates": False,
         },
         {
@@ -13778,6 +13805,9 @@ def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
         ("导出批次清单", "python3 scripts/export_batches.py docs --output docs/exports/batches.md"),
         ("导出批次项目任务", "python3 scripts/export_batches.py docs --format project --severity high --output docs/exports/batches-project.csv"),
         ("导出批次复习 patch", "python3 scripts/export_batches.py docs --format patch --gap review --field review_stage --set-value due --output docs/exports/batches-review-patch.csv"),
+        ("导出覆盖缺口清单", "python3 scripts/export_coverage.py docs --output docs/exports/coverage.md"),
+        ("导出覆盖项目任务", "python3 scripts/export_coverage.py docs --format project --risk high --risk medium --output docs/exports/coverage-project.csv"),
+        ("导出覆盖 topic patch", "python3 scripts/export_coverage.py docs --format patch --field topics --set-value <topic> --output docs/exports/coverage-topic-patch.csv"),
         ("导出集合清单", "python3 scripts/export_collections.py docs --output docs/exports/collections.md"),
         ("导出集合项目任务", "python3 scripts/export_collections.py docs --format project --output docs/exports/collections-project.csv"),
         ("导出 Owner 工作量", "python3 scripts/export_ownership.py docs --output docs/exports/ownership.md"),
@@ -15763,7 +15793,7 @@ renderBalanceRows();
     (report_dir / "balance.html").write_text(page_shell("分类均衡复盘", body, extra_css=balance_css), encoding="utf-8")
 
 
-def render_coverage(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+def build_coverage_payload(papers: list[dict[str, Any]]) -> dict[str, Any]:
     policy = GOVERNANCE_POLICY["coverage"]
     coverage_specs = [
         ("domains", "Domain", "domain", True),
@@ -15797,7 +15827,8 @@ def render_coverage(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         present_slots = 0
         missing_slots = 0
         for field, label, query_key, is_list in coverage_specs:
-            missing = sum(1 for paper in items if not values_for(paper, field, is_list))
+            missing_slugs = [str(paper.get("slug") or "") for paper in items if not values_for(paper, field, is_list)]
+            missing = len(missing_slugs)
             present = total - missing
             present_slots += present
             missing_slots += missing
@@ -15810,6 +15841,7 @@ def render_coverage(report_dir: Path, papers: list[dict[str, Any]]) -> None:
                     "query_key": query_key,
                     "coverage": round((present / total) * 100) if total else 100,
                     "missing": missing,
+                    "missing_slugs": missing_slugs,
                     "unique": len(values),
                     "top_values": [{"value": value, "count": count} for value, count in top],
                 }
@@ -15837,6 +15869,50 @@ def render_coverage(report_dir: Path, papers: list[dict[str, Any]]) -> None:
                 "fields": field_rows,
             }
         )
+
+    total_missing = sum(int(row["missing_total"]) for row in coverage_rows)
+    avg_score = round(sum(int(row["score"]) for row in coverage_rows) / len(coverage_rows), 1) if coverage_rows else 100
+    risk_counts = dict(sorted(Counter(row["risk"] for row in coverage_rows).items()))
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": len(papers),
+        "line_count": len(coverage_rows),
+        "field_count": len(coverage_specs),
+        "avg_score": avg_score,
+        "risk_counts": risk_counts,
+        "weak_line_count": risk_counts.get("high", 0),
+        "total_missing": total_missing,
+        "fields": [
+            {"field": field, "label": label, "query_key": query_key, "multi": is_list}
+            for field, label, query_key, is_list in coverage_specs
+        ],
+        "coverage": coverage_rows,
+        "links": {
+            "html": "coverage.html",
+            "library": "library.html",
+            "balance": "balance.html",
+            "facets": "facets.html",
+            "quality": "quality.html",
+            "lines": "lines/index.html",
+        },
+    }
+
+
+def write_coverage_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_coverage_payload(papers)
+    (report_dir / "coverage.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+
+def render_coverage(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_coverage_payload(papers)
+    coverage_rows = payload["coverage"]
+    coverage_specs = [
+        (item["field"], item["label"], item["query_key"], item["multi"])
+        for item in payload["fields"]
+    ]
 
     def field_cell(line: str, field: dict[str, Any]) -> str:
         top = field["top_values"][:2]
@@ -15872,9 +15948,9 @@ def render_coverage(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     )
     field_headers = "".join(f"<th>{html.escape(label)}</th>" for _field, label, _query_key, _is_list in coverage_specs)
     coverage_json = json.dumps(coverage_rows, ensure_ascii=False).replace("</", "<\\/")
-    weak_lines = sum(1 for row in coverage_rows if row["risk"] == "high")
-    total_missing = sum(int(row["missing_total"]) for row in coverage_rows)
-    avg_score = round(sum(int(row["score"]) for row in coverage_rows) / len(coverage_rows), 1) if coverage_rows else 100
+    weak_lines = payload["weak_line_count"]
+    total_missing = payload["total_missing"]
+    avg_score = payload["avg_score"]
     coverage_css = """
     .coverage-top {
       display: grid;
@@ -15932,6 +16008,7 @@ def render_coverage(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="facets.html">分类工作台</a>
     <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="lines/index.html">研究线</a>
+    <a class="stat" href="coverage.json">Coverage JSON</a>
     <span class="stat">研究线 {len(coverage_rows)}</span>
     <span class="stat">平均覆盖 {avg_score}</span>
     <span class="stat">高风险 {weak_lines}</span>
@@ -19006,6 +19083,7 @@ def build_wiki(report_dir: Path) -> int:
     write_status_json(report_dir, papers)
     write_batch_json(report_dir, papers)
     write_collections_json(report_dir, papers)
+    write_coverage_json(report_dir, papers)
     write_pivot_json(report_dir, papers)
     write_compare_json(report_dir, papers)
     write_taxonomy_map_json(report_dir, papers)
