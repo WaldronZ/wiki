@@ -452,6 +452,32 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertTrue(taxonomy_action_rows)
             self.assertIn("severity", taxonomy_action_rows[0])
 
+            taxonomy_project_path = report_dir / "exports" / "taxonomy-project.csv"
+            self.run_cmd(
+                "scripts/export_taxonomy_actions.py",
+                str(report_dir),
+                "--format",
+                "project",
+                "--severity",
+                "medium",
+                "--assignee",
+                "taxonomy-owner",
+                "--task-status",
+                "ready",
+                "--due-date",
+                "2026-07-01",
+                "--output",
+                str(taxonomy_project_path),
+            )
+            taxonomy_project_rows = list(csv.DictReader(taxonomy_project_path.read_text(encoding="utf-8").splitlines()))
+            self.assertTrue(taxonomy_project_rows)
+            self.assertEqual(taxonomy_project_rows[0]["status"], "ready")
+            self.assertEqual(taxonomy_project_rows[0]["assignee"], "taxonomy-owner")
+            self.assertEqual(taxonomy_project_rows[0]["due_date"], "2026-07-01")
+            self.assertIn("taxonomy", taxonomy_project_rows[0]["labels"])
+            self.assertIn("taxonomy value", taxonomy_project_rows[0]["title"])
+            self.assertIn("Count:", taxonomy_project_rows[0]["body"])
+
             unsafe_taxonomy_export = self.run_cmd(
                 "scripts/export_taxonomy_actions.py",
                 str(report_dir),

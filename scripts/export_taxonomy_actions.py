@@ -27,6 +27,24 @@ FIELDS = [
     "recommendation",
 ]
 
+PROJECT_FIELDS = [
+    "task_id",
+    "title",
+    "status",
+    "priority",
+    "assignee",
+    "due_date",
+    "labels",
+    "severity",
+    "action",
+    "field",
+    "value",
+    "count",
+    "href",
+    "sample_slugs",
+    "body",
+]
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Export AutoPaperReader taxonomy governance actions.")
@@ -39,11 +57,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--format",
         "-f",
-        choices=["markdown", "csv"],
+        choices=["markdown", "csv", "project"],
         default="markdown",
-        help="Output format.",
+        help="Output format. Use 'project' for a task CSV suitable for project trackers.",
     )
     parser.add_argument("--output", "-o", help="Output path. Defaults to stdout.")
+    parser.add_argument("--assignee", default="", help="Default assignee for --format project rows.")
+    parser.add_argument("--due-date", default="", help="Default due date for --format project rows.")
+    parser.add_argument("--task-status", default="todo", help="Default task status for --format project rows.")
     parser.add_argument(
         "--severity",
         choices=["high", "medium", "low"],
@@ -158,6 +179,70 @@ def render_csv(actions: list[dict[str, Any]]) -> str:
     return buffer.getvalue()
 
 
+def priority_for(item: dict[str, Any]) -> str:
+    severity = str(item.get("severity") or "")
+    return {"high": "P1", "medium": "P2", "low": "P3"}.get(severity, "P3")
+
+
+def task_title(item: dict[str, Any]) -> str:
+    action_label = {
+        "split_candidate": "Split taxonomy value",
+        "merge_candidate": "Merge taxonomy value",
+        "unused_config": "Review unused config",
+        "watch": "Watch taxonomy value",
+    }.get(str(item.get("action") or ""), str(item.get("action") or "Taxonomy task"))
+    field = str(item.get("field") or "taxonomy")
+    value = str(item.get("value") or "")
+    return f"{action_label}: {field} / {value}".strip()
+
+
+def task_body(item: dict[str, Any]) -> str:
+    parts = [
+        str(item.get("recommendation") or ""),
+        f"Count: {item.get('count', 0)}",
+        f"Share: {round(float(item.get('share') or 0) * 100)}%",
+    ]
+    href = str(item.get("href") or "")
+    if href:
+        parts.append(f"View: {href}")
+    samples = join_value(item.get("sample_slugs"))
+    if samples:
+        parts.append(f"Samples: {samples}")
+    return " | ".join(part for part in parts if part)
+
+
+def render_project_csv(actions: list[dict[str, Any]], args: argparse.Namespace) -> str:
+    from io import StringIO
+
+    buffer = StringIO()
+    writer = csv.DictWriter(buffer, fieldnames=PROJECT_FIELDS)
+    writer.writeheader()
+    for index, item in enumerate(actions, start=1):
+        action = str(item.get("action") or "")
+        field = str(item.get("field") or "")
+        severity = str(item.get("severity") or "")
+        labels = "; ".join(label for label in ["taxonomy", action, field, severity] if label)
+        row = {
+            "task_id": f"tax-{index:03d}",
+            "title": task_title(item),
+            "status": args.task_status,
+            "priority": priority_for(item),
+            "assignee": args.assignee,
+            "due_date": args.due_date,
+            "labels": labels,
+            "severity": severity,
+            "action": action,
+            "field": field,
+            "value": join_value(item.get("value")),
+            "count": join_value(item.get("count")),
+            "href": join_value(item.get("href")),
+            "sample_slugs": join_value(item.get("sample_slugs")),
+            "body": task_body(item),
+        }
+        writer.writerow(row)
+    return buffer.getvalue()
+
+
 def write_output(text: str, output_path: str | None, report_dir: Path, stream: TextIO) -> None:
     if not output_path:
         stream.write(text)
@@ -181,7 +266,12 @@ def main() -> int:
     try:
         payload = load_actions(report_dir)
         actions = filter_actions(payload.get("actions", []), args)
-        text = render_csv(actions) if args.format == "csv" else render_markdown(payload, actions)
+        if args.format == "csv":
+            text = render_csv(actions)
+        elif args.format == "project":
+            text = render_project_csv(actions, args)
+        else:
+            text = render_markdown(payload, actions)
         write_output(text, args.output, report_dir, sys.stdout)
     except (FileNotFoundError, ValueError) as error:
         print(f"ERROR: {error}", file=sys.stderr)
