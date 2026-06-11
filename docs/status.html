@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>复习计划</title>
+  <title>状态选择器</title>
   <style>
     :root {
       color-scheme: light;
@@ -350,12 +350,56 @@
       .data-table { display: block; overflow-x: auto; }
       header { padding-top: 28px; }
     }
+
+    .status-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
+      gap: 16px;
+      align-items: start;
+    }
+    .status-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 14px;
+    }
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 10px;
+    }
+    .status-choice {
+      display: grid;
+      gap: 4px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: color-mix(in srgb, var(--panel) 88%, white);
+    }
+    .status-choice strong { font-size: 16px; }
+    .status-choice span { color: var(--muted); font-size: 13px; }
+    .status-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .status-config {
+      width: 100%;
+      min-height: 160px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--ink);
+      padding: 10px;
+      font: 13px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    @media (max-width: 900px) { .status-layout { grid-template-columns: 1fr; } }
+    
   </style>
 </head>
 <body>
-<script>
-window.PAPER_WIKI = {"review_items": [{"slug": "2604.11035-introspective-dlm", "title": "Introspective Diffusion Language Models", "title_zh": "内省式扩散语言模型", "research_line": "Parallel Decoding with Diffusion Models", "line_role": "foundation", "importance": 5, "confidence": 4, "reproducibility": 3, "review_stage": "", "last_reviewed": "", "next_review": "", "suggested_next_review": "2026-06-18", "interval_days": 7, "state": "needs_plan", "priority": 58, "html_path": "2604.11035-introspective-dlm.html"}, {"slug": "2307.08691-flashattention-2", "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning", "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention", "research_line": "Efficient Attention Kernels", "line_role": "foundation", "importance": 5, "confidence": 4, "reproducibility": 4, "review_stage": "", "last_reviewed": "", "next_review": "", "suggested_next_review": "2026-06-25", "interval_days": 14, "state": "needs_plan", "priority": 58, "html_path": "2307.08691-flashattention-2.html"}, {"slug": "2602.06036-dflash", "title": "DFlash: Block Diffusion for Flash Speculative Decoding", "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法", "research_line": "Parallel Decoding with Diffusion Models", "line_role": "followup", "importance": 4, "confidence": 4, "reproducibility": 3, "review_stage": "", "last_reviewed": "", "next_review": "", "suggested_next_review": "2026-07-04", "interval_days": 23, "state": "needs_plan", "priority": 48, "html_path": "2602.06036-dflash.html"}, {"slug": "2605.12825-orthrus", "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion", "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成", "research_line": "Parallel Decoding with Diffusion Models", "line_role": "variant", "importance": 4, "confidence": 4, "reproducibility": 3, "review_stage": "", "last_reviewed": "", "next_review": "", "suggested_next_review": "2026-07-04", "interval_days": 23, "state": "needs_plan", "priority": 48, "html_path": "2605.12825-orthrus.html"}, {"slug": "2501.01005-flashinfer", "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving", "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎", "research_line": "Efficient Attention Kernels", "line_role": "system", "importance": 4, "confidence": 4, "reproducibility": 4, "review_stage": "", "last_reviewed": "", "next_review": "", "suggested_next_review": "2026-07-11", "interval_days": 30, "state": "needs_plan", "priority": 48, "html_path": "2501.01005-flashinfer.html"}]};
-</script>
 
 <button class="button quick-open" type="button" id="quickOpen">快速跳转</button>
 <div class="quick-panel" id="quickPanel" hidden>
@@ -369,131 +413,243 @@ window.PAPER_WIKI = {"review_items": [{"slug": "2604.11035-introspective-dlm", "
 </div>
 
 <header class="shell">
-  <div class="eyebrow">Review Planner</div>
-  <h1>复习计划</h1>
-  <p class="lead">根据 importance、confidence、reproducibility、last_reviewed 与 next_review 生成复习队列。没有写入报告的项目会给出建议日期，便于后续批量补 frontmatter。</p>
+  <div class="eyebrow">Status Selector</div>
+  <h1>状态选择器</h1>
+  <p class="lead">把多套 `status_workflows` 变成运行时可选项：选择 workflow、status、reading stage 和 review stage 后，可直接跳转到对应页面，或复制共享视图与配置片段。</p>
   <div class="stats">
-    <a class="stat" href="index.html">返回首页</a>
-    <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="status.json">Status JSON</a>
+    <a class="stat" href="workflow.html">工作流中心</a>
     <a class="stat" href="board.html">状态看板</a>
-    <a class="stat" href="dashboard.html">管理控制台</a>
-    <a class="stat" href="collections.html">集合视图</a>
-    <a class="stat" href="related.html">关联网络</a>
-    <a class="stat" href="gaps.html">研究缺口</a>
+    <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
-    <a class="stat" href="review.json">复习 JSON</a>
+    <span class="stat">active personal</span>
+    <span class="stat">workflow 2</span>
     <span class="stat">论文 5</span>
   </div>
 </header>
 <main class="shell">
-  <section>
-    <h2 class="section-title">队列</h2>
-    <div class="metric-grid"><section class="metric-card"><span>due</span><strong>0</strong><span></span></section><section class="metric-card"><span>needs_plan</span><strong>5</strong><span>2604.11035-introspective-dlm, 2307.08691-flashattention-2, 2602.06036-dflash</span></section><section class="metric-card"><span>scheduled</span><strong>0</strong><span></span></section><section class="metric-card"><span>high_priority</span><strong>2</strong><span>2604.11035-introspective-dlm, 2307.08691-flashattention-2</span></section></div>
+  <section class="status-layout">
+    <div class="status-panel">
+      <div class="controls">
+        <select id="statusWorkflow" aria-label="状态体系"><option value="personal">personal (默认)</option><option value="research">research</option></select>
+        <select id="statusValue" aria-label="状态"><option value="">全部状态</option></select>
+        <select id="statusStage" aria-label="阅读阶段"><option value="">全部阅读阶段</option></select>
+        <select id="statusReview" aria-label="复习阶段"><option value="">全部复习阶段</option></select>
+      </div>
+      <div class="status-actions">
+        <a class="button" id="openLibrary" href="library.html">打开论文库</a>
+        <a class="button" id="openBoard" href="board.html">打开看板</a>
+        <a class="button" id="openIndex" href="index.html">打开首页</a>
+        <button class="button" type="button" id="copyStatusView">复制共享视图</button>
+        <button class="button" type="button" id="copyStatusConfig">复制当前 workflow 配置</button>
+      </div>
+      <h2 class="section-title">当前候选值</h2>
+      <div class="status-grid" id="statusChoices"></div>
+    </div>
+    <aside class="status-panel">
+      <h2 class="section-title">配置片段</h2>
+      <textarea class="status-config" id="statusConfigPreview" readonly></textarea>
+      <div class="bulk-actions"><button class="button copy-status-command" type="button" data-command="python3 scripts/apply_status_workflow.py docs --input &lt;taxonomy_status_workflow.json&gt;">scripts/apply_status_workflow.py</button><button class="button copy-status-command" type="button" data-command="python3 scripts/apply_status_workflow.py docs --input &lt;taxonomy_status_workflow.json&gt; --write">scripts/apply_status_workflow.py</button><button class="button copy-status-command" type="button" data-command="python3 scripts/apply_library_metadata.py docs --input &lt;status_patch.csv&gt;">scripts/apply_library_metadata.py</button></div>
+      <p class="meta">复制 JSON 后可用 apply_status_workflow.py 预览或写回；页面选择只影响当前浏览视图，不会直接修改报告。</p>
+    </aside>
   </section>
   <section>
-    <h2 class="section-title">复习条目</h2>
-    <div class="results-bar">
-      <strong>建议写回：5 篇需建计划</strong>
-      <div class="results-actions">
-        <button id="downloadReviewPatch" class="button" type="button">下载建议 CSV</button>
-      </div>
-    </div>
-    <div class="table-wrap">
-      <table class="library-table">
-        <thead><tr><th>论文</th><th>研究线</th><th>状态</th><th>下次复习</th><th>评分</th><th>优先级</th></tr></thead>
-        <tbody><tr>
-  <td class="library-title">
-    <strong><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a></strong>
-    <div class="meta">2604.11035-introspective-dlm</div>
-  </td>
-  <td>Parallel Decoding with Diffusion Models<div class="meta">foundation</div></td>
-  <td><span class="flag">需建计划</span><div class="meta">未设置阶段</div></td>
-  <td>建议 2026-06-18<div class="meta">间隔 7 天</div></td>
-  <td><div class="score-grid"><span>I 5</span><span>C 4</span><span>R 3</span></div></td>
-  <td>58</td>
-</tr>
-<tr>
-  <td class="library-title">
-    <strong><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></strong>
-    <div class="meta">2307.08691-flashattention-2</div>
-  </td>
-  <td>Efficient Attention Kernels<div class="meta">foundation</div></td>
-  <td><span class="flag">需建计划</span><div class="meta">未设置阶段</div></td>
-  <td>建议 2026-06-25<div class="meta">间隔 14 天</div></td>
-  <td><div class="score-grid"><span>I 5</span><span>C 4</span><span>R 4</span></div></td>
-  <td>58</td>
-</tr>
-<tr>
-  <td class="library-title">
-    <strong><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a></strong>
-    <div class="meta">2602.06036-dflash</div>
-  </td>
-  <td>Parallel Decoding with Diffusion Models<div class="meta">followup</div></td>
-  <td><span class="flag">需建计划</span><div class="meta">未设置阶段</div></td>
-  <td>建议 2026-07-04<div class="meta">间隔 23 天</div></td>
-  <td><div class="score-grid"><span>I 4</span><span>C 4</span><span>R 3</span></div></td>
-  <td>48</td>
-</tr>
-<tr>
-  <td class="library-title">
-    <strong><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></strong>
-    <div class="meta">2605.12825-orthrus</div>
-  </td>
-  <td>Parallel Decoding with Diffusion Models<div class="meta">variant</div></td>
-  <td><span class="flag">需建计划</span><div class="meta">未设置阶段</div></td>
-  <td>建议 2026-07-04<div class="meta">间隔 23 天</div></td>
-  <td><div class="score-grid"><span>I 4</span><span>C 4</span><span>R 3</span></div></td>
-  <td>48</td>
-</tr>
-<tr>
-  <td class="library-title">
-    <strong><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></strong>
-    <div class="meta">2501.01005-flashinfer</div>
-  </td>
-  <td>Efficient Attention Kernels<div class="meta">system</div></td>
-  <td><span class="flag">需建计划</span><div class="meta">未设置阶段</div></td>
-  <td>建议 2026-07-11<div class="meta">间隔 30 天</div></td>
-  <td><div class="score-grid"><span>I 4</span><span>C 4</span><span>R 4</span></div></td>
-  <td>48</td>
-</tr></tbody>
-      </table>
-    </div>
+    <h2 class="section-title">命中论文 <span class="meta" id="statusResultCount"></span></h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>论文</th><th>研究线</th><th>Status</th><th>Reading</th><th>Review</th><th>重要性</th></tr></thead><tbody id="statusRows"></tbody></table></div>
   </section>
 </main>
 <script>
-const reviewItems = window.PAPER_WIKI.review_items || [];
-const downloadReviewPatch = document.querySelector("#downloadReviewPatch");
+const statusPayload = {"generated_at": "2026-06-12T04:45:49", "count": 5, "active_status_workflow": "personal", "workflow_count": 2, "workflows": [{"name": "personal", "active": true, "status_values": ["unread", "skimmed", "reading", "read", "archived"], "reading_stage_values": ["skim", "normal_read", "deep_read", "code_checked"], "review_stage_values": ["fresh", "due", "reviewed"], "fields": {"status": {"field": "status", "label": "阅读状态", "configured_count": 5, "used_configured_count": 1, "empty_count": 0, "empty_slugs": [], "values": [{"value": "unread", "count": 0, "configured": true, "href": "library.html?workflow=personal&status=unread"}, {"value": "skimmed", "count": 0, "configured": true, "href": "library.html?workflow=personal&status=skimmed"}, {"value": "reading", "count": 0, "configured": true, "href": "library.html?workflow=personal&status=reading"}, {"value": "read", "count": 5, "configured": true, "href": "library.html?workflow=personal&status=read"}, {"value": "archived", "count": 0, "configured": true, "href": "library.html?workflow=personal&status=archived"}], "unconfigured": []}, "reading_stage": {"field": "reading_stage", "label": "阅读阶段", "configured_count": 4, "used_configured_count": 1, "empty_count": 0, "empty_slugs": [], "values": [{"value": "skim", "count": 0, "configured": true, "href": "library.html?workflow=personal&stage=skim"}, {"value": "normal_read", "count": 0, "configured": true, "href": "library.html?workflow=personal&stage=normal_read"}, {"value": "deep_read", "count": 5, "configured": true, "href": "library.html?workflow=personal&stage=deep_read"}, {"value": "code_checked", "count": 0, "configured": true, "href": "library.html?workflow=personal&stage=code_checked"}], "unconfigured": []}, "review_stage": {"field": "review_stage", "label": "复习阶段", "configured_count": 3, "used_configured_count": 0, "empty_count": 5, "empty_slugs": ["2307.08691-flashattention-2", "2501.01005-flashinfer", "2602.06036-dflash", "2604.11035-introspective-dlm", "2605.12825-orthrus"], "values": [{"value": "fresh", "count": 0, "configured": true, "href": "library.html?workflow=personal&reviewStage=fresh"}, {"value": "due", "count": 0, "configured": true, "href": "library.html?workflow=personal&reviewStage=due"}, {"value": "reviewed", "count": 0, "configured": true, "href": "library.html?workflow=personal&reviewStage=reviewed"}], "unconfigured": []}}, "unconfigured_total": 0, "empty_total": 5, "board_href": "board.html?workflow=personal", "library_href": "library.html?workflow=personal"}, {"name": "research", "active": false, "status_values": ["inbox", "triaged", "reading", "implemented", "cited", "archived"], "reading_stage_values": ["skim", "normal_read", "deep_read", "code_checked", "reproduced"], "review_stage_values": ["fresh", "due", "reviewed", "evergreen"], "fields": {"status": {"field": "status", "label": "阅读状态", "configured_count": 6, "used_configured_count": 0, "empty_count": 0, "empty_slugs": [], "values": [{"value": "inbox", "count": 0, "configured": true, "href": "library.html?workflow=research&status=inbox"}, {"value": "triaged", "count": 0, "configured": true, "href": "library.html?workflow=research&status=triaged"}, {"value": "reading", "count": 0, "configured": true, "href": "library.html?workflow=research&status=reading"}, {"value": "implemented", "count": 0, "configured": true, "href": "library.html?workflow=research&status=implemented"}, {"value": "cited", "count": 0, "configured": true, "href": "library.html?workflow=research&status=cited"}, {"value": "archived", "count": 0, "configured": true, "href": "library.html?workflow=research&status=archived"}], "unconfigured": [{"value": "read", "count": 5, "configured": false, "slugs": ["2307.08691-flashattention-2", "2501.01005-flashinfer", "2602.06036-dflash", "2604.11035-introspective-dlm", "2605.12825-orthrus"], "href": "library.html?workflow=research&status=read"}]}, "reading_stage": {"field": "reading_stage", "label": "阅读阶段", "configured_count": 5, "used_configured_count": 1, "empty_count": 0, "empty_slugs": [], "values": [{"value": "skim", "count": 0, "configured": true, "href": "library.html?workflow=research&stage=skim"}, {"value": "normal_read", "count": 0, "configured": true, "href": "library.html?workflow=research&stage=normal_read"}, {"value": "deep_read", "count": 5, "configured": true, "href": "library.html?workflow=research&stage=deep_read"}, {"value": "code_checked", "count": 0, "configured": true, "href": "library.html?workflow=research&stage=code_checked"}, {"value": "reproduced", "count": 0, "configured": true, "href": "library.html?workflow=research&stage=reproduced"}], "unconfigured": []}, "review_stage": {"field": "review_stage", "label": "复习阶段", "configured_count": 4, "used_configured_count": 0, "empty_count": 5, "empty_slugs": ["2307.08691-flashattention-2", "2501.01005-flashinfer", "2602.06036-dflash", "2604.11035-introspective-dlm", "2605.12825-orthrus"], "values": [{"value": "fresh", "count": 0, "configured": true, "href": "library.html?workflow=research&reviewStage=fresh"}, {"value": "due", "count": 0, "configured": true, "href": "library.html?workflow=research&reviewStage=due"}, {"value": "reviewed", "count": 0, "configured": true, "href": "library.html?workflow=research&reviewStage=reviewed"}, {"value": "evergreen", "count": 0, "configured": true, "href": "library.html?workflow=research&reviewStage=evergreen"}], "unconfigured": []}}, "unconfigured_total": 1, "empty_total": 5, "board_href": "board.html?workflow=research", "library_href": "library.html?workflow=research"}], "papers": [{"slug": "2602.06036-dflash", "title": "DFlash: Block Diffusion for Flash Speculative Decoding", "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法", "research_line": "Parallel Decoding with Diffusion Models", "line_role": "followup", "status": "read", "reading_stage": "deep_read", "review_stage": "", "importance": 4, "has_code": true, "href": "2602.06036-dflash.html"}, {"slug": "2604.11035-introspective-dlm", "title": "Introspective Diffusion Language Models", "title_zh": "内省式扩散语言模型", "research_line": "Parallel Decoding with Diffusion Models", "line_role": "foundation", "status": "read", "reading_stage": "deep_read", "review_stage": "", "importance": 5, "has_code": true, "href": "2604.11035-introspective-dlm.html"}, {"slug": "2605.12825-orthrus", "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion", "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成", "research_line": "Parallel Decoding with Diffusion Models", "line_role": "variant", "status": "read", "reading_stage": "deep_read", "review_stage": "", "importance": 4, "has_code": true, "href": "2605.12825-orthrus.html"}, {"slug": "2501.01005-flashinfer", "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving", "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎", "research_line": "Efficient Attention Kernels", "line_role": "system", "status": "read", "reading_stage": "deep_read", "review_stage": "", "importance": 4, "has_code": true, "href": "2501.01005-flashinfer.html"}, {"slug": "2307.08691-flashattention-2", "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning", "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention", "research_line": "Efficient Attention Kernels", "line_role": "foundation", "status": "read", "reading_stage": "deep_read", "review_stage": "", "importance": 5, "has_code": true, "href": "2307.08691-flashattention-2.html"}], "defaults": {"workflow": "personal", "status": "", "reading_stage": "", "review_stage": ""}, "links": {"index": "index.html", "library": "library.html", "board": "board.html", "workflow": "workflow.html", "taxonomy": "taxonomy.html"}, "commands": ["python3 scripts/apply_status_workflow.py docs --input <taxonomy_status_workflow.json>", "python3 scripts/apply_status_workflow.py docs --input <taxonomy_status_workflow.json> --write", "python3 scripts/apply_library_metadata.py docs --input <status_patch.csv>"]};
+const statusWorkflow = document.querySelector("#statusWorkflow");
+const statusValue = document.querySelector("#statusValue");
+const statusStage = document.querySelector("#statusStage");
+const statusReview = document.querySelector("#statusReview");
+const statusChoices = document.querySelector("#statusChoices");
+const statusRows = document.querySelector("#statusRows");
+const statusResultCount = document.querySelector("#statusResultCount");
+const statusConfigPreview = document.querySelector("#statusConfigPreview");
+const openLibrary = document.querySelector("#openLibrary");
+const openBoard = document.querySelector("#openBoard");
+const openIndex = document.querySelector("#openIndex");
 
-function reviewCsvCell(value) {
-  const text = String(value ?? "");
-  return (text.includes(",") || text.includes('"') || text.includes("\n"))
-    ? `"${text.replaceAll('"', '""')}"`
-    : text;
+function workflowByName(name) {
+  return statusPayload.workflows.find(workflow => workflow.name === name) || statusPayload.workflows[0] || {};
 }
 
-function downloadReviewCsv(filename, rows) {
-  const csv = rows.map(row => row.map(reviewCsvCell).join(",")).join("\n") + "\n";
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = filename;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  URL.revokeObjectURL(url);
+function uniqueObserved(field) {
+  return Array.from(new Set(statusPayload.papers.map(paper => paper[field]).filter(Boolean))).sort((a, b) => a.localeCompare(b));
 }
 
-downloadReviewPatch.addEventListener("click", () => {
-  const rows = reviewItems
-    .filter(item => item.state === "needs_plan" && item.suggested_next_review)
-    .map(item => [item.slug, item.suggested_next_review, item.review_stage || "fresh"]);
+function countFor(field, value) {
+  return statusPayload.papers.filter(paper => paper[field] === value).length;
+}
+
+function mergeValues(configured, observed) {
+  const seen = new Set();
+  return [...(configured || []), ...(observed || [])].filter(value => {
+    if (!value || seen.has(value)) return false;
+    seen.add(value);
+    return true;
+  });
+}
+
+function fillSelect(select, label, values, field) {
+  const current = select.value;
+  select.replaceChildren(new Option(label, ""));
+  values.forEach(value => select.appendChild(new Option(`${value} (${countFor(field, value)})`, value)));
+  select.value = values.includes(current) ? current : "";
+}
+
+function stateFromControls() {
+  return {
+    workflow: statusWorkflow.value || statusPayload.active_status_workflow || "",
+    status: statusValue.value || "",
+    stage: statusStage.value || "",
+    reviewStage: statusReview.value || "",
+  };
+}
+
+function queryHref(page) {
+  const url = new URL(page, window.location.href);
+  Object.entries(stateFromControls()).forEach(([key, value]) => {
+    if (value) url.searchParams.set(key, value);
+  });
+  return `${url.pathname.split("/").pop()}${url.search}`;
+}
+
+function renderConfig(workflow) {
+  const name = workflow.name || statusPayload.active_status_workflow || "default";
+  const config = {
+    active_status_workflow: name,
+    status_workflows: {
+      [name]: {
+        status_values: workflow.status_values || [],
+        reading_stage_values: workflow.reading_stage_values || [],
+        review_stage_values: workflow.review_stage_values || [],
+      },
+    },
+  };
+  statusConfigPreview.value = JSON.stringify(config, null, 2);
+}
+
+function renderChoices(workflow) {
+  const statusValues = mergeValues(workflow.status_values, uniqueObserved("status"));
+  statusChoices.replaceChildren();
+  statusValues.forEach(value => {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "status-choice";
+    card.innerHTML = `<strong>${value}</strong><span>${countFor("status", value)} 篇论文</span>`;
+    card.addEventListener("click", () => {
+      statusValue.value = value;
+      renderStatus();
+    });
+    statusChoices.appendChild(card);
+  });
+  if (!statusValues.length) {
+    const empty = document.createElement("p");
+    empty.className = "empty";
+    empty.textContent = "当前 workflow 没有 status 候选。";
+    statusChoices.appendChild(empty);
+  }
+}
+
+function filteredPapers() {
+  return statusPayload.papers.filter(paper => (
+    (!statusValue.value || paper.status === statusValue.value)
+    && (!statusStage.value || paper.reading_stage === statusStage.value)
+    && (!statusReview.value || paper.review_stage === statusReview.value)
+  ));
+}
+
+function renderRows() {
+  const rows = filteredPapers();
+  statusResultCount.textContent = `${rows.length} / ${statusPayload.count}`;
+  statusRows.replaceChildren();
   if (!rows.length) {
-    window.alert("当前没有需要写回的建议复习计划。");
+    const row = document.createElement("tr");
+    row.innerHTML = `<td colspan="6" class="empty">当前选择没有命中论文。</td>`;
+    statusRows.appendChild(row);
     return;
   }
-  downloadReviewCsv("review_plan_patch.csv", [["slug", "next_review", "review_stage"], ...rows]);
+  rows.forEach(paper => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td><a href="${paper.href}">${paper.title_zh || paper.title}</a><div class="meta">${paper.slug}</div></td>
+      <td>${paper.research_line || "Unassigned"}</td>
+      <td>${paper.status || ""}</td>
+      <td>${paper.reading_stage || ""}</td>
+      <td>${paper.review_stage || ""}</td>
+      <td>${paper.importance || ""}</td>
+    `;
+    statusRows.appendChild(row);
+  });
+}
+
+function syncLinks() {
+  openLibrary.href = queryHref("library.html");
+  openBoard.href = queryHref("board.html");
+  openIndex.href = queryHref("index.html");
+}
+
+function renderStatus() {
+  const workflow = workflowByName(statusWorkflow.value);
+  fillSelect(statusValue, "全部状态", mergeValues(workflow.status_values, uniqueObserved("status")), "status");
+  fillSelect(statusStage, "全部阅读阶段", mergeValues(workflow.reading_stage_values, uniqueObserved("reading_stage")), "reading_stage");
+  fillSelect(statusReview, "全部复习阶段", mergeValues(workflow.review_stage_values, uniqueObserved("review_stage")), "review_stage");
+  renderChoices(workflow);
+  renderConfig(workflow);
+  renderRows();
+  syncLinks();
+}
+
+function readStatusUrl() {
+  const params = new URLSearchParams(window.location.search);
+  statusWorkflow.value = params.get("workflow") || statusPayload.active_status_workflow || statusWorkflow.value;
+  renderStatus();
+  statusValue.value = params.get("status") || "";
+  statusStage.value = params.get("stage") || "";
+  statusReview.value = params.get("reviewStage") || "";
+  renderStatus();
+}
+
+async function copyText(value, fallbackTitle) {
+  try {
+    await navigator.clipboard.writeText(value);
+  } catch (error) {
+    window.prompt(fallbackTitle, value);
+  }
+}
+
+document.querySelector("#copyStatusView").addEventListener("click", () => {
+  const state = Object.fromEntries(Object.entries(stateFromControls()).filter(([, value]) => value));
+  const payload = { name: `状态视图-${state.workflow || "default"}`, page: "library", state };
+  copyText(JSON.stringify(payload, null, 2), "复制共享视图");
 });
+
+document.querySelector("#copyStatusConfig").addEventListener("click", () => copyText(statusConfigPreview.value, "复制状态配置"));
+
+document.querySelectorAll(".copy-status-command").forEach(button => {
+  button.dataset.label = button.textContent;
+  button.addEventListener("click", async () => {
+    await copyText(button.dataset.command || "", "复制命令");
+    button.textContent = "已复制";
+    setTimeout(() => button.textContent = button.dataset.label, 1200);
+  });
+});
+
+[statusWorkflow, statusValue, statusStage, statusReview].forEach(control => {
+  control.addEventListener("input", () => {
+    if (control === statusWorkflow) {
+      statusValue.value = "";
+      statusStage.value = "";
+      statusReview.value = "";
+    }
+    renderStatus();
+  });
+});
+
+readStatusUrl();
 </script>
 
 <script>

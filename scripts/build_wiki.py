@@ -36,6 +36,7 @@ GENERATED_FIXED_PATHS = (
     "taxonomy_actions.json",
     "actions.json",
     "workflow.json",
+    "status.json",
     "pivot.json",
     "compare.json",
     "taxonomy_map.json",
@@ -51,6 +52,7 @@ GENERATED_FIXED_PATHS = (
     "library.html",
     "board.html",
     "workflow.html",
+    "status.html",
     "pivot.html",
     "compare.html",
     "taxonomy_map.html",
@@ -1579,6 +1581,61 @@ def write_workflow_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     )
 
 
+def status_selector_paper(paper: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "slug": paper["slug"],
+        "title": paper["title"],
+        "title_zh": paper.get("title_zh") or "",
+        "research_line": paper.get("research_line") or "Unassigned",
+        "line_role": paper.get("line_role") or "",
+        "status": paper.get("status") or "",
+        "reading_stage": paper.get("reading_stage") or "",
+        "review_stage": paper.get("review_stage") or "",
+        "importance": paper.get("importance") or "",
+        "has_code": bool(paper.get("has_code")),
+        "href": paper_href(paper),
+    }
+
+
+def build_status_selector_payload(papers: list[dict[str, Any]]) -> dict[str, Any]:
+    workflow = build_workflow_payload(papers)
+    defaults = {
+        "workflow": workflow["active_status_workflow"],
+        "status": "",
+        "reading_stage": "",
+        "review_stage": "",
+    }
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": len(papers),
+        "active_status_workflow": workflow["active_status_workflow"],
+        "workflow_count": workflow["workflow_count"],
+        "workflows": workflow["workflows"],
+        "papers": [status_selector_paper(paper) for paper in papers],
+        "defaults": defaults,
+        "links": {
+            "index": "index.html",
+            "library": "library.html",
+            "board": "board.html",
+            "workflow": "workflow.html",
+            "taxonomy": "taxonomy.html",
+        },
+        "commands": [
+            "python3 scripts/apply_status_workflow.py docs --input <taxonomy_status_workflow.json>",
+            "python3 scripts/apply_status_workflow.py docs --input <taxonomy_status_workflow.json> --write",
+            "python3 scripts/apply_library_metadata.py docs --input <status_patch.csv>",
+        ],
+    }
+
+
+def write_status_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_status_selector_payload(papers)
+    (report_dir / "status.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
 PIVOT_DIMENSIONS = {
     "research_line": {"label": "研究线", "query": "line", "multi": False},
     "domain": {"label": "Domain", "query": "domain", "multi": True, "paper_key": "domains"},
@@ -2760,6 +2817,7 @@ DATA_CONSUMER_HINTS = {
     "taxonomy_actions.json": ["taxonomy", "project-management", "writeback"],
     "actions.json": ["tasks", "project-management", "exports"],
     "workflow.json": ["workflow", "desktop", "filters"],
+    "status.json": ["workflow", "runtime-selector", "desktop"],
     "pivot.json": ["analytics", "classification", "desktop"],
     "compare.json": ["comparison", "curation", "desktop"],
     "taxonomy_map.json": ["taxonomy", "graph", "desktop"],
@@ -3084,6 +3142,7 @@ def wiki_pages_manifest() -> list[dict[str, str]]:
         {"title": "研究缺口", "href": "gaps.html", "kind": "ops", "description": "下一步行动和研究线缺口"},
         {"title": "状态看板", "href": "board.html", "kind": "workflow", "description": "拖拽式状态流和 CSV patch"},
         {"title": "工作流中心", "href": "workflow.html", "kind": "workflow", "description": "状态体系对比、分布和漂移审计"},
+        {"title": "状态选择器", "href": "status.html", "kind": "workflow", "description": "动态选择状态体系、阶段和值并生成可分享视图"},
         {"title": "分类透视表", "href": "pivot.html", "kind": "analysis", "description": "任意两个分类维度交叉分析论文分布"},
         {"title": "论文对比", "href": "compare.html", "kind": "analysis", "description": "并排比较候选论文的分类、状态和质量信号"},
         {"title": "分类图谱", "href": "taxonomy_map.html", "kind": "analysis", "description": "分类节点、共现边和研究线簇"},
@@ -3116,6 +3175,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "taxonomy_actions.json", "description": "分类长尾、过载和空候选治理任务"},
         {"href": "actions.json", "description": "统一行动队列，汇总质量、复习、分类和 inbox 任务"},
         {"href": "workflow.json", "description": "状态工作流配置、分布和漂移审计"},
+        {"href": "status.json", "description": "运行时状态选择器、状态字段选项和论文状态快照"},
         {"href": "pivot.json", "description": "分类透视表维度、论文投影和交叉分布"},
         {"href": "compare.json", "description": "论文对比视图数据和推荐对比集合"},
         {"href": "taxonomy_map.json", "description": "分类节点、共现边、研究线簇和图谱治理建议"},
@@ -7507,6 +7567,309 @@ document.querySelectorAll(".copy-workflow-command").forEach(button => {{
 </script>
 """
     (report_dir / "workflow.html").write_text(page_shell("工作流中心", body, extra_css=workflow_css), encoding="utf-8")
+
+
+def render_status(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_status_selector_payload(papers)
+    status_json = json.dumps(payload, ensure_ascii=False)
+    workflow_options = "".join(
+        f'<option value="{html.escape(str(workflow["name"]), quote=True)}">'
+        f'{html.escape(str(workflow["name"]))}{" (默认)" if workflow.get("active") else ""}</option>'
+        for workflow in payload["workflows"]
+    )
+    command_buttons = "".join(
+        f'<button class="button copy-status-command" type="button" data-command="{html.escape(command, quote=True)}">{html.escape(command.split()[1] if len(command.split()) > 1 else command)}</button>'
+        for command in payload["commands"]
+    )
+    status_css = """
+    .status-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
+      gap: 16px;
+      align-items: start;
+    }
+    .status-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 14px;
+    }
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 10px;
+    }
+    .status-choice {
+      display: grid;
+      gap: 4px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: color-mix(in srgb, var(--panel) 88%, white);
+    }
+    .status-choice strong { font-size: 16px; }
+    .status-choice span { color: var(--muted); font-size: 13px; }
+    .status-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .status-config {
+      width: 100%;
+      min-height: 160px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--ink);
+      padding: 10px;
+      font: 13px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    @media (max-width: 900px) { .status-layout { grid-template-columns: 1fr; } }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Status Selector</div>
+  <h1>状态选择器</h1>
+  <p class="lead">把多套 `status_workflows` 变成运行时可选项：选择 workflow、status、reading stage 和 review stage 后，可直接跳转到对应页面，或复制共享视图与配置片段。</p>
+  <div class="stats">
+    <a class="stat" href="status.json">Status JSON</a>
+    <a class="stat" href="workflow.html">工作流中心</a>
+    <a class="stat" href="board.html">状态看板</a>
+    <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="taxonomy.html">分类治理</a>
+    <span class="stat">active {html.escape(str(payload["active_status_workflow"]))}</span>
+    <span class="stat">workflow {payload["workflow_count"]}</span>
+    <span class="stat">论文 {payload["count"]}</span>
+  </div>
+</header>
+<main class="shell">
+  <section class="status-layout">
+    <div class="status-panel">
+      <div class="controls">
+        <select id="statusWorkflow" aria-label="状态体系">{workflow_options}</select>
+        <select id="statusValue" aria-label="状态"><option value="">全部状态</option></select>
+        <select id="statusStage" aria-label="阅读阶段"><option value="">全部阅读阶段</option></select>
+        <select id="statusReview" aria-label="复习阶段"><option value="">全部复习阶段</option></select>
+      </div>
+      <div class="status-actions">
+        <a class="button" id="openLibrary" href="library.html">打开论文库</a>
+        <a class="button" id="openBoard" href="board.html">打开看板</a>
+        <a class="button" id="openIndex" href="index.html">打开首页</a>
+        <button class="button" type="button" id="copyStatusView">复制共享视图</button>
+        <button class="button" type="button" id="copyStatusConfig">复制当前 workflow 配置</button>
+      </div>
+      <h2 class="section-title">当前候选值</h2>
+      <div class="status-grid" id="statusChoices"></div>
+    </div>
+    <aside class="status-panel">
+      <h2 class="section-title">配置片段</h2>
+      <textarea class="status-config" id="statusConfigPreview" readonly></textarea>
+      <div class="bulk-actions">{command_buttons}</div>
+      <p class="meta">复制 JSON 后可用 apply_status_workflow.py 预览或写回；页面选择只影响当前浏览视图，不会直接修改报告。</p>
+    </aside>
+  </section>
+  <section>
+    <h2 class="section-title">命中论文 <span class="meta" id="statusResultCount"></span></h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>论文</th><th>研究线</th><th>Status</th><th>Reading</th><th>Review</th><th>重要性</th></tr></thead><tbody id="statusRows"></tbody></table></div>
+  </section>
+</main>
+<script>
+const statusPayload = {status_json};
+const statusWorkflow = document.querySelector("#statusWorkflow");
+const statusValue = document.querySelector("#statusValue");
+const statusStage = document.querySelector("#statusStage");
+const statusReview = document.querySelector("#statusReview");
+const statusChoices = document.querySelector("#statusChoices");
+const statusRows = document.querySelector("#statusRows");
+const statusResultCount = document.querySelector("#statusResultCount");
+const statusConfigPreview = document.querySelector("#statusConfigPreview");
+const openLibrary = document.querySelector("#openLibrary");
+const openBoard = document.querySelector("#openBoard");
+const openIndex = document.querySelector("#openIndex");
+
+function workflowByName(name) {{
+  return statusPayload.workflows.find(workflow => workflow.name === name) || statusPayload.workflows[0] || {{}};
+}}
+
+function uniqueObserved(field) {{
+  return Array.from(new Set(statusPayload.papers.map(paper => paper[field]).filter(Boolean))).sort((a, b) => a.localeCompare(b));
+}}
+
+function countFor(field, value) {{
+  return statusPayload.papers.filter(paper => paper[field] === value).length;
+}}
+
+function mergeValues(configured, observed) {{
+  const seen = new Set();
+  return [...(configured || []), ...(observed || [])].filter(value => {{
+    if (!value || seen.has(value)) return false;
+    seen.add(value);
+    return true;
+  }});
+}}
+
+function fillSelect(select, label, values, field) {{
+  const current = select.value;
+  select.replaceChildren(new Option(label, ""));
+  values.forEach(value => select.appendChild(new Option(`${{value}} (${{countFor(field, value)}})`, value)));
+  select.value = values.includes(current) ? current : "";
+}}
+
+function stateFromControls() {{
+  return {{
+    workflow: statusWorkflow.value || statusPayload.active_status_workflow || "",
+    status: statusValue.value || "",
+    stage: statusStage.value || "",
+    reviewStage: statusReview.value || "",
+  }};
+}}
+
+function queryHref(page) {{
+  const url = new URL(page, window.location.href);
+  Object.entries(stateFromControls()).forEach(([key, value]) => {{
+    if (value) url.searchParams.set(key, value);
+  }});
+  return `${{url.pathname.split("/").pop()}}${{url.search}}`;
+}}
+
+function renderConfig(workflow) {{
+  const name = workflow.name || statusPayload.active_status_workflow || "default";
+  const config = {{
+    active_status_workflow: name,
+    status_workflows: {{
+      [name]: {{
+        status_values: workflow.status_values || [],
+        reading_stage_values: workflow.reading_stage_values || [],
+        review_stage_values: workflow.review_stage_values || [],
+      }},
+    }},
+  }};
+  statusConfigPreview.value = JSON.stringify(config, null, 2);
+}}
+
+function renderChoices(workflow) {{
+  const statusValues = mergeValues(workflow.status_values, uniqueObserved("status"));
+  statusChoices.replaceChildren();
+  statusValues.forEach(value => {{
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "status-choice";
+    card.innerHTML = `<strong>${{value}}</strong><span>${{countFor("status", value)}} 篇论文</span>`;
+    card.addEventListener("click", () => {{
+      statusValue.value = value;
+      renderStatus();
+    }});
+    statusChoices.appendChild(card);
+  }});
+  if (!statusValues.length) {{
+    const empty = document.createElement("p");
+    empty.className = "empty";
+    empty.textContent = "当前 workflow 没有 status 候选。";
+    statusChoices.appendChild(empty);
+  }}
+}}
+
+function filteredPapers() {{
+  return statusPayload.papers.filter(paper => (
+    (!statusValue.value || paper.status === statusValue.value)
+    && (!statusStage.value || paper.reading_stage === statusStage.value)
+    && (!statusReview.value || paper.review_stage === statusReview.value)
+  ));
+}}
+
+function renderRows() {{
+  const rows = filteredPapers();
+  statusResultCount.textContent = `${{rows.length}} / ${{statusPayload.count}}`;
+  statusRows.replaceChildren();
+  if (!rows.length) {{
+    const row = document.createElement("tr");
+    row.innerHTML = `<td colspan="6" class="empty">当前选择没有命中论文。</td>`;
+    statusRows.appendChild(row);
+    return;
+  }}
+  rows.forEach(paper => {{
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td><a href="${{paper.href}}">${{paper.title_zh || paper.title}}</a><div class="meta">${{paper.slug}}</div></td>
+      <td>${{paper.research_line || "Unassigned"}}</td>
+      <td>${{paper.status || ""}}</td>
+      <td>${{paper.reading_stage || ""}}</td>
+      <td>${{paper.review_stage || ""}}</td>
+      <td>${{paper.importance || ""}}</td>
+    `;
+    statusRows.appendChild(row);
+  }});
+}}
+
+function syncLinks() {{
+  openLibrary.href = queryHref("library.html");
+  openBoard.href = queryHref("board.html");
+  openIndex.href = queryHref("index.html");
+}}
+
+function renderStatus() {{
+  const workflow = workflowByName(statusWorkflow.value);
+  fillSelect(statusValue, "全部状态", mergeValues(workflow.status_values, uniqueObserved("status")), "status");
+  fillSelect(statusStage, "全部阅读阶段", mergeValues(workflow.reading_stage_values, uniqueObserved("reading_stage")), "reading_stage");
+  fillSelect(statusReview, "全部复习阶段", mergeValues(workflow.review_stage_values, uniqueObserved("review_stage")), "review_stage");
+  renderChoices(workflow);
+  renderConfig(workflow);
+  renderRows();
+  syncLinks();
+}}
+
+function readStatusUrl() {{
+  const params = new URLSearchParams(window.location.search);
+  statusWorkflow.value = params.get("workflow") || statusPayload.active_status_workflow || statusWorkflow.value;
+  renderStatus();
+  statusValue.value = params.get("status") || "";
+  statusStage.value = params.get("stage") || "";
+  statusReview.value = params.get("reviewStage") || "";
+  renderStatus();
+}}
+
+async function copyText(value, fallbackTitle) {{
+  try {{
+    await navigator.clipboard.writeText(value);
+  }} catch (error) {{
+    window.prompt(fallbackTitle, value);
+  }}
+}}
+
+document.querySelector("#copyStatusView").addEventListener("click", () => {{
+  const state = Object.fromEntries(Object.entries(stateFromControls()).filter(([, value]) => value));
+  const payload = {{ name: `状态视图-${{state.workflow || "default"}}`, page: "library", state }};
+  copyText(JSON.stringify(payload, null, 2), "复制共享视图");
+}});
+
+document.querySelector("#copyStatusConfig").addEventListener("click", () => copyText(statusConfigPreview.value, "复制状态配置"));
+
+document.querySelectorAll(".copy-status-command").forEach(button => {{
+  button.dataset.label = button.textContent;
+  button.addEventListener("click", async () => {{
+    await copyText(button.dataset.command || "", "复制命令");
+    button.textContent = "已复制";
+    setTimeout(() => button.textContent = button.dataset.label, 1200);
+  }});
+}});
+
+[statusWorkflow, statusValue, statusStage, statusReview].forEach(control => {{
+  control.addEventListener("input", () => {{
+    if (control === statusWorkflow) {{
+      statusValue.value = "";
+      statusStage.value = "";
+      statusReview.value = "";
+    }}
+    renderStatus();
+  }});
+}});
+
+readStatusUrl();
+</script>
+"""
+    (report_dir / "status.html").write_text(page_shell("状态选择器", body, extra_css=status_css), encoding="utf-8")
 
 
 def render_pivot(report_dir: Path, papers: list[dict[str, Any]]) -> None:
@@ -14959,6 +15322,7 @@ def build_wiki(report_dir: Path) -> int:
     write_actions_json(report_dir, papers, inbox_items)
     write_stats_json(report_dir, papers)
     write_workflow_json(report_dir, papers)
+    write_status_json(report_dir, papers)
     write_pivot_json(report_dir, papers)
     write_compare_json(report_dir, papers)
     write_taxonomy_map_json(report_dir, papers)
@@ -14973,6 +15337,7 @@ def build_wiki(report_dir: Path) -> int:
     render_library(report_dir, papers)
     render_board(report_dir, papers)
     render_workflow(report_dir, papers)
+    render_status(report_dir, papers)
     render_pivot(report_dir, papers)
     render_compare(report_dir, papers)
     render_taxonomy_map(report_dir, papers)

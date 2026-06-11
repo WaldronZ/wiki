@@ -16,6 +16,7 @@ function htmlFiles() {
     "library.html",
     "board.html",
     "workflow.html",
+    "status.html",
     "pivot.html",
     "compare.html",
     "taxonomy_map.html",

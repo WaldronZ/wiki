@@ -102,6 +102,7 @@ REQUIRED_PAGES = {
     "library.html",
     "board.html",
     "workflow.html",
+    "status.html",
     "pivot.html",
     "compare.html",
     "taxonomy_map.html",
@@ -135,6 +136,7 @@ REQUIRED_PAGES = {
     "freshness.json",
     "taxonomy_actions.json",
     "workflow.json",
+    "status.json",
     "pivot.json",
     "compare.json",
     "taxonomy_map.json",
@@ -561,6 +563,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     review_path = report_dir / "review.json"
     taxonomy_actions_path = report_dir / "taxonomy_actions.json"
     workflow_path = report_dir / "workflow.json"
+    status_path = report_dir / "status.json"
     pivot_path = report_dir / "pivot.json"
     compare_path = report_dir / "compare.json"
     taxonomy_map_path = report_dir / "taxonomy_map.json"
@@ -591,6 +594,9 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         return
     if not workflow_path.exists():
         errors.append("missing workflow.json")
+        return
+    if not status_path.exists():
+        errors.append("missing status.json")
         return
     if not pivot_path.exists():
         errors.append("missing pivot.json")
@@ -638,6 +644,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     review_data = json.loads(review_path.read_text(encoding="utf-8"))
     taxonomy_actions_data = json.loads(taxonomy_actions_path.read_text(encoding="utf-8"))
     workflow_data = json.loads(workflow_path.read_text(encoding="utf-8"))
+    status_data = json.loads(status_path.read_text(encoding="utf-8"))
     pivot_data = json.loads(pivot_path.read_text(encoding="utf-8"))
     compare_data = json.loads(compare_path.read_text(encoding="utf-8"))
     taxonomy_map_data = json.loads(taxonomy_map_path.read_text(encoding="utf-8"))
@@ -822,6 +829,37 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         errors.append("workflow.json active_unconfigured must be a list")
     if not isinstance(workflow_data.get("shared_workflow_views"), list):
         errors.append("workflow.json shared_workflow_views must be a list")
+
+    if status_data.get("count") != len(report_slugs):
+        errors.append(f"status.json count {status_data.get('count')} != markdown report count {len(report_slugs)}")
+    required_status = {"active_status_workflow", "workflow_count", "workflows", "papers", "defaults", "links", "commands"}
+    missing_status = sorted(required_status - set(status_data))
+    if missing_status:
+        errors.append(f"status.json missing keys: {', '.join(missing_status)}")
+    status_workflows = status_data.get("workflows")
+    if not isinstance(status_workflows, list):
+        errors.append("status.json workflows must be a list")
+        status_workflows = []
+    elif status_data.get("workflow_count") != len(status_workflows):
+        errors.append("status.json workflow_count must match workflows length")
+    status_papers = status_data.get("papers")
+    if not isinstance(status_papers, list):
+        errors.append("status.json papers must be a list")
+        status_papers = []
+    status_slugs = {item.get("slug") for item in status_papers if isinstance(item, dict)}
+    if status_slugs != report_slugs:
+        errors.append(
+            "status.json paper slugs do not match markdown reports: "
+            f"missing={sorted(report_slugs - status_slugs)}, extra={sorted(status_slugs - report_slugs)}"
+        )
+    defaults = status_data.get("defaults")
+    if not isinstance(defaults, dict) or "workflow" not in defaults:
+        errors.append("status.json defaults must include workflow")
+    status_links = status_data.get("links")
+    if not isinstance(status_links, dict) or not {"library", "board", "workflow"}.issubset(status_links):
+        errors.append("status.json links must include library, board, and workflow")
+    if not isinstance(status_data.get("commands"), list):
+        errors.append("status.json commands must be a list")
 
     if pivot_data.get("count") != len(report_slugs):
         errors.append(f"pivot.json count {pivot_data.get('count')} != markdown report count {len(report_slugs)}")
