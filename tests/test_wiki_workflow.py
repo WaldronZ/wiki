@@ -177,6 +177,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "dashboard.html",
                 "release.html",
                 "collections.html",
+                "facets.html",
                 "related.html",
                 "taxonomy.html",
                 "timeline.html",
@@ -269,6 +270,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(manifest["count"], 2)
             self.assertTrue(manifest["publish_checks"]["no_duplicate_reports"])
             self.assertIn("release.html", {item["href"] for item in manifest["pages"]})
+            self.assertIn("facets.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("manifest.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("python3 scripts/check_quality.py docs", manifest["commands"])
             release_html = (report_dir / "release.html").read_text(encoding="utf-8")
@@ -281,6 +283,13 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("重点队列", collections_html)
             self.assertIn("智能集合", collections_html)
             self.assertIn("需建复习计划", collections_html)
+            facets_html = (report_dir / "facets.html").read_text(encoding="utf-8")
+            self.assertIn("分类工作台", facets_html)
+            self.assertIn("字段概览", facets_html)
+            self.assertIn("long-tail", facets_html)
+            self.assertIn("unused", facets_html)
+            self.assertIn("triaged", facets_html)
+            self.assertIn("library.html?status=triaged", facets_html)
             related_html = (report_dir / "related.html").read_text(encoding="utf-8")
             self.assertIn("关联网络", related_html)
             self.assertIn("标签共现", related_html)

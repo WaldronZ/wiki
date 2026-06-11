@@ -97,6 +97,8 @@ has_code: true
 
 `docs/quality.json` 会输出 `label_alias_suggestions`，`docs/quality.html` 和 `docs/taxonomy.html` 会展示“标签归一化建议”。这些建议只根据大小写、复数、连字符、斜杠等规范化后相同的标签生成，适合发现 `tiling` / `Tiling`、`KV-cache` / `KV Cache` 这类漂移；最终是否合并仍由你把建议片段写入 `label_aliases` 来确认。
 
+`docs/facets.html` 是日常分类工作台：它会按字段展示每个标签命中的论文数、长尾标签、过载标签和动态状态候选值。论文数量变多后，优先从这里判断哪些标签需要合并、哪些大桶需要拆成更细的 track / problem。
+
 `role_order` 会影响研究线详情页和首页研究线概览中的论文排序。`status_values`、`reading_stage_values` 和 `review_stage_values` 会进入首页和论文库表格的筛选项；其中 `status_values` 还会成为 `docs/board.html` 的状态看板列。即使某个状态当前还没有论文使用，也可以先作为可选管理状态出现。构建后的 `papers.json` 和 `stats.json` 会把这些选项输出到 `controls` 字段，供后续前端、脚本或桌面软件动态读取。
 
 如果想试一套新的状态流，不必先改所有报告：可以在 `docs/board.html` 新增临时状态列，把论文拖进去后导出 `status_board_patch.csv`，用 `scripts/apply_library_metadata.py` 预览或写回。确认这套状态值得长期保留后，再把它加入 `taxonomy.json` 的 `status_values`，刷新 wiki，它就会成为所有页面的正式下拉选项。`docs/taxonomy.html` 的「状态工作流配置」区域会展示当前可选值和可复制的 JSON 片段，方便迁移。

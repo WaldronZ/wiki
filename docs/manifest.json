@@ -360,6 +360,12 @@
       "description": "共享视图、智能集合、研究线入口"
     },
     {
+      "title": "分类工作台",
+      "href": "facets.html",
+      "kind": "ops",
+      "description": "标签规模、长尾和过载分类"
+    },
+    {
       "title": "关联网络",
       "href": "related.html",
       "kind": "analysis",

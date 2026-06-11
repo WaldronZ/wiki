@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>分类工作台</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f3ee;
+      --panel: #fffdf8;
+      --ink: #222426;
+      --muted: #6b6f76;
+      --line: #ded8cd;
+      --accent: #2f6f73;
+      --accent-2: #8a5d3b;
+      --chip: #edf3f1;
+      --shadow: 0 14px 36px rgba(48, 44, 36, .08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "PingFang SC", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+      line-height: 1.65;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+    header { padding: 44px 0 22px; }
+    .eyebrow { color: var(--accent-2); font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    h1 { margin: 8px 0 10px; font-size: clamp(30px, 5vw, 56px); line-height: 1.08; letter-spacing: 0; }
+    .lead { max-width: 760px; margin: 0; color: var(--muted); font-size: 17px; }
+    .stats { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+    .stat, .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 999px;
+      padding: 7px 12px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      padding: 12px 0;
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+    }
+    .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(138px, 1fr)); gap: 10px; }
+    .controls input[type="search"] { grid-column: span 2; min-width: 260px; }
+    input, select {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--ink);
+      padding: 0 12px;
+      font: inherit;
+    }
+    main { padding: 28px 0 56px; }
+    .overview { margin-bottom: 30px; }
+    .line-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+    .line-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 15px;
+    }
+    .line-card h2 { margin: 0 0 8px; font-size: 18px; line-height: 1.25; }
+    .line-card ul { margin: 10px 0 0; padding-left: 18px; }
+    .taxonomy-kicker { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 10px; }
+    .results-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin: 0 0 16px;
+      color: var(--muted);
+    }
+    .results-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .saved-view { min-width: 180px; width: auto; }
+    .pager {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 22px;
+      color: var(--muted);
+    }
+    .pager[hidden] { display: none; }
+    .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin: 24px 0; }
+    .metric-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .metric-card strong { display: block; font-size: 28px; line-height: 1.1; }
+    .metric-card span { color: var(--muted); font-size: 13px; }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    .data-table th, .data-table td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+    .data-table th { color: var(--muted); font-size: 13px; font-weight: 700; }
+    .data-table tr:last-child td { border-bottom: 0; }
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+    .library-table {
+      width: 100%;
+      min-width: 1080px;
+      border-collapse: collapse;
+    }
+    .library-table th, .library-table td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }
+    .library-table th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: #f0ebe1;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+      text-transform: uppercase;
+    }
+    .library-table tr:last-child td { border-bottom: 0; }
+    .library-table tr[hidden] { display: none; }
+    .library-title { min-width: 300px; }
+    .library-title strong { display: block; font-size: 15px; line-height: 1.3; }
+    .library-taxonomy { min-width: 210px; }
+    .library-actions { display: flex; flex-wrap: wrap; gap: 8px; min-width: 145px; }
+    .status-stack { display: grid; gap: 5px; }
+    .score-grid { display: grid; grid-template-columns: repeat(3, minmax(42px, 1fr)); gap: 6px; }
+    .score-grid span {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #faf7f0;
+      padding: 4px 6px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+    }
+    .queue-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .queue-list { margin: 0; padding-left: 18px; }
+    .queue-list li { margin: 8px 0; }
+    .taxonomy-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+    .taxonomy-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .taxonomy-panel h2 { margin: 0 0 10px; font-size: 20px; }
+    .taxonomy-panel .data-table { border: 0; }
+    .matrix-link { display: inline-flex; min-width: 32px; justify-content: center; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+    }
+    .card h2 { margin: 0 0 8px; font-size: 20px; line-height: 1.25; letter-spacing: 0; }
+    .line-detail { display: grid; gap: 18px; }
+    .role-section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .role-section h2 { margin: 0 0 12px; font-size: 20px; }
+    .paper-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 14px;
+      padding: 12px 0;
+      border-top: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+    }
+    .paper-row:first-of-type { border-top: 0; }
+    .paper-row h3 { margin: 0 0 4px; font-size: 17px; line-height: 1.3; }
+    .paper-row .chips { margin-top: 8px; padding-top: 0; }
+    .meta { color: var(--muted); font-size: 13px; }
+    .essence {
+      margin: 12px 0 0;
+      padding: 10px 12px;
+      border-left: 3px solid var(--accent);
+      border-radius: 7px;
+      background: var(--chip);
+      color: #2f5054;
+      font-size: 14px;
+    }
+    .excerpt { color: #3f4448; margin: 12px 0; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 12px; }
+    .chip { background: var(--chip); padding: 4px 9px; font-size: 12px; }
+    .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 0 11px;
+      font-size: 14px;
+      font-weight: 650;
+      color: var(--accent);
+      cursor: pointer;
+    }
+    .button:disabled { cursor: not-allowed; opacity: .45; }
+    .quick-open {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 80;
+      min-width: 92px;
+      box-shadow: var(--shadow);
+    }
+    .quick-panel[hidden] { display: none; }
+    .quick-panel {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      place-items: start center;
+      padding: 74px 16px 16px;
+      background: rgba(34, 36, 38, .28);
+    }
+    .quick-dialog {
+      width: min(680px, 100%);
+      max-height: min(720px, calc(100vh - 96px));
+      display: grid;
+      grid-template-rows: auto 1fr;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: 0 24px 80px rgba(28, 31, 32, .24);
+      overflow: hidden;
+    }
+    .quick-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .quick-close { min-width: 40px; padding: 0; }
+    .quick-list {
+      overflow-y: auto;
+      padding: 8px;
+    }
+    .quick-item {
+      display: grid;
+      gap: 2px;
+      width: 100%;
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: var(--ink);
+    }
+    .quick-item:hover, .quick-item.is-active {
+      background: var(--chip);
+      text-decoration: none;
+    }
+    .quick-item strong { line-height: 1.25; }
+    .quick-empty { padding: 24px; color: var(--muted); }
+    .section-title { margin: 28px 0 12px; font-size: 22px; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 10px; }
+    .tag-pill {
+      display: inline-flex;
+      justify-content: space-between;
+      gap: 20px;
+      min-width: 150px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 10px 12px;
+    }
+    .empty {
+      border: 1px dashed var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+      padding: 28px;
+      color: var(--muted);
+    }
+    .card-flags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .flag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      border-radius: 999px;
+      background: #f7f3eb;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      padding: 0 8px;
+      font-size: 12px;
+    }
+    @media (max-width: 760px) {
+      .controls { grid-template-columns: 1fr; }
+      .controls input[type="search"] { grid-column: auto; min-width: 0; }
+      .results-bar { align-items: flex-start; flex-direction: column; }
+      .pager { justify-content: flex-start; flex-wrap: wrap; }
+      .paper-row { grid-template-columns: 1fr; }
+      .data-table { display: block; overflow-x: auto; }
+      header { padding-top: 28px; }
+    }
+
+    .facet-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px;
+    }
+    .facet-card {
+      display: grid;
+      gap: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 16px;
+    }
+    .facet-card h2 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.3;
+    }
+    .facet-metrics {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 6px 10px;
+      align-items: baseline;
+    }
+    .facet-metrics strong { color: var(--accent); font-size: 22px; }
+    .facet-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+    .facet-action {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--chip);
+      padding: 14px;
+    }
+    .facet-action h3 { margin: 0 0 6px; font-size: 16px; }
+    
+  </style>
+</head>
+<body>
+
+<button class="button quick-open" type="button" id="quickOpen">快速跳转</button>
+<div class="quick-panel" id="quickPanel" hidden>
+  <div class="quick-dialog" role="dialog" aria-modal="true" aria-label="快速跳转">
+    <div class="quick-head">
+      <input id="quickSearch" type="search" placeholder="搜索页面或论文" aria-labelledby="quickTitle">
+      <button class="button quick-close" type="button" id="quickClose" aria-label="关闭">×</button>
+    </div>
+    <div class="quick-list" id="quickList"></div>
+  </div>
+</div>
+
+<header class="shell">
+  <div class="eyebrow">Facet Workbench</div>
+  <h1>分类工作台</h1>
+  <p class="lead">集中审计 domain、track、problem、topic、method、研究线和阅读状态的规模。长尾标签提示可能需要合并，过载标签提示需要拆分，空候选值来自动态 taxonomy 配置。</p>
+  <div class="stats">
+    <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="taxonomy.html">分类治理</a>
+    <a class="stat" href="quality.html">质量治理</a>
+    <a class="stat" href="collections.html">集合视图</a>
+    <a class="stat" href="gaps.html">研究缺口</a>
+    <span class="stat">论文 5</span>
+    <span class="stat">长尾 42</span>
+    <span class="stat">过载 3</span>
+  </div>
+</header>
+<main class="shell">
+  <section>
+    <h2 class="section-title">字段概览</h2>
+    <div class="facet-grid"><section class="facet-card">
+  <h2>结构域 <span class="meta">Domain</span></h2>
+  <div class="facet-metrics"><strong>1</strong><span>已使用标签</span><strong>0</strong><span>长尾</span><strong>0</strong><span>候选空值</span></div>
+</section><section class="facet-card">
+  <h2>方向 <span class="meta">Track</span></h2>
+  <div class="facet-metrics"><strong>4</strong><span>已使用标签</span><strong>1</strong><span>长尾</span><strong>0</strong><span>候选空值</span></div>
+</section><section class="facet-card">
+  <h2>问题 <span class="meta">Problem</span></h2>
+  <div class="facet-metrics"><strong>5</strong><span>已使用标签</span><strong>5</strong><span>长尾</span><strong>0</strong><span>候选空值</span></div>
+</section><section class="facet-card">
+  <h2>主题 <span class="meta">Topic</span></h2>
+  <div class="facet-metrics"><strong>14</strong><span>已使用标签</span><strong>8</strong><span>长尾</span><strong>0</strong><span>候选空值</span></div>
+</section><section class="facet-card">
+  <h2>方法 <span class="meta">Method</span></h2>
+  <div class="facet-metrics"><strong>26</strong><span>已使用标签</span><strong>25</strong><span>长尾</span><strong>0</strong><span>候选空值</span></div>
+</section><section class="facet-card">
+  <h2>研究线 <span class="meta">Research line</span></h2>
+  <div class="facet-metrics"><strong>2</strong><span>已使用标签</span><strong>0</strong><span>长尾</span><strong>0</strong><span>候选空值</span></div>
+</section><section class="facet-card">
+  <h2>研究线角色 <span class="meta">Line role</span></h2>
+  <div class="facet-metrics"><strong>4</strong><span>已使用标签</span><strong>3</strong><span>长尾</span><strong>0</strong><span>候选空值</span></div>
+</section><section class="facet-card">
+  <h2>阅读状态 <span class="meta">Status</span></h2>
+  <div class="facet-metrics"><strong>1</strong><span>已使用标签</span><strong>0</strong><span>长尾</span><strong>4</strong><span>候选空值</span></div>
+</section><section class="facet-card">
+  <h2>阅读阶段 <span class="meta">Reading stage</span></h2>
+  <div class="facet-metrics"><strong>1</strong><span>已使用标签</span><strong>0</strong><span>长尾</span><strong>3</strong><span>候选空值</span></div>
+</section><section class="facet-card">
+  <h2>复习阶段 <span class="meta">Review stage</span></h2>
+  <div class="facet-metrics"><strong>0</strong><span>已使用标签</span><strong>0</strong><span>长尾</span><strong>3</strong><span>候选空值</span></div>
+</section></div>
+  </section>
+  <section>
+    <h2 class="section-title">治理建议</h2>
+    <div class="facet-actions">
+      <section class="facet-action"><h3>长尾标签</h3><p class="meta">42 个只命中 1 篇论文的标签。优先检查是否是大小写、复数、连字符或粒度不一致。</p></section>
+      <section class="facet-action"><h3>过载标签</h3><p class="meta">3 个标签覆盖过高。论文继续增加时，优先把它们拆成更可操作的子类。</p></section>
+      <section class="facet-action"><h3>候选空值</h3><p class="meta">10 个配置值当前没有论文使用。它们适合作为流程预留，也可能是过期状态。</p></section>
+    </div>
+  </section>
+  <section>
+    <h2 class="section-title">分类明细</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>字段</th><th>标签</th><th>论文</th><th>占比</th><th>状态</th><th>样例</th><th>建议动作</th></tr></thead><tbody><tr><td>结构域</td><td><a href="library.html?domain=LLM+Systems">LLM Systems</a></td><td>5</td><td>100%</td><td><span class="flag">overloaded</span></td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a><br><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a><br><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td><td>结构域 过大，考虑拆成更细子类。</td></tr><tr><td>方向</td><td><a href="library.html?track=Inference+Acceleration">Inference Acceleration</a></td><td>3</td><td>60%</td><td><span class="flag">stable</span></td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a><br><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a><br><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td><td>结构稳定，继续积累样本。</td></tr><tr><td>方向</td><td><a href="library.html?track=Parallel+Decoding">Parallel Decoding</a></td><td>3</td><td>60%</td><td><span class="flag">stable</span></td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a><br><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a><br><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td><td>结构稳定，继续积累样本。</td></tr><tr><td>方向</td><td><a href="library.html?track=Attention+Kernels">Attention Kernels</a></td><td>2</td><td>40%</td><td><span class="flag">stable</span></td><td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a><br><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></td><td>结构稳定，继续积累样本。</td></tr><tr><td>方向</td><td><a href="library.html?track=Inference+Serving+Systems">Inference Serving Systems</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>问题</td><td><a href="library.html?problem=Customizable+Attention+Serving">Customizable Attention Serving</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>问题</td><td><a href="library.html?problem=Efficient+Exact+Attention">Efficient Exact Attention</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>问题</td><td><a href="library.html?problem=Lossless+Speculative+Decoding">Lossless Speculative Decoding</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>问题</td><td><a href="library.html?problem=Memory-Efficient+Parallel+Token+Generation">Memory-Efficient Parallel Token Generation</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>问题</td><td><a href="library.html?problem=Parallel+Diffusion+Decoding">Parallel Diffusion Decoding</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>主题</td><td><a href="library.html?topic=Diffusion+Language+Models">Diffusion Language Models</a></td><td>3</td><td>60%</td><td><span class="flag">stable</span></td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a><br><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a><br><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td><td>结构稳定，继续积累样本。</td></tr><tr><td>主题</td><td><a href="library.html?topic=LLM+Serving">LLM Serving</a></td><td>3</td><td>60%</td><td><span class="flag">stable</span></td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a><br><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a><br><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></td><td>结构稳定，继续积累样本。</td></tr><tr><td>主题</td><td><a href="library.html?topic=Speculative+Decoding">Speculative Decoding</a></td><td>3</td><td>60%</td><td><span class="flag">stable</span></td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a><br><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a><br><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td><td>结构稳定，继续积累样本。</td></tr><tr><td>主题</td><td><a href="library.html?topic=KV+Cache">KV Cache</a></td><td>2</td><td>40%</td><td><span class="flag">stable</span></td><td><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a><br><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></td><td>结构稳定，继续积累样本。</td></tr><tr><td>主题</td><td><a href="library.html?topic=LLM+Inference">LLM Inference</a></td><td>2</td><td>40%</td><td><span class="flag">stable</span></td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a><br><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td><td>结构稳定，继续积累样本。</td></tr><tr><td>主题</td><td><a href="library.html?topic=Parallel+Decoding">Parallel Decoding</a></td><td>2</td><td>40%</td><td><span class="flag">stable</span></td><td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a><br><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td><td>结构稳定，继续积累样本。</td></tr><tr><td>主题</td><td><a href="library.html?topic=Attention+Kernels">Attention Kernels</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>主题</td><td><a href="library.html?topic=Efficient+Attention">Efficient Attention</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>主题</td><td><a href="library.html?topic=GPU+Kernel+Optimization">GPU Kernel Optimization</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>主题</td><td><a href="library.html?topic=GPU+Systems">GPU Systems</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>主题</td><td><a href="library.html?topic=Inference+Optimization">Inference Optimization</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>主题</td><td><a href="library.html?topic=LLM">LLM</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>主题</td><td><a href="library.html?topic=Long+Context">Long Context</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>主题</td><td><a href="library.html?topic=Transformer">Transformer</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>方法</td><td><a href="library.html?method=FlashAttention">FlashAttention</a></td><td>2</td><td>40%</td><td><span class="flag">stable</span></td><td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a><br><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></td><td>结构稳定，继续积累样本。</td></tr><tr><td>方法</td><td><a href="library.html?method=block+diffusion">block diffusion</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>方法</td><td><a href="library.html?method=block-sparse+attention">block-sparse attention</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>方法</td><td><a href="library.html?method=composable+KV-cache+format">composable KV-cache format</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>方法</td><td><a href="library.html?method=CUDA+%2F+GPU+parallelism">CUDA / GPU parallelism</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>方法</td><td><a href="library.html?method=CUDA+Graph">CUDA Graph</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>方法</td><td><a href="library.html?method=dual-view+attention">dual-view attention</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>方法</td><td><a href="library.html?method=forward+KL+distillation">forward KL distillation</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>方法</td><td><a href="library.html?method=gated+LoRA">gated LoRA</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>方法</td><td><a href="library.html?method=intra-model+consensus">intra-model consensus</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>方法</td><td><a href="library.html?method=introspective+consistency">introspective consistency</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>方法</td><td><a href="library.html?method=introspective+strided+decoding">introspective strided decoding</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>方法</td><td><a href="library.html?method=JIT+compilation">JIT compilation</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>方法</td><td><a href="library.html?method=KV+injection">KV injection</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>方法</td><td><a href="library.html?method=load-balanced+scheduling">load-balanced scheduling</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>方法</td><td><a href="library.html?method=logit-shifted+causal+training">logit-shifted causal training</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>方法</td><td><a href="library.html?method=masked+diffusion">masked diffusion</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>方法</td><td><a href="library.html?method=online+softmax">online softmax</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>方法</td><td><a href="library.html?method=p%2Fq+acceptance">p/q acceptance</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>方法</td><td><a href="library.html?method=parallel+drafting">parallel drafting</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>方法</td><td><a href="library.html?method=SGLang+serving">SGLang serving</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>方法</td><td><a href="library.html?method=shared+KV+cache">shared KV cache</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>方法</td><td><a href="library.html?method=Speculative+Decoding">Speculative Decoding</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>方法</td><td><a href="library.html?method=target+hidden+features">target hidden features</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>方法</td><td><a href="library.html?method=tiling">tiling</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>方法</td><td><a href="library.html?method=work+partitioning">work partitioning</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>研究线</td><td><a href="library.html?line=Parallel+Decoding+with+Diffusion+Models">Parallel Decoding with Diffusion Models</a></td><td>3</td><td>60%</td><td><span class="flag">stable</span></td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a><br><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a><br><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td><td>结构稳定，继续积累样本。</td></tr><tr><td>研究线</td><td><a href="library.html?line=Efficient+Attention+Kernels">Efficient Attention Kernels</a></td><td>2</td><td>40%</td><td><span class="flag">stable</span></td><td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a><br><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></td><td>结构稳定，继续积累样本。</td></tr><tr><td>研究线角色</td><td><a href="library.html?role=foundation">foundation</a></td><td>2</td><td>40%</td><td><span class="flag">stable</span></td><td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a><br><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></td><td>结构稳定，继续积累样本。</td></tr><tr><td>研究线角色</td><td><a href="library.html?role=followup">followup</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>研究线角色</td><td><a href="library.html?role=system">system</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>研究线角色</td><td><a href="library.html?role=variant">variant</a></td><td>1</td><td>20%</td><td><span class="flag">long-tail</span></td><td><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td><td>检查是否应合并为更通用标签。</td></tr><tr><td>阅读状态</td><td><a href="library.html?status=read">read</a></td><td>5</td><td>100%</td><td><span class="flag">overloaded</span></td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a><br><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a><br><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td><td>阅读状态 过大，考虑拆成更细子类。</td></tr><tr><td>阅读状态</td><td><a href="library.html?status=archived">archived</a></td><td>0</td><td>0%</td><td><span class="flag">unused</span></td><td><span class="meta">暂无论文</span></td><td>保留为候选值，或从 taxonomy.json 中移除。</td></tr><tr><td>阅读状态</td><td><a href="library.html?status=reading">reading</a></td><td>0</td><td>0%</td><td><span class="flag">unused</span></td><td><span class="meta">暂无论文</span></td><td>保留为候选值，或从 taxonomy.json 中移除。</td></tr><tr><td>阅读状态</td><td><a href="library.html?status=skimmed">skimmed</a></td><td>0</td><td>0%</td><td><span class="flag">unused</span></td><td><span class="meta">暂无论文</span></td><td>保留为候选值，或从 taxonomy.json 中移除。</td></tr><tr><td>阅读状态</td><td><a href="library.html?status=unread">unread</a></td><td>0</td><td>0%</td><td><span class="flag">unused</span></td><td><span class="meta">暂无论文</span></td><td>保留为候选值，或从 taxonomy.json 中移除。</td></tr><tr><td>阅读阶段</td><td><a href="library.html?stage=deep_read">deep_read</a></td><td>5</td><td>100%</td><td><span class="flag">overloaded</span></td><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a><br><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a><br><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></td><td>阅读阶段 过大，考虑拆成更细子类。</td></tr><tr><td>阅读阶段</td><td><a href="library.html?stage=code_checked">code_checked</a></td><td>0</td><td>0%</td><td><span class="flag">unused</span></td><td><span class="meta">暂无论文</span></td><td>保留为候选值，或从 taxonomy.json 中移除。</td></tr><tr><td>阅读阶段</td><td><a href="library.html?stage=normal_read">normal_read</a></td><td>0</td><td>0%</td><td><span class="flag">unused</span></td><td><span class="meta">暂无论文</span></td><td>保留为候选值，或从 taxonomy.json 中移除。</td></tr><tr><td>阅读阶段</td><td><a href="library.html?stage=skim">skim</a></td><td>0</td><td>0%</td><td><span class="flag">unused</span></td><td><span class="meta">暂无论文</span></td><td>保留为候选值，或从 taxonomy.json 中移除。</td></tr><tr><td>复习阶段</td><td><a href="library.html?reviewStage=due">due</a></td><td>0</td><td>0%</td><td><span class="flag">unused</span></td><td><span class="meta">暂无论文</span></td><td>保留为候选值，或从 taxonomy.json 中移除。</td></tr><tr><td>复习阶段</td><td><a href="library.html?reviewStage=fresh">fresh</a></td><td>0</td><td>0%</td><td><span class="flag">unused</span></td><td><span class="meta">暂无论文</span></td><td>保留为候选值，或从 taxonomy.json 中移除。</td></tr><tr><td>复习阶段</td><td><a href="library.html?reviewStage=reviewed">reviewed</a></td><td>0</td><td>0%</td><td><span class="flag">unused</span></td><td><span class="meta">暂无论文</span></td><td>保留为候选值，或从 taxonomy.json 中移除。</td></tr></tbody></table></div>
+  </section>
+</main>
+
+<script>
+(() => {
+  const prefix = "";
+  const openButton = document.querySelector("#quickOpen");
+  const panel = document.querySelector("#quickPanel");
+  const search = document.querySelector("#quickSearch");
+  const list = document.querySelector("#quickList");
+  const closeButton = document.querySelector("#quickClose");
+  if (!openButton || !panel || !search || !list || !closeButton) return;
+
+  const pages = [
+    ["首页", "index.html", "总览、搜索和筛选"],
+    ["论文库表格", "library.html", "密集筛选、列管理和批量更新"],
+    ["管理控制台", "dashboard.html", "覆盖率、队列和运营指标"],
+    ["发布摘要", "release.html", "页面入口、数据文件和发布状态"],
+    ["集合视图", "collections.html", "共享视图和智能集合"],
+    ["分类工作台", "facets.html", "标签规模、长尾和过载分类"],
+    ["关联网络", "related.html", "标签共现和相似论文"],
+    ["研究缺口", "gaps.html", "下一步行动和线索缺口"],
+    ["状态看板", "board.html", "拖拽状态流"],
+    ["待处理池", "inbox.html", "候选论文队列"],
+    ["复习计划", "review.html", "待复习和建议日期"],
+    ["质量治理", "quality.html", "元数据和 taxonomy drift"],
+    ["分类治理", "taxonomy.html", "分类矩阵和状态工作流"],
+    ["时间轴", "timeline.html", "按年份浏览研究路线"],
+    ["研究矩阵", "matrix.html", "研究线和年份覆盖"],
+    ["研究线", "lines/index.html", "按研究脉络组织论文"],
+    ["分类总览", "tags.html", "标签聚合入口"],
+  ].map(([title, href, meta]) => ({
+    title,
+    href: prefix + href,
+    meta,
+    kind: "page",
+  }));
+
+  const dataPapers = (window.PAPER_WIKI && Array.isArray(window.PAPER_WIKI.papers))
+    ? window.PAPER_WIKI.papers.map((paper) => ({
+        title: paper.title_zh || paper.title || paper.slug,
+        href: prefix + (paper.html_path || paper.md_path || ""),
+        meta: [paper.research_line, paper.status, paper.arxiv_id].filter(Boolean).join(" · "),
+        kind: "paper",
+      })).filter((item) => item.href)
+    : [];
+  const rowPapers = Array.from(document.querySelectorAll("[data-slug][data-href]")).map((row) => ({
+    title: row.dataset.titleZh || row.dataset.title || row.dataset.slug,
+    href: row.dataset.href || "",
+    meta: [row.dataset.line, row.dataset.status, row.dataset.arxivId].filter(Boolean).join(" · "),
+    kind: "paper",
+  })).filter((item) => item.href);
+  const paperMap = new Map([...dataPapers, ...rowPapers].map((item) => [item.href, item]));
+  const papers = Array.from(paperMap.values());
+  const entries = [...pages, ...papers];
+  let activeIndex = 0;
+
+  function score(entry, query) {
+    if (!query) return entry.kind === "page" ? 2 : 1;
+    const haystack = `${entry.title} ${entry.meta} ${entry.href}`.toLowerCase();
+    if (haystack.includes(query)) return entry.title.toLowerCase().includes(query) ? 3 : 2;
+    return 0;
+  }
+
+  function currentEntries() {
+    const query = search.value.trim().toLowerCase();
+    return entries
+      .map((entry) => [score(entry, query), entry])
+      .filter(([rank]) => rank > 0)
+      .sort((left, right) => right[0] - left[0] || left[1].title.localeCompare(right[1].title))
+      .slice(0, 40)
+      .map(([, entry]) => entry);
+  }
+
+  function render() {
+    const visible = currentEntries();
+    activeIndex = Math.min(activeIndex, Math.max(visible.length - 1, 0));
+    if (!visible.length) {
+      list.innerHTML = '<div class="quick-empty">没有匹配结果</div>';
+      return;
+    }
+    list.replaceChildren(...visible.map((entry, index) => {
+      const link = document.createElement("a");
+      link.className = `quick-item${index === activeIndex ? " is-active" : ""}`;
+      link.href = entry.href;
+      link.dataset.index = String(index);
+      const title = document.createElement("strong");
+      title.textContent = entry.title;
+      const meta = document.createElement("span");
+      meta.className = "meta";
+      meta.textContent = entry.meta || entry.href;
+      link.append(title, meta);
+      return link;
+    }));
+  }
+
+  function open() {
+    panel.hidden = false;
+    search.value = "";
+    activeIndex = 0;
+    render();
+    search.focus();
+  }
+
+  function close() {
+    panel.hidden = true;
+    openButton.focus();
+  }
+
+  openButton.addEventListener("click", open);
+  closeButton.addEventListener("click", close);
+  panel.addEventListener("click", (event) => {
+    if (event.target === panel) close();
+  });
+  search.addEventListener("input", () => {
+    activeIndex = 0;
+    render();
+  });
+  search.addEventListener("keydown", (event) => {
+    const visible = currentEntries();
+    if (event.key === "Escape") {
+      event.preventDefault();
+      close();
+    } else if (event.key === "ArrowDown") {
+      event.preventDefault();
+      activeIndex = Math.min(activeIndex + 1, Math.max(visible.length - 1, 0));
+      render();
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      activeIndex = Math.max(activeIndex - 1, 0);
+      render();
+    } else if (event.key === "Enter" && visible[activeIndex]) {
+      event.preventDefault();
+      window.location.href = visible[activeIndex].href;
+    }
+  });
+  document.addEventListener("keydown", (event) => {
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+      event.preventDefault();
+      panel.hidden ? open() : close();
+    }
+  });
+})();
+</script>
+</body>
+</html>

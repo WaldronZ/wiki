@@ -85,6 +85,7 @@ REQUIRED_PAGES = {
     "dashboard.html",
     "release.html",
     "collections.html",
+    "facets.html",
     "related.html",
     "taxonomy.html",
     "timeline.html",

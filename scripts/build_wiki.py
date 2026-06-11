@@ -40,6 +40,7 @@ GENERATED_FIXED_PATHS = (
     "dashboard.html",
     "release.html",
     "collections.html",
+    "facets.html",
     "related.html",
     "taxonomy.html",
     "timeline.html",
@@ -1157,6 +1158,7 @@ def wiki_pages_manifest() -> list[dict[str, str]]:
         {"title": "管理控制台", "href": "dashboard.html", "kind": "ops", "description": "覆盖率、队列和运营指标"},
         {"title": "发布摘要", "href": "release.html", "kind": "ops", "description": "页面入口、数据文件、质量状态"},
         {"title": "集合视图", "href": "collections.html", "kind": "view", "description": "共享视图、智能集合、研究线入口"},
+        {"title": "分类工作台", "href": "facets.html", "kind": "ops", "description": "标签规模、长尾和过载分类"},
         {"title": "关联网络", "href": "related.html", "kind": "analysis", "description": "标签共现、相似论文、孤岛论文"},
         {"title": "研究缺口", "href": "gaps.html", "kind": "ops", "description": "下一步行动和研究线缺口"},
         {"title": "状态看板", "href": "board.html", "kind": "workflow", "description": "拖拽式状态流和 CSV patch"},
@@ -1750,6 +1752,7 @@ def page_shell(
     ["管理控制台", "dashboard.html", "覆盖率、队列和运营指标"],
     ["发布摘要", "release.html", "页面入口、数据文件和发布状态"],
     ["集合视图", "collections.html", "共享视图和智能集合"],
+    ["分类工作台", "facets.html", "标签规模、长尾和过载分类"],
     ["关联网络", "related.html", "标签共现和相似论文"],
     ["研究缺口", "gaps.html", "下一步行动和线索缺口"],
     ["状态看板", "board.html", "拖拽状态流"],
@@ -4255,6 +4258,200 @@ def render_collections(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     (report_dir / "collections.html").write_text(page_shell("集合视图", body, extra_css=collections_css), encoding="utf-8")
 
 
+FACET_SPECS = (
+    ("domains", "Domain", "domain", "结构域", True),
+    ("tracks", "Track", "track", "方向", True),
+    ("problems", "Problem", "problem", "问题", True),
+    ("topics", "Topic", "topic", "主题", True),
+    ("methods", "Method", "method", "方法", True),
+    ("research_line", "Research line", "line", "研究线", False),
+    ("line_role", "Line role", "role", "研究线角色", False),
+    ("status", "Status", "status", "阅读状态", False),
+    ("reading_stage", "Reading stage", "stage", "阅读阶段", False),
+    ("review_stage", "Review stage", "reviewStage", "复习阶段", False),
+)
+
+
+def render_facets(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    total = len(papers)
+    taxonomy = taxonomy_counts(papers)
+
+    def values_for_field(paper: dict[str, Any], field: str, is_list: bool) -> list[str]:
+        if is_list:
+            return [str(value).strip() for value in paper.get(field, []) if str(value).strip()]
+        value = str(paper.get(field) or "").strip()
+        return [value] if value and value != "Unassigned" else []
+
+    def facet_count(field: str, is_list: bool) -> dict[str, int]:
+        if field == "research_line":
+            return taxonomy["research_lines"]
+        if field == "line_role":
+            return taxonomy["line_roles"]
+        if field == "status":
+            return taxonomy["statuses"]
+        if field == "reading_stage":
+            return taxonomy["reading_stages"]
+        if field == "review_stage":
+            return taxonomy["review_stages"]
+        if is_list:
+            return taxonomy[field]
+        return scalar_counts(papers, field)
+
+    def sample_links(field: str, value: str, is_list: bool) -> str:
+        matches = [
+            paper
+            for paper in papers
+            if value in values_for_field(paper, field, is_list)
+        ][:3]
+        if not matches:
+            return '<span class="meta">暂无论文</span>'
+        links = [
+            f'<a href="{html.escape(paper_href(paper))}">{html.escape(paper["title_zh"] or paper["title"])}</a>'
+            for paper in matches
+        ]
+        return "<br>".join(links)
+
+    def action_for(count: int, share: float, field_label: str) -> str:
+        if count == 0:
+            return "保留为候选值，或从 taxonomy.json 中移除。"
+        if count == 1:
+            return "检查是否应合并为更通用标签。"
+        if share >= 0.6 and count >= 5:
+            return f"{field_label} 过大，考虑拆成更细子类。"
+        if share >= 0.4 and count >= 4:
+            return "关注是否正在变成默认桶。"
+        return "结构稳定，继续积累样本。"
+
+    facet_cards = []
+    table_rows = []
+    long_tail_total = 0
+    overloaded_total = 0
+    unused_total = 0
+    for field, english, query_key, label, is_list in FACET_SPECS:
+        counts = facet_count(field, is_list)
+        used_items = [(value, count) for value, count in counts.items() if count > 0]
+        long_tail = sum(1 for _, count in used_items if count == 1)
+        overloaded = sum(1 for _, count in used_items if total and count / total >= 0.6 and count >= 5)
+        unused = sum(1 for _, count in counts.items() if count == 0)
+        long_tail_total += long_tail
+        overloaded_total += overloaded
+        unused_total += unused
+        facet_cards.append(
+            f"""<section class="facet-card">
+  <h2>{html.escape(label)} <span class="meta">{html.escape(english)}</span></h2>
+  <div class="facet-metrics"><strong>{len(used_items)}</strong><span>已使用标签</span><strong>{long_tail}</strong><span>长尾</span><strong>{unused}</strong><span>候选空值</span></div>
+</section>"""
+        )
+        for value, count in counts.items():
+            share = (count / total) if total else 0
+            flags = []
+            if count == 0:
+                flags.append("unused")
+            if count == 1:
+                flags.append("long-tail")
+            if share >= 0.6 and count >= 5:
+                flags.append("overloaded")
+            elif share >= 0.4 and count >= 4:
+                flags.append("watch")
+            flag_html = "".join(f'<span class="flag">{html.escape(flag)}</span>' for flag in flags) or '<span class="flag">stable</span>'
+            href = page_query_href("library.html", **{query_key: value})
+            value_cell = f'<a href="{html.escape(href)}">{html.escape(value)}</a>'
+            table_rows.append(
+                "<tr>"
+                f"<td>{html.escape(label)}</td>"
+                f"<td>{value_cell}</td>"
+                f"<td>{count}</td>"
+                f"<td>{round(share * 100)}%</td>"
+                f"<td>{flag_html}</td>"
+                f"<td>{sample_links(field, value, is_list)}</td>"
+                f"<td>{html.escape(action_for(count, share, label))}</td>"
+                "</tr>"
+            )
+
+    table_html = (
+        '<table class="data-table"><thead><tr><th>字段</th><th>标签</th><th>论文</th><th>占比</th><th>状态</th><th>样例</th><th>建议动作</th></tr></thead>'
+        f"<tbody>{''.join(table_rows)}</tbody></table>"
+        if table_rows
+        else '<div class="empty">还没有可审计的分类。</div>'
+    )
+
+    facets_css = """
+    .facet-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px;
+    }
+    .facet-card {
+      display: grid;
+      gap: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 16px;
+    }
+    .facet-card h2 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.3;
+    }
+    .facet-metrics {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 6px 10px;
+      align-items: baseline;
+    }
+    .facet-metrics strong { color: var(--accent); font-size: 22px; }
+    .facet-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+    .facet-action {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--chip);
+      padding: 14px;
+    }
+    .facet-action h3 { margin: 0 0 6px; font-size: 16px; }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Facet Workbench</div>
+  <h1>分类工作台</h1>
+  <p class="lead">集中审计 domain、track、problem、topic、method、研究线和阅读状态的规模。长尾标签提示可能需要合并，过载标签提示需要拆分，空候选值来自动态 taxonomy 配置。</p>
+  <div class="stats">
+    <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="taxonomy.html">分类治理</a>
+    <a class="stat" href="quality.html">质量治理</a>
+    <a class="stat" href="collections.html">集合视图</a>
+    <a class="stat" href="gaps.html">研究缺口</a>
+    <span class="stat">论文 {total}</span>
+    <span class="stat">长尾 {long_tail_total}</span>
+    <span class="stat">过载 {overloaded_total}</span>
+  </div>
+</header>
+<main class="shell">
+  <section>
+    <h2 class="section-title">字段概览</h2>
+    <div class="facet-grid">{"".join(facet_cards)}</div>
+  </section>
+  <section>
+    <h2 class="section-title">治理建议</h2>
+    <div class="facet-actions">
+      <section class="facet-action"><h3>长尾标签</h3><p class="meta">{long_tail_total} 个只命中 1 篇论文的标签。优先检查是否是大小写、复数、连字符或粒度不一致。</p></section>
+      <section class="facet-action"><h3>过载标签</h3><p class="meta">{overloaded_total} 个标签覆盖过高。论文继续增加时，优先把它们拆成更可操作的子类。</p></section>
+      <section class="facet-action"><h3>候选空值</h3><p class="meta">{unused_total} 个配置值当前没有论文使用。它们适合作为流程预留，也可能是过期状态。</p></section>
+    </div>
+  </section>
+  <section>
+    <h2 class="section-title">分类明细</h2>
+    <div class="table-wrap">{table_html}</div>
+  </section>
+</main>
+"""
+    (report_dir / "facets.html").write_text(page_shell("分类工作台", body, extra_css=facets_css), encoding="utf-8")
+
+
 def paper_relation_features(paper: dict[str, Any]) -> set[str]:
     features: set[str] = set()
     for field in ("domains", "tracks", "problems", "topics", "methods"):
@@ -5918,6 +6115,7 @@ def build_wiki(report_dir: Path) -> int:
     render_quality(report_dir, papers, inbox_items)
     render_dashboard(report_dir, papers)
     render_collections(report_dir, papers)
+    render_facets(report_dir, papers)
     render_related(report_dir, papers)
     render_taxonomy(report_dir, papers)
     render_timeline(report_dir, papers)
