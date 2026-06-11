@@ -1,0 +1,43 @@
+{
+  "label_aliases": {
+    "attention kernel": "Attention Kernels",
+    "diffusion language models": "Diffusion Language Models",
+    "gpu kernel optimization": "GPU Kernel Optimization",
+    "gpu systems": "GPU Systems",
+    "inference optimization": "Inference Optimization",
+    "kv cache": "KV Cache",
+    "llm inference acceleration": "LLM Inference",
+    "llm serving": "LLM Serving",
+    "parallel decoding": "Parallel Decoding",
+    "serving systems": "LLM Serving",
+    "speculative decoding": "Speculative Decoding",
+    "transformer": "Transformer"
+  },
+  "role_order": [
+    "foundation",
+    "baseline",
+    "main",
+    "system",
+    "variant",
+    "followup",
+    "survey"
+  ],
+  "status_values": [
+    "unread",
+    "skimmed",
+    "reading",
+    "read",
+    "archived"
+  ],
+  "reading_stage_values": [
+    "skim",
+    "normal_read",
+    "deep_read",
+    "code_checked"
+  ],
+  "review_stage_values": [
+    "fresh",
+    "due",
+    "reviewed"
+  ]
+}

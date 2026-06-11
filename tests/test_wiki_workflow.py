@@ -102,6 +102,20 @@ class WikiWorkflowTest(unittest.TestCase):
     def make_report_dir(self, tmp: Path) -> Path:
         report_dir = tmp / "docs"
         report_dir.mkdir()
+        guides_dir = report_dir / "guides"
+        guides_dir.mkdir()
+        (guides_dir / "taxonomy.json").write_text(
+            json.dumps(
+                {
+                    "label_aliases": {
+                        "batch scheduling": "Request Scheduling",
+                        "llm serving": "LLM Serving",
+                    },
+                    "role_order": ["foundation", "system", "followup"],
+                }
+            ),
+            encoding="utf-8",
+        )
         for slug, text in {
             "2601.00001-alpha-paper": REPORT_A,
             "2501.00002-beta-paper": REPORT_B,
@@ -139,6 +153,7 @@ class WikiWorkflowTest(unittest.TestCase):
             papers = json.loads((report_dir / "papers.json").read_text(encoding="utf-8"))
             self.assertEqual(papers["count"], 2)
             self.assertIn("LLM Serving", papers["taxonomy"]["research_lines"])
+            self.assertIn("Request Scheduling", papers["taxonomy"]["problems"])
 
             review = json.loads((report_dir / "review.json").read_text(encoding="utf-8"))
             self.assertEqual(review["count"], 2)

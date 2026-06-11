@@ -84,4 +84,15 @@ has_code: true
 - `LLM serving` -> `LLM Serving`
 - `KV cache` -> `KV Cache`
 
-如果发现新的重复标签，优先在 `scripts/build_wiki.py` 的 `LABEL_ALIASES` 中加入别名，而不是在每篇报告里临时修。
+如果发现新的重复标签，优先在 `docs/guides/taxonomy.json` 的 `label_aliases` 中加入别名，而不是在每篇报告里临时修。例如：
+
+```json
+{
+  "label_aliases": {
+    "serving systems": "LLM Serving"
+  },
+  "role_order": ["foundation", "baseline", "main", "system", "variant", "followup", "survey"]
+}
+```
+
+`role_order` 会影响研究线详情页和首页研究线概览中的论文排序。`status_values`、`reading_stage_values` 和 `review_stage_values` 目前主要作为团队约定文档；首页筛选项仍会从实际报告数据中动态生成。

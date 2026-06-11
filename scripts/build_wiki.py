@@ -48,7 +48,7 @@ KEYWORD_TOPICS = {
     "Efficient Training": ["efficient", "lora", "quantization", "蒸馏", "量化"],
 }
 
-LABEL_ALIASES = {
+DEFAULT_LABEL_ALIASES = {
     "attention kernel": "Attention Kernels",
     "diffusion language models": "Diffusion Language Models",
     "gpu kernel optimization": "GPU Kernel Optimization",
@@ -62,6 +62,19 @@ LABEL_ALIASES = {
     "speculative decoding": "Speculative Decoding",
     "transformer": "Transformer",
 }
+
+DEFAULT_ROLE_ORDER = [
+    "foundation",
+    "baseline",
+    "main",
+    "system",
+    "variant",
+    "followup",
+    "survey",
+]
+
+LABEL_ALIASES = DEFAULT_LABEL_ALIASES.copy()
+ROLE_ORDER = {role: index for index, role in enumerate(DEFAULT_ROLE_ORDER)}
 
 
 def parse_args() -> argparse.Namespace:
@@ -78,6 +91,41 @@ def parse_args() -> argparse.Namespace:
         help="Verify generated wiki artifacts are up to date without leaving file changes behind.",
     )
     return parser.parse_args()
+
+
+def load_taxonomy_config(report_dir: Path) -> None:
+    """Load optional taxonomy normalization config for this report directory."""
+    global LABEL_ALIASES, ROLE_ORDER
+
+    LABEL_ALIASES = DEFAULT_LABEL_ALIASES.copy()
+    ROLE_ORDER = {role: index for index, role in enumerate(DEFAULT_ROLE_ORDER)}
+
+    config_path = report_dir / "guides" / "taxonomy.json"
+    if not config_path.exists():
+        return
+
+    try:
+        config = json.loads(config_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise SystemExit(f"Invalid taxonomy config {config_path}: {exc}") from exc
+
+    aliases = config.get("label_aliases") or {}
+    if isinstance(aliases, dict):
+        LABEL_ALIASES.update(
+            {
+                str(alias).strip().lower(): str(canonical).strip()
+                for alias, canonical in aliases.items()
+                if str(alias).strip() and str(canonical).strip()
+            }
+        )
+
+    role_order = config.get("role_order") or []
+    if isinstance(role_order, list) and role_order:
+        ROLE_ORDER = {
+            str(role).strip(): index
+            for index, role in enumerate(role_order)
+            if str(role).strip()
+        }
 
 
 def strip_frontmatter(text: str) -> tuple[dict[str, Any], str]:
@@ -338,16 +386,7 @@ def paper_href(paper: dict[str, Any], prefix: str = "") -> str:
 
 
 def role_rank(role: str) -> int:
-    order = {
-        "foundation": 0,
-        "baseline": 1,
-        "main": 2,
-        "system": 3,
-        "variant": 4,
-        "followup": 5,
-        "survey": 6,
-    }
-    return order.get(role, 20)
+    return ROLE_ORDER.get(role, 20)
 
 
 def percent(part: int | float, total: int | float) -> str:
@@ -2012,6 +2051,7 @@ def render_tags(report_dir: Path, papers: list[dict[str, Any]]) -> None:
 
 
 def build_wiki(report_dir: Path) -> int:
+    load_taxonomy_config(report_dir)
     papers = collect_papers(report_dir)
     write_json(report_dir, papers)
     write_quality_json(report_dir, papers)
