@@ -4,7 +4,7 @@ AutoPaperReader 是一个自动化「找论文 -> 读论文 -> 写报告」的 a
 
 它的目标是把一篇论文从检索、下载源码、分析论文、分析配套代码，到最终输出结构化中文阅读报告的流程串起来，并把产物（包括 Markdown 报告和 HTML 展示网页）统一组织到固定目录中。
 
-项目还会把这些逐篇报告汇总成一个轻量动态 wiki：所有汇总页都提供全局快速跳转入口，方便在大量页面、论文、机器数据和治理命令之间切换；`docs/index.html` 提供全文搜索、研究线、分类、状态体系、代码/重要性/复习筛选、排序、分页和可分享 URL 状态；`docs/library.html` 提供适合大量论文批量管理的密集表格视图；`docs/board.html` 提供可拖拽状态看板；`docs/inbox.html` 提供候选论文待处理池；`docs/quality.html` 提供质量治理、标签归一化建议和 taxonomy drift 门禁；`docs/review.html` 提供复习队列和建议复习日期；`docs/dashboard.html` 提供分类覆盖、研究线健康度和待处理队列；`docs/release.html` 提供发布摘要、页面入口、机器可读数据清单、artifact inventory、SHA-256 和治理 playbooks；`docs/actions.html` 提供统一行动中心，汇总复习、质量、分类、重复项和 inbox 待办；`docs/collections.html` 提供共享视图、智能队列和研究线集合入口；`docs/balance.html` 提供分类均衡复盘，集中查看分类维度健康度、长尾、过载和空候选；`docs/coverage.html` 提供研究线分类覆盖地图，按研究线定位 domain/track/problem/topic/method 缺口；`docs/facets.html` 提供分类工作台，集中审计标签规模、长尾和过载分类；`docs/related.html` 提供标签共现和相似论文关系发现；`docs/gaps.html` 提供研究缺口和下一步行动建议；`docs/taxonomy.html` 提供分类治理、状态矩阵、研究线角色矩阵和分类变更 patch 预览；`docs/timeline.html` 提供按年份和研究线浏览的路线时间轴；`docs/matrix.html` 提供研究线 x 年份覆盖矩阵；`docs/lines/index.html` 提供研究线入口；`docs/tags.html` 提供分类总览；`docs/papers.json` 提供机器可读索引；`docs/search_index.json` 提供正文检索索引；`docs/stats.json` 提供机器可读运营指标；`docs/quality.json` 提供元数据质量、标签别名建议与运营队列报告；`docs/review.json` 提供机器可读复习计划；`docs/taxonomy_actions.json` 提供可分派的分类治理任务；`docs/actions.json` 提供统一行动队列；`docs/manifest.json` 提供发布状态、入口清单、数据契约和可校验产物清单。
+项目还会把这些逐篇报告汇总成一个轻量动态 wiki：所有汇总页都提供全局快速跳转入口，方便在大量页面、论文、机器数据和治理命令之间切换；`docs/index.html` 提供全文搜索、研究线、分类、状态体系、代码/重要性/复习筛选、排序、分页和可分享 URL 状态；`docs/library.html` 提供适合大量论文批量管理的密集表格视图；`docs/board.html` 提供可拖拽状态看板；`docs/inbox.html` 提供候选论文待处理池；`docs/quality.html` 提供质量治理、标签归一化建议和 taxonomy drift 门禁；`docs/review.html` 提供复习队列和建议复习日期；`docs/freshness.html` 提供报告时效治理、过期分析和研究线维护队列；`docs/dashboard.html` 提供分类覆盖、研究线健康度和待处理队列；`docs/release.html` 提供发布摘要、页面入口、机器可读数据清单、artifact inventory、SHA-256 和治理 playbooks；`docs/actions.html` 提供统一行动中心，汇总复习、质量、分类、重复项和 inbox 待办；`docs/collections.html` 提供共享视图、智能队列和研究线集合入口；`docs/balance.html` 提供分类均衡复盘，集中查看分类维度健康度、长尾、过载和空候选；`docs/coverage.html` 提供研究线分类覆盖地图，按研究线定位 domain/track/problem/topic/method 缺口；`docs/facets.html` 提供分类工作台，集中审计标签规模、长尾和过载分类；`docs/related.html` 提供标签共现和相似论文关系发现；`docs/gaps.html` 提供研究缺口和下一步行动建议；`docs/taxonomy.html` 提供分类治理、状态矩阵、研究线角色矩阵和分类变更 patch 预览；`docs/timeline.html` 提供按年份和研究线浏览的路线时间轴；`docs/matrix.html` 提供研究线 x 年份覆盖矩阵；`docs/lines/index.html` 提供研究线入口；`docs/tags.html` 提供分类总览；`docs/papers.json` 提供机器可读索引；`docs/search_index.json` 提供正文检索索引；`docs/stats.json` 提供机器可读运营指标；`docs/quality.json` 提供元数据质量、标签别名建议与运营队列报告；`docs/review.json` 提供机器可读复习计划；`docs/freshness.json` 提供机器可读报告新鲜度和过期队列；`docs/taxonomy_actions.json` 提供可分派的分类治理任务；`docs/actions.json` 提供统一行动队列；`docs/manifest.json` 提供发布状态、入口清单、数据契约和可校验产物清单。
 
 **注：建议开启 Agent Teams 特性 `export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`**
 
@@ -147,6 +147,7 @@ paper_reader/
 - `docs/inbox.html`：候选论文待处理池，支持筛选、去重提示、复制阅读任务、下载当前筛选 CSV 和复制 inbox 模板
 - `docs/quality.html`：质量治理页，集中展示弱元数据、分类粒度审计与 CSV 导出、标签归一化建议、taxonomy drift 和库内重复报告
 - `docs/review.html`：复习计划页，展示待复习、需建计划、已计划和高优先级队列
+- `docs/freshness.html`：时效治理页，展示报告新鲜度分数、过期分析、研究线健康度和可复制治理队列
 - `docs/dashboard.html`：管理控制台，展示分类覆盖、分类均衡度、研究线健康度、待复习和待补分类队列
 - `docs/release.html`：发布摘要页，集中展示发布状态、页面入口、数据文件、数据契约、artifact inventory、队列规模、推荐命令和治理 playbooks
 - `docs/actions.html`：行动中心，统一筛选、导出和复制复习、质量、分类治理、重复项和 inbox 任务；`scripts/export_actions.py` 可把同一队列导出为 checklist 或带自定义任务状态的项目 CSV
@@ -168,6 +169,7 @@ paper_reader/
 - `docs/inbox.json`：机器可读候选论文队列
 - `docs/quality.json`：元数据质量报告，列出缺分类、标签别名建议、taxonomy drift、库内重复报告、缺复习计划、待复习、缺代码观察等队列
 - `docs/review.json`：机器可读复习计划，给出 suggested_next_review 和优先级
+- `docs/freshness.json`：机器可读时效报告，给出 due / needs_plan / stale / aging 队列和研究线新鲜度
 - `docs/taxonomy_actions.json`：机器可读分类治理任务，列出长尾合并候选、过载拆分候选、空候选状态和关注项
 - `docs/actions.json`：机器可读统一行动队列，汇总 quality、review、taxonomy、dedupe 和 inbox 来源的任务
 - `docs/manifest.json`：机器可读发布清单，包含页面入口、数据文件、质量状态、重复报告发布门禁、队列规模、常用命令、command recipes 和治理 playbooks

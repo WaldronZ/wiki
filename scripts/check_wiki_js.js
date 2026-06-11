@@ -18,6 +18,7 @@ function htmlFiles() {
     "inbox.html",
     "quality.html",
     "review.html",
+    "freshness.html",
     "dashboard.html",
     "release.html",
     "actions.html",

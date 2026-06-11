@@ -32,6 +32,7 @@ GENERATED_FIXED_PATHS = (
     "inbox.json",
     "quality.json",
     "review.json",
+    "freshness.json",
     "taxonomy_actions.json",
     "actions.json",
     "manifest.json",
@@ -41,6 +42,7 @@ GENERATED_FIXED_PATHS = (
     "inbox.html",
     "quality.html",
     "review.html",
+    "freshness.html",
     "dashboard.html",
     "release.html",
     "actions.html",
@@ -1297,6 +1299,7 @@ def wiki_pages_manifest() -> list[dict[str, str]]:
         {"title": "状态看板", "href": "board.html", "kind": "workflow", "description": "拖拽式状态流和 CSV patch"},
         {"title": "待处理池", "href": "inbox.html", "kind": "workflow", "description": "候选论文队列和去重提示"},
         {"title": "复习计划", "href": "review.html", "kind": "workflow", "description": "待复习、需建计划、建议日期"},
+        {"title": "时效治理", "href": "freshness.html", "kind": "ops", "description": "报告新鲜度、过期分析和研究线维护"},
         {"title": "质量治理", "href": "quality.html", "kind": "ops", "description": "弱元数据、别名建议、taxonomy drift"},
         {"title": "分类治理", "href": "taxonomy.html", "kind": "ops", "description": "分类矩阵、状态工作流、治理队列"},
         {"title": "时间轴", "href": "timeline.html", "kind": "analysis", "description": "按年份和研究线浏览论文演进"},
@@ -1313,6 +1316,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "stats.json", "description": "运营统计、覆盖率和队列规模"},
         {"href": "quality.json", "description": "质量问题、taxonomy load、taxonomy drift、标签别名建议"},
         {"href": "review.json", "description": "复习计划和建议 next_review"},
+        {"href": "freshness.json", "description": "报告新鲜度、过期分析和研究线维护队列"},
         {"href": "taxonomy_actions.json", "description": "分类长尾、过载和空候选治理任务"},
         {"href": "actions.json", "description": "统一行动队列，汇总质量、复习、分类和 inbox 任务"},
         {"href": "inbox.json", "description": "候选论文队列和重复项"},
@@ -1788,6 +1792,137 @@ def build_review_plan(papers: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+def freshness_item(paper: dict[str, Any], today: dt.date) -> dict[str, Any]:
+    next_review = parse_date(paper.get("next_review"))
+    last_reviewed = parse_date(paper.get("last_reviewed"))
+    updated_at = parse_date(paper.get("updated_at"))
+    reference_date = last_reviewed or updated_at
+    age_days = (today - reference_date).days if reference_date else None
+    year = int(paper.get("year") or 0)
+    year_age = today.year - year if year else None
+    has_plan = bool(next_review)
+    due = bool(next_review and next_review <= today)
+    score = 100
+    reasons: list[str] = []
+    actions: list[str] = []
+
+    if not has_plan:
+        score -= 25
+        reasons.append("missing_next_review")
+        actions.append("补 next_review")
+    elif due:
+        overdue_days = (today - next_review).days
+        score -= min(45, 30 + overdue_days // 14)
+        reasons.append("review_due")
+        actions.append("复习并更新 last_reviewed")
+
+    if not last_reviewed:
+        score -= 15
+        reasons.append("missing_last_reviewed")
+        actions.append("补 last_reviewed")
+    elif age_days is not None and age_days >= 365:
+        score -= min(35, age_days // 30)
+        reasons.append("old_last_reviewed")
+        actions.append("检索后续工作")
+    elif age_days is not None and age_days >= 180:
+        score -= 10
+        reasons.append("aging_review")
+        actions.append("安排半年复盘")
+
+    if year_age is not None and year_age >= 3:
+        score -= 15
+        reasons.append("old_publication_year")
+        actions.append("补近年 follow-up")
+    elif year_age is not None and year_age >= 2:
+        score -= 8
+        reasons.append("aging_publication_year")
+
+    if due:
+        state = "due"
+    elif not has_plan:
+        state = "needs_plan"
+    elif "old_last_reviewed" in reasons or "old_publication_year" in reasons:
+        state = "stale"
+    elif "aging_review" in reasons or "aging_publication_year" in reasons:
+        state = "aging"
+    else:
+        state = "current"
+
+    if not actions:
+        actions.append("保持观察")
+    score = max(0, score)
+    return {
+        "slug": paper["slug"],
+        "title": paper["title"],
+        "title_zh": paper["title_zh"],
+        "research_line": paper.get("research_line") or "Unassigned",
+        "line_role": paper.get("line_role") or "",
+        "year": paper.get("year"),
+        "importance": paper.get("importance"),
+        "last_reviewed": paper.get("last_reviewed") or "",
+        "next_review": paper.get("next_review") or "",
+        "updated_at": paper.get("updated_at") or "",
+        "age_days": age_days,
+        "year_age": year_age,
+        "state": state,
+        "score": score,
+        "reasons": reasons,
+        "actions": actions,
+        "html_path": paper.get("html_path") or paper.get("md_path"),
+    }
+
+
+def build_freshness_report(papers: list[dict[str, Any]]) -> dict[str, Any]:
+    today = dt.date.today()
+    items = [freshness_item(paper, today) for paper in papers]
+    state_rank = {"due": 0, "needs_plan": 1, "stale": 2, "aging": 3, "current": 4}
+    items.sort(key=lambda item: (state_rank.get(str(item["state"]), 9), int(item["score"]), -int(item.get("importance") or 0), item["title"]))
+    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for item in items:
+        grouped[str(item.get("research_line") or "Unassigned")].append(item)
+    line_health = []
+    for line, line_items in grouped.items():
+        average_score = round(sum(int(item["score"]) for item in line_items) / len(line_items), 1)
+        state_counts = Counter(str(item["state"]) for item in line_items)
+        line_health.append(
+            {
+                "research_line": line,
+                "count": len(line_items),
+                "average_score": average_score,
+                "state_counts": dict(state_counts),
+                "risk": "high" if state_counts.get("due") or state_counts.get("stale") else "medium" if state_counts.get("needs_plan") or state_counts.get("aging") else "low",
+                "oldest_age_days": max((item["age_days"] or 0) for item in line_items),
+                "actions": sorted({action for item in line_items for action in item["actions"] if action != "保持观察"})[:5],
+            }
+        )
+    line_health.sort(key=lambda item: ({"high": 0, "medium": 1, "low": 2}.get(str(item["risk"]), 9), item["average_score"], item["research_line"]))
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "today": today.isoformat(),
+        "count": len(items),
+        "summary": {
+            "states": dict(Counter(str(item["state"]) for item in items)),
+            "average_score": round(sum(int(item["score"]) for item in items) / len(items), 1) if items else 100,
+        },
+        "queues": {
+            "due": [item["slug"] for item in items if item["state"] == "due"],
+            "needs_plan": [item["slug"] for item in items if item["state"] == "needs_plan"],
+            "stale": [item["slug"] for item in items if item["state"] == "stale"],
+            "aging": [item["slug"] for item in items if item["state"] == "aging"],
+        },
+        "line_health": line_health,
+        "items": items,
+    }
+
+
+def write_freshness_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_freshness_report(papers)
+    (report_dir / "freshness.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
 def write_review_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     payload = build_review_plan(papers)
     (report_dir / "review.json").write_text(
@@ -1799,6 +1934,7 @@ def write_review_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
 def build_action_center(papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> dict[str, Any]:
     quality = build_quality_report(papers)
     review = build_review_plan(papers)
+    freshness = build_freshness_report(papers)
     taxonomy_actions = build_taxonomy_actions(papers)
     paper_by_slug = {paper["slug"]: paper for paper in papers}
     severity_priority = {"high": 90, "medium": 60, "low": 30, "none": 10}
@@ -1873,6 +2009,24 @@ def build_action_center(papers: list[dict[str, Any]], inbox_items: list[dict[str
                 "python3 scripts/apply_review_plan.py docs --write",
                 4,
             )
+
+    for item in freshness["items"]:
+        state = str(item.get("state") or "")
+        if state not in {"stale", "aging"}:
+            continue
+        slug = str(item.get("slug") or "")
+        add_action(
+            f"freshness:{state}:{slug}",
+            "freshness",
+            "high" if state == "stale" else "medium",
+            f"更新时效：{paper_title(slug)}",
+            "; ".join(str(action) for action in item.get("actions", []) if action),
+            paper_link(slug),
+            "freshness.json",
+            [slug],
+            "",
+            5 if state == "stale" else 2,
+        )
 
     issue_by_slug = {issue["slug"]: issue for issue in quality["issues"]}
     for slug in quality["queues"].get("missing_required_metadata", []):
@@ -5519,6 +5673,218 @@ downloadReviewPatch.addEventListener("click", () => {{
 </script>
 """
     (report_dir / "review.html").write_text(page_shell("复习计划", body, {"review_items": items}), encoding="utf-8")
+
+
+def render_freshness(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    report = build_freshness_report(papers)
+    items = report["items"]
+    state_labels = {
+        "due": "待复习",
+        "needs_plan": "需建计划",
+        "stale": "已过期",
+        "aging": "变旧中",
+        "current": "新鲜",
+    }
+    metric_html = "".join(
+        f'<section class="metric-card"><span>{html.escape(state_labels.get(state, state))}</span><strong>{count}</strong><span>{html.escape(state)}</span></section>'
+        for state, count in report["summary"]["states"].items()
+    )
+    line_rows = "".join(
+        "<tr>"
+        f'<td><a href="{html.escape(page_query_href("library.html", line=line["research_line"]))}">{html.escape(str(line["research_line"]))}</a></td>'
+        f"<td>{line['count']}</td>"
+        f"<td>{line['average_score']}</td>"
+        f"<td><span class=\"flag\">{html.escape(str(line['risk']))}</span></td>"
+        f"<td>{html.escape(json.dumps(line['state_counts'], ensure_ascii=False, sort_keys=True))}</td>"
+        f"<td>{html.escape('; '.join(line['actions']) or '保持观察')}</td>"
+        "</tr>"
+        for line in report["line_health"]
+    )
+
+    def row(item: dict[str, Any]) -> str:
+        actions = "".join(f'<span class="chip">{html.escape(action)}</span>' for action in item.get("actions", []))
+        reasons = "".join(f'<span class="chip">{html.escape(reason)}</span>' for reason in item.get("reasons", []))
+        searchable = " ".join(
+            str(value)
+            for value in [
+                item.get("title"),
+                item.get("title_zh"),
+                item.get("research_line"),
+                item.get("state"),
+                *item.get("reasons", []),
+                *item.get("actions", []),
+            ]
+            if value
+        ).lower()
+        return f"""<tr
+  data-search="{html.escape(searchable, quote=True)}"
+  data-state="{html.escape(str(item.get("state") or ""), quote=True)}"
+  data-line="{html.escape(str(item.get("research_line") or ""), quote=True)}"
+  data-score="{html.escape(str(item.get("score") or 0), quote=True)}"
+  data-age="{html.escape(str(item.get("age_days") or 0), quote=True)}"
+  data-slug="{html.escape(str(item.get("slug") or ""), quote=True)}">
+  <td class="library-title">
+    <strong><a href="{html.escape(str(item.get("html_path") or ""))}">{html.escape(str(item.get("title_zh") or item.get("title") or item.get("slug")))}</a></strong>
+    <div class="meta">{html.escape(str(item.get("slug") or ""))}</div>
+  </td>
+  <td>{html.escape(str(item.get("research_line") or "Unassigned"))}<div class="meta">{html.escape(str(item.get("line_role") or ""))}</div></td>
+  <td><span class="flag">{html.escape(state_labels.get(str(item.get("state")), str(item.get("state"))))}</span><div class="meta">score {item.get("score")}</div></td>
+  <td>{html.escape(str(item.get("last_reviewed") or "-"))}<div class="meta">age {html.escape(str(item.get("age_days") if item.get("age_days") is not None else "-"))} days</div></td>
+  <td>{html.escape(str(item.get("next_review") or "-"))}<div class="meta">year age {html.escape(str(item.get("year_age") if item.get("year_age") is not None else "-"))}</div></td>
+  <td><div class="chips">{reasons}</div></td>
+  <td><div class="chips">{actions}</div></td>
+</tr>"""
+
+    rows = "".join(row(item) for item in items)
+    line_options = render_topic_options({str(line["research_line"]): int(line["count"]) for line in report["line_health"]})
+    freshness_json = json.dumps(items, ensure_ascii=False).replace("</", "<\\/")
+    freshness_css = """
+    .freshness-controls {
+      display: grid;
+      grid-template-columns: minmax(240px, 2fr) repeat(3, minmax(150px, 1fr));
+      gap: 10px;
+      align-items: center;
+    }
+    .freshness-controls input,
+    .freshness-controls select {
+      width: 100%;
+    }
+    @media (max-width: 900px) {
+      .freshness-controls { grid-template-columns: 1fr; }
+    }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Freshness Governance</div>
+  <h1>时效治理</h1>
+  <p class="lead">集中查看报告是否过期、是否缺复习计划、哪些研究线需要检索后续工作。适合论文库变大后做周期性维护。</p>
+  <div class="stats">
+    <a class="stat" href="index.html">返回首页</a>
+    <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="review.html">复习计划</a>
+    <a class="stat" href="gaps.html">研究缺口</a>
+    <a class="stat" href="actions.html">行动中心</a>
+    <a class="stat" href="freshness.json">Freshness JSON</a>
+    <span class="stat">论文 {report["count"]}</span>
+    <span class="stat">平均分 {report["summary"]["average_score"]}</span>
+    <span class="stat">日期 {html.escape(str(report["today"]))}</span>
+  </div>
+</header>
+<main class="shell">
+  <section>
+    <h2 class="section-title">新鲜度状态</h2>
+    <div class="metric-grid">{metric_html}</div>
+  </section>
+  <section>
+    <h2 class="section-title">研究线健康度</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>研究线</th><th>论文</th><th>平均分</th><th>风险</th><th>状态分布</th><th>建议动作</th></tr></thead><tbody>{line_rows}</tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">报告时效队列</h2>
+    <div class="freshness-controls">
+      <input id="freshnessSearch" type="search" placeholder="搜索标题、研究线、原因或动作">
+      <select id="freshnessState"><option value="">全部状态</option>{render_topic_options(report["summary"]["states"])}</select>
+      <select id="freshnessLine"><option value="">全部研究线</option>{line_options}</select>
+      <select id="freshnessSort"><option value="risk">风险优先</option><option value="score">分数低到高</option><option value="age">最久未复盘</option><option value="line">研究线 A-Z</option></select>
+      <strong id="freshnessCount">{len(items)} 条</strong>
+    </div>
+    <div class="results-actions">
+      <button id="downloadFreshnessCsv" class="button" type="button">下载当前 CSV</button>
+      <button id="copyFreshnessQueue" class="button" type="button">复制治理队列</button>
+    </div>
+    <div class="table-wrap"><table class="library-table"><thead><tr><th>论文</th><th>研究线</th><th>状态</th><th>上次复盘</th><th>下次复习</th><th>原因</th><th>建议动作</th></tr></thead><tbody id="freshnessRows">{rows}</tbody></table></div>
+  </section>
+</main>
+<script>
+const freshnessData = {freshness_json};
+const freshnessSearch = document.querySelector("#freshnessSearch");
+const freshnessState = document.querySelector("#freshnessState");
+const freshnessLine = document.querySelector("#freshnessLine");
+const freshnessSort = document.querySelector("#freshnessSort");
+const freshnessCount = document.querySelector("#freshnessCount");
+const freshnessBody = document.querySelector("#freshnessRows");
+const freshnessRows = Array.from(document.querySelectorAll("#freshnessRows tr"));
+const downloadFreshnessCsv = document.querySelector("#downloadFreshnessCsv");
+const copyFreshnessQueue = document.querySelector("#copyFreshnessQueue");
+const freshnessRank = {{ due: 0, needs_plan: 1, stale: 2, aging: 3, current: 4 }};
+
+function visibleFreshnessRows() {{
+  return freshnessRows.filter(row => !row.hidden);
+}}
+
+function csvCell(value) {{
+  const text = String(value ?? "");
+  return (text.includes(",") || text.includes('"') || text.includes("\\n"))
+    ? `"${{text.replaceAll('"', '""')}}"`
+    : text;
+}}
+
+function sortFreshnessRows(rows) {{
+  const mode = freshnessSort.value;
+  return rows.sort((a, b) => {{
+    if (mode === "score") return Number(a.dataset.score || 0) - Number(b.dataset.score || 0) || a.dataset.slug.localeCompare(b.dataset.slug);
+    if (mode === "age") return Number(b.dataset.age || 0) - Number(a.dataset.age || 0) || a.dataset.slug.localeCompare(b.dataset.slug);
+    if (mode === "line") return a.dataset.line.localeCompare(b.dataset.line) || a.dataset.slug.localeCompare(b.dataset.slug);
+    return (freshnessRank[a.dataset.state] ?? 9) - (freshnessRank[b.dataset.state] ?? 9) || Number(a.dataset.score || 0) - Number(b.dataset.score || 0);
+  }});
+}}
+
+function renderFreshnessRows() {{
+  const q = freshnessSearch.value.trim().toLowerCase();
+  let visible = 0;
+  freshnessRows.forEach(row => {{
+    const hit = (!q || row.dataset.search.includes(q))
+      && (!freshnessState.value || row.dataset.state === freshnessState.value)
+      && (!freshnessLine.value || row.dataset.line === freshnessLine.value);
+    row.hidden = !hit;
+    if (hit) visible += 1;
+  }});
+  sortFreshnessRows(freshnessRows).forEach(row => freshnessBody.appendChild(row));
+  freshnessCount.textContent = `${{visible}} / ${{freshnessRows.length}} 条`;
+}}
+
+function currentFreshnessItems() {{
+  const visibleSlugs = new Set(visibleFreshnessRows().map(row => row.dataset.slug));
+  return freshnessData.filter(item => visibleSlugs.has(item.slug));
+}}
+
+downloadFreshnessCsv.addEventListener("click", () => {{
+  const header = ["slug", "title", "research_line", "state", "score", "last_reviewed", "next_review", "age_days", "year_age", "reasons", "actions"];
+  const rows = currentFreshnessItems().map(item => [item.slug, item.title_zh || item.title, item.research_line, item.state, item.score, item.last_reviewed, item.next_review, item.age_days ?? "", item.year_age ?? "", (item.reasons || []).join("; "), (item.actions || []).join("; ")]);
+  const csv = [header, ...rows].map(row => row.map(csvCell).join(",")).join("\\n") + "\\n";
+  const blob = new Blob([csv], {{ type: "text/csv;charset=utf-8" }});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "freshness_queue.csv";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}});
+
+copyFreshnessQueue.addEventListener("click", async () => {{
+  const lines = ["# Freshness Queue", ""];
+  currentFreshnessItems().forEach(item => {{
+    lines.push(`- [ ] ${{item.slug}} ${{item.title_zh || item.title}}`);
+    lines.push(`  - State: ${{item.state}}, score ${{item.score}}, line ${{item.research_line || "Unassigned"}}`);
+    lines.push(`  - Actions: ${{(item.actions || []).join("; ")}}`);
+  }});
+  const text = lines.join("\\n");
+  try {{
+    await navigator.clipboard.writeText(text);
+    copyFreshnessQueue.textContent = "已复制队列";
+    setTimeout(() => copyFreshnessQueue.textContent = "复制治理队列", 1400);
+  }} catch {{
+    window.prompt("复制治理队列", text);
+  }}
+}});
+
+[freshnessSearch, freshnessState, freshnessLine, freshnessSort].forEach(control => control.addEventListener("input", renderFreshnessRows));
+renderFreshnessRows();
+</script>
+"""
+    (report_dir / "freshness.html").write_text(page_shell("时效治理", body, extra_css=freshness_css), encoding="utf-8")
 
 
 def render_quality_issue_row(issue: dict[str, Any]) -> str:
@@ -9988,6 +10354,7 @@ def build_wiki(report_dir: Path) -> int:
     write_json(report_dir, papers)
     write_quality_json(report_dir, papers)
     write_review_json(report_dir, papers)
+    write_freshness_json(report_dir, papers)
     write_taxonomy_actions_json(report_dir, papers)
     write_actions_json(report_dir, papers, inbox_items)
     write_stats_json(report_dir, papers)
@@ -9998,6 +10365,7 @@ def build_wiki(report_dir: Path) -> int:
     render_board(report_dir, papers)
     render_inbox(report_dir, inbox_items)
     render_review(report_dir, papers)
+    render_freshness(report_dir, papers)
     render_quality(report_dir, papers, inbox_items)
     render_actions(report_dir, papers, inbox_items)
     render_dashboard(report_dir, papers)

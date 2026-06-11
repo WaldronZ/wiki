@@ -197,6 +197,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "inbox.html",
                 "quality.html",
                 "review.html",
+                "freshness.html",
                 "dashboard.html",
                 "release.html",
                 "actions.html",
@@ -216,6 +217,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "inbox.json",
                 "quality.json",
                 "review.json",
+                "freshness.json",
                 "taxonomy_actions.json",
                 "actions.json",
                 "manifest.json",
@@ -402,6 +404,16 @@ class WikiWorkflowTest(unittest.TestCase):
             review_html = (report_dir / "review.html").read_text(encoding="utf-8")
             self.assertIn('id="downloadReviewPatch"', review_html)
             self.assertIn("review_plan_patch.csv", review_html)
+            freshness = json.loads((report_dir / "freshness.json").read_text(encoding="utf-8"))
+            self.assertEqual(freshness["count"], 2)
+            self.assertIn("needs_plan", freshness["queues"])
+            self.assertIn("2601.00001-alpha-paper", freshness["queues"]["needs_plan"])
+            self.assertTrue(freshness["line_health"])
+            freshness_html = (report_dir / "freshness.html").read_text(encoding="utf-8")
+            self.assertIn("时效治理", freshness_html)
+            self.assertIn('id="freshnessRows"', freshness_html)
+            self.assertIn("freshness_queue.csv", freshness_html)
+            self.assertIn("copyFreshnessQueue", freshness_html)
             taxonomy_actions = json.loads((report_dir / "taxonomy_actions.json").read_text(encoding="utf-8"))
             self.assertEqual(taxonomy_actions["paper_count"], 2)
             self.assertGreater(taxonomy_actions["summary"]["unused_config"], 0)
@@ -481,11 +493,13 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertTrue(manifest["publish_checks"]["no_duplicate_reports"])
             self.assertIn("release.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("actions.html", {item["href"] for item in manifest["pages"]})
+            self.assertIn("freshness.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("balance.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("coverage.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("facets.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("taxonomy_actions.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("actions.json", {item["href"] for item in manifest["data_files"]})
+            self.assertIn("freshness.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("manifest.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("guides/report.template.md", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/metadata.schema.json", {item["href"] for item in manifest["contract_files"]})
@@ -544,6 +558,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("Artifact Inventory", release_html)
             self.assertIn("SHA-256", release_html)
             self.assertIn("guides/report.template.md", release_html)
+            self.assertIn("freshness.html", release_html)
+            self.assertIn("freshness.json", release_html)
             self.assertIn("guides/metadata.schema.json", release_html)
             self.assertIn("guides/inbox.schema.json", release_html)
             self.assertIn("guides/taxonomy.schema.json", release_html)

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>状态看板</title>
+  <title>时效治理</title>
   <style>
     :root {
       color-scheme: light;
@@ -351,89 +351,19 @@
       header { padding-top: 28px; }
     }
 
-    .board-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-    }
-    .status-composer {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-      padding: 12px;
-      margin: 10px 0 12px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-    }
-    .status-composer input {
-      flex: 1 1 220px;
-      min-width: 0;
-    }
-    .board-wrap {
+    .freshness-controls {
       display: grid;
-      grid-auto-flow: column;
-      grid-auto-columns: minmax(280px, 1fr);
-      gap: 14px;
-      overflow-x: auto;
-      padding-bottom: 10px;
-      min-height: 480px;
-    }
-    .board-column {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-      min-width: 280px;
-      max-width: 420px;
-    }
-    .board-column header {
-      position: sticky;
-      top: 0;
-      z-index: 1;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 12px;
-      border-bottom: 1px solid var(--line);
-      background: var(--panel);
-      border-radius: 8px 8px 0 0;
-    }
-    .board-column h2 { margin: 0; font-size: 15px; line-height: 1.2; }
-    .board-count {
-      min-width: 26px;
-      text-align: center;
-      color: var(--muted);
-      font-weight: 800;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 2px 8px;
-    }
-    .board-dropzone {
-      display: grid;
-      align-content: start;
+      grid-template-columns: minmax(240px, 2fr) repeat(3, minmax(150px, 1fr));
       gap: 10px;
-      min-height: 360px;
-      padding: 12px;
+      align-items: center;
     }
-    .board-dropzone.drag-over { outline: 2px solid var(--accent); outline-offset: -5px; }
-    .board-card {
-      display: grid;
-      gap: 7px;
-      padding: 12px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--bg);
-      cursor: grab;
+    .freshness-controls input,
+    .freshness-controls select {
+      width: 100%;
     }
-    .board-card:active { cursor: grabbing; }
-    .board-card.changed { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(37, 99, 235, .14); }
-    .board-card[hidden] { display: none; }
-    .board-card h3 { margin: 0; font-size: 15px; line-height: 1.35; }
-    .board-card .chips { padding-top: 0; }
-    .board-help { color: var(--muted); font-size: 13px; line-height: 1.5; }
+    @media (max-width: 900px) {
+      .freshness-controls { grid-template-columns: 1fr; }
+    }
     
   </style>
 </head>
@@ -451,327 +381,218 @@
 </div>
 
 <header class="shell">
-  <div class="eyebrow">Status Board</div>
-  <h1>状态看板</h1>
-  <p class="lead">按自定义 status 分列管理论文。拖拽卡片只会在浏览器里暂存改动，下载 CSV 后用现有写回脚本应用到 markdown frontmatter。</p>
+  <div class="eyebrow">Freshness Governance</div>
+  <h1>时效治理</h1>
+  <p class="lead">集中查看报告是否过期、是否缺复习计划、哪些研究线需要检索后续工作。适合论文库变大后做周期性维护。</p>
   <div class="stats">
-    <a class="stat" href="index.html">卡片首页</a>
+    <a class="stat" href="index.html">返回首页</a>
     <a class="stat" href="library.html">论文库表格</a>
-    <a class="stat" href="board.html">状态看板</a>
-    <a class="stat" href="dashboard.html">管理控制台</a>
-    <a class="stat" href="collections.html">集合视图</a>
-    <a class="stat" href="related.html">关联网络</a>
+    <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="gaps.html">研究缺口</a>
-    <a class="stat" href="quality.html">质量治理</a>
-    <a class="stat" href="taxonomy.html">分类治理</a>
-    <a class="stat" href="timeline.html">时间轴</a>
-    <a class="stat" href="matrix.html">研究矩阵</a>
+    <a class="stat" href="actions.html">行动中心</a>
+    <a class="stat" href="freshness.json">Freshness JSON</a>
     <span class="stat">论文 5</span>
-    <span class="stat">状态 5</span>
+    <span class="stat">平均分 57.0</span>
+    <span class="stat">日期 2026-06-12</span>
   </div>
 </header>
-<div class="toolbar">
-  <div class="shell controls">
-    <input id="boardSearch" type="search" placeholder="搜索标题、作者、研究线、分类、状态">
-    <select id="boardWorkflow" aria-label="状态工作流"><option value="personal" selected>personal</option><option value="research">research</option></select>
-    <select id="boardLine"><option value="">全部研究线</option><option value="Parallel Decoding with Diffusion Models">Parallel Decoding with Diffusion Models (3)</option><option value="Efficient Attention Kernels">Efficient Attention Kernels (2)</option></select>
-    <select id="boardTrack"><option value="">全部方向</option><option value="Inference Acceleration">Inference Acceleration (3)</option><option value="Parallel Decoding">Parallel Decoding (3)</option><option value="Attention Kernels">Attention Kernels (2)</option><option value="Inference Serving Systems">Inference Serving Systems (1)</option></select>
-    <select id="boardImportance"><option value="">重要性</option><option value="5">5 星</option><option value="4">4 星及以上</option><option value="3">3 星及以上</option></select>
-  </div>
-</div>
 <main class="shell">
-  <div class="results-bar">
-    <strong id="boardCount">显示 5 / 5 篇</strong>
-    <div class="board-actions">
-      <span id="changedCount" class="board-help">未保存 0 篇</span>
-      <button id="downloadBoardPatch" class="button" type="button">下载 CSV</button>
-      <button id="resetBoardChanges" class="button" type="button">撤销改动</button>
+  <section>
+    <h2 class="section-title">新鲜度状态</h2>
+    <div class="metric-grid"><section class="metric-card"><span>需建计划</span><strong>5</strong><span>needs_plan</span></section></div>
+  </section>
+  <section>
+    <h2 class="section-title">研究线健康度</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>研究线</th><th>论文</th><th>平均分</th><th>风险</th><th>状态分布</th><th>建议动作</th></tr></thead><tbody><tr><td><a href="library.html?line=Efficient+Attention+Kernels">Efficient Attention Kernels</a></td><td>2</td><td>52.5</td><td><span class="flag">medium</span></td><td>{&quot;needs_plan&quot;: 2}</td><td>补 last_reviewed; 补 next_review; 补近年 follow-up</td></tr><tr><td><a href="library.html?line=Parallel+Decoding+with+Diffusion+Models">Parallel Decoding with Diffusion Models</a></td><td>3</td><td>60.0</td><td><span class="flag">medium</span></td><td>{&quot;needs_plan&quot;: 3}</td><td>补 last_reviewed; 补 next_review</td></tr></tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">报告时效队列</h2>
+    <div class="freshness-controls">
+      <input id="freshnessSearch" type="search" placeholder="搜索标题、研究线、原因或动作">
+      <select id="freshnessState"><option value="">全部状态</option><option value="needs_plan">needs_plan (5)</option></select>
+      <select id="freshnessLine"><option value="">全部研究线</option><option value="Efficient Attention Kernels">Efficient Attention Kernels (2)</option><option value="Parallel Decoding with Diffusion Models">Parallel Decoding with Diffusion Models (3)</option></select>
+      <select id="freshnessSort"><option value="risk">风险优先</option><option value="score">分数低到高</option><option value="age">最久未复盘</option><option value="line">研究线 A-Z</option></select>
+      <strong id="freshnessCount">5 条</strong>
     </div>
-  </div>
-  <div class="status-composer">
-    <input id="newStatusName" type="text" placeholder="新增临时状态列，例如 queued_for_deep_read" aria-label="新增状态名称">
-    <button id="addStatusColumn" class="button" type="button">新增状态列</button>
-  </div>
-  <div class="board-help">导出后运行：python3 scripts/apply_library_metadata.py docs --input ~/Downloads/status_board_patch.csv --write</div>
-  <div class="board-wrap" id="boardWrap"><section class="board-column" data-status="read">
-  <header><h2>read</h2><span class="board-count">0</span></header>
-  <div class="board-dropzone" data-status="read"><article class="board-card" draggable="true"
-  data-slug="2602.06036-dflash"
-  data-original-status="read"
-  data-status="read"
-  data-line="Parallel Decoding with Diffusion Models"
-  data-tracks="Inference Acceleration|Parallel Decoding"
-  data-importance="4"
-  data-search="2602.06036-dflash dflash: block diffusion for flash speculative decoding dflash：用于快速 speculative decoding 的块扩散方法 dflash: block diffusion for flash speculative decoding 2602.06036v1 parallel decoding with diffusion models followup read deep_read jian chen yesheng liang zhijian liu llm systems inference acceleration parallel decoding lossless speculative decoding diffusion language models llm inference llm serving speculative decoding block diffusion kv injection parallel drafting speculative decoding target hidden features">
-  <h3><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a></h3>
-  <div class="meta">DFlash: Block Diffusion for Flash Speculative Decoding</div>
-  <div class="meta">Parallel Decoding with Diffusion Models</div>
-  <div class="card-flags"><span class="flag">I 4</span><span class="flag">deep_read</span><span class="flag">followup</span><span class="flag">code</span></div>
-  <div class="chips"><span class="chip">Diffusion Language Models</span><span class="chip">LLM Inference</span><span class="chip">LLM Serving</span><span class="chip">Speculative Decoding</span><span class="chip">+5</span></div>
-</article>
-<article class="board-card" draggable="true"
-  data-slug="2604.11035-introspective-dlm"
-  data-original-status="read"
-  data-status="read"
-  data-line="Parallel Decoding with Diffusion Models"
-  data-tracks="Inference Acceleration|Parallel Decoding"
-  data-importance="5"
-  data-search="2604.11035-introspective-dlm introspective diffusion language models 内省式扩散语言模型 introspective diffusion language models 2604.11035v1 parallel decoding with diffusion models foundation read deep_read yifan yu yuqing jian junxiong wang zhongzhu zhou donglin zhuang xinyu fang sri yanamandra xiaoxia wu qingyang wu shuaiwen leon song tri dao ben athiwaratkun james zou fan lai chenfeng xu llm systems inference acceleration parallel decoding parallel diffusion decoding diffusion language models llm llm serving parallel decoding speculative decoding gated lora introspective consistency introspective strided decoding logit-shifted causal training p/q acceptance sglang serving">
-  <h3><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a></h3>
-  <div class="meta">Introspective Diffusion Language Models</div>
-  <div class="meta">Parallel Decoding with Diffusion Models</div>
-  <div class="card-flags"><span class="flag">I 5</span><span class="flag">deep_read</span><span class="flag">foundation</span><span class="flag">code</span></div>
-  <div class="chips"><span class="chip">Diffusion Language Models</span><span class="chip">LLM</span><span class="chip">LLM Serving</span><span class="chip">Parallel Decoding</span><span class="chip">+7</span></div>
-</article>
-<article class="board-card" draggable="true"
-  data-slug="2605.12825-orthrus"
-  data-original-status="read"
-  data-status="read"
-  data-line="Parallel Decoding with Diffusion Models"
-  data-tracks="Inference Acceleration|Parallel Decoding"
-  data-importance="4"
-  data-search="2605.12825-orthrus orthrus: memory-efficient parallel token generation via dual-view diffusion orthrus：通过双视角扩散实现内存高效的并行 token 生成 orthrus: memory-efficient parallel token generation via dual-view diffusion 2605.12825v2 parallel decoding with diffusion models variant read deep_read chien van nguyen chaitra hegde van cuong pham ryan a. rossi franck dernoncourt thien huu nguyen llm systems inference acceleration parallel decoding memory-efficient parallel token generation diffusion language models kv cache llm inference parallel decoding speculative decoding dual-view attention forward kl distillation intra-model consensus masked diffusion shared kv cache">
-  <h3><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></h3>
-  <div class="meta">Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion</div>
-  <div class="meta">Parallel Decoding with Diffusion Models</div>
-  <div class="card-flags"><span class="flag">I 4</span><span class="flag">deep_read</span><span class="flag">variant</span><span class="flag">code</span></div>
-  <div class="chips"><span class="chip">Diffusion Language Models</span><span class="chip">KV Cache</span><span class="chip">LLM Inference</span><span class="chip">Parallel Decoding</span><span class="chip">+6</span></div>
-</article>
-<article class="board-card" draggable="true"
-  data-slug="2501.01005-flashinfer"
-  data-original-status="read"
-  data-status="read"
+    <div class="results-actions">
+      <button id="downloadFreshnessCsv" class="button" type="button">下载当前 CSV</button>
+      <button id="copyFreshnessQueue" class="button" type="button">复制治理队列</button>
+    </div>
+    <div class="table-wrap"><table class="library-table"><thead><tr><th>论文</th><th>研究线</th><th>状态</th><th>上次复盘</th><th>下次复习</th><th>原因</th><th>建议动作</th></tr></thead><tbody id="freshnessRows"><tr
+  data-search="flashattention-2: faster attention with better parallelism and work partitioning flashattention-2：用更好的并行性与工作划分加速 attention efficient attention kernels needs_plan missing_next_review missing_last_reviewed old_publication_year 补 next_review 补 last_reviewed 补近年 follow-up"
+  data-state="needs_plan"
   data-line="Efficient Attention Kernels"
-  data-tracks="Attention Kernels|Inference Serving Systems"
-  data-importance="4"
-  data-search="2501.01005-flashinfer flashinfer: efficient and customizable attention engine for llm inference serving flashinfer：面向 llm 推理服务的高效可定制 attention 引擎 flashinfer: efficient and customizable attention engine for llm inference serving 2501.01005v2 efficient attention kernels system read deep_read zihao ye lequn chen ruihang lai wuwei lin yineng zhang stephanie wang tianqi chen baris kasikci vinod grover arvind krishnamurthy luis ceze llm systems attention kernels inference serving systems customizable attention serving attention kernels gpu systems inference optimization kv cache llm serving block-sparse attention composable kv-cache format cuda graph flashattention jit compilation load-balanced scheduling">
-  <h3><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></h3>
-  <div class="meta">FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving</div>
-  <div class="meta">Efficient Attention Kernels</div>
-  <div class="card-flags"><span class="flag">I 4</span><span class="flag">deep_read</span><span class="flag">system</span><span class="flag">code</span></div>
-  <div class="chips"><span class="chip">Attention Kernels</span><span class="chip">GPU Systems</span><span class="chip">Inference Optimization</span><span class="chip">KV Cache</span><span class="chip">+7</span></div>
-</article>
-<article class="board-card" draggable="true"
-  data-slug="2307.08691-flashattention-2"
-  data-original-status="read"
-  data-status="read"
+  data-score="45"
+  data-age="1"
+  data-slug="2307.08691-flashattention-2">
+  <td class="library-title">
+    <strong><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></strong>
+    <div class="meta">2307.08691-flashattention-2</div>
+  </td>
+  <td>Efficient Attention Kernels<div class="meta">foundation</div></td>
+  <td><span class="flag">需建计划</span><div class="meta">score 45</div></td>
+  <td>-<div class="meta">age 1 days</div></td>
+  <td>-<div class="meta">year age 3</div></td>
+  <td><div class="chips"><span class="chip">missing_next_review</span><span class="chip">missing_last_reviewed</span><span class="chip">old_publication_year</span></div></td>
+  <td><div class="chips"><span class="chip">补 next_review</span><span class="chip">补 last_reviewed</span><span class="chip">补近年 follow-up</span></div></td>
+</tr><tr
+  data-search="introspective diffusion language models 内省式扩散语言模型 parallel decoding with diffusion models needs_plan missing_next_review missing_last_reviewed 补 next_review 补 last_reviewed"
+  data-state="needs_plan"
+  data-line="Parallel Decoding with Diffusion Models"
+  data-score="60"
+  data-age="1"
+  data-slug="2604.11035-introspective-dlm">
+  <td class="library-title">
+    <strong><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a></strong>
+    <div class="meta">2604.11035-introspective-dlm</div>
+  </td>
+  <td>Parallel Decoding with Diffusion Models<div class="meta">foundation</div></td>
+  <td><span class="flag">需建计划</span><div class="meta">score 60</div></td>
+  <td>-<div class="meta">age 1 days</div></td>
+  <td>-<div class="meta">year age 0</div></td>
+  <td><div class="chips"><span class="chip">missing_next_review</span><span class="chip">missing_last_reviewed</span></div></td>
+  <td><div class="chips"><span class="chip">补 next_review</span><span class="chip">补 last_reviewed</span></div></td>
+</tr><tr
+  data-search="dflash: block diffusion for flash speculative decoding dflash：用于快速 speculative decoding 的块扩散方法 parallel decoding with diffusion models needs_plan missing_next_review missing_last_reviewed 补 next_review 补 last_reviewed"
+  data-state="needs_plan"
+  data-line="Parallel Decoding with Diffusion Models"
+  data-score="60"
+  data-age="1"
+  data-slug="2602.06036-dflash">
+  <td class="library-title">
+    <strong><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a></strong>
+    <div class="meta">2602.06036-dflash</div>
+  </td>
+  <td>Parallel Decoding with Diffusion Models<div class="meta">followup</div></td>
+  <td><span class="flag">需建计划</span><div class="meta">score 60</div></td>
+  <td>-<div class="meta">age 1 days</div></td>
+  <td>-<div class="meta">year age 0</div></td>
+  <td><div class="chips"><span class="chip">missing_next_review</span><span class="chip">missing_last_reviewed</span></div></td>
+  <td><div class="chips"><span class="chip">补 next_review</span><span class="chip">补 last_reviewed</span></div></td>
+</tr><tr
+  data-search="flashinfer: efficient and customizable attention engine for llm inference serving flashinfer：面向 llm 推理服务的高效可定制 attention 引擎 efficient attention kernels needs_plan missing_next_review missing_last_reviewed 补 next_review 补 last_reviewed"
+  data-state="needs_plan"
   data-line="Efficient Attention Kernels"
-  data-tracks="Attention Kernels"
-  data-importance="5"
-  data-search="2307.08691-flashattention-2 flashattention-2: faster attention with better parallelism and work partitioning flashattention-2：用更好的并行性与工作划分加速 attention flashattention-2: faster attention with better parallelism and work partitioning 2307.08691v1 efficient attention kernels foundation read deep_read tri dao llm systems attention kernels efficient exact attention efficient attention gpu kernel optimization long context transformer cuda / gpu parallelism flashattention online softmax tiling work partitioning">
-  <h3><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></h3>
-  <div class="meta">FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning</div>
-  <div class="meta">Efficient Attention Kernels</div>
-  <div class="card-flags"><span class="flag">I 5</span><span class="flag">deep_read</span><span class="flag">foundation</span><span class="flag">code</span></div>
-  <div class="chips"><span class="chip">Efficient Attention</span><span class="chip">GPU Kernel Optimization</span><span class="chip">Long Context</span><span class="chip">Transformer</span><span class="chip">+5</span></div>
-</article></div>
-</section><section class="board-column" data-status="archived">
-  <header><h2>archived</h2><span class="board-count">0</span></header>
-  <div class="board-dropzone" data-status="archived"></div>
-</section><section class="board-column" data-status="reading">
-  <header><h2>reading</h2><span class="board-count">0</span></header>
-  <div class="board-dropzone" data-status="reading"></div>
-</section><section class="board-column" data-status="skimmed">
-  <header><h2>skimmed</h2><span class="board-count">0</span></header>
-  <div class="board-dropzone" data-status="skimmed"></div>
-</section><section class="board-column" data-status="unread">
-  <header><h2>unread</h2><span class="board-count">0</span></header>
-  <div class="board-dropzone" data-status="unread"></div>
-</section></div>
+  data-score="60"
+  data-age="1"
+  data-slug="2501.01005-flashinfer">
+  <td class="library-title">
+    <strong><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></strong>
+    <div class="meta">2501.01005-flashinfer</div>
+  </td>
+  <td>Efficient Attention Kernels<div class="meta">system</div></td>
+  <td><span class="flag">需建计划</span><div class="meta">score 60</div></td>
+  <td>-<div class="meta">age 1 days</div></td>
+  <td>-<div class="meta">year age 1</div></td>
+  <td><div class="chips"><span class="chip">missing_next_review</span><span class="chip">missing_last_reviewed</span></div></td>
+  <td><div class="chips"><span class="chip">补 next_review</span><span class="chip">补 last_reviewed</span></div></td>
+</tr><tr
+  data-search="orthrus: memory-efficient parallel token generation via dual-view diffusion orthrus：通过双视角扩散实现内存高效的并行 token 生成 parallel decoding with diffusion models needs_plan missing_next_review missing_last_reviewed 补 next_review 补 last_reviewed"
+  data-state="needs_plan"
+  data-line="Parallel Decoding with Diffusion Models"
+  data-score="60"
+  data-age="1"
+  data-slug="2605.12825-orthrus">
+  <td class="library-title">
+    <strong><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></strong>
+    <div class="meta">2605.12825-orthrus</div>
+  </td>
+  <td>Parallel Decoding with Diffusion Models<div class="meta">variant</div></td>
+  <td><span class="flag">需建计划</span><div class="meta">score 60</div></td>
+  <td>-<div class="meta">age 1 days</div></td>
+  <td>-<div class="meta">year age 0</div></td>
+  <td><div class="chips"><span class="chip">missing_next_review</span><span class="chip">missing_last_reviewed</span></div></td>
+  <td><div class="chips"><span class="chip">补 next_review</span><span class="chip">补 last_reviewed</span></div></td>
+</tr></tbody></table></div>
+  </section>
 </main>
 <script>
-const boardCards = Array.from(document.querySelectorAll(".board-card"));
-const boardWrap = document.querySelector("#boardWrap");
-let dropzones = Array.from(document.querySelectorAll(".board-dropzone"));
-const boardWorkflows = {"personal": {"status_values": ["unread", "skimmed", "reading", "read", "archived"], "reading_stage_values": ["skim", "normal_read", "deep_read", "code_checked"], "review_stage_values": ["fresh", "due", "reviewed"]}, "research": {"status_values": ["inbox", "triaged", "reading", "implemented", "cited", "archived"], "reading_stage_values": ["skim", "normal_read", "deep_read", "code_checked", "reproduced"], "review_stage_values": ["fresh", "due", "reviewed", "evergreen"]}};
-const boardSearch = document.querySelector("#boardSearch");
-const boardWorkflow = document.querySelector("#boardWorkflow");
-const boardLine = document.querySelector("#boardLine");
-const boardTrack = document.querySelector("#boardTrack");
-const boardImportance = document.querySelector("#boardImportance");
-const boardCount = document.querySelector("#boardCount");
-const changedCount = document.querySelector("#changedCount");
-const downloadBoardPatch = document.querySelector("#downloadBoardPatch");
-const resetBoardChanges = document.querySelector("#resetBoardChanges");
-const newStatusName = document.querySelector("#newStatusName");
-const addStatusColumn = document.querySelector("#addStatusColumn");
-let draggedCard = null;
+const freshnessData = [{"slug": "2307.08691-flashattention-2", "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning", "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention", "research_line": "Efficient Attention Kernels", "line_role": "foundation", "year": 2023, "importance": 5, "last_reviewed": "", "next_review": "", "updated_at": "2026-06-11T15:42:03", "age_days": 1, "year_age": 3, "state": "needs_plan", "score": 45, "reasons": ["missing_next_review", "missing_last_reviewed", "old_publication_year"], "actions": ["补 next_review", "补 last_reviewed", "补近年 follow-up"], "html_path": "2307.08691-flashattention-2.html"}, {"slug": "2604.11035-introspective-dlm", "title": "Introspective Diffusion Language Models", "title_zh": "内省式扩散语言模型", "research_line": "Parallel Decoding with Diffusion Models", "line_role": "foundation", "year": 2026, "importance": 5, "last_reviewed": "", "next_review": "", "updated_at": "2026-06-11T15:42:03", "age_days": 1, "year_age": 0, "state": "needs_plan", "score": 60, "reasons": ["missing_next_review", "missing_last_reviewed"], "actions": ["补 next_review", "补 last_reviewed"], "html_path": "2604.11035-introspective-dlm.html"}, {"slug": "2602.06036-dflash", "title": "DFlash: Block Diffusion for Flash Speculative Decoding", "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法", "research_line": "Parallel Decoding with Diffusion Models", "line_role": "followup", "year": 2026, "importance": 4, "last_reviewed": "", "next_review": "", "updated_at": "2026-06-11T15:42:03", "age_days": 1, "year_age": 0, "state": "needs_plan", "score": 60, "reasons": ["missing_next_review", "missing_last_reviewed"], "actions": ["补 next_review", "补 last_reviewed"], "html_path": "2602.06036-dflash.html"}, {"slug": "2501.01005-flashinfer", "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving", "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎", "research_line": "Efficient Attention Kernels", "line_role": "system", "year": 2025, "importance": 4, "last_reviewed": "", "next_review": "", "updated_at": "2026-06-11T15:42:03", "age_days": 1, "year_age": 1, "state": "needs_plan", "score": 60, "reasons": ["missing_next_review", "missing_last_reviewed"], "actions": ["补 next_review", "补 last_reviewed"], "html_path": "2501.01005-flashinfer.html"}, {"slug": "2605.12825-orthrus", "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion", "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成", "research_line": "Parallel Decoding with Diffusion Models", "line_role": "variant", "year": 2026, "importance": 4, "last_reviewed": "", "next_review": "", "updated_at": "2026-06-11T15:42:03", "age_days": 1, "year_age": 0, "state": "needs_plan", "score": 60, "reasons": ["missing_next_review", "missing_last_reviewed"], "actions": ["补 next_review", "补 last_reviewed"], "html_path": "2605.12825-orthrus.html"}];
+const freshnessSearch = document.querySelector("#freshnessSearch");
+const freshnessState = document.querySelector("#freshnessState");
+const freshnessLine = document.querySelector("#freshnessLine");
+const freshnessSort = document.querySelector("#freshnessSort");
+const freshnessCount = document.querySelector("#freshnessCount");
+const freshnessBody = document.querySelector("#freshnessRows");
+const freshnessRows = Array.from(document.querySelectorAll("#freshnessRows tr"));
+const downloadFreshnessCsv = document.querySelector("#downloadFreshnessCsv");
+const copyFreshnessQueue = document.querySelector("#copyFreshnessQueue");
+const freshnessRank = { due: 0, needs_plan: 1, stale: 2, aging: 3, current: 4 };
 
-function boardTokens(value) {
-  return String(value || "").split("|").filter(Boolean);
+function visibleFreshnessRows() {
+  return freshnessRows.filter(row => !row.hidden);
 }
 
-function boardCsvCell(value) {
+function csvCell(value) {
   const text = String(value ?? "");
   return (text.includes(",") || text.includes('"') || text.includes("\n"))
     ? `"${text.replaceAll('"', '""')}"`
     : text;
 }
 
-function downloadBoardCsv(filename, rows) {
-  const csv = rows.map(row => row.map(boardCsvCell).join(",")).join("\n") + "\n";
+function sortFreshnessRows(rows) {
+  const mode = freshnessSort.value;
+  return rows.sort((a, b) => {
+    if (mode === "score") return Number(a.dataset.score || 0) - Number(b.dataset.score || 0) || a.dataset.slug.localeCompare(b.dataset.slug);
+    if (mode === "age") return Number(b.dataset.age || 0) - Number(a.dataset.age || 0) || a.dataset.slug.localeCompare(b.dataset.slug);
+    if (mode === "line") return a.dataset.line.localeCompare(b.dataset.line) || a.dataset.slug.localeCompare(b.dataset.slug);
+    return (freshnessRank[a.dataset.state] ?? 9) - (freshnessRank[b.dataset.state] ?? 9) || Number(a.dataset.score || 0) - Number(b.dataset.score || 0);
+  });
+}
+
+function renderFreshnessRows() {
+  const q = freshnessSearch.value.trim().toLowerCase();
+  let visible = 0;
+  freshnessRows.forEach(row => {
+    const hit = (!q || row.dataset.search.includes(q))
+      && (!freshnessState.value || row.dataset.state === freshnessState.value)
+      && (!freshnessLine.value || row.dataset.line === freshnessLine.value);
+    row.hidden = !hit;
+    if (hit) visible += 1;
+  });
+  sortFreshnessRows(freshnessRows).forEach(row => freshnessBody.appendChild(row));
+  freshnessCount.textContent = `${visible} / ${freshnessRows.length} 条`;
+}
+
+function currentFreshnessItems() {
+  const visibleSlugs = new Set(visibleFreshnessRows().map(row => row.dataset.slug));
+  return freshnessData.filter(item => visibleSlugs.has(item.slug));
+}
+
+downloadFreshnessCsv.addEventListener("click", () => {
+  const header = ["slug", "title", "research_line", "state", "score", "last_reviewed", "next_review", "age_days", "year_age", "reasons", "actions"];
+  const rows = currentFreshnessItems().map(item => [item.slug, item.title_zh || item.title, item.research_line, item.state, item.score, item.last_reviewed, item.next_review, item.age_days ?? "", item.year_age ?? "", (item.reasons || []).join("; "), (item.actions || []).join("; ")]);
+  const csv = [header, ...rows].map(row => row.map(csvCell).join(",")).join("\n") + "\n";
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = filename;
+  link.download = "freshness_queue.csv";
   document.body.appendChild(link);
   link.click();
   link.remove();
   URL.revokeObjectURL(url);
-}
-
-function changedCards() {
-  return boardCards.filter(card => card.dataset.status !== card.dataset.originalStatus);
-}
-
-function placeCard(card, status) {
-  const zone = dropzones.find(item => item.dataset.status === status);
-  if (!zone) return;
-  zone.appendChild(card);
-  card.dataset.status = status;
-  card.classList.toggle("changed", card.dataset.status !== card.dataset.originalStatus);
-  renderBoard();
-}
-
-function renderBoard() {
-  const q = boardSearch.value.trim().toLowerCase();
-  const minImportance = Number(boardImportance.value || 0);
-  let visible = 0;
-  boardCards.forEach(card => {
-    const hit = (!q || card.dataset.search.includes(q))
-      && (!boardLine.value || card.dataset.line === boardLine.value)
-      && (!boardTrack.value || boardTokens(card.dataset.tracks).includes(boardTrack.value))
-      && (!minImportance || Number(card.dataset.importance || 0) >= minImportance);
-    card.hidden = !hit;
-    if (hit) visible += 1;
-  });
-  dropzones.forEach(zone => {
-    const count = Array.from(zone.querySelectorAll(".board-card")).filter(card => !card.hidden).length;
-    zone.closest(".board-column").querySelector(".board-count").textContent = count;
-  });
-  const changed = changedCards().length;
-  boardCount.textContent = `显示 ${visible} / ${boardCards.length} 篇`;
-  changedCount.textContent = `未保存 ${changed} 篇`;
-  downloadBoardPatch.disabled = changed === 0;
-  resetBoardChanges.disabled = changed === 0;
-}
-
-function attachDropzone(zone) {
-  zone.addEventListener("dragover", event => {
-    event.preventDefault();
-    zone.classList.add("drag-over");
-  });
-  zone.addEventListener("dragleave", () => zone.classList.remove("drag-over"));
-  zone.addEventListener("drop", event => {
-    event.preventDefault();
-    zone.classList.remove("drag-over");
-    if (draggedCard) placeCard(draggedCard, zone.dataset.status);
-  });
-}
-
-function createBoardColumn(status) {
-  const normalized = String(status || "").trim();
-  const section = document.createElement("section");
-  section.className = "board-column";
-  section.dataset.status = normalized;
-  const header = document.createElement("header");
-  const title = document.createElement("h2");
-  title.textContent = normalized;
-  const count = document.createElement("span");
-  count.className = "board-count";
-  count.textContent = "0";
-  header.append(title, count);
-  const zone = document.createElement("div");
-  zone.className = "board-dropzone";
-  zone.dataset.status = normalized;
-  section.append(header, zone);
-  attachDropzone(zone);
-  return { section, zone };
-}
-
-function addBoardColumn(status) {
-  const normalized = String(status || "").trim();
-  if (!normalized) return;
-  if (dropzones.some(zone => zone.dataset.status === normalized)) {
-    window.alert("这个状态列已经存在。");
-    return;
-  }
-  const { section, zone } = createBoardColumn(normalized);
-  boardWrap.appendChild(section);
-  dropzones.push(zone);
-  renderBoard();
-}
-
-function uniqueValues(values) {
-  const seen = new Set();
-  return values
-    .map(value => String(value || "").trim())
-    .filter(value => {
-      if (!value || seen.has(value)) return false;
-      seen.add(value);
-      return true;
-    });
-}
-
-function applyWorkflow(name) {
-  const workflow = boardWorkflows[name] || {};
-  const workflowStatuses = Array.isArray(workflow.status_values) ? workflow.status_values : [];
-  const activeStatuses = boardCards.map(card => card.dataset.status || card.dataset.originalStatus || "unread");
-  const orderedStatuses = uniqueValues([...workflowStatuses, ...activeStatuses]);
-  if (!orderedStatuses.length) return;
-  const cards = boardCards.slice();
-  boardWrap.textContent = "";
-  dropzones = [];
-  orderedStatuses.forEach(status => {
-    const { section, zone } = createBoardColumn(status);
-    boardWrap.appendChild(section);
-    dropzones.push(zone);
-  });
-  cards.forEach(card => {
-    const status = card.dataset.status || card.dataset.originalStatus || "unread";
-    const zone = dropzones.find(item => item.dataset.status === status) || dropzones[0];
-    zone.appendChild(card);
-  });
-  renderBoard();
-}
-
-boardCards.forEach(card => {
-  card.addEventListener("dragstart", event => {
-    draggedCard = card;
-    event.dataTransfer.effectAllowed = "move";
-    event.dataTransfer.setData("text/plain", card.dataset.slug);
-  });
-  card.addEventListener("dragend", () => {
-    draggedCard = null;
-    dropzones.forEach(zone => zone.classList.remove("drag-over"));
-  });
 });
 
-dropzones.forEach(attachDropzone);
-addStatusColumn.addEventListener("click", () => {
-  addBoardColumn(newStatusName.value);
-  newStatusName.value = "";
-  newStatusName.focus();
-});
-newStatusName.addEventListener("keydown", event => {
-  if (event.key === "Enter") {
-    event.preventDefault();
-    addStatusColumn.click();
+copyFreshnessQueue.addEventListener("click", async () => {
+  const lines = ["# Freshness Queue", ""];
+  currentFreshnessItems().forEach(item => {
+    lines.push(`- [ ] ${item.slug} ${item.title_zh || item.title}`);
+    lines.push(`  - State: ${item.state}, score ${item.score}, line ${item.research_line || "Unassigned"}`);
+    lines.push(`  - Actions: ${(item.actions || []).join("; ")}`);
+  });
+  const text = lines.join("\n");
+  try {
+    await navigator.clipboard.writeText(text);
+    copyFreshnessQueue.textContent = "已复制队列";
+    setTimeout(() => copyFreshnessQueue.textContent = "复制治理队列", 1400);
+  } catch {
+    window.prompt("复制治理队列", text);
   }
 });
 
-[boardSearch, boardLine, boardTrack, boardImportance].forEach(el => el.addEventListener("input", renderBoard));
-boardWorkflow.addEventListener("change", () => applyWorkflow(boardWorkflow.value));
-downloadBoardPatch.addEventListener("click", () => {
-  const changed = changedCards();
-  if (!changed.length) return;
-  downloadBoardCsv("status_board_patch.csv", [["slug", "status"], ...changed.map(card => [card.dataset.slug, card.dataset.status])]);
-});
-resetBoardChanges.addEventListener("click", () => {
-  changedCards().forEach(card => placeCard(card, card.dataset.originalStatus));
-});
-renderBoard();
+[freshnessSearch, freshnessState, freshnessLine, freshnessSort].forEach(control => control.addEventListener("input", renderFreshnessRows));
+renderFreshnessRows();
 </script>
 
 <script>
