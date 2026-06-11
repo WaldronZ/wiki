@@ -73,6 +73,8 @@
       "no_code_observation": 0,
       "taxonomy_drift": 0,
       "duplicate_reports": 0,
+      "taxonomy_sparse": 0,
+      "taxonomy_dense": 2,
       "high_importance": 2
     },
     "review": {

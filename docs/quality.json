@@ -21,6 +21,11 @@
     "no_code_observation": [],
     "taxonomy_drift": [],
     "duplicate_reports": [],
+    "taxonomy_sparse": [],
+    "taxonomy_dense": [
+      "2501.01005-flashinfer",
+      "2604.11035-introspective-dlm"
+    ],
     "high_importance": [
       "2307.08691-flashattention-2",
       "2604.11035-introspective-dlm"
@@ -101,6 +106,38 @@
       ],
       "due_review": false,
       "has_code": true
+    }
+  ],
+  "taxonomy_load": [
+    {
+      "slug": "2604.11035-introspective-dlm",
+      "title": "Introspective Diffusion Language Models",
+      "title_zh": "内省式扩散语言模型",
+      "html_path": "2604.11035-introspective-dlm.html",
+      "research_line": "Parallel Decoding with Diffusion Models",
+      "structure_count": 4,
+      "topic_count": 5,
+      "method_count": 6,
+      "tag_count": 11,
+      "signals": [
+        "dense_tags"
+      ],
+      "recommendation": "检查 topic / method 是否过细，保留最能区分论文的标签。"
+    },
+    {
+      "slug": "2501.01005-flashinfer",
+      "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
+      "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
+      "html_path": "2501.01005-flashinfer.html",
+      "research_line": "Efficient Attention Kernels",
+      "structure_count": 4,
+      "topic_count": 5,
+      "method_count": 6,
+      "tag_count": 11,
+      "signals": [
+        "dense_tags"
+      ],
+      "recommendation": "检查 topic / method 是否过细，保留最能区分论文的标签。"
     }
   ],
   "taxonomy_drift": [],

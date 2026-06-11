@@ -1019,12 +1019,53 @@ def paper_quality_issue(paper: dict[str, Any], today: str) -> dict[str, Any]:
     }
 
 
+def paper_taxonomy_load_issue(paper: dict[str, Any]) -> dict[str, Any] | None:
+    structure_count = sum(len(paper.get(field, []) or []) for field in ("domains", "tracks", "problems"))
+    topic_count = len(paper.get("topics", []) or [])
+    method_count = len(paper.get("methods", []) or [])
+    tag_count = topic_count + method_count
+    signals: list[str] = []
+    if structure_count < 3:
+        signals.append("sparse_structure")
+    if tag_count < 3:
+        signals.append("sparse_tags")
+    if tag_count > 10:
+        signals.append("dense_tags")
+    if method_count > 8:
+        signals.append("method_overload")
+    if not signals:
+        return None
+
+    if any(signal.startswith("sparse") for signal in signals):
+        recommendation = "补齐 domain / track / problem 或 topic / method，让这篇论文能被多入口检索。"
+    else:
+        recommendation = "检查 topic / method 是否过细，保留最能区分论文的标签。"
+    return {
+        "slug": paper["slug"],
+        "title": paper["title"],
+        "title_zh": paper["title_zh"],
+        "html_path": paper.get("html_path") or f"{paper['slug']}.html",
+        "research_line": paper.get("research_line") or "Unassigned",
+        "structure_count": structure_count,
+        "topic_count": topic_count,
+        "method_count": method_count,
+        "tag_count": tag_count,
+        "signals": signals,
+        "recommendation": recommendation,
+    }
+
+
 def build_quality_report(papers: list[dict[str, Any]]) -> dict[str, Any]:
     today = dt.date.today().isoformat()
     issues = [paper_quality_issue(paper, today) for paper in papers]
     taxonomy_drift = taxonomy_drift_items(papers)
     alias_suggestions = label_alias_suggestions(papers)
     duplicate_groups = duplicate_report_groups(papers)
+    taxonomy_load = [
+        item
+        for item in (paper_taxonomy_load_issue(paper) for paper in papers)
+        if item is not None
+    ]
     papers_with_issues = [
         issue
         for issue in issues
@@ -1043,6 +1084,20 @@ def build_quality_report(papers: list[dict[str, Any]]) -> dict[str, Any]:
         "no_code_observation": [paper["slug"] for paper in papers if not paper.get("has_code")],
         "taxonomy_drift": sorted({item["slug"] for item in taxonomy_drift}),
         "duplicate_reports": sorted({slug for group in duplicate_groups for slug in group["slugs"]}),
+        "taxonomy_sparse": sorted(
+            {
+                item["slug"]
+                for item in taxonomy_load
+                if any(str(signal).startswith("sparse") for signal in item["signals"])
+            }
+        ),
+        "taxonomy_dense": sorted(
+            {
+                item["slug"]
+                for item in taxonomy_load
+                if any(str(signal).startswith("dense") or str(signal).endswith("overload") for signal in item["signals"])
+            }
+        ),
         "high_importance": [
             paper["slug"]
             for paper in sorted(papers, key=lambda p: (-(p.get("importance") or 0), p["title"]))
@@ -1062,6 +1117,7 @@ def build_quality_report(papers: list[dict[str, Any]]) -> dict[str, Any]:
         },
         "queues": queues,
         "issues": papers_with_issues,
+        "taxonomy_load": taxonomy_load,
         "taxonomy_drift": taxonomy_drift,
         "label_alias_suggestions": alias_suggestions,
         "duplicate_reports": duplicate_groups,
@@ -4108,9 +4164,26 @@ def render_duplicate_report_row(item: dict[str, Any]) -> str:
     )
 
 
+def render_taxonomy_load_row(item: dict[str, Any]) -> str:
+    title = item.get("title_zh") or item.get("title") or item.get("slug")
+    href = str(item.get("html_path") or f"{item.get('slug')}.html")
+    signals = "".join(f'<span class="flag">{html.escape(str(signal))}</span>' for signal in item.get("signals", []))
+    return (
+        "<tr>"
+        f'<td><a href="{html.escape(href)}">{html.escape(str(title))}</a><div class="meta">{html.escape(str(item.get("research_line") or ""))}</div></td>'
+        f"<td>{html.escape(str(item.get('structure_count') or 0))}</td>"
+        f"<td>{html.escape(str(item.get('topic_count') or 0))}</td>"
+        f"<td>{html.escape(str(item.get('method_count') or 0))}</td>"
+        f"<td>{signals}</td>"
+        f"<td>{html.escape(str(item.get('recommendation') or ''))}</td>"
+        "</tr>"
+    )
+
+
 def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
     quality = build_quality_report(papers)
     issue_rows = "".join(render_quality_issue_row(issue) for issue in quality["issues"])
+    taxonomy_load_rows = "".join(render_taxonomy_load_row(item) for item in quality["taxonomy_load"])
     drift_rows = "".join(render_quality_drift_row(item) for item in quality["taxonomy_drift"])
     alias_rows = "".join(render_alias_suggestion_row(item) for item in quality["label_alias_suggestions"])
     duplicate_report_rows = "".join(render_duplicate_report_row(item) for item in quality["duplicate_reports"])
@@ -4128,6 +4201,12 @@ def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
         f"<tbody>{drift_rows}</tbody></table>"
         if drift_rows
         else '<div class="empty">暂无 taxonomy drift。</div>'
+    )
+    taxonomy_load_table = (
+        '<table class="data-table"><thead><tr><th>论文</th><th>结构标签</th><th>Topic</th><th>Method</th><th>信号</th><th>建议</th></tr></thead>'
+        f"<tbody>{taxonomy_load_rows}</tbody></table>"
+        if taxonomy_load_rows
+        else '<div class="empty">分类粒度稳定。</div>'
     )
     duplicate_table = (
         '<table class="data-table"><thead><tr><th>候选论文</th><th>链接</th><th>状态</th><th>备注</th></tr></thead>'
@@ -4164,6 +4243,7 @@ def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
         ("分类覆盖", quality["coverage"]["taxonomy"], "必要字段"),
         ("复习计划", quality["coverage"]["review_plan"], "next_review"),
         ("漂移项", str(len(quality["taxonomy_drift"])), "taxonomy drift"),
+        ("粒度提示", str(len(quality["taxonomy_load"])), "taxonomy load"),
         ("别名建议", str(len(quality["label_alias_suggestions"])), "label aliases"),
         ("库内重复", str(len(quality["duplicate_reports"])), "duplicate reports"),
         ("重复候选", str(len(duplicate_inbox)), "inbox"),
@@ -4223,6 +4303,10 @@ def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
   <section>
     <h2 class="section-title">Taxonomy Drift</h2>
     <div class="table-wrap">{drift_table}</div>
+  </section>
+  <section>
+    <h2 class="section-title">分类粒度审计</h2>
+    <div class="table-wrap">{taxonomy_load_table}</div>
   </section>
   <section>
     <h2 class="section-title">标签归一化建议</h2>
