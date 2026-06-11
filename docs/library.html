@@ -843,7 +843,11 @@ const wikiControls = window.PAPER_WIKI.controls || {};
 const statusWorkflows = wikiControls.status_workflows || {};
 const activeStatusWorkflow = wikiControls.active_status_workflow || Object.keys(statusWorkflows)[0] || "default";
 const fallbackStatusValues = Array.isArray(wikiControls.status) ? wikiControls.status : [];
+const fallbackStageValues = Array.isArray(wikiControls.reading_stage) ? wikiControls.reading_stage : [];
+const fallbackReviewStageValues = Array.isArray(wikiControls.review_stage) ? wikiControls.review_stage : [];
 const observedStatusValues = Array.from(new Set(allRows.map(row => row.dataset.status).filter(Boolean)));
+const observedStageValues = Array.from(new Set(allRows.map(row => row.dataset.stage).filter(Boolean)));
+const observedReviewStageValues = Array.from(new Set(allRows.map(row => row.dataset.reviewStage).filter(Boolean)));
 let currentPage = 1;
 let currentRankedRows = [...allRows];
 const savedViewsKey = "autopaperreader:library:savedViews";
@@ -880,20 +884,24 @@ function orderedUnique(values) {
 }
 
 function statusValuesForWorkflow(name) {
+  return workflowValuesFor(name, "status_values", fallbackStatusValues, observedStatusValues);
+}
+
+function workflowValuesFor(name, key, fallbackValues, observedValues) {
   const workflow = statusWorkflows[name] || {};
-  const configured = Array.isArray(workflow.status_values) ? workflow.status_values : fallbackStatusValues;
-  return orderedUnique([...configured, ...observedStatusValues]);
+  const configured = Array.isArray(workflow[key]) ? workflow[key] : fallbackValues;
+  return orderedUnique([...configured, ...observedValues]);
 }
 
-function statusCount(value) {
-  return allRows.filter(row => row.dataset.status === value).length;
+function valueCount(datasetKey, value) {
+  return allRows.filter(row => row.dataset[datasetKey] === value).length;
 }
 
-function replaceStatusOptions(select, placeholder, values, withCounts = false) {
+function replaceWorkflowOptions(select, placeholder, values, datasetKey, withCounts = false) {
   const current = select.value;
   select.replaceChildren(new Option(placeholder, ""));
   values.forEach(value => {
-    const label = withCounts ? `${value} (${statusCount(value)})` : value;
+    const label = withCounts ? `${value} (${valueCount(datasetKey, value)})` : value;
     select.appendChild(new Option(label, value));
   });
   select.value = values.includes(current) ? current : "";
@@ -910,9 +918,16 @@ function populateStatusWorkflowOptions() {
 }
 
 function applyStatusWorkflow() {
-  const values = statusValuesForWorkflow(statusWorkflow.value);
-  replaceStatusOptions(status, "全部状态", values, true);
-  replaceStatusOptions(bulkStatus, "状态", values, false);
+  const workflowName = statusWorkflow.value;
+  const statusValues = statusValuesForWorkflow(workflowName);
+  const stageValues = workflowValuesFor(workflowName, "reading_stage_values", fallbackStageValues, observedStageValues);
+  const reviewStageValues = workflowValuesFor(workflowName, "review_stage_values", fallbackReviewStageValues, observedReviewStageValues);
+  replaceWorkflowOptions(status, "全部状态", statusValues, "status", true);
+  replaceWorkflowOptions(bulkStatus, "状态", statusValues, "status", false);
+  replaceWorkflowOptions(stage, "阅读阶段", stageValues, "stage", true);
+  replaceWorkflowOptions(bulkStage, "阅读阶段", stageValues, "stage", false);
+  replaceWorkflowOptions(reviewStage, "复习阶段", reviewStageValues, "reviewStage", true);
+  replaceWorkflowOptions(bulkReviewStage, "复习阶段", reviewStageValues, "reviewStage", false);
 }
 
 function pageLimit() {
@@ -935,11 +950,13 @@ function currentState() {
 
 function applyState(state) {
   controls.forEach(([key, el]) => {
-    if (key === "status") return;
+    if (["status", "stage", "reviewStage"].includes(key)) return;
     el.value = state[key] || defaultValueFor(key);
   });
   applyStatusWorkflow();
   status.value = state.status || defaultValueFor("status");
+  stage.value = state.stage || defaultValueFor("stage");
+  reviewStage.value = state.reviewStage || defaultValueFor("reviewStage");
   currentPage = Number(state.page || 1) || 1;
   render();
 }
@@ -947,11 +964,13 @@ function applyState(state) {
 function readStateFromUrl() {
   const params = new URLSearchParams(window.location.search);
   controls.forEach(([key, el]) => {
-    if (key === "status") return;
+    if (["status", "stage", "reviewStage"].includes(key)) return;
     el.value = params.has(key) ? params.get(key) : defaultValueFor(key);
   });
   applyStatusWorkflow();
   status.value = params.has("status") ? params.get("status") : defaultValueFor("status");
+  stage.value = params.has("stage") ? params.get("stage") : defaultValueFor("stage");
+  reviewStage.value = params.has("reviewStage") ? params.get("reviewStage") : defaultValueFor("reviewStage");
   currentPage = Number(params.get("page") || 1) || 1;
 }
 
