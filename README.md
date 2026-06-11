@@ -164,6 +164,12 @@ python3 scripts/build_wiki.py docs --check
 python3 scripts/validate_wiki.py docs
 ```
 
+运行脚本工作流测试：
+
+```bash
+python3 -m unittest discover -s tests
+```
+
 预览并写入复习计划建议：
 
 ```bash
