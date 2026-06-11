@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T01:43:52",
+  "generated_at": "2026-06-12T01:47:09",
   "name": "AutoPaperReader Wiki",
   "count": 5,
   "publish_ready": false,
@@ -517,6 +517,10 @@
   ],
   "contract_files": [
     {
+      "href": "guides/report.template.md",
+      "description": "中文论文阅读报告模板"
+    },
+    {
       "href": "guides/metadata.schema.json",
       "description": "报告 frontmatter 字段契约"
     },
@@ -566,8 +570,8 @@
       "description": "页面入口、数据文件、质量状态",
       "exists": true,
       "status": "ok",
-      "size_bytes": 44965,
-      "sha256": "7940b9d8f9b623437ecef42e15f163f87bee5c2f578c7094d9e9256fab01d4b4",
+      "size_bytes": 45377,
+      "sha256": "06e2a91c9cdc14e5cd17f23593135d45fefc67b563639bff2e6ad221f105a8cc",
       "hash_mode": "raw"
     },
     {
@@ -776,6 +780,16 @@
       "description": "发布摘要和页面入口清单",
       "exists": true,
       "status": "generated_after_inventory"
+    },
+    {
+      "href": "guides/report.template.md",
+      "kind": "contract",
+      "description": "中文论文阅读报告模板",
+      "exists": true,
+      "status": "ok",
+      "size_bytes": 3075,
+      "sha256": "698233eb11b0d1f212ef9f1dad719735f337031c5a8ba4c4e142370c5deb3254",
+      "hash_mode": "raw"
     },
     {
       "href": "guides/metadata.schema.json",

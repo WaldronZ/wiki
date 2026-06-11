@@ -157,6 +157,10 @@ class WikiWorkflowTest(unittest.TestCase):
             (ROOT / "docs" / "guides" / "inbox.schema.json").read_text(encoding="utf-8"),
             encoding="utf-8",
         )
+        (guides_dir / "report.template.md").write_text(
+            (ROOT / "docs" / "guides" / "report.template.md").read_text(encoding="utf-8"),
+            encoding="utf-8",
+        )
         for slug, text in {
             "2601.00001-alpha-paper": REPORT_A,
             "2501.00002-beta-paper": REPORT_B,
@@ -404,12 +408,14 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("facets.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("taxonomy_actions.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("manifest.json", {item["href"] for item in manifest["data_files"]})
+            self.assertIn("guides/report.template.md", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/metadata.schema.json", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/inbox.schema.json", {item["href"] for item in manifest["contract_files"]})
             artifact_by_href = {item["href"]: item for item in manifest["artifact_inventory"]}
             self.assertEqual(artifact_by_href["index.html"]["status"], "ok")
             self.assertRegex(artifact_by_href["index.html"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertGreater(artifact_by_href["index.html"]["size_bytes"], 0)
+            self.assertEqual(artifact_by_href["guides/report.template.md"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/metadata.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/inbox.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["manifest.json"]["status"], "generated_after_inventory")
@@ -435,6 +441,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("数据契约", release_html)
             self.assertIn("Artifact Inventory", release_html)
             self.assertIn("SHA-256", release_html)
+            self.assertIn("guides/report.template.md", release_html)
             self.assertIn("guides/metadata.schema.json", release_html)
             self.assertIn("guides/inbox.schema.json", release_html)
             self.assertIn("命令 Recipes", release_html)

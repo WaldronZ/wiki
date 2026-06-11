@@ -21,7 +21,8 @@ Use the issue forms to keep a large paper library manageable:
 
 ### Add Or Update A Paper
 
-1. Add or edit `docs/<slug>.md`.
+1. Add or edit `docs/<slug>.md`, preferably starting from
+   `docs/guides/report.template.md`.
 2. Make sure the frontmatter follows `docs/guides/metadata.schema.json`.
 3. Render or update `docs/<slug>.html`.
 4. Run `python3 scripts/build_wiki.py docs`.

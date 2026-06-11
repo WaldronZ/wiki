@@ -1312,6 +1312,7 @@ def data_files_manifest() -> list[dict[str, str]]:
 
 def contract_files_manifest() -> list[dict[str, str]]:
     return [
+        {"href": "guides/report.template.md", "description": "中文论文阅读报告模板"},
         {"href": "guides/metadata.schema.json", "description": "报告 frontmatter 字段契约"},
         {"href": "guides/inbox.schema.json", "description": "候选论文 inbox.csv 字段契约"},
         {"href": "guides/taxonomy.json", "description": "分类别名、状态工作流和共享视图配置"},
