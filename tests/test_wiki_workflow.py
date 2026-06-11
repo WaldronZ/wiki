@@ -487,6 +487,39 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("taxonomy value", taxonomy_project_rows[0]["title"])
             self.assertIn("Count:", taxonomy_project_rows[0]["body"])
 
+            taxonomy_balance_path = report_dir / "exports" / "taxonomy-balance.md"
+            self.run_cmd(
+                "scripts/export_taxonomy_balance.py",
+                str(report_dir),
+                "--max-score",
+                "50",
+                "--output",
+                str(taxonomy_balance_path),
+            )
+            taxonomy_balance_md = taxonomy_balance_path.read_text(encoding="utf-8")
+            self.assertIn("# Taxonomy Balance Review", taxonomy_balance_md)
+            self.assertIn("LLM Systems", taxonomy_balance_md)
+            self.assertIn("Recommendation:", taxonomy_balance_md)
+
+            taxonomy_balance_project_path = report_dir / "exports" / "taxonomy-balance-project.csv"
+            self.run_cmd(
+                "scripts/export_taxonomy_balance.py",
+                str(report_dir),
+                "--format",
+                "project",
+                "--max-score",
+                "50",
+                "--assignee",
+                "taxonomy-owner",
+                "--output",
+                str(taxonomy_balance_project_path),
+            )
+            taxonomy_balance_project_rows = list(csv.DictReader(taxonomy_balance_project_path.read_text(encoding="utf-8").splitlines()))
+            self.assertTrue(taxonomy_balance_project_rows)
+            self.assertEqual(taxonomy_balance_project_rows[0]["assignee"], "taxonomy-owner")
+            self.assertIn("Review taxonomy balance", taxonomy_balance_project_rows[0]["title"])
+            self.assertIn("taxonomy_balance", taxonomy_balance_project_rows[0]["labels"])
+
             unsafe_taxonomy_export = self.run_cmd(
                 "scripts/export_taxonomy_actions.py",
                 str(report_dir),
@@ -496,6 +529,16 @@ class WikiWorkflowTest(unittest.TestCase):
             )
             self.assertNotEqual(unsafe_taxonomy_export.returncode, 0)
             self.assertIn("Refusing to write a Markdown export", unsafe_taxonomy_export.stderr)
+
+            unsafe_taxonomy_balance_export = self.run_cmd(
+                "scripts/export_taxonomy_balance.py",
+                str(report_dir),
+                "--output",
+                str(report_dir / "taxonomy-balance.md"),
+                check=False,
+            )
+            self.assertNotEqual(unsafe_taxonomy_balance_export.returncode, 0)
+            self.assertIn("Refusing to write a Markdown export", unsafe_taxonomy_balance_export.stderr)
 
             taxonomy_load_path = report_dir / "exports" / "taxonomy-load.md"
             self.run_cmd(
