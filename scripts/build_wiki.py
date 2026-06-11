@@ -120,6 +120,7 @@ STATUS_VALUES = DEFAULT_STATUS_VALUES.copy()
 READING_STAGE_VALUES = DEFAULT_READING_STAGE_VALUES.copy()
 REVIEW_STAGE_VALUES = DEFAULT_REVIEW_STAGE_VALUES.copy()
 SHARED_VIEWS: list[dict[str, Any]] = []
+ACTIVE_STATUS_WORKFLOW = ""
 
 
 def parse_args() -> argparse.Namespace:
@@ -140,7 +141,7 @@ def parse_args() -> argparse.Namespace:
 
 def load_taxonomy_config(report_dir: Path) -> None:
     """Load optional taxonomy normalization config for this report directory."""
-    global LABEL_ALIASES, ROLE_ORDER, STATUS_VALUES, READING_STAGE_VALUES, REVIEW_STAGE_VALUES, SHARED_VIEWS
+    global LABEL_ALIASES, ROLE_ORDER, STATUS_VALUES, READING_STAGE_VALUES, REVIEW_STAGE_VALUES, SHARED_VIEWS, ACTIVE_STATUS_WORKFLOW
 
     LABEL_ALIASES = DEFAULT_LABEL_ALIASES.copy()
     ROLE_ORDER = {role: index for index, role in enumerate(DEFAULT_ROLE_ORDER)}
@@ -148,6 +149,7 @@ def load_taxonomy_config(report_dir: Path) -> None:
     READING_STAGE_VALUES = DEFAULT_READING_STAGE_VALUES.copy()
     REVIEW_STAGE_VALUES = DEFAULT_REVIEW_STAGE_VALUES.copy()
     SHARED_VIEWS = []
+    ACTIVE_STATUS_WORKFLOW = ""
 
     config_path = report_dir / "guides" / "taxonomy.json"
     if not config_path.exists():
@@ -176,9 +178,11 @@ def load_taxonomy_config(report_dir: Path) -> None:
             if str(role).strip()
         }
 
-    STATUS_VALUES = configured_values(config, "status_values", DEFAULT_STATUS_VALUES)
-    READING_STAGE_VALUES = configured_values(config, "reading_stage_values", DEFAULT_READING_STAGE_VALUES)
-    REVIEW_STAGE_VALUES = configured_values(config, "review_stage_values", DEFAULT_REVIEW_STAGE_VALUES)
+    workflow_name, workflow_config = configured_status_workflow(config)
+    ACTIVE_STATUS_WORKFLOW = workflow_name
+    STATUS_VALUES = configured_values(workflow_config, "status_values", DEFAULT_STATUS_VALUES)
+    READING_STAGE_VALUES = configured_values(workflow_config, "reading_stage_values", DEFAULT_READING_STAGE_VALUES)
+    REVIEW_STAGE_VALUES = configured_values(workflow_config, "review_stage_values", DEFAULT_REVIEW_STAGE_VALUES)
     SHARED_VIEWS = configured_shared_views(config)
 
 
@@ -188,6 +192,18 @@ def configured_values(config: dict[str, Any], key: str, defaults: list[str]) -> 
         return defaults.copy()
     cleaned = [str(value).strip() for value in values if str(value).strip()]
     return cleaned or defaults.copy()
+
+
+def configured_status_workflow(config: dict[str, Any]) -> tuple[str, dict[str, Any]]:
+    workflows = config.get("status_workflows") or {}
+    active_name = str(config.get("active_status_workflow") or "").strip()
+    if active_name and isinstance(workflows, dict):
+        active_workflow = workflows.get(active_name)
+        if isinstance(active_workflow, dict):
+            merged = config.copy()
+            merged.update(active_workflow)
+            return active_name, merged
+    return active_name, config
 
 
 def configured_shared_views(config: dict[str, Any]) -> list[dict[str, Any]]:
@@ -223,6 +239,7 @@ def shared_views_for(page: str) -> list[dict[str, Any]]:
 
 def control_options() -> dict[str, Any]:
     return {
+        "active_status_workflow": ACTIVE_STATUS_WORKFLOW,
         "status": STATUS_VALUES.copy(),
         "reading_stage": READING_STAGE_VALUES.copy(),
         "review_stage": REVIEW_STAGE_VALUES.copy(),
@@ -4875,13 +4892,25 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         '<table class="data-table"><thead><tr><th>字段</th><th>用途</th><th>当前可选值</th><th>影响页面</th></tr></thead>'
         f"<tbody>{workflow_table_rows}</tbody></table>"
     )
+    workflow_name = ACTIVE_STATUS_WORKFLOW or "personal"
     workflow_config = {
+        "active_status_workflow": workflow_name,
+        "status_workflows": {
+            workflow_name: {
+                "status_values": controls["status"],
+                "reading_stage_values": controls["reading_stage"],
+                "review_stage_values": controls["review_stage"],
+            }
+        },
+    }
+    workflow_seed = {
+        "name": workflow_name,
         "status_values": controls["status"],
         "reading_stage_values": controls["reading_stage"],
         "review_stage_values": controls["review_stage"],
     }
     workflow_config_json = html.escape(json.dumps(workflow_config, ensure_ascii=False, indent=2))
-    workflow_seed_json = html.escape(json.dumps(workflow_config, ensure_ascii=False), quote=True)
+    workflow_seed_json = html.escape(json.dumps(workflow_seed, ensure_ascii=False), quote=True)
 
     long_tail = Counter(
         tag
@@ -4984,8 +5013,9 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <section class="taxonomy-panel workflow-designer" data-workflow="{workflow_seed_json}">
       <div>
         <h2>状态工作流设计器</h2>
-        <p class="meta">每行一个值。下载或复制后合并到 guides/taxonomy.json，再运行 build_wiki，首页、论文库、看板和 JSON controls 会同步更新。</p>
+        <p class="meta">命名一套 workflow，每行一个值。下载或复制后合并到 guides/taxonomy.json，再运行 build_wiki，首页、论文库、看板和 JSON controls 会同步更新。</p>
       </div>
+      <label><span>Workflow name</span><input id="workflowName" type="text" value="{html.escape(workflow_name, quote=True)}"></label>
       <div class="designer-grid">
         <label><span>Status</span><textarea id="workflowStatus" rows="6"></textarea></label>
         <label><span>Reading stage</span><textarea id="workflowReadingStage" rows="6"></textarea></label>
@@ -5018,6 +5048,7 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   const designer = document.querySelector(".workflow-designer");
   if (!designer) return;
   const seed = JSON.parse(designer.dataset.workflow || "{{}}");
+  const nameInput = document.querySelector("#workflowName");
   const fields = {{
     status_values: document.querySelector("#workflowStatus"),
     reading_stage_values: document.querySelector("#workflowReadingStage"),
@@ -5039,15 +5070,23 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   }}
 
   function payload() {{
-    return Object.fromEntries(
+    const workflowName = (nameInput.value || "personal").trim() || "personal";
+    const workflow = Object.fromEntries(
       Object.entries(fields).map(([key, input]) => [key, uniqueLines(input.value)])
     );
+    return {{
+      active_status_workflow: workflowName,
+      status_workflows: {{
+        [workflowName]: workflow,
+      }},
+    }};
   }}
 
   function renderPreview() {{
     const data = payload();
     preview.textContent = JSON.stringify(data, null, 2);
-    const emptyFields = Object.entries(data)
+    const workflow = data.status_workflows[data.active_status_workflow] || {{}};
+    const emptyFields = Object.entries(workflow)
       .filter(([, values]) => values.length === 0)
       .map(([key]) => key);
     message.textContent = emptyFields.length ? `空字段：${{emptyFields.join(", ")}}` : "";
@@ -5055,6 +5094,7 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   }}
 
   function reset() {{
+    nameInput.value = seed.name || "personal";
     Object.entries(fields).forEach(([key, input]) => {{
       input.value = (seed[key] || []).join("\\n");
     }});
@@ -5081,6 +5121,7 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     }}
   }}
 
+  nameInput.addEventListener("input", renderPreview);
   Object.values(fields).forEach((input) => input.addEventListener("input", renderPreview));
   document.querySelector("#resetWorkflow").addEventListener("click", reset);
   document.querySelector("#downloadWorkflow").addEventListener("click", download);

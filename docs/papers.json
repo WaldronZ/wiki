@@ -2,6 +2,7 @@
   "generated_at": "2026-06-11T16:48:29",
   "count": 5,
   "controls": {
+    "active_status_workflow": "personal",
     "status": [
       "unread",
       "skimmed",

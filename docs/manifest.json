@@ -274,6 +274,7 @@
     }
   ],
   "controls": {
+    "active_status_workflow": "personal",
     "status": [
       "unread",
       "skimmed",

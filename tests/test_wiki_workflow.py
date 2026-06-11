@@ -119,9 +119,20 @@ class WikiWorkflowTest(unittest.TestCase):
                         "llm serving": "LLM Serving",
                     },
                     "role_order": ["foundation", "system", "followup"],
-                    "status_values": ["unread", "triaged", "reading", "read", "archived"],
-                    "reading_stage_values": ["skimmed", "deep_read", "code_checked"],
-                    "review_stage_values": ["fresh", "due", "reviewed"],
+                    "status_values": ["unread", "read"],
+                    "active_status_workflow": "research",
+                    "status_workflows": {
+                        "simple": {
+                            "status_values": ["unread", "read", "archived"],
+                            "reading_stage_values": ["skimmed", "deep_read"],
+                            "review_stage_values": ["fresh", "reviewed"],
+                        },
+                        "research": {
+                            "status_values": ["unread", "triaged", "reading", "read", "archived"],
+                            "reading_stage_values": ["skimmed", "deep_read", "code_checked"],
+                            "review_stage_values": ["fresh", "due", "reviewed"],
+                        },
+                    },
                     "shared_views": [
                         {
                             "name": "重点队列",
@@ -207,6 +218,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 papers["controls"]["status"],
                 ["unread", "triaged", "reading", "read", "archived"],
             )
+            self.assertEqual(papers["controls"]["active_status_workflow"], "research")
             self.assertEqual(papers["controls"]["reading_stage"], ["skimmed", "deep_read", "code_checked"])
             index_html = (report_dir / "index.html").read_text(encoding="utf-8")
             self.assertIn('<option value="triaged">triaged (0)</option>', index_html)
@@ -518,6 +530,14 @@ class WikiWorkflowTest(unittest.TestCase):
                         "label_aliases": {"": "Broken", "ok": ""},
                         "role_order": ["foundation", "foundation", ""],
                         "status_values": "read",
+                        "active_status_workflow": "missing",
+                        "status_workflows": {
+                            "broken": {
+                                "status_values": ["read", "read"],
+                                "reading_stage_values": "deep_read",
+                                "review_stage_values": [""],
+                            }
+                        },
                         "shared_views": [
                             {"name": "bad", "page": "sidebar", "state": {"unknown": "x"}},
                             {"name": "", "page": "all", "state": {}},
@@ -532,6 +552,9 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("guides/taxonomy.json", result.stderr)
             self.assertIn("duplicate value", result.stderr)
             self.assertIn("status_values must be a list", result.stderr)
+            self.assertIn("active_status_workflow 'missing' is not defined", result.stderr)
+            self.assertIn("status_workflows.broken.status_values has duplicate value", result.stderr)
+            self.assertIn("status_workflows.broken.reading_stage_values must be a list", result.stderr)
             self.assertIn("shared_views[0].page", result.stderr)
             self.assertIn("shared_views[0].state has unknown keys", result.stderr)
             self.assertIn("shared_views[1].name", result.stderr)

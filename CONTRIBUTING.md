@@ -49,8 +49,10 @@ inline JavaScript parsing, and the unit test suite.
 
 - Reports include required frontmatter and valid `importance`, `confidence`,
   `reproducibility`, `has_code`, and review date values.
-- New status, reading stage, review stage, or line role values are added to
-  `docs/guides/taxonomy.json`, or intentionally show up as taxonomy drift.
+- New status, reading stage, review stage, or line role values are added to the
+  active workflow in `docs/guides/taxonomy.json`, or intentionally show up as
+  taxonomy drift. For alternate processes, add a named `status_workflows` entry
+  and switch it through `active_status_workflow`.
 - `docs/quality.html` has no surprising unresolved queues for the change.
 - Generated artifacts are current: `python3 scripts/build_wiki.py docs --check`
   passes.

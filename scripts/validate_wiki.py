@@ -614,7 +614,13 @@ def validate_taxonomy_config(report_dir: Path, errors: list[str], warnings: list
         errors.append("guides/taxonomy.json: root must be an object")
         return {}
 
-    known_fields = {"label_aliases", "shared_views", *TAXONOMY_CONFIG_LIST_FIELDS}
+    known_fields = {
+        "label_aliases",
+        "shared_views",
+        "active_status_workflow",
+        "status_workflows",
+        *TAXONOMY_CONFIG_LIST_FIELDS,
+    }
     unknown_fields = sorted(set(config) - known_fields)
     if unknown_fields:
         warnings.append(f"guides/taxonomy.json: unknown fields ignored: {', '.join(unknown_fields)}")
@@ -630,21 +636,41 @@ def validate_taxonomy_config(report_dir: Path, errors: list[str], warnings: list
                 errors.append(f"guides/taxonomy.json: alias '{alias}' must map to a non-empty string")
 
     for field in TAXONOMY_CONFIG_LIST_FIELDS:
-        values = config.get(field, [])
-        if values is None:
-            continue
-        if not isinstance(values, list):
-            errors.append(f"guides/taxonomy.json: {field} must be a list")
-            continue
-        seen: set[str] = set()
-        for value in values:
-            if not isinstance(value, str) or not value.strip():
-                errors.append(f"guides/taxonomy.json: {field} values must be non-empty strings")
+        validate_string_list(config.get(field, []), f"guides/taxonomy.json: {field}", errors, allow_none=True)
+
+    active_workflow = config.get("active_status_workflow", "")
+    if active_workflow is not None and active_workflow != "" and (
+        not isinstance(active_workflow, str) or not active_workflow.strip()
+    ):
+        errors.append("guides/taxonomy.json: active_status_workflow must be a non-empty string")
+
+    workflows = config.get("status_workflows", {})
+    if workflows is not None and workflows != {} and not isinstance(workflows, dict):
+        errors.append("guides/taxonomy.json: status_workflows must be an object")
+    elif isinstance(workflows, dict):
+        active_name = active_workflow.strip() if isinstance(active_workflow, str) else ""
+        if active_name and active_name not in workflows:
+            errors.append(f"guides/taxonomy.json: active_status_workflow '{active_name}' is not defined in status_workflows")
+        for name, workflow in workflows.items():
+            if not isinstance(name, str) or not name.strip():
+                errors.append("guides/taxonomy.json: status_workflows keys must be non-empty strings")
                 continue
-            normalized = value.strip().lower()
-            if normalized in seen:
-                errors.append(f"guides/taxonomy.json: {field} has duplicate value '{value}'")
-            seen.add(normalized)
+            if not isinstance(workflow, dict):
+                errors.append(f"guides/taxonomy.json: status_workflows.{name} must be an object")
+                continue
+            unknown_workflow_fields = sorted(set(workflow) - {"status_values", "reading_stage_values", "review_stage_values"})
+            if unknown_workflow_fields:
+                errors.append(
+                    f"guides/taxonomy.json: status_workflows.{name} has unknown keys: "
+                    f"{', '.join(unknown_workflow_fields)}"
+                )
+            for field in ("status_values", "reading_stage_values", "review_stage_values"):
+                validate_string_list(
+                    workflow.get(field, []),
+                    f"guides/taxonomy.json: status_workflows.{name}.{field}",
+                    errors,
+                    allow_none=False,
+                )
 
     shared_views = config.get("shared_views", [])
     if shared_views is not None and not isinstance(shared_views, list):
@@ -678,6 +704,33 @@ def validate_taxonomy_config(report_dir: Path, errors: list[str], warnings: list
     return config
 
 
+def validate_string_list(value: Any, label: str, errors: list[str], allow_none: bool) -> None:
+    if value is None and allow_none:
+        return
+    if not isinstance(value, list):
+        errors.append(f"{label} must be a list")
+        return
+    seen: set[str] = set()
+    for item in value:
+        if not isinstance(item, str) or not item.strip():
+            errors.append(f"{label} values must be non-empty strings")
+            continue
+        normalized = item.strip().lower()
+        if normalized in seen:
+            errors.append(f"{label} has duplicate value '{item}'")
+        seen.add(normalized)
+
+
+def active_taxonomy_config(config: dict[str, Any]) -> dict[str, Any]:
+    workflows = config.get("status_workflows") or {}
+    active_name = str(config.get("active_status_workflow") or "").strip()
+    if active_name and isinstance(workflows, dict) and isinstance(workflows.get(active_name), dict):
+        merged = config.copy()
+        merged.update(workflows[active_name])
+        return merged
+    return config
+
+
 def configured_set(config: dict[str, Any], field: str) -> set[str]:
     values = config.get(field, [])
     if not isinstance(values, list):
@@ -692,6 +745,7 @@ def validate_controlled_taxonomy(
     warnings: list[str],
     strict: bool,
 ) -> None:
+    config = active_taxonomy_config(config)
     controlled = {
         "status": configured_set(config, "status_values"),
         "reading_stage": configured_set(config, "reading_stage_values"),

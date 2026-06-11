@@ -431,32 +431,38 @@
       <section class="taxonomy-panel">
         <h2>taxonomy.json 片段</h2>
         <pre class="config-snippet"><code>{
-  &quot;status_values&quot;: [
-    &quot;unread&quot;,
-    &quot;skimmed&quot;,
-    &quot;reading&quot;,
-    &quot;read&quot;,
-    &quot;archived&quot;
-  ],
-  &quot;reading_stage_values&quot;: [
-    &quot;skim&quot;,
-    &quot;normal_read&quot;,
-    &quot;deep_read&quot;,
-    &quot;code_checked&quot;
-  ],
-  &quot;review_stage_values&quot;: [
-    &quot;fresh&quot;,
-    &quot;due&quot;,
-    &quot;reviewed&quot;
-  ]
+  &quot;active_status_workflow&quot;: &quot;personal&quot;,
+  &quot;status_workflows&quot;: {
+    &quot;personal&quot;: {
+      &quot;status_values&quot;: [
+        &quot;unread&quot;,
+        &quot;skimmed&quot;,
+        &quot;reading&quot;,
+        &quot;read&quot;,
+        &quot;archived&quot;
+      ],
+      &quot;reading_stage_values&quot;: [
+        &quot;skim&quot;,
+        &quot;normal_read&quot;,
+        &quot;deep_read&quot;,
+        &quot;code_checked&quot;
+      ],
+      &quot;review_stage_values&quot;: [
+        &quot;fresh&quot;,
+        &quot;due&quot;,
+        &quot;reviewed&quot;
+      ]
+    }
+  }
 }</code></pre>
       </section>
     </div>
-    <section class="taxonomy-panel workflow-designer" data-workflow="{&quot;status_values&quot;: [&quot;unread&quot;, &quot;skimmed&quot;, &quot;reading&quot;, &quot;read&quot;, &quot;archived&quot;], &quot;reading_stage_values&quot;: [&quot;skim&quot;, &quot;normal_read&quot;, &quot;deep_read&quot;, &quot;code_checked&quot;], &quot;review_stage_values&quot;: [&quot;fresh&quot;, &quot;due&quot;, &quot;reviewed&quot;]}">
+    <section class="taxonomy-panel workflow-designer" data-workflow="{&quot;name&quot;: &quot;personal&quot;, &quot;status_values&quot;: [&quot;unread&quot;, &quot;skimmed&quot;, &quot;reading&quot;, &quot;read&quot;, &quot;archived&quot;], &quot;reading_stage_values&quot;: [&quot;skim&quot;, &quot;normal_read&quot;, &quot;deep_read&quot;, &quot;code_checked&quot;], &quot;review_stage_values&quot;: [&quot;fresh&quot;, &quot;due&quot;, &quot;reviewed&quot;]}">
       <div>
         <h2>状态工作流设计器</h2>
-        <p class="meta">每行一个值。下载或复制后合并到 guides/taxonomy.json，再运行 build_wiki，首页、论文库、看板和 JSON controls 会同步更新。</p>
+        <p class="meta">命名一套 workflow，每行一个值。下载或复制后合并到 guides/taxonomy.json，再运行 build_wiki，首页、论文库、看板和 JSON controls 会同步更新。</p>
       </div>
+      <label><span>Workflow name</span><input id="workflowName" type="text" value="personal"></label>
       <div class="designer-grid">
         <label><span>Status</span><textarea id="workflowStatus" rows="6"></textarea></label>
         <label><span>Reading stage</span><textarea id="workflowReadingStage" rows="6"></textarea></label>
@@ -489,6 +495,7 @@
   const designer = document.querySelector(".workflow-designer");
   if (!designer) return;
   const seed = JSON.parse(designer.dataset.workflow || "{}");
+  const nameInput = document.querySelector("#workflowName");
   const fields = {
     status_values: document.querySelector("#workflowStatus"),
     reading_stage_values: document.querySelector("#workflowReadingStage"),
@@ -510,15 +517,23 @@
   }
 
   function payload() {
-    return Object.fromEntries(
+    const workflowName = (nameInput.value || "personal").trim() || "personal";
+    const workflow = Object.fromEntries(
       Object.entries(fields).map(([key, input]) => [key, uniqueLines(input.value)])
     );
+    return {
+      active_status_workflow: workflowName,
+      status_workflows: {
+        [workflowName]: workflow,
+      },
+    };
   }
 
   function renderPreview() {
     const data = payload();
     preview.textContent = JSON.stringify(data, null, 2);
-    const emptyFields = Object.entries(data)
+    const workflow = data.status_workflows[data.active_status_workflow] || {};
+    const emptyFields = Object.entries(workflow)
       .filter(([, values]) => values.length === 0)
       .map(([key]) => key);
     message.textContent = emptyFields.length ? `空字段：${emptyFields.join(", ")}` : "";
@@ -526,6 +541,7 @@
   }
 
   function reset() {
+    nameInput.value = seed.name || "personal";
     Object.entries(fields).forEach(([key, input]) => {
       input.value = (seed[key] || []).join("\n");
     });
@@ -552,6 +568,7 @@
     }
   }
 
+  nameInput.addEventListener("input", renderPreview);
   Object.values(fields).forEach((input) => input.addEventListener("input", renderPreview));
   document.querySelector("#resetWorkflow").addEventListener("click", reset);
   document.querySelector("#downloadWorkflow").addEventListener("click", download);

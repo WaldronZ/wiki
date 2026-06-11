@@ -3,6 +3,7 @@
   "count": 5,
   "quality_score": 92.0,
   "controls": {
+    "active_status_workflow": "personal",
     "status": [
       "unread",
       "skimmed",

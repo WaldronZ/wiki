@@ -101,7 +101,27 @@ has_code: true
 
 `role_order` 会影响研究线详情页和首页研究线概览中的论文排序。`status_values`、`reading_stage_values` 和 `review_stage_values` 会进入首页和论文库表格的筛选项；其中 `status_values` 还会成为 `docs/board.html` 的状态看板列。即使某个状态当前还没有论文使用，也可以先作为可选管理状态出现。构建后的 `papers.json` 和 `stats.json` 会把这些选项输出到 `controls` 字段，供后续前端、脚本或桌面软件动态读取。
 
-如果想试一套新的状态流，不必先改所有报告：可以在 `docs/board.html` 新增临时状态列，把论文拖进去后导出 `status_board_patch.csv`，用 `scripts/apply_library_metadata.py` 预览或写回。确认这套状态值得长期保留后，再把它加入 `taxonomy.json` 的 `status_values`，刷新 wiki，它就会成为所有页面的正式下拉选项。`docs/taxonomy.html` 的「状态工作流配置」区域会展示当前可选值和可复制的 JSON 片段，方便迁移。
+如果你想在多套状态体系之间切换，可以在 `taxonomy.json` 里使用 `status_workflows` 保存多个命名 workflow，并用 `active_status_workflow` 选择当前启用的一套。构建脚本会优先读取激活 workflow 里的 `status_values`、`reading_stage_values` 和 `review_stage_values`；未配置时仍兼容根层同名字段。
+
+```json
+{
+  "active_status_workflow": "research",
+  "status_workflows": {
+    "simple": {
+      "status_values": ["unread", "read", "archived"],
+      "reading_stage_values": ["skim", "deep_read"],
+      "review_stage_values": ["fresh", "reviewed"]
+    },
+    "research": {
+      "status_values": ["inbox", "triaged", "reading", "implemented", "cited", "archived"],
+      "reading_stage_values": ["skim", "normal_read", "deep_read", "code_checked", "reproduced"],
+      "review_stage_values": ["fresh", "due", "reviewed", "evergreen"]
+    }
+  }
+}
+```
+
+如果想试一套新的状态流，不必先改所有报告：可以在 `docs/board.html` 新增临时状态列，把论文拖进去后导出 `status_board_patch.csv`，用 `scripts/apply_library_metadata.py` 预览或写回。确认这套状态值得长期保留后，再用 `docs/taxonomy.html` 的「状态工作流设计器」生成一个命名 workflow 片段，合并到 `status_workflows` 并切换 `active_status_workflow`，刷新 wiki 后它就会成为所有页面的正式下拉选项。
 
 `shared_views` 可以把常用筛选队列随仓库同步到首页和论文库表格。`page` 支持 `all`、`index`、`library`；`state` 使用 URL query 里的筛选键，例如 `importance`、`status`、`line`、`track`、`review`、`sort`：
 
@@ -124,6 +144,7 @@ has_code: true
 
 - `label_aliases` 必须是 object，key 和 value 都是非空字符串。
 - `role_order`、`status_values`、`reading_stage_values`、`review_stage_values` 必须是字符串列表。
+- `active_status_workflow` 必须指向 `status_workflows` 中已有的名称；每个 workflow 只允许包含 `status_values`、`reading_stage_values` 和 `review_stage_values`。
 - 列表里不能有重复值或空值。
 - `shared_views` 必须是对象列表，每个视图都要有非空 `name` 和非空 `state`。
 
