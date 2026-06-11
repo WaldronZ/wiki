@@ -142,13 +142,19 @@ has_code: true
 python3 scripts/build_wiki.py docs
 ```
 
+检查已提交的 wiki 生成物是否为最新：
+
+```bash
+python3 scripts/build_wiki.py docs --check
+```
+
 验证 wiki 元数据、生成索引和内部链接：
 
 ```bash
 python3 scripts/validate_wiki.py docs
 ```
 
-仓库也提供 GitHub Actions workflow：每次 push / pull request 会检查脚本语法、重建 wiki 并运行验证脚本。
+仓库也提供 GitHub Actions workflow：每次 push / pull request 会检查脚本语法、确认 wiki 生成物已更新并运行验证脚本。
 
 手动重建某篇报告 HTML：
 

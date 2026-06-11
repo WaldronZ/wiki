@@ -18,8 +18,8 @@ jobs:
       - name: Check Python syntax
         run: python -m py_compile scripts/build_wiki.py scripts/render_report_html.py scripts/validate_wiki.py
 
-      - name: Rebuild wiki
-        run: python scripts/build_wiki.py docs
+      - name: Check generated wiki is current
+        run: python scripts/build_wiki.py docs --check
 
       - name: Validate wiki artifacts
         run: python scripts/validate_wiki.py docs

@@ -12,6 +12,7 @@ import datetime as dt
 import html
 import json
 import re
+import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
@@ -19,6 +20,14 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_REPORT_DIR = ROOT / "docs"
+GENERATED_FIXED_PATHS = (
+    "papers.json",
+    "search_index.json",
+    "index.html",
+    "dashboard.html",
+    "tags.html",
+    "lines/index.html",
+)
 
 ARXIV_RE = re.compile(r"(?<!\d)(\d{4}\.\d{4,5})(?:v\d+)?(?!\d)")
 URL_RE = re.compile(r"https?://[^\s\]\)<>\"']+")
@@ -58,6 +67,11 @@ def parse_args() -> argparse.Namespace:
         nargs="?",
         default=str(DEFAULT_REPORT_DIR),
         help="Directory containing <slug>.md and <slug>.html reports.",
+    )
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="Verify generated wiki artifacts are up to date without leaving file changes behind.",
     )
     return parser.parse_args()
 
@@ -1194,12 +1208,14 @@ def render_line_pages(report_dir: Path, papers: list[dict[str, Any]]) -> None:
             grouped[line].append(paper)
 
     line_cards = []
+    expected_line_pages = {"index.html"}
     for line in sorted(grouped, key=lambda name: (-len(grouped[name]), name.lower())):
         items = sorted(
             grouped[line],
             key=lambda paper: (role_rank(paper.get("line_role", "")), -(paper.get("year") or 0), paper["title"]),
         )
         filename = f"{slugify_label(line)}.html"
+        expected_line_pages.add(filename)
         roles = sorted({p.get("line_role") for p in items if p.get("line_role")}, key=role_rank)
         topics = Counter(topic for paper in items for topic in paper.get("topics", []))
         topic_html = "".join(
@@ -1281,6 +1297,10 @@ def render_line_pages(report_dir: Path, papers: list[dict[str, Any]]) -> None:
 """
     (lines_dir / "index.html").write_text(page_shell("研究线", index_body), encoding="utf-8")
 
+    for stale_page in lines_dir.glob("*.html"):
+        if stale_page.name not in expected_line_pages:
+            stale_page.unlink()
+
 
 def render_tags(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     def render_group(title: str, field: str, scalar: bool = False) -> str:
@@ -1345,13 +1365,7 @@ def render_tags(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     (report_dir / "tags.html").write_text(page_shell("分类总览", body), encoding="utf-8")
 
 
-def main() -> None:
-    args = parse_args()
-    report_dir = Path(args.report_dir).expanduser()
-    if not report_dir.is_absolute():
-        report_dir = ROOT / report_dir
-    report_dir.mkdir(parents=True, exist_ok=True)
-
+def build_wiki(report_dir: Path) -> int:
     papers = collect_papers(report_dir)
     write_json(report_dir, papers)
     write_search_index(report_dir, papers)
@@ -1359,8 +1373,97 @@ def main() -> None:
     render_dashboard(report_dir, papers)
     render_line_pages(report_dir, papers)
     render_tags(report_dir, papers)
+    return len(papers)
+
+
+def generated_output_paths(report_dir: Path) -> set[Path]:
+    paths = {report_dir / path for path in GENERATED_FIXED_PATHS}
+    lines_dir = report_dir / "lines"
+    if lines_dir.exists():
+        paths.update(lines_dir.glob("*.html"))
+    return paths
+
+
+def snapshot_outputs(paths: set[Path]) -> dict[Path, bytes | None]:
+    return {path: path.read_bytes() if path.exists() else None for path in paths}
+
+
+def restore_outputs(snapshot: dict[Path, bytes | None], extra_paths: set[Path]) -> None:
+    for path in sorted(set(snapshot) | extra_paths):
+        original = snapshot.get(path)
+        if original is None:
+            if path.exists():
+                path.unlink()
+            continue
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(original)
+
+
+def normalize_generated_content(path: Path, data: bytes | None) -> str:
+    if data is None:
+        return "<missing>"
+    text = data.decode("utf-8")
+    text = re.sub(
+        r'("(?:generated_at|created_at|updated_at)"\s*:\s*")[^"]+(")',
+        r"\1<TIMESTAMP>\2",
+        text,
+    )
+    text = re.sub(r"(最近更新|生成时间) \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}", r"\1 <TIMESTAMP>", text)
+    text = re.sub(r"next_review &lt;= \d{4}-\d{2}-\d{2}", "next_review &lt;= <DATE>", text)
+    return text
+
+
+def check_wiki(report_dir: Path) -> int:
+    before_paths = generated_output_paths(report_dir)
+    before = snapshot_outputs(before_paths)
+
+    try:
+        count = build_wiki(report_dir)
+        after_paths = generated_output_paths(report_dir)
+        after = snapshot_outputs(after_paths)
+        all_paths = before_paths | after_paths
+        changed = []
+        for path in sorted(all_paths):
+            old = normalize_generated_content(path, before.get(path))
+            new = normalize_generated_content(path, after.get(path))
+            if old != new:
+                changed.append(path)
+    finally:
+        restore_outputs(before, generated_output_paths(report_dir))
+
+    if changed:
+        rel_paths = [
+            str(path.relative_to(ROOT) if path.is_relative_to(ROOT) else path)
+            for path in changed
+        ]
+        print("Wiki artifacts are out of date:", file=sys.stderr)
+        for rel_path in rel_paths:
+            print(f"  - {rel_path}", file=sys.stderr)
+        print("Run: python3 scripts/build_wiki.py docs", file=sys.stderr)
+        return 1
+
     rel = report_dir.relative_to(ROOT) if report_dir.is_relative_to(ROOT) else report_dir
-    print(f"Built wiki for {len(papers)} papers in {rel}")
+    print(f"Wiki artifacts are up to date for {count} papers in {rel}")
+    return 0
+
+
+def main() -> None:
+    args = parse_args()
+    report_dir = Path(args.report_dir).expanduser()
+    if not report_dir.is_absolute():
+        report_dir = ROOT / report_dir
+
+    if args.check and not report_dir.exists():
+        print(f"Report directory does not exist: {report_dir}", file=sys.stderr)
+        raise SystemExit(1)
+    report_dir.mkdir(parents=True, exist_ok=True)
+
+    if args.check:
+        raise SystemExit(check_wiki(report_dir))
+
+    count = build_wiki(report_dir)
+    rel = report_dir.relative_to(ROOT) if report_dir.is_relative_to(ROOT) else report_dir
+    print(f"Built wiki for {count} papers in {rel}")
 
 
 if __name__ == "__main__":
