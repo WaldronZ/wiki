@@ -871,6 +871,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("python3 scripts/export_taxonomy_balance.py docs --format project --max-score 50 --output docs/exports/taxonomy-balance-project.csv", quality_html)
             self.assertIn("python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv", quality_html)
             self.assertIn("python3 scripts/export_collections.py docs --format project --output docs/exports/collections-project.csv", quality_html)
+            self.assertIn("python3 scripts/export_ownership.py docs --format project --only-open-queues --output docs/exports/ownership-project.csv", quality_html)
             self.assertIn("python3 scripts/export_roadmap.py docs --format project --output docs/exports/roadmap-project.csv", quality_html)
 
             review = json.loads((report_dir / "review.json").read_text(encoding="utf-8"))
@@ -1027,6 +1028,51 @@ class WikiWorkflowTest(unittest.TestCase):
             )
             self.assertNotEqual(unsafe_collections_export.returncode, 0)
             self.assertIn("Refusing to write a Markdown export", unsafe_collections_export.stderr)
+
+            ownership_export_path = report_dir / "exports" / "ownership.md"
+            self.run_cmd(
+                "scripts/export_ownership.py",
+                str(report_dir),
+                "--owner",
+                "serving-owner",
+                "--output",
+                str(ownership_export_path),
+            )
+            ownership_export = ownership_export_path.read_text(encoding="utf-8")
+            self.assertIn("# AutoPaperReader Ownership Workload", ownership_export)
+            self.assertIn("serving-owner", ownership_export)
+            self.assertIn("补复习计划", ownership_export)
+
+            ownership_project_path = report_dir / "exports" / "ownership-project.csv"
+            self.run_cmd(
+                "scripts/export_ownership.py",
+                str(report_dir),
+                "--format",
+                "project",
+                "--only-open-queues",
+                "--owner",
+                "serving-owner",
+                "--task-status",
+                "ready",
+                "--output",
+                str(ownership_project_path),
+            )
+            ownership_project_rows = list(csv.DictReader(ownership_project_path.read_text(encoding="utf-8").splitlines()))
+            self.assertTrue(ownership_project_rows)
+            self.assertEqual(ownership_project_rows[0]["status"], "ready")
+            self.assertEqual(ownership_project_rows[0]["owner"], "serving-owner")
+            self.assertIn("ownership", ownership_project_rows[0]["labels"])
+            self.assertGreater(int(ownership_project_rows[0]["queue_count"]), 0)
+
+            unsafe_ownership_export = self.run_cmd(
+                "scripts/export_ownership.py",
+                str(report_dir),
+                "--output",
+                str(report_dir / "ownership.md"),
+                check=False,
+            )
+            self.assertNotEqual(unsafe_ownership_export.returncode, 0)
+            self.assertIn("Refusing to write a Markdown export", unsafe_ownership_export.stderr)
 
             roadmap_export_path = report_dir / "exports" / "roadmap.md"
             self.run_cmd(
@@ -1222,6 +1268,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("python3 scripts/export_taxonomy_registry.py docs --output docs/exports/taxonomy-registry.md", manifest["commands"])
             self.assertIn("python3 scripts/export_taxonomy_load.py docs --format csv --output docs/exports/taxonomy-load.csv", manifest["commands"])
             self.assertIn("python3 scripts/export_collections.py docs --output docs/exports/collections.md", manifest["commands"])
+            self.assertIn("python3 scripts/export_ownership.py docs --output docs/exports/ownership.md", manifest["commands"])
             self.assertIn("python3 scripts/export_roadmap.py docs --output docs/exports/roadmap.md", manifest["commands"])
             recipe_by_id = {item["id"]: item for item in manifest["command_recipes"]}
             self.assertEqual(recipe_by_id["quality_gate"]["kind"], "check")
@@ -1241,6 +1288,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(recipe_by_id["taxonomy_actions_patch"]["output"], "docs/exports/taxonomy-action-patch.csv")
             self.assertEqual(recipe_by_id["collections_markdown"]["output"], "docs/exports/collections.md")
             self.assertEqual(recipe_by_id["collections_project"]["kind"], "export")
+            self.assertEqual(recipe_by_id["ownership_markdown"]["output"], "docs/exports/ownership.md")
+            self.assertEqual(recipe_by_id["ownership_project"]["output"], "docs/exports/ownership-project.csv")
             self.assertEqual(recipe_by_id["roadmap_markdown"]["output"], "docs/exports/roadmap.md")
             self.assertEqual(recipe_by_id["roadmap_project"]["output"], "docs/exports/roadmap-project.csv")
             playbook_by_id = {item["id"]: item for item in manifest["governance_playbooks"]}
