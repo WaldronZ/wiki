@@ -45,6 +45,7 @@ REQUIRED_META = {
 REQUIRED_PAGES = {
     "index.html",
     "library.html",
+    "board.html",
     "inbox.html",
     "quality.html",
     "review.html",

@@ -31,6 +31,7 @@ GENERATED_FIXED_PATHS = (
     "review.json",
     "index.html",
     "library.html",
+    "board.html",
     "inbox.html",
     "quality.html",
     "review.html",
@@ -1411,6 +1412,7 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <span class="stat">分类 {len(data["tags"])}</span>
     <span class="stat">最近更新 {html.escape(data["generated_at"])}</span>
     <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="inbox.html">待处理池</a>
     <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
@@ -1920,6 +1922,7 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <div class="stats">
     <a class="stat" href="index.html">卡片首页</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="inbox.html">待处理池</a>
     <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="quality.html">质量治理</a>
@@ -2321,6 +2324,297 @@ render();
     (report_dir / "library.html").write_text(page_shell("论文库表格", body, data, bulk_css), encoding="utf-8")
 
 
+def render_board_card(paper: dict[str, Any]) -> str:
+    link = paper["html_path"] or paper["md_path"]
+    labels = [
+        f'I {paper.get("importance")}' if paper.get("importance") else "",
+        str(paper.get("reading_stage") or ""),
+        str(paper.get("line_role") or ""),
+        "code" if paper.get("has_code") else "",
+    ]
+    flags = "".join(f'<span class="flag">{html.escape(label)}</span>' for label in labels if label)
+    tags = render_inline_chips([*paper.get("topics", []), *paper.get("methods", [])], 4)
+    search_text = " ".join(
+        str(part)
+        for part in [
+            paper.get("slug"),
+            paper.get("title"),
+            paper.get("title_zh"),
+            paper.get("title_en"),
+            paper.get("arxiv_id"),
+            paper.get("research_line"),
+            paper.get("line_role"),
+            paper.get("status"),
+            paper.get("reading_stage"),
+            *paper.get("authors", []),
+            *paper.get("domains", []),
+            *paper.get("tracks", []),
+            *paper.get("problems", []),
+            *paper.get("topics", []),
+            *paper.get("methods", []),
+        ]
+        if part
+    ).lower()
+    return f"""<article class="board-card" draggable="true"
+  data-slug="{html.escape(str(paper.get("slug") or ""), quote=True)}"
+  data-original-status="{html.escape(str(paper.get("status") or "unread"), quote=True)}"
+  data-status="{html.escape(str(paper.get("status") or "unread"), quote=True)}"
+  data-line="{html.escape(str(paper.get("research_line") or ""), quote=True)}"
+  data-tracks="{html.escape(attr_tokens(paper.get("tracks", [])), quote=True)}"
+  data-importance="{html.escape(str(paper.get("importance") or 0), quote=True)}"
+  data-search="{html.escape(search_text, quote=True)}">
+  <h3><a href="{html.escape(link)}">{html.escape(paper["title_zh"] or paper["title"])}</a></h3>
+  <div class="meta">{html.escape(str(paper.get("title_en") or ""))}</div>
+  <div class="meta">{html.escape(str(paper.get("research_line") or "Unassigned"))}</div>
+  <div class="card-flags">{flags}</div>
+  <div class="chips">{tags}</div>
+</article>"""
+
+
+def render_board(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    taxonomy = taxonomy_counts(papers)
+    controls = control_options()
+    statuses = list(taxonomy["statuses"].keys())
+    fallback_statuses = sorted(
+        {
+            str(paper.get("status") or "unread")
+            for paper in papers
+            if str(paper.get("status") or "").strip() and str(paper.get("status") or "") not in statuses
+        }
+    )
+    statuses.extend(fallback_statuses)
+    if not statuses:
+        statuses = controls["status"] or DEFAULT_STATUS_VALUES
+
+    status_columns = []
+    for status in statuses:
+        cards = "\n".join(render_board_card(paper) for paper in papers if str(paper.get("status") or "unread") == status)
+        status_columns.append(
+            f"""<section class="board-column" data-status="{html.escape(status, quote=True)}">
+  <header><h2>{html.escape(status)}</h2><span class="board-count">0</span></header>
+  <div class="board-dropzone" data-status="{html.escape(status, quote=True)}">{cards}</div>
+</section>"""
+        )
+
+    board_css = """
+    .board-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .board-wrap {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(280px, 1fr);
+      gap: 14px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+      min-height: 480px;
+    }
+    .board-column {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      min-width: 280px;
+      max-width: 420px;
+    }
+    .board-column header {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 8px 8px 0 0;
+    }
+    .board-column h2 { margin: 0; font-size: 15px; line-height: 1.2; }
+    .board-count {
+      min-width: 26px;
+      text-align: center;
+      color: var(--muted);
+      font-weight: 800;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 2px 8px;
+    }
+    .board-dropzone {
+      display: grid;
+      align-content: start;
+      gap: 10px;
+      min-height: 360px;
+      padding: 12px;
+    }
+    .board-dropzone.drag-over { outline: 2px solid var(--accent); outline-offset: -5px; }
+    .board-card {
+      display: grid;
+      gap: 7px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--bg);
+      cursor: grab;
+    }
+    .board-card:active { cursor: grabbing; }
+    .board-card.changed { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(37, 99, 235, .14); }
+    .board-card[hidden] { display: none; }
+    .board-card h3 { margin: 0; font-size: 15px; line-height: 1.35; }
+    .board-card .chips { padding-top: 0; }
+    .board-help { color: var(--muted); font-size: 13px; line-height: 1.5; }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Status Board</div>
+  <h1>状态看板</h1>
+  <p class="lead">按自定义 status 分列管理论文。拖拽卡片只会在浏览器里暂存改动，下载 CSV 后用现有写回脚本应用到 markdown frontmatter。</p>
+  <div class="stats">
+    <a class="stat" href="index.html">卡片首页</a>
+    <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="board.html">状态看板</a>
+    <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="quality.html">质量治理</a>
+    <a class="stat" href="taxonomy.html">分类治理</a>
+    <span class="stat">论文 {len(papers)}</span>
+    <span class="stat">状态 {len(statuses)}</span>
+  </div>
+</header>
+<div class="toolbar">
+  <div class="shell controls">
+    <input id="boardSearch" type="search" placeholder="搜索标题、作者、研究线、分类、状态">
+    <select id="boardLine"><option value="">全部研究线</option>{render_topic_options(taxonomy["research_lines"])}</select>
+    <select id="boardTrack"><option value="">全部方向</option>{render_topic_options(taxonomy["tracks"])}</select>
+    <select id="boardImportance"><option value="">重要性</option><option value="5">5 星</option><option value="4">4 星及以上</option><option value="3">3 星及以上</option></select>
+  </div>
+</div>
+<main class="shell">
+  <div class="results-bar">
+    <strong id="boardCount">显示 {len(papers)} / {len(papers)} 篇</strong>
+    <div class="board-actions">
+      <span id="changedCount" class="board-help">未保存 0 篇</span>
+      <button id="downloadBoardPatch" class="button" type="button">下载 CSV</button>
+      <button id="resetBoardChanges" class="button" type="button">撤销改动</button>
+    </div>
+  </div>
+  <div class="board-help">导出后运行：python3 scripts/apply_library_metadata.py docs --input ~/Downloads/status_board_patch.csv --write</div>
+  <div class="board-wrap" id="boardWrap">{''.join(status_columns)}</div>
+</main>
+<script>
+const boardCards = Array.from(document.querySelectorAll(".board-card"));
+const dropzones = Array.from(document.querySelectorAll(".board-dropzone"));
+const boardSearch = document.querySelector("#boardSearch");
+const boardLine = document.querySelector("#boardLine");
+const boardTrack = document.querySelector("#boardTrack");
+const boardImportance = document.querySelector("#boardImportance");
+const boardCount = document.querySelector("#boardCount");
+const changedCount = document.querySelector("#changedCount");
+const downloadBoardPatch = document.querySelector("#downloadBoardPatch");
+const resetBoardChanges = document.querySelector("#resetBoardChanges");
+let draggedCard = null;
+
+function boardTokens(value) {{
+  return String(value || "").split("|").filter(Boolean);
+}}
+
+function boardCsvCell(value) {{
+  const text = String(value ?? "");
+  return (text.includes(",") || text.includes('"') || text.includes("\\n"))
+    ? `"${{text.replaceAll('"', '""')}}"`
+    : text;
+}}
+
+function downloadBoardCsv(filename, rows) {{
+  const csv = rows.map(row => row.map(boardCsvCell).join(",")).join("\\n") + "\\n";
+  const blob = new Blob([csv], {{ type: "text/csv;charset=utf-8" }});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}}
+
+function changedCards() {{
+  return boardCards.filter(card => card.dataset.status !== card.dataset.originalStatus);
+}}
+
+function placeCard(card, status) {{
+  const zone = dropzones.find(item => item.dataset.status === status);
+  if (!zone) return;
+  zone.appendChild(card);
+  card.dataset.status = status;
+  card.classList.toggle("changed", card.dataset.status !== card.dataset.originalStatus);
+  renderBoard();
+}}
+
+function renderBoard() {{
+  const q = boardSearch.value.trim().toLowerCase();
+  const minImportance = Number(boardImportance.value || 0);
+  let visible = 0;
+  boardCards.forEach(card => {{
+    const hit = (!q || card.dataset.search.includes(q))
+      && (!boardLine.value || card.dataset.line === boardLine.value)
+      && (!boardTrack.value || boardTokens(card.dataset.tracks).includes(boardTrack.value))
+      && (!minImportance || Number(card.dataset.importance || 0) >= minImportance);
+    card.hidden = !hit;
+    if (hit) visible += 1;
+  }});
+  dropzones.forEach(zone => {{
+    const count = Array.from(zone.querySelectorAll(".board-card")).filter(card => !card.hidden).length;
+    zone.closest(".board-column").querySelector(".board-count").textContent = count;
+  }});
+  const changed = changedCards().length;
+  boardCount.textContent = `显示 ${{visible}} / ${{boardCards.length}} 篇`;
+  changedCount.textContent = `未保存 ${{changed}} 篇`;
+  downloadBoardPatch.disabled = changed === 0;
+  resetBoardChanges.disabled = changed === 0;
+}}
+
+boardCards.forEach(card => {{
+  card.addEventListener("dragstart", event => {{
+    draggedCard = card;
+    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.setData("text/plain", card.dataset.slug);
+  }});
+  card.addEventListener("dragend", () => {{
+    draggedCard = null;
+    dropzones.forEach(zone => zone.classList.remove("drag-over"));
+  }});
+}});
+
+dropzones.forEach(zone => {{
+  zone.addEventListener("dragover", event => {{
+    event.preventDefault();
+    zone.classList.add("drag-over");
+  }});
+  zone.addEventListener("dragleave", () => zone.classList.remove("drag-over"));
+  zone.addEventListener("drop", event => {{
+    event.preventDefault();
+    zone.classList.remove("drag-over");
+    if (draggedCard) placeCard(draggedCard, zone.dataset.status);
+  }});
+}});
+
+[boardSearch, boardLine, boardTrack, boardImportance].forEach(el => el.addEventListener("input", renderBoard));
+downloadBoardPatch.addEventListener("click", () => {{
+  const changed = changedCards();
+  if (!changed.length) return;
+  downloadBoardCsv("status_board_patch.csv", [["slug", "status"], ...changed.map(card => [card.dataset.slug, card.dataset.status])]);
+}});
+resetBoardChanges.addEventListener("click", () => {{
+  changedCards().forEach(card => placeCard(card, card.dataset.originalStatus));
+}});
+renderBoard();
+</script>
+"""
+    (report_dir / "board.html").write_text(page_shell("状态看板", body, extra_css=board_css), encoding="utf-8")
+
+
 def render_inbox_row(item: dict[str, Any]) -> str:
     tags = "".join(f'<span class="chip">{html.escape(tag)}</span>' for tag in item.get("tags", []))
     link = str(item.get("link") or "")
@@ -2364,6 +2658,7 @@ def render_inbox(report_dir: Path, items: list[dict[str, Any]]) -> None:
   <div class="stats">
     <a class="stat" href="index.html">卡片首页</a>
     <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="inbox.json">Inbox JSON</a>
     <span class="stat">候选 {len(items)}</span>
@@ -2464,6 +2759,7 @@ def render_review(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <div class="stats">
     <a class="stat" href="index.html">返回首页</a>
     <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="review.json">复习 JSON</a>
@@ -2592,6 +2888,7 @@ def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="inbox.html">待处理池</a>
     <a class="stat" href="quality.json">质量 JSON</a>
     <span class="stat">论文 {quality["count"]}</span>
@@ -2741,6 +3038,7 @@ def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <div class="stats">
     <a class="stat" href="index.html">返回首页</a>
     <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="inbox.html">待处理池</a>
     <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="quality.html">质量治理</a>
@@ -2961,6 +3259,7 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <div class="stats">
     <a class="stat" href="index.html">返回首页</a>
     <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="board.html">状态看板</a>
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="tags.html">分类总览</a>
@@ -3193,6 +3492,7 @@ def build_wiki(report_dir: Path) -> int:
     write_search_index(report_dir, papers)
     render_index(report_dir, papers)
     render_library(report_dir, papers)
+    render_board(report_dir, papers)
     render_inbox(report_dir, inbox_items)
     render_review(report_dir, papers)
     render_quality(report_dir, papers, inbox_items)

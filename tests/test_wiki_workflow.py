@@ -164,6 +164,7 @@ class WikiWorkflowTest(unittest.TestCase):
             generated = {
                 "index.html",
                 "library.html",
+                "board.html",
                 "inbox.html",
                 "quality.html",
                 "review.html",
@@ -203,6 +204,11 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn('id="bulkReviewStage"', library_html)
             self.assertIn("metadata_patch.csv", library_html)
             self.assertIn('data-slug="2601.00001-alpha-paper"', library_html)
+            board_html = (report_dir / "board.html").read_text(encoding="utf-8")
+            self.assertIn("状态看板", board_html)
+            self.assertIn('data-status="triaged"', board_html)
+            self.assertIn("status_board_patch.csv", board_html)
+            self.assertIn('draggable="true"', board_html)
             inbox = json.loads((report_dir / "inbox.json").read_text(encoding="utf-8"))
             self.assertEqual(inbox["count"], 2)
             self.assertEqual(inbox["statuses"]["queued"], 2)
