@@ -86,6 +86,34 @@
       color: var(--muted);
     }
     .results-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin: 24px 0; }
+    .metric-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .metric-card strong { display: block; font-size: 28px; line-height: 1.1; }
+    .metric-card span { color: var(--muted); font-size: 13px; }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    .data-table th, .data-table td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+    .data-table th { color: var(--muted); font-size: 13px; font-weight: 700; }
+    .data-table tr:last-child td { border-bottom: 0; }
+    .queue-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .queue-list { margin: 0; padding-left: 18px; }
+    .queue-list li { margin: 8px 0; }
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; }
     .card {
       background: var(--panel);
@@ -178,6 +206,7 @@
       .controls input[type="search"] { grid-column: auto; min-width: 0; }
       .results-bar { align-items: flex-start; flex-direction: column; }
       .paper-row { grid-template-columns: 1fr; }
+      .data-table { display: block; overflow-x: auto; }
       header { padding-top: 28px; }
     }
   </style>
@@ -191,6 +220,7 @@
   <p class="lead">按 research line、domain、track、problem、topic 与 method 汇总论文。分类来自报告 frontmatter，缺失时由构建脚本根据关键词做轻量推断。</p>
   <div class="stats">
     <a class="stat" href="index.html">返回首页</a>
+    <a class="stat" href="dashboard.html">管理控制台</a>
     <span class="stat">分类 47</span>
     <span class="stat">论文 5</span>
   </div>

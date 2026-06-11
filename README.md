@@ -4,7 +4,7 @@ AutoPaperReader 是一个自动化「找论文 -> 读论文 -> 写报告」的 a
 
 它的目标是把一篇论文从检索、下载源码、分析论文、分析配套代码，到最终输出结构化中文阅读报告的流程串起来，并把产物（包括 Markdown 报告和 HTML 展示网页）统一组织到固定目录中。
 
-项目还会把这些逐篇报告汇总成一个轻量动态 wiki：`docs/index.html` 提供全文搜索、研究线、分类/状态/代码/重要性/复习筛选、排序和论文卡片；`docs/lines/index.html` 提供研究线入口；`docs/tags.html` 提供分类总览；`docs/papers.json` 提供机器可读索引；`docs/search_index.json` 提供正文检索索引。
+项目还会把这些逐篇报告汇总成一个轻量动态 wiki：`docs/index.html` 提供全文搜索、研究线、分类/状态/代码/重要性/复习筛选、排序和论文卡片；`docs/dashboard.html` 提供分类覆盖、研究线健康度和待处理队列；`docs/lines/index.html` 提供研究线入口；`docs/tags.html` 提供分类总览；`docs/papers.json` 提供机器可读索引；`docs/search_index.json` 提供正文检索索引。
 
 **注：建议开启 Agent Teams 特性 `export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`**
 
@@ -30,6 +30,7 @@ paper_reader/
 │       └── code-analyst.md
 ├── docs/
 │   ├── index.html
+│   ├── dashboard.html
 │   ├── lines/
 │   │   └── index.html
 │   ├── tags.html
@@ -87,6 +88,7 @@ paper_reader/
 - `docs/<slug>.md`：阅读报告
 - `docs/<slug>.html`：单篇阅读报告 HTML
 - `docs/index.html`：wiki 首页
+- `docs/dashboard.html`：管理控制台，展示分类覆盖、研究线健康度、待复习和待补分类队列
 - `docs/lines/index.html`：研究线总览
 - `docs/lines/<research-line>.html`：单条研究线详情页
 - `docs/tags.html`：分类总览

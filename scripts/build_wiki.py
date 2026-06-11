@@ -332,6 +332,12 @@ def role_rank(role: str) -> int:
     return order.get(role, 20)
 
 
+def percent(part: int | float, total: int | float) -> str:
+    if not total:
+        return "0%"
+    return f"{round(float(part) * 100 / float(total))}%"
+
+
 def build_paper(md_path: Path, report_dir: Path) -> dict[str, Any]:
     text = md_path.read_text(encoding="utf-8")
     meta, body = strip_frontmatter(text)
@@ -556,6 +562,34 @@ def page_shell(title: str, body: str, data: dict[str, Any] | None = None) -> str
       color: var(--muted);
     }}
     .results-actions {{ display: flex; gap: 10px; flex-wrap: wrap; }}
+    .metric-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin: 24px 0; }}
+    .metric-card {{
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+    }}
+    .metric-card strong {{ display: block; font-size: 28px; line-height: 1.1; }}
+    .metric-card span {{ color: var(--muted); font-size: 13px; }}
+    .data-table {{
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }}
+    .data-table th, .data-table td {{
+      border-bottom: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }}
+    .data-table th {{ color: var(--muted); font-size: 13px; font-weight: 700; }}
+    .data-table tr:last-child td {{ border-bottom: 0; }}
+    .queue-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }}
+    .queue-list {{ margin: 0; padding-left: 18px; }}
+    .queue-list li {{ margin: 8px 0; }}
     .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; }}
     .card {{
       background: var(--panel);
@@ -648,6 +682,7 @@ def page_shell(title: str, body: str, data: dict[str, Any] | None = None) -> str
       .controls input[type="search"] {{ grid-column: auto; min-width: 0; }}
       .results-bar {{ align-items: flex-start; flex-direction: column; }}
       .paper-row {{ grid-template-columns: 1fr; }}
+      .data-table {{ display: block; overflow-x: auto; }}
       header {{ padding-top: 28px; }}
     }}
   </style>
@@ -733,6 +768,7 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <span class="stat">研究线 {len(taxonomy["research_lines"])}</span>
     <span class="stat">分类 {len(data["tags"])}</span>
     <span class="stat">最近更新 {html.escape(data["generated_at"])}</span>
+    <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="lines/index.html">研究线</a>
     <a class="stat" href="tags.html">分类总览</a>
     <a class="stat" href="papers.json">JSON 索引</a>
@@ -929,6 +965,128 @@ def render_card(paper: dict[str, Any]) -> str:
 </article>"""
 
 
+def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    today = dt.date.today().isoformat()
+    total = len(papers)
+    with_code = sum(1 for paper in papers if paper.get("has_code"))
+    high_importance = [paper for paper in papers if int(paper.get("importance") or 0) >= 5]
+    due_review = [
+        paper
+        for paper in papers
+        if paper.get("next_review") and str(paper.get("next_review")) <= today
+    ]
+    missing_taxonomy = [
+        paper
+        for paper in papers
+        if not paper.get("domains")
+        or not paper.get("tracks")
+        or not paper.get("topics")
+        or not paper.get("methods")
+        or paper.get("research_line") == "Unassigned"
+        or not paper.get("line_role")
+    ]
+    no_code_observation = [paper for paper in papers if not paper.get("has_code")]
+    no_review_plan = [paper for paper in papers if not paper.get("next_review")]
+
+    metrics = [
+        ("论文", str(total), "已纳入 wiki 的报告数"),
+        ("研究线", str(len(scalar_counts(papers, "research_line"))), "有明确 research_line 的脉络"),
+        ("代码覆盖", percent(with_code, total), "包含代码观察或代码仓库线索"),
+        ("高优先级", str(len(high_importance)), "importance >= 5"),
+        ("待复习", str(len(due_review)), f"next_review <= {today}"),
+        ("待补分类", str(len(missing_taxonomy)), "缺 taxonomy 或 line role"),
+    ]
+    metric_html = "".join(
+        f'<section class="metric-card"><span>{html.escape(label)}</span><strong>{html.escape(value)}</strong><span>{html.escape(note)}</span></section>'
+        for label, value, note in metrics
+    )
+
+    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for paper in papers:
+        line = str(paper.get("research_line") or "Unassigned").strip() or "Unassigned"
+        grouped[line].append(paper)
+
+    line_rows = []
+    for line in sorted(grouped, key=lambda name: (-len(grouped[name]), name.lower())):
+        items = grouped[line]
+        roles = sorted({paper.get("line_role") or "unclassified" for paper in items}, key=role_rank)
+        avg_importance = round(
+            sum(int(paper.get("importance") or 0) for paper in items) / len(items),
+            1,
+        )
+        code_count = sum(1 for paper in items if paper.get("has_code"))
+        line_link = (
+            f'<a href="lines/{html.escape(slugify_label(line))}.html">{html.escape(line)}</a>'
+            if line != "Unassigned"
+            else html.escape(line)
+        )
+        line_rows.append(
+            "<tr>"
+            f"<td>{line_link}</td>"
+            f"<td>{len(items)}</td>"
+            f"<td>{html.escape(', '.join(roles))}</td>"
+            f"<td>{avg_importance}</td>"
+            f"<td>{percent(code_count, len(items))}</td>"
+            "</tr>"
+        )
+
+    line_table = (
+        '<table class="data-table"><thead><tr><th>研究线</th><th>论文</th><th>角色</th><th>平均重要性</th><th>代码覆盖</th></tr></thead>'
+        f"<tbody>{''.join(line_rows)}</tbody></table>"
+        if line_rows
+        else '<div class="empty">还没有研究线。</div>'
+    )
+
+    def queue(title: str, items: list[dict[str, Any]], empty: str) -> str:
+        if items:
+            rows = "".join(
+                f'<li><a href="{html.escape(paper_href(paper))}">{html.escape(paper["title_zh"] or paper["title"])}</a>'
+                f' <span class="meta">{html.escape(str(paper.get("research_line") or ""))}</span></li>'
+                for paper in items[:12]
+            )
+            content = f'<ol class="queue-list">{rows}</ol>'
+        else:
+            content = f'<div class="empty">{html.escape(empty)}</div>'
+        return f'<section class="role-section"><h2>{html.escape(title)} <span class="meta">{len(items)}</span></h2>{content}</section>'
+
+    queues = [
+        queue("高优先级", sorted(high_importance, key=lambda p: (-(p.get("importance") or 0), p["title"])), "暂无 5 星论文。"),
+        queue("待补分类", missing_taxonomy, "taxonomy 覆盖完整。"),
+        queue("待复习", due_review, "没有到期复习项。"),
+        queue("未设置复习", no_review_plan, "所有论文都有 next_review。"),
+        queue("无代码观察", no_code_observation, "所有论文都有代码观察或代码线索。"),
+    ]
+
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Knowledge Base Operations</div>
+  <h1>管理控制台</h1>
+  <p class="lead">面向大量论文的运营视图：看分类覆盖、研究线健康度、复习队列和需要补元数据的报告。所有数据来自 markdown frontmatter 与 wiki 索引。</p>
+  <div class="stats">
+    <a class="stat" href="index.html">返回首页</a>
+    <a class="stat" href="lines/index.html">研究线</a>
+    <a class="stat" href="tags.html">分类总览</a>
+    <span class="stat">生成时间 {html.escape(dt.datetime.now().isoformat(timespec="seconds"))}</span>
+  </div>
+</header>
+<main class="shell">
+  <section>
+    <h2 class="section-title">总览</h2>
+    <div class="metric-grid">{metric_html}</div>
+  </section>
+  <section>
+    <h2 class="section-title">研究线健康度</h2>
+    {line_table}
+  </section>
+  <section>
+    <h2 class="section-title">管理队列</h2>
+    <div class="queue-grid">{''.join(queues)}</div>
+  </section>
+</main>
+"""
+    (report_dir / "dashboard.html").write_text(page_shell("管理控制台", body), encoding="utf-8")
+
+
 def render_line_pages(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     lines_dir = report_dir / "lines"
     lines_dir.mkdir(parents=True, exist_ok=True)
@@ -996,6 +1154,7 @@ def render_line_pages(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <p class="lead">按论文在该研究线中的角色组织：foundation、baseline、main、system、variant、followup 等角色来自 frontmatter，可按你的分类习惯自由扩展。</p>
   <div class="stats">
     <a class="stat" href="../index.html">返回首页</a>
+    <a class="stat" href="../dashboard.html">管理控制台</a>
     <a class="stat" href="index.html">全部研究线</a>
     <span class="stat">论文 {len(items)}</span>
     <span class="stat">角色 {len(role_groups)}</span>
@@ -1014,6 +1173,7 @@ def render_line_pages(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <p class="lead">研究线把大量论文组织成脉络，而不是孤立标签。每条线都可以进入详情页，按论文角色和重要性浏览。</p>
   <div class="stats">
     <a class="stat" href="../index.html">返回首页</a>
+    <a class="stat" href="../dashboard.html">管理控制台</a>
     <a class="stat" href="../tags.html">分类总览</a>
     <span class="stat">研究线 {len(grouped)}</span>
     <span class="stat">论文 {sum(len(items) for items in grouped.values())}</span>
@@ -1079,6 +1239,7 @@ def render_tags(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <p class="lead">按 research line、domain、track、problem、topic 与 method 汇总论文。分类来自报告 frontmatter，缺失时由构建脚本根据关键词做轻量推断。</p>
   <div class="stats">
     <a class="stat" href="index.html">返回首页</a>
+    <a class="stat" href="dashboard.html">管理控制台</a>
     <span class="stat">分类 {len(grouped)}</span>
     <span class="stat">论文 {len(papers)}</span>
   </div>
@@ -1099,6 +1260,7 @@ def main() -> None:
     write_json(report_dir, papers)
     write_search_index(report_dir, papers)
     render_index(report_dir, papers)
+    render_dashboard(report_dir, papers)
     render_line_pages(report_dir, papers)
     render_tags(report_dir, papers)
     rel = report_dir.relative_to(ROOT) if report_dir.is_relative_to(ROOT) else report_dir
