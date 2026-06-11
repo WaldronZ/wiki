@@ -378,6 +378,34 @@
       font-size: 12px;
       line-height: 1.4;
     }
+    .bulk-preview {
+      grid-column: 1 / -1;
+      display: grid;
+      gap: 8px;
+      padding: 10px;
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .bulk-preview strong { color: var(--text); }
+    .bulk-preview code { white-space: normal; overflow-wrap: anywhere; }
+    .bulk-preview-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .bulk-preview-list span {
+      padding: 2px 6px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel);
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 700;
+    }
     .row-check, .header-check { width: 18px; min-height: 18px; padding: 0; }
     .column-panel { position: relative; }
     .column-panel summary { list-style: none; cursor: pointer; }
@@ -516,11 +544,15 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
     <select id="bulkStage"><option value="">阅读阶段</option><option value="skim">skim</option><option value="normal_read">normal_read</option><option value="deep_read">deep_read</option><option value="code_checked">code_checked</option></select>
     <select id="bulkReviewStage"><option value="">复习阶段</option><option value="fresh">fresh</option><option value="due">due</option><option value="reviewed">reviewed</option></select>
     <input id="bulkNextReview" type="date" aria-label="下次复习日期">
+    <select id="bulkImportance"><option value="">重要性</option><option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select>
     <div class="bulk-actions">
       <button id="selectVisible" class="button" type="button">选中当前页</button>
       <button id="selectFiltered" class="button" type="button">选中筛选结果</button>
       <button id="clearSelected" class="button" type="button">清除选择</button>
+      <button id="previewPatch" class="button" type="button">预览 Patch</button>
       <button id="downloadPatch" class="button" type="button">下载 CSV</button>
+      <button id="copyPatchDryRun" class="button" type="button">复制预览命令</button>
+      <button id="copyPatchWrite" class="button" type="button">复制写入命令</button>
     </div>
     <details class="bulk-taxonomy">
       <summary>批量分类字段</summary>
@@ -535,6 +567,7 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
         <div class="bulk-hint">这些字段会替换所选论文 frontmatter 中的对应值；下载后先 dry-run，再用 --write 写回。</div>
       </div>
     </details>
+    <div id="bulkPreview" class="bulk-preview" aria-live="polite">选择论文和字段后显示 patch 摘要。</div>
   </div>
   <datalist id="researchLineOptions"><option value="Parallel Decoding with Diffusion Models"></option><option value="Efficient Attention Kernels"></option></datalist>
   <datalist id="domainOptions"><option value="LLM Systems"></option></datalist>
@@ -786,6 +819,7 @@ const bulkStatus = document.querySelector("#bulkStatus");
 const bulkStage = document.querySelector("#bulkStage");
 const bulkReviewStage = document.querySelector("#bulkReviewStage");
 const bulkNextReview = document.querySelector("#bulkNextReview");
+const bulkImportance = document.querySelector("#bulkImportance");
 const bulkResearchLine = document.querySelector("#bulkResearchLine");
 const bulkLineRole = document.querySelector("#bulkLineRole");
 const bulkDomains = document.querySelector("#bulkDomains");
@@ -796,7 +830,11 @@ const bulkMethods = document.querySelector("#bulkMethods");
 const selectVisible = document.querySelector("#selectVisible");
 const selectFiltered = document.querySelector("#selectFiltered");
 const clearSelected = document.querySelector("#clearSelected");
+const previewPatch = document.querySelector("#previewPatch");
 const downloadPatch = document.querySelector("#downloadPatch");
+const copyPatchDryRun = document.querySelector("#copyPatchDryRun");
+const copyPatchWrite = document.querySelector("#copyPatchWrite");
+const bulkPreview = document.querySelector("#bulkPreview");
 const libraryTable = document.querySelector(".library-table");
 const columnToggles = Array.from(document.querySelectorAll("[data-column-toggle]"));
 const densityMode = document.querySelector("#densityMode");
@@ -1091,6 +1129,7 @@ function updateBulkState() {
   bulkCount.textContent = `已选 ${selected} 篇`;
   toggleVisible.checked = visible.length > 0 && visibleSelected === visible.length;
   toggleVisible.indeterminate = visibleSelected > 0 && visibleSelected < visible.length;
+  updateBulkPreview();
 }
 
 function csvCell(value) {
@@ -1235,7 +1274,20 @@ function exportRows(format) {
   downloadText("library.bib", entries.join("\n\n") + "\n", "application/x-bibtex;charset=utf-8");
 }
 
-function buildPatchRows() {
+function patchCommand(write = false) {
+  return `python3 scripts/apply_library_metadata.py docs --input ~/Downloads/metadata_patch.csv${write ? " --write" : ""}`;
+}
+
+async function copyText(text, fallbackLabel) {
+  try {
+    await navigator.clipboard.writeText(text);
+    window.alert("已复制。");
+  } catch {
+    window.prompt(fallbackLabel, text);
+  }
+}
+
+function patchFieldValues() {
   const fields = [];
   const values = {};
   [
@@ -1243,6 +1295,7 @@ function buildPatchRows() {
     ["reading_stage", bulkStage.value],
     ["review_stage", bulkReviewStage.value],
     ["next_review", bulkNextReview.value],
+    ["importance", bulkImportance.value],
     ["research_line", bulkResearchLine.value],
     ["line_role", bulkLineRole.value],
     ["domains", bulkDomains.value],
@@ -1256,16 +1309,49 @@ function buildPatchRows() {
       values[field] = String(value).trim();
     }
   });
+  return { fields, values };
+}
+
+function buildPatchSpec(showAlerts = false) {
+  const { fields, values } = patchFieldValues();
   const selected = selectedRows();
   if (!selected.length) {
-    window.alert("请先选择论文。");
-    return [];
+    if (showAlerts) window.alert("请先选择论文。");
+    return null;
   }
   if (!fields.length) {
-    window.alert("请先选择要写入的状态、日期或分类字段。");
-    return [];
+    if (showAlerts) window.alert("请先选择要写入的状态、日期或分类字段。");
+    return null;
   }
-  return [["slug", ...fields], ...selected.map(row => [row.dataset.slug, ...fields.map(field => values[field])])];
+  return {
+    fields,
+    values,
+    selected,
+    rows: [["slug", ...fields], ...selected.map(row => [row.dataset.slug, ...fields.map(field => values[field])])],
+  };
+}
+
+function updateBulkPreview() {
+  const { fields } = patchFieldValues();
+  const selected = selectedRows();
+  copyPatchDryRun.disabled = !selected.length || !fields.length;
+  copyPatchWrite.disabled = !selected.length || !fields.length;
+  if (!selected.length || !fields.length) {
+    bulkPreview.textContent = "选择论文和字段后显示 patch 摘要。";
+    return;
+  }
+  const sample = selected.slice(0, 8).map(row => `<span>${row.dataset.slug}</span>`).join("");
+  const more = selected.length > 8 ? `<span>+${selected.length - 8}</span>` : "";
+  bulkPreview.innerHTML = `
+    <div><strong>${selected.length}</strong> 篇论文，字段 <strong>${fields.join(", ")}</strong></div>
+    <div class="bulk-preview-list">${sample}${more}</div>
+    <code>${patchCommand(false)}</code>
+  `;
+}
+
+function buildPatchRows() {
+  const spec = buildPatchSpec(true);
+  return spec ? spec.rows : [];
 }
 
 function render() {
@@ -1418,6 +1504,23 @@ downloadPatch.addEventListener("click", () => {
   const rows = buildPatchRows();
   if (rows.length) downloadCsv("metadata_patch.csv", rows);
 });
+previewPatch.addEventListener("click", () => updateBulkPreview());
+copyPatchDryRun.addEventListener("click", () => copyText(patchCommand(false), "复制 dry-run 命令"));
+copyPatchWrite.addEventListener("click", () => copyText(patchCommand(true), "复制写入命令"));
+[
+  bulkStatus,
+  bulkStage,
+  bulkReviewStage,
+  bulkNextReview,
+  bulkImportance,
+  bulkResearchLine,
+  bulkLineRole,
+  bulkDomains,
+  bulkTracks,
+  bulkProblems,
+  bulkTopics,
+  bulkMethods,
+].forEach(el => el.addEventListener("input", updateBulkPreview));
 exportMarkdown.addEventListener("click", () => exportRows("markdown"));
 exportCsv.addEventListener("click", () => exportRows("csv"));
 exportBibtex.addEventListener("click", () => exportRows("bibtex"));
