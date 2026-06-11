@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import csv
 import subprocess
 import sys
 import tempfile
@@ -143,6 +144,16 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(review["count"], 2)
             self.assertEqual(review["queues"]["needs_plan"], ["2601.00001-alpha-paper"])
             self.assertEqual(review["queues"]["scheduled"], ["2501.00002-beta-paper"])
+
+            csv_path = report_dir / "library.csv"
+            self.run_cmd("scripts/export_library_csv.py", str(report_dir), "--output", str(csv_path))
+            rows = list(csv.DictReader(csv_path.read_text(encoding="utf-8").splitlines()))
+            self.assertEqual(len(rows), 2)
+            row_by_slug = {row["slug"]: row for row in rows}
+            self.assertEqual(row_by_slug["2601.00001-alpha-paper"]["review_state"], "needs_plan")
+            self.assertEqual(row_by_slug["2501.00002-beta-paper"]["review_state"], "scheduled")
+            self.assertTrue(row_by_slug["2601.00001-alpha-paper"]["suggested_next_review"])
+            self.assertTrue(row_by_slug["2601.00001-alpha-paper"]["quality_score"])
 
             dry = self.run_cmd("scripts/apply_review_plan.py", str(report_dir))
             self.assertIn("DRY  2601.00001-alpha-paper", dry.stdout)

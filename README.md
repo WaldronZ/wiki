@@ -46,6 +46,7 @@ paper_reader/
 ├── scripts/
 │   ├── apply_review_plan.py
 │   ├── build_wiki.py
+│   ├── export_library_csv.py
 │   └── render_report_html.py
 └── sources/
     └── .gitkeep
@@ -60,6 +61,7 @@ paper_reader/
 - `scripts/build_wiki.py` 用于扫描报告并生成 wiki 汇总页
 - `scripts/render_report_html.py` 是稳定 HTML 渲染兜底脚本，用于修复公式裸露、图片破图等展示问题
 - `scripts/apply_review_plan.py` 用于把 `docs/review.json` 的建议复习日期安全写回报告 frontmatter，默认只 dry-run
+- `scripts/export_library_csv.py` 用于把 `papers.json`、`review.json` 和 `quality.json` 合并导出成 CSV，便于用表格工具批量管理
 
 ## 工作流概览
 
@@ -168,6 +170,12 @@ python3 scripts/validate_wiki.py docs
 
 ```bash
 python3 -m unittest discover -s tests
+```
+
+导出论文库管理表：
+
+```bash
+python3 scripts/export_library_csv.py docs --output docs/library.csv
 ```
 
 预览并写入复习计划建议：
