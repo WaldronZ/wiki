@@ -49,6 +49,7 @@ REQUIRED_PAGES = {
     "tags.html",
     "papers.json",
     "search_index.json",
+    "quality.json",
     "lines/index.html",
 }
 
@@ -202,15 +203,20 @@ def validate_reports(report_dir: Path, errors: list[str], warnings: list[str]) -
 def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: list[str]) -> None:
     papers_path = report_dir / "papers.json"
     search_path = report_dir / "search_index.json"
+    quality_path = report_dir / "quality.json"
     if not papers_path.exists():
         errors.append("missing papers.json")
         return
     if not search_path.exists():
         errors.append("missing search_index.json")
         return
+    if not quality_path.exists():
+        errors.append("missing quality.json")
+        return
 
     papers_data = json.loads(papers_path.read_text(encoding="utf-8"))
     search_data = json.loads(search_path.read_text(encoding="utf-8"))
+    quality_data = json.loads(quality_path.read_text(encoding="utf-8"))
     paper_slugs = {paper.get("slug") for paper in papers_data.get("papers", [])}
     report_slugs = set(reports)
 
@@ -228,6 +234,22 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
             "search_index.json slugs do not match markdown reports: "
             f"missing={sorted(report_slugs - search_slugs)}, extra={sorted(search_slugs - report_slugs)}"
         )
+
+    quality_queues = quality_data.get("queues") or {}
+    quality_slugs = set()
+    for value in quality_queues.values():
+        if isinstance(value, list):
+            quality_slugs.update(value)
+    quality_issue_slugs = {issue.get("slug") for issue in quality_data.get("issues", [])}
+    unknown_quality_slugs = sorted((quality_slugs | quality_issue_slugs) - report_slugs)
+    if quality_data.get("count") != len(report_slugs):
+        errors.append(f"quality.json count {quality_data.get('count')} != markdown report count {len(report_slugs)}")
+    if unknown_quality_slugs:
+        errors.append(f"quality.json references unknown slugs: {unknown_quality_slugs}")
+    required_quality = {"quality_score", "coverage", "queues", "issues"}
+    missing_quality = sorted(required_quality - set(quality_data))
+    if missing_quality:
+        errors.append(f"quality.json missing keys: {', '.join(missing_quality)}")
 
     taxonomy = papers_data.get("taxonomy") or {}
     required_taxonomy = {

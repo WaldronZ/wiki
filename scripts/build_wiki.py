@@ -23,6 +23,7 @@ DEFAULT_REPORT_DIR = ROOT / "docs"
 GENERATED_FIXED_PATHS = (
     "papers.json",
     "search_index.json",
+    "quality.json",
     "index.html",
     "library.html",
     "dashboard.html",
@@ -446,6 +447,90 @@ def taxonomy_counts(papers: list[dict[str, Any]]) -> dict[str, dict[str, int]]:
     }
 
 
+def paper_quality_issue(paper: dict[str, Any], today: str) -> dict[str, Any]:
+    missing_fields: list[str] = []
+    weak_fields: list[str] = []
+
+    for field in ("domains", "tracks", "problems", "topics", "methods"):
+        if not paper.get(field):
+            missing_fields.append(field)
+    for field in ("research_line", "line_role", "status", "reading_stage"):
+        value = str(paper.get(field) or "").strip()
+        if not value or value == "Unassigned":
+            missing_fields.append(field)
+    for field in ("importance", "confidence", "reproducibility"):
+        if paper.get(field) in {None, ""}:
+            missing_fields.append(field)
+
+    if not paper.get("next_review"):
+        weak_fields.append("next_review")
+    if not paper.get("review_stage"):
+        weak_fields.append("review_stage")
+    if not paper.get("has_code"):
+        weak_fields.append("has_code")
+    if int(paper.get("confidence") or 0) <= 2:
+        weak_fields.append("confidence")
+    if int(paper.get("reproducibility") or 0) <= 2:
+        weak_fields.append("reproducibility")
+
+    due_review = bool(paper.get("next_review") and str(paper.get("next_review")) <= today)
+    score = max(0, 100 - len(missing_fields) * 10 - len(weak_fields) * 4 - (8 if due_review else 0))
+
+    return {
+        "slug": paper["slug"],
+        "title": paper["title"],
+        "title_zh": paper["title_zh"],
+        "research_line": paper.get("research_line") or "Unassigned",
+        "importance": paper.get("importance"),
+        "score": score,
+        "missing_fields": missing_fields,
+        "weak_fields": weak_fields,
+        "due_review": due_review,
+        "has_code": bool(paper.get("has_code")),
+    }
+
+
+def build_quality_report(papers: list[dict[str, Any]]) -> dict[str, Any]:
+    today = dt.date.today().isoformat()
+    issues = [paper_quality_issue(paper, today) for paper in papers]
+    papers_with_issues = [
+        issue
+        for issue in issues
+        if issue["missing_fields"] or issue["weak_fields"] or issue["due_review"]
+    ]
+    total = len(papers)
+    complete_taxonomy = total - sum(1 for issue in issues if issue["missing_fields"])
+    with_review_plan = sum(1 for paper in papers if paper.get("next_review"))
+    with_code = sum(1 for paper in papers if paper.get("has_code"))
+    line_counts = scalar_counts(papers, "research_line")
+
+    queues = {
+        "missing_required_metadata": [issue["slug"] for issue in issues if issue["missing_fields"]],
+        "needs_review_plan": [paper["slug"] for paper in papers if not paper.get("next_review")],
+        "due_review": [issue["slug"] for issue in issues if issue["due_review"]],
+        "no_code_observation": [paper["slug"] for paper in papers if not paper.get("has_code")],
+        "high_importance": [
+            paper["slug"]
+            for paper in sorted(papers, key=lambda p: (-(p.get("importance") or 0), p["title"]))
+            if int(paper.get("importance") or 0) >= 5
+        ],
+    }
+
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": total,
+        "quality_score": round(sum(issue["score"] for issue in issues) / total, 1) if total else 100,
+        "coverage": {
+            "taxonomy": percent(complete_taxonomy, total),
+            "review_plan": percent(with_review_plan, total),
+            "code_observation": percent(with_code, total),
+            "research_lines": len(line_counts),
+        },
+        "queues": queues,
+        "issues": papers_with_issues,
+    }
+
+
 def write_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     payload = {
         "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
@@ -455,6 +540,14 @@ def write_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         "papers": [public_paper(paper) for paper in papers],
     }
     (report_dir / "papers.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
+def write_quality_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_quality_report(papers)
+    (report_dir / "quality.json").write_text(
         json.dumps(payload, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
@@ -845,6 +938,7 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="lines/index.html">研究线</a>
     <a class="stat" href="tags.html">分类总览</a>
+    <a class="stat" href="quality.json">质量 JSON</a>
     <a class="stat" href="papers.json">JSON 索引</a>
   </div>
 </header>
@@ -1230,6 +1324,7 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="dashboard.html">管理控制台</a>
     <a class="stat" href="lines/index.html">研究线</a>
     <a class="stat" href="tags.html">分类总览</a>
+    <a class="stat" href="quality.json">质量 JSON</a>
     <span class="stat">论文 {len(papers)}</span>
   </div>
 </header>
@@ -1423,6 +1518,7 @@ render();
 
 
 def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    quality = build_quality_report(papers)
     today = dt.date.today().isoformat()
     total = len(papers)
     with_code = sum(1 for paper in papers if paper.get("has_code"))
@@ -1447,8 +1543,10 @@ def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
 
     metrics = [
         ("论文", str(total), "已纳入 wiki 的报告数"),
+        ("质量分", str(quality["quality_score"]), "元数据、复习计划和代码观察综合分"),
         ("研究线", str(len(scalar_counts(papers, "research_line"))), "有明确 research_line 的脉络"),
         ("代码覆盖", percent(with_code, total), "包含代码观察或代码仓库线索"),
+        ("分类覆盖", quality["coverage"]["taxonomy"], "必要 taxonomy 字段完整"),
         ("高优先级", str(len(high_importance)), "importance >= 5"),
         ("待复习", str(len(due_review)), f"next_review <= {today}"),
         ("待补分类", str(len(missing_taxonomy)), "缺 taxonomy 或 line role"),
@@ -1513,6 +1611,18 @@ def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         queue("未设置复习", no_review_plan, "所有论文都有 next_review。"),
         queue("无代码观察", no_code_observation, "所有论文都有代码观察或代码线索。"),
     ]
+    quality_rows = "".join(
+        "<tr>"
+        f"<td>{html.escape(name)}</td>"
+        f"<td>{len(slugs)}</td>"
+        f"<td>{html.escape(', '.join(slugs[:8]))}{' ...' if len(slugs) > 8 else ''}</td>"
+        "</tr>"
+        for name, slugs in quality["queues"].items()
+    )
+    quality_table = (
+        '<table class="data-table"><thead><tr><th>队列</th><th>数量</th><th>样例 slug</th></tr></thead>'
+        f"<tbody>{quality_rows}</tbody></table>"
+    )
 
     body = f"""
 <header class="shell">
@@ -1524,6 +1634,7 @@ def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="lines/index.html">研究线</a>
     <a class="stat" href="tags.html">分类总览</a>
+    <a class="stat" href="quality.json">质量 JSON</a>
     <span class="stat">生成时间 {html.escape(dt.datetime.now().isoformat(timespec="seconds"))}</span>
   </div>
 </header>
@@ -1539,6 +1650,10 @@ def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <section>
     <h2 class="section-title">管理队列</h2>
     <div class="queue-grid">{''.join(queues)}</div>
+  </section>
+  <section>
+    <h2 class="section-title">质量队列</h2>
+    {quality_table}
   </section>
 </main>
 """
@@ -1719,6 +1834,7 @@ def render_tags(report_dir: Path, papers: list[dict[str, Any]]) -> None:
 def build_wiki(report_dir: Path) -> int:
     papers = collect_papers(report_dir)
     write_json(report_dir, papers)
+    write_quality_json(report_dir, papers)
     write_search_index(report_dir, papers)
     render_index(report_dir, papers)
     render_library(report_dir, papers)
