@@ -870,6 +870,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv", quality_html)
             self.assertIn("python3 scripts/export_taxonomy_balance.py docs --format project --max-score 50 --output docs/exports/taxonomy-balance-project.csv", quality_html)
             self.assertIn("python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv", quality_html)
+            self.assertIn("python3 scripts/export_collections.py docs --format project --output docs/exports/collections-project.csv", quality_html)
 
             review = json.loads((report_dir / "review.json").read_text(encoding="utf-8"))
             self.assertEqual(review["count"], 2)
@@ -978,6 +979,53 @@ class WikiWorkflowTest(unittest.TestCase):
             )
             self.assertNotEqual(unsafe_actions_export.returncode, 0)
             self.assertIn("Refusing to write a Markdown export", unsafe_actions_export.stderr)
+
+            collections_export_path = report_dir / "exports" / "collections.md"
+            self.run_cmd(
+                "scripts/export_collections.py",
+                str(report_dir),
+                "--type",
+                "smart",
+                "--min-count",
+                "1",
+                "--output",
+                str(collections_export_path),
+            )
+            collections_export = collections_export_path.read_text(encoding="utf-8")
+            self.assertIn("# AutoPaperReader Collections", collections_export)
+            self.assertIn("needs_review_plan", collections_export)
+
+            collections_project_path = report_dir / "exports" / "collections-project.csv"
+            self.run_cmd(
+                "scripts/export_collections.py",
+                str(report_dir),
+                "--format",
+                "project",
+                "--type",
+                "research_line",
+                "--assignee",
+                "wiki-owner",
+                "--task-status",
+                "ready",
+                "--output",
+                str(collections_project_path),
+            )
+            collection_project_rows = list(csv.DictReader(collections_project_path.read_text(encoding="utf-8").splitlines()))
+            self.assertTrue(collection_project_rows)
+            self.assertEqual(collection_project_rows[0]["status"], "ready")
+            self.assertEqual(collection_project_rows[0]["assignee"], "wiki-owner")
+            self.assertIn("collection", collection_project_rows[0]["labels"])
+            self.assertEqual(collection_project_rows[0]["collection_type"], "research_line")
+
+            unsafe_collections_export = self.run_cmd(
+                "scripts/export_collections.py",
+                str(report_dir),
+                "--output",
+                str(report_dir / "collections.md"),
+                check=False,
+            )
+            self.assertNotEqual(unsafe_collections_export.returncode, 0)
+            self.assertIn("Refusing to write a Markdown export", unsafe_collections_export.stderr)
 
             stats = json.loads((report_dir / "stats.json").read_text(encoding="utf-8"))
             self.assertEqual(stats["count"], 2)
@@ -1125,6 +1173,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("python3 scripts/export_actions.py docs --output docs/exports/actions.md", manifest["commands"])
             self.assertIn("python3 scripts/export_taxonomy_registry.py docs --output docs/exports/taxonomy-registry.md", manifest["commands"])
             self.assertIn("python3 scripts/export_taxonomy_load.py docs --format csv --output docs/exports/taxonomy-load.csv", manifest["commands"])
+            self.assertIn("python3 scripts/export_collections.py docs --output docs/exports/collections.md", manifest["commands"])
             recipe_by_id = {item["id"]: item for item in manifest["command_recipes"]}
             self.assertEqual(recipe_by_id["quality_gate"]["kind"], "check")
             self.assertFalse(recipe_by_id["quality_gate"]["mutates"])
@@ -1141,6 +1190,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(recipe_by_id["taxonomy_registry_project"]["output"], "docs/exports/taxonomy-registry-project.csv")
             self.assertEqual(recipe_by_id["taxonomy_balance_project"]["output"], "docs/exports/taxonomy-balance-project.csv")
             self.assertEqual(recipe_by_id["taxonomy_actions_patch"]["output"], "docs/exports/taxonomy-action-patch.csv")
+            self.assertEqual(recipe_by_id["collections_markdown"]["output"], "docs/exports/collections.md")
+            self.assertEqual(recipe_by_id["collections_project"]["kind"], "export")
             playbook_by_id = {item["id"]: item for item in manifest["governance_playbooks"]}
             self.assertEqual(
                 playbook_by_id["taxonomy_merge_batch"]["steps"],
