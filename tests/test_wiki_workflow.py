@@ -68,6 +68,8 @@ topics:
   - Attention Kernels
 methods:
   - tiling
+  - KV-cache
+  - KV cache
 research_line: Attention Kernels
 line_role: system
 status: read
@@ -242,9 +244,12 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("taxonomy_drift", quality)
             self.assertEqual(quality["taxonomy_drift"], [])
             self.assertEqual(quality["queues"]["taxonomy_drift"], [])
+            self.assertEqual(quality["label_alias_suggestions"][0]["canonical"], "KV Cache")
+            self.assertEqual(quality["label_alias_suggestions"][0]["aliases"], {"KV-cache": "KV Cache"})
             quality_html = (report_dir / "quality.html").read_text(encoding="utf-8")
             self.assertIn("质量治理", quality_html)
             self.assertIn("Taxonomy Drift", quality_html)
+            self.assertIn("标签归一化建议", quality_html)
 
             review = json.loads((report_dir / "review.json").read_text(encoding="utf-8"))
             self.assertEqual(review["count"], 2)
@@ -274,6 +279,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("taxonomy_status_workflow.json", taxonomy_html)
             self.assertIn("&quot;status_values&quot;: [", taxonomy_html)
             self.assertIn("triaged", taxonomy_html)
+            self.assertIn("KV-cache -&gt; KV Cache", taxonomy_html)
             timeline_html = (report_dir / "timeline.html").read_text(encoding="utf-8")
             self.assertIn("研究路线时间轴", timeline_html)
             self.assertIn('id="timelineLine"', timeline_html)

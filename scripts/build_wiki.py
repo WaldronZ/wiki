@@ -820,6 +820,85 @@ def taxonomy_drift_items(papers: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return drift
 
 
+def label_fingerprint(label: str) -> str:
+    text = str(label or "").strip().lower()
+    text = text.replace("&", " and ")
+    text = re.sub(r"[^a-z0-9]+", " ", text)
+    tokens = []
+    for token in text.split():
+        if len(token) > 3 and token.endswith("s"):
+            token = token[:-1]
+        tokens.append(token)
+    return " ".join(tokens)
+
+
+def label_alias_suggestions(papers: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    grouped: dict[str, dict[str, dict[str, Any]]] = defaultdict(dict)
+    list_fields = ("domains", "tracks", "problems", "topics", "methods")
+    scalar_fields = ("research_line",)
+
+    def record(field: str, value: str, slug: str) -> None:
+        label = str(value or "").strip()
+        key = label_fingerprint(label)
+        if not label or not key or label == "Unassigned":
+            return
+        bucket = grouped[key].setdefault(label, {"count": 0, "fields": set(), "slugs": set()})
+        bucket["count"] += 1
+        bucket["fields"].add(field)
+        bucket["slugs"].add(slug)
+
+    for paper in papers:
+        slug = str(paper.get("slug") or "")
+        for field in list_fields:
+            for value in paper.get(field, []):
+                record(field, value, slug)
+        for field in scalar_fields:
+            record(field, str(paper.get(field) or ""), slug)
+
+    suggestions: list[dict[str, Any]] = []
+    for key, labels in grouped.items():
+        if len(labels) <= 1:
+            continue
+        canonical = sorted(
+            labels,
+            key=lambda label: (
+                -int(labels[label]["count"]),
+                label.islower(),
+                len(label),
+                label.lower(),
+            ),
+        )[0]
+        alias_values = [label for label in sorted(labels, key=str.lower) if label != canonical]
+        if not alias_values:
+            continue
+        aliases = {alias: canonical for alias in alias_values}
+        fields = sorted({field for item in labels.values() for field in item["fields"]})
+        slugs = sorted({slug for item in labels.values() for slug in item["slugs"]})
+        suggestions.append(
+            {
+                "fingerprint": key,
+                "canonical": canonical,
+                "aliases": aliases,
+                "fields": fields,
+                "slugs": slugs,
+                "labels": [
+                    {
+                        "value": label,
+                        "count": int(labels[label]["count"]),
+                        "fields": sorted(labels[label]["fields"]),
+                        "slugs": sorted(labels[label]["slugs"]),
+                    }
+                    for label in sorted(labels, key=lambda label: (-int(labels[label]["count"]), label.lower()))
+                ],
+            }
+        )
+
+    return sorted(
+        suggestions,
+        key=lambda item: (-len(item["aliases"]), -sum(label["count"] for label in item["labels"]), item["canonical"].lower()),
+    )
+
+
 def paper_quality_issue(paper: dict[str, Any], today: str) -> dict[str, Any]:
     missing_fields: list[str] = []
     weak_fields: list[str] = []
@@ -867,6 +946,7 @@ def build_quality_report(papers: list[dict[str, Any]]) -> dict[str, Any]:
     today = dt.date.today().isoformat()
     issues = [paper_quality_issue(paper, today) for paper in papers]
     taxonomy_drift = taxonomy_drift_items(papers)
+    alias_suggestions = label_alias_suggestions(papers)
     papers_with_issues = [
         issue
         for issue in issues
@@ -904,6 +984,7 @@ def build_quality_report(papers: list[dict[str, Any]]) -> dict[str, Any]:
         "queues": queues,
         "issues": papers_with_issues,
         "taxonomy_drift": taxonomy_drift,
+        "label_alias_suggestions": alias_suggestions,
     }
 
 
@@ -3427,10 +3508,27 @@ def render_quality_inbox_row(item: dict[str, Any]) -> str:
     )
 
 
+def render_alias_suggestion_row(item: dict[str, Any]) -> str:
+    aliases = item.get("aliases") or {}
+    alias_text = ", ".join(f"{alias} -> {canonical}" for alias, canonical in aliases.items())
+    fields = ", ".join(str(field) for field in item.get("fields", []))
+    slugs = ", ".join(str(slug) for slug in item.get("slugs", [])[:8])
+    snippet = html.escape(json.dumps({"label_aliases": aliases}, ensure_ascii=False, indent=2))
+    return (
+        "<tr>"
+        f"<td><strong>{html.escape(str(item.get('canonical') or ''))}</strong><div class=\"meta\">{html.escape(fields)}</div></td>"
+        f"<td>{html.escape(alias_text)}</td>"
+        f"<td>{html.escape(slugs)}{' ...' if len(item.get('slugs', [])) > 8 else ''}</td>"
+        f"<td><pre class=\"config-snippet\"><code>{snippet}</code></pre></td>"
+        "</tr>"
+    )
+
+
 def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
     quality = build_quality_report(papers)
     issue_rows = "".join(render_quality_issue_row(issue) for issue in quality["issues"])
     drift_rows = "".join(render_quality_drift_row(item) for item in quality["taxonomy_drift"])
+    alias_rows = "".join(render_alias_suggestion_row(item) for item in quality["label_alias_suggestions"])
     duplicate_inbox = [item for item in inbox_items if item.get("duplicate")]
     duplicate_rows = "".join(render_quality_inbox_row(item) for item in duplicate_inbox)
 
@@ -3452,6 +3550,12 @@ def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
         if duplicate_rows
         else '<div class="empty">暂无疑似重复候选。</div>'
     )
+    alias_table = (
+        '<table class="data-table"><thead><tr><th>建议规范值</th><th>建议别名</th><th>涉及论文</th><th>taxonomy.json 片段</th></tr></thead>'
+        f"<tbody>{alias_rows}</tbody></table>"
+        if alias_rows
+        else '<div class="empty">暂无标签归一化建议。</div>'
+    )
     queue_rows = "".join(
         "<tr>"
         f"<td>{html.escape(name)}</td>"
@@ -3469,6 +3573,7 @@ def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
         ("分类覆盖", quality["coverage"]["taxonomy"], "必要字段"),
         ("复习计划", quality["coverage"]["review_plan"], "next_review"),
         ("漂移项", str(len(quality["taxonomy_drift"])), "taxonomy drift"),
+        ("别名建议", str(len(quality["label_alias_suggestions"])), "label aliases"),
         ("重复候选", str(len(duplicate_inbox)), "inbox"),
     ]
     metric_html = "".join(
@@ -3509,6 +3614,10 @@ def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
     <div class="table-wrap">{drift_table}</div>
   </section>
   <section>
+    <h2 class="section-title">标签归一化建议</h2>
+    <div class="table-wrap">{alias_table}</div>
+  </section>
+  <section>
     <h2 class="section-title">候选去重</h2>
     <div class="table-wrap">{duplicate_table}</div>
   </section>
@@ -3518,7 +3627,21 @@ def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
   </section>
 </main>
 """
-    (report_dir / "quality.html").write_text(page_shell("质量治理", body), encoding="utf-8")
+    quality_css = "\n".join(
+        [
+            "    .config-snippet {",
+            "      margin: 0;",
+            "      padding: 10px;",
+            "      border: 1px solid var(--line);",
+            "      border-radius: 8px;",
+            "      background: #f8fafc;",
+            "      overflow-x: auto;",
+            "      font-size: 12px;",
+            "      line-height: 1.5;",
+            "    }",
+        ]
+    )
+    (report_dir / "quality.html").write_text(page_shell("质量治理", body, extra_css=quality_css), encoding="utf-8")
 
 
 def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
@@ -4214,6 +4337,14 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         if tail_items
         else '<div class="empty">暂无长尾 topic/method。</div>'
     )
+    alias_suggestions = label_alias_suggestions(papers)
+    alias_rows = "".join(render_alias_suggestion_row(item) for item in alias_suggestions)
+    alias_table = (
+        '<table class="data-table"><thead><tr><th>建议规范值</th><th>建议别名</th><th>涉及论文</th><th>taxonomy.json 片段</th></tr></thead>'
+        f"<tbody>{alias_rows}</tbody></table>"
+        if alias_rows
+        else '<div class="empty">暂无标签归一化建议。</div>'
+    )
 
     queue_specs = [
         ("缺 Domain", [paper for paper in papers if not paper.get("domains")], "所有论文都有 domain。"),
@@ -4256,6 +4387,7 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <span class="stat">论文 {len(papers)}</span>
     <span class="stat">Domain {len(taxonomy["domains"])}</span>
     <span class="stat">Research line {len(taxonomy["research_lines"])}</span>
+    <span class="stat">别名建议 {len(alias_suggestions)}</span>
   </div>
 </header>
 <main class="shell">
@@ -4308,6 +4440,10 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <section>
     <h2 class="section-title">治理队列</h2>
     <div class="queue-grid">{queue_cards}</div>
+  </section>
+  <section>
+    <h2 class="section-title">标签归一化建议</h2>
+    <div class="table-wrap">{alias_table}</div>
   </section>
   <section>
     <h2 class="section-title">长尾 Topic / Method</h2>

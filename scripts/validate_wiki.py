@@ -443,12 +443,22 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
             quality_slugs.update(value)
     quality_issue_slugs = {issue.get("slug") for issue in quality_data.get("issues", [])}
     quality_drift_slugs = {item.get("slug") for item in quality_data.get("taxonomy_drift", [])}
-    unknown_quality_slugs = sorted((quality_slugs | quality_issue_slugs | quality_drift_slugs) - report_slugs)
+    alias_suggestions = quality_data.get("label_alias_suggestions", [])
+    if alias_suggestions is not None and not isinstance(alias_suggestions, list):
+        errors.append("quality.json label_alias_suggestions must be a list")
+        alias_suggestions = []
+    quality_alias_slugs = {
+        slug
+        for item in alias_suggestions
+        if isinstance(item, dict)
+        for slug in item.get("slugs", [])
+    }
+    unknown_quality_slugs = sorted((quality_slugs | quality_issue_slugs | quality_drift_slugs | quality_alias_slugs) - report_slugs)
     if quality_data.get("count") != len(report_slugs):
         errors.append(f"quality.json count {quality_data.get('count')} != markdown report count {len(report_slugs)}")
     if unknown_quality_slugs:
         errors.append(f"quality.json references unknown slugs: {unknown_quality_slugs}")
-    required_quality = {"quality_score", "coverage", "queues", "issues", "taxonomy_drift"}
+    required_quality = {"quality_score", "coverage", "queues", "issues", "taxonomy_drift", "label_alias_suggestions"}
     missing_quality = sorted(required_quality - set(quality_data))
     if missing_quality:
         errors.append(f"quality.json missing keys: {', '.join(missing_quality)}")
