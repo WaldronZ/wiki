@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T05:23:55",
+  "generated_at": "2026-06-12T05:29:46",
   "count": 5,
   "inbox_count": 0,
   "readiness_score": "100%",
@@ -164,12 +164,14 @@
       "issue_template": ".github/ISSUE_TEMPLATE/taxonomy-governance.yml",
       "contract": "guides/taxonomy.schema.json",
       "recommended_pages": [
+        "registry.html",
         "facets.html",
         "balance.html",
         "coverage.html",
         "ownership.html"
       ],
       "commands": [
+        "python3 scripts/export_taxonomy_registry.py docs --output docs/exports/taxonomy-registry.md",
         "python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md",
         "python3 scripts/apply_taxonomy_aliases.py docs --write",
         "python3 scripts/check_quality.py docs"
@@ -218,6 +220,11 @@
       "label": "Export unified actions",
       "command": "python3 scripts/export_actions.py docs --output docs/exports/actions.md",
       "href": "actions.html"
+    },
+    {
+      "label": "Export label registry",
+      "command": "python3 scripts/export_taxonomy_registry.py docs --output docs/exports/taxonomy-registry.md",
+      "href": "registry.html"
     }
   ],
   "contracts": [

@@ -1555,8 +1555,8 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     registry_columns = registry_data.get("csv_columns")
     if not isinstance(registry_columns, list) or not {"label", "severity", "fields", "recommended_action"}.issubset(set(registry_columns)):
         errors.append("registry.json csv_columns must include label, severity, fields, and recommended_action")
-    if not isinstance(registry_data.get("commands"), list) or not any("export_taxonomy_actions.py" in str(command) for command in registry_data.get("commands", [])):
-        errors.append("registry.json commands must include export_taxonomy_actions.py")
+    if not isinstance(registry_data.get("commands"), list) or not any("export_taxonomy_registry.py" in str(command) for command in registry_data.get("commands", [])):
+        errors.append("registry.json commands must include export_taxonomy_registry.py")
     registry_links = registry_data.get("links")
     if not isinstance(registry_links, dict) or not {"taxonomy", "facets", "quality", "library"}.issubset(registry_links):
         errors.append("registry.json links must include taxonomy, facets, quality, and library")

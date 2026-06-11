@@ -3427,6 +3427,12 @@ def build_catalog_payload(report_dir: Path, papers: list[dict[str, Any]], inbox_
             "uses": ["actions.json", "taxonomy_actions.json", "review.json"],
             "outputs": ["docs/exports/actions-project.csv"],
         },
+        {
+            "name": "Taxonomy registry export",
+            "command": "python3 scripts/export_taxonomy_registry.py docs --format project --severity high --severity medium --output docs/exports/taxonomy-registry-project.csv",
+            "uses": ["registry.json", "papers.json"],
+            "outputs": ["docs/exports/taxonomy-registry-project.csv"],
+        },
     ]
     return {
         "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
@@ -3572,8 +3578,9 @@ def build_onboarding_payload(report_dir: Path, papers: list[dict[str, Any]], inb
             "entry": "taxonomy.html",
             "issue_template": ".github/ISSUE_TEMPLATE/taxonomy-governance.yml",
             "contract": "guides/taxonomy.schema.json",
-            "recommended_pages": ["facets.html", "balance.html", "coverage.html", "ownership.html"],
+            "recommended_pages": ["registry.html", "facets.html", "balance.html", "coverage.html", "ownership.html"],
             "commands": [
+                "python3 scripts/export_taxonomy_registry.py docs --output docs/exports/taxonomy-registry.md",
                 "python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md",
                 "python3 scripts/apply_taxonomy_aliases.py docs --write",
                 "python3 scripts/check_quality.py docs",
@@ -3599,6 +3606,7 @@ def build_onboarding_payload(report_dir: Path, papers: list[dict[str, Any]], inb
         {"label": "Strict validation", "command": "python3 scripts/validate_wiki.py docs --strict-taxonomy", "href": "quality.html"},
         {"label": "Quality gate", "command": "python3 scripts/check_quality.py docs", "href": "quality.html"},
         {"label": "Export unified actions", "command": "python3 scripts/export_actions.py docs --output docs/exports/actions.md", "href": "actions.html"},
+        {"label": "Export label registry", "command": "python3 scripts/export_taxonomy_registry.py docs --output docs/exports/taxonomy-registry.md", "href": "registry.html"},
     ]
     return {
         "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
@@ -3921,6 +3929,22 @@ def command_recipes_manifest() -> list[dict[str, Any]]:
             "mutates": False,
         },
         {
+            "id": "taxonomy_registry_markdown",
+            "kind": "export",
+            "label": "Export taxonomy registry checklist",
+            "command": "python3 scripts/export_taxonomy_registry.py docs --output docs/exports/taxonomy-registry.md",
+            "output": "docs/exports/taxonomy-registry.md",
+            "mutates": False,
+        },
+        {
+            "id": "taxonomy_registry_project",
+            "kind": "export",
+            "label": "Export taxonomy registry project tasks",
+            "command": "python3 scripts/export_taxonomy_registry.py docs --format project --severity high --severity medium --output docs/exports/taxonomy-registry-project.csv",
+            "output": "docs/exports/taxonomy-registry-project.csv",
+            "mutates": False,
+        },
+        {
             "id": "actions_markdown",
             "kind": "export",
             "label": "Export unified action checklist",
@@ -3982,6 +4006,7 @@ def governance_playbooks_manifest() -> list[dict[str, Any]]:
             "label": "Taxonomy balance review",
             "description": "Turn overloaded or sparse taxonomy buckets into project tasks before changing labels.",
             "steps": [
+                "taxonomy_registry_project",
                 "taxonomy_balance_project",
                 "taxonomy_actions_project",
                 "quality_gate",
@@ -13354,7 +13379,9 @@ def build_registry_report(papers: list[dict[str, Any]]) -> dict[str, Any]:
         "signals": dict(sorted(signal_counts.items())),
         "csv_columns": ["label", "severity", "fields", "total_count", "paper_count", "aliases", "signals", "recommended_action"],
         "commands": [
-            "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
+            "python3 scripts/export_taxonomy_registry.py docs --output docs/exports/taxonomy-registry.md",
+            "python3 scripts/export_taxonomy_registry.py docs --format project --severity high --severity medium --output docs/exports/taxonomy-registry-project.csv",
+            "python3 scripts/export_taxonomy_registry.py docs --format patch --signal singleton --target-value <target_value> --output docs/exports/taxonomy-registry-patch.csv",
             "python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv",
             "python3 scripts/apply_library_metadata.py docs --input <taxonomy_registry_patch.csv>",
             "python3 scripts/apply_taxonomy_aliases.py docs --write",

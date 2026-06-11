@@ -725,7 +725,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("recommended_action", registry["csv_columns"])
             self.assertTrue(any("KV Cache" == item["label"] and item["aliases"] for item in registry["labels"]))
             self.assertTrue(any("singleton" in item["signals"] for item in registry["labels"]))
-            self.assertTrue(any("export_taxonomy_actions.py" in command for command in registry["commands"]))
+            self.assertTrue(any("export_taxonomy_registry.py" in command for command in registry["commands"]))
             registry_html = (report_dir / "registry.html").read_text(encoding="utf-8")
             self.assertIn("标签注册表", registry_html)
             self.assertIn("Registry JSON", registry_html)
@@ -997,6 +997,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("python3 scripts/apply_status_workflow.py docs --input <taxonomy_status_workflow.json> --write", manifest["commands"])
             self.assertIn("python3 scripts/apply_governance_policy.py docs --input <taxonomy_governance_policy.json> --write", manifest["commands"])
             self.assertIn("python3 scripts/export_actions.py docs --output docs/exports/actions.md", manifest["commands"])
+            self.assertIn("python3 scripts/export_taxonomy_registry.py docs --output docs/exports/taxonomy-registry.md", manifest["commands"])
             self.assertIn("python3 scripts/export_taxonomy_load.py docs --format csv --output docs/exports/taxonomy-load.csv", manifest["commands"])
             recipe_by_id = {item["id"]: item for item in manifest["command_recipes"]}
             self.assertEqual(recipe_by_id["quality_gate"]["kind"], "check")
@@ -1011,6 +1012,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(recipe_by_id["apply_governance_policy"]["output"], "docs/guides/taxonomy.json")
             self.assertFalse(recipe_by_id["apply_governance_policy_dry_run"]["mutates"])
             self.assertEqual(recipe_by_id["actions_project"]["output"], "docs/exports/actions-project.csv")
+            self.assertEqual(recipe_by_id["taxonomy_registry_project"]["output"], "docs/exports/taxonomy-registry-project.csv")
             self.assertEqual(recipe_by_id["taxonomy_balance_project"]["output"], "docs/exports/taxonomy-balance-project.csv")
             self.assertEqual(recipe_by_id["taxonomy_actions_patch"]["output"], "docs/exports/taxonomy-action-patch.csv")
             playbook_by_id = {item["id"]: item for item in manifest["governance_playbooks"]}
@@ -1019,6 +1021,10 @@ class WikiWorkflowTest(unittest.TestCase):
                 ["taxonomy_actions_markdown", "taxonomy_actions_patch", "apply_metadata_audit", "apply_metadata_dry_run", "quality_gate"],
             )
             self.assertEqual(playbook_by_id["weekly_action_review"]["steps"], ["actions_markdown", "actions_project", "quality_gate"])
+            self.assertEqual(
+                playbook_by_id["taxonomy_balance_review"]["steps"],
+                ["taxonomy_registry_project", "taxonomy_balance_project", "taxonomy_actions_project", "quality_gate"],
+            )
             self.assertEqual(
                 playbook_by_id["status_workflow_rollout"]["steps"],
                 ["apply_status_workflow_dry_run", "apply_status_workflow", "build_wiki", "strict_validate"],
@@ -1212,6 +1218,76 @@ class WikiWorkflowTest(unittest.TestCase):
             self.run_cmd("scripts/build_wiki.py", str(report_dir))
             quality_after_alias = json.loads((report_dir / "quality.json").read_text(encoding="utf-8"))
             self.assertEqual(quality_after_alias["label_alias_suggestions"], [])
+
+            registry_path = report_dir / "exports" / "taxonomy-registry.md"
+            self.run_cmd(
+                "scripts/export_taxonomy_registry.py",
+                str(report_dir),
+                "--signal",
+                "singleton",
+                "--output",
+                str(registry_path),
+            )
+            registry_md = registry_path.read_text(encoding="utf-8")
+            self.assertIn("# Taxonomy Label Registry", registry_md)
+            self.assertIn("singleton", registry_md)
+
+            registry_project_path = report_dir / "exports" / "taxonomy-registry-project.csv"
+            self.run_cmd(
+                "scripts/export_taxonomy_registry.py",
+                str(report_dir),
+                "--format",
+                "project",
+                "--severity",
+                "medium",
+                "--assignee",
+                "taxonomy-owner",
+                "--task-status",
+                "ready",
+                "--output",
+                str(registry_project_path),
+            )
+            registry_project_rows = list(csv.DictReader(registry_project_path.read_text(encoding="utf-8").splitlines()))
+            self.assertTrue(registry_project_rows)
+            self.assertEqual(registry_project_rows[0]["status"], "ready")
+            self.assertEqual(registry_project_rows[0]["assignee"], "taxonomy-owner")
+            self.assertIn("taxonomy_registry", registry_project_rows[0]["labels"])
+
+            registry_patch_path = report_dir / "exports" / "taxonomy-registry-patch.csv"
+            self.run_cmd(
+                "scripts/export_taxonomy_registry.py",
+                str(report_dir),
+                "--format",
+                "patch",
+                "--signal",
+                "singleton",
+                "--target-value",
+                "Unified Label",
+                "--output",
+                str(registry_patch_path),
+            )
+            registry_patch_rows = list(csv.DictReader(registry_patch_path.read_text(encoding="utf-8").splitlines()))
+            self.assertTrue(registry_patch_rows)
+            self.assertIn("source_value", registry_patch_rows[0])
+            self.assertIn("source_field", registry_patch_rows[0])
+            self.assertIn("Unified Label", "; ".join(registry_patch_rows[0].values()))
+            registry_patch_apply = self.run_cmd(
+                "scripts/apply_library_metadata.py",
+                str(report_dir),
+                "--input",
+                str(registry_patch_path),
+            )
+            self.assertIn("DRY", registry_patch_apply.stdout)
+
+            unsafe_registry_export = self.run_cmd(
+                "scripts/export_taxonomy_registry.py",
+                str(report_dir),
+                "--output",
+                str(report_dir / "taxonomy-registry.md"),
+                check=False,
+            )
+            self.assertNotEqual(unsafe_registry_export.returncode, 0)
+            self.assertIn("Refusing to write a Markdown export", unsafe_registry_export.stderr)
 
             taxonomy_actions_path = report_dir / "exports" / "taxonomy-actions.md"
             self.run_cmd(

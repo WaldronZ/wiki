@@ -108,6 +108,7 @@ paper_reader/
 │   ├── export_reading_list.py
 │   ├── export_taxonomy_actions.py
 │   ├── export_taxonomy_load.py
+│   ├── export_taxonomy_registry.py
 │   ├── validate_wiki.py
 │   └── render_report_html.py
 └── sources/
@@ -133,6 +134,7 @@ paper_reader/
 - `scripts/export_taxonomy_actions.py` 用于把 `taxonomy_actions.json` 导出成 Markdown checklist、审计 CSV 或项目任务 CSV，便于分派分类治理任务
 - `scripts/export_taxonomy_balance.py` 用于把 `stats.json` 中的分类均衡度导出成复盘 checklist、CSV 或项目任务 CSV
 - `scripts/export_taxonomy_load.py` 用于把 `quality.json` 中的分类粒度审计导出成 Markdown checklist、审计 CSV 或可写回的分类 patch CSV
+- `scripts/export_taxonomy_registry.py` 用于把 `registry.json` 导出成标签治理 checklist、审计 CSV、项目任务 CSV 或可写回的分类 patch CSV
 - `scripts/apply_library_metadata.py` 用于把编辑后的 CSV 分类/状态字段安全写回报告 frontmatter，默认只 dry-run
 - `scripts/apply_taxonomy_aliases.py` 用于把 `quality.json` 中的标签别名建议安全合并到 `guides/taxonomy.json`，默认只 dry-run
 - `scripts/check_quality.py` 是本地一键质量门禁，和 GitHub Actions 使用同一组检查
@@ -368,6 +370,9 @@ python3 scripts/export_taxonomy_actions.py docs --format patch --action merge_ca
 python3 scripts/export_taxonomy_balance.py docs --format project --max-score 50 --assignee taxonomy-owner --output docs/exports/taxonomy-balance-project.csv
 python3 scripts/export_taxonomy_load.py docs --format csv --signal dense_tags --output docs/exports/taxonomy-load.csv
 python3 scripts/export_taxonomy_load.py docs --format patch --signal sparse_tags --output docs/exports/taxonomy-load-patch.csv
+python3 scripts/export_taxonomy_registry.py docs --output docs/exports/taxonomy-registry.md
+python3 scripts/export_taxonomy_registry.py docs --format project --severity high --severity medium --assignee taxonomy-owner --output docs/exports/taxonomy-registry-project.csv
+python3 scripts/export_taxonomy_registry.py docs --format patch --signal singleton --target-value "Unified Label" --output docs/exports/taxonomy-registry-patch.csv
 ```
 
 为批量元数据或分类 CSV 生成审计 JSON，方便在 PR 中复核受影响 slug、字段和 before/after：

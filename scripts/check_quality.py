@@ -32,6 +32,7 @@ PYTHON_SCRIPTS = [
     "scripts/export_taxonomy_actions.py",
     "scripts/export_taxonomy_balance.py",
     "scripts/export_taxonomy_load.py",
+    "scripts/export_taxonomy_registry.py",
     "scripts/check_quality.py",
 ]
 

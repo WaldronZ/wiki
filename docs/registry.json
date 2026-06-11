@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T05:23:55",
+  "generated_at": "2026-06-12T05:29:46",
   "count": 5,
   "label_count": 68,
   "configured_label_count": 21,
@@ -3383,7 +3383,9 @@
     "recommended_action"
   ],
   "commands": [
-    "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
+    "python3 scripts/export_taxonomy_registry.py docs --output docs/exports/taxonomy-registry.md",
+    "python3 scripts/export_taxonomy_registry.py docs --format project --severity high --severity medium --output docs/exports/taxonomy-registry-project.csv",
+    "python3 scripts/export_taxonomy_registry.py docs --format patch --signal singleton --target-value <target_value> --output docs/exports/taxonomy-registry-patch.csv",
     "python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv",
     "python3 scripts/apply_library_metadata.py docs --input <taxonomy_registry_patch.csv>",
     "python3 scripts/apply_taxonomy_aliases.py docs --write"
