@@ -387,6 +387,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("治理命令", quality_html)
             self.assertIn("copy-quality-command", quality_html)
             self.assertIn("python3 scripts/check_quality.py docs", quality_html)
+            self.assertIn("python3 scripts/apply_shared_views.py docs --input &lt;shared_views.json&gt; --write", quality_html)
             self.assertIn("python3 scripts/apply_status_workflow.py docs --input &lt;taxonomy_status_workflow.json&gt; --write", quality_html)
             self.assertIn("python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv", quality_html)
             self.assertIn("python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv", quality_html)
@@ -500,6 +501,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(artifact_by_href["manifest.json"]["status"], "generated_after_inventory")
             self.assertTrue(manifest["publish_checks"]["artifacts_present"])
             self.assertIn("python3 scripts/check_quality.py docs", manifest["commands"])
+            self.assertIn("python3 scripts/apply_shared_views.py docs --input <shared_views.json> --write", manifest["commands"])
             self.assertIn("python3 scripts/apply_status_workflow.py docs --input <taxonomy_status_workflow.json> --write", manifest["commands"])
             self.assertIn("python3 scripts/export_actions.py docs --output docs/exports/actions.md", manifest["commands"])
             self.assertIn("python3 scripts/export_taxonomy_load.py docs --format csv --output docs/exports/taxonomy-load.csv", manifest["commands"])
@@ -508,6 +510,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertFalse(recipe_by_id["quality_gate"]["mutates"])
             self.assertFalse(recipe_by_id["apply_metadata_dry_run"]["mutates"])
             self.assertEqual(recipe_by_id["apply_metadata_dry_run"]["command"], "python3 scripts/apply_library_metadata.py docs --input <csv>")
+            self.assertEqual(recipe_by_id["apply_shared_views"]["output"], "docs/guides/taxonomy.json")
             self.assertEqual(recipe_by_id["apply_status_workflow"]["output"], "docs/guides/taxonomy.json")
             self.assertEqual(recipe_by_id["actions_project"]["output"], "docs/exports/actions-project.csv")
             self.assertEqual(recipe_by_id["taxonomy_balance_project"]["output"], "docs/exports/taxonomy-balance-project.csv")
@@ -521,6 +524,10 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(
                 playbook_by_id["status_workflow_rollout"]["steps"],
                 ["apply_status_workflow_dry_run", "apply_status_workflow", "build_wiki", "strict_validate"],
+            )
+            self.assertEqual(
+                playbook_by_id["shared_view_rollout"]["steps"],
+                ["apply_shared_views_dry_run", "apply_shared_views", "build_wiki", "strict_validate"],
             )
             release_html = (report_dir / "release.html").read_text(encoding="utf-8")
             self.assertIn("知识库发布摘要", release_html)
@@ -539,6 +546,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("复制命令组", release_html)
             self.assertIn("taxonomy_balance_project", release_html)
             self.assertIn("taxonomy_actions_patch", release_html)
+            self.assertIn("shared_view_rollout", release_html)
             self.assertIn("status_workflow_rollout", release_html)
             self.assertIn("copy-release-command", release_html)
             self.assertIn("copyReleaseCommand", release_html)
@@ -1133,6 +1141,71 @@ class WikiWorkflowTest(unittest.TestCase):
             )
             self.assertNotEqual(broken.returncode, 0)
             self.assertIn("missing required keys", broken.stderr)
+
+    def test_apply_shared_views_merges_saved_view_exports(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_name:
+            report_dir = self.make_report_dir(Path(tmp_name))
+            self.run_cmd("scripts/build_wiki.py", str(report_dir))
+
+            views_path = Path(tmp_name) / "library_saved_views.json"
+            views_path.write_text(
+                json.dumps(
+                    {
+                        "page": "library",
+                        "saved_views": [
+                            {
+                                "name": "Kernel Deep Reads",
+                                "state": {
+                                    "track": "Attention Kernels",
+                                    "workflow": "research",
+                                    "stage": "deep_read",
+                                    "sort": "year",
+                                },
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            dry = self.run_cmd("scripts/apply_shared_views.py", str(report_dir), "--input", str(views_path))
+            self.assertIn("DRY  ADD shared view library / Kernel Deep Reads", dry.stdout)
+            taxonomy_before = json.loads((report_dir / "guides" / "taxonomy.json").read_text(encoding="utf-8"))
+            self.assertEqual(len(taxonomy_before["shared_views"]), 2)
+
+            write = self.run_cmd(
+                "scripts/apply_shared_views.py",
+                str(report_dir),
+                "--input",
+                str(views_path),
+                "--write",
+            )
+            self.assertIn("WRITE  ADD shared view library / Kernel Deep Reads", write.stdout)
+            taxonomy_after = json.loads((report_dir / "guides" / "taxonomy.json").read_text(encoding="utf-8"))
+            view_by_name = {view["name"]: view for view in taxonomy_after["shared_views"]}
+            self.assertEqual(view_by_name["Kernel Deep Reads"]["page"], "library")
+            self.assertEqual(view_by_name["Kernel Deep Reads"]["state"]["workflow"], "research")
+
+            self.run_cmd("scripts/build_wiki.py", str(report_dir))
+            self.run_cmd("scripts/validate_wiki.py", str(report_dir), "--strict-taxonomy")
+            library_html = (report_dir / "library.html").read_text(encoding="utf-8")
+            self.assertIn("Kernel Deep Reads", library_html)
+            self.assertIn('"workflow": "research"', library_html)
+
+            broken_path = Path(tmp_name) / "broken_shared_views.json"
+            broken_path.write_text(
+                json.dumps({"shared_views": [{"name": "Bad", "state": {"unknown": "x"}}]}),
+                encoding="utf-8",
+            )
+            broken = self.run_cmd(
+                "scripts/apply_shared_views.py",
+                str(report_dir),
+                "--input",
+                str(broken_path),
+                check=False,
+            )
+            self.assertNotEqual(broken.returncode, 0)
+            self.assertIn("unknown state key", broken.stderr)
 
     def test_invalid_taxonomy_config_fails_validation(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_name:

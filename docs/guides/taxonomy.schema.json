@@ -92,6 +92,7 @@
               "problem": {"$ref": "#/$defs/filter_value"},
               "line": {"$ref": "#/$defs/filter_value"},
               "role": {"$ref": "#/$defs/filter_value"},
+              "workflow": {"$ref": "#/$defs/filter_value"},
               "topic": {"$ref": "#/$defs/filter_value"},
               "method": {"$ref": "#/$defs/filter_value"},
               "status": {"$ref": "#/$defs/filter_value"},

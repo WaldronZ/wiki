@@ -66,6 +66,7 @@ paper_reader/
 ├── scripts/
 │   ├── apply_library_metadata.py
 │   ├── apply_review_plan.py
+│   ├── apply_shared_views.py
 │   ├── apply_status_workflow.py
 │   ├── apply_taxonomy_aliases.py
 │   ├── build_wiki.py
@@ -91,6 +92,7 @@ paper_reader/
 - `scripts/build_wiki.py` 用于扫描报告并生成 wiki 汇总页
 - `scripts/render_report_html.py` 是稳定 HTML 渲染兜底脚本，用于修复公式裸露、图片破图等展示问题
 - `scripts/apply_review_plan.py` 用于把 `docs/review.json` 的建议复习日期安全写回报告 frontmatter，默认只 dry-run
+- `scripts/apply_shared_views.py` 用于把首页/论文库导出的 saved views 或复制的 shared view JSON 安全合并到 `guides/taxonomy.json`，默认只 dry-run
 - `scripts/apply_status_workflow.py` 用于把 `docs/taxonomy.html` 下载的 `taxonomy_status_workflow.json` 安全合并到 `guides/taxonomy.json`，默认只 dry-run
 - `scripts/export_library_csv.py` 用于把 `papers.json`、`review.json` 和 `quality.json` 合并导出成 CSV，便于用表格工具批量管理
 - `scripts/export_reading_list.py` 用于按研究线、状态、方向、主题、方法或重要性导出 Markdown 阅读清单、BibTeX 或链接列表
@@ -215,7 +217,7 @@ has_code: true
 
 新增报告时可以从 [`docs/guides/report.template.md`](docs/guides/report.template.md) 复制章节骨架；报告 frontmatter 的字段类型、必填项、评分范围和日期格式由 [`docs/guides/metadata.schema.json`](docs/guides/metadata.schema.json) 描述；候选论文 CSV 的字段契约由 [`docs/guides/inbox.schema.json`](docs/guides/inbox.schema.json) 描述；分类配置字段由 [`docs/guides/taxonomy.schema.json`](docs/guides/taxonomy.schema.json) 描述，当前 `taxonomy.json` 已带 `$schema` 引用，支持编辑器自动提示。`python3 scripts/validate_wiki.py docs --strict-taxonomy` 会同时校验 schema、报告元数据、inbox CSV、分类漂移和生成页面，适合作为发布或开源协作前的质量门禁。
 
-首页和论文库表格的筛选、排序、分页状态会写入 URL query string。比如按研究线、重要性排序后复制浏览器地址，即可分享同一个论文列表视图。常用状态组合也可以保存为浏览器本地视图，并用「导出视图」/「导入视图」在浏览器、设备或团队成员之间迁移；需要团队共用时，点击「复制共享视图」即可把当前筛选生成 `shared_views` JSON，写进 `docs/guides/taxonomy.json` 后会随仓库同步到所有人的 wiki 下拉框里。
+首页和论文库表格的筛选、排序、分页状态会写入 URL query string。比如按研究线、重要性排序后复制浏览器地址，即可分享同一个论文列表视图。常用状态组合也可以保存为浏览器本地视图，并用「导出视图」/「导入视图」在浏览器、设备或团队成员之间迁移；需要团队共用时，点击「复制共享视图」即可把当前筛选生成 shared view JSON，或用「导出视图」拿到 saved views 包，再用 `scripts/apply_shared_views.py` dry-run / write 合并进 `docs/guides/taxonomy.json`，它会随仓库同步到所有人的 wiki 下拉框里。
 
 手动刷新 wiki：
 
@@ -298,6 +300,14 @@ python3 scripts/export_taxonomy_load.py docs --format patch --signal sparse_tags
 ```bash
 python3 scripts/apply_status_workflow.py docs --input ~/Downloads/taxonomy_status_workflow.json
 python3 scripts/apply_status_workflow.py docs --input ~/Downloads/taxonomy_status_workflow.json --write
+python3 scripts/build_wiki.py docs
+```
+
+应用浏览器里保存或复制的共享视图：
+
+```bash
+python3 scripts/apply_shared_views.py docs --input ~/Downloads/library_saved_views.json
+python3 scripts/apply_shared_views.py docs --input ~/Downloads/library_saved_views.json --write
 python3 scripts/build_wiki.py docs
 ```
 

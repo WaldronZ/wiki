@@ -131,7 +131,15 @@ python3 scripts/build_wiki.py docs
 
 写回脚本会把 active workflow 同步到根层 `status_values`、`reading_stage_values` 和 `review_stage_values`，同时保留其它命名 workflow。刷新 wiki 后，它就会成为首页、论文库、状态看板和 JSON controls 的正式下拉选项。
 
-`shared_views` 可以把常用筛选队列随仓库同步到首页和论文库表格。最省事的方式是在 `docs/index.html` 或 `docs/library.html` 调好筛选后点击「复制共享视图」，把生成的 JSON 对象放进下面的 `shared_views` 列表。浏览器本地保存的视图也可以用「导出视图」下载为 `*_saved_views.json`，再用「导入视图」迁移到另一台机器或临时试用一组 `shared_views` JSON；确认稳定后再合并进 `taxonomy.json`。`page` 支持 `all`、`index`、`library`；`state` 使用 URL query 里的筛选键，例如 `importance`、`status`、`line`、`track`、`review`、`sort`：
+`shared_views` 可以把常用筛选队列随仓库同步到首页和论文库表格。最省事的方式是在 `docs/index.html` 或 `docs/library.html` 调好筛选后点击「复制共享视图」，把生成的 JSON 对象保存成文件；浏览器本地保存的视图也可以用「导出视图」下载为 `*_saved_views.json`。确认稳定后用写回脚本合并进 `taxonomy.json`：
+
+```bash
+python3 scripts/apply_shared_views.py docs --input ~/Downloads/library_saved_views.json
+python3 scripts/apply_shared_views.py docs --input ~/Downloads/library_saved_views.json --write
+python3 scripts/build_wiki.py docs
+```
+
+`page` 支持 `all`、`index`、`library`；`state` 使用 URL query 里的筛选键，例如 `importance`、`workflow`、`status`、`line`、`track`、`review`、`sort`：
 
 ```json
 {
@@ -154,7 +162,7 @@ python3 scripts/build_wiki.py docs
 - `role_order`、`status_values`、`reading_stage_values`、`review_stage_values` 必须是字符串列表。
 - `active_status_workflow` 必须指向 `status_workflows` 中已有的名称；每个 workflow 只允许包含 `status_values`、`reading_stage_values` 和 `review_stage_values`。
 - 列表里不能有重复值或空值。
-- `shared_views` 必须是对象列表，每个视图都要有非空 `name` 和非空 `state`。
+- `shared_views` 必须是对象列表，每个视图都要有非空 `name` 和非空 `state`；`state` 可以保存 `workflow`，用于团队共享某套状态体系下的队列。
 
 报告 frontmatter 的字段契约写在 `docs/guides/metadata.schema.json`，用于约束必填字段、字符串 / 列表 / 布尔 / 整数类型、`importance` / `confidence` / `reproducibility` 的 1-5 范围，以及 `last_reviewed` / `next_review` 的 `YYYY-MM-DD` 日期格式。这个 schema 是给校验器和后续桌面软件共用的机器可读契约。
 

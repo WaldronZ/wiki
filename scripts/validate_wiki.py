@@ -139,6 +139,7 @@ SHARED_VIEW_STATE_KEYS = {
     "problem",
     "line",
     "role",
+    "workflow",
     "topic",
     "method",
     "status",
