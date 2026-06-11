@@ -279,6 +279,9 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("质量治理", quality_html)
             self.assertIn("Taxonomy Drift", quality_html)
             self.assertIn("标签归一化建议", quality_html)
+            self.assertIn("治理命令", quality_html)
+            self.assertIn("copy-quality-command", quality_html)
+            self.assertIn("python3 scripts/check_quality.py docs", quality_html)
 
             review = json.loads((report_dir / "review.json").read_text(encoding="utf-8"))
             self.assertEqual(review["count"], 2)

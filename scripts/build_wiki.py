@@ -3981,6 +3981,18 @@ def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
         f'<section class="metric-card"><span>{html.escape(label)}</span><strong>{html.escape(value)}</strong><span>{html.escape(note)}</span></section>'
         for label, value, note in metrics
     )
+    quality_commands = [
+        ("质量门禁", "python3 scripts/check_quality.py docs"),
+        ("严格校验", "python3 scripts/validate_wiki.py docs --strict-taxonomy"),
+        ("预览别名写入", "python3 scripts/apply_taxonomy_aliases.py docs"),
+        ("写入别名建议", "python3 scripts/apply_taxonomy_aliases.py docs --write"),
+        ("导出治理清单", "python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md"),
+        ("导出高优先级 CSV", "python3 scripts/export_taxonomy_actions.py docs --format csv --severity high --output docs/exports/taxonomy-actions.csv"),
+    ]
+    command_buttons = "".join(
+        f'<button class="button copy-quality-command" type="button" data-command="{html.escape(command, quote=True)}">{html.escape(label)}</button>'
+        for label, command in quality_commands
+    )
 
     body = f"""
 <header class="shell">
@@ -4007,6 +4019,13 @@ def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
     <div class="metric-grid">{metric_html}</div>
   </section>
   <section>
+    <h2 class="section-title">治理命令</h2>
+    <div class="command-panel">
+      <div class="bulk-actions">{command_buttons}</div>
+      <p class="meta">复制后在仓库根目录执行；带 --write 的命令会修改文件，建议先运行对应预览命令。</p>
+    </div>
+  </section>
+  <section>
     <h2 class="section-title">待处理问题</h2>
     <div class="table-wrap">{issue_table}</div>
   </section>
@@ -4031,6 +4050,23 @@ def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
     {queue_table}
   </section>
 </main>
+<script>
+async function copyQualityCommand(button) {{
+  const command = button.dataset.command || "";
+  try {{
+    await navigator.clipboard.writeText(command);
+    button.textContent = "已复制";
+    setTimeout(() => button.textContent = button.dataset.label, 1200);
+  }} catch {{
+    window.prompt("复制命令", command);
+  }}
+}}
+
+document.querySelectorAll(".copy-quality-command").forEach(button => {{
+  button.dataset.label = button.textContent;
+  button.addEventListener("click", () => copyQualityCommand(button));
+}});
+</script>
 """
     quality_css = "\n".join(
         [
@@ -4043,6 +4079,12 @@ def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
             "      overflow-x: auto;",
             "      font-size: 12px;",
             "      line-height: 1.5;",
+            "    }",
+            "    .command-panel {",
+            "      border: 1px solid var(--line);",
+            "      border-radius: 8px;",
+            "      background: var(--panel);",
+            "      padding: 12px;",
             "    }",
         ]
     )

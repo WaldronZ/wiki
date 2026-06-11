@@ -343,6 +343,12 @@
       font-size: 12px;
       line-height: 1.5;
     }
+    .command-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 12px;
+    }
   </style>
 </head>
 <body>
@@ -382,6 +388,13 @@
     <div class="metric-grid"><section class="metric-card"><span>质量分</span><strong>92.0</strong><span>综合得分</span></section><section class="metric-card"><span>分类覆盖</span><strong>100%</strong><span>必要字段</span></section><section class="metric-card"><span>复习计划</span><strong>0%</strong><span>next_review</span></section><section class="metric-card"><span>漂移项</span><strong>0</strong><span>taxonomy drift</span></section><section class="metric-card"><span>别名建议</span><strong>0</strong><span>label aliases</span></section><section class="metric-card"><span>库内重复</span><strong>0</strong><span>duplicate reports</span></section><section class="metric-card"><span>重复候选</span><strong>0</strong><span>inbox</span></section></div>
   </section>
   <section>
+    <h2 class="section-title">治理命令</h2>
+    <div class="command-panel">
+      <div class="bulk-actions"><button class="button copy-quality-command" type="button" data-command="python3 scripts/check_quality.py docs">质量门禁</button><button class="button copy-quality-command" type="button" data-command="python3 scripts/validate_wiki.py docs --strict-taxonomy">严格校验</button><button class="button copy-quality-command" type="button" data-command="python3 scripts/apply_taxonomy_aliases.py docs">预览别名写入</button><button class="button copy-quality-command" type="button" data-command="python3 scripts/apply_taxonomy_aliases.py docs --write">写入别名建议</button><button class="button copy-quality-command" type="button" data-command="python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md">导出治理清单</button><button class="button copy-quality-command" type="button" data-command="python3 scripts/export_taxonomy_actions.py docs --format csv --severity high --output docs/exports/taxonomy-actions.csv">导出高优先级 CSV</button></div>
+      <p class="meta">复制后在仓库根目录执行；带 --write 的命令会修改文件，建议先运行对应预览命令。</p>
+    </div>
+  </section>
+  <section>
     <h2 class="section-title">待处理问题</h2>
     <div class="table-wrap"><table class="data-table"><thead><tr><th>论文</th><th>分数</th><th>缺失字段</th><th>弱字段</th><th>复习</th></tr></thead><tbody><tr><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a><div class="meta">Parallel Decoding with Diffusion Models</div></td><td>92</td><td>-</td><td>next_review, review_stage</td><td>-</td></tr><tr><td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a><div class="meta">Parallel Decoding with Diffusion Models</div></td><td>92</td><td>-</td><td>next_review, review_stage</td><td>-</td></tr><tr><td><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a><div class="meta">Parallel Decoding with Diffusion Models</div></td><td>92</td><td>-</td><td>next_review, review_stage</td><td>-</td></tr><tr><td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a><div class="meta">Efficient Attention Kernels</div></td><td>92</td><td>-</td><td>next_review, review_stage</td><td>-</td></tr><tr><td><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a><div class="meta">Efficient Attention Kernels</div></td><td>92</td><td>-</td><td>next_review, review_stage</td><td>-</td></tr></tbody></table></div>
   </section>
@@ -406,6 +419,23 @@
     <table class="data-table"><thead><tr><th>队列</th><th>数量</th><th>样例 slug</th></tr></thead><tbody><tr><td>missing_required_metadata</td><td>0</td><td></td></tr><tr><td>needs_review_plan</td><td>5</td><td>2602.06036-dflash, 2604.11035-introspective-dlm, 2605.12825-orthrus, 2501.01005-flashinfer, 2307.08691-flashattention-2</td></tr><tr><td>due_review</td><td>0</td><td></td></tr><tr><td>no_code_observation</td><td>0</td><td></td></tr><tr><td>taxonomy_drift</td><td>0</td><td></td></tr><tr><td>duplicate_reports</td><td>0</td><td></td></tr><tr><td>high_importance</td><td>2</td><td>2307.08691-flashattention-2, 2604.11035-introspective-dlm</td></tr></tbody></table>
   </section>
 </main>
+<script>
+async function copyQualityCommand(button) {
+  const command = button.dataset.command || "";
+  try {
+    await navigator.clipboard.writeText(command);
+    button.textContent = "已复制";
+    setTimeout(() => button.textContent = button.dataset.label, 1200);
+  } catch {
+    window.prompt("复制命令", command);
+  }
+}
+
+document.querySelectorAll(".copy-quality-command").forEach(button => {
+  button.dataset.label = button.textContent;
+  button.addEventListener("click", () => copyQualityCommand(button));
+});
+</script>
 
 <script>
 (() => {
