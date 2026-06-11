@@ -42,6 +42,7 @@ GENERATED_FIXED_PATHS = (
     "command.json",
     "workflow.json",
     "status.json",
+    "views.json",
     "batch.json",
     "collections.json",
     "coverage.json",
@@ -63,6 +64,7 @@ GENERATED_FIXED_PATHS = (
     "board.html",
     "workflow.html",
     "status.html",
+    "views.html",
     "batch.html",
     "pivot.html",
     "compare.html",
@@ -3588,6 +3590,7 @@ DATA_CONSUMER_HINTS = {
     "command.json": ["command-center", "desktop", "navigation", "ops"],
     "workflow.json": ["workflow", "desktop", "filters"],
     "status.json": ["workflow", "runtime-selector", "desktop"],
+    "views.json": ["saved-views", "shared-views", "workflow", "desktop"],
     "batch.json": ["batch-planning", "classification", "ops", "desktop"],
     "collections.json": ["collections", "shared-views", "queues", "desktop"],
     "coverage.json": ["coverage", "taxonomy", "project-management", "desktop"],
@@ -3693,7 +3696,7 @@ def build_catalog_payload(report_dir: Path, papers: list[dict[str, Any]], inbox_
         {
             "name": "Desktop sync bootstrap",
             "command": "read docs/catalog.json, docs/papers.json, docs/search_index.json",
-            "uses": ["catalog.json", "papers.json", "search_index.json", "workflow.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
+            "uses": ["catalog.json", "papers.json", "search_index.json", "workflow.json", "status.json", "views.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
             "outputs": ["local searchable paper library"],
         },
         {
@@ -3720,7 +3723,7 @@ def build_catalog_payload(report_dir: Path, papers: list[dict[str, Any]], inbox_
         "data_resources": data_resources,
         "contracts": contracts,
         "integration_recipes": integration_recipes,
-        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
+        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "status.json", "views.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
     }
 
 
@@ -3744,7 +3747,7 @@ def write_catalog_placeholders(report_dir: Path) -> None:
         "data_resources": [],
         "contracts": [],
         "integration_recipes": [],
-        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
+        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "status.json", "views.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
     }
     (report_dir / "catalog.json").write_text(
         json.dumps(payload, ensure_ascii=False, indent=2),
@@ -3895,7 +3898,7 @@ def build_onboarding_payload(report_dir: Path, papers: list[dict[str, Any]], inb
         "contribution_paths": contribution_paths,
         "command_groups": command_groups,
         "contracts": contract_files_manifest(),
-        "bootstrap_files": ["command.json", "onboarding.json", "catalog.json", "manifest.json", "papers.json", "batch.json", "collections.json", "coverage.json", "gaps.json", "intake.json", "routing.json", "quality.json"],
+        "bootstrap_files": ["command.json", "onboarding.json", "catalog.json", "manifest.json", "papers.json", "workflow.json", "status.json", "views.json", "batch.json", "collections.json", "coverage.json", "gaps.json", "intake.json", "routing.json", "quality.json"],
         "core_pages": [
             item
             for item in wiki_pages_manifest()
@@ -3938,6 +3941,7 @@ def wiki_pages_manifest() -> list[dict[str, str]]:
         {"title": "状态看板", "href": "board.html", "kind": "workflow", "description": "拖拽式状态流和 CSV patch"},
         {"title": "工作流中心", "href": "workflow.html", "kind": "workflow", "description": "状态体系对比、分布和漂移审计"},
         {"title": "状态选择器", "href": "status.html", "kind": "workflow", "description": "动态选择状态体系、阶段和值并生成可分享视图"},
+        {"title": "视图目录", "href": "views.html", "kind": "workflow", "description": "共享视图、系统队列和状态/研究线视图目录"},
         {"title": "批次规划", "href": "batch.html", "kind": "ops", "description": "按分类、状态和复习缺口切分可执行论文批次"},
         {"title": "分类透视表", "href": "pivot.html", "kind": "analysis", "description": "任意两个分类维度交叉分析论文分布"},
         {"title": "论文对比", "href": "compare.html", "kind": "analysis", "description": "并排比较候选论文的分类、状态和质量信号"},
@@ -3977,6 +3981,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "command.json", "description": "场景化命令中心，组织页面入口、队列、数据和推荐命令"},
         {"href": "workflow.json", "description": "状态工作流配置、分布和漂移审计"},
         {"href": "status.json", "description": "运行时状态选择器、状态字段选项和论文状态快照"},
+        {"href": "views.json", "description": "共享视图、系统队列、研究线和状态工作流视图目录"},
         {"href": "batch.json", "description": "按分类、状态和治理缺口生成的可执行论文批次"},
         {"href": "collections.json", "description": "共享视图、智能集合和研究线集合的机器可读入口"},
         {"href": "coverage.json", "description": "研究线分类覆盖、字段缺口、缺失 slug 和 owner 信号"},
@@ -14700,6 +14705,338 @@ def collection_paper_summary(paper: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def build_views_payload(papers: list[dict[str, Any]]) -> dict[str, Any]:
+    quality = build_quality_report(papers)
+    review_plan = build_review_plan(papers)
+    today = dt.date.today().isoformat()
+    paper_by_slug = {paper["slug"]: paper for paper in papers}
+
+    def by_slugs(slugs: list[str]) -> list[dict[str, Any]]:
+        return [paper_by_slug[slug] for slug in slugs if slug in paper_by_slug]
+
+    def summarize(view: dict[str, Any], source: str, kind: str, note: str = "") -> dict[str, Any]:
+        page = str(view.get("page") or "library")
+        state = {
+            str(key): str(value)
+            for key, value in (view.get("state") or {}).items()
+            if str(value).strip()
+        }
+        matched = [paper for paper in papers if matches_view_state(paper, state, today)]
+        name = str(view.get("name") or "Untitled view")
+        identity = json.dumps({"source": source, "kind": kind, "page": page, "name": name, "state": state}, ensure_ascii=False, sort_keys=True)
+        view_id = f"{source}-{slugify_label(page)}-{slugify_label(name)}-{hashlib.sha1(identity.encode('utf-8')).hexdigest()[:8]}"
+        return {
+            "id": view_id,
+            "name": name,
+            "source": source,
+            "kind": kind,
+            "page": page,
+            "target_page": view_target_page({"page": page}),
+            "href": view_href({"page": page, "state": state}),
+            "state": state,
+            "count": len(matched),
+            "slugs": [paper["slug"] for paper in matched],
+            "sample_papers": [collection_paper_summary(paper) for paper in matched[:8]],
+            "note": note,
+            "shared_view": {"name": name, "page": page, "state": state},
+            "empty": not matched,
+        }
+
+    configured_views = [
+        summarize(view, "configured", "shared", "来自 docs/guides/taxonomy.json 的 shared_views。")
+        for view in SHARED_VIEWS
+    ]
+
+    no_review = by_slugs(list(review_plan["queues"].get("needs_plan", [])))
+    missing_taxonomy = by_slugs(list(quality["queues"].get("missing_required_metadata", [])))
+    taxonomy_sparse = by_slugs(list(quality["queues"].get("taxonomy_sparse", [])))
+    no_code_observation = by_slugs(list(quality["queues"].get("no_code_observation", [])))
+    due_review = [
+        paper
+        for paper in papers
+        if paper.get("next_review") and str(paper.get("next_review")) <= today
+    ]
+
+    smart_specs = [
+        ("重点论文", "library", {"importance": "5", "sort": "importance"}, "高重要性论文，适合周会或路线图优先复盘。"),
+        ("待复习", "library", {"review": "due", "sort": "importance"}, f"next_review <= {today} 的复习视图。"),
+        ("未设置复习", "library", {"review": "none", "sort": "importance"}, "缺少 next_review 的论文，适合批量补复习计划。"),
+        ("有代码", "library", {"code": "yes", "sort": "year"}, "带代码或实现观察的论文。"),
+        ("缺代码观察", "library", {"code": "no", "sort": "importance"}, "尚未记录代码仓库或代码实现观察的论文。"),
+    ]
+    smart_views = [summarize({"name": name, "page": page, "state": state}, "system", "queue", note) for name, page, state, note in smart_specs]
+    smart_views.extend(
+        [
+            {
+                **summarize({"name": "待补分类", "page": "library", "state": {"sort": "importance"}}, "system", "queue", "缺必要分类字段的论文，入口指向质量治理。"),
+                "href": "quality.html",
+                "slugs": [paper["slug"] for paper in missing_taxonomy],
+                "count": len(missing_taxonomy),
+                "sample_papers": [collection_paper_summary(paper) for paper in missing_taxonomy[:8]],
+                "empty": not missing_taxonomy,
+            },
+            {
+                **summarize({"name": "分类偏薄", "page": "library", "state": {"sort": "importance"}}, "system", "queue", "标签粒度不足，影响后续检索和聚类。"),
+                "href": "quality.html",
+                "slugs": [paper["slug"] for paper in taxonomy_sparse],
+                "count": len(taxonomy_sparse),
+                "sample_papers": [collection_paper_summary(paper) for paper in taxonomy_sparse[:8]],
+                "empty": not taxonomy_sparse,
+            },
+            {
+                **summarize({"name": "复习计划缺口", "page": "library", "state": {"review": "none", "sort": "importance"}}, "system", "queue", "缺少 next_review 的论文，入口指向复习计划。"),
+                "href": "review.html",
+                "slugs": [paper["slug"] for paper in no_review],
+                "count": len(no_review),
+                "sample_papers": [collection_paper_summary(paper) for paper in no_review[:8]],
+                "empty": not no_review,
+            },
+            {
+                **summarize({"name": "已到复习日", "page": "library", "state": {"review": "due", "sort": "importance"}}, "system", "queue", "已到复习日的论文。"),
+                "href": "review.html",
+                "slugs": [paper["slug"] for paper in due_review],
+                "count": len(due_review),
+                "sample_papers": [collection_paper_summary(paper) for paper in due_review[:8]],
+                "empty": not due_review,
+            },
+            {
+                **summarize({"name": "代码观察缺口", "page": "library", "state": {"code": "no", "sort": "importance"}}, "system", "queue", "缺代码实现观察的论文，入口指向研究缺口。"),
+                "href": "gaps.html",
+                "slugs": [paper["slug"] for paper in no_code_observation],
+                "count": len(no_code_observation),
+                "sample_papers": [collection_paper_summary(paper) for paper in no_code_observation[:8]],
+                "empty": not no_code_observation,
+            },
+        ]
+    )
+
+    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for paper in papers:
+        grouped[str(paper.get("research_line") or "Unassigned")].append(paper)
+    line_views = [
+        summarize(
+            {"name": f"研究线：{line}", "page": "library", "state": {"line": line, "sort": "importance"}},
+            "generated",
+            "research_line",
+            "按研究线固定入口生成的视图。",
+        )
+        for line in sorted(grouped, key=lambda name: (-len(grouped[name]), name.lower()))
+    ]
+
+    workflow_views = []
+    for workflow_name, workflow in sorted((STATUS_WORKFLOWS or {}).items()):
+        for status in workflow.get("status_values", []):
+            workflow_views.append(
+                summarize(
+                    {
+                        "name": f"{workflow_name} / {status}",
+                        "page": "library",
+                        "state": {"workflow": workflow_name, "status": status, "sort": "year"},
+                    },
+                    "generated",
+                    "workflow_status",
+                    "按状态 workflow 和 status 自动生成的视图。",
+                )
+            )
+
+    views = configured_views + smart_views + line_views + workflow_views
+    source_counts = Counter(str(view["source"]) for view in views)
+    kind_counts = Counter(str(view["kind"]) for view in views)
+    empty_views = [view for view in views if view["empty"]]
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": len(papers),
+        "view_count": len(views),
+        "configured_count": len(configured_views),
+        "system_count": len(smart_views),
+        "generated_count": len(line_views) + len(workflow_views),
+        "source_counts": dict(sorted(source_counts.items())),
+        "kind_counts": dict(sorted(kind_counts.items())),
+        "empty_view_count": len(empty_views),
+        "views": views,
+        "recommendations": [
+            "把常用筛选从浏览器本地 saved views 提升到 docs/guides/taxonomy.json 的 shared_views，便于多人和桌面端复用。",
+            "优先保留命中数稳定、能代表研究线或状态流的视图；空视图可作为未来队列，也可从 shared_views 中移除。",
+            "桌面软件或 DMG 外壳可直接读取 views.json，把 href/state/slugs 映射为侧边栏、收藏夹或项目队列。",
+        ],
+        "commands": [
+            "python3 scripts/apply_shared_views.py docs --input <shared_views.json>",
+            "python3 scripts/apply_shared_views.py docs --input <shared_views.json> --write",
+            "python3 scripts/build_wiki.py docs",
+        ],
+        "links": {
+            "html": "views.html",
+            "index": "index.html",
+            "library": "library.html",
+            "collections": "collections.html",
+            "status": "status.html",
+            "workflow": "workflow.html",
+            "quality": "quality.html",
+        },
+    }
+
+
+def write_views_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_views_payload(papers)
+    (report_dir / "views.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
+def render_views(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_views_payload(papers)
+
+    def sample_list(items: list[dict[str, Any]]) -> str:
+        if not items:
+            return '<span class="meta">暂无样例</span>'
+        links = []
+        for paper in items[:3]:
+            title = str(paper.get("title_zh") or paper.get("title") or paper.get("slug") or "")
+            links.append(f'<a href="{html.escape(str(paper.get("href") or ""))}">{html.escape(title)}</a>')
+        more = f' <span class="meta">+{len(items) - 3}</span>' if len(items) > 3 else ""
+        return " · ".join(links) + more
+
+    rows = []
+    for view in payload["views"]:
+        shared = html.escape(json.dumps(view["shared_view"], ensure_ascii=False, sort_keys=True), quote=True)
+        state = html.escape(json.dumps(view["state"], ensure_ascii=False, sort_keys=True))
+        rows.append(
+            f"""<tr data-source="{html.escape(str(view['source']), quote=True)}" data-kind="{html.escape(str(view['kind']), quote=True)}" data-empty="{str(bool(view['empty'])).lower()}">
+  <td><a href="{html.escape(str(view['href']))}">{html.escape(str(view['name']))}</a><div class="meta">{html.escape(str(view['note']))}</div></td>
+  <td>{html.escape(str(view['source']))}</td>
+  <td>{html.escape(str(view['kind']))}</td>
+  <td>{html.escape(str(view['page']))}</td>
+  <td>{int(view['count'])}</td>
+  <td><code>{state}</code></td>
+  <td>{sample_list(view.get('sample_papers', []))}</td>
+  <td><button class="button copy-view-json" type="button" data-view="{shared}">复制</button></td>
+</tr>"""
+        )
+
+    command_buttons = "".join(
+        f'<button class="button copy-view-command" type="button" data-command="{html.escape(command, quote=True)}">{html.escape(command)}</button>'
+        for command in payload["commands"]
+    )
+    source_options = "".join(f'<option value="{html.escape(source)}">{html.escape(source)}</option>' for source in sorted(payload["source_counts"]))
+    kind_options = "".join(f'<option value="{html.escape(kind)}">{html.escape(kind)}</option>' for kind in sorted(payload["kind_counts"]))
+    data = {"views": payload["views"], "summary": {key: payload[key] for key in ("view_count", "configured_count", "system_count", "generated_count", "empty_view_count")}}
+    views_css = """
+    .view-toolbar {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) 180px 180px 160px;
+      gap: 10px;
+      align-items: center;
+      margin: 18px 0;
+    }
+    .view-toolbar input,
+    .view-toolbar select {
+      width: 100%;
+      min-height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fffdf8;
+      color: var(--ink);
+      padding: 8px 10px;
+      font: inherit;
+    }
+    .view-table code {
+      white-space: normal;
+      word-break: break-word;
+      font-size: 12px;
+    }
+    .view-table .button {
+      min-width: 58px;
+      justify-content: center;
+    }
+    .command-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    @media (max-width: 820px) {
+      .view-toolbar { grid-template-columns: 1fr; }
+      .view-table { min-width: 980px; }
+    }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">View Directory</div>
+  <h1>视图目录</h1>
+  <p class="lead">把共享筛选、系统队列、研究线入口和状态工作流入口集中成可版本化目录。论文多起来后，这里就是团队共用的侧边栏和桌面端启动数据。</p>
+  <div class="stats">
+    <a class="stat" href="views.json">Views JSON</a>
+    <a class="stat" href="index.html">首页</a>
+    <a class="stat" href="library.html">论文库</a>
+    <a class="stat" href="collections.html">集合视图</a>
+    <a class="stat" href="status.html">状态选择器</a>
+    <span class="stat">视图 {payload["view_count"]}</span>
+    <span class="stat">共享 {payload["configured_count"]}</span>
+    <span class="stat">空视图 {payload["empty_view_count"]}</span>
+  </div>
+</header>
+<main class="shell">
+  <section>
+    <h2 class="section-title">筛选视图</h2>
+    <div class="view-toolbar">
+      <input id="viewSearch" type="search" placeholder="搜索视图、状态或筛选条件">
+      <select id="viewSource"><option value="">全部来源</option>{source_options}</select>
+      <select id="viewKind"><option value="">全部类型</option>{kind_options}</select>
+      <select id="viewEmpty"><option value="">全部命中</option><option value="false">有命中</option><option value="true">空视图</option></select>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table view-table">
+        <thead><tr><th>视图</th><th>来源</th><th>类型</th><th>页面</th><th>命中</th><th>状态</th><th>样例</th><th>JSON</th></tr></thead>
+        <tbody id="viewRows">{''.join(rows)}</tbody>
+      </table>
+    </div>
+  </section>
+  <section>
+    <h2 class="section-title">写回命令</h2>
+    <p class="meta">复制某个视图 JSON 后，可保存成文件并用 dry-run 检查，再写回 docs/guides/taxonomy.json。</p>
+    <div class="command-strip">{command_buttons}</div>
+  </section>
+</main>
+<script>
+(() => {{
+  const rows = Array.from(document.querySelectorAll("#viewRows tr"));
+  const search = document.querySelector("#viewSearch");
+  const source = document.querySelector("#viewSource");
+  const kind = document.querySelector("#viewKind");
+  const empty = document.querySelector("#viewEmpty");
+  function applyFilters() {{
+    const term = (search.value || "").toLowerCase();
+    rows.forEach(row => {{
+      const matchesText = !term || row.textContent.toLowerCase().includes(term);
+      const matchesSource = !source.value || row.dataset.source === source.value;
+      const matchesKind = !kind.value || row.dataset.kind === kind.value;
+      const matchesEmpty = !empty.value || row.dataset.empty === empty.value;
+      row.hidden = !(matchesText && matchesSource && matchesKind && matchesEmpty);
+    }});
+  }}
+  [search, source, kind, empty].forEach(input => input.addEventListener("input", applyFilters));
+  document.querySelectorAll(".copy-view-json").forEach(button => {{
+    button.addEventListener("click", async () => {{
+      const text = JSON.stringify({{ shared_views: [JSON.parse(button.dataset.view || "{{}}")] }}, null, 2);
+      await navigator.clipboard.writeText(text);
+      button.textContent = "已复制";
+      setTimeout(() => button.textContent = "复制", 1200);
+    }});
+  }});
+  document.querySelectorAll(".copy-view-command").forEach(button => {{
+    button.addEventListener("click", async () => {{
+      await navigator.clipboard.writeText(button.dataset.command || "");
+      button.textContent = "已复制";
+      setTimeout(() => button.textContent = button.dataset.command || "复制", 1200);
+    }});
+  }});
+}})();
+</script>
+"""
+    (report_dir / "views.html").write_text(page_shell("视图目录", body, data, views_css), encoding="utf-8")
+
+
 def build_collections_payload(papers: list[dict[str, Any]]) -> dict[str, Any]:
     quality = build_quality_report(papers)
     review_plan = build_review_plan(papers)
@@ -19176,6 +19513,7 @@ def build_wiki(report_dir: Path) -> int:
     write_stats_json(report_dir, papers)
     write_workflow_json(report_dir, papers)
     write_status_json(report_dir, papers)
+    write_views_json(report_dir, papers)
     write_batch_json(report_dir, papers)
     write_collections_json(report_dir, papers)
     write_coverage_json(report_dir, papers)
@@ -19199,6 +19537,7 @@ def build_wiki(report_dir: Path) -> int:
     render_board(report_dir, papers)
     render_workflow(report_dir, papers)
     render_status(report_dir, papers)
+    render_views(report_dir, papers)
     render_batch(report_dir, papers)
     render_pivot(report_dir, papers)
     render_compare(report_dir, papers)

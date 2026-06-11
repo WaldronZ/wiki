@@ -104,6 +104,7 @@ REQUIRED_PAGES = {
     "board.html",
     "workflow.html",
     "status.html",
+    "views.html",
     "batch.html",
     "pivot.html",
     "compare.html",
@@ -147,6 +148,7 @@ REQUIRED_PAGES = {
     "command.json",
     "workflow.json",
     "status.json",
+    "views.json",
     "batch.json",
     "collections.json",
     "coverage.json",
@@ -581,6 +583,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     command_path = report_dir / "command.json"
     workflow_path = report_dir / "workflow.json"
     status_path = report_dir / "status.json"
+    views_path = report_dir / "views.json"
     batch_path = report_dir / "batch.json"
     collections_path = report_dir / "collections.json"
     coverage_path = report_dir / "coverage.json"
@@ -625,6 +628,9 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         return
     if not status_path.exists():
         errors.append("missing status.json")
+        return
+    if not views_path.exists():
+        errors.append("missing views.json")
         return
     if not batch_path.exists():
         errors.append("missing batch.json")
@@ -698,6 +704,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     command_data = json.loads(command_path.read_text(encoding="utf-8"))
     workflow_data = json.loads(workflow_path.read_text(encoding="utf-8"))
     status_data = json.loads(status_path.read_text(encoding="utf-8"))
+    views_data = json.loads(views_path.read_text(encoding="utf-8"))
     batch_data = json.loads(batch_path.read_text(encoding="utf-8"))
     collections_data = json.loads(collections_path.read_text(encoding="utf-8"))
     coverage_data = json.loads(coverage_path.read_text(encoding="utf-8"))
@@ -949,6 +956,66 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         errors.append("status.json links must include library, board, and workflow")
     if not isinstance(status_data.get("commands"), list):
         errors.append("status.json commands must be a list")
+
+    if views_data.get("count") != len(report_slugs):
+        errors.append(f"views.json count {views_data.get('count')} != markdown report count {len(report_slugs)}")
+    required_views = {"view_count", "configured_count", "system_count", "generated_count", "source_counts", "kind_counts", "empty_view_count", "views", "recommendations", "commands", "links"}
+    missing_views = sorted(required_views - set(views_data))
+    if missing_views:
+        errors.append(f"views.json missing keys: {', '.join(missing_views)}")
+    view_items = views_data.get("views")
+    if not isinstance(view_items, list):
+        errors.append("views.json views must be a list")
+        view_items = []
+    elif views_data.get("view_count") != len(view_items):
+        errors.append("views.json view_count must match views length")
+    valid_view_sources = {"configured", "system", "generated"}
+    valid_view_kinds = {"shared", "queue", "research_line", "workflow_status"}
+    view_ids: set[str] = set()
+    for index, item in enumerate(view_items):
+        if not isinstance(item, dict):
+            errors.append(f"views.json views[{index}] must be an object")
+            continue
+        for key in ("id", "name", "source", "kind", "page", "target_page", "href", "state", "count", "slugs", "sample_papers", "shared_view", "empty"):
+            if key not in item:
+                errors.append(f"views.json views[{index}] missing {key}")
+        if item.get("source") not in valid_view_sources:
+            errors.append(f"views.json views[{index}] has invalid source")
+        if item.get("kind") not in valid_view_kinds:
+            errors.append(f"views.json views[{index}] has invalid kind")
+        view_id = str(item.get("id") or "")
+        if view_id in view_ids:
+            errors.append(f"views.json duplicate view id: {view_id}")
+        if view_id:
+            view_ids.add(view_id)
+        if not isinstance(item.get("state"), dict):
+            errors.append(f"views.json views[{index}].state must be an object")
+        if not isinstance(item.get("shared_view"), dict):
+            errors.append(f"views.json views[{index}].shared_view must be an object")
+        slugs = item.get("slugs")
+        if not isinstance(slugs, list):
+            errors.append(f"views.json views[{index}].slugs must be a list")
+        else:
+            unknown_view_slugs = sorted(str(slug) for slug in slugs if str(slug) not in report_slugs)
+            if unknown_view_slugs:
+                errors.append(f"views.json views[{index}] references unknown slugs: {unknown_view_slugs}")
+            if isinstance(item.get("count"), int) and item.get("count") != len(slugs):
+                errors.append(f"views.json views[{index}].count must match slugs length")
+        sample_papers = item.get("sample_papers")
+        if not isinstance(sample_papers, list):
+            errors.append(f"views.json views[{index}].sample_papers must be a list")
+        else:
+            sample_slugs = sorted(str(paper.get("slug") or "") for paper in sample_papers if isinstance(paper, dict))
+            unknown_sample_slugs = [slug for slug in sample_slugs if slug and slug not in report_slugs]
+            if unknown_sample_slugs:
+                errors.append(f"views.json views[{index}] references unknown sample paper slugs: {unknown_sample_slugs}")
+    if not isinstance(views_data.get("recommendations"), list):
+        errors.append("views.json recommendations must be a list")
+    if not isinstance(views_data.get("commands"), list):
+        errors.append("views.json commands must be a list")
+    view_links = views_data.get("links")
+    if not isinstance(view_links, dict) or not {"html", "index", "library", "collections", "status", "workflow", "quality"}.issubset(view_links):
+        errors.append("views.json links missing required entries")
 
     if batch_data.get("count") != len(report_slugs):
         errors.append(f"batch.json count {batch_data.get('count')} != markdown report count {len(report_slugs)}")

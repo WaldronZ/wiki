@@ -17,6 +17,7 @@ function htmlFiles() {
     "board.html",
     "workflow.html",
     "status.html",
+    "views.html",
     "batch.html",
     "pivot.html",
     "compare.html",
