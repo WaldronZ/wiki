@@ -238,6 +238,10 @@ class WikiWorkflowTest(unittest.TestCase):
             (ROOT / "docs" / "guides" / "facets.schema.json").read_text(encoding="utf-8"),
             encoding="utf-8",
         )
+        (guides_dir / "batch.schema.json").write_text(
+            (ROOT / "docs" / "guides" / "batch.schema.json").read_text(encoding="utf-8"),
+            encoding="utf-8",
+        )
         (guides_dir / "workflow.schema.json").write_text(
             (ROOT / "docs" / "guides" / "workflow.schema.json").read_text(encoding="utf-8"),
             encoding="utf-8",
@@ -624,7 +628,11 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertGreater(batch["batch_count"], 0)
             self.assertIn("research_line", {item["key"] for item in batch["dimensions"]})
             self.assertIn("status", {item["key"] for item in batch["dimensions"]})
+            dimension_by_key = {item["key"]: item for item in batch["dimensions"]}
+            self.assertEqual(dimension_by_key["research_line"]["query"], "line")
+            self.assertFalse(dimension_by_key["status"]["multi"])
             self.assertTrue(batch["top_batches"])
+            self.assertIn("sample_titles", batch["top_batches"][0])
             serving_batch = next(item for item in batch["batches"] if item["dimension"] == "research_line" and item["value"] == "LLM Serving")
             self.assertEqual(serving_batch["count"], 1)
             self.assertIn(serving_batch["severity"], {"high", "medium", "low"})
@@ -1539,6 +1547,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("guides/inbox.schema.json", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/taxonomy.schema.json", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/facets.schema.json", {item["href"] for item in manifest["contract_files"]})
+            self.assertIn("guides/batch.schema.json", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/workflow.schema.json", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/status.schema.json", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/views.schema.json", {item["href"] for item in manifest["contract_files"]})
@@ -1553,6 +1562,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(artifact_by_href["guides/inbox.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/taxonomy.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/facets.schema.json"]["kind"], "contract")
+            self.assertEqual(artifact_by_href["guides/batch.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/workflow.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/status.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/views.schema.json"]["kind"], "contract")
@@ -2733,6 +2743,21 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("guides/facets.schema.json: properties.fields is required", result.stderr)
             self.assertIn("guides/facets.schema.json: $defs must be an object", result.stderr)
+
+    def test_invalid_batch_schema_fails_validation(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_name:
+            report_dir = self.make_report_dir(Path(tmp_name))
+            self.run_cmd("scripts/build_wiki.py", str(report_dir))
+
+            (report_dir / "guides" / "batch.schema.json").write_text(
+                json.dumps({"$schema": "https://json-schema.org/draft/2020-12/schema", "type": "object", "properties": {}}),
+                encoding="utf-8",
+            )
+            result = self.run_cmd("scripts/validate_wiki.py", str(report_dir), check=False)
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("guides/batch.schema.json: properties.dimensions is required", result.stderr)
+            self.assertIn("guides/batch.schema.json: $defs must be an object", result.stderr)
 
     def test_invalid_status_schema_fails_validation(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_name:

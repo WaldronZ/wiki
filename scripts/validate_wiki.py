@@ -1037,6 +1037,15 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         batch_dimension_keys = {str(item.get("key") or "") for item in batch_dimensions if isinstance(item, dict)}
         if batch_data.get("dimension_count") != len(batch_dimensions):
             errors.append("batch.json dimension_count must match dimensions length")
+        for index, item in enumerate(batch_dimensions):
+            if not isinstance(item, dict):
+                errors.append(f"batch.json dimensions[{index}] must be an object")
+                continue
+            for key in ("key", "label", "query", "multi", "paper_key"):
+                if key not in item:
+                    errors.append(f"batch.json dimensions[{index}] missing {key}")
+            if not isinstance(item.get("multi"), bool):
+                errors.append(f"batch.json dimensions[{index}].multi must be boolean")
     batch_items = batch_data.get("batches")
     if not isinstance(batch_items, list):
         errors.append("batch.json batches must be a list")
@@ -1067,8 +1076,17 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
             unknown_slugs = sorted(str(slug) for slug in item.get("sample_slugs", []) if str(slug) not in report_slugs)
             if unknown_slugs:
                 errors.append(f"batch.json batches[{index}] references unknown sample slugs: {unknown_slugs}")
-    if not isinstance(batch_data.get("top_batches"), list):
+    top_batches = batch_data.get("top_batches")
+    if not isinstance(top_batches, list):
         errors.append("batch.json top_batches must be a list")
+        top_batches = []
+    for index, item in enumerate(top_batches):
+        if not isinstance(item, dict):
+            errors.append(f"batch.json top_batches[{index}] must be an object")
+            continue
+        unknown_slugs = sorted(str(slug) for slug in item.get("slugs", []) if str(slug) not in report_slugs)
+        if unknown_slugs:
+            errors.append(f"batch.json top_batches[{index}] references unknown slugs: {unknown_slugs}")
     batch_links = batch_data.get("links")
     if not isinstance(batch_links, dict) or not {"library", "actions", "review", "facets"}.issubset(batch_links):
         errors.append("batch.json links must include library, actions, review, and facets")
@@ -2007,6 +2025,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         "guides/metadata.schema.json",
         "guides/taxonomy.json",
         "guides/facets.schema.json",
+        "guides/batch.schema.json",
         "guides/workflow.schema.json",
         "guides/status.schema.json",
         "guides/views.schema.json",
@@ -2460,6 +2479,61 @@ def validate_facets_schema_contract(report_dir: Path, errors: list[str], warning
         errors.append("guides/facets.schema.json: severity enum must include none, low, medium, high")
 
 
+def validate_batch_schema_contract(report_dir: Path, errors: list[str], warnings: list[str]) -> None:
+    schema_path = report_dir / "guides" / "batch.schema.json"
+    if not schema_path.exists():
+        warnings.append("guides/batch.schema.json missing; external batch-planning schema hints are unavailable")
+        return
+
+    try:
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        errors.append(f"guides/batch.schema.json: invalid JSON: {exc}")
+        return
+
+    if not isinstance(schema, dict):
+        errors.append("guides/batch.schema.json: root must be an object")
+        return
+    if not isinstance(schema.get("$schema"), str) or not schema.get("$schema", "").strip():
+        errors.append("guides/batch.schema.json: $schema must be a non-empty string")
+    if schema.get("type") != "object":
+        errors.append("guides/batch.schema.json: type must be object")
+    properties = schema.get("properties")
+    if not isinstance(properties, dict):
+        errors.append("guides/batch.schema.json: properties must be an object")
+        properties = {}
+    for key in ("dimensions", "summary", "batches", "top_batches", "links"):
+        if key not in properties:
+            errors.append(f"guides/batch.schema.json: properties.{key} is required")
+    defs = schema.get("$defs")
+    if not isinstance(defs, dict):
+        errors.append("guides/batch.schema.json: $defs must be an object")
+        defs = {}
+    dimension_def = defs.get("dimension")
+    if not isinstance(dimension_def, dict):
+        errors.append("guides/batch.schema.json: $defs.dimension is required")
+    else:
+        dimension_required = set(dimension_def.get("required") or [])
+        for key in ("key", "label", "query", "multi", "paper_key"):
+            if key not in dimension_required:
+                errors.append(f"guides/batch.schema.json: $defs.dimension.required missing {key}")
+    batch_def = defs.get("batch")
+    if not isinstance(batch_def, dict):
+        errors.append("guides/batch.schema.json: $defs.batch is required")
+        return
+    batch_required = set(batch_def.get("required") or [])
+    for key in ("id", "dimension", "value", "count", "severity", "priority", "recommended_action", "href", "export_command", "slugs", "sample_slugs", "sample_titles"):
+        if key not in batch_required:
+            errors.append(f"guides/batch.schema.json: $defs.batch.required missing {key}")
+    batch_properties = batch_def.get("properties")
+    if not isinstance(batch_properties, dict):
+        errors.append("guides/batch.schema.json: $defs.batch.properties must be an object")
+        return
+    severity_enum = set((batch_properties.get("severity") or {}).get("enum") or [])
+    if not {"high", "medium", "low"}.issubset(severity_enum):
+        errors.append("guides/batch.schema.json: severity enum must include high, medium, low")
+
+
 def validate_status_schema_contract(report_dir: Path, errors: list[str], warnings: list[str]) -> None:
     schema_path = report_dir / "guides" / "status.schema.json"
     if not schema_path.exists():
@@ -2702,6 +2776,7 @@ def main() -> int:
         reports = validate_reports(report_dir, schema, errors, warnings)
         validate_taxonomy_schema_contract(report_dir, errors, warnings)
         validate_facets_schema_contract(report_dir, errors, warnings)
+        validate_batch_schema_contract(report_dir, errors, warnings)
         validate_workflow_schema_contract(report_dir, errors, warnings)
         validate_status_schema_contract(report_dir, errors, warnings)
         validate_views_schema_contract(report_dir, errors, warnings)

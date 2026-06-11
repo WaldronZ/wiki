@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/autopaperreader/batch.schema.json",
+  "title": "AutoPaperReader batch planning data",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "generated_at": {"type": "string"},
+    "count": {"type": "integer", "minimum": 0},
+    "report_dir": {"type": "string", "minLength": 1},
+    "dimension_count": {"type": "integer", "minimum": 0},
+    "batch_count": {"type": "integer", "minimum": 0},
+    "dimensions": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/dimension"}
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "high": {"type": "integer", "minimum": 0},
+        "medium": {"type": "integer", "minimum": 0},
+        "low": {"type": "integer", "minimum": 0},
+        "missing_review": {"type": "integer", "minimum": 0},
+        "missing_taxonomy": {"type": "integer", "minimum": 0}
+      },
+      "required": ["high", "medium", "low", "missing_review", "missing_taxonomy"]
+    },
+    "batches": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/batch"}
+    },
+    "top_batches": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/batch"}
+    },
+    "links": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "library": {"type": "string", "minLength": 1},
+        "actions": {"type": "string", "minLength": 1},
+        "quality": {"type": "string", "minLength": 1},
+        "review": {"type": "string", "minLength": 1},
+        "facets": {"type": "string", "minLength": 1},
+        "scale": {"type": "string", "minLength": 1}
+      },
+      "required": ["library", "actions", "quality", "review", "facets", "scale"]
+    }
+  },
+  "required": [
+    "generated_at",
+    "count",
+    "report_dir",
+    "dimension_count",
+    "batch_count",
+    "dimensions",
+    "summary",
+    "batches",
+    "top_batches",
+    "links"
+  ],
+  "$defs": {
+    "dimension": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "key": {"type": "string", "minLength": 1},
+        "label": {"type": "string", "minLength": 1},
+        "query": {"type": "string", "minLength": 1},
+        "multi": {"type": "boolean"},
+        "paper_key": {"type": "string", "minLength": 1}
+      },
+      "required": ["key", "label", "query", "multi", "paper_key"]
+    },
+    "batch": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "dimension": {"type": "string", "minLength": 1},
+        "dimension_label": {"type": "string", "minLength": 1},
+        "value": {"type": "string", "minLength": 1},
+        "count": {"type": "integer", "minimum": 0},
+        "severity": {"type": "string", "enum": ["high", "medium", "low"]},
+        "priority": {"type": "integer", "minimum": 0},
+        "latest_year": {
+          "oneOf": [
+            {"type": "integer", "minimum": 0},
+            {"type": "string"}
+          ]
+        },
+        "high_importance": {"type": "integer", "minimum": 0},
+        "missing_review": {"type": "integer", "minimum": 0},
+        "due_review": {"type": "integer", "minimum": 0},
+        "missing_taxonomy": {"type": "integer", "minimum": 0},
+        "no_code": {"type": "integer", "minimum": 0},
+        "recommended_action": {"type": "string", "minLength": 1},
+        "href": {"type": "string", "minLength": 1},
+        "export_command": {"type": "string"},
+        "slugs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "sample_slugs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "sample_titles": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        }
+      },
+      "required": [
+        "id",
+        "dimension",
+        "dimension_label",
+        "value",
+        "count",
+        "severity",
+        "priority",
+        "latest_year",
+        "high_importance",
+        "missing_review",
+        "due_review",
+        "missing_taxonomy",
+        "no_code",
+        "recommended_action",
+        "href",
+        "export_command",
+        "slugs",
+        "sample_slugs",
+        "sample_titles"
+      ]
+    }
+  }
+}
