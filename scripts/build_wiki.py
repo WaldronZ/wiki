@@ -16,6 +16,7 @@ import itertools
 import json
 import math
 import re
+import shlex
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -2103,7 +2104,41 @@ def batch_action(missing_review: int, due_review: int, missing_taxonomy: int, no
     return "保持观察"
 
 
-def batch_record(dimension: dict[str, Any], value: str, items: list[dict[str, Any]], today: str) -> dict[str, Any]:
+def command_report_dir(report_dir: Path) -> Path:
+    if report_dir.is_relative_to(ROOT):
+        return report_dir.relative_to(ROOT)
+    return report_dir
+
+
+def batch_export_command(dimension: dict[str, Any], value: str, report_dir: Path) -> str:
+    if value in {"未设置", "unset"}:
+        return ""
+    arg_by_dimension = {
+        "research_line": "--line",
+        "track": "--track",
+        "topic": "--topic",
+        "method": "--method",
+        "status": "--status",
+    }
+    option = arg_by_dimension.get(str(dimension["key"]))
+    if not option:
+        return ""
+    slug = slugify_label(f"{dimension['key']}-{value}") or "batch"
+    command_dir = command_report_dir(report_dir)
+    output_path = command_dir / "exports" / f"{slug}-reading-list.md"
+    return (
+        f"python3 scripts/export_reading_list.py {shlex.quote(str(command_dir))} {option} {shlex.quote(value)} "
+        f"--output {shlex.quote(str(output_path))}"
+    )
+
+
+def batch_record(
+    dimension: dict[str, Any],
+    value: str,
+    items: list[dict[str, Any]],
+    today: str,
+    report_dir: Path,
+) -> dict[str, Any]:
     count = len(items)
     missing_review = sum(1 for paper in items if not paper.get("next_review"))
     due_review = sum(1 for paper in items if paper.get("next_review") and str(paper.get("next_review")) <= today)
@@ -2140,12 +2175,13 @@ def batch_record(dimension: dict[str, Any], value: str, items: list[dict[str, An
         "no_code": no_code,
         "recommended_action": batch_action(missing_review, due_review, missing_taxonomy, no_code, high_importance),
         "href": batch_href(dimension, value),
+        "export_command": batch_export_command(dimension, value, report_dir),
         "sample_slugs": [paper["slug"] for paper in samples],
         "sample_titles": [paper.get("title_zh") or paper.get("title") or paper["slug"] for paper in samples],
     }
 
 
-def build_batch_payload(papers: list[dict[str, Any]]) -> dict[str, Any]:
+def build_batch_payload(papers: list[dict[str, Any]], report_dir: Path) -> dict[str, Any]:
     today = dt.date.today().isoformat()
     batches: list[dict[str, Any]] = []
     for dimension in BATCH_DIMENSIONS:
@@ -2154,7 +2190,7 @@ def build_batch_payload(papers: list[dict[str, Any]]) -> dict[str, Any]:
             for value in batch_dimension_values(paper, dimension):
                 grouped[value].append(paper)
         for value, items in grouped.items():
-            batches.append(batch_record(dimension, value, items, today))
+            batches.append(batch_record(dimension, value, items, today, report_dir))
     batches.sort(key=lambda item: (-int(item["priority"]), str(item["dimension"]), str(item["value"]).lower()))
     summary = {
         "high": sum(1 for item in batches if item["severity"] == "high"),
@@ -2184,7 +2220,7 @@ def build_batch_payload(papers: list[dict[str, Any]]) -> dict[str, Any]:
 
 
 def write_batch_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
-    payload = build_batch_payload(papers)
+    payload = build_batch_payload(papers, report_dir)
     (report_dir / "batch.json").write_text(
         json.dumps(payload, ensure_ascii=False, indent=2),
         encoding="utf-8",
@@ -9456,7 +9492,7 @@ readStatusUrl();
 
 
 def render_batch(report_dir: Path, papers: list[dict[str, Any]]) -> None:
-    payload = build_batch_payload(papers)
+    payload = build_batch_payload(papers, report_dir)
     batch_json = json.dumps(payload, ensure_ascii=False).replace("</", "<\\/")
     dimension_options = "".join(
         f'<option value="{html.escape(str(item["key"]), quote=True)}">{html.escape(str(item["label"]))}</option>'
@@ -9502,6 +9538,30 @@ def render_batch(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       vertical-align: top;
     }
     .batch-table code {
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+    .batch-table tr.is-active td {
+      background: color-mix(in srgb, var(--chip) 72%, white);
+    }
+    .batch-select {
+      margin-top: 6px;
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+    .batch-detail {
+      display: grid;
+      gap: 9px;
+      border-top: 1px solid var(--line);
+      margin-top: 4px;
+      padding-top: 12px;
+    }
+    .batch-detail h2 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.25;
+    }
+    .batch-detail code {
       white-space: normal;
       overflow-wrap: anywhere;
     }
@@ -9551,6 +9611,19 @@ def render_batch(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       <button class="button" id="downloadBatchCsv" type="button">下载 CSV</button>
       <button class="button" id="resetBatch" type="button">重置</button>
       <div class="meta" id="batchCount">准备加载批次</div>
+      <section class="batch-detail" id="batchDetail">
+        <h2 id="batchDetailTitle">选择一个批次</h2>
+        <div class="card-flags" id="batchDetailFlags"></div>
+        <p class="meta" id="batchDetailAction">点击表格里的“选择”查看执行入口。</p>
+        <code id="batchDetailHref">library.html</code>
+        <div class="bulk-actions">
+          <a class="button" id="openBatch" href="library.html">打开批次</a>
+          <button class="button" id="copyBatchLink" type="button">复制链接</button>
+          <button class="button" id="copyBatchTask" type="button">复制任务</button>
+          <button class="button" id="copyBatchCommand" type="button">复制导出命令</button>
+        </div>
+        <div class="batch-samples" id="batchDetailSamples"></div>
+      </section>
     </aside>
     <div>
       <section>
@@ -9572,6 +9645,16 @@ const batchDimension = document.querySelector("#batchDimension");
 const batchSeverity = document.querySelector("#batchSeverity");
 const batchSort = document.querySelector("#batchSort");
 const batchCount = document.querySelector("#batchCount");
+const batchDetailTitle = document.querySelector("#batchDetailTitle");
+const batchDetailFlags = document.querySelector("#batchDetailFlags");
+const batchDetailAction = document.querySelector("#batchDetailAction");
+const batchDetailHref = document.querySelector("#batchDetailHref");
+const batchDetailSamples = document.querySelector("#batchDetailSamples");
+const openBatch = document.querySelector("#openBatch");
+const copyBatchLink = document.querySelector("#copyBatchLink");
+const copyBatchTask = document.querySelector("#copyBatchTask");
+const copyBatchCommand = document.querySelector("#copyBatchCommand");
+let activeBatchId = "";
 
 function batchEscape(value) {{
   return String(value ?? "").replace(/[&<>"']/g, char => ({{ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }}[char]));
@@ -9626,9 +9709,11 @@ function gapText(item) {{
 
 function renderBatchRows() {{
   const items = filteredBatches();
+  if (!items.some(item => item.id === activeBatchId)) activeBatchId = items[0]?.id || "";
   batchCount.textContent = `显示 ${{items.length}} / ${{batchPayload.batch_count}} 个批次`;
   if (!items.length) {{
     batchRows.innerHTML = '<tr><td colspan="7" class="empty">没有匹配批次。</td></tr>';
+    renderBatchDetail(null);
     return;
   }}
   batchRows.innerHTML = items.map(item => {{
@@ -9636,8 +9721,8 @@ function renderBatchRows() {{
       const slug = (item.sample_slugs || [])[index] || "";
       return `<div>${{batchEscape(title)}} <span class="meta">${{batchEscape(slug)}}</span></div>`;
     }}).join("");
-    return `<tr>
-      <td><span class="flag">${{batchEscape(item.severity)}}</span></td>
+    return `<tr data-batch-id="${{batchEscape(item.id)}}" class="${{item.id === activeBatchId ? "is-active" : ""}}">
+      <td><span class="flag">${{batchEscape(item.severity)}}</span><br><button class="button batch-select" type="button" data-batch-id="${{batchEscape(item.id)}}">选择</button></td>
       <td>${{batchEscape(item.dimension_label)}}</td>
       <td><a href="${{batchEscape(item.href)}}">${{batchEscape(item.value)}}</a><div class="meta">${{batchEscape(item.dimension)}}</div></td>
       <td>${{Number(item.count || 0)}}</td>
@@ -9646,6 +9731,7 @@ function renderBatchRows() {{
       <td><div class="batch-samples">${{samples || "-"}}</div></td>
     </tr>`;
   }}).join("");
+  renderBatchDetail(items.find(item => item.id === activeBatchId) || items[0]);
 }}
 
 function visibleBatchRows() {{
@@ -9679,6 +9765,43 @@ function markdownPlan(items) {{
   )).join("\\n") + "\\n";
 }}
 
+function batchTask(item) {{
+  if (!item) return "";
+  const samples = (item.sample_slugs || []).length ? `\\n  - 样例：${{item.sample_slugs.join(", ")}}` : "";
+  const command = item.export_command ? `\\n  - 导出：${{item.export_command}}` : "";
+  return `- [ ] ${{item.dimension_label}} / ${{item.value}}：${{item.recommended_action}}\\n  - 风险：${{item.severity}}；论文：${{item.count}}；缺复习：${{item.missing_review}}；缺分类：${{item.missing_taxonomy}}\\n  - 入口：${{item.href}}${{command}}${{samples}}\\n`;
+}}
+
+function renderBatchDetail(item) {{
+  copyBatchLink.disabled = !item;
+  copyBatchTask.disabled = !item;
+  copyBatchCommand.disabled = !item || !item.export_command;
+  if (!item) {{
+    batchDetailTitle.textContent = "选择一个批次";
+    batchDetailFlags.replaceChildren();
+    batchDetailAction.textContent = "当前筛选没有匹配批次。";
+    batchDetailHref.textContent = "library.html";
+    openBatch.href = "library.html";
+    batchDetailSamples.textContent = "";
+    return;
+  }}
+  batchDetailTitle.textContent = `${{item.dimension_label}} / ${{item.value}}`;
+  batchDetailFlags.innerHTML = [
+    item.severity,
+    `${{item.count}} 篇`,
+    `重点 ${{item.high_importance}}`,
+    `缺复习 ${{item.missing_review}}`,
+    `缺分类 ${{item.missing_taxonomy}}`,
+  ].map(value => `<span class="flag">${{batchEscape(value)}}</span>`).join("");
+  batchDetailAction.textContent = item.recommended_action;
+  batchDetailHref.textContent = item.export_command || item.href;
+  openBatch.href = item.href || "library.html";
+  batchDetailSamples.innerHTML = (item.sample_titles || []).slice(0, 6).map((title, index) => {{
+    const slug = (item.sample_slugs || [])[index] || "";
+    return `<div>${{batchEscape(title)}} <span class="meta">${{batchEscape(slug)}}</span></div>`;
+  }}).join("") || "暂无样例。";
+}}
+
 function downloadText(filename, text, type) {{
   const blob = new Blob([text], {{ type }});
   const url = URL.createObjectURL(blob);
@@ -9700,8 +9823,26 @@ async function copyText(text, fallbackTitle) {{
 }}
 
 [batchSearch, batchDimension, batchSeverity, batchSort].forEach(control => control.addEventListener("input", renderBatchRows));
+batchRows.addEventListener("click", event => {{
+  const button = event.target instanceof Element ? event.target.closest("[data-batch-id]") : null;
+  if (!button) return;
+  activeBatchId = button.dataset.batchId || "";
+  renderBatchRows();
+}});
 document.querySelector("#downloadBatchCsv").addEventListener("click", () => downloadText("paper_batches.csv", batchCsv(visibleBatchRows()), "text/csv;charset=utf-8"));
 document.querySelector("#copyBatchMarkdown").addEventListener("click", () => copyText(markdownPlan(visibleBatchRows()), "复制 Markdown 批次计划"));
+copyBatchLink.addEventListener("click", () => {{
+  const item = visibleBatchRows().find(batch => batch.id === activeBatchId);
+  if (item) copyText(item.href, "复制批次链接");
+}});
+copyBatchTask.addEventListener("click", () => {{
+  const item = visibleBatchRows().find(batch => batch.id === activeBatchId);
+  if (item) copyText(batchTask(item), "复制批次任务");
+}});
+copyBatchCommand.addEventListener("click", () => {{
+  const item = visibleBatchRows().find(batch => batch.id === activeBatchId);
+  if (item && item.export_command) copyText(item.export_command, "复制导出命令");
+}});
 document.querySelector("#resetBatch").addEventListener("click", () => {{
   batchSearch.value = "";
   batchDimension.value = "";

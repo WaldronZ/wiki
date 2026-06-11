@@ -957,7 +957,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         if not isinstance(item, dict):
             errors.append(f"batch.json batches[{index}] must be an object")
             continue
-        for key in ("id", "dimension", "value", "count", "severity", "priority", "recommended_action", "href", "sample_slugs"):
+        for key in ("id", "dimension", "value", "count", "severity", "priority", "recommended_action", "href", "export_command", "sample_slugs"):
             if key not in item:
                 errors.append(f"batch.json batches[{index}] missing {key}")
         if item.get("severity") not in valid_batch_severities:
