@@ -452,16 +452,40 @@
         &quot;due&quot;,
         &quot;reviewed&quot;
       ]
+    },
+    &quot;research&quot;: {
+      &quot;status_values&quot;: [
+        &quot;inbox&quot;,
+        &quot;triaged&quot;,
+        &quot;reading&quot;,
+        &quot;implemented&quot;,
+        &quot;cited&quot;,
+        &quot;archived&quot;
+      ],
+      &quot;reading_stage_values&quot;: [
+        &quot;skim&quot;,
+        &quot;normal_read&quot;,
+        &quot;deep_read&quot;,
+        &quot;code_checked&quot;,
+        &quot;reproduced&quot;
+      ],
+      &quot;review_stage_values&quot;: [
+        &quot;fresh&quot;,
+        &quot;due&quot;,
+        &quot;reviewed&quot;,
+        &quot;evergreen&quot;
+      ]
     }
   }
 }</code></pre>
       </section>
     </div>
-    <section class="taxonomy-panel workflow-designer" data-workflow="{&quot;name&quot;: &quot;personal&quot;, &quot;status_values&quot;: [&quot;unread&quot;, &quot;skimmed&quot;, &quot;reading&quot;, &quot;read&quot;, &quot;archived&quot;], &quot;reading_stage_values&quot;: [&quot;skim&quot;, &quot;normal_read&quot;, &quot;deep_read&quot;, &quot;code_checked&quot;], &quot;review_stage_values&quot;: [&quot;fresh&quot;, &quot;due&quot;, &quot;reviewed&quot;]}">
+    <section class="taxonomy-panel workflow-designer" data-workflow="{&quot;name&quot;: &quot;personal&quot;, &quot;status_values&quot;: [&quot;unread&quot;, &quot;skimmed&quot;, &quot;reading&quot;, &quot;read&quot;, &quot;archived&quot;], &quot;reading_stage_values&quot;: [&quot;skim&quot;, &quot;normal_read&quot;, &quot;deep_read&quot;, &quot;code_checked&quot;], &quot;review_stage_values&quot;: [&quot;fresh&quot;, &quot;due&quot;, &quot;reviewed&quot;]}" data-workflows="{&quot;personal&quot;: {&quot;status_values&quot;: [&quot;unread&quot;, &quot;skimmed&quot;, &quot;reading&quot;, &quot;read&quot;, &quot;archived&quot;], &quot;reading_stage_values&quot;: [&quot;skim&quot;, &quot;normal_read&quot;, &quot;deep_read&quot;, &quot;code_checked&quot;], &quot;review_stage_values&quot;: [&quot;fresh&quot;, &quot;due&quot;, &quot;reviewed&quot;]}, &quot;research&quot;: {&quot;status_values&quot;: [&quot;inbox&quot;, &quot;triaged&quot;, &quot;reading&quot;, &quot;implemented&quot;, &quot;cited&quot;, &quot;archived&quot;], &quot;reading_stage_values&quot;: [&quot;skim&quot;, &quot;normal_read&quot;, &quot;deep_read&quot;, &quot;code_checked&quot;, &quot;reproduced&quot;], &quot;review_stage_values&quot;: [&quot;fresh&quot;, &quot;due&quot;, &quot;reviewed&quot;, &quot;evergreen&quot;]}}">
       <div>
         <h2>状态工作流设计器</h2>
-        <p class="meta">命名一套 workflow，每行一个值。下载或复制后合并到 guides/taxonomy.json，再运行 build_wiki，首页、论文库、看板和 JSON controls 会同步更新。</p>
+        <p class="meta">载入已有 workflow 或命名一套新 workflow，每行一个值。下载或复制后合并到 guides/taxonomy.json，再运行 build_wiki，首页、论文库、看板和 JSON controls 会同步更新。</p>
       </div>
+      <label><span>Load existing workflow</span><select id="workflowSource"></select></label>
       <label><span>Workflow name</span><input id="workflowName" type="text" value="personal"></label>
       <div class="designer-grid">
         <label><span>Status</span><textarea id="workflowStatus" rows="6"></textarea></label>
@@ -495,6 +519,8 @@
   const designer = document.querySelector(".workflow-designer");
   if (!designer) return;
   const seed = JSON.parse(designer.dataset.workflow || "{}");
+  const knownWorkflows = JSON.parse(designer.dataset.workflows || "{}");
+  const sourceSelect = document.querySelector("#workflowSource");
   const nameInput = document.querySelector("#workflowName");
   const fields = {
     status_values: document.querySelector("#workflowStatus"),
@@ -524,6 +550,7 @@
     return {
       active_status_workflow: workflowName,
       status_workflows: {
+        ...knownWorkflows,
         [workflowName]: workflow,
       },
     };
@@ -544,6 +571,17 @@
     nameInput.value = seed.name || "personal";
     Object.entries(fields).forEach(([key, input]) => {
       input.value = (seed[key] || []).join("\n");
+    });
+    if (sourceSelect) sourceSelect.value = seed.name || "";
+    renderPreview();
+  }
+
+  function loadWorkflow(name) {
+    const workflow = knownWorkflows[name];
+    if (!workflow) return;
+    nameInput.value = name;
+    Object.entries(fields).forEach(([key, input]) => {
+      input.value = Array.isArray(workflow[key]) ? workflow[key].join("\n") : "";
     });
     renderPreview();
   }
@@ -570,6 +608,10 @@
 
   nameInput.addEventListener("input", renderPreview);
   Object.values(fields).forEach((input) => input.addEventListener("input", renderPreview));
+  sourceSelect.replaceChildren(
+    ...Object.keys(knownWorkflows).map((name) => new Option(name === seed.name ? `${name} (active)` : name, name))
+  );
+  sourceSelect.addEventListener("change", () => loadWorkflow(sourceSelect.value));
   document.querySelector("#resetWorkflow").addEventListener("click", reset);
   document.querySelector("#downloadWorkflow").addEventListener("click", download);
   document.querySelector("#copyWorkflow").addEventListener("click", copy);

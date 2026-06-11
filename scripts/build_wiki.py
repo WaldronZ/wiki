@@ -5935,15 +5935,18 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         f"<tbody>{workflow_table_rows}</tbody></table>"
     )
     workflow_name = ACTIVE_STATUS_WORKFLOW or "personal"
-    workflow_config = {
-        "active_status_workflow": workflow_name,
-        "status_workflows": {
+    status_workflows = controls.get("status_workflows") or {}
+    if not status_workflows:
+        status_workflows = {
             workflow_name: {
                 "status_values": controls["status"],
                 "reading_stage_values": controls["reading_stage"],
                 "review_stage_values": controls["review_stage"],
             }
-        },
+        }
+    workflow_config = {
+        "active_status_workflow": workflow_name,
+        "status_workflows": status_workflows,
     }
     workflow_seed = {
         "name": workflow_name,
@@ -5953,6 +5956,7 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     }
     workflow_config_json = html.escape(json.dumps(workflow_config, ensure_ascii=False, indent=2))
     workflow_seed_json = html.escape(json.dumps(workflow_seed, ensure_ascii=False), quote=True)
+    workflow_all_json = html.escape(json.dumps(status_workflows, ensure_ascii=False), quote=True)
 
     long_tail = Counter(
         tag
@@ -6052,11 +6056,12 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         <pre class="config-snippet"><code>{workflow_config_json}</code></pre>
       </section>
     </div>
-    <section class="taxonomy-panel workflow-designer" data-workflow="{workflow_seed_json}">
+    <section class="taxonomy-panel workflow-designer" data-workflow="{workflow_seed_json}" data-workflows="{workflow_all_json}">
       <div>
         <h2>状态工作流设计器</h2>
-        <p class="meta">命名一套 workflow，每行一个值。下载或复制后合并到 guides/taxonomy.json，再运行 build_wiki，首页、论文库、看板和 JSON controls 会同步更新。</p>
+        <p class="meta">载入已有 workflow 或命名一套新 workflow，每行一个值。下载或复制后合并到 guides/taxonomy.json，再运行 build_wiki，首页、论文库、看板和 JSON controls 会同步更新。</p>
       </div>
+      <label><span>Load existing workflow</span><select id="workflowSource"></select></label>
       <label><span>Workflow name</span><input id="workflowName" type="text" value="{html.escape(workflow_name, quote=True)}"></label>
       <div class="designer-grid">
         <label><span>Status</span><textarea id="workflowStatus" rows="6"></textarea></label>
@@ -6090,6 +6095,8 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   const designer = document.querySelector(".workflow-designer");
   if (!designer) return;
   const seed = JSON.parse(designer.dataset.workflow || "{{}}");
+  const knownWorkflows = JSON.parse(designer.dataset.workflows || "{{}}");
+  const sourceSelect = document.querySelector("#workflowSource");
   const nameInput = document.querySelector("#workflowName");
   const fields = {{
     status_values: document.querySelector("#workflowStatus"),
@@ -6119,6 +6126,7 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     return {{
       active_status_workflow: workflowName,
       status_workflows: {{
+        ...knownWorkflows,
         [workflowName]: workflow,
       }},
     }};
@@ -6139,6 +6147,17 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     nameInput.value = seed.name || "personal";
     Object.entries(fields).forEach(([key, input]) => {{
       input.value = (seed[key] || []).join("\\n");
+    }});
+    if (sourceSelect) sourceSelect.value = seed.name || "";
+    renderPreview();
+  }}
+
+  function loadWorkflow(name) {{
+    const workflow = knownWorkflows[name];
+    if (!workflow) return;
+    nameInput.value = name;
+    Object.entries(fields).forEach(([key, input]) => {{
+      input.value = Array.isArray(workflow[key]) ? workflow[key].join("\\n") : "";
     }});
     renderPreview();
   }}
@@ -6165,6 +6184,10 @@ def render_taxonomy(report_dir: Path, papers: list[dict[str, Any]]) -> None:
 
   nameInput.addEventListener("input", renderPreview);
   Object.values(fields).forEach((input) => input.addEventListener("input", renderPreview));
+  sourceSelect.replaceChildren(
+    ...Object.keys(knownWorkflows).map((name) => new Option(name === seed.name ? `${{name}} (active)` : name, name))
+  );
+  sourceSelect.addEventListener("change", () => loadWorkflow(sourceSelect.value));
   document.querySelector("#resetWorkflow").addEventListener("click", reset);
   document.querySelector("#downloadWorkflow").addEventListener("click", download);
   document.querySelector("#copyWorkflow").addEventListener("click", copy);
