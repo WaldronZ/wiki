@@ -34,6 +34,7 @@ GENERATED_FIXED_PATHS = (
     "inbox.json",
     "dedupe.json",
     "registry.json",
+    "facets.json",
     "quality.json",
     "review.json",
     "freshness.json",
@@ -3784,6 +3785,7 @@ def build_onboarding_payload(report_dir: Path, papers: list[dict[str, Any]], inb
         repo_file_status("docs/guides/metadata.schema.json", "Metadata schema", "guides/metadata.schema.json"),
         repo_file_status("docs/guides/inbox.schema.json", "Inbox schema", "guides/inbox.schema.json"),
         repo_file_status("docs/guides/taxonomy.schema.json", "Taxonomy schema", "guides/taxonomy.schema.json"),
+        repo_file_status("docs/guides/facets.schema.json", "Facets schema", "guides/facets.schema.json"),
         repo_file_status("docs/guides/workflow.schema.json", "Workflow schema", "guides/workflow.schema.json"),
         repo_file_status("docs/guides/status.schema.json", "Status schema", "guides/status.schema.json"),
         repo_file_status("docs/guides/views.schema.json", "Views schema", "guides/views.schema.json"),
@@ -4005,6 +4007,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "inbox.json", "description": "候选论文队列和重复项"},
         {"href": "dedupe.json", "description": "重复报告、候选重复项和去重建议"},
         {"href": "registry.json", "description": "分类标签注册表、alias、字段复用和治理信号"},
+        {"href": "facets.json", "description": "分类字段目录、候选值规模和治理动作"},
         {"href": "manifest.json", "description": "发布摘要和页面入口清单"},
     ]
 
@@ -4015,6 +4018,7 @@ def contract_files_manifest() -> list[dict[str, str]]:
         {"href": "guides/metadata.schema.json", "description": "报告 frontmatter 字段契约"},
         {"href": "guides/inbox.schema.json", "description": "候选论文 inbox.csv 字段契约"},
         {"href": "guides/taxonomy.schema.json", "description": "taxonomy.json 配置字段契约"},
+        {"href": "guides/facets.schema.json", "description": "facets.json 分类字段目录契约"},
         {"href": "guides/workflow.schema.json", "description": "workflow.json 状态工作流审计契约"},
         {"href": "guides/status.schema.json", "description": "status.json 状态选择器和写回命令契约"},
         {"href": "guides/views.schema.json", "description": "views.json 视图目录和批量队列契约"},
@@ -16894,6 +16898,124 @@ def write_taxonomy_actions_json(report_dir: Path, papers: list[dict[str, Any]]) 
     )
 
 
+def build_facets_payload(papers: list[dict[str, Any]]) -> dict[str, Any]:
+    total = len(papers)
+    taxonomy = taxonomy_counts(papers)
+    balance_by_field = {item["field"]: item for item in taxonomy_balance_report(papers)}
+    fields: list[dict[str, Any]] = []
+    values: list[dict[str, Any]] = []
+    summary = Counter()
+
+    for field, english, query_key, label, is_list in FACET_SPECS:
+        counts = facet_count_for_field(papers, taxonomy, field, is_list)
+        configured = registry_configured_values(field)
+        grouped_papers = registry_field_papers(papers, field, is_list)
+        balance = balance_by_field.get(field, {})
+        fields.append(
+            {
+                "field": field,
+                "label": label,
+                "english": english,
+                "query_key": query_key,
+                "is_list": is_list,
+                "configured_count": int(balance.get("configured_count") or len(counts)),
+                "used_count": int(balance.get("used_count") or sum(1 for count in counts.values() if count > 0)),
+                "unused_count": int(balance.get("unused_count") or sum(1 for count in counts.values() if count == 0)),
+                "singleton_count": int(balance.get("singleton_count") or sum(1 for count in counts.values() if count == 1)),
+                "overloaded_count": int(balance.get("overloaded_count") or 0),
+                "max_value": str(balance.get("max_value") or ""),
+                "max_count": int(balance.get("max_count") or 0),
+                "max_share": float(balance.get("max_share") or 0),
+                "effective_count": float(balance.get("effective_count") or 0),
+                "balance_score": int(balance.get("balance_score") or 0),
+                "href": page_query_href("library.html"),
+            }
+        )
+        summary["fields"] += 1
+        summary["configured_values"] += len(configured)
+
+        for value, count in sorted(counts.items(), key=lambda item: (-int(item[1]), str(item[0]).lower())):
+            value_text = str(value or "").strip()
+            if not value_text:
+                continue
+            share = (int(count) / total) if total else 0
+            action, severity = taxonomy_action_status(int(count), share)
+            definition = label_definition(field, value_text)
+            owner = definition.get("owner") if definition else ""
+            if not owner and field == "research_line":
+                owner = research_line_owner(value_text).get("owner") or ""
+            sample_slugs = [paper["slug"] for paper in grouped_papers.get(value_text, [])[:5]]
+            values.append(
+                {
+                    "field": field,
+                    "field_label": label,
+                    "english": english,
+                    "query_key": query_key,
+                    "value": value_text,
+                    "count": int(count),
+                    "share": round(share, 4),
+                    "configured": value_text in configured,
+                    "definition_status": str(definition.get("status") or "") if definition else "",
+                    "owner_name": str(owner or ""),
+                    "action": action,
+                    "severity": severity,
+                    "href": page_query_href("library.html", **{query_key: value_text}),
+                    "sample_slugs": sample_slugs,
+                    "recommendation": taxonomy_action_recommendation(action, label),
+                }
+            )
+            summary[action] += 1
+            summary[severity] += 1
+
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": total,
+        "field_count": len(fields),
+        "value_count": len(values),
+        "summary": dict(sorted(summary.items())),
+        "fields": fields,
+        "values": values,
+        "csv_columns": [
+            "field",
+            "field_label",
+            "value",
+            "count",
+            "share",
+            "configured",
+            "definition_status",
+            "owner_name",
+            "action",
+            "severity",
+            "href",
+            "sample_slugs",
+            "recommendation",
+        ],
+        "commands": [
+            "python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md",
+            "python3 scripts/export_taxonomy_actions.py docs --format csv --output docs/exports/taxonomy-actions.csv",
+            "python3 scripts/export_taxonomy_registry.py docs --output docs/exports/taxonomy-registry.md",
+            "python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv",
+            "python3 scripts/apply_library_metadata.py docs --input <metadata-patch.csv>",
+        ],
+        "links": {
+            "html": "facets.html",
+            "library": "library.html",
+            "taxonomy": "taxonomy.html",
+            "registry": "registry.html",
+            "quality": "quality.html",
+            "actions": "taxonomy_actions.json",
+        },
+    }
+
+
+def write_facets_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_facets_payload(papers)
+    (report_dir / "facets.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
 def render_facets(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     total = len(papers)
     taxonomy = taxonomy_counts(papers)
@@ -17039,6 +17161,7 @@ def render_facets(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <a class="stat" href="taxonomy.html">分类治理</a>
     <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="collections.html">集合视图</a>
+    <a class="stat" href="facets.json">Facets JSON</a>
     <a class="stat" href="taxonomy_actions.json">治理任务 JSON</a>
     <a class="stat" href="gaps.html">研究缺口</a>
     <span class="stat">论文 {total}</span>
@@ -19815,6 +19938,7 @@ def build_wiki(report_dir: Path) -> int:
     write_inbox_json(report_dir, inbox_items)
     write_dedupe_json(report_dir, papers, inbox_items)
     write_registry_json(report_dir, papers)
+    write_facets_json(report_dir, papers)
     write_intake_json(report_dir, papers, inbox_items)
     write_search_index(report_dir, papers)
     write_scale_json(report_dir, papers, inbox_items)

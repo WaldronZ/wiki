@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/autopaperreader/facets.schema.json",
+  "title": "AutoPaperReader facet directory",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "generated_at": {"type": "string"},
+    "count": {"type": "integer", "minimum": 0},
+    "field_count": {"type": "integer", "minimum": 0},
+    "value_count": {"type": "integer", "minimum": 0},
+    "summary": {
+      "type": "object",
+      "additionalProperties": {"type": "integer", "minimum": 0}
+    },
+    "fields": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/facet_field"}
+    },
+    "values": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/facet_value"}
+    },
+    "csv_columns": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "commands": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "links": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "html": {"type": "string", "minLength": 1},
+        "library": {"type": "string", "minLength": 1},
+        "taxonomy": {"type": "string", "minLength": 1},
+        "registry": {"type": "string", "minLength": 1},
+        "quality": {"type": "string", "minLength": 1},
+        "actions": {"type": "string", "minLength": 1}
+      },
+      "required": ["html", "library", "taxonomy", "registry", "quality", "actions"]
+    }
+  },
+  "required": [
+    "generated_at",
+    "count",
+    "field_count",
+    "value_count",
+    "summary",
+    "fields",
+    "values",
+    "csv_columns",
+    "commands",
+    "links"
+  ],
+  "$defs": {
+    "facet_field": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "field": {"type": "string", "minLength": 1},
+        "label": {"type": "string", "minLength": 1},
+        "english": {"type": "string", "minLength": 1},
+        "query_key": {"type": "string", "minLength": 1},
+        "is_list": {"type": "boolean"},
+        "configured_count": {"type": "integer", "minimum": 0},
+        "used_count": {"type": "integer", "minimum": 0},
+        "unused_count": {"type": "integer", "minimum": 0},
+        "singleton_count": {"type": "integer", "minimum": 0},
+        "overloaded_count": {"type": "integer", "minimum": 0},
+        "max_value": {"type": "string"},
+        "max_count": {"type": "integer", "minimum": 0},
+        "max_share": {"type": "number", "minimum": 0},
+        "effective_count": {"type": "number", "minimum": 0},
+        "balance_score": {"type": "integer", "minimum": 0},
+        "href": {"type": "string", "minLength": 1}
+      },
+      "required": [
+        "field",
+        "label",
+        "english",
+        "query_key",
+        "is_list",
+        "configured_count",
+        "used_count",
+        "unused_count",
+        "singleton_count",
+        "overloaded_count",
+        "max_value",
+        "max_count",
+        "max_share",
+        "effective_count",
+        "balance_score",
+        "href"
+      ]
+    },
+    "facet_value": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "field": {"type": "string", "minLength": 1},
+        "field_label": {"type": "string", "minLength": 1},
+        "english": {"type": "string", "minLength": 1},
+        "query_key": {"type": "string", "minLength": 1},
+        "value": {"type": "string", "minLength": 1},
+        "count": {"type": "integer", "minimum": 0},
+        "share": {"type": "number", "minimum": 0},
+        "configured": {"type": "boolean"},
+        "definition_status": {"type": "string"},
+        "owner_name": {"type": "string"},
+        "action": {
+          "type": "string",
+          "enum": ["stable", "watch", "merge_candidate", "split_candidate", "unused_config"]
+        },
+        "severity": {
+          "type": "string",
+          "enum": ["none", "low", "medium", "high"]
+        },
+        "href": {"type": "string", "minLength": 1},
+        "sample_slugs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "recommendation": {"type": "string", "minLength": 1}
+      },
+      "required": [
+        "field",
+        "field_label",
+        "english",
+        "query_key",
+        "value",
+        "count",
+        "share",
+        "configured",
+        "definition_status",
+        "owner_name",
+        "action",
+        "severity",
+        "href",
+        "sample_slugs",
+        "recommendation"
+      ]
+    }
+  }
+}

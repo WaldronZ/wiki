@@ -140,6 +140,7 @@ REQUIRED_PAGES = {
     "inbox.json",
     "dedupe.json",
     "registry.json",
+    "facets.json",
     "quality.json",
     "review.json",
     "freshness.json",
@@ -603,6 +604,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     inbox_path = report_dir / "inbox.json"
     dedupe_path = report_dir / "dedupe.json"
     registry_path = report_dir / "registry.json"
+    facets_path = report_dir / "facets.json"
     snapshot_path = report_dir / "snapshot.json"
     manifest_path = report_dir / "manifest.json"
     if not papers_path.exists():
@@ -689,6 +691,9 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     if not registry_path.exists():
         errors.append("missing registry.json")
         return
+    if not facets_path.exists():
+        errors.append("missing facets.json")
+        return
     if not snapshot_path.exists():
         errors.append("missing snapshot.json")
         return
@@ -724,6 +729,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     inbox_data = json.loads(inbox_path.read_text(encoding="utf-8"))
     dedupe_data = json.loads(dedupe_path.read_text(encoding="utf-8"))
     registry_data = json.loads(registry_path.read_text(encoding="utf-8"))
+    facets_data = json.loads(facets_path.read_text(encoding="utf-8"))
     snapshot_data = json.loads(snapshot_path.read_text(encoding="utf-8"))
     manifest_data = json.loads(manifest_path.read_text(encoding="utf-8"))
     paper_slugs = {paper.get("slug") for paper in papers_data.get("papers", [])}
@@ -1904,6 +1910,71 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     if not isinstance(registry_links, dict) or not {"taxonomy", "facets", "quality", "library"}.issubset(registry_links):
         errors.append("registry.json links must include taxonomy, facets, quality, and library")
 
+    if facets_data.get("count") != len(report_slugs):
+        errors.append(f"facets.json count {facets_data.get('count')} != markdown report count {len(report_slugs)}")
+    required_facets = {"field_count", "value_count", "summary", "fields", "values", "csv_columns", "commands", "links"}
+    missing_facets = sorted(required_facets - set(facets_data))
+    if missing_facets:
+        errors.append(f"facets.json missing keys: {', '.join(missing_facets)}")
+    facet_fields = facets_data.get("fields")
+    if not isinstance(facet_fields, list):
+        errors.append("facets.json fields must be a list")
+        facet_fields = []
+    facet_values = facets_data.get("values")
+    if not isinstance(facet_values, list):
+        errors.append("facets.json values must be a list")
+        facet_values = []
+    if facets_data.get("field_count") != len(facet_fields):
+        errors.append("facets.json field_count must match fields length")
+    if facets_data.get("value_count") != len(facet_values):
+        errors.append("facets.json value_count must match values length")
+    valid_facet_fields = {"domains", "tracks", "problems", "topics", "methods", "research_line", "line_role", "status", "reading_stage", "review_stage"}
+    valid_facet_actions = {"stable", "watch", "merge_candidate", "split_candidate", "unused_config"}
+    valid_facet_severities = {"none", "low", "medium", "high"}
+    seen_facet_fields: set[str] = set()
+    for index, item in enumerate(facet_fields):
+        if not isinstance(item, dict):
+            errors.append(f"facets.json fields[{index}] must be an object")
+            continue
+        for key in ("field", "label", "english", "query_key", "is_list", "used_count", "unused_count", "href"):
+            if key not in item:
+                errors.append(f"facets.json fields[{index}] missing {key}")
+        field = str(item.get("field") or "")
+        if field not in valid_facet_fields:
+            errors.append(f"facets.json fields[{index}] has unknown field {field!r}")
+        seen_facet_fields.add(field)
+        if not isinstance(item.get("is_list"), bool):
+            errors.append(f"facets.json fields[{index}].is_list must be boolean")
+    missing_expected_facet_fields = sorted(valid_facet_fields - seen_facet_fields)
+    if missing_expected_facet_fields:
+        errors.append(f"facets.json fields missing expected fields: {', '.join(missing_expected_facet_fields)}")
+    for index, item in enumerate(facet_values):
+        if not isinstance(item, dict):
+            errors.append(f"facets.json values[{index}] must be an object")
+            continue
+        for key in ("field", "value", "count", "share", "configured", "action", "severity", "href", "sample_slugs", "recommendation"):
+            if key not in item:
+                errors.append(f"facets.json values[{index}] missing {key}")
+        if item.get("field") not in valid_facet_fields:
+            errors.append(f"facets.json values[{index}] has unknown field {item.get('field')!r}")
+        if item.get("action") not in valid_facet_actions:
+            errors.append(f"facets.json values[{index}] has invalid action")
+        if item.get("severity") not in valid_facet_severities:
+            errors.append(f"facets.json values[{index}] has invalid severity")
+        if not isinstance(item.get("configured"), bool):
+            errors.append(f"facets.json values[{index}].configured must be boolean")
+        unknown_slugs = sorted(str(slug) for slug in item.get("sample_slugs", []) if str(slug) not in report_slugs)
+        if unknown_slugs:
+            errors.append(f"facets.json values[{index}] references unknown slugs: {unknown_slugs}")
+    facet_columns = facets_data.get("csv_columns")
+    if not isinstance(facet_columns, list) or not {"field", "value", "action", "severity", "recommendation"}.issubset(set(facet_columns)):
+        errors.append("facets.json csv_columns must include field, value, action, severity, and recommendation")
+    if not isinstance(facets_data.get("commands"), list) or not any("export_taxonomy_actions.py" in str(command) for command in facets_data.get("commands", [])):
+        errors.append("facets.json commands must include export_taxonomy_actions.py")
+    facet_links = facets_data.get("links")
+    if not isinstance(facet_links, dict) or not {"html", "library", "taxonomy", "registry", "quality", "actions"}.issubset(facet_links):
+        errors.append("facets.json links must include html, library, taxonomy, registry, quality, and actions")
+
     if manifest_data.get("count") != len(report_slugs):
         errors.append(f"manifest.json count {manifest_data.get('count')} != markdown report count {len(report_slugs)}")
     required_manifest = {
@@ -1935,6 +2006,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     expected_contract_files = {
         "guides/metadata.schema.json",
         "guides/taxonomy.json",
+        "guides/facets.schema.json",
         "guides/workflow.schema.json",
         "guides/status.schema.json",
         "guides/views.schema.json",
@@ -2330,6 +2402,64 @@ def validate_views_schema_contract(report_dir: Path, errors: list[str], warnings
         errors.append("guides/views.schema.json: kind enum must include shared, queue, research_line, workflow_status")
 
 
+def validate_facets_schema_contract(report_dir: Path, errors: list[str], warnings: list[str]) -> None:
+    schema_path = report_dir / "guides" / "facets.schema.json"
+    if not schema_path.exists():
+        warnings.append("guides/facets.schema.json missing; external facet-directory schema hints are unavailable")
+        return
+
+    try:
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        errors.append(f"guides/facets.schema.json: invalid JSON: {exc}")
+        return
+
+    if not isinstance(schema, dict):
+        errors.append("guides/facets.schema.json: root must be an object")
+        return
+    if not isinstance(schema.get("$schema"), str) or not schema.get("$schema", "").strip():
+        errors.append("guides/facets.schema.json: $schema must be a non-empty string")
+    if schema.get("type") != "object":
+        errors.append("guides/facets.schema.json: type must be object")
+    properties = schema.get("properties")
+    if not isinstance(properties, dict):
+        errors.append("guides/facets.schema.json: properties must be an object")
+        properties = {}
+    for key in ("fields", "values", "summary", "commands", "links"):
+        if key not in properties:
+            errors.append(f"guides/facets.schema.json: properties.{key} is required")
+    defs = schema.get("$defs")
+    if not isinstance(defs, dict):
+        errors.append("guides/facets.schema.json: $defs must be an object")
+        defs = {}
+    field_def = defs.get("facet_field")
+    if not isinstance(field_def, dict):
+        errors.append("guides/facets.schema.json: $defs.facet_field is required")
+    else:
+        field_required = set(field_def.get("required") or [])
+        for key in ("field", "label", "query_key", "is_list", "used_count", "href"):
+            if key not in field_required:
+                errors.append(f"guides/facets.schema.json: $defs.facet_field.required missing {key}")
+    value_def = defs.get("facet_value")
+    if not isinstance(value_def, dict):
+        errors.append("guides/facets.schema.json: $defs.facet_value is required")
+        return
+    value_required = set(value_def.get("required") or [])
+    for key in ("field", "value", "count", "configured", "action", "severity", "sample_slugs", "recommendation"):
+        if key not in value_required:
+            errors.append(f"guides/facets.schema.json: $defs.facet_value.required missing {key}")
+    value_properties = value_def.get("properties")
+    if not isinstance(value_properties, dict):
+        errors.append("guides/facets.schema.json: $defs.facet_value.properties must be an object")
+        return
+    action_enum = set((value_properties.get("action") or {}).get("enum") or [])
+    if not {"stable", "watch", "merge_candidate", "split_candidate", "unused_config"}.issubset(action_enum):
+        errors.append("guides/facets.schema.json: action enum must include stable, watch, merge_candidate, split_candidate, unused_config")
+    severity_enum = set((value_properties.get("severity") or {}).get("enum") or [])
+    if not {"none", "low", "medium", "high"}.issubset(severity_enum):
+        errors.append("guides/facets.schema.json: severity enum must include none, low, medium, high")
+
+
 def validate_status_schema_contract(report_dir: Path, errors: list[str], warnings: list[str]) -> None:
     schema_path = report_dir / "guides" / "status.schema.json"
     if not schema_path.exists():
@@ -2571,6 +2701,7 @@ def main() -> int:
         inbox_schema = load_inbox_schema(report_dir, errors, warnings)
         reports = validate_reports(report_dir, schema, errors, warnings)
         validate_taxonomy_schema_contract(report_dir, errors, warnings)
+        validate_facets_schema_contract(report_dir, errors, warnings)
         validate_workflow_schema_contract(report_dir, errors, warnings)
         validate_status_schema_contract(report_dir, errors, warnings)
         validate_views_schema_contract(report_dir, errors, warnings)
