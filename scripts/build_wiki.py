@@ -562,6 +562,15 @@ def page_shell(title: str, body: str, data: dict[str, Any] | None = None) -> str
       color: var(--muted);
     }}
     .results-actions {{ display: flex; gap: 10px; flex-wrap: wrap; }}
+    .pager {{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 22px;
+      color: var(--muted);
+    }}
+    .pager[hidden] {{ display: none; }}
     .metric-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin: 24px 0; }}
     .metric-card {{
       background: var(--panel);
@@ -645,7 +654,10 @@ def page_shell(title: str, body: str, data: dict[str, Any] | None = None) -> str
       padding: 0 11px;
       font-size: 14px;
       font-weight: 650;
+      color: var(--accent);
+      cursor: pointer;
     }}
+    .button:disabled {{ cursor: not-allowed; opacity: .45; }}
     .section-title {{ margin: 28px 0 12px; font-size: 22px; }}
     .tag-list {{ display: flex; flex-wrap: wrap; gap: 10px; }}
     .tag-pill {{
@@ -681,6 +693,7 @@ def page_shell(title: str, body: str, data: dict[str, Any] | None = None) -> str
       .controls {{ grid-template-columns: 1fr; }}
       .controls input[type="search"] {{ grid-column: auto; min-width: 0; }}
       .results-bar {{ align-items: flex-start; flex-direction: column; }}
+      .pager {{ justify-content: flex-start; flex-wrap: wrap; }}
       .paper-row {{ grid-template-columns: 1fr; }}
       .data-table {{ display: block; overflow-x: auto; }}
       header {{ padding-top: 28px; }}
@@ -789,6 +802,7 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <select id="reviewStage"><option value="">复习阶段</option>{render_topic_options(taxonomy["review_stages"])}</select>
     <select id="review"><option value="">复习时间</option><option value="due">待复习</option><option value="none">未设置复习</option></select>
     <select id="sort"><option value="default">默认排序</option><option value="importance">重要性优先</option><option value="updated">最近更新</option><option value="year">年份新到旧</option><option value="reading">阅读时间短到长</option><option value="title">标题 A-Z</option></select>
+    <select id="pageSize"><option value="12">每页 12 篇</option><option value="24">每页 24 篇</option><option value="48">每页 48 篇</option><option value="all">显示全部</option></select>
   </div>
 </div>
 <main class="shell">
@@ -800,6 +814,11 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     </div>
   </div>
   <div id="cards" class="grid">{cards if papers else empty}</div>
+  <nav id="pager" class="pager" aria-label="分页">
+    <button id="prevPage" class="button" type="button">上一页</button>
+    <span id="pageInfo">第 1 / 1 页</span>
+    <button id="nextPage" class="button" type="button">下一页</button>
+  </nav>
 </main>
 <script>
 const papers = window.PAPER_WIKI.papers;
@@ -818,11 +837,61 @@ const importance = document.querySelector("#importance");
 const reviewStage = document.querySelector("#reviewStage");
 const review = document.querySelector("#review");
 const sort = document.querySelector("#sort");
+const pageSize = document.querySelector("#pageSize");
 const resetFilters = document.querySelector("#resetFilters");
+const pager = document.querySelector("#pager");
+const pageInfo = document.querySelector("#pageInfo");
+const prevPage = document.querySelector("#prevPage");
+const nextPage = document.querySelector("#nextPage");
 const searchTextBySlug = new Map((window.PAPER_WIKI.search_index || []).map(item => [item.slug, item.search_text || ""]));
+let currentPage = 1;
+const queryControls = [
+  ["q", search],
+  ["domain", domain],
+  ["line", line],
+  ["role", role],
+  ["topic", topic],
+  ["method", method],
+  ["status", status],
+  ["stage", stage],
+  ["code", code],
+  ["importance", importance],
+  ["reviewStage", reviewStage],
+  ["review", review],
+  ["sort", sort],
+  ["size", pageSize],
+];
 
 function esc(value) {{
   return String(value ?? "").replace(/[&<>"']/g, ch => ({{"&":"&amp;","<":"&lt;",">":"&gt;","\\"":"&quot;","'":"&#39;"}}[ch]));
+}}
+
+function clampPage(page, totalPages) {{
+  return Math.min(Math.max(page, 1), totalPages);
+}}
+
+function getPageSize() {{
+  return pageSize.value === "all" ? Infinity : Number(pageSize.value || 12);
+}}
+
+function readStateFromUrl() {{
+  const params = new URLSearchParams(window.location.search);
+  queryControls.forEach(([key, el]) => {{
+    if (params.has(key)) el.value = params.get(key);
+  }});
+  currentPage = Number(params.get("page") || 1) || 1;
+}}
+
+function writeStateToUrl() {{
+  const params = new URLSearchParams();
+  queryControls.forEach(([key, el]) => {{
+    const defaultValue = key === "sort" ? "default" : key === "size" ? "12" : "";
+    if (el.value && el.value !== defaultValue) params.set(key, el.value);
+  }});
+  if (currentPage > 1) params.set("page", String(currentPage));
+  const query = params.toString();
+  const nextUrl = query ? `${{location.pathname}}?${{query}}` : location.pathname;
+  window.history.replaceState(null, "", nextUrl);
 }}
 
 function card(p) {{
@@ -900,17 +969,44 @@ function render() {{
     return (!q || text.includes(q)) && domainHit && lineHit && roleHit && topicHit && methodHit && statusHit && stageHit && codeHit && importanceHit && reviewStageHit && reviewHit;
   }});
   const sorted = sortPapers(filtered);
-  resultCount.textContent = `显示 ${{sorted.length}} / ${{papers.length}} 篇`;
-  cards.innerHTML = sorted.length ? sorted.map(card).join("") : `<div class="empty">没有匹配的论文。</div>`;
+  const size = getPageSize();
+  const totalPages = size === Infinity ? 1 : Math.max(1, Math.ceil(sorted.length / size));
+  currentPage = clampPage(currentPage, totalPages);
+  const start = size === Infinity ? 0 : (currentPage - 1) * size;
+  const end = size === Infinity ? sorted.length : Math.min(start + size, sorted.length);
+  const visible = size === Infinity ? sorted : sorted.slice(start, end);
+  const from = sorted.length ? start + 1 : 0;
+  const to = sorted.length ? end : 0;
+  resultCount.textContent = `显示 ${{from}}-${{to}} / ${{sorted.length}} 篇（总计 ${{papers.length}} 篇）`;
+  cards.innerHTML = visible.length ? visible.map(card).join("") : `<div class="empty">没有匹配的论文。</div>`;
+  pager.hidden = sorted.length === 0 || size === Infinity || totalPages <= 1;
+  pageInfo.textContent = `第 ${{currentPage}} / ${{totalPages}} 页`;
+  prevPage.disabled = currentPage <= 1;
+  nextPage.disabled = currentPage >= totalPages;
+  writeStateToUrl();
 }}
 
-const filterControls = [search, domain, line, role, topic, method, status, stage, code, importance, reviewStage, review, sort];
-filterControls.forEach(el => el.addEventListener("input", render));
+const filterControls = [search, domain, line, role, topic, method, status, stage, code, importance, reviewStage, review, sort, pageSize];
+filterControls.forEach(el => el.addEventListener("input", () => {{
+  currentPage = 1;
+  render();
+}}));
+prevPage.addEventListener("click", () => {{
+  currentPage -= 1;
+  render();
+}});
+nextPage.addEventListener("click", () => {{
+  currentPage += 1;
+  render();
+}});
 resetFilters.addEventListener("click", () => {{
   filterControls.forEach(el => el.value = "");
   sort.value = "default";
+  pageSize.value = "12";
+  currentPage = 1;
   render();
 }});
+readStateFromUrl();
 render();
 </script>
 """
