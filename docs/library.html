@@ -500,6 +500,7 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
         </div>
       </details>
       <button id="exportMarkdown" class="button" type="button">导出清单</button>
+      <button id="exportCsv" class="button" type="button">导出 CSV</button>
       <button id="exportBibtex" class="button" type="button">导出 BibTeX</button>
       <button id="resetFilters" class="button" type="button">重置筛选</button>
     </div>
@@ -756,6 +757,7 @@ const saveView = document.querySelector("#saveView");
 const copySharedView = document.querySelector("#copySharedView");
 const deleteView = document.querySelector("#deleteView");
 const exportMarkdown = document.querySelector("#exportMarkdown");
+const exportCsv = document.querySelector("#exportCsv");
 const exportBibtex = document.querySelector("#exportBibtex");
 const rowChecks = allRows.map(row => row.querySelector(".row-check"));
 const toggleVisible = document.querySelector("#toggleVisible");
@@ -1045,6 +1047,10 @@ function rowUrl(row) {
   return row.dataset.arxivUrl || row.dataset.href || "";
 }
 
+function tokenCsvValue(row, key) {
+  return tokens(row.dataset[key]).join("; ");
+}
+
 function exportRows(format) {
   if (!currentRankedRows.length) {
     window.alert("当前筛选结果为空。");
@@ -1065,6 +1071,52 @@ function exportRows(format) {
     });
     lines.push("");
     downloadText("reading_list.md", lines.join("\n"), "text/markdown;charset=utf-8");
+    return;
+  }
+  if (format === "csv") {
+    const header = [
+      "slug",
+      "title",
+      "title_zh",
+      "year",
+      "authors",
+      "arxiv_id",
+      "research_line",
+      "line_role",
+      "domains",
+      "tracks",
+      "problems",
+      "status",
+      "reading_stage",
+      "review_stage",
+      "importance",
+      "has_code",
+      "arxiv_url",
+      "code_url",
+      "report",
+    ];
+    const rows = currentRankedRows.map(row => [
+      row.dataset.slug,
+      row.dataset.title,
+      row.dataset.titleZh,
+      row.dataset.year !== "0" ? row.dataset.year : "",
+      row.dataset.authors,
+      row.dataset.arxivId,
+      row.dataset.line,
+      row.dataset.role,
+      tokenCsvValue(row, "domains"),
+      tokenCsvValue(row, "tracks"),
+      tokenCsvValue(row, "problems"),
+      row.dataset.status,
+      row.dataset.stage,
+      row.dataset.reviewStage,
+      row.dataset.importance !== "0" ? row.dataset.importance : "",
+      row.dataset.code,
+      row.dataset.arxivUrl,
+      row.dataset.codeUrl,
+      row.dataset.href,
+    ]);
+    downloadCsv("library_filtered.csv", [header, ...rows]);
     return;
   }
   const entries = currentRankedRows.map(row => {
@@ -1233,6 +1285,7 @@ downloadPatch.addEventListener("click", () => {
   if (rows.length) downloadCsv("metadata_patch.csv", rows);
 });
 exportMarkdown.addEventListener("click", () => exportRows("markdown"));
+exportCsv.addEventListener("click", () => exportRows("csv"));
 exportBibtex.addEventListener("click", () => exportRows("bibtex"));
 columnToggles.forEach(toggle => toggle.addEventListener("change", () => {
   const prefs = collectLibraryPrefs();
