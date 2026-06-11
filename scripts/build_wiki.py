@@ -395,6 +395,10 @@ def taxonomy_counts(papers: list[dict[str, Any]]) -> dict[str, dict[str, int]]:
         "topics": list_counts(papers, ("topics",)),
         "methods": list_counts(papers, ("methods",)),
         "research_lines": scalar_counts(papers, "research_line"),
+        "line_roles": scalar_counts(papers, "line_role"),
+        "statuses": scalar_counts(papers, "status"),
+        "reading_stages": scalar_counts(papers, "reading_stage"),
+        "review_stages": scalar_counts(papers, "review_stage"),
     }
 
 
@@ -496,7 +500,8 @@ def page_shell(title: str, body: str, data: dict[str, Any] | None = None) -> str
       backdrop-filter: blur(12px);
       border-bottom: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
     }}
-    .controls {{ display: grid; grid-template-columns: minmax(220px, 1fr) repeat(7, minmax(112px, auto)); gap: 10px; }}
+    .controls {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(138px, 1fr)); gap: 10px; }}
+    .controls input[type="search"] {{ grid-column: span 2; min-width: 260px; }}
     input, select {{
       width: 100%;
       min-height: 42px;
@@ -590,6 +595,7 @@ def page_shell(title: str, body: str, data: dict[str, Any] | None = None) -> str
     }}
     @media (max-width: 760px) {{
       .controls {{ grid-template-columns: 1fr; }}
+      .controls input[type="search"] {{ grid-column: auto; min-width: 0; }}
       header {{ padding-top: 28px; }}
     }}
   </style>
@@ -683,11 +689,15 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <input id="search" type="search" placeholder="全文搜索：标题、作者、主题、方法、正文关键词">
     <select id="domain"><option value="">全部领域</option>{render_topic_options(taxonomy["domains"])}</select>
     <select id="line"><option value="">全部研究线</option>{render_topic_options(taxonomy["research_lines"])}</select>
+    <select id="role"><option value="">全部角色</option>{render_topic_options(taxonomy["line_roles"])}</select>
     <select id="topic"><option value="">全部主题</option>{render_topic_options(taxonomy["topics"])}</select>
     <select id="method"><option value="">全部方法</option>{render_topic_options(taxonomy["methods"])}</select>
+    <select id="status"><option value="">全部状态</option>{render_topic_options(taxonomy["statuses"])}</select>
+    <select id="stage"><option value="">阅读阶段</option>{render_topic_options(taxonomy["reading_stages"])}</select>
     <select id="code"><option value="">代码状态</option><option value="yes">有代码观察</option><option value="no">无代码观察</option></select>
     <select id="importance"><option value="">重要性</option><option value="5">5 星</option><option value="4">4 星及以上</option><option value="3">3 星及以上</option></select>
-    <select id="review"><option value="">复习状态</option><option value="due">待复习</option><option value="none">未设置复习</option></select>
+    <select id="reviewStage"><option value="">复习阶段</option>{render_topic_options(taxonomy["review_stages"])}</select>
+    <select id="review"><option value="">复习时间</option><option value="due">待复习</option><option value="none">未设置复习</option></select>
   </div>
 </div>
 <main class="shell">
@@ -700,10 +710,14 @@ const cards = document.querySelector("#cards");
 const search = document.querySelector("#search");
 const domain = document.querySelector("#domain");
 const line = document.querySelector("#line");
+const role = document.querySelector("#role");
 const topic = document.querySelector("#topic");
 const method = document.querySelector("#method");
+const status = document.querySelector("#status");
+const stage = document.querySelector("#stage");
 const code = document.querySelector("#code");
 const importance = document.querySelector("#importance");
+const reviewStage = document.querySelector("#reviewStage");
 const review = document.querySelector("#review");
 const searchTextBySlug = new Map((window.PAPER_WIKI.search_index || []).map(item => [item.slug, item.search_text || ""]));
 
@@ -744,28 +758,36 @@ function render() {{
   const q = search.value.trim().toLowerCase();
   const domainValue = domain.value;
   const lineValue = line.value;
+  const roleValue = role.value;
   const topicValue = topic.value;
   const methodValue = method.value;
+  const statusValue = status.value;
+  const stageValue = stage.value;
   const codeValue = code.value;
   const importanceValue = Number(importance.value || 0);
+  const reviewStageValue = reviewStage.value;
   const reviewValue = review.value;
   const today = new Date().toISOString().slice(0, 10);
   const filtered = papers.filter(p => {{
-    const text = [p.slug, p.title, p.title_zh, p.title_en, p.arxiv_id, p.excerpt, p.essence, p.research_line, p.line_role, ...(p.authors || []), ...(p.domains || []), ...(p.tracks || []), ...(p.problems || []), ...(p.topics || []), ...(p.methods || []), searchTextBySlug.get(p.slug) || ""].join(" ").toLowerCase();
+    const text = [p.slug, p.title, p.title_zh, p.title_en, p.arxiv_id, p.excerpt, p.essence, p.research_line, p.line_role, p.status, p.reading_stage, p.review_stage, ...(p.authors || []), ...(p.domains || []), ...(p.tracks || []), ...(p.problems || []), ...(p.topics || []), ...(p.methods || []), searchTextBySlug.get(p.slug) || ""].join(" ").toLowerCase();
     const domainHit = !domainValue || (p.domains || []).includes(domainValue);
     const lineHit = !lineValue || p.research_line === lineValue;
+    const roleHit = !roleValue || p.line_role === roleValue;
     const topicHit = !topicValue || (p.topics || []).includes(topicValue);
     const methodHit = !methodValue || (p.methods || []).includes(methodValue);
+    const statusHit = !statusValue || p.status === statusValue;
+    const stageHit = !stageValue || p.reading_stage === stageValue;
     const codeHit = !codeValue || (codeValue === "yes" ? p.has_code : !p.has_code);
     const importanceHit = !importanceValue || Number(p.importance || 0) >= importanceValue;
+    const reviewStageHit = !reviewStageValue || p.review_stage === reviewStageValue;
     const reviewHit = !reviewValue ||
       (reviewValue === "none" ? !p.next_review : Boolean(p.next_review && p.next_review <= today));
-    return (!q || text.includes(q)) && domainHit && lineHit && topicHit && methodHit && codeHit && importanceHit && reviewHit;
+    return (!q || text.includes(q)) && domainHit && lineHit && roleHit && topicHit && methodHit && statusHit && stageHit && codeHit && importanceHit && reviewStageHit && reviewHit;
   }});
   cards.innerHTML = filtered.length ? filtered.map(card).join("") : `<div class="empty">没有匹配的论文。</div>`;
 }}
 
-[search, domain, line, topic, method, code, importance, review].forEach(el => el.addEventListener("input", render));
+[search, domain, line, role, topic, method, status, stage, code, importance, reviewStage, review].forEach(el => el.addEventListener("input", render));
 </script>
 """
     (report_dir / "index.html").write_text(page_shell("我的论文知识库", body, data), encoding="utf-8")

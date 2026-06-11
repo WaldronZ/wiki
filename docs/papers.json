@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-11T15:43:11",
+  "generated_at": "2026-06-11T16:32:03",
   "count": 5,
   "tags": {
     "Speculative Decoding": 4,
@@ -106,7 +106,20 @@
     "research_lines": {
       "Parallel Decoding with Diffusion Models": 3,
       "Efficient Attention Kernels": 2
-    }
+    },
+    "line_roles": {
+      "foundation": 2,
+      "followup": 1,
+      "system": 1,
+      "variant": 1
+    },
+    "statuses": {
+      "read": 5
+    },
+    "reading_stages": {
+      "deep_read": 5
+    },
+    "review_stages": {}
   },
   "papers": [
     {

@@ -53,7 +53,8 @@
       backdrop-filter: blur(12px);
       border-bottom: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
     }
-    .controls { display: grid; grid-template-columns: minmax(220px, 1fr) repeat(7, minmax(112px, auto)); gap: 10px; }
+    .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(138px, 1fr)); gap: 10px; }
+    .controls input[type="search"] { grid-column: span 2; min-width: 260px; }
     input, select {
       width: 100%;
       min-height: 42px;
@@ -147,6 +148,7 @@
     }
     @media (max-width: 760px) {
       .controls { grid-template-columns: 1fr; }
+      .controls input[type="search"] { grid-column: auto; min-width: 0; }
       header { padding-top: 28px; }
     }
   </style>
