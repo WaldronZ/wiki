@@ -957,13 +957,19 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         if not isinstance(item, dict):
             errors.append(f"batch.json batches[{index}] must be an object")
             continue
-        for key in ("id", "dimension", "value", "count", "severity", "priority", "recommended_action", "href", "export_command", "sample_slugs"):
+        for key in ("id", "dimension", "value", "count", "severity", "priority", "recommended_action", "href", "export_command", "slugs", "sample_slugs"):
             if key not in item:
                 errors.append(f"batch.json batches[{index}] missing {key}")
         if item.get("severity") not in valid_batch_severities:
             errors.append(f"batch.json batches[{index}] has invalid severity")
         if str(item.get("dimension") or "") not in batch_dimension_keys:
             errors.append(f"batch.json batches[{index}] references unknown dimension")
+        if not isinstance(item.get("slugs"), list):
+            errors.append(f"batch.json batches[{index}].slugs must be a list")
+        else:
+            unknown_slugs = sorted(str(slug) for slug in item.get("slugs", []) if str(slug) not in report_slugs)
+            if unknown_slugs:
+                errors.append(f"batch.json batches[{index}] references unknown slugs: {unknown_slugs}")
         if not isinstance(item.get("sample_slugs"), list):
             errors.append(f"batch.json batches[{index}].sample_slugs must be a list")
         else:

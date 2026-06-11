@@ -1,6 +1,7 @@
 {
-  "generated_at": "2026-06-12T06:14:26",
+  "generated_at": "2026-06-12T06:18:44",
   "count": 5,
+  "report_dir": "docs",
   "dimension_count": 11,
   "batch_count": 60,
   "dimensions": [
@@ -107,6 +108,13 @@
       "recommended_action": "补 next_review 5 篇",
       "href": "library.html?code=yes",
       "export_command": "",
+      "slugs": [
+        "2307.08691-flashattention-2",
+        "2501.01005-flashinfer",
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2307.08691-flashattention-2",
@@ -139,6 +147,13 @@
       "recommended_action": "补 next_review 5 篇",
       "href": "library.html?domain=LLM+Systems",
       "export_command": "",
+      "slugs": [
+        "2307.08691-flashattention-2",
+        "2501.01005-flashinfer",
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2307.08691-flashattention-2",
@@ -171,6 +186,13 @@
       "recommended_action": "补 next_review 5 篇",
       "href": "library.html?stage=deep_read",
       "export_command": "",
+      "slugs": [
+        "2307.08691-flashattention-2",
+        "2501.01005-flashinfer",
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2307.08691-flashattention-2",
@@ -203,6 +225,13 @@
       "recommended_action": "补 next_review 5 篇",
       "href": "library.html",
       "export_command": "",
+      "slugs": [
+        "2307.08691-flashattention-2",
+        "2501.01005-flashinfer",
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2307.08691-flashattention-2",
@@ -235,6 +264,13 @@
       "recommended_action": "补 next_review 5 篇",
       "href": "library.html?status=read",
       "export_command": "python3 scripts/export_reading_list.py docs --status read --output docs/exports/status-read-reading-list.md",
+      "slugs": [
+        "2307.08691-flashattention-2",
+        "2501.01005-flashinfer",
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2307.08691-flashattention-2",
@@ -267,6 +303,11 @@
       "recommended_action": "补 next_review 3 篇",
       "href": "library.html?line=Parallel+Decoding+with+Diffusion+Models",
       "export_command": "python3 scripts/export_reading_list.py docs --line 'Parallel Decoding with Diffusion Models' --output docs/exports/research-line-parallel-decoding-with-diffusion-models-reading-list.md",
+      "slugs": [
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2602.06036-dflash",
@@ -295,6 +336,11 @@
       "recommended_action": "补 next_review 3 篇",
       "href": "library.html?topic=Diffusion+Language+Models",
       "export_command": "python3 scripts/export_reading_list.py docs --topic 'Diffusion Language Models' --output docs/exports/topic-diffusion-language-models-reading-list.md",
+      "slugs": [
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2602.06036-dflash",
@@ -323,6 +369,11 @@
       "recommended_action": "补 next_review 3 篇",
       "href": "library.html?topic=LLM+Serving",
       "export_command": "python3 scripts/export_reading_list.py docs --topic 'LLM Serving' --output docs/exports/topic-llm-serving-reading-list.md",
+      "slugs": [
+        "2501.01005-flashinfer",
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2602.06036-dflash",
@@ -351,6 +402,11 @@
       "recommended_action": "补 next_review 3 篇",
       "href": "library.html?topic=Speculative+Decoding",
       "export_command": "python3 scripts/export_reading_list.py docs --topic 'Speculative Decoding' --output docs/exports/topic-speculative-decoding-reading-list.md",
+      "slugs": [
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2602.06036-dflash",
@@ -379,6 +435,11 @@
       "recommended_action": "补 next_review 3 篇",
       "href": "library.html?track=Inference+Acceleration",
       "export_command": "python3 scripts/export_reading_list.py docs --track 'Inference Acceleration' --output docs/exports/track-inference-acceleration-reading-list.md",
+      "slugs": [
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2602.06036-dflash",
@@ -407,6 +468,11 @@
       "recommended_action": "补 next_review 3 篇",
       "href": "library.html?track=Parallel+Decoding",
       "export_command": "python3 scripts/export_reading_list.py docs --track 'Parallel Decoding' --output docs/exports/track-parallel-decoding-reading-list.md",
+      "slugs": [
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2602.06036-dflash",
@@ -435,6 +501,10 @@
       "recommended_action": "补 next_review 2 篇",
       "href": "library.html?role=foundation",
       "export_command": "",
+      "slugs": [
+        "2307.08691-flashattention-2",
+        "2604.11035-introspective-dlm"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2307.08691-flashattention-2"
@@ -461,6 +531,10 @@
       "recommended_action": "补 next_review 2 篇",
       "href": "library.html?method=FlashAttention",
       "export_command": "python3 scripts/export_reading_list.py docs --method FlashAttention --output docs/exports/method-flashattention-reading-list.md",
+      "slugs": [
+        "2307.08691-flashattention-2",
+        "2501.01005-flashinfer"
+      ],
       "sample_slugs": [
         "2307.08691-flashattention-2",
         "2501.01005-flashinfer"
@@ -487,6 +561,10 @@
       "recommended_action": "补 next_review 2 篇",
       "href": "library.html?line=Efficient+Attention+Kernels",
       "export_command": "python3 scripts/export_reading_list.py docs --line 'Efficient Attention Kernels' --output docs/exports/research-line-efficient-attention-kernels-reading-list.md",
+      "slugs": [
+        "2307.08691-flashattention-2",
+        "2501.01005-flashinfer"
+      ],
       "sample_slugs": [
         "2307.08691-flashattention-2",
         "2501.01005-flashinfer"
@@ -513,6 +591,10 @@
       "recommended_action": "补 next_review 2 篇",
       "href": "library.html?topic=Parallel+Decoding",
       "export_command": "python3 scripts/export_reading_list.py docs --topic 'Parallel Decoding' --output docs/exports/topic-parallel-decoding-reading-list.md",
+      "slugs": [
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus"
@@ -539,6 +621,10 @@
       "recommended_action": "补 next_review 2 篇",
       "href": "library.html?track=Attention+Kernels",
       "export_command": "python3 scripts/export_reading_list.py docs --track 'Attention Kernels' --output docs/exports/track-attention-kernels-reading-list.md",
+      "slugs": [
+        "2307.08691-flashattention-2",
+        "2501.01005-flashinfer"
+      ],
       "sample_slugs": [
         "2307.08691-flashattention-2",
         "2501.01005-flashinfer"
@@ -565,6 +651,10 @@
       "recommended_action": "补 next_review 2 篇",
       "href": "library.html?topic=KV+Cache",
       "export_command": "python3 scripts/export_reading_list.py docs --topic 'KV Cache' --output docs/exports/topic-kv-cache-reading-list.md",
+      "slugs": [
+        "2501.01005-flashinfer",
+        "2605.12825-orthrus"
+      ],
       "sample_slugs": [
         "2605.12825-orthrus",
         "2501.01005-flashinfer"
@@ -591,6 +681,10 @@
       "recommended_action": "补 next_review 2 篇",
       "href": "library.html?topic=LLM+Inference",
       "export_command": "python3 scripts/export_reading_list.py docs --topic 'LLM Inference' --output docs/exports/topic-llm-inference-reading-list.md",
+      "slugs": [
+        "2602.06036-dflash",
+        "2605.12825-orthrus"
+      ],
       "sample_slugs": [
         "2602.06036-dflash",
         "2605.12825-orthrus"
@@ -617,6 +711,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?method=CUDA+%2F+GPU+parallelism",
       "export_command": "python3 scripts/export_reading_list.py docs --method 'CUDA / GPU parallelism' --output docs/exports/method-cuda-gpu-parallelism-reading-list.md",
+      "slugs": [
+        "2307.08691-flashattention-2"
+      ],
       "sample_slugs": [
         "2307.08691-flashattention-2"
       ],
@@ -641,6 +738,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?method=gated+LoRA",
       "export_command": "python3 scripts/export_reading_list.py docs --method 'gated LoRA' --output docs/exports/method-gated-lora-reading-list.md",
+      "slugs": [
+        "2604.11035-introspective-dlm"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm"
       ],
@@ -665,6 +765,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?method=introspective+consistency",
       "export_command": "python3 scripts/export_reading_list.py docs --method 'introspective consistency' --output docs/exports/method-introspective-consistency-reading-list.md",
+      "slugs": [
+        "2604.11035-introspective-dlm"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm"
       ],
@@ -689,6 +792,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?method=introspective+strided+decoding",
       "export_command": "python3 scripts/export_reading_list.py docs --method 'introspective strided decoding' --output docs/exports/method-introspective-strided-decoding-reading-list.md",
+      "slugs": [
+        "2604.11035-introspective-dlm"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm"
       ],
@@ -713,6 +819,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?method=logit-shifted+causal+training",
       "export_command": "python3 scripts/export_reading_list.py docs --method 'logit-shifted causal training' --output docs/exports/method-logit-shifted-causal-training-reading-list.md",
+      "slugs": [
+        "2604.11035-introspective-dlm"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm"
       ],
@@ -737,6 +846,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?method=online+softmax",
       "export_command": "python3 scripts/export_reading_list.py docs --method 'online softmax' --output docs/exports/method-online-softmax-reading-list.md",
+      "slugs": [
+        "2307.08691-flashattention-2"
+      ],
       "sample_slugs": [
         "2307.08691-flashattention-2"
       ],
@@ -761,6 +873,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?method=p%2Fq+acceptance",
       "export_command": "python3 scripts/export_reading_list.py docs --method 'p/q acceptance' --output docs/exports/method-p-q-acceptance-reading-list.md",
+      "slugs": [
+        "2604.11035-introspective-dlm"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm"
       ],
@@ -785,6 +900,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?method=SGLang+serving",
       "export_command": "python3 scripts/export_reading_list.py docs --method 'SGLang serving' --output docs/exports/method-sglang-serving-reading-list.md",
+      "slugs": [
+        "2604.11035-introspective-dlm"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm"
       ],
@@ -809,6 +927,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?method=tiling",
       "export_command": "python3 scripts/export_reading_list.py docs --method tiling --output docs/exports/method-tiling-reading-list.md",
+      "slugs": [
+        "2307.08691-flashattention-2"
+      ],
       "sample_slugs": [
         "2307.08691-flashattention-2"
       ],
@@ -833,6 +954,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?method=work+partitioning",
       "export_command": "python3 scripts/export_reading_list.py docs --method 'work partitioning' --output docs/exports/method-work-partitioning-reading-list.md",
+      "slugs": [
+        "2307.08691-flashattention-2"
+      ],
       "sample_slugs": [
         "2307.08691-flashattention-2"
       ],
@@ -857,6 +981,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?problem=Efficient+Exact+Attention",
       "export_command": "",
+      "slugs": [
+        "2307.08691-flashattention-2"
+      ],
       "sample_slugs": [
         "2307.08691-flashattention-2"
       ],
@@ -881,6 +1008,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?problem=Parallel+Diffusion+Decoding",
       "export_command": "",
+      "slugs": [
+        "2604.11035-introspective-dlm"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm"
       ],
@@ -905,6 +1035,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?topic=Efficient+Attention",
       "export_command": "python3 scripts/export_reading_list.py docs --topic 'Efficient Attention' --output docs/exports/topic-efficient-attention-reading-list.md",
+      "slugs": [
+        "2307.08691-flashattention-2"
+      ],
       "sample_slugs": [
         "2307.08691-flashattention-2"
       ],
@@ -929,6 +1062,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?topic=GPU+Kernel+Optimization",
       "export_command": "python3 scripts/export_reading_list.py docs --topic 'GPU Kernel Optimization' --output docs/exports/topic-gpu-kernel-optimization-reading-list.md",
+      "slugs": [
+        "2307.08691-flashattention-2"
+      ],
       "sample_slugs": [
         "2307.08691-flashattention-2"
       ],
@@ -953,6 +1089,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?topic=LLM",
       "export_command": "python3 scripts/export_reading_list.py docs --topic LLM --output docs/exports/topic-llm-reading-list.md",
+      "slugs": [
+        "2604.11035-introspective-dlm"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm"
       ],
@@ -977,6 +1116,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?topic=Long+Context",
       "export_command": "python3 scripts/export_reading_list.py docs --topic 'Long Context' --output docs/exports/topic-long-context-reading-list.md",
+      "slugs": [
+        "2307.08691-flashattention-2"
+      ],
       "sample_slugs": [
         "2307.08691-flashattention-2"
       ],
@@ -1001,6 +1143,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?topic=Transformer",
       "export_command": "python3 scripts/export_reading_list.py docs --topic Transformer --output docs/exports/topic-transformer-reading-list.md",
+      "slugs": [
+        "2307.08691-flashattention-2"
+      ],
       "sample_slugs": [
         "2307.08691-flashattention-2"
       ],
@@ -1025,6 +1170,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?role=followup",
       "export_command": "",
+      "slugs": [
+        "2602.06036-dflash"
+      ],
       "sample_slugs": [
         "2602.06036-dflash"
       ],
@@ -1049,6 +1197,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?role=system",
       "export_command": "",
+      "slugs": [
+        "2501.01005-flashinfer"
+      ],
       "sample_slugs": [
         "2501.01005-flashinfer"
       ],
@@ -1073,6 +1224,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?role=variant",
       "export_command": "",
+      "slugs": [
+        "2605.12825-orthrus"
+      ],
       "sample_slugs": [
         "2605.12825-orthrus"
       ],
@@ -1097,6 +1251,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?method=block+diffusion",
       "export_command": "python3 scripts/export_reading_list.py docs --method 'block diffusion' --output docs/exports/method-block-diffusion-reading-list.md",
+      "slugs": [
+        "2602.06036-dflash"
+      ],
       "sample_slugs": [
         "2602.06036-dflash"
       ],
@@ -1121,6 +1278,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?method=block-sparse+attention",
       "export_command": "python3 scripts/export_reading_list.py docs --method 'block-sparse attention' --output docs/exports/method-block-sparse-attention-reading-list.md",
+      "slugs": [
+        "2501.01005-flashinfer"
+      ],
       "sample_slugs": [
         "2501.01005-flashinfer"
       ],
@@ -1145,6 +1305,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?method=composable+KV-cache+format",
       "export_command": "python3 scripts/export_reading_list.py docs --method 'composable KV-cache format' --output docs/exports/method-composable-kv-cache-format-reading-list.md",
+      "slugs": [
+        "2501.01005-flashinfer"
+      ],
       "sample_slugs": [
         "2501.01005-flashinfer"
       ],
@@ -1169,6 +1332,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?method=CUDA+Graph",
       "export_command": "python3 scripts/export_reading_list.py docs --method 'CUDA Graph' --output docs/exports/method-cuda-graph-reading-list.md",
+      "slugs": [
+        "2501.01005-flashinfer"
+      ],
       "sample_slugs": [
         "2501.01005-flashinfer"
       ],
@@ -1193,6 +1359,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?method=dual-view+attention",
       "export_command": "python3 scripts/export_reading_list.py docs --method 'dual-view attention' --output docs/exports/method-dual-view-attention-reading-list.md",
+      "slugs": [
+        "2605.12825-orthrus"
+      ],
       "sample_slugs": [
         "2605.12825-orthrus"
       ],
@@ -1217,6 +1386,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?method=forward+KL+distillation",
       "export_command": "python3 scripts/export_reading_list.py docs --method 'forward KL distillation' --output docs/exports/method-forward-kl-distillation-reading-list.md",
+      "slugs": [
+        "2605.12825-orthrus"
+      ],
       "sample_slugs": [
         "2605.12825-orthrus"
       ],
@@ -1241,6 +1413,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?method=intra-model+consensus",
       "export_command": "python3 scripts/export_reading_list.py docs --method 'intra-model consensus' --output docs/exports/method-intra-model-consensus-reading-list.md",
+      "slugs": [
+        "2605.12825-orthrus"
+      ],
       "sample_slugs": [
         "2605.12825-orthrus"
       ],
@@ -1265,6 +1440,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?method=JIT+compilation",
       "export_command": "python3 scripts/export_reading_list.py docs --method 'JIT compilation' --output docs/exports/method-jit-compilation-reading-list.md",
+      "slugs": [
+        "2501.01005-flashinfer"
+      ],
       "sample_slugs": [
         "2501.01005-flashinfer"
       ],
@@ -1289,6 +1467,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?method=KV+injection",
       "export_command": "python3 scripts/export_reading_list.py docs --method 'KV injection' --output docs/exports/method-kv-injection-reading-list.md",
+      "slugs": [
+        "2602.06036-dflash"
+      ],
       "sample_slugs": [
         "2602.06036-dflash"
       ],
@@ -1313,6 +1494,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?method=load-balanced+scheduling",
       "export_command": "python3 scripts/export_reading_list.py docs --method 'load-balanced scheduling' --output docs/exports/method-load-balanced-scheduling-reading-list.md",
+      "slugs": [
+        "2501.01005-flashinfer"
+      ],
       "sample_slugs": [
         "2501.01005-flashinfer"
       ],
@@ -1337,6 +1521,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?method=masked+diffusion",
       "export_command": "python3 scripts/export_reading_list.py docs --method 'masked diffusion' --output docs/exports/method-masked-diffusion-reading-list.md",
+      "slugs": [
+        "2605.12825-orthrus"
+      ],
       "sample_slugs": [
         "2605.12825-orthrus"
       ],
@@ -1361,6 +1548,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?method=parallel+drafting",
       "export_command": "python3 scripts/export_reading_list.py docs --method 'parallel drafting' --output docs/exports/method-parallel-drafting-reading-list.md",
+      "slugs": [
+        "2602.06036-dflash"
+      ],
       "sample_slugs": [
         "2602.06036-dflash"
       ],
@@ -1385,6 +1575,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?method=shared+KV+cache",
       "export_command": "python3 scripts/export_reading_list.py docs --method 'shared KV cache' --output docs/exports/method-shared-kv-cache-reading-list.md",
+      "slugs": [
+        "2605.12825-orthrus"
+      ],
       "sample_slugs": [
         "2605.12825-orthrus"
       ],
@@ -1409,6 +1602,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?method=Speculative+Decoding",
       "export_command": "python3 scripts/export_reading_list.py docs --method 'Speculative Decoding' --output docs/exports/method-speculative-decoding-reading-list.md",
+      "slugs": [
+        "2602.06036-dflash"
+      ],
       "sample_slugs": [
         "2602.06036-dflash"
       ],
@@ -1433,6 +1629,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?method=target+hidden+features",
       "export_command": "python3 scripts/export_reading_list.py docs --method 'target hidden features' --output docs/exports/method-target-hidden-features-reading-list.md",
+      "slugs": [
+        "2602.06036-dflash"
+      ],
       "sample_slugs": [
         "2602.06036-dflash"
       ],
@@ -1457,6 +1656,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?problem=Customizable+Attention+Serving",
       "export_command": "",
+      "slugs": [
+        "2501.01005-flashinfer"
+      ],
       "sample_slugs": [
         "2501.01005-flashinfer"
       ],
@@ -1481,6 +1683,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?problem=Lossless+Speculative+Decoding",
       "export_command": "",
+      "slugs": [
+        "2602.06036-dflash"
+      ],
       "sample_slugs": [
         "2602.06036-dflash"
       ],
@@ -1505,6 +1710,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?problem=Memory-Efficient+Parallel+Token+Generation",
       "export_command": "",
+      "slugs": [
+        "2605.12825-orthrus"
+      ],
       "sample_slugs": [
         "2605.12825-orthrus"
       ],
@@ -1529,6 +1737,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?topic=Attention+Kernels",
       "export_command": "python3 scripts/export_reading_list.py docs --topic 'Attention Kernels' --output docs/exports/topic-attention-kernels-reading-list.md",
+      "slugs": [
+        "2501.01005-flashinfer"
+      ],
       "sample_slugs": [
         "2501.01005-flashinfer"
       ],
@@ -1553,6 +1764,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?topic=GPU+Systems",
       "export_command": "python3 scripts/export_reading_list.py docs --topic 'GPU Systems' --output docs/exports/topic-gpu-systems-reading-list.md",
+      "slugs": [
+        "2501.01005-flashinfer"
+      ],
       "sample_slugs": [
         "2501.01005-flashinfer"
       ],
@@ -1577,6 +1791,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?topic=Inference+Optimization",
       "export_command": "python3 scripts/export_reading_list.py docs --topic 'Inference Optimization' --output docs/exports/topic-inference-optimization-reading-list.md",
+      "slugs": [
+        "2501.01005-flashinfer"
+      ],
       "sample_slugs": [
         "2501.01005-flashinfer"
       ],
@@ -1601,6 +1818,9 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?track=Inference+Serving+Systems",
       "export_command": "python3 scripts/export_reading_list.py docs --track 'Inference Serving Systems' --output docs/exports/track-inference-serving-systems-reading-list.md",
+      "slugs": [
+        "2501.01005-flashinfer"
+      ],
       "sample_slugs": [
         "2501.01005-flashinfer"
       ],
@@ -1627,6 +1847,13 @@
       "recommended_action": "补 next_review 5 篇",
       "href": "library.html?code=yes",
       "export_command": "",
+      "slugs": [
+        "2307.08691-flashattention-2",
+        "2501.01005-flashinfer",
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2307.08691-flashattention-2",
@@ -1659,6 +1886,13 @@
       "recommended_action": "补 next_review 5 篇",
       "href": "library.html?domain=LLM+Systems",
       "export_command": "",
+      "slugs": [
+        "2307.08691-flashattention-2",
+        "2501.01005-flashinfer",
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2307.08691-flashattention-2",
@@ -1691,6 +1925,13 @@
       "recommended_action": "补 next_review 5 篇",
       "href": "library.html?stage=deep_read",
       "export_command": "",
+      "slugs": [
+        "2307.08691-flashattention-2",
+        "2501.01005-flashinfer",
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2307.08691-flashattention-2",
@@ -1723,6 +1964,13 @@
       "recommended_action": "补 next_review 5 篇",
       "href": "library.html",
       "export_command": "",
+      "slugs": [
+        "2307.08691-flashattention-2",
+        "2501.01005-flashinfer",
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2307.08691-flashattention-2",
@@ -1755,6 +2003,13 @@
       "recommended_action": "补 next_review 5 篇",
       "href": "library.html?status=read",
       "export_command": "python3 scripts/export_reading_list.py docs --status read --output docs/exports/status-read-reading-list.md",
+      "slugs": [
+        "2307.08691-flashattention-2",
+        "2501.01005-flashinfer",
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2307.08691-flashattention-2",
@@ -1787,6 +2042,11 @@
       "recommended_action": "补 next_review 3 篇",
       "href": "library.html?line=Parallel+Decoding+with+Diffusion+Models",
       "export_command": "python3 scripts/export_reading_list.py docs --line 'Parallel Decoding with Diffusion Models' --output docs/exports/research-line-parallel-decoding-with-diffusion-models-reading-list.md",
+      "slugs": [
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2602.06036-dflash",
@@ -1815,6 +2075,11 @@
       "recommended_action": "补 next_review 3 篇",
       "href": "library.html?topic=Diffusion+Language+Models",
       "export_command": "python3 scripts/export_reading_list.py docs --topic 'Diffusion Language Models' --output docs/exports/topic-diffusion-language-models-reading-list.md",
+      "slugs": [
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2602.06036-dflash",
@@ -1843,6 +2108,11 @@
       "recommended_action": "补 next_review 3 篇",
       "href": "library.html?topic=LLM+Serving",
       "export_command": "python3 scripts/export_reading_list.py docs --topic 'LLM Serving' --output docs/exports/topic-llm-serving-reading-list.md",
+      "slugs": [
+        "2501.01005-flashinfer",
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2602.06036-dflash",
@@ -1871,6 +2141,11 @@
       "recommended_action": "补 next_review 3 篇",
       "href": "library.html?topic=Speculative+Decoding",
       "export_command": "python3 scripts/export_reading_list.py docs --topic 'Speculative Decoding' --output docs/exports/topic-speculative-decoding-reading-list.md",
+      "slugs": [
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2602.06036-dflash",
@@ -1899,6 +2174,11 @@
       "recommended_action": "补 next_review 3 篇",
       "href": "library.html?track=Inference+Acceleration",
       "export_command": "python3 scripts/export_reading_list.py docs --track 'Inference Acceleration' --output docs/exports/track-inference-acceleration-reading-list.md",
+      "slugs": [
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2602.06036-dflash",
@@ -1927,6 +2207,11 @@
       "recommended_action": "补 next_review 3 篇",
       "href": "library.html?track=Parallel+Decoding",
       "export_command": "python3 scripts/export_reading_list.py docs --track 'Parallel Decoding' --output docs/exports/track-parallel-decoding-reading-list.md",
+      "slugs": [
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2602.06036-dflash",
@@ -1955,6 +2240,10 @@
       "recommended_action": "补 next_review 2 篇",
       "href": "library.html?role=foundation",
       "export_command": "",
+      "slugs": [
+        "2307.08691-flashattention-2",
+        "2604.11035-introspective-dlm"
+      ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2307.08691-flashattention-2"

@@ -2176,6 +2176,7 @@ def batch_record(
         "recommended_action": batch_action(missing_review, due_review, missing_taxonomy, no_code, high_importance),
         "href": batch_href(dimension, value),
         "export_command": batch_export_command(dimension, value, report_dir),
+        "slugs": sorted(str(paper["slug"]) for paper in items),
         "sample_slugs": [paper["slug"] for paper in samples],
         "sample_titles": [paper.get("title_zh") or paper.get("title") or paper["slug"] for paper in samples],
     }
@@ -2202,6 +2203,7 @@ def build_batch_payload(papers: list[dict[str, Any]], report_dir: Path) -> dict[
     return {
         "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
         "count": len(papers),
+        "report_dir": str(command_report_dir(report_dir)),
         "dimension_count": len(BATCH_DIMENSIONS),
         "batch_count": len(batches),
         "dimensions": BATCH_DIMENSIONS,
@@ -9565,6 +9567,23 @@ def render_batch(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       white-space: normal;
       overflow-wrap: anywhere;
     }
+    .batch-patch {
+      display: grid;
+      gap: 8px;
+      border-top: 1px solid var(--line);
+      margin-top: 2px;
+      padding-top: 12px;
+    }
+    .batch-patch label {
+      display: grid;
+      gap: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .batch-patch input,
+    .batch-patch select {
+      width: 100%;
+    }
     .batch-samples {
       max-width: 320px;
       color: var(--muted);
@@ -9622,6 +9641,42 @@ def render_batch(report_dir: Path, papers: list[dict[str, Any]]) -> None:
           <button class="button" id="copyBatchTask" type="button">复制任务</button>
           <button class="button" id="copyBatchCommand" type="button">复制导出命令</button>
         </div>
+        <div class="batch-patch">
+          <strong>生成 metadata patch</strong>
+          <label>字段
+            <select id="batchPatchField">
+              <option value="">选择要写回的字段</option>
+              <option value="status">status</option>
+              <option value="reading_stage">reading_stage</option>
+              <option value="review_stage">review_stage</option>
+              <option value="next_review">next_review</option>
+              <option value="importance">importance</option>
+              <option value="research_line">research_line</option>
+              <option value="line_role">line_role</option>
+              <option value="domains">domains</option>
+              <option value="tracks">tracks</option>
+              <option value="problems">problems</option>
+              <option value="topics">topics</option>
+              <option value="methods">methods</option>
+            </select>
+          </label>
+          <label>新值
+            <input id="batchPatchValue" type="text" placeholder="例如 reading / 2026-07-01 / KV Cache">
+          </label>
+          <label>列表字段模式
+            <select id="batchPatchListMode">
+              <option value="replace">replace</option>
+              <option value="append">append</option>
+              <option value="remove">remove</option>
+            </select>
+          </label>
+          <div class="bulk-actions">
+            <button class="button primary" id="downloadBatchPatch" type="button">下载 patch</button>
+            <button class="button" id="copyBatchDryRun" type="button">复制 dry-run</button>
+            <button class="button" id="copyBatchWrite" type="button">复制写回命令</button>
+          </div>
+          <code id="batchPatchPreview">选择批次、字段和值后生成 CSV patch。</code>
+        </div>
         <div class="batch-samples" id="batchDetailSamples"></div>
       </section>
     </aside>
@@ -9654,7 +9709,15 @@ const openBatch = document.querySelector("#openBatch");
 const copyBatchLink = document.querySelector("#copyBatchLink");
 const copyBatchTask = document.querySelector("#copyBatchTask");
 const copyBatchCommand = document.querySelector("#copyBatchCommand");
+const batchPatchField = document.querySelector("#batchPatchField");
+const batchPatchValue = document.querySelector("#batchPatchValue");
+const batchPatchListMode = document.querySelector("#batchPatchListMode");
+const downloadBatchPatch = document.querySelector("#downloadBatchPatch");
+const copyBatchDryRun = document.querySelector("#copyBatchDryRun");
+const copyBatchWrite = document.querySelector("#copyBatchWrite");
+const batchPatchPreview = document.querySelector("#batchPatchPreview");
 let activeBatchId = "";
+const batchListFields = new Set(["domains", "tracks", "problems", "topics", "methods", "authors"]);
 
 function batchEscape(value) {{
   return String(value ?? "").replace(/[&<>"']/g, char => ({{ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }}[char]));
@@ -9738,8 +9801,12 @@ function visibleBatchRows() {{
   return filteredBatches();
 }}
 
+function activeBatch() {{
+  return visibleBatchRows().find(batch => batch.id === activeBatchId) || null;
+}}
+
 function batchCsv(items) {{
-  const header = ["severity", "dimension", "value", "count", "priority", "high_importance", "missing_review", "due_review", "missing_taxonomy", "no_code", "latest_year", "recommended_action", "href", "sample_slugs"];
+  const header = ["severity", "dimension", "value", "count", "priority", "high_importance", "missing_review", "due_review", "missing_taxonomy", "no_code", "latest_year", "recommended_action", "href", "slugs", "sample_slugs"];
   const rows = items.map(item => [
     item.severity,
     item.dimension,
@@ -9754,6 +9821,7 @@ function batchCsv(items) {{
     item.latest_year,
     item.recommended_action,
     item.href,
+    (item.slugs || []).join(";"),
     (item.sample_slugs || []).join(";"),
   ]);
   return [header, ...rows].map(row => row.map(batchCsvCell).join(",")).join("\\n") + "\\n";
@@ -9769,13 +9837,64 @@ function batchTask(item) {{
   if (!item) return "";
   const samples = (item.sample_slugs || []).length ? `\\n  - 样例：${{item.sample_slugs.join(", ")}}` : "";
   const command = item.export_command ? `\\n  - 导出：${{item.export_command}}` : "";
-  return `- [ ] ${{item.dimension_label}} / ${{item.value}}：${{item.recommended_action}}\\n  - 风险：${{item.severity}}；论文：${{item.count}}；缺复习：${{item.missing_review}}；缺分类：${{item.missing_taxonomy}}\\n  - 入口：${{item.href}}${{command}}${{samples}}\\n`;
+  const patchHint = (item.slugs || []).length ? `\\n  - patch 范围：${{item.slugs.length}} 个 slug` : "";
+  return `- [ ] ${{item.dimension_label}} / ${{item.value}}：${{item.recommended_action}}\\n  - 风险：${{item.severity}}；论文：${{item.count}}；缺复习：${{item.missing_review}}；缺分类：${{item.missing_taxonomy}}\\n  - 入口：${{item.href}}${{command}}${{patchHint}}${{samples}}\\n`;
+}}
+
+function patchFilename(item) {{
+  const slug = String(item?.id || "batch").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "batch";
+  return `${{slug}}-metadata-patch.csv`;
+}}
+
+function patchInputPath(item) {{
+  return `~/Downloads/${{patchFilename(item)}}`;
+}}
+
+function shellArg(value) {{
+  const text = String(value ?? "");
+  if (/^[A-Za-z0-9_./~:-]+$/.test(text)) return text;
+  return `'${{text.replaceAll("'", "'\\\"'\\\"'")}}'`;
+}}
+
+function batchPatchCsv(item) {{
+  const field = batchPatchField.value;
+  const value = batchPatchValue.value.trim();
+  if (!item || !field || !value) return "";
+  const listField = batchListFields.has(field);
+  const header = listField ? ["slug", field, "_list_mode"] : ["slug", field];
+  const rows = (item.slugs || []).map(slug => listField ? [slug, value, batchPatchListMode.value] : [slug, value]);
+  return [header, ...rows].map(row => row.map(batchCsvCell).join(",")).join("\\n") + "\\n";
+}}
+
+function batchPatchCommand(item, write) {{
+  if (!item || !batchPatchField.value || !batchPatchValue.value.trim()) return "";
+  const reportDir = batchPayload.report_dir || "docs";
+  const command = `python3 scripts/apply_library_metadata.py ${{shellArg(reportDir)}} --input ${{shellArg(patchInputPath(item))}} --field ${{batchPatchField.value}}`;
+  return write ? `${{command}} --write` : command;
+}}
+
+function renderBatchPatchState(item) {{
+  const field = batchPatchField.value;
+  const value = batchPatchValue.value.trim();
+  const enabled = Boolean(item && field && value && (item.slugs || []).length);
+  batchPatchListMode.disabled = !batchListFields.has(field);
+  downloadBatchPatch.disabled = !enabled;
+  copyBatchDryRun.disabled = !enabled;
+  copyBatchWrite.disabled = !enabled;
+  if (!item) {{
+    batchPatchPreview.textContent = "选择批次、字段和值后生成 CSV patch。";
+  }} else if (!field || !value) {{
+    batchPatchPreview.textContent = `当前批次包含 ${{(item.slugs || []).length}} 个 slug；选择字段和值后可下载 patch。`;
+  }} else {{
+    batchPatchPreview.textContent = `${{patchFilename(item)}} · ${{(item.slugs || []).length}} 行 · ${{field}}=${{value}}`;
+  }}
 }}
 
 function renderBatchDetail(item) {{
   copyBatchLink.disabled = !item;
   copyBatchTask.disabled = !item;
   copyBatchCommand.disabled = !item || !item.export_command;
+  renderBatchPatchState(item);
   if (!item) {{
     batchDetailTitle.textContent = "选择一个批次";
     batchDetailFlags.replaceChildren();
@@ -9783,6 +9902,7 @@ function renderBatchDetail(item) {{
     batchDetailHref.textContent = "library.html";
     openBatch.href = "library.html";
     batchDetailSamples.textContent = "";
+    renderBatchPatchState(null);
     return;
   }}
   batchDetailTitle.textContent = `${{item.dimension_label}} / ${{item.value}}`;
@@ -9800,6 +9920,7 @@ function renderBatchDetail(item) {{
     const slug = (item.sample_slugs || [])[index] || "";
     return `<div>${{batchEscape(title)}} <span class="meta">${{batchEscape(slug)}}</span></div>`;
   }}).join("") || "暂无样例。";
+  renderBatchPatchState(item);
 }}
 
 function downloadText(filename, text, type) {{
@@ -9832,16 +9953,34 @@ batchRows.addEventListener("click", event => {{
 document.querySelector("#downloadBatchCsv").addEventListener("click", () => downloadText("paper_batches.csv", batchCsv(visibleBatchRows()), "text/csv;charset=utf-8"));
 document.querySelector("#copyBatchMarkdown").addEventListener("click", () => copyText(markdownPlan(visibleBatchRows()), "复制 Markdown 批次计划"));
 copyBatchLink.addEventListener("click", () => {{
-  const item = visibleBatchRows().find(batch => batch.id === activeBatchId);
+  const item = activeBatch();
   if (item) copyText(item.href, "复制批次链接");
 }});
 copyBatchTask.addEventListener("click", () => {{
-  const item = visibleBatchRows().find(batch => batch.id === activeBatchId);
+  const item = activeBatch();
   if (item) copyText(batchTask(item), "复制批次任务");
 }});
 copyBatchCommand.addEventListener("click", () => {{
-  const item = visibleBatchRows().find(batch => batch.id === activeBatchId);
+  const item = activeBatch();
   if (item && item.export_command) copyText(item.export_command, "复制导出命令");
+}});
+[batchPatchField, batchPatchValue, batchPatchListMode].forEach(control => {{
+  control.addEventListener("input", () => renderBatchPatchState(activeBatch()));
+}});
+downloadBatchPatch.addEventListener("click", () => {{
+  const item = activeBatch();
+  const csv = batchPatchCsv(item);
+  if (item && csv) downloadText(patchFilename(item), csv, "text/csv;charset=utf-8");
+}});
+copyBatchDryRun.addEventListener("click", () => {{
+  const item = activeBatch();
+  const command = batchPatchCommand(item, false);
+  if (command) copyText(command, "复制 dry-run 命令");
+}});
+copyBatchWrite.addEventListener("click", () => {{
+  const item = activeBatch();
+  const command = batchPatchCommand(item, true);
+  if (command) copyText(command, "复制写回命令");
 }});
 document.querySelector("#resetBatch").addEventListener("click", () => {{
   batchSearch.value = "";

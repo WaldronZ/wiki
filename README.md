@@ -179,6 +179,7 @@ paper_reader/
 - `docs/board.html`：状态看板，按自定义 `status` 分列，可动态切换 `status_workflows` 并保留 URL 状态，也可临时新增状态列，拖拽后导出 `status_board_patch.csv`
 - `docs/workflow.html`：工作流中心，集中对比多套 `status_workflows`、active workflow 分布、状态定义覆盖、未配置状态 drift、空字段和绑定 workflow 的共享视图
 - `docs/status.html`：状态选择器，运行时动态选择 workflow/status/reading stage/review stage，并生成可跳转 URL、共享视图 JSON 和 workflow 配置片段
+- `docs/batch.html`：批次规划页，按分类、状态、阅读阶段和复习缺口切分可执行论文批次；选中批次后可复制任务、导出阅读清单命令，或直接生成 `metadata-patch.csv` 写回状态/复习/分类字段
 - `docs/pivot.html`：分类透视表，支持在 research line、domain、track、problem、topic、method、status、year 等维度之间动态交叉分析
 - `docs/compare.html`：论文对比页，按搜索、研究线、方向、状态或推荐集合选择论文，并排比较分类、状态、复习计划、评分和代码线索
 - `docs/taxonomy_map.html`：分类图谱页，按节点和共现边审计 research line、domain、track、problem、topic 和 method 的连接关系，可筛选并导出边 CSV
@@ -225,6 +226,7 @@ paper_reader/
 - `docs/command.json`：机器可读命令中心，按使用场景暴露页面入口、数据文件、推荐命令和 next actions
 - `docs/workflow.json`：机器可读状态工作流审计，包含 active workflow、每套 workflow 的字段分布、状态定义、未配置值、共享视图绑定和推荐动作
 - `docs/status.json`：机器可读运行时状态选择契约，包含 workflow 选项、论文状态快照、默认选择、跳转链接和写回命令
+- `docs/batch.json`：机器可读批次规划数据，包含每个批次的风险、缺口、完整 slug 范围、跳转链接和可复制导出命令
 - `docs/pivot.json`：机器可读分类透视表，包含可交叉的维度、每篇论文的维度投影和常用预设矩阵
 - `docs/compare.json`：机器可读论文对比数据，包含对比字段、论文元数据和高优先级/研究线/方向推荐集合
 - `docs/taxonomy_map.json`：机器可读分类图谱，包含分类节点、共现边、研究线簇、孤立节点和治理建议
