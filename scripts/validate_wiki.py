@@ -107,6 +107,7 @@ REQUIRED_PAGES = {
     "compare.html",
     "taxonomy_map.html",
     "clusters.html",
+    "roadmap.html",
     "scale.html",
     "ownership.html",
     "routing.html",
@@ -142,6 +143,7 @@ REQUIRED_PAGES = {
     "compare.json",
     "taxonomy_map.json",
     "clusters.json",
+    "roadmap.json",
     "scale.json",
     "ownership.json",
     "routing.json",
@@ -570,6 +572,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     compare_path = report_dir / "compare.json"
     taxonomy_map_path = report_dir / "taxonomy_map.json"
     clusters_path = report_dir / "clusters.json"
+    roadmap_path = report_dir / "roadmap.json"
     scale_path = report_dir / "scale.json"
     ownership_path = report_dir / "ownership.json"
     routing_path = report_dir / "routing.json"
@@ -613,6 +616,9 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     if not clusters_path.exists():
         errors.append("missing clusters.json")
         return
+    if not roadmap_path.exists():
+        errors.append("missing roadmap.json")
+        return
     if not scale_path.exists():
         errors.append("missing scale.json")
         return
@@ -655,6 +661,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     compare_data = json.loads(compare_path.read_text(encoding="utf-8"))
     taxonomy_map_data = json.loads(taxonomy_map_path.read_text(encoding="utf-8"))
     clusters_data = json.loads(clusters_path.read_text(encoding="utf-8"))
+    roadmap_data = json.loads(roadmap_path.read_text(encoding="utf-8"))
     scale_data = json.loads(scale_path.read_text(encoding="utf-8"))
     ownership_data = json.loads(ownership_path.read_text(encoding="utf-8"))
     routing_data = json.loads(routing_path.read_text(encoding="utf-8"))
@@ -1051,6 +1058,85 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
             errors.append(f"clusters.json clusters[{index}].split_candidates must be a list")
     if not isinstance(clusters_data.get("recommendations"), list):
         errors.append("clusters.json recommendations must be a list")
+
+    if roadmap_data.get("count") != len(report_slugs):
+        errors.append(f"roadmap.json count {roadmap_data.get('count')} != markdown report count {len(report_slugs)}")
+    required_roadmap = {"line_count", "risk_counts", "recommended_roles", "roadmaps", "actions", "links"}
+    missing_roadmap = sorted(required_roadmap - set(roadmap_data))
+    if missing_roadmap:
+        errors.append(f"roadmap.json missing keys: {', '.join(missing_roadmap)}")
+    roadmap_items = roadmap_data.get("roadmaps")
+    if not isinstance(roadmap_items, list):
+        errors.append("roadmap.json roadmaps must be a list")
+        roadmap_items = []
+    if roadmap_data.get("line_count") != len(roadmap_items):
+        errors.append("roadmap.json line_count must match roadmaps length")
+    roadmap_action_types = {"role_gap", "year_gap", "freshness_gap", "review_plan", "metadata_gap", "taxonomy_load", "code_observation", "maintain"}
+    valid_risks = {"high", "medium", "low"}
+    for index, item in enumerate(roadmap_items):
+        if not isinstance(item, dict):
+            errors.append(f"roadmap.json roadmaps[{index}] must be an object")
+            continue
+        for key in ("id", "line", "href", "count", "risk", "score", "role_counts", "missing_roles", "milestones", "representative_papers", "queues", "actions"):
+            if key not in item:
+                errors.append(f"roadmap.json roadmaps[{index}] missing {key}")
+        if item.get("risk") not in valid_risks:
+            errors.append(f"roadmap.json roadmaps[{index}].risk has invalid value")
+        if not isinstance(item.get("role_counts"), dict):
+            errors.append(f"roadmap.json roadmaps[{index}].role_counts must be an object")
+        if not isinstance(item.get("missing_roles"), list):
+            errors.append(f"roadmap.json roadmaps[{index}].missing_roles must be a list")
+        representative_slugs = [
+            paper.get("slug")
+            for paper in item.get("representative_papers", [])
+            if isinstance(paper, dict)
+        ]
+        unknown_representatives = sorted(set(representative_slugs) - report_slugs)
+        if unknown_representatives:
+            errors.append(f"roadmap.json roadmaps[{index}] representative_papers reference unknown slugs: {unknown_representatives}")
+        queue_slugs = {
+            slug
+            for queue in (item.get("queues") or {}).values()
+            if isinstance(queue, list)
+            for slug in queue
+        }
+        unknown_queue_slugs = sorted(queue_slugs - report_slugs)
+        if unknown_queue_slugs:
+            errors.append(f"roadmap.json roadmaps[{index}] queues reference unknown slugs: {unknown_queue_slugs}")
+        milestone_slugs = {
+            slug
+            for milestone in item.get("milestones", [])
+            if isinstance(milestone, dict)
+            for slug in milestone.get("representative_slugs", [])
+        }
+        unknown_milestone_slugs = sorted(milestone_slugs - report_slugs)
+        if unknown_milestone_slugs:
+            errors.append(f"roadmap.json roadmaps[{index}] milestones reference unknown slugs: {unknown_milestone_slugs}")
+        actions = item.get("actions")
+        if not isinstance(actions, list):
+            errors.append(f"roadmap.json roadmaps[{index}].actions must be a list")
+            actions = []
+        for action_index, action in enumerate(actions):
+            if not isinstance(action, dict):
+                errors.append(f"roadmap.json roadmaps[{index}].actions[{action_index}] must be an object")
+                continue
+            for key in ("type", "priority", "label", "href", "slugs"):
+                if key not in action:
+                    errors.append(f"roadmap.json roadmaps[{index}].actions[{action_index}] missing {key}")
+            if action.get("type") not in roadmap_action_types:
+                errors.append(f"roadmap.json roadmaps[{index}].actions[{action_index}].type has invalid value")
+            action_slugs = set(action.get("slugs", [])) if isinstance(action.get("slugs"), list) else set()
+            unknown_action_slugs = sorted(action_slugs - report_slugs)
+            if unknown_action_slugs:
+                errors.append(f"roadmap.json roadmaps[{index}].actions[{action_index}] references unknown slugs: {unknown_action_slugs}")
+    roadmap_actions = roadmap_data.get("actions")
+    if not isinstance(roadmap_actions, list):
+        errors.append("roadmap.json actions must be a list")
+    if not isinstance(roadmap_data.get("recommended_roles"), list) or not roadmap_data.get("recommended_roles"):
+        errors.append("roadmap.json recommended_roles must be a non-empty list")
+    links = roadmap_data.get("links")
+    if not isinstance(links, dict) or not {"library", "lines", "clusters", "gaps"}.issubset(links):
+        errors.append("roadmap.json links must include library, lines, clusters, and gaps")
 
     if scale_data.get("count") != len(report_slugs):
         errors.append(f"scale.json count {scale_data.get('count')} != markdown report count {len(report_slugs)}")

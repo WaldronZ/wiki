@@ -4,7 +4,7 @@ AutoPaperReader 是一个自动化「找论文 -> 读论文 -> 写报告」的 a
 
 它的目标是把一篇论文从检索、下载源码、分析论文、分析配套代码，到最终输出结构化中文阅读报告的流程串起来，并把产物（包括 Markdown 报告和 HTML 展示网页）统一组织到固定目录中。
 
-项目还会把这些逐篇报告汇总成一个轻量动态 wiki：所有汇总页都提供全局快速跳转入口，方便在大量页面、论文、机器数据和治理命令之间切换；`docs/index.html` 提供全文搜索、研究线、分类、状态体系、代码/重要性/复习筛选、排序、分页和可分享 URL 状态；`docs/library.html` 提供适合大量论文批量管理的密集表格视图；`docs/board.html` 提供可拖拽状态看板，可按 workflow 动态切换状态列并保留 URL 状态；`docs/workflow.html` 提供状态工作流中心，集中对比 active workflow、状态分布和 drift；`docs/status.html` 提供运行时状态选择器，可动态选择 workflow/status/reading stage/review stage 并复制共享视图或配置片段；`docs/pivot.html` 提供任意两个分类维度的交叉透视表；`docs/compare.html` 提供多论文并排对比；`docs/taxonomy_map.html` 提供分类图谱，审计 domain/track/problem/topic/method 的节点和共现边；`docs/clusters.html` 提供研究簇驾驶舱，按研究线查看簇风险、拆分候选和代表论文；`docs/scale.html` 提供规模就绪视图，评估大库容量、索引体量和治理瓶颈；`docs/ownership.html` 提供 owner 工作台，按研究线负责人聚合工作量、风险和治理队列；`docs/routing.html` 提供新论文分类路由器，粘贴标题/摘要即可推荐研究线、标签和相似论文；`docs/onboarding.html` 提供开源上手控制台，集中贡献路径、质量门、数据契约和常用命令；`docs/catalog.html` 提供面向桌面软件、DMG 封装和开源接入的数据/API 目录；`docs/intake.html` 提供批量导入台，可粘贴多条论文链接并先做库内/inbox/批内去重；`docs/inbox.html` 提供候选论文待处理池；`docs/quality.html` 提供质量治理、标签归一化建议和 taxonomy drift 门禁；`docs/review.html` 提供复习队列和建议复习日期；`docs/freshness.html` 提供报告时效治理、过期分析和研究线维护队列；`docs/dashboard.html` 提供分类覆盖、研究线健康度和待处理队列；`docs/release.html` 提供发布摘要、页面入口、机器可读数据清单、artifact inventory、SHA-256 和治理 playbooks；`docs/snapshot.html` 提供当前发布基线、风险队列、治理策略和 artifact hash 快照；`docs/actions.html` 提供统一行动中心，汇总复习、质量、分类、重复项和 inbox 待办；`docs/collections.html` 提供共享视图、智能队列和研究线集合入口；`docs/balance.html` 提供分类均衡复盘，集中查看分类维度健康度、长尾、过载和空候选；`docs/coverage.html` 提供研究线分类覆盖地图，按研究线定位 domain/track/problem/topic/method 缺口；`docs/facets.html` 提供分类工作台，集中审计标签规模、长尾和过载分类；`docs/related.html` 提供标签共现和相似论文关系发现；`docs/gaps.html` 提供研究缺口和下一步行动建议；`docs/taxonomy.html` 提供分类治理、状态矩阵、研究线角色矩阵、浏览器内状态工作流设计器和分类变更 patch 预览；`docs/timeline.html` 提供按年份和研究线浏览的路线时间轴；`docs/matrix.html` 提供研究线 x 年份覆盖矩阵；`docs/lines/index.html` 提供研究线入口；`docs/tags.html` 提供分类总览；`docs/papers.json` 提供机器可读索引；`docs/search_index.json` 提供正文检索索引；`docs/stats.json` 提供机器可读运营指标；`docs/quality.json` 提供元数据质量、标签别名建议与运营队列报告；`docs/review.json` 提供机器可读复习计划；`docs/freshness.json` 提供机器可读报告新鲜度和过期队列；`docs/taxonomy_actions.json` 提供可分派的分类治理任务；`docs/actions.json` 提供统一行动队列；`docs/workflow.json` 提供机器可读状态工作流配置、分布和漂移审计；`docs/status.json` 提供运行时状态选择契约、状态字段选项和论文状态快照；`docs/pivot.json` 提供机器可读分类透视表维度、论文投影和交叉分布；`docs/compare.json` 提供机器可读论文对比数据和推荐集合；`docs/taxonomy_map.json` 提供分类节点、共现边、研究线簇和治理建议；`docs/clusters.json` 提供研究簇、拆分候选、代表论文和簇风险；`docs/scale.json` 提供规模就绪评分、容量投影和大库治理风险；`docs/ownership.json` 提供研究线 owner、工作量、风险和队列数据；`docs/routing.json` 提供新论文分类路由画像、推荐权重和相似论文签名；`docs/onboarding.json` 提供开源贡献路径、质量门和数据契约清单；`docs/catalog.json` 提供页面、机器数据、契约字段和集成 recipe 的机器可读目录；`docs/intake.json` 提供批量导入去重索引、默认字段和 inbox CSV 契约；`docs/snapshot.json` 提供机器可读治理快照；`docs/manifest.json` 提供发布状态、入口清单、数据契约和可校验产物清单。
+项目还会把这些逐篇报告汇总成一个轻量动态 wiki：所有汇总页都提供全局快速跳转入口，方便在大量页面、论文、机器数据和治理命令之间切换；`docs/index.html` 提供全文搜索、研究线、分类、状态体系、代码/重要性/复习筛选、排序、分页和可分享 URL 状态；`docs/library.html` 提供适合大量论文批量管理的密集表格视图；`docs/board.html` 提供可拖拽状态看板，可按 workflow 动态切换状态列并保留 URL 状态；`docs/workflow.html` 提供状态工作流中心，集中对比 active workflow、状态分布和 drift；`docs/status.html` 提供运行时状态选择器，可动态选择 workflow/status/reading stage/review stage 并复制共享视图或配置片段；`docs/pivot.html` 提供任意两个分类维度的交叉透视表；`docs/compare.html` 提供多论文并排对比；`docs/taxonomy_map.html` 提供分类图谱，审计 domain/track/problem/topic/method 的节点和共现边；`docs/clusters.html` 提供研究簇驾驶舱，按研究线查看簇风险、拆分候选和代表论文；`docs/roadmap.html` 提供研究路线图，按研究线组织阶段覆盖、里程碑、代表论文和下一步计划；`docs/scale.html` 提供规模就绪视图，评估大库容量、索引体量和治理瓶颈；`docs/ownership.html` 提供 owner 工作台，按研究线负责人聚合工作量、风险和治理队列；`docs/routing.html` 提供新论文分类路由器，粘贴标题/摘要即可推荐研究线、标签和相似论文；`docs/onboarding.html` 提供开源上手控制台，集中贡献路径、质量门、数据契约和常用命令；`docs/catalog.html` 提供面向桌面软件、DMG 封装和开源接入的数据/API 目录；`docs/intake.html` 提供批量导入台，可粘贴多条论文链接并先做库内/inbox/批内去重；`docs/inbox.html` 提供候选论文待处理池；`docs/quality.html` 提供质量治理、标签归一化建议和 taxonomy drift 门禁；`docs/review.html` 提供复习队列和建议复习日期；`docs/freshness.html` 提供报告时效治理、过期分析和研究线维护队列；`docs/dashboard.html` 提供分类覆盖、研究线健康度和待处理队列；`docs/release.html` 提供发布摘要、页面入口、机器可读数据清单、artifact inventory、SHA-256 和治理 playbooks；`docs/snapshot.html` 提供当前发布基线、风险队列、治理策略和 artifact hash 快照；`docs/actions.html` 提供统一行动中心，汇总复习、质量、分类、重复项和 inbox 待办；`docs/collections.html` 提供共享视图、智能队列和研究线集合入口；`docs/balance.html` 提供分类均衡复盘，集中查看分类维度健康度、长尾、过载和空候选；`docs/coverage.html` 提供研究线分类覆盖地图，按研究线定位 domain/track/problem/topic/method 缺口；`docs/facets.html` 提供分类工作台，集中审计标签规模、长尾和过载分类；`docs/related.html` 提供标签共现和相似论文关系发现；`docs/gaps.html` 提供研究缺口和下一步行动建议；`docs/taxonomy.html` 提供分类治理、状态矩阵、研究线角色矩阵、浏览器内状态工作流设计器和分类变更 patch 预览；`docs/timeline.html` 提供按年份和研究线浏览的路线时间轴；`docs/matrix.html` 提供研究线 x 年份覆盖矩阵；`docs/lines/index.html` 提供研究线入口；`docs/tags.html` 提供分类总览；`docs/papers.json` 提供机器可读索引；`docs/search_index.json` 提供正文检索索引；`docs/stats.json` 提供机器可读运营指标；`docs/quality.json` 提供元数据质量、标签别名建议与运营队列报告；`docs/review.json` 提供机器可读复习计划；`docs/freshness.json` 提供机器可读报告新鲜度和过期队列；`docs/taxonomy_actions.json` 提供可分派的分类治理任务；`docs/actions.json` 提供统一行动队列；`docs/workflow.json` 提供机器可读状态工作流配置、分布和漂移审计；`docs/status.json` 提供运行时状态选择契约、状态字段选项和论文状态快照；`docs/pivot.json` 提供机器可读分类透视表维度、论文投影和交叉分布；`docs/compare.json` 提供机器可读论文对比数据和推荐集合；`docs/taxonomy_map.json` 提供分类节点、共现边、研究线簇和治理建议；`docs/clusters.json` 提供研究簇、拆分候选、代表论文和簇风险；`docs/roadmap.json` 提供研究线路线图、阶段覆盖、里程碑和下一步计划；`docs/scale.json` 提供规模就绪评分、容量投影和大库治理风险；`docs/ownership.json` 提供研究线 owner、工作量、风险和队列数据；`docs/routing.json` 提供新论文分类路由画像、推荐权重和相似论文签名；`docs/onboarding.json` 提供开源贡献路径、质量门和数据契约清单；`docs/catalog.json` 提供页面、机器数据、契约字段和集成 recipe 的机器可读目录；`docs/intake.json` 提供批量导入去重索引、默认字段和 inbox CSV 契约；`docs/snapshot.json` 提供机器可读治理快照；`docs/manifest.json` 提供发布状态、入口清单、数据契约和可校验产物清单。
 
 **注：建议开启 Agent Teams 特性 `export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`**
 
@@ -39,6 +39,7 @@ paper_reader/
 │   ├── compare.html
 │   ├── taxonomy_map.html
 │   ├── clusters.html
+│   ├── roadmap.html
 │   ├── scale.html
 │   ├── ownership.html
 │   ├── routing.html
@@ -72,6 +73,7 @@ paper_reader/
 │   ├── compare.json
 │   ├── taxonomy_map.json
 │   ├── clusters.json
+│   ├── roadmap.json
 │   ├── scale.json
 │   ├── ownership.json
 │   ├── routing.json
@@ -174,6 +176,7 @@ paper_reader/
 - `docs/compare.html`：论文对比页，按搜索、研究线、方向、状态或推荐集合选择论文，并排比较分类、状态、复习计划、评分和代码线索
 - `docs/taxonomy_map.html`：分类图谱页，按节点和共现边审计 research line、domain、track、problem、topic 和 method 的连接关系，可筛选并导出边 CSV
 - `docs/clusters.html`：研究簇驾驶舱，按研究线聚合簇风险、角色/状态分布、top labels、拆分候选和代表论文，可导出 `research_clusters.csv`
+- `docs/roadmap.html`：研究路线图，按研究线汇总角色覆盖、年份里程碑、代表论文、风险和下一步行动，可导出 `research_roadmap.csv`
 - `docs/scale.html`：规模就绪页，评估搜索索引、分类图谱、动态状态体系、行动队列和治理风险在 100/500/1000/5000 篇规模下的增长压力
 - `docs/ownership.html`：Owner 工作台，按 `research_line_owners` 聚合 owner/team/维护节奏、工作量、风险分和缺分类/复习/代码观察队列，可筛选并导出 `ownership_workload.csv`
 - `docs/routing.html`：新论文分类路由器，粘贴标题、摘要或关键词后，根据现有研究线、taxonomy 标签和相似论文推荐 frontmatter 分类 patch
@@ -216,6 +219,7 @@ paper_reader/
 - `docs/compare.json`：机器可读论文对比数据，包含对比字段、论文元数据和高优先级/研究线/方向推荐集合
 - `docs/taxonomy_map.json`：机器可读分类图谱，包含分类节点、共现边、研究线簇、孤立节点和治理建议
 - `docs/clusters.json`：机器可读研究簇报告，包含研究线簇风险、拆分候选、代表论文、owner 和 top labels
+- `docs/roadmap.json`：机器可读研究线路线图，包含阶段覆盖、年份里程碑、代表论文、队列、风险和下一步行动
 - `docs/scale.json`：机器可读规模就绪报告，包含 readiness score、资源体量、队列规模、瓶颈、容量投影和扩展阶段
 - `docs/ownership.json`：机器可读 owner 工作量报告，包含 owner 聚合、研究线风险、治理队列和跳转入口
 - `docs/routing.json`：机器可读分类路由画像，包含 line profiles、label profiles、paper signatures、推荐权重和输入契约

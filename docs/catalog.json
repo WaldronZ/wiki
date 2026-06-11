@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-06-12T04:54:18",
+  "generated_at": "2026-06-12T05:03:25",
   "count": 5,
   "inbox_count": 0,
-  "page_count": 34,
-  "data_file_count": 23,
+  "page_count": 35,
+  "data_file_count": 24,
   "contract_count": 5,
   "pages": [
     {
@@ -119,6 +119,12 @@
       "href": "clusters.html",
       "kind": "analysis",
       "description": "研究线簇、拆分候选和代表论文"
+    },
+    {
+      "title": "研究路线图",
+      "href": "roadmap.html",
+      "kind": "planning",
+      "description": "按研究线组织阶段、里程碑和下一步计划"
     },
     {
       "title": "规模就绪",
@@ -248,7 +254,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:54:17",
+      "generated_at": "2026-06-12T05:03:25",
       "consumers": [
         "frontend",
         "desktop",
@@ -275,7 +281,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:54:17",
+      "generated_at": "2026-06-12T05:03:25",
       "consumers": [
         "search",
         "desktop"
@@ -338,7 +344,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:54:17",
+      "generated_at": "2026-06-12T05:03:25",
       "consumers": [
         "dashboard",
         "ops",
@@ -407,7 +413,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:54:17",
+      "generated_at": "2026-06-12T05:03:25",
       "consumers": [
         "quality-gate",
         "ops",
@@ -439,7 +445,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:54:17",
+      "generated_at": "2026-06-12T05:03:25",
       "consumers": [
         "review",
         "scheduler",
@@ -484,7 +490,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:54:17",
+      "generated_at": "2026-06-12T05:03:25",
       "consumers": [
         "freshness",
         "maintenance"
@@ -522,7 +528,7 @@
         }
       ],
       "declared_count": 55,
-      "generated_at": "2026-06-12T04:54:17",
+      "generated_at": "2026-06-12T05:03:25",
       "consumers": [
         "taxonomy",
         "project-management",
@@ -554,7 +560,7 @@
         }
       ],
       "declared_count": 62,
-      "generated_at": "2026-06-12T04:54:17",
+      "generated_at": "2026-06-12T05:03:25",
       "consumers": [
         "tasks",
         "project-management",
@@ -606,7 +612,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:54:17",
+      "generated_at": "2026-06-12T05:03:25",
       "consumers": [
         "workflow",
         "desktop",
@@ -658,7 +664,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:54:17",
+      "generated_at": "2026-06-12T05:03:25",
       "consumers": [
         "workflow",
         "runtime-selector",
@@ -696,7 +702,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:54:17",
+      "generated_at": "2026-06-12T05:03:25",
       "consumers": [
         "analytics",
         "classification",
@@ -740,7 +746,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:54:17",
+      "generated_at": "2026-06-12T05:03:25",
       "consumers": [
         "comparison",
         "curation",
@@ -808,7 +814,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:54:17",
+      "generated_at": "2026-06-12T05:03:25",
       "consumers": [
         "taxonomy",
         "graph",
@@ -848,11 +854,62 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:54:17",
+      "generated_at": "2026-06-12T05:03:25",
       "consumers": [
         "taxonomy",
         "clusters",
         "curation"
+      ],
+      "error": ""
+    },
+    {
+      "href": "roadmap.json",
+      "description": "研究线路线图、阶段覆盖、里程碑和下一步计划",
+      "exists": true,
+      "size_bytes": 13953,
+      "top_level_keys": [
+        "actions",
+        "count",
+        "generated_at",
+        "line_count",
+        "links",
+        "recommended_roles",
+        "risk_counts",
+        "roadmaps"
+      ],
+      "collections": [
+        {
+          "key": "risk_counts",
+          "type": "object",
+          "count": 1
+        },
+        {
+          "key": "recommended_roles",
+          "type": "list",
+          "count": 4
+        },
+        {
+          "key": "roadmaps",
+          "type": "list",
+          "count": 2
+        },
+        {
+          "key": "actions",
+          "type": "list",
+          "count": 6
+        },
+        {
+          "key": "links",
+          "type": "object",
+          "count": 7
+        }
+      ],
+      "declared_count": 5,
+      "generated_at": "2026-06-12T05:03:25",
+      "consumers": [
+        "research-lines",
+        "planning",
+        "desktop"
       ],
       "error": ""
     },
@@ -917,7 +974,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:54:17",
+      "generated_at": "2026-06-12T05:03:25",
       "consumers": [
         "ops",
         "capacity-planning",
@@ -957,7 +1014,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:54:17",
+      "generated_at": "2026-06-12T05:03:25",
       "consumers": [
         "ops",
         "owners",
@@ -1022,7 +1079,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:54:17",
+      "generated_at": "2026-06-12T05:03:25",
       "consumers": [
         "taxonomy",
         "intake",
@@ -1094,7 +1151,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:54:17",
+      "generated_at": "2026-06-12T05:03:25",
       "consumers": [
         "open-source",
         "contributors",
@@ -1106,7 +1163,7 @@
       "href": "snapshot.json",
       "description": "当前知识库治理快照和发布基线",
       "exists": true,
-      "size_bytes": 13743,
+      "size_bytes": 14107,
       "top_level_keys": [
         "action_groups",
         "active_status_workflow",
@@ -1173,7 +1230,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:54:18",
+      "generated_at": "2026-06-12T05:03:25",
       "consumers": [
         "release",
         "audit",
@@ -1248,7 +1305,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:54:17",
+      "generated_at": "2026-06-12T05:03:25",
       "consumers": [
         "intake",
         "dedupe",
@@ -1292,7 +1349,7 @@
         }
       ],
       "declared_count": 0,
-      "generated_at": "2026-06-12T04:54:17",
+      "generated_at": "2026-06-12T05:03:25",
       "consumers": [
         "intake",
         "dedupe"
@@ -1358,12 +1415,12 @@
         {
           "key": "pages",
           "type": "list",
-          "count": 34
+          "count": 35
         },
         {
           "key": "data_files",
           "type": "list",
-          "count": 23
+          "count": 24
         },
         {
           "key": "contract_files",
@@ -1373,7 +1430,7 @@
         {
           "key": "artifact_inventory",
           "type": "list",
-          "count": 62
+          "count": 64
         },
         {
           "key": "command_recipes",
@@ -1392,7 +1449,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T04:54:18",
+      "generated_at": "2026-06-12T05:03:25",
       "consumers": [
         "release",
         "audit",

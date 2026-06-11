@@ -42,6 +42,7 @@ GENERATED_FIXED_PATHS = (
     "compare.json",
     "taxonomy_map.json",
     "clusters.json",
+    "roadmap.json",
     "scale.json",
     "ownership.json",
     "routing.json",
@@ -58,6 +59,7 @@ GENERATED_FIXED_PATHS = (
     "compare.html",
     "taxonomy_map.html",
     "clusters.html",
+    "roadmap.html",
     "scale.html",
     "ownership.html",
     "routing.html",
@@ -2185,6 +2187,179 @@ def write_clusters_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     )
 
 
+ROADMAP_RECOMMENDED_ROLES = ["foundation", "baseline", "main", "system"]
+
+
+def roadmap_paper_summary(paper: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "slug": paper["slug"],
+        "title": paper.get("title") or paper["slug"],
+        "title_zh": paper.get("title_zh") or "",
+        "year": paper.get("year") or "",
+        "role": paper.get("line_role") or "unclassified",
+        "status": paper.get("status") or "",
+        "importance": paper.get("importance") or "",
+        "has_code": bool(paper.get("has_code")),
+        "topics": paper.get("topics") or [],
+        "methods": paper.get("methods") or [],
+        "href": paper_href(paper),
+    }
+
+
+def roadmap_risk(score: int) -> str:
+    if score < 55:
+        return "high"
+    if score < 78:
+        return "medium"
+    return "low"
+
+
+def build_roadmap_payload(papers: list[dict[str, Any]]) -> dict[str, Any]:
+    quality = build_quality_report(papers)
+    review = build_review_plan(papers)
+    taxonomy_load_by_slug = {item["slug"]: item for item in quality.get("taxonomy_load", [])}
+    review_needs_plan = set(review.get("queues", {}).get("needs_plan", []))
+    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for paper in papers:
+        grouped[str(paper.get("research_line") or "Unassigned")].append(paper)
+
+    roadmaps: list[dict[str, Any]] = []
+    action_items: list[dict[str, Any]] = []
+    current_year = dt.date.today().year
+    for line in sorted(grouped, key=lambda name: (-len(grouped[name]), name == "Unassigned", name.lower())):
+        items = sorted(grouped[line], key=lambda paper: (role_rank(str(paper.get("line_role") or "")), -(int(paper.get("year") or 0)), paper["title"]))
+        owner_config = RESEARCH_LINE_OWNERS.get(line, {})
+        role_counts = Counter(str(paper.get("line_role") or "unclassified") for paper in items)
+        missing_roles = [role for role in ROADMAP_RECOMMENDED_ROLES if role_counts.get(role, 0) == 0]
+        years = sorted({int(paper["year"]) for paper in items if isinstance(paper.get("year"), int)})
+        latest_year = max(years) if years else None
+        first_year = min(years) if years else None
+        stale_years = current_year - latest_year if latest_year else None
+        missing_taxonomy = [
+            paper["slug"]
+            for paper in items
+            if not paper.get("domains")
+            or not paper.get("tracks")
+            or not paper.get("problems")
+            or not paper.get("topics")
+            or not paper.get("methods")
+            or not paper.get("line_role")
+        ]
+        no_review = [paper["slug"] for paper in items if not paper.get("next_review")]
+        no_code = [paper["slug"] for paper in items if not paper.get("has_code")]
+        taxonomy_load = [paper["slug"] for paper in items if paper["slug"] in taxonomy_load_by_slug]
+        needs_plan = [paper["slug"] for paper in items if paper["slug"] in review_needs_plan]
+        score = 100
+        score -= len(missing_roles) * 9
+        score -= min(22, len(missing_taxonomy) * 7)
+        score -= min(16, len(taxonomy_load) * 4)
+        score -= min(18, len(no_review) * 4)
+        score -= min(12, len(no_code) * 3)
+        if stale_years is None:
+            score -= 10
+        elif stale_years >= 2:
+            score -= min(18, stale_years * 4)
+        score = max(0, score)
+        risk = roadmap_risk(score)
+
+        actions: list[dict[str, Any]] = []
+        if missing_roles:
+            actions.append({"type": "role_gap", "priority": 100 - score + len(missing_roles), "label": f"补齐角色：{', '.join(missing_roles)}", "href": page_query_href("library.html", line=line), "slugs": []})
+        if stale_years is None:
+            actions.append({"type": "year_gap", "priority": 82, "label": "补齐年份信息，建立时间线基准", "href": page_query_href("library.html", line=line), "slugs": [paper["slug"] for paper in items if not paper.get("year")][:8]})
+        elif stale_years >= 2:
+            actions.append({"type": "freshness_gap", "priority": min(95, 62 + stale_years * 6), "label": f"检索 {latest_year + 1}-{current_year} 后续工作", "href": page_query_href("freshness.html", line=line), "slugs": []})
+        if needs_plan or no_review:
+            targets = needs_plan or no_review
+            actions.append({"type": "review_plan", "priority": min(90, 55 + len(targets) * 4), "label": f"补复习计划 {len(targets)} 篇", "href": page_query_href("review.html", line=line), "slugs": targets[:10]})
+        if missing_taxonomy:
+            actions.append({"type": "metadata_gap", "priority": min(88, 54 + len(missing_taxonomy) * 5), "label": f"补 taxonomy {len(missing_taxonomy)} 篇", "href": page_query_href("library.html", line=line), "slugs": missing_taxonomy[:10]})
+        if taxonomy_load:
+            actions.append({"type": "taxonomy_load", "priority": min(80, 46 + len(taxonomy_load) * 4), "label": f"审分类粒度 {len(taxonomy_load)} 篇", "href": page_query_href("quality.html", line=line), "slugs": taxonomy_load[:10]})
+        if no_code:
+            actions.append({"type": "code_observation", "priority": min(72, 42 + len(no_code) * 3), "label": f"补代码观察 {len(no_code)} 篇", "href": page_query_href("library.html", line=line), "slugs": no_code[:10]})
+        if not actions:
+            actions.append({"type": "maintain", "priority": 20, "label": "保持观察，等待新论文进入 intake", "href": "intake.html", "slugs": []})
+
+        milestones = []
+        for year in years:
+            year_items = [paper for paper in items if paper.get("year") == year]
+            representatives = sorted(year_items, key=lambda paper: (-(int(paper.get("importance") or 0)), role_rank(str(paper.get("line_role") or "")), paper["title"]))[:4]
+            milestones.append(
+                {
+                    "year": year,
+                    "count": len(year_items),
+                    "roles": dict(sorted(Counter(str(paper.get("line_role") or "unclassified") for paper in year_items).items(), key=lambda pair: (role_rank(pair[0]), pair[0]))),
+                    "representative_slugs": [paper["slug"] for paper in representatives],
+                }
+            )
+
+        representative_papers = sorted(items, key=lambda paper: (-(int(paper.get("importance") or 0)), role_rank(str(paper.get("line_role") or "")), -(int(paper.get("year") or 0)), paper["title"]))[:5]
+        top_topics = Counter(topic for paper in items for topic in paper.get("topics", []))
+        top_methods = Counter(method for paper in items for method in paper.get("methods", []))
+        roadmap = {
+            "id": slugify_label(line),
+            "line": line,
+            "href": f"lines/{slugify_label(line)}.html" if line != "Unassigned" else page_query_href("library.html", line="Unassigned"),
+            "library_href": page_query_href("library.html", line=line),
+            "count": len(items),
+            "owner": owner_config.get("owner") or "unassigned",
+            "team": owner_config.get("team") or "",
+            "cadence": owner_config.get("cadence") or "",
+            "risk": risk,
+            "score": score,
+            "first_year": first_year,
+            "latest_year": latest_year,
+            "year_span": (latest_year - first_year + 1) if first_year and latest_year else 0,
+            "role_counts": dict(sorted(role_counts.items(), key=lambda pair: (role_rank(pair[0]), pair[0]))),
+            "missing_roles": missing_roles,
+            "top_topics": top_counts(dict(top_topics.most_common(8)), 8),
+            "top_methods": top_counts(dict(top_methods.most_common(8)), 8),
+            "milestones": milestones,
+            "representative_papers": [roadmap_paper_summary(paper) for paper in representative_papers],
+            "queues": {
+                "missing_taxonomy": missing_taxonomy,
+                "taxonomy_load": taxonomy_load,
+                "needs_review_plan": needs_plan,
+                "no_review": no_review,
+                "no_code_observation": no_code,
+            },
+            "actions": actions,
+        }
+        roadmaps.append(roadmap)
+        for action in actions:
+            action_items.append({"line": line, "risk": risk, "score": score, **action})
+
+    action_items = sorted(action_items, key=lambda item: (-int(item["priority"]), item["line"], item["type"]))
+    risk_counts = dict(sorted(Counter(item["risk"] for item in roadmaps).items()))
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": len(papers),
+        "line_count": len(roadmaps),
+        "risk_counts": risk_counts,
+        "recommended_roles": ROADMAP_RECOMMENDED_ROLES,
+        "roadmaps": roadmaps,
+        "actions": action_items,
+        "links": {
+            "library": "library.html",
+            "lines": "lines/index.html",
+            "clusters": "clusters.html",
+            "gaps": "gaps.html",
+            "timeline": "timeline.html",
+            "matrix": "matrix.html",
+            "intake": "intake.html",
+        },
+    }
+
+
+def write_roadmap_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_roadmap_payload(papers)
+    (report_dir / "roadmap.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
 SCALE_CORE_RESOURCES = [
     "papers.json",
     "search_index.json",
@@ -2939,6 +3114,7 @@ DATA_CONSUMER_HINTS = {
     "compare.json": ["comparison", "curation", "desktop"],
     "taxonomy_map.json": ["taxonomy", "graph", "desktop"],
     "clusters.json": ["taxonomy", "clusters", "curation"],
+    "roadmap.json": ["research-lines", "planning", "desktop"],
     "scale.json": ["ops", "capacity-planning", "desktop"],
     "ownership.json": ["ops", "owners", "project-management"],
     "routing.json": ["taxonomy", "intake", "classification"],
@@ -3273,6 +3449,7 @@ def wiki_pages_manifest() -> list[dict[str, str]]:
         {"title": "论文对比", "href": "compare.html", "kind": "analysis", "description": "并排比较候选论文的分类、状态和质量信号"},
         {"title": "分类图谱", "href": "taxonomy_map.html", "kind": "analysis", "description": "分类节点、共现边和研究线簇"},
         {"title": "研究簇", "href": "clusters.html", "kind": "analysis", "description": "研究线簇、拆分候选和代表论文"},
+        {"title": "研究路线图", "href": "roadmap.html", "kind": "planning", "description": "按研究线组织阶段、里程碑和下一步计划"},
         {"title": "规模就绪", "href": "scale.html", "kind": "ops", "description": "大规模论文库容量、风险和扩展建议"},
         {"title": "Owner 工作台", "href": "ownership.html", "kind": "ops", "description": "研究线 owner、工作量和治理队列"},
         {"title": "分类路由器", "href": "routing.html", "kind": "workflow", "description": "新论文研究线和标签推荐"},
@@ -3307,6 +3484,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "compare.json", "description": "论文对比视图数据和推荐对比集合"},
         {"href": "taxonomy_map.json", "description": "分类节点、共现边、研究线簇和图谱治理建议"},
         {"href": "clusters.json", "description": "研究线簇、拆分候选和代表论文"},
+        {"href": "roadmap.json", "description": "研究线路线图、阶段覆盖、里程碑和下一步计划"},
         {"href": "scale.json", "description": "规模就绪评分、容量投影和大库治理风险"},
         {"href": "ownership.json", "description": "研究线 owner、工作量和治理队列"},
         {"href": "routing.json", "description": "新论文分类路由画像和推荐权重"},
@@ -9071,6 +9249,280 @@ renderClusterRows();
 </script>
 """
     (report_dir / "clusters.html").write_text(page_shell("研究簇驾驶舱", body, extra_css=clusters_css), encoding="utf-8")
+
+
+def render_roadmap(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_roadmap_payload(papers)
+    roadmap_json = json.dumps(payload, ensure_ascii=False).replace("</", "<\\/")
+    owners = sorted({item["owner"] for item in payload["roadmaps"] if item.get("owner") and item.get("owner") != "unassigned"})
+    owner_options = "".join(f'<option value="{html.escape(owner, quote=True)}">{html.escape(owner)}</option>' for owner in owners)
+    action_rows = "".join(
+        "<tr>"
+        f"<td>{int(action.get('priority') or 0)}</td>"
+        f'<td><a href="{html.escape(page_query_href("library.html", line=str(action.get("line") or "")))}">{html.escape(str(action.get("line") or ""))}</a></td>'
+        f"<td>{html.escape(str(action.get('type') or ''))}</td>"
+        f"<td>{html.escape(str(action.get('label') or ''))}</td>"
+        f'<td><a href="{html.escape(str(action.get("href") or ""))}">打开</a></td>'
+        "</tr>"
+        for action in payload["actions"][:20]
+    ) or '<tr><td colspan="5" class="empty">暂无路线图行动。</td></tr>'
+    roadmap_css = """
+    .roadmap-layout {
+      display: grid;
+      grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+      gap: 16px;
+      align-items: start;
+    }
+    .roadmap-panel {
+      position: sticky;
+      top: 82px;
+      display: grid;
+      gap: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 14px;
+    }
+    .roadmap-card {
+      display: grid;
+      gap: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+    .roadmap-card header {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 0;
+    }
+    .roadmap-card h2 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.25;
+    }
+    .roadmap-score {
+      min-width: 48px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #edf3f1;
+      color: var(--accent);
+      font-weight: 800;
+    }
+    .roadmap-sections {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 10px;
+    }
+    .roadmap-mini {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      background: color-mix(in srgb, var(--panel) 88%, white);
+    }
+    .roadmap-mini h3 {
+      margin: 0 0 6px;
+      font-size: 14px;
+      line-height: 1.3;
+    }
+    .roadmap-list {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+    }
+    .roadmap-list li { margin: 3px 0; }
+    .roadmap-card[hidden] { display: none; }
+    @media (max-width: 920px) {
+      .roadmap-layout { grid-template-columns: 1fr; }
+      .roadmap-panel { position: static; }
+    }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Research Roadmap</div>
+  <h1>研究路线图</h1>
+  <p class="lead">把每条 research line 组织成可执行路线：阶段覆盖、里程碑年份、代表论文、维护风险和下一步行动。适合论文库变大后做季度规划或开源协作分工。</p>
+  <div class="stats">
+    <a class="stat" href="roadmap.json">Roadmap JSON</a>
+    <a class="stat" href="lines/index.html">研究线</a>
+    <a class="stat" href="clusters.html">研究簇</a>
+    <a class="stat" href="gaps.html">研究缺口</a>
+    <a class="stat" href="timeline.html">时间轴</a>
+    <a class="stat" href="matrix.html">研究矩阵</a>
+    <a class="stat" href="intake.html">批量导入</a>
+    <span class="stat">论文 {payload["count"]}</span>
+    <span class="stat">研究线 {payload["line_count"]}</span>
+    <span class="stat">行动 {len(payload["actions"])}</span>
+  </div>
+</header>
+<main class="shell">
+  <section class="roadmap-layout">
+    <aside class="roadmap-panel">
+      <input id="roadmapSearch" type="search" placeholder="搜索研究线、owner、标签、论文">
+      <select id="roadmapRisk"><option value="">全部风险</option><option value="high">high</option><option value="medium">medium</option><option value="low">low</option></select>
+      <select id="roadmapOwner"><option value="">全部 owner</option>{owner_options}</select>
+      <select id="roadmapRoleGap"><option value="">全部角色覆盖</option><option value="yes">有缺口</option><option value="no">角色完整</option></select>
+      <button class="button" id="downloadRoadmapCsv" type="button">下载路线 CSV</button>
+      <button class="button" id="copyRoadmapMarkdown" type="button">复制 Markdown 路线图</button>
+      <button class="button" id="resetRoadmap" type="button">重置</button>
+      <div class="meta" id="roadmapCount">准备加载路线图</div>
+    </aside>
+    <div>
+      <section>
+        <h2 class="section-title">优先行动</h2>
+        <div class="table-wrap"><table class="data-table"><thead><tr><th>优先级</th><th>研究线</th><th>类型</th><th>行动</th><th>入口</th></tr></thead><tbody>{action_rows}</tbody></table></div>
+      </section>
+      <section>
+        <h2 class="section-title">研究线路线</h2>
+        <div id="roadmapCards"></div>
+      </section>
+    </div>
+  </section>
+</main>
+<script>
+const roadmapPayload = {roadmap_json};
+const roadmapSearch = document.querySelector("#roadmapSearch");
+const roadmapRisk = document.querySelector("#roadmapRisk");
+const roadmapOwner = document.querySelector("#roadmapOwner");
+const roadmapRoleGap = document.querySelector("#roadmapRoleGap");
+const roadmapCount = document.querySelector("#roadmapCount");
+const roadmapCards = document.querySelector("#roadmapCards");
+
+function roadmapEscape(value) {{
+  return String(value ?? "").replace(/[&<>"']/g, char => ({{ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }}[char]));
+}}
+
+function roadmapCsvCell(value) {{
+  const text = String(value ?? "");
+  return (text.includes(",") || text.includes('"') || text.includes("\\n"))
+    ? `"${{text.replaceAll('"', '""')}}"`
+    : text;
+}}
+
+function roadmapSearchText(item) {{
+  return [
+    item.line,
+    item.owner,
+    item.team,
+    item.cadence,
+    ...(item.missing_roles || []),
+    ...(item.top_topics || []).map(topic => topic.name),
+    ...(item.top_methods || []).map(method => method.name),
+    ...(item.representative_papers || []).flatMap(paper => [paper.slug, paper.title, paper.title_zh]),
+    ...(item.actions || []).map(action => action.label),
+  ].join(" ").toLowerCase();
+}}
+
+function filteredRoadmaps() {{
+  const q = roadmapSearch.value.trim().toLowerCase();
+  return (roadmapPayload.roadmaps || []).filter(item => (
+    (!q || roadmapSearchText(item).includes(q))
+    && (!roadmapRisk.value || item.risk === roadmapRisk.value)
+    && (!roadmapOwner.value || item.owner === roadmapOwner.value)
+    && (!roadmapRoleGap.value || (roadmapRoleGap.value === "yes" ? (item.missing_roles || []).length : !(item.missing_roles || []).length))
+  ));
+}}
+
+function chips(values) {{
+  return (values || []).map(value => `<span class="chip">${{roadmapEscape(value)}}</span>`).join("");
+}}
+
+function countChips(values) {{
+  return (values || []).map(item => `<span class="chip">${{roadmapEscape(item.name)}} ${{item.count}}</span>`).join("");
+}}
+
+function renderRoadmapCards() {{
+  const items = filteredRoadmaps();
+  roadmapCount.textContent = `显示 ${{items.length}} / ${{roadmapPayload.line_count}} 条研究线`;
+  roadmapCards.innerHTML = items.map(item => {{
+    const milestones = (item.milestones || []).map(milestone => `${{milestone.year}}:${{milestone.count}}`).join(" · ") || "-";
+    const papers = (item.representative_papers || []).map(paper => `<li><a href="${{roadmapEscape(paper.href)}}">${{roadmapEscape(paper.title_zh || paper.title || paper.slug)}}</a> <span class="meta">${{roadmapEscape(paper.role)}} · ${{roadmapEscape(paper.year)}}</span></li>`).join("") || '<li class="meta">暂无代表论文。</li>';
+    const actions = (item.actions || []).slice(0, 5).map(action => `<li><a href="${{roadmapEscape(action.href)}}">${{roadmapEscape(action.label)}}</a></li>`).join("");
+    return `<article class="roadmap-card" data-risk="${{roadmapEscape(item.risk)}}">
+      <header>
+        <div>
+          <h2><a href="${{roadmapEscape(item.href)}}">${{roadmapEscape(item.line)}}</a></h2>
+          <div class="meta">${{roadmapEscape(item.owner || "unassigned")}}${{item.team ? " · " + roadmapEscape(item.team) : ""}}${{item.cadence ? " · " + roadmapEscape(item.cadence) : ""}}</div>
+        </div>
+        <div class="roadmap-score">${{item.score}}</div>
+      </header>
+      <div class="card-flags"><span class="flag">${{roadmapEscape(item.risk)}}</span><span class="flag">${{item.count}} 篇</span><span class="flag">${{roadmapEscape(item.first_year || "-")}}-${{roadmapEscape(item.latest_year || "-")}}</span></div>
+      <div class="roadmap-sections">
+        <section class="roadmap-mini"><h3>角色覆盖</h3><div class="chips">${{chips(Object.entries(item.role_counts || {{}}).map(([role, count]) => `${{role}} ${{count}}`))}}</div><div class="meta">缺口：${{(item.missing_roles || []).join(", ") || "-"}}</div></section>
+        <section class="roadmap-mini"><h3>里程碑</h3><div class="meta">${{roadmapEscape(milestones)}}</div></section>
+        <section class="roadmap-mini"><h3>Top Topics</h3><div class="chips">${{countChips(item.top_topics)}}</div></section>
+        <section class="roadmap-mini"><h3>Top Methods</h3><div class="chips">${{countChips(item.top_methods)}}</div></section>
+      </div>
+      <div class="roadmap-sections">
+        <section class="roadmap-mini"><h3>代表论文</h3><ol class="roadmap-list">${{papers}}</ol></section>
+        <section class="roadmap-mini"><h3>下一步</h3><ol class="roadmap-list">${{actions || '<li class="meta">保持观察。</li>'}}</ol></section>
+      </div>
+    </article>`;
+  }}).join("") || '<div class="empty">没有匹配路线。</div>';
+}}
+
+function roadmapsToCsv(items) {{
+  const header = ["line", "owner", "team", "risk", "score", "count", "first_year", "latest_year", "missing_roles", "top_action"];
+  return [header, ...items.map(item => [
+    item.line,
+    item.owner,
+    item.team,
+    item.risk,
+    item.score,
+    item.count,
+    item.first_year || "",
+    item.latest_year || "",
+    (item.missing_roles || []).join(";"),
+    ((item.actions || [])[0] || {{}}).label || "",
+  ])].map(row => row.map(roadmapCsvCell).join(",")).join("\\n") + "\\n";
+}}
+
+function markdownPlan(items) {{
+  return items.map(item => {{
+    const actions = (item.actions || []).slice(0, 5).map(action => `- [ ] ${{action.label}}`).join("\\n");
+    return `## ${{item.line}}\\n- Owner: ${{item.owner || "unassigned"}}\\n- Risk: ${{item.risk}} / score ${{item.score}}\\n- Papers: ${{item.count}}\\n- Missing roles: ${{(item.missing_roles || []).join(", ") || "-"}}\\n${{actions}}`;
+  }}).join("\\n\\n");
+}}
+
+function downloadText(filename, text, type) {{
+  const blob = new Blob([text], {{ type }});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}}
+
+async function copyText(text, fallbackTitle) {{
+  try {{
+    await navigator.clipboard.writeText(text);
+  }} catch {{
+    window.prompt(fallbackTitle, text);
+  }}
+}}
+
+[roadmapSearch, roadmapRisk, roadmapOwner, roadmapRoleGap].forEach(control => control.addEventListener("input", renderRoadmapCards));
+document.querySelector("#downloadRoadmapCsv").addEventListener("click", () => downloadText("research_roadmap.csv", roadmapsToCsv(filteredRoadmaps()), "text/csv;charset=utf-8"));
+document.querySelector("#copyRoadmapMarkdown").addEventListener("click", () => copyText(markdownPlan(filteredRoadmaps()), "复制 Markdown 路线图"));
+document.querySelector("#resetRoadmap").addEventListener("click", () => {{
+  roadmapSearch.value = "";
+  roadmapRisk.value = "";
+  roadmapOwner.value = "";
+  roadmapRoleGap.value = "";
+  renderRoadmapCards();
+}});
+renderRoadmapCards();
+</script>
+"""
+    (report_dir / "roadmap.html").write_text(page_shell("研究路线图", body, extra_css=roadmap_css), encoding="utf-8")
 
 
 def render_scale(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
@@ -15803,6 +16255,7 @@ def build_wiki(report_dir: Path) -> int:
     write_compare_json(report_dir, papers)
     write_taxonomy_map_json(report_dir, papers)
     write_clusters_json(report_dir, papers)
+    write_roadmap_json(report_dir, papers)
     write_inbox_json(report_dir, inbox_items)
     write_intake_json(report_dir, papers, inbox_items)
     write_search_index(report_dir, papers)
@@ -15819,6 +16272,7 @@ def build_wiki(report_dir: Path) -> int:
     render_compare(report_dir, papers)
     render_taxonomy_map(report_dir, papers)
     render_clusters(report_dir, papers)
+    render_roadmap(report_dir, papers)
     render_scale(report_dir, papers, inbox_items)
     render_ownership(report_dir, papers)
     render_routing(report_dir, papers)

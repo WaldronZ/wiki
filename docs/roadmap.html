@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>质量治理</title>
+  <title>研究路线图</title>
   <style>
     :root {
       color-scheme: light;
@@ -350,28 +350,85 @@
       .data-table { display: block; overflow-x: auto; }
       header { padding-top: 28px; }
     }
-    .config-snippet {
-      margin: 0;
-      padding: 10px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #f8fafc;
-      overflow-x: auto;
-      font-size: 12px;
-      line-height: 1.5;
+
+    .roadmap-layout {
+      display: grid;
+      grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+      gap: 16px;
+      align-items: start;
     }
-    .command-panel {
+    .roadmap-panel {
+      position: sticky;
+      top: 82px;
+      display: grid;
+      gap: 12px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: var(--panel);
-      padding: 12px;
+      padding: 14px;
     }
+    .roadmap-card {
+      display: grid;
+      gap: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+    .roadmap-card header {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 0;
+    }
+    .roadmap-card h2 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.25;
+    }
+    .roadmap-score {
+      min-width: 48px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #edf3f1;
+      color: var(--accent);
+      font-weight: 800;
+    }
+    .roadmap-sections {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 10px;
+    }
+    .roadmap-mini {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      background: color-mix(in srgb, var(--panel) 88%, white);
+    }
+    .roadmap-mini h3 {
+      margin: 0 0 6px;
+      font-size: 14px;
+      line-height: 1.3;
+    }
+    .roadmap-list {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+    }
+    .roadmap-list li { margin: 3px 0; }
+    .roadmap-card[hidden] { display: none; }
+    @media (max-width: 920px) {
+      .roadmap-layout { grid-template-columns: 1fr; }
+      .roadmap-panel { position: static; }
+    }
+    
   </style>
 </head>
 <body>
-<script>
-window.PAPER_WIKI = {"taxonomy_load": [{"slug": "2604.11035-introspective-dlm", "title": "Introspective Diffusion Language Models", "title_zh": "内省式扩散语言模型", "html_path": "2604.11035-introspective-dlm.html", "research_line": "Parallel Decoding with Diffusion Models", "structure_count": 4, "topic_count": 5, "method_count": 6, "tag_count": 11, "signals": ["dense_tags"], "policy": {"min_structure_labels": 3, "min_tags": 3, "max_tags": 10, "max_methods": 8}, "recommendation": "检查 topic / method 是否过细，保留最能区分论文的标签。"}, {"slug": "2501.01005-flashinfer", "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving", "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎", "html_path": "2501.01005-flashinfer.html", "research_line": "Efficient Attention Kernels", "structure_count": 4, "topic_count": 5, "method_count": 6, "tag_count": 11, "signals": ["dense_tags"], "policy": {"min_structure_labels": 3, "min_tags": 3, "max_tags": 10, "max_methods": 8}, "recommendation": "检查 topic / method 是否过细，保留最能区分论文的标签。"}]};
-</script>
 
 <button class="button quick-open" type="button" id="quickOpen">快速跳转</button>
 <div class="quick-panel" id="quickPanel" hidden>
@@ -385,125 +442,182 @@ window.PAPER_WIKI = {"taxonomy_load": [{"slug": "2604.11035-introspective-dlm", 
 </div>
 
 <header class="shell">
-  <div class="eyebrow">Quality Gate</div>
-  <h1>质量治理</h1>
-  <p class="lead">把分类漂移、弱元数据、复习计划和候选论文去重集中到一个发布前检查视图。适合论文库变大后做持续治理。</p>
+  <div class="eyebrow">Research Roadmap</div>
+  <h1>研究路线图</h1>
+  <p class="lead">把每条 research line 组织成可执行路线：阶段覆盖、里程碑年份、代表论文、维护风险和下一步行动。适合论文库变大后做季度规划或开源协作分工。</p>
   <div class="stats">
-    <a class="stat" href="dashboard.html">管理控制台</a>
-    <a class="stat" href="collections.html">集合视图</a>
-    <a class="stat" href="related.html">关联网络</a>
+    <a class="stat" href="roadmap.json">Roadmap JSON</a>
+    <a class="stat" href="lines/index.html">研究线</a>
+    <a class="stat" href="clusters.html">研究簇</a>
     <a class="stat" href="gaps.html">研究缺口</a>
-    <a class="stat" href="taxonomy.html">分类治理</a>
-    <a class="stat" href="library.html">论文库表格</a>
-    <a class="stat" href="board.html">状态看板</a>
-    <a class="stat" href="inbox.html">待处理池</a>
-    <a class="stat" href="quality.json">质量 JSON</a>
+    <a class="stat" href="timeline.html">时间轴</a>
+    <a class="stat" href="matrix.html">研究矩阵</a>
+    <a class="stat" href="intake.html">批量导入</a>
     <span class="stat">论文 5</span>
-    <span class="stat">生成时间 2026-06-12T05:03:25</span>
+    <span class="stat">研究线 2</span>
+    <span class="stat">行动 6</span>
   </div>
 </header>
 <main class="shell">
-  <section>
-    <h2 class="section-title">质量门禁</h2>
-    <div class="metric-grid"><section class="metric-card"><span>质量分</span><strong>92.0</strong><span>综合得分</span></section><section class="metric-card"><span>分类覆盖</span><strong>100%</strong><span>必要字段</span></section><section class="metric-card"><span>复习计划</span><strong>0%</strong><span>next_review</span></section><section class="metric-card"><span>漂移项</span><strong>0</strong><span>taxonomy drift</span></section><section class="metric-card"><span>粒度提示</span><strong>2</strong><span>taxonomy load</span></section><section class="metric-card"><span>别名建议</span><strong>0</strong><span>label aliases</span></section><section class="metric-card"><span>库内重复</span><strong>0</strong><span>duplicate reports</span></section><section class="metric-card"><span>重复候选</span><strong>0</strong><span>inbox</span></section></div>
-  </section>
-  <section>
-    <h2 class="section-title">治理命令</h2>
-    <div class="command-panel">
-      <div class="bulk-actions"><button class="button copy-quality-command" type="button" data-command="python3 scripts/check_quality.py docs">质量门禁</button><button class="button copy-quality-command" type="button" data-command="python3 scripts/validate_wiki.py docs --strict-taxonomy">严格校验</button><button class="button copy-quality-command" type="button" data-command="python3 scripts/apply_inbox_items.py docs --input &lt;candidate_csv&gt;">预览候选论文导入</button><button class="button copy-quality-command" type="button" data-command="python3 scripts/apply_inbox_items.py docs --input &lt;candidate_csv&gt; --write">写入候选论文导入</button><button class="button copy-quality-command" type="button" data-command="python3 scripts/apply_library_metadata.py docs --input &lt;csv&gt;">预览元数据写入</button><button class="button copy-quality-command" type="button" data-command="python3 scripts/apply_taxonomy_aliases.py docs">预览别名写入</button><button class="button copy-quality-command" type="button" data-command="python3 scripts/apply_taxonomy_aliases.py docs --write">写入别名建议</button><button class="button copy-quality-command" type="button" data-command="python3 scripts/apply_status_workflow.py docs --input &lt;taxonomy_status_workflow.json&gt;">预览状态流写入</button><button class="button copy-quality-command" type="button" data-command="python3 scripts/apply_status_workflow.py docs --input &lt;taxonomy_status_workflow.json&gt; --write">写入状态流配置</button><button class="button copy-quality-command" type="button" data-command="python3 scripts/apply_shared_views.py docs --input &lt;shared_views.json&gt;">预览共享视图写入</button><button class="button copy-quality-command" type="button" data-command="python3 scripts/apply_shared_views.py docs --input &lt;shared_views.json&gt; --write">写入共享视图</button><button class="button copy-quality-command" type="button" data-command="python3 scripts/export_actions.py docs --output docs/exports/actions.md">导出统一行动清单</button><button class="button copy-quality-command" type="button" data-command="python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv">导出统一项目任务</button><button class="button copy-quality-command" type="button" data-command="python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md">导出治理清单</button><button class="button copy-quality-command" type="button" data-command="python3 scripts/export_taxonomy_actions.py docs --format csv --severity high --output docs/exports/taxonomy-actions.csv">导出高优先级 CSV</button><button class="button copy-quality-command" type="button" data-command="python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv">导出项目任务</button><button class="button copy-quality-command" type="button" data-command="python3 scripts/export_taxonomy_actions.py docs --format patch --action merge_candidate --output docs/exports/taxonomy-action-patch.csv">导出合并补丁模板</button><button class="button copy-quality-command" type="button" data-command="python3 scripts/export_taxonomy_balance.py docs --format project --max-score 50 --output docs/exports/taxonomy-balance-project.csv">导出均衡任务</button><button class="button copy-quality-command" type="button" data-command="python3 scripts/export_taxonomy_load.py docs --format csv --output docs/exports/taxonomy-load.csv">导出粒度审计</button><button class="button copy-quality-command" type="button" data-command="python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv">导出分类补丁</button></div>
-      <p class="meta">复制后在仓库根目录执行；带 --write 的命令会修改文件，建议先运行对应预览命令。</p>
+  <section class="roadmap-layout">
+    <aside class="roadmap-panel">
+      <input id="roadmapSearch" type="search" placeholder="搜索研究线、owner、标签、论文">
+      <select id="roadmapRisk"><option value="">全部风险</option><option value="high">high</option><option value="medium">medium</option><option value="low">low</option></select>
+      <select id="roadmapOwner"><option value="">全部 owner</option><option value="decoding-owner">decoding-owner</option><option value="kernel-owner">kernel-owner</option></select>
+      <select id="roadmapRoleGap"><option value="">全部角色覆盖</option><option value="yes">有缺口</option><option value="no">角色完整</option></select>
+      <button class="button" id="downloadRoadmapCsv" type="button">下载路线 CSV</button>
+      <button class="button" id="copyRoadmapMarkdown" type="button">复制 Markdown 路线图</button>
+      <button class="button" id="resetRoadmap" type="button">重置</button>
+      <div class="meta" id="roadmapCount">准备加载路线图</div>
+    </aside>
+    <div>
+      <section>
+        <h2 class="section-title">优先行动</h2>
+        <div class="table-wrap"><table class="data-table"><thead><tr><th>优先级</th><th>研究线</th><th>类型</th><th>行动</th><th>入口</th></tr></thead><tbody><tr><td>67</td><td><a href="library.html?line=Parallel+Decoding+with+Diffusion+Models">Parallel Decoding with Diffusion Models</a></td><td>review_plan</td><td>补复习计划 3 篇</td><td><a href="review.html?line=Parallel+Decoding+with+Diffusion+Models">打开</a></td></tr><tr><td>63</td><td><a href="library.html?line=Efficient+Attention+Kernels">Efficient Attention Kernels</a></td><td>review_plan</td><td>补复习计划 2 篇</td><td><a href="review.html?line=Efficient+Attention+Kernels">打开</a></td></tr><tr><td>50</td><td><a href="library.html?line=Efficient+Attention+Kernels">Efficient Attention Kernels</a></td><td>taxonomy_load</td><td>审分类粒度 1 篇</td><td><a href="quality.html?line=Efficient+Attention+Kernels">打开</a></td></tr><tr><td>50</td><td><a href="library.html?line=Parallel+Decoding+with+Diffusion+Models">Parallel Decoding with Diffusion Models</a></td><td>taxonomy_load</td><td>审分类粒度 1 篇</td><td><a href="quality.html?line=Parallel+Decoding+with+Diffusion+Models">打开</a></td></tr><tr><td>46</td><td><a href="library.html?line=Parallel+Decoding+with+Diffusion+Models">Parallel Decoding with Diffusion Models</a></td><td>role_gap</td><td>补齐角色：baseline, main, system</td><td><a href="library.html?line=Parallel+Decoding+with+Diffusion+Models">打开</a></td></tr><tr><td>32</td><td><a href="library.html?line=Efficient+Attention+Kernels">Efficient Attention Kernels</a></td><td>role_gap</td><td>补齐角色：baseline, main</td><td><a href="library.html?line=Efficient+Attention+Kernels">打开</a></td></tr></tbody></table></div>
+      </section>
+      <section>
+        <h2 class="section-title">研究线路线</h2>
+        <div id="roadmapCards"></div>
+      </section>
     </div>
-  </section>
-  <section>
-    <h2 class="section-title">待处理问题</h2>
-    <div class="table-wrap"><table class="data-table"><thead><tr><th>论文</th><th>分数</th><th>缺失字段</th><th>弱字段</th><th>复习</th></tr></thead><tbody><tr><td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a><div class="meta">Parallel Decoding with Diffusion Models</div></td><td>92</td><td>-</td><td>next_review, review_stage</td><td>-</td></tr><tr><td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a><div class="meta">Parallel Decoding with Diffusion Models</div></td><td>92</td><td>-</td><td>next_review, review_stage</td><td>-</td></tr><tr><td><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a><div class="meta">Parallel Decoding with Diffusion Models</div></td><td>92</td><td>-</td><td>next_review, review_stage</td><td>-</td></tr><tr><td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a><div class="meta">Efficient Attention Kernels</div></td><td>92</td><td>-</td><td>next_review, review_stage</td><td>-</td></tr><tr><td><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a><div class="meta">Efficient Attention Kernels</div></td><td>92</td><td>-</td><td>next_review, review_stage</td><td>-</td></tr></tbody></table></div>
-  </section>
-  <section>
-    <h2 class="section-title">Taxonomy Drift</h2>
-    <div class="table-wrap"><div class="empty">暂无 taxonomy drift。</div></div>
-  </section>
-  <section>
-    <h2 class="section-title">分类粒度审计</h2>
-    <div class="results-bar">
-      <strong>2 篇需要检查分类粒度</strong>
-      <div class="results-actions"><button id="downloadTaxonomyLoad" class="button" type="button">下载粒度 CSV</button></div>
-    </div>
-    <div class="table-wrap"><table class="data-table"><thead><tr><th>论文</th><th>结构标签</th><th>Topic</th><th>Method</th><th>信号</th><th>建议</th></tr></thead><tbody><tr><td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a><div class="meta">Parallel Decoding with Diffusion Models</div></td><td>4</td><td>5</td><td>6</td><td><span class="flag">dense_tags</span></td><td>检查 topic / method 是否过细，保留最能区分论文的标签。</td></tr><tr><td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a><div class="meta">Efficient Attention Kernels</div></td><td>4</td><td>5</td><td>6</td><td><span class="flag">dense_tags</span></td><td>检查 topic / method 是否过细，保留最能区分论文的标签。</td></tr></tbody></table></div>
-  </section>
-  <section>
-    <h2 class="section-title">标签归一化建议</h2>
-    <div class="table-wrap"><div class="empty">暂无标签归一化建议。</div></div>
-  </section>
-  <section>
-    <h2 class="section-title">库内重复报告</h2>
-    <div class="table-wrap"><div class="empty">暂无库内重复报告。</div></div>
-  </section>
-  <section>
-    <h2 class="section-title">候选去重</h2>
-    <div class="table-wrap"><div class="empty">暂无疑似重复候选。</div></div>
-  </section>
-  <section>
-    <h2 class="section-title">队列摘要</h2>
-    <table class="data-table"><thead><tr><th>队列</th><th>数量</th><th>样例 slug</th></tr></thead><tbody><tr><td>missing_required_metadata</td><td>0</td><td></td></tr><tr><td>needs_review_plan</td><td>5</td><td>2602.06036-dflash, 2604.11035-introspective-dlm, 2605.12825-orthrus, 2501.01005-flashinfer, 2307.08691-flashattention-2</td></tr><tr><td>due_review</td><td>0</td><td></td></tr><tr><td>no_code_observation</td><td>0</td><td></td></tr><tr><td>taxonomy_drift</td><td>0</td><td></td></tr><tr><td>duplicate_reports</td><td>0</td><td></td></tr><tr><td>taxonomy_sparse</td><td>0</td><td></td></tr><tr><td>taxonomy_dense</td><td>2</td><td>2501.01005-flashinfer, 2604.11035-introspective-dlm</td></tr><tr><td>high_importance</td><td>2</td><td>2307.08691-flashattention-2, 2604.11035-introspective-dlm</td></tr></tbody></table>
   </section>
 </main>
 <script>
-async function copyQualityCommand(button) {
-  const command = button.dataset.command || "";
-  try {
-    await navigator.clipboard.writeText(command);
-    button.textContent = "已复制";
-    setTimeout(() => button.textContent = button.dataset.label, 1200);
-  } catch {
-    window.prompt("复制命令", command);
-  }
+const roadmapPayload = {"generated_at": "2026-06-12T05:03:25", "count": 5, "line_count": 2, "risk_counts": {"medium": 2}, "recommended_roles": ["foundation", "baseline", "main", "system"], "roadmaps": [{"id": "parallel-decoding-with-diffusion-models", "line": "Parallel Decoding with Diffusion Models", "href": "lines/parallel-decoding-with-diffusion-models.html", "library_href": "library.html?line=Parallel+Decoding+with+Diffusion+Models", "count": 3, "owner": "decoding-owner", "team": "generation", "cadence": "biweekly", "risk": "medium", "score": 57, "first_year": 2026, "latest_year": 2026, "year_span": 1, "role_counts": {"foundation": 1, "variant": 1, "followup": 1}, "missing_roles": ["baseline", "main", "system"], "top_topics": [{"name": "Diffusion Language Models", "count": 3}, {"name": "Speculative Decoding", "count": 3}, {"name": "LLM Serving", "count": 2}, {"name": "Parallel Decoding", "count": 2}, {"name": "LLM Inference", "count": 2}, {"name": "LLM", "count": 1}, {"name": "KV Cache", "count": 1}], "top_methods": [{"name": "gated LoRA", "count": 1}, {"name": "introspective consistency", "count": 1}, {"name": "introspective strided decoding", "count": 1}, {"name": "logit-shifted causal training", "count": 1}, {"name": "p/q acceptance", "count": 1}, {"name": "SGLang serving", "count": 1}, {"name": "dual-view attention", "count": 1}, {"name": "forward KL distillation", "count": 1}], "milestones": [{"year": 2026, "count": 3, "roles": {"foundation": 1, "variant": 1, "followup": 1}, "representative_slugs": ["2604.11035-introspective-dlm", "2605.12825-orthrus", "2602.06036-dflash"]}], "representative_papers": [{"slug": "2604.11035-introspective-dlm", "title": "Introspective Diffusion Language Models", "title_zh": "内省式扩散语言模型", "year": 2026, "role": "foundation", "status": "read", "importance": 5, "has_code": true, "topics": ["Diffusion Language Models", "LLM", "LLM Serving", "Parallel Decoding", "Speculative Decoding"], "methods": ["gated LoRA", "introspective consistency", "introspective strided decoding", "logit-shifted causal training", "p/q acceptance", "SGLang serving"], "href": "2604.11035-introspective-dlm.html"}, {"slug": "2605.12825-orthrus", "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion", "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成", "year": 2026, "role": "variant", "status": "read", "importance": 4, "has_code": true, "topics": ["Diffusion Language Models", "KV Cache", "LLM Inference", "Parallel Decoding", "Speculative Decoding"], "methods": ["dual-view attention", "forward KL distillation", "intra-model consensus", "masked diffusion", "shared KV cache"], "href": "2605.12825-orthrus.html"}, {"slug": "2602.06036-dflash", "title": "DFlash: Block Diffusion for Flash Speculative Decoding", "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法", "year": 2026, "role": "followup", "status": "read", "importance": 4, "has_code": true, "topics": ["Diffusion Language Models", "LLM Inference", "LLM Serving", "Speculative Decoding"], "methods": ["block diffusion", "KV injection", "parallel drafting", "Speculative Decoding", "target hidden features"], "href": "2602.06036-dflash.html"}], "queues": {"missing_taxonomy": [], "taxonomy_load": ["2604.11035-introspective-dlm"], "needs_review_plan": ["2604.11035-introspective-dlm", "2605.12825-orthrus", "2602.06036-dflash"], "no_review": ["2604.11035-introspective-dlm", "2605.12825-orthrus", "2602.06036-dflash"], "no_code_observation": []}, "actions": [{"type": "role_gap", "priority": 46, "label": "补齐角色：baseline, main, system", "href": "library.html?line=Parallel+Decoding+with+Diffusion+Models", "slugs": []}, {"type": "review_plan", "priority": 67, "label": "补复习计划 3 篇", "href": "review.html?line=Parallel+Decoding+with+Diffusion+Models", "slugs": ["2604.11035-introspective-dlm", "2605.12825-orthrus", "2602.06036-dflash"]}, {"type": "taxonomy_load", "priority": 50, "label": "审分类粒度 1 篇", "href": "quality.html?line=Parallel+Decoding+with+Diffusion+Models", "slugs": ["2604.11035-introspective-dlm"]}]}, {"id": "efficient-attention-kernels", "line": "Efficient Attention Kernels", "href": "lines/efficient-attention-kernels.html", "library_href": "library.html?line=Efficient+Attention+Kernels", "count": 2, "owner": "kernel-owner", "team": "systems", "cadence": "monthly", "risk": "medium", "score": 70, "first_year": 2023, "latest_year": 2025, "year_span": 3, "role_counts": {"foundation": 1, "system": 1}, "missing_roles": ["baseline", "main"], "top_topics": [{"name": "Efficient Attention", "count": 1}, {"name": "GPU Kernel Optimization", "count": 1}, {"name": "Long Context", "count": 1}, {"name": "Transformer", "count": 1}, {"name": "Attention Kernels", "count": 1}, {"name": "GPU Systems", "count": 1}, {"name": "Inference Optimization", "count": 1}, {"name": "KV Cache", "count": 1}], "top_methods": [{"name": "FlashAttention", "count": 2}, {"name": "CUDA / GPU parallelism", "count": 1}, {"name": "online softmax", "count": 1}, {"name": "tiling", "count": 1}, {"name": "work partitioning", "count": 1}, {"name": "block-sparse attention", "count": 1}, {"name": "composable KV-cache format", "count": 1}, {"name": "CUDA Graph", "count": 1}], "milestones": [{"year": 2023, "count": 1, "roles": {"foundation": 1}, "representative_slugs": ["2307.08691-flashattention-2"]}, {"year": 2025, "count": 1, "roles": {"system": 1}, "representative_slugs": ["2501.01005-flashinfer"]}], "representative_papers": [{"slug": "2307.08691-flashattention-2", "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning", "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention", "year": 2023, "role": "foundation", "status": "read", "importance": 5, "has_code": true, "topics": ["Efficient Attention", "GPU Kernel Optimization", "Long Context", "Transformer"], "methods": ["CUDA / GPU parallelism", "FlashAttention", "online softmax", "tiling", "work partitioning"], "href": "2307.08691-flashattention-2.html"}, {"slug": "2501.01005-flashinfer", "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving", "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎", "year": 2025, "role": "system", "status": "read", "importance": 4, "has_code": true, "topics": ["Attention Kernels", "GPU Systems", "Inference Optimization", "KV Cache", "LLM Serving"], "methods": ["block-sparse attention", "composable KV-cache format", "CUDA Graph", "FlashAttention", "JIT compilation", "load-balanced scheduling"], "href": "2501.01005-flashinfer.html"}], "queues": {"missing_taxonomy": [], "taxonomy_load": ["2501.01005-flashinfer"], "needs_review_plan": ["2307.08691-flashattention-2", "2501.01005-flashinfer"], "no_review": ["2307.08691-flashattention-2", "2501.01005-flashinfer"], "no_code_observation": []}, "actions": [{"type": "role_gap", "priority": 32, "label": "补齐角色：baseline, main", "href": "library.html?line=Efficient+Attention+Kernels", "slugs": []}, {"type": "review_plan", "priority": 63, "label": "补复习计划 2 篇", "href": "review.html?line=Efficient+Attention+Kernels", "slugs": ["2307.08691-flashattention-2", "2501.01005-flashinfer"]}, {"type": "taxonomy_load", "priority": 50, "label": "审分类粒度 1 篇", "href": "quality.html?line=Efficient+Attention+Kernels", "slugs": ["2501.01005-flashinfer"]}]}], "actions": [{"line": "Parallel Decoding with Diffusion Models", "risk": "medium", "score": 57, "type": "review_plan", "priority": 67, "label": "补复习计划 3 篇", "href": "review.html?line=Parallel+Decoding+with+Diffusion+Models", "slugs": ["2604.11035-introspective-dlm", "2605.12825-orthrus", "2602.06036-dflash"]}, {"line": "Efficient Attention Kernels", "risk": "medium", "score": 70, "type": "review_plan", "priority": 63, "label": "补复习计划 2 篇", "href": "review.html?line=Efficient+Attention+Kernels", "slugs": ["2307.08691-flashattention-2", "2501.01005-flashinfer"]}, {"line": "Efficient Attention Kernels", "risk": "medium", "score": 70, "type": "taxonomy_load", "priority": 50, "label": "审分类粒度 1 篇", "href": "quality.html?line=Efficient+Attention+Kernels", "slugs": ["2501.01005-flashinfer"]}, {"line": "Parallel Decoding with Diffusion Models", "risk": "medium", "score": 57, "type": "taxonomy_load", "priority": 50, "label": "审分类粒度 1 篇", "href": "quality.html?line=Parallel+Decoding+with+Diffusion+Models", "slugs": ["2604.11035-introspective-dlm"]}, {"line": "Parallel Decoding with Diffusion Models", "risk": "medium", "score": 57, "type": "role_gap", "priority": 46, "label": "补齐角色：baseline, main, system", "href": "library.html?line=Parallel+Decoding+with+Diffusion+Models", "slugs": []}, {"line": "Efficient Attention Kernels", "risk": "medium", "score": 70, "type": "role_gap", "priority": 32, "label": "补齐角色：baseline, main", "href": "library.html?line=Efficient+Attention+Kernels", "slugs": []}], "links": {"library": "library.html", "lines": "lines/index.html", "clusters": "clusters.html", "gaps": "gaps.html", "timeline": "timeline.html", "matrix": "matrix.html", "intake": "intake.html"}};
+const roadmapSearch = document.querySelector("#roadmapSearch");
+const roadmapRisk = document.querySelector("#roadmapRisk");
+const roadmapOwner = document.querySelector("#roadmapOwner");
+const roadmapRoleGap = document.querySelector("#roadmapRoleGap");
+const roadmapCount = document.querySelector("#roadmapCount");
+const roadmapCards = document.querySelector("#roadmapCards");
+
+function roadmapEscape(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char]));
 }
 
-document.querySelectorAll(".copy-quality-command").forEach(button => {
-  button.dataset.label = button.textContent;
-  button.addEventListener("click", () => copyQualityCommand(button));
-});
-
-const taxonomyLoadItems = window.PAPER_WIKI.taxonomy_load || [];
-const downloadTaxonomyLoad = document.querySelector("#downloadTaxonomyLoad");
-
-function qualityCsvCell(value) {
+function roadmapCsvCell(value) {
   const text = String(value ?? "");
   return (text.includes(",") || text.includes('"') || text.includes("\n"))
     ? `"${text.replaceAll('"', '""')}"`
     : text;
 }
 
-function downloadTaxonomyLoadCsv() {
-  if (!taxonomyLoadItems.length) {
-    window.alert("当前没有分类粒度提示。");
-    return;
-  }
-  const header = ["slug", "title", "research_line", "structure_count", "topic_count", "method_count", "tag_count", "signals", "recommendation"];
-  const rows = taxonomyLoadItems.map(item => [
-    item.slug,
-    item.title_zh || item.title,
-    item.research_line,
-    item.structure_count,
-    item.topic_count,
-    item.method_count,
-    item.tag_count,
-    (item.signals || []).join("; "),
-    item.recommendation,
-  ]);
-  const csv = [header, ...rows].map(row => row.map(qualityCsvCell).join(",")).join("\n") + "\n";
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+function roadmapSearchText(item) {
+  return [
+    item.line,
+    item.owner,
+    item.team,
+    item.cadence,
+    ...(item.missing_roles || []),
+    ...(item.top_topics || []).map(topic => topic.name),
+    ...(item.top_methods || []).map(method => method.name),
+    ...(item.representative_papers || []).flatMap(paper => [paper.slug, paper.title, paper.title_zh]),
+    ...(item.actions || []).map(action => action.label),
+  ].join(" ").toLowerCase();
+}
+
+function filteredRoadmaps() {
+  const q = roadmapSearch.value.trim().toLowerCase();
+  return (roadmapPayload.roadmaps || []).filter(item => (
+    (!q || roadmapSearchText(item).includes(q))
+    && (!roadmapRisk.value || item.risk === roadmapRisk.value)
+    && (!roadmapOwner.value || item.owner === roadmapOwner.value)
+    && (!roadmapRoleGap.value || (roadmapRoleGap.value === "yes" ? (item.missing_roles || []).length : !(item.missing_roles || []).length))
+  ));
+}
+
+function chips(values) {
+  return (values || []).map(value => `<span class="chip">${roadmapEscape(value)}</span>`).join("");
+}
+
+function countChips(values) {
+  return (values || []).map(item => `<span class="chip">${roadmapEscape(item.name)} ${item.count}</span>`).join("");
+}
+
+function renderRoadmapCards() {
+  const items = filteredRoadmaps();
+  roadmapCount.textContent = `显示 ${items.length} / ${roadmapPayload.line_count} 条研究线`;
+  roadmapCards.innerHTML = items.map(item => {
+    const milestones = (item.milestones || []).map(milestone => `${milestone.year}:${milestone.count}`).join(" · ") || "-";
+    const papers = (item.representative_papers || []).map(paper => `<li><a href="${roadmapEscape(paper.href)}">${roadmapEscape(paper.title_zh || paper.title || paper.slug)}</a> <span class="meta">${roadmapEscape(paper.role)} · ${roadmapEscape(paper.year)}</span></li>`).join("") || '<li class="meta">暂无代表论文。</li>';
+    const actions = (item.actions || []).slice(0, 5).map(action => `<li><a href="${roadmapEscape(action.href)}">${roadmapEscape(action.label)}</a></li>`).join("");
+    return `<article class="roadmap-card" data-risk="${roadmapEscape(item.risk)}">
+      <header>
+        <div>
+          <h2><a href="${roadmapEscape(item.href)}">${roadmapEscape(item.line)}</a></h2>
+          <div class="meta">${roadmapEscape(item.owner || "unassigned")}${item.team ? " · " + roadmapEscape(item.team) : ""}${item.cadence ? " · " + roadmapEscape(item.cadence) : ""}</div>
+        </div>
+        <div class="roadmap-score">${item.score}</div>
+      </header>
+      <div class="card-flags"><span class="flag">${roadmapEscape(item.risk)}</span><span class="flag">${item.count} 篇</span><span class="flag">${roadmapEscape(item.first_year || "-")}-${roadmapEscape(item.latest_year || "-")}</span></div>
+      <div class="roadmap-sections">
+        <section class="roadmap-mini"><h3>角色覆盖</h3><div class="chips">${chips(Object.entries(item.role_counts || {}).map(([role, count]) => `${role} ${count}`))}</div><div class="meta">缺口：${(item.missing_roles || []).join(", ") || "-"}</div></section>
+        <section class="roadmap-mini"><h3>里程碑</h3><div class="meta">${roadmapEscape(milestones)}</div></section>
+        <section class="roadmap-mini"><h3>Top Topics</h3><div class="chips">${countChips(item.top_topics)}</div></section>
+        <section class="roadmap-mini"><h3>Top Methods</h3><div class="chips">${countChips(item.top_methods)}</div></section>
+      </div>
+      <div class="roadmap-sections">
+        <section class="roadmap-mini"><h3>代表论文</h3><ol class="roadmap-list">${papers}</ol></section>
+        <section class="roadmap-mini"><h3>下一步</h3><ol class="roadmap-list">${actions || '<li class="meta">保持观察。</li>'}</ol></section>
+      </div>
+    </article>`;
+  }).join("") || '<div class="empty">没有匹配路线。</div>';
+}
+
+function roadmapsToCsv(items) {
+  const header = ["line", "owner", "team", "risk", "score", "count", "first_year", "latest_year", "missing_roles", "top_action"];
+  return [header, ...items.map(item => [
+    item.line,
+    item.owner,
+    item.team,
+    item.risk,
+    item.score,
+    item.count,
+    item.first_year || "",
+    item.latest_year || "",
+    (item.missing_roles || []).join(";"),
+    ((item.actions || [])[0] || {}).label || "",
+  ])].map(row => row.map(roadmapCsvCell).join(",")).join("\n") + "\n";
+}
+
+function markdownPlan(items) {
+  return items.map(item => {
+    const actions = (item.actions || []).slice(0, 5).map(action => `- [ ] ${action.label}`).join("\n");
+    return `## ${item.line}\n- Owner: ${item.owner || "unassigned"}\n- Risk: ${item.risk} / score ${item.score}\n- Papers: ${item.count}\n- Missing roles: ${(item.missing_roles || []).join(", ") || "-"}\n${actions}`;
+  }).join("\n\n");
+}
+
+function downloadText(filename, text, type) {
+  const blob = new Blob([text], { type });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = "taxonomy_load_audit.csv";
+  link.download = filename;
   document.body.appendChild(link);
   link.click();
   link.remove();
   URL.revokeObjectURL(url);
 }
 
-if (downloadTaxonomyLoad) downloadTaxonomyLoad.addEventListener("click", downloadTaxonomyLoadCsv);
+async function copyText(text, fallbackTitle) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {
+    window.prompt(fallbackTitle, text);
+  }
+}
+
+[roadmapSearch, roadmapRisk, roadmapOwner, roadmapRoleGap].forEach(control => control.addEventListener("input", renderRoadmapCards));
+document.querySelector("#downloadRoadmapCsv").addEventListener("click", () => downloadText("research_roadmap.csv", roadmapsToCsv(filteredRoadmaps()), "text/csv;charset=utf-8"));
+document.querySelector("#copyRoadmapMarkdown").addEventListener("click", () => copyText(markdownPlan(filteredRoadmaps()), "复制 Markdown 路线图"));
+document.querySelector("#resetRoadmap").addEventListener("click", () => {
+  roadmapSearch.value = "";
+  roadmapRisk.value = "";
+  roadmapOwner.value = "";
+  roadmapRoleGap.value = "";
+  renderRoadmapCards();
+});
+renderRoadmapCards();
 </script>
 
 <script>

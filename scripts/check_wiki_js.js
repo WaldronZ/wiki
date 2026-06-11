@@ -21,6 +21,7 @@ function htmlFiles() {
     "compare.html",
     "taxonomy_map.html",
     "clusters.html",
+    "roadmap.html",
     "scale.html",
     "ownership.html",
     "routing.html",
