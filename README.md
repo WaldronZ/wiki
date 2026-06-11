@@ -135,7 +135,7 @@ paper_reader/
 - `docs/inbox.html`：候选论文待处理池，支持筛选、去重提示和复制阅读任务
 - `docs/quality.html`：质量治理页，集中展示弱元数据、分类粒度审计与 CSV 导出、标签归一化建议、taxonomy drift 和库内重复报告
 - `docs/review.html`：复习计划页，展示待复习、需建计划、已计划和高优先级队列
-- `docs/dashboard.html`：管理控制台，展示分类覆盖、研究线健康度、待复习和待补分类队列
+- `docs/dashboard.html`：管理控制台，展示分类覆盖、分类均衡度、研究线健康度、待复习和待补分类队列
 - `docs/release.html`：发布摘要页，集中展示发布状态、页面入口、数据文件、队列规模和推荐命令
 - `docs/collections.html`：集合视图页，集中展示共享筛选视图、分类粒度智能队列和研究线集合入口
 - `docs/facets.html`：分类工作台，按字段审计标签规模、搜索筛选并导出长尾标签、过载标签和动态状态候选值

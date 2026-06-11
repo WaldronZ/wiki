@@ -13,6 +13,7 @@ import datetime as dt
 import html
 import itertools
 import json
+import math
 import re
 import sys
 from collections import Counter, defaultdict
@@ -1259,6 +1260,7 @@ def build_stats_report(papers: list[dict[str, Any]]) -> dict[str, Any]:
             "years": dict(sorted(years.items(), key=lambda item: item[0], reverse=True)),
             "importance": dict(sorted(importance_counts.items(), key=lambda item: item[0], reverse=True)),
         },
+        "taxonomy_balance": taxonomy_balance_report(papers),
         "research_lines": line_items,
         "shared_views": len(SHARED_VIEWS),
     }
@@ -4707,6 +4709,24 @@ def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         if line_rows
         else '<div class="empty">还没有研究线。</div>'
     )
+    balance_rows = []
+    for row in sorted(taxonomy_balance_report(papers), key=lambda item: (item["balance_score"], -item["singleton_count"], item["label"])):
+        max_value = str(row.get("max_value") or "")
+        max_href = page_query_href("library.html", **{str(row["query_key"]): max_value}) if max_value else "library.html"
+        balance_rows.append(
+            "<tr>"
+            f"<td>{html.escape(str(row['label']))}<div class=\"meta\">{html.escape(str(row['english']))}</div></td>"
+            f"<td>{row['balance_score']}</td>"
+            f"<td>{row['used_count']} / {row['configured_count']}</td>"
+            f"<td>{row['singleton_count']}</td>"
+            f"<td>{row['overloaded_count']}</td>"
+            f'<td><a href="{html.escape(max_href)}">{html.escape(max_value or "-")}</a> <span class="meta">{round(float(row["max_share"]) * 100)}%</span></td>'
+            "</tr>"
+        )
+    balance_table = (
+        '<table class="data-table"><thead><tr><th>字段</th><th>均衡分</th><th>已用/配置</th><th>长尾</th><th>过载</th><th>最大值</th></tr></thead>'
+        f"<tbody>{''.join(balance_rows)}</tbody></table>"
+    )
 
     def queue(title: str, items: list[dict[str, Any]], empty: str) -> str:
         if items:
@@ -4772,6 +4792,10 @@ def render_dashboard(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <section>
     <h2 class="section-title">研究线健康度</h2>
     {line_table}
+  </section>
+  <section>
+    <h2 class="section-title">分类均衡度</h2>
+    {balance_table}
   </section>
   <section>
     <h2 class="section-title">管理队列</h2>
@@ -4992,6 +5016,49 @@ def facet_count_for_field(papers: list[dict[str, Any]], taxonomy: dict[str, dict
     if is_list:
         return taxonomy[field]
     return scalar_counts(papers, field)
+
+
+def taxonomy_balance_report(papers: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    taxonomy = taxonomy_counts(papers)
+    total = len(papers)
+    rows: list[dict[str, Any]] = []
+    for field, english, query_key, label, is_list in FACET_SPECS:
+        counts = facet_count_for_field(papers, taxonomy, field, is_list)
+        used_items = [(value, count) for value, count in counts.items() if count > 0]
+        unused_count = sum(1 for count in counts.values() if count == 0)
+        singleton_count = sum(1 for _value, count in used_items if count == 1)
+        overloaded_count = sum(
+            1
+            for _value, count in used_items
+            if total and count / total >= 0.6 and count >= 5
+        )
+        max_value, max_count = max(used_items, key=lambda item: (item[1], item[0].lower()), default=("", 0))
+        observed_total = sum(count for _value, count in used_items)
+        probabilities = [count / observed_total for _value, count in used_items if observed_total]
+        entropy = -sum(probability * math.log(probability) for probability in probabilities if probability > 0)
+        effective_count = round(math.exp(entropy), 2) if probabilities else 0
+        singleton_rate = (singleton_count / len(used_items)) if used_items else 0
+        max_share = (max_count / total) if total else 0
+        balance_score = round(100 * (1 - max_share) * (1 - singleton_rate * 0.5)) if used_items else 0
+        rows.append(
+            {
+                "field": field,
+                "label": label,
+                "english": english,
+                "query_key": query_key,
+                "configured_count": len(counts),
+                "used_count": len(used_items),
+                "unused_count": unused_count,
+                "singleton_count": singleton_count,
+                "overloaded_count": overloaded_count,
+                "max_value": max_value,
+                "max_count": max_count,
+                "max_share": round(max_share, 4),
+                "effective_count": effective_count,
+                "balance_score": balance_score,
+            }
+        )
+    return rows
 
 
 def taxonomy_action_status(count: int, share: float) -> tuple[str, str]:
