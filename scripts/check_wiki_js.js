@@ -20,6 +20,7 @@ function htmlFiles() {
     "review.html",
     "dashboard.html",
     "release.html",
+    "actions.html",
     "collections.html",
     "balance.html",
     "coverage.html",

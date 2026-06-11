@@ -33,6 +33,7 @@ GENERATED_FIXED_PATHS = (
     "quality.json",
     "review.json",
     "taxonomy_actions.json",
+    "actions.json",
     "manifest.json",
     "index.html",
     "library.html",
@@ -42,6 +43,7 @@ GENERATED_FIXED_PATHS = (
     "review.html",
     "dashboard.html",
     "release.html",
+    "actions.html",
     "collections.html",
     "balance.html",
     "coverage.html",
@@ -1284,6 +1286,7 @@ def wiki_pages_manifest() -> list[dict[str, str]]:
         {"title": "论文库表格", "href": "library.html", "kind": "view", "description": "密集筛选、列管理、批量更新"},
         {"title": "管理控制台", "href": "dashboard.html", "kind": "ops", "description": "覆盖率、队列和运营指标"},
         {"title": "发布摘要", "href": "release.html", "kind": "ops", "description": "页面入口、数据文件、质量状态"},
+        {"title": "行动中心", "href": "actions.html", "kind": "ops", "description": "统一运营队列和可分派任务"},
         {"title": "集合视图", "href": "collections.html", "kind": "view", "description": "共享视图、智能集合、研究线入口"},
         {"title": "分类均衡", "href": "balance.html", "kind": "ops", "description": "分类维度健康度、长尾和过载复盘"},
         {"title": "覆盖地图", "href": "coverage.html", "kind": "ops", "description": "研究线 x 分类字段覆盖缺口"},
@@ -1310,6 +1313,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "quality.json", "description": "质量问题、taxonomy load、taxonomy drift、标签别名建议"},
         {"href": "review.json", "description": "复习计划和建议 next_review"},
         {"href": "taxonomy_actions.json", "description": "分类长尾、过载和空候选治理任务"},
+        {"href": "actions.json", "description": "统一行动队列，汇总质量、复习、分类和 inbox 任务"},
         {"href": "inbox.json", "description": "候选论文队列和重复项"},
         {"href": "manifest.json", "description": "发布摘要和页面入口清单"},
     ]
@@ -1679,6 +1683,236 @@ def build_review_plan(papers: list[dict[str, Any]]) -> dict[str, Any]:
 def write_review_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     payload = build_review_plan(papers)
     (report_dir / "review.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
+def build_action_center(papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> dict[str, Any]:
+    quality = build_quality_report(papers)
+    review = build_review_plan(papers)
+    taxonomy_actions = build_taxonomy_actions(papers)
+    paper_by_slug = {paper["slug"]: paper for paper in papers}
+    severity_priority = {"high": 90, "medium": 60, "low": 30, "none": 10}
+    actions: list[dict[str, Any]] = []
+    seen: set[str] = set()
+
+    def paper_title(slug: str) -> str:
+        paper = paper_by_slug.get(slug) or {}
+        return str(paper.get("title_zh") or paper.get("title") or slug)
+
+    def paper_link(slug: str) -> str:
+        paper = paper_by_slug.get(slug) or {}
+        return str(paper.get("html_path") or paper.get("md_path") or page_query_href("library.html", q=slug))
+
+    def add_action(
+        action_id: str,
+        group: str,
+        severity: str,
+        title: str,
+        detail: str,
+        href: str,
+        source: str,
+        slugs: list[str] | None = None,
+        command: str = "",
+        priority_bonus: int = 0,
+    ) -> None:
+        if action_id in seen:
+            return
+        seen.add(action_id)
+        clean_slugs = [slug for slug in (slugs or []) if slug]
+        max_importance = max((int((paper_by_slug.get(slug) or {}).get("importance") or 0) for slug in clean_slugs), default=0)
+        actions.append(
+            {
+                "id": action_id,
+                "group": group,
+                "severity": severity,
+                "priority": severity_priority.get(severity, 10) + max_importance * 2 + priority_bonus,
+                "title": title,
+                "detail": detail,
+                "href": href,
+                "source": source,
+                "slugs": clean_slugs,
+                "command": command,
+            }
+        )
+
+    for item in review["items"]:
+        slug = str(item["slug"])
+        if item["state"] == "due":
+            add_action(
+                f"review_due:{slug}",
+                "review",
+                "high",
+                f"复习到期：{paper_title(slug)}",
+                f"next_review = {item.get('next_review') or item.get('suggested_next_review')}",
+                paper_link(slug),
+                "review.json",
+                [slug],
+                "python3 scripts/apply_review_plan.py docs",
+                6,
+            )
+        elif item["state"] == "needs_plan":
+            add_action(
+                f"review_plan:{slug}",
+                "review",
+                "medium",
+                f"补复习计划：{paper_title(slug)}",
+                f"建议 next_review = {item.get('suggested_next_review')}",
+                paper_link(slug),
+                "review.json",
+                [slug],
+                "python3 scripts/apply_review_plan.py docs --write",
+                4,
+            )
+
+    issue_by_slug = {issue["slug"]: issue for issue in quality["issues"]}
+    for slug in quality["queues"].get("missing_required_metadata", []):
+        issue = issue_by_slug.get(slug, {})
+        missing = ", ".join(issue.get("missing_fields", []))
+        add_action(
+            f"metadata_missing:{slug}",
+            "metadata",
+            "high",
+            f"补必填元数据：{paper_title(slug)}",
+            missing or "缺少必要 frontmatter 字段",
+            page_query_href("library.html", q=slug),
+            "quality.json",
+            [slug],
+            "python3 scripts/apply_library_metadata.py docs --input <csv>",
+            8,
+        )
+    for slug in quality["queues"].get("no_code_observation", []):
+        add_action(
+            f"code_observation:{slug}",
+            "quality",
+            "low",
+            f"补代码观察：{paper_title(slug)}",
+            "缺少 has_code 或代码实现观察线索。",
+            paper_link(slug),
+            "quality.json",
+            [slug],
+        )
+    for slug in quality["queues"].get("taxonomy_sparse", []):
+        add_action(
+            f"taxonomy_sparse:{slug}",
+            "taxonomy",
+            "medium",
+            f"补分类粒度：{paper_title(slug)}",
+            "结构分类或 topic/method 偏少，检索入口不足。",
+            page_query_href("library.html", q=slug),
+            "quality.json",
+            [slug],
+            "python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv",
+            4,
+        )
+    for slug in quality["queues"].get("taxonomy_dense", []):
+        add_action(
+            f"taxonomy_dense:{slug}",
+            "taxonomy",
+            "medium",
+            f"审分类过密：{paper_title(slug)}",
+            "topic/method 过密，可能需要保留更可区分的标签。",
+            page_query_href("library.html", q=slug),
+            "quality.json",
+            [slug],
+            "python3 scripts/export_taxonomy_load.py docs --format csv --signal dense_tags --output docs/exports/taxonomy-load.csv",
+        )
+    for item in quality["taxonomy_drift"]:
+        slug = str(item["slug"])
+        add_action(
+            f"taxonomy_drift:{item['field']}:{item['value']}:{slug}",
+            "taxonomy",
+            "high",
+            f"处理 taxonomy drift：{paper_title(slug)}",
+            f"{item['field']} = {item['value']} 不在允许值中。",
+            page_query_href("quality.html"),
+            "quality.json",
+            [slug],
+            "python3 scripts/validate_wiki.py docs --strict-taxonomy",
+            8,
+        )
+    for group in quality["duplicate_reports"]:
+        slugs = [str(slug) for slug in group.get("slugs", [])]
+        add_action(
+            f"duplicate_reports:{group.get('reason')}:{'-'.join(slugs)}",
+            "dedupe",
+            "high",
+            f"合并重复报告：{', '.join(slugs[:2])}",
+            f"reason={group.get('reason')} value={group.get('value')}",
+            "quality.html",
+            "quality.json",
+            slugs,
+            "python3 scripts/check_quality.py docs",
+            10,
+        )
+    for suggestion in quality["label_alias_suggestions"][:20]:
+        aliases = ", ".join(suggestion.get("aliases", {}).keys())
+        add_action(
+            f"alias:{suggestion.get('fingerprint')}",
+            "taxonomy",
+            "medium",
+            f"归一化标签：{suggestion.get('canonical')}",
+            f"建议别名：{aliases}",
+            "quality.html",
+            "quality.json",
+            [str(slug) for slug in suggestion.get("slugs", [])],
+            "python3 scripts/apply_taxonomy_aliases.py docs --write",
+            3,
+        )
+
+    for item in taxonomy_actions["actions"]:
+        severity = str(item.get("severity") or "low")
+        if severity == "none":
+            continue
+        value = str(item.get("value") or "")
+        field = str(item.get("field_label") or item.get("field") or "")
+        add_action(
+            f"taxonomy_action:{item.get('action')}:{item.get('field')}:{value}",
+            "taxonomy",
+            severity,
+            f"{field}：{value}",
+            str(item.get("recommendation") or ""),
+            str(item.get("href") or "facets.html"),
+            "taxonomy_actions.json",
+            [str(slug) for slug in item.get("sample_slugs", [])],
+            "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
+        )
+
+    for item in inbox_items:
+        item_id = str(item.get("id") or item.get("title") or "")
+        priority = str(item.get("priority") or "normal")
+        duplicate = bool(item.get("duplicate"))
+        if duplicate or priority == "high":
+            add_action(
+                f"inbox:{item_id}",
+                "inbox",
+                "high" if duplicate else "medium",
+                f"{'去重候选' if duplicate else '处理高优先级候选'}：{item.get('title')}",
+                str(item.get("note") or item.get("link") or ""),
+                "inbox.html",
+                "inbox.json",
+                [],
+                "",
+                6 if duplicate else 3,
+            )
+
+    severity_rank = {"high": 0, "medium": 1, "low": 2, "none": 3}
+    actions.sort(key=lambda item: (severity_rank.get(str(item["severity"]), 9), -int(item["priority"]), item["group"], item["title"]))
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": len(actions),
+        "summary": {
+            "groups": dict(Counter(str(item["group"]) for item in actions)),
+            "severity": dict(Counter(str(item["severity"]) for item in actions)),
+        },
+        "actions": actions,
+    }
+
+
+def write_actions_json(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
+    payload = build_action_center(papers, inbox_items)
+    (report_dir / "actions.json").write_text(
         json.dumps(payload, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
@@ -5510,6 +5744,225 @@ if (downloadTaxonomyLoad) downloadTaxonomyLoad.addEventListener("click", downloa
         page_shell("质量治理", body, {"taxonomy_load": quality["taxonomy_load"]}, quality_css),
         encoding="utf-8",
     )
+
+
+def render_actions(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
+    payload = build_action_center(papers, inbox_items)
+    actions = payload["actions"]
+    group_options = "".join(
+        f'<option value="{html.escape(group, quote=True)}">{html.escape(group)} ({count})</option>'
+        for group, count in sorted(payload["summary"]["groups"].items())
+    )
+    severity_options = "".join(
+        f'<option value="{html.escape(severity, quote=True)}">{html.escape(severity)} ({count})</option>'
+        for severity, count in sorted(payload["summary"]["severity"].items())
+    )
+    source_values = Counter(str(item["source"]) for item in actions)
+    source_options = "".join(
+        f'<option value="{html.escape(source, quote=True)}">{html.escape(source)} ({count})</option>'
+        for source, count in sorted(source_values.items())
+    )
+
+    def row(action: dict[str, Any]) -> str:
+        slugs = ", ".join(str(slug) for slug in action.get("slugs", [])[:3])
+        more = len(action.get("slugs", [])) - 3
+        if more > 0:
+            slugs += f" +{more}"
+        command = str(action.get("command") or "")
+        return (
+            f'<tr data-group="{html.escape(str(action["group"]), quote=True)}" '
+            f'data-severity="{html.escape(str(action["severity"]), quote=True)}" '
+            f'data-source="{html.escape(str(action["source"]), quote=True)}" '
+            f'data-priority="{int(action["priority"])}" '
+            f'data-title="{html.escape(str(action["title"]), quote=True)}" '
+            f'data-detail="{html.escape(str(action["detail"]), quote=True)}" '
+            f'data-href="{html.escape(str(action["href"]), quote=True)}" '
+            f'data-command="{html.escape(command, quote=True)}" '
+            f'data-search="{html.escape(" ".join([str(action["group"]), str(action["severity"]), str(action["source"]), str(action["title"]), str(action["detail"]), slugs, command]).lower(), quote=True)}">'
+            f'<td><span class="flag">{html.escape(str(action["severity"]))}</span><div class="meta">P{int(action["priority"])}</div></td>'
+            f'<td><a href="{html.escape(str(action["href"]))}">{html.escape(str(action["title"]))}</a><div class="meta">{html.escape(str(action["detail"]))}</div></td>'
+            f'<td>{html.escape(str(action["group"]))}</td>'
+            f'<td>{html.escape(str(action["source"]))}</td>'
+            f'<td>{html.escape(slugs or "-")}</td>'
+            f'<td>{"<code>" + html.escape(command) + "</code>" if command else "-"}</td>'
+            "</tr>"
+        )
+
+    rows = "".join(row(action) for action in actions)
+    actions_json = json.dumps(actions, ensure_ascii=False).replace("</", "<\\/")
+    actions_css = """
+    .actions-controls {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) repeat(3, minmax(140px, 190px)) repeat(3, auto);
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .actions-controls input,
+    .actions-controls select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 10px 12px;
+      color: var(--ink);
+      font: inherit;
+    }
+    .actions-table {
+      min-width: 1040px;
+    }
+    .actions-table code {
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+    @media (max-width: 900px) {
+      .actions-controls { grid-template-columns: 1fr; }
+    }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Action Center</div>
+  <h1>行动中心</h1>
+  <p class="lead">把复习、质量、分类治理、重复项和 inbox 高优先级候选汇成一个统一队列。适合论文库变大后集中分派任务、导出项目清单和周复盘。</p>
+  <div class="stats">
+    <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="quality.html">质量治理</a>
+    <a class="stat" href="review.html">复习计划</a>
+    <a class="stat" href="facets.html">分类工作台</a>
+    <a class="stat" href="actions.json">Actions JSON</a>
+    <span class="stat">任务 {payload["count"]}</span>
+    <span class="stat">High {payload["summary"]["severity"].get("high", 0)}</span>
+    <span class="stat">Medium {payload["summary"]["severity"].get("medium", 0)}</span>
+  </div>
+</header>
+<main class="shell">
+  <section class="metric-grid">
+    <section class="metric-card"><span>全部任务</span><strong>{payload["count"]}</strong><span>统一运营队列</span></section>
+    <section class="metric-card"><span>高优先级</span><strong>{payload["summary"]["severity"].get("high", 0)}</strong><span>发布或维护优先处理</span></section>
+    <section class="metric-card"><span>分类任务</span><strong>{payload["summary"]["groups"].get("taxonomy", 0)}</strong><span>标签、粒度和 drift</span></section>
+    <section class="metric-card"><span>复习任务</span><strong>{payload["summary"]["groups"].get("review", 0)}</strong><span>到期或缺计划</span></section>
+  </section>
+  <section>
+    <h2 class="section-title">统一队列</h2>
+    <div class="actions-controls">
+      <input id="actionSearch" type="search" placeholder="搜索标题、详情、slug、命令">
+      <select id="actionGroup"><option value="">全部分组</option>{group_options}</select>
+      <select id="actionSeverity"><option value="">全部优先级</option>{severity_options}</select>
+      <select id="actionSource"><option value="">全部来源</option>{source_options}</select>
+      <strong id="actionCount">{len(actions)} 项</strong>
+      <button id="downloadActionsCsv" class="button" type="button">下载当前 CSV</button>
+      <button id="copyActionsMarkdown" class="button" type="button">复制任务清单</button>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table actions-table"><thead><tr><th>优先级</th><th>任务</th><th>分组</th><th>来源</th><th>论文</th><th>命令</th></tr></thead><tbody id="actionRows">{rows}</tbody></table>
+    </div>
+  </section>
+</main>
+<script>
+const actionPayload = {actions_json};
+const actionSearch = document.querySelector("#actionSearch");
+const actionGroup = document.querySelector("#actionGroup");
+const actionSeverity = document.querySelector("#actionSeverity");
+const actionSource = document.querySelector("#actionSource");
+const actionCount = document.querySelector("#actionCount");
+const actionBody = document.querySelector("#actionRows");
+const actionRows = Array.from(document.querySelectorAll("#actionRows tr"));
+const downloadActionsCsv = document.querySelector("#downloadActionsCsv");
+const copyActionsMarkdown = document.querySelector("#copyActionsMarkdown");
+const actionSeverityRank = {{ high: 0, medium: 1, low: 2, none: 3 }};
+
+function visibleActionRows() {{
+  return actionRows.filter(row => !row.hidden);
+}}
+
+function actionCsvCell(value) {{
+  const text = String(value ?? "");
+  return (text.includes(",") || text.includes('"') || text.includes("\\n"))
+    ? `"${{text.replaceAll('"', '""')}}"`
+    : text;
+}}
+
+function sortActionRows(rows) {{
+  return [...rows].sort((a, b) => {{
+    const severity = (actionSeverityRank[a.dataset.severity] ?? 9) - (actionSeverityRank[b.dataset.severity] ?? 9);
+    if (severity) return severity;
+    return Number(b.dataset.priority || 0) - Number(a.dataset.priority || 0) || a.dataset.title.localeCompare(b.dataset.title);
+  }});
+}}
+
+function renderActionRows() {{
+  const q = actionSearch.value.trim().toLowerCase();
+  const group = actionGroup.value;
+  const severity = actionSeverity.value;
+  const source = actionSource.value;
+  let visible = 0;
+  actionRows.forEach(row => {{
+    const hit = (!q || row.dataset.search.includes(q))
+      && (!group || row.dataset.group === group)
+      && (!severity || row.dataset.severity === severity)
+      && (!source || row.dataset.source === source);
+    row.hidden = !hit;
+    if (hit) visible += 1;
+  }});
+  sortActionRows(actionRows).forEach(row => actionBody.appendChild(row));
+  actionCount.textContent = `${{visible}} / ${{actionRows.length}} 项`;
+}}
+
+function filteredActions() {{
+  const visibleIds = new Set(visibleActionRows().map(row => `${{row.dataset.group}}:${{row.dataset.title}}`));
+  return actionPayload.filter(action => visibleIds.has(`${{action.group}}:${{action.title}}`));
+}}
+
+function downloadCurrentActions() {{
+  const actions = filteredActions();
+  if (!actions.length) {{
+    window.alert("当前筛选结果为空。");
+    return;
+  }}
+  const header = ["id", "group", "severity", "priority", "title", "detail", "href", "source", "slugs", "command"];
+  const rows = actions.map(action => [action.id, action.group, action.severity, action.priority, action.title, action.detail, action.href, action.source, (action.slugs || []).join(";"), action.command || ""]);
+  const csv = [header, ...rows].map(row => row.map(actionCsvCell).join(",")).join("\\n") + "\\n";
+  const blob = new Blob([csv], {{ type: "text/csv;charset=utf-8" }});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "actions_filtered.csv";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}}
+
+async function copyActionsQueue() {{
+  const actions = filteredActions();
+  if (!actions.length) {{
+    window.alert("当前筛选结果为空。");
+    return;
+  }}
+  const lines = ["# AutoPaperReader Action Queue", ""];
+  actions.forEach(action => {{
+    lines.push(`- [ ] ${{action.severity}} / P${{action.priority}} / ${{action.group}}: [${{action.title}}](${{action.href}})`);
+    lines.push(`  - Source: ${{action.source}}`);
+    if (action.detail) lines.push(`  - Detail: ${{action.detail}}`);
+    if (action.slugs && action.slugs.length) lines.push(`  - Slugs: ${{action.slugs.join(", ")}}`);
+    if (action.command) lines.push("  - Command: `" + action.command + "`");
+  }});
+  const text = lines.join("\\n") + "\\n";
+  try {{
+    await navigator.clipboard.writeText(text);
+    window.alert("已复制。");
+  }} catch {{
+    window.prompt("复制任务清单", text);
+  }}
+}}
+
+[actionSearch, actionGroup, actionSeverity, actionSource].forEach(control => control.addEventListener("input", renderActionRows));
+downloadActionsCsv.addEventListener("click", downloadCurrentActions);
+copyActionsMarkdown.addEventListener("click", copyActionsQueue);
+renderActionRows();
+</script>
+"""
+    (report_dir / "actions.html").write_text(page_shell("行动中心", body, extra_css=actions_css), encoding="utf-8")
 
 
 def render_release(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
@@ -9420,6 +9873,7 @@ def build_wiki(report_dir: Path) -> int:
     write_quality_json(report_dir, papers)
     write_review_json(report_dir, papers)
     write_taxonomy_actions_json(report_dir, papers)
+    write_actions_json(report_dir, papers, inbox_items)
     write_stats_json(report_dir, papers)
     write_inbox_json(report_dir, inbox_items)
     write_search_index(report_dir, papers)
@@ -9429,6 +9883,7 @@ def build_wiki(report_dir: Path) -> int:
     render_inbox(report_dir, inbox_items)
     render_review(report_dir, papers)
     render_quality(report_dir, papers, inbox_items)
+    render_actions(report_dir, papers, inbox_items)
     render_dashboard(report_dir, papers)
     render_collections(report_dir, papers)
     render_balance(report_dir, papers)

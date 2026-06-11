@@ -1,0 +1,876 @@
+{
+  "generated_at": "2026-06-12T02:20:42",
+  "count": 62,
+  "summary": {
+    "groups": {
+      "taxonomy": 57,
+      "review": 5
+    },
+    "severity": {
+      "high": 3,
+      "medium": 59
+    }
+  },
+  "actions": [
+    {
+      "id": "taxonomy_action:split_candidate:domains:LLM Systems",
+      "group": "taxonomy",
+      "severity": "high",
+      "priority": 100,
+      "title": "结构域：LLM Systems",
+      "detail": "结构域 过大，考虑拆成更细子类。",
+      "href": "library.html?domain=LLM+Systems",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus",
+        "2501.01005-flashinfer",
+        "2307.08691-flashattention-2"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:split_candidate:status:read",
+      "group": "taxonomy",
+      "severity": "high",
+      "priority": 100,
+      "title": "阅读状态：read",
+      "detail": "阅读状态 过大，考虑拆成更细子类。",
+      "href": "library.html?status=read",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus",
+        "2501.01005-flashinfer",
+        "2307.08691-flashattention-2"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:split_candidate:reading_stage:deep_read",
+      "group": "taxonomy",
+      "severity": "high",
+      "priority": 100,
+      "title": "阅读阶段：deep_read",
+      "detail": "阅读阶段 过大，考虑拆成更细子类。",
+      "href": "library.html?stage=deep_read",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus",
+        "2501.01005-flashinfer",
+        "2307.08691-flashattention-2"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "review_plan:2307.08691-flashattention-2",
+      "group": "review",
+      "severity": "medium",
+      "priority": 74,
+      "title": "补复习计划：FlashAttention-2：用更好的并行性与工作划分加速 Attention",
+      "detail": "建议 next_review = 2026-06-25",
+      "href": "2307.08691-flashattention-2.html",
+      "source": "review.json",
+      "slugs": [
+        "2307.08691-flashattention-2"
+      ],
+      "command": "python3 scripts/apply_review_plan.py docs --write"
+    },
+    {
+      "id": "review_plan:2604.11035-introspective-dlm",
+      "group": "review",
+      "severity": "medium",
+      "priority": 74,
+      "title": "补复习计划：内省式扩散语言模型",
+      "detail": "建议 next_review = 2026-06-18",
+      "href": "2604.11035-introspective-dlm.html",
+      "source": "review.json",
+      "slugs": [
+        "2604.11035-introspective-dlm"
+      ],
+      "command": "python3 scripts/apply_review_plan.py docs --write"
+    },
+    {
+      "id": "review_plan:2602.06036-dflash",
+      "group": "review",
+      "severity": "medium",
+      "priority": 72,
+      "title": "补复习计划：DFlash：用于快速 speculative decoding 的块扩散方法",
+      "detail": "建议 next_review = 2026-07-04",
+      "href": "2602.06036-dflash.html",
+      "source": "review.json",
+      "slugs": [
+        "2602.06036-dflash"
+      ],
+      "command": "python3 scripts/apply_review_plan.py docs --write"
+    },
+    {
+      "id": "review_plan:2501.01005-flashinfer",
+      "group": "review",
+      "severity": "medium",
+      "priority": 72,
+      "title": "补复习计划：FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
+      "detail": "建议 next_review = 2026-07-11",
+      "href": "2501.01005-flashinfer.html",
+      "source": "review.json",
+      "slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "command": "python3 scripts/apply_review_plan.py docs --write"
+    },
+    {
+      "id": "review_plan:2605.12825-orthrus",
+      "group": "review",
+      "severity": "medium",
+      "priority": 72,
+      "title": "补复习计划：Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+      "detail": "建议 next_review = 2026-07-04",
+      "href": "2605.12825-orthrus.html",
+      "source": "review.json",
+      "slugs": [
+        "2605.12825-orthrus"
+      ],
+      "command": "python3 scripts/apply_review_plan.py docs --write"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:topics:Efficient Attention",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 70,
+      "title": "主题：Efficient Attention",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?topic=Efficient+Attention",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2307.08691-flashattention-2"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:topics:GPU Kernel Optimization",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 70,
+      "title": "主题：GPU Kernel Optimization",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?topic=GPU+Kernel+Optimization",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2307.08691-flashattention-2"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:topics:LLM",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 70,
+      "title": "主题：LLM",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?topic=LLM",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2604.11035-introspective-dlm"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:topics:Long Context",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 70,
+      "title": "主题：Long Context",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?topic=Long+Context",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2307.08691-flashattention-2"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:topics:Transformer",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 70,
+      "title": "主题：Transformer",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?topic=Transformer",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2307.08691-flashattention-2"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_dense:2604.11035-introspective-dlm",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 70,
+      "title": "审分类过密：内省式扩散语言模型",
+      "detail": "topic/method 过密，可能需要保留更可区分的标签。",
+      "href": "library.html?q=2604.11035-introspective-dlm",
+      "source": "quality.json",
+      "slugs": [
+        "2604.11035-introspective-dlm"
+      ],
+      "command": "python3 scripts/export_taxonomy_load.py docs --format csv --signal dense_tags --output docs/exports/taxonomy-load.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:CUDA / GPU parallelism",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 70,
+      "title": "方法：CUDA / GPU parallelism",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=CUDA+%2F+GPU+parallelism",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2307.08691-flashattention-2"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:SGLang serving",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 70,
+      "title": "方法：SGLang serving",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=SGLang+serving",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2604.11035-introspective-dlm"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:gated LoRA",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 70,
+      "title": "方法：gated LoRA",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=gated+LoRA",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2604.11035-introspective-dlm"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:introspective consistency",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 70,
+      "title": "方法：introspective consistency",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=introspective+consistency",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2604.11035-introspective-dlm"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:introspective strided decoding",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 70,
+      "title": "方法：introspective strided decoding",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=introspective+strided+decoding",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2604.11035-introspective-dlm"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:logit-shifted causal training",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 70,
+      "title": "方法：logit-shifted causal training",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=logit-shifted+causal+training",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2604.11035-introspective-dlm"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:online softmax",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 70,
+      "title": "方法：online softmax",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=online+softmax",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2307.08691-flashattention-2"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:p/q acceptance",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 70,
+      "title": "方法：p/q acceptance",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=p%2Fq+acceptance",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2604.11035-introspective-dlm"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:tiling",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 70,
+      "title": "方法：tiling",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=tiling",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2307.08691-flashattention-2"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:work partitioning",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 70,
+      "title": "方法：work partitioning",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=work+partitioning",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2307.08691-flashattention-2"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:problems:Efficient Exact Attention",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 70,
+      "title": "问题：Efficient Exact Attention",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?problem=Efficient+Exact+Attention",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2307.08691-flashattention-2"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:problems:Parallel Diffusion Decoding",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 70,
+      "title": "问题：Parallel Diffusion Decoding",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?problem=Parallel+Diffusion+Decoding",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2604.11035-introspective-dlm"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:topics:Attention Kernels",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "主题：Attention Kernels",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?topic=Attention+Kernels",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:topics:GPU Systems",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "主题：GPU Systems",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?topic=GPU+Systems",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:topics:Inference Optimization",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "主题：Inference Optimization",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?topic=Inference+Optimization",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_dense:2501.01005-flashinfer",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "审分类过密：FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
+      "detail": "topic/method 过密，可能需要保留更可区分的标签。",
+      "href": "library.html?q=2501.01005-flashinfer",
+      "source": "quality.json",
+      "slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "command": "python3 scripts/export_taxonomy_load.py docs --format csv --signal dense_tags --output docs/exports/taxonomy-load.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:tracks:Inference Serving Systems",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "方向：Inference Serving Systems",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?track=Inference+Serving+Systems",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:CUDA Graph",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "方法：CUDA Graph",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=CUDA+Graph",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:JIT compilation",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "方法：JIT compilation",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=JIT+compilation",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:KV injection",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "方法：KV injection",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=KV+injection",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2602.06036-dflash"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:Speculative Decoding",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "方法：Speculative Decoding",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=Speculative+Decoding",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2602.06036-dflash"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:block diffusion",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "方法：block diffusion",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=block+diffusion",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2602.06036-dflash"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:block-sparse attention",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "方法：block-sparse attention",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=block-sparse+attention",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:composable KV-cache format",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "方法：composable KV-cache format",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=composable+KV-cache+format",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:dual-view attention",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "方法：dual-view attention",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=dual-view+attention",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2605.12825-orthrus"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:forward KL distillation",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "方法：forward KL distillation",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=forward+KL+distillation",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2605.12825-orthrus"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:intra-model consensus",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "方法：intra-model consensus",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=intra-model+consensus",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2605.12825-orthrus"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:load-balanced scheduling",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "方法：load-balanced scheduling",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=load-balanced+scheduling",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:masked diffusion",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "方法：masked diffusion",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=masked+diffusion",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2605.12825-orthrus"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:parallel drafting",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "方法：parallel drafting",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=parallel+drafting",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2602.06036-dflash"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:shared KV cache",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "方法：shared KV cache",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=shared+KV+cache",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2605.12825-orthrus"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:target hidden features",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "方法：target hidden features",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=target+hidden+features",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2602.06036-dflash"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:line_role:followup",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "研究线角色：followup",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?role=followup",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2602.06036-dflash"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:line_role:system",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "研究线角色：system",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?role=system",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:line_role:variant",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "研究线角色：variant",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?role=variant",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2605.12825-orthrus"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:problems:Customizable Attention Serving",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "问题：Customizable Attention Serving",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?problem=Customizable+Attention+Serving",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2501.01005-flashinfer"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:problems:Lossless Speculative Decoding",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "问题：Lossless Speculative Decoding",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?problem=Lossless+Speculative+Decoding",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2602.06036-dflash"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:problems:Memory-Efficient Parallel Token Generation",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "问题：Memory-Efficient Parallel Token Generation",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?problem=Memory-Efficient+Parallel+Token+Generation",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2605.12825-orthrus"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:unused_config:review_stage:due",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 60,
+      "title": "复习阶段：due",
+      "detail": "保留为候选值，或从 taxonomy.json 中移除。",
+      "href": "library.html?reviewStage=due",
+      "source": "taxonomy_actions.json",
+      "slugs": [],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:unused_config:review_stage:fresh",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 60,
+      "title": "复习阶段：fresh",
+      "detail": "保留为候选值，或从 taxonomy.json 中移除。",
+      "href": "library.html?reviewStage=fresh",
+      "source": "taxonomy_actions.json",
+      "slugs": [],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:unused_config:review_stage:reviewed",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 60,
+      "title": "复习阶段：reviewed",
+      "detail": "保留为候选值，或从 taxonomy.json 中移除。",
+      "href": "library.html?reviewStage=reviewed",
+      "source": "taxonomy_actions.json",
+      "slugs": [],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:unused_config:status:archived",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 60,
+      "title": "阅读状态：archived",
+      "detail": "保留为候选值，或从 taxonomy.json 中移除。",
+      "href": "library.html?status=archived",
+      "source": "taxonomy_actions.json",
+      "slugs": [],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:unused_config:status:reading",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 60,
+      "title": "阅读状态：reading",
+      "detail": "保留为候选值，或从 taxonomy.json 中移除。",
+      "href": "library.html?status=reading",
+      "source": "taxonomy_actions.json",
+      "slugs": [],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:unused_config:status:skimmed",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 60,
+      "title": "阅读状态：skimmed",
+      "detail": "保留为候选值，或从 taxonomy.json 中移除。",
+      "href": "library.html?status=skimmed",
+      "source": "taxonomy_actions.json",
+      "slugs": [],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:unused_config:status:unread",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 60,
+      "title": "阅读状态：unread",
+      "detail": "保留为候选值，或从 taxonomy.json 中移除。",
+      "href": "library.html?status=unread",
+      "source": "taxonomy_actions.json",
+      "slugs": [],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:unused_config:reading_stage:code_checked",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 60,
+      "title": "阅读阶段：code_checked",
+      "detail": "保留为候选值，或从 taxonomy.json 中移除。",
+      "href": "library.html?stage=code_checked",
+      "source": "taxonomy_actions.json",
+      "slugs": [],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:unused_config:reading_stage:normal_read",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 60,
+      "title": "阅读阶段：normal_read",
+      "detail": "保留为候选值，或从 taxonomy.json 中移除。",
+      "href": "library.html?stage=normal_read",
+      "source": "taxonomy_actions.json",
+      "slugs": [],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:unused_config:reading_stage:skim",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 60,
+      "title": "阅读阶段：skim",
+      "detail": "保留为候选值，或从 taxonomy.json 中移除。",
+      "href": "library.html?stage=skim",
+      "source": "taxonomy_actions.json",
+      "slugs": [],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    }
+  ]
+}

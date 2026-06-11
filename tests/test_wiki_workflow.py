@@ -199,6 +199,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "review.html",
                 "dashboard.html",
                 "release.html",
+                "actions.html",
                 "collections.html",
                 "balance.html",
                 "coverage.html",
@@ -216,6 +217,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "quality.json",
                 "review.json",
                 "taxonomy_actions.json",
+                "actions.json",
                 "manifest.json",
                 "lines/index.html",
             }
@@ -262,6 +264,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("View: 重点队列", index_html)
             self.assertIn("View: Kernel 方向", index_html)
             self.assertIn("Playbook: Release readiness", index_html)
+            self.assertIn('"href": "actions.html"', index_html)
             self.assertIn('"href": "balance.html"', index_html)
             self.assertIn('"href": "coverage.html"', index_html)
             self.assertIn("Data: manifest.json", index_html)
@@ -401,6 +404,12 @@ class WikiWorkflowTest(unittest.TestCase):
             triaged_action = next(item for item in taxonomy_actions["actions"] if item["field"] == "status" and item["value"] == "triaged")
             self.assertEqual(triaged_action["action"], "unused_config")
             self.assertEqual(triaged_action["href"], "library.html?status=triaged")
+            actions = json.loads((report_dir / "actions.json").read_text(encoding="utf-8"))
+            self.assertGreater(actions["count"], 0)
+            self.assertIn("review", actions["summary"]["groups"])
+            self.assertIn("taxonomy", actions["summary"]["groups"])
+            self.assertTrue(any(item["source"] == "taxonomy_actions.json" for item in actions["actions"]))
+            self.assertTrue(any(item["source"] == "review.json" for item in actions["actions"]))
             stats = json.loads((report_dir / "stats.json").read_text(encoding="utf-8"))
             self.assertEqual(stats["count"], 2)
             self.assertIn("quality", stats["queue_sizes"])
@@ -418,10 +427,12 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(manifest["count"], 2)
             self.assertTrue(manifest["publish_checks"]["no_duplicate_reports"])
             self.assertIn("release.html", {item["href"] for item in manifest["pages"]})
+            self.assertIn("actions.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("balance.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("coverage.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("facets.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("taxonomy_actions.json", {item["href"] for item in manifest["data_files"]})
+            self.assertIn("actions.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("manifest.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("guides/report.template.md", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/metadata.schema.json", {item["href"] for item in manifest["contract_files"]})
@@ -472,6 +483,14 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("copyReleaseCommand", release_html)
             self.assertIn("Alpha 论文", release_html)
             self.assertIn("quick-kind", release_html)
+            actions_html = (report_dir / "actions.html").read_text(encoding="utf-8")
+            self.assertIn("行动中心", actions_html)
+            self.assertIn('id="actionRows"', actions_html)
+            self.assertIn("actions_filtered.csv", actions_html)
+            self.assertIn("copyActionsQueue", actions_html)
+            self.assertIn("renderActionRows", actions_html)
+            self.assertIn("review.json", actions_html)
+            self.assertIn("taxonomy_actions.json", actions_html)
             dashboard_html = (report_dir / "dashboard.html").read_text(encoding="utf-8")
             self.assertIn("分类均衡度", dashboard_html)
             self.assertIn("均衡分", dashboard_html)
