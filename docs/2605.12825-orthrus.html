@@ -1,0 +1,967 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Orthrus：通过双视角扩散实现内存高效的并行 token 生成</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.11.1/styles/github.min.css">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f7f8;
+      --paper: #ffffff;
+      --ink: #22262a;
+      --muted: #667078;
+      --line: #d8e0e5;
+      --accent: #2c6e73;
+      --accent-2: #6f5b8a;
+      --soft: #e7f0ed;
+      --soft-2: #eef0f5;
+      --shadow: 0 18px 45px rgba(31, 44, 52, .08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "PingFang SC", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+      line-height: 1.72;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .shell { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
+    .hero { padding: 16px 0 20px; }
+    .crumb { display: none; }
+    h1 { margin: 0 0 8px; font-size: clamp(30px, 5vw, 52px); line-height: 1.1; letter-spacing: 0; }
+    .subtitle { max-width: 820px; color: var(--muted); font-size: 18px; margin: 0; }
+    .meta-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 0; }
+    .pill, .hero-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--paper);
+      padding: 0 12px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .hero-link { color: var(--accent); font-weight: 700; }
+    .hero-link svg {
+      width: 15px;
+      height: 15px;
+      margin-right: 6px;
+      fill: currentColor;
+      flex: 0 0 auto;
+    }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .chips span {
+      border: 1px solid #cfdedc;
+      background: var(--soft);
+      color: #33595d;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 13px;
+    }
+    .panel {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    .mindmap-panel { padding: 22px; margin: 14px auto 18px; }
+    .panel-title { margin: 0 0 10px; font-size: 18px; }
+    .mind-overview {
+      display: grid;
+      grid-template-columns: minmax(180px, .42fr) 1fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+    .mind-root {
+      min-height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      border-radius: 8px;
+      border: 1px solid #cbdeda;
+      background: linear-gradient(180deg, #edf7f5, #ffffff);
+      color: #234e52;
+      font-size: clamp(20px, 2.4vw, 28px);
+      font-weight: 800;
+      line-height: 1.15;
+      padding: 20px;
+    }
+    .mind-branches {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 12px;
+    }
+    .mind-branch {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 12px;
+      min-height: 132px;
+    }
+    .mind-branch h3 {
+      margin: 0 0 6px;
+      font-size: 16px;
+      color: var(--accent);
+    }
+    .mind-branch ul {
+      margin: 0;
+      padding-left: 1.1em;
+      color: #4a5358;
+      font-size: 13.5px;
+      line-height: 1.5;
+    }
+    .mindmap-toggle {
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      overflow: hidden;
+    }
+    .mindmap-toggle summary {
+      cursor: pointer;
+      padding: 10px 14px;
+      color: var(--accent);
+      font-weight: 700;
+      list-style: none;
+    }
+    .mindmap-toggle summary::-webkit-details-marker { display: none; }
+    .markmap {
+      height: 520px;
+      border-top: 1px solid var(--line);
+      background: #fffdf8;
+      overflow: hidden;
+      pointer-events: none;
+      user-select: none;
+    }
+    .markmap svg {
+      width: 100%;
+      height: 520px;
+      display: block;
+      pointer-events: none;
+    }
+    .reader-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(210px, 248px);
+      gap: 14px;
+      align-items: start;
+      padding-bottom: 56px;
+      transition: grid-template-columns .18s ease;
+    }
+    .reader-layout.sidebar-collapsed {
+      grid-template-columns: minmax(0, 1fr) 44px;
+    }
+    .side-toc {
+      grid-column: 2;
+      grid-row: 1;
+      position: sticky;
+      top: 64px;
+      max-height: calc(100vh - 84px);
+      overflow: hidden;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    .side-toggle {
+      width: 100%;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      background: #ffffff;
+      color: var(--accent);
+      padding: 0 12px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 750;
+      cursor: pointer;
+    }
+    .side-toggle-icon {
+      width: 20px;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--muted);
+      background: #fff;
+      flex: 0 0 auto;
+    }
+    .side-toc nav {
+      max-height: calc(100vh - 130px);
+      overflow-y: auto;
+      padding: 8px;
+    }
+    .side-toc a {
+      display: block;
+      border-radius: 7px;
+      border: 1px solid transparent;
+      padding: 8px 10px;
+      color: #405059;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+    .side-toc a:hover,
+    .side-toc a.is-active {
+      background: var(--soft);
+      text-decoration: none;
+      border-color: #cbdeda;
+      color: #234e52;
+    }
+    .side-toc.is-collapsed .side-toggle {
+      width: 44px;
+      height: 44px;
+      min-height: 44px;
+      justify-content: center;
+      border-bottom: 0;
+      padding: 0;
+    }
+    .side-toc.is-collapsed {
+      width: 44px;
+      height: 44px;
+      justify-self: end;
+    }
+    .side-toc.is-collapsed nav,
+    .side-toc.is-collapsed .side-toggle-text {
+      display: none;
+    }
+    .article { grid-column: 1; grid-row: 1; min-width: 0; }
+    .report-section {
+      margin: 16px 0;
+      padding: 22px;
+      border-left: 5px solid var(--accent);
+      background: var(--paper);
+      border-radius: 8px;
+      border-top: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+    .report-section:nth-of-type(3) {
+      border-left-color: #6f5b8a;
+      background: linear-gradient(90deg, #f4f0fa 0, #fff 140px);
+    }
+    .report-section:nth-of-type(7) {
+      border-left-color: #9a623d;
+      background: linear-gradient(90deg, #f7f1ed 0, #fff 160px);
+    }
+    .report-section:nth-of-type(10) {
+      border-left-color: #3f6c88;
+      background: linear-gradient(90deg, #eef4f8 0, #fff 160px);
+    }
+    details.report-section { padding: 0; overflow: hidden; }
+    details.report-section summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 18px 22px;
+      font-size: 22px;
+      font-weight: 760;
+      line-height: 1.25;
+    }
+    details.report-section summary::-webkit-details-marker { display: none; }
+    details.report-section summary::after {
+      content: "收起";
+      float: right;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 500;
+      margin-top: 5px;
+    }
+    .report-section > h2,
+    details.report-section > summary {
+      scroll-margin-top: 96px;
+    }
+    details.report-section:not([open]) summary::after { content: "展开"; }
+    .section-body { padding: 0 22px 22px; }
+    .article > h1 {
+      margin: 18px 0;
+      padding: 18px 22px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      font-size: clamp(24px, 3vw, 34px);
+    }
+    h2, h3 { letter-spacing: 0; line-height: 1.32; }
+    h2 { margin: 0 0 12px; font-size: 24px; }
+    h3 { margin: 22px 0 8px; font-size: 19px; color: #293d42; }
+    p { margin: 10px 0; }
+    ul, ol { padding-left: 1.4em; }
+    li { margin: 5px 0; }
+    blockquote {
+      margin: 14px 0;
+      padding: 10px 14px;
+      border-left: 4px solid var(--accent-2);
+      background: var(--soft-2);
+      color: #51483f;
+      border-radius: 6px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      overflow: hidden;
+      border-radius: 8px;
+      display: block;
+      overflow-x: auto;
+    }
+    th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; }
+    th { background: #edf3f1; }
+    pre {
+      padding: 14px;
+      overflow-x: auto;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #f7f7f5;
+    }
+    code {
+      font-family: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .92em;
+    }
+    :not(pre) > code {
+      background: #eef1ef;
+      border-radius: 5px;
+      padding: 1px 5px;
+    }
+    .math-inline {
+      display: inline-block;
+      max-width: 100%;
+      vertical-align: baseline;
+    }
+    img, object.figure-pdf {
+      max-width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      display: block;
+      margin: 14px auto;
+    }
+    img.media-thumb { cursor: zoom-in; }
+    object.figure-pdf { width: 100%; min-height: 420px; }
+    .figure-fallback { display: block; margin: 8px 0 16px; font-size: 13px; color: var(--muted); }
+    .figure-open {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--paper);
+      color: var(--accent);
+      padding: 0 12px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .figure-open:hover { background: var(--soft); }
+    .media-viewer {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: none;
+      background: rgba(28, 31, 32, .72);
+      padding: 22px;
+    }
+    .media-viewer.is-open {
+      display: grid;
+      place-items: center;
+    }
+    .media-dialog {
+      position: relative;
+      width: min(1180px, 96vw);
+      height: min(860px, 92vh);
+      border-radius: 8px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, .28);
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      overflow: hidden;
+    }
+    .media-bar {
+      min-height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid var(--line);
+      padding: 0 10px 0 14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .media-title {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .media-close {
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .media-close:hover { background: var(--soft); }
+    .media-content {
+      min-height: 0;
+      overflow: auto;
+      padding: 14px;
+      display: grid;
+      place-items: center;
+      background: #f3f6f8;
+    }
+    .media-content img {
+      max-width: 100%;
+      max-height: calc(92vh - 88px);
+      object-fit: contain;
+      margin: 0;
+      cursor: default;
+    }
+    .media-content iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #fff;
+      border-radius: 6px;
+    }
+    body.media-viewer-open { overflow: hidden; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 75%, transparent);
+    }
+    .topbar-inner { min-height: 42px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .topbar a,
+    .topbar button {
+      border: 0;
+      background: transparent;
+      color: var(--accent);
+      padding: 0;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .topbar button:hover { text-decoration: underline; }
+    @media (max-width: 960px) {
+      .reader-layout,
+      .reader-layout.sidebar-collapsed {
+        display: block;
+      }
+      .side-toc {
+        position: sticky;
+        top: 42px;
+        z-index: 1;
+        margin-bottom: 16px;
+        max-height: none;
+        width: auto;
+        height: auto;
+        justify-self: stretch;
+      }
+      .side-toc nav {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        max-height: none;
+        padding: 8px;
+      }
+      .side-toc a {
+        white-space: nowrap;
+        border: 1px solid var(--line);
+        background: #fff;
+      }
+      .side-toc.is-collapsed .side-toggle {
+        width: 100%;
+        height: auto;
+        min-height: 44px;
+        justify-content: space-between;
+        border-bottom: 0;
+        padding: 0 12px;
+      }
+      .side-toc.is-collapsed {
+        width: auto;
+        height: auto;
+      }
+      .side-toc.is-collapsed .side-toggle-text {
+        display: inline;
+      }
+    }
+    @media (max-width: 760px) {
+      .hero { padding-top: 12px; }
+      .report-section { padding: 16px; }
+      details.report-section summary { padding: 15px 16px; font-size: 19px; }
+      .section-body { padding: 0 16px 16px; }
+      .mind-overview { grid-template-columns: 1fr; }
+      .mind-root { min-height: 120px; }
+      .markmap, .markmap svg { height: 360px; }
+    }
+  </style>
+</head>
+<body>
+  <script>
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    if (window.location.hash === "#side-toc") {
+      history.replaceState(null, "", window.location.pathname + window.location.search);
+      window.scrollTo(0, 0);
+    }
+  </script>
+  <div class="topbar">
+    <div class="shell topbar-inner">
+      <a href="index.html">论文 wiki</a>
+      <button id="topbar-toc-toggle" type="button">目录</button>
+    </div>
+  </div>
+  <header class="shell hero">
+    <div class="crumb">Paper Reading Report</div>
+    <h1>Orthrus：通过双视角扩散实现内存高效的并行 token 生成</h1>
+    <p class="subtitle">Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion</p>
+    <div class="meta-row">
+      <span class="pill">Chien Van Nguyen, Chaitra Hegde, Van Cuong Pham, Ryan A. Rossi, Franck Dernoncourt, Thien Huu Nguyen</span>
+      <span class="pill">2026</span>
+      <span class="pill">2605.12825v2</span>
+      
+      <a class="hero-link" href="https://arxiv.org/abs/2605.12825"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3Z"></path><path d="M5 5h6v2H7v10h10v-4h2v6H5V5Z"></path></svg>arxiv</a>
+        <a class="hero-link" href="https://github.com/chiennv2000/orthrus"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8.7 16.6-5-4.6 5-4.6 1.35 1.48L6.66 12l3.39 3.12L8.7 16.6Zm6.6 0-1.35-1.48L17.34 12l-3.39-3.12L15.3 7.4l5 4.6-5 4.6Z"></path></svg>code</a>
+    </div>
+    <div class="chips"><span>LLM inference acceleration</span><span>Diffusion language models</span><span>Speculative decoding</span><span>KV cache</span><span>Parallel decoding</span><span>dual-view attention</span><span>masked diffusion</span><span>intra-model consensus</span><span>forward KL distillation</span><span>shared KV cache</span></div>
+  </header>
+  <section class="shell panel mindmap-panel">
+    <h2 class="panel-title">内容脑图</h2>
+    <div class="mind-overview">
+  <div class="mind-root">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</div>
+  <div class="mind-branches"><article class="mind-branch">
+  <h3>研究问题</h3>
+  <ul><li>动机</li><li>关键瓶颈</li></ul>
+</article><article class="mind-branch">
+  <h3>方法设计</h3>
+  <ul><li>核心算法</li><li>关键公式</li></ul>
+</article><article class="mind-branch">
+  <h3>实验验证</h3>
+  <ul><li>数据集</li><li>baseline</li><li>ablation</li></ul>
+</article><article class="mind-branch">
+  <h3>批判视角</h3>
+  <ul><li>前作关系</li><li>局限</li></ul>
+</article><article class="mind-branch">
+  <h3>代码实现</h3>
+  <ul><li>工程约束</li><li>可复现性</li></ul>
+</article></div>
+</div>
+    <details class="mindmap-toggle">
+      <summary>交互脑图</summary>
+      <div class="markmap"><script type="text/template"># Orthrus：通过双视角扩散实现内存高效的并行 token 生成
+## 研究问题
+- 动机
+- 关键瓶颈
+## 方法设计
+- 核心算法
+- 关键公式
+## 实验验证
+- 数据集
+- baseline
+- ablation
+## 批判视角
+- 前作关系
+- 局限
+## 代码实现
+- 工程约束
+- 可复现性</script></div>
+    </details>
+  </section>
+  <div class="shell reader-layout" id="reader-layout">
+    <aside class="side-toc" id="paper-side-toc">
+      <button class="side-toggle" id="side-toggle" type="button" aria-label="收起目录" title="收起目录">
+        <span class="side-toggle-text">目录</span>
+        <span class="side-toggle-icon" aria-hidden="true">›</span>
+      </button>
+      <nav id="side-links" aria-label="章节目录"></nav>
+    </aside>
+    <main class="article" id="article"></main>
+  </div>
+  <div class="media-viewer" id="media-viewer" aria-hidden="true">
+    <div class="media-dialog" role="dialog" aria-modal="true" aria-labelledby="media-title">
+      <div class="media-bar">
+        <div class="media-title" id="media-title">图表预览</div>
+        <button class="media-close" id="media-close" type="button" aria-label="关闭预览" title="关闭预览">×</button>
+      </div>
+      <div class="media-content" id="media-content"></div>
+    </div>
+  </div>
+  <script>window.REPORT_PAYLOAD = {"markdown": "# Orthrus：通过双视角扩散实现内存高效的并行 token 生成（Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion）\n\n## 1. 基本情况\n\n- 题目（中 / 英）：Orthrus：通过双视角扩散实现内存高效的并行 token 生成 / Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion\n- 作者：Chien Van Nguyen, Chaitra Hegde, Van Cuong Pham, Ryan A. Rossi, Franck Dernoncourt, Thien Huu Nguyen\n- 单位：University of Oregon, Google DeepMind, Adobe Research\n- arXiv 编号：2605.12825v2\n- 提交日期：v1 于 2026-05-12 提交；v2 于 2026-05-17 修订\n- arXiv 链接：https://arxiv.org/abs/2605.12825v2\n- PDF 链接：https://arxiv.org/pdf/2605.12825v2\n- 代码仓库：https://github.com/chiennv2000/orthrus\n- 主题分类：Machine Learning (cs.LG); Artificial Intelligence (cs.AI)\n\n## 2. 核心贡献概述\n\n- 中文版：Orthrus 在冻结的 autoregressive LLM 内部插入轻量 trainable diffusion attention module，让 AR view 负责高质量 context / KV cache 构建，让 diffusion view 一次并行预测多个 future tokens，再由同一个 frozen AR head 做 consensus verification，从而在不改变 base model 输出分布的前提下加速生成。它的关键卖点不是“diffusion 本身更准”，而是把 diffusion drafting 与 AR verification 做成同模型、共享 KV cache 的结构。\n- English version（abstract）：`Orthrus guarantees lossless inference, delivering up to a 7.8x speedup with only an O(1) memory cache overhead and minimal parameter additions.`\n\n## 3. 一句话精髓（写给外行）\n\nOrthrus 像是在老练作家的脑子里装了一个会同时写好几句草稿的小助手，但每一句交稿前都由作家本人逐字点头，所以快了，却没有换掉原来的声音。\n\n## 4. 学术贡献清单\n\n### 4.1 动机的发现与阐明\n\n作者抓住了 AR LLM 推理中的一个结构性不对称：prefill 阶段本来可以并行并产生高质量 KV cache，而 decode 阶段却必须逐 token 前进，主要受 memory bandwidth 和重复读取 KV cache 限制。已有 diffusion language models 能并行生成 token，但往往需要大规模训练、质量落后于同规模 AR model；已有 AR-to-diffusion adaptation 则会改变 base weights，使输出分布不可再严格等同于原 AR 模型。\n\n这篇论文的动机不是重新证明 diffusion LM 可行，而是提出一个更窄也更工程化的问题：能否只把 parallel drafting 能力注入 frozen AR Transformer，同时保留 AR 模型原本的 exact predictive distribution 和 KV cache？\n\n### 4.2 方法的创新\n\n- 在每层 Transformer 中并列加入 trainable diffusion attention path；源码中新增的是 diffusion <span class=\"math-inline\" data-tex=\"Q/K/V/O\"></span> projections 以及 diffusion q/k RMSNorm，而不是只有 <span class=\"math-inline\" data-tex=\"Q/K/V\"></span>，这也更接近论文所称 trainable parameters 约占 16% 的量级（已据代码核对修订）。\n- AR view 和 diffusion view 共享历史 <span class=\"math-inline\" data-tex=\"(\\mathbf{K}_{\\text{AR}}, \\mathbf{V}_{\\text{AR}})\"></span>，diffusion view 只为固定大小的 parallel block 产生瞬时状态，因此历史 KV cache 没有线性级重复存储。\n- 训练时用 dual-pass block masking：AR path 在 clean sequence 上产生 teacher distribution，diffusion path 看 clean prefix 加 anchor / `<mask>` block，用 forward KL 蒸馏 AR teacher 的完整 token distribution。\n- 推理时采用 intra-model consensus：diffusion head 一次提出 <span class=\"math-inline\" data-tex=\"K\"></span> 个候选，frozen AR head 在一个 verification pass 中计算 exact causal distribution，并只接受从左到右与 AR greedy / rejection sampling 对齐的最长前缀。\n\n### 4.3 实验上的核心结论\n\n- 在 Qwen3-1.7B / 4B / 8B 上，Orthrus 在 greedy 和 temperature sampling 设置下平均 speedup 约 <span class=\"math-inline\" data-tex=\"4.25\\times\"></span> 到 <span class=\"math-inline\" data-tex=\"5.36\\times\"></span>，最大报告值为 Qwen3-8B 在 Pseudo2code 上的 <span class=\"math-inline\" data-tex=\"7.83\\times\"></span>。\n- 与 Dream-7B、LLaDA-1.5、SDAR、Fast-dLLM-v2、Mercury Coder、Gemini Diffusion 等 diffusion-based 模型相比，Orthrus-Qwen3-8B 在表中给出的数学和代码任务上保持 Qwen3-8B baseline 的 zero-shot 准确率，并有更高 MATH-500 / HumanEval / MBPP 数值。\n- 与 EAGLE-3 和 DFlash 类 speculative decoding 对比，论文强调 Orthrus 的平均接受长度更高，并且在长 context 下因为不维护外部 drafter 的历史 KV cache，吞吐退化更小。\n- 消融显示 <span class=\"math-inline\" data-tex=\"K=32\"></span> 在 MATH-500 上使 TPF 达到 6.35；single-step block projection 比 two-step denoising 更快；KL soft distillation 与 hard CE 在 MATH-500 准确率相同，但 KL 的 TPF 更高。\n\n## 5. 写作故事线\n\n论文先从 AR LLM 的 decode bottleneck 入手：prefill 阶段的 self-attention 已经能并行处理 prompt，而后续生成必须一个 token 一个 token 地运行，导致 KV cache 被反复加载，硬件利用率低。然后作者引入 diffusion language models，承认它们在并行生成上天然有优势，但指出它们依赖 masked / denoising 条件独立近似，质量和训练成本都不理想。\n\n在 §2，作者把矛盾形式化成两种概率建模范式：AR 通过 chain rule 保证每个 token 条件于完整历史，但采样串行；DLM 通过 block 内并行预测 amortize forward pass，但会偏离 strict causal dependency。这个数学铺垫是 §3 的转折点：Orthrus 不试图把 AR 模型“改造成” diffusion model，而是把两种 view 放进同一个 Transformer 里。\n\n§3 的方法叙事围绕“分工”展开：frozen AR head 只负责构建可信历史表示和验证，trainable diffusion head 只负责并行提出候选。图 1 给出 dual-view architecture，图 2 把 training 与 inference 的 mask / verification 机制对齐起来：训练时 diffusion rows 对齐 AR rows，推理时 diffusion candidates 被 AR rows 验证。\n\n§4 的实验先证明加速来自 TPF 和 wall-clock throughput，再把 Orthrus 放到两个邻近谱系里比较：一边是独立或 adapted diffusion LLM，另一边是 speculative decoding。作者借此强化核心 claim：Orthrus 的优势不是单点精度，而是“lossless + parallel + shared cache”三者同时成立。附录再补训练配方、objective ablation、memory scaling 与 limitation。\n\n![Orthrus dual-view architecture](assets/2605.12825-orthrus/orthrus.pdf)\n\n![Orthrus training and inference masking](assets/2605.12825-orthrus/masking.pdf)\n\n## 6. 核心参考文献\n\n- [1] Leviathan et al. 2022/2023, *Fast Inference from Transformers via Speculative Decoding*, arXiv:2211.17192 — Orthrus 的 verification / rejection sampling 正确性叙事直接继承 speculative decoding 的 lossless acceleration 思想。\n- [2] Nie et al. 2025, *Large Language Diffusion Models*, arXiv:2502.09992 — 作为 LLaDA / language MDM 代表，支撑“diffusion LM 可以挑战 AR，但训练成本和质量仍有争议”的背景。\n- [3] Arriola et al. 2025, *Block Diffusion: Interpolating Between Autoregressive and Diffusion Language Models*, arXiv:2503.09573 — 提供 block-wise diffusion、parallel token sampling 和 KV caching 方向的直接前史。\n- [4] Wu et al. 2025, *Fast-dLLM v2: Efficient Block-Diffusion LLM*, arXiv:2509.26328 — Orthrus 重点比较的 AR-to-dLLM adaptation baseline；同样追求 block parallel generation，但会改动/适配原模型。\n- [5] Cheng et al. 2025, *SDAR: A Synergistic Diffusion-AutoRegression Paradigm for Scalable Sequence Generation*, arXiv:2510.06303 — 另一个 diffusion-autoregression 混合范式，本文用它说明 paradigm conversion 仍可能带来性能退化。\n- [6] Chen et al. 2026, *DFlash: Block Diffusion for Flash Speculative Decoding*, arXiv:2602.06036 — 与 Orthrus 最接近的 speculative + block diffusion 方向；差别在于 DFlash 是外部 lightweight block diffusion drafter，而 Orthrus 把 drafter 内嵌到 target model。\n- [7] Li et al. 2025, *EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test*, arXiv:2503.01840 — speculative decoding SOTA baseline，论文用它对比 average acceptance length。\n- [8] Ye et al. 2025, *Dream 7B: Diffusion Large Language Models*, arXiv:2508.15487 — 代表更完整的 standalone diffusion LLM 路线，提供“高训练成本 + iterative denoising + 灵活生成”的对照。\n- [9] Khanna et al. 2025, *Mercury: Ultra-Fast Language Models Based on Diffusion*, arXiv:2506.17298；Google DeepMind 2025, *Gemini Diffusion* — 代表商业/闭源高速 diffusion text generation 系统，说明 diffusion LM 已在速度质量前沿被积极探索。\n\n## 7. 批判性分析\n\n与前作的关系：Orthrus 最像“同模型内嵌式 speculative decoding”，而不是纯粹的新 diffusion LM。DFlash（*DFlash: Block Diffusion for Flash Speculative Decoding*, arXiv:2602.06036）已经把 block diffusion drafter 与 target verifier 结合起来，并声称 single forward pass drafting 与 lossless acceleration；Orthrus 的关键差异是把 drafter 做成每层新增 diffusion attention path，让它直接复用 target model 的历史 KV cache。也就是说，Orthrus 的新意集中在 architectural integration 和 cache sharing，而 lossless guarantee 本身来自 AR verification / rejection sampling 框架。\n\n相对于 Fast-dLLM-v2（*Fast-dLLM v2: Efficient Block-Diffusion LLM*, arXiv:2509.26328）和 SDAR（*SDAR: A Synergistic Diffusion-AutoRegression Paradigm for Scalable Sequence Generation*, arXiv:2510.06303），Orthrus 的路线更保守：不把 base model 变成 block diffusion model，而是冻结 base model，只训练新增 path。这个保守性带来精确分布对齐和低训练成本，但也带来明显边界：它不能超过 base AR model 的能力上限，所有生成质量 claim 都应理解为“保持 baseline，同时用更少 forward passes 达成”，而不是“diffusion view 自身更强”。\n\n相对于 Block Diffusion（*Block Diffusion: Interpolating Between Autoregressive and Diffusion Language Models*, arXiv:2503.09573）、LLaDA（*Large Language Diffusion Models*, arXiv:2502.09992）、LLaDA-1.5（arXiv:2505.19223）和 Dream-7B（arXiv:2508.15487），Orthrus 放弃了 diffusion model 在 arbitrary-order generation、infilling、可控 denoising schedule 等方面的开放形态，而把 diffusion 限定为“未来 block 的 draft generator”。这让它非常适合 serving 加速，但不应被解读为证明 masked diffusion LM 全面替代 AR。\n\n对 memory claim 需要谨慎。论文说 Orthrus 的历史 KV cache overhead 是 <span class=\"math-inline\" data-tex=\"O(1)\"></span>，并报告 <span class=\"math-inline\" data-tex=\"\\Delta \\approx 4.5\"></span> MiB，这在其结构下合理：历史 cache 由 AR view 产生并复用，diffusion path 只处理固定 <span class=\"math-inline\" data-tex=\"K=32\"></span> 的临时 block。但“优于所有 speculative decoding 的内存开销”依赖具体实现；某些 speculative methods 的 draft model 可以更小、量化或不保留完整长历史 cache。因此，最稳妥的表述是 Orthrus 在“需要长上下文且 drafter 也要保留随 context 增长状态”的场景中更有结构优势。\n\n对 speed claim 也要区分指标。表 1 的 TPF 是 hardware-agnostic proxy，而 speedup 列来自相对 AR baseline 的测量；最大 <span class=\"math-inline\" data-tex=\"7.83\\times\"></span> 出现在 Pseudo2code / Qwen3-8B / greedy 设置。由于每个 generation cycle 至少包含 diffusion projection 和 AR verification 两次 forward，实际吞吐会强依赖 GPU kernel、batch size、context length、accepted prefix length 和 serving framework。论文虽用 FlexAttention + FlashAttention-4 做训练 mask，但推理端是否在不同部署栈中维持同等收益，仍需要独立复现。\n\n比较表中的 diffusion baselines 也有时间和版本问题。Orthrus 是 2026-05-17 的 v2，而 DFlash 在 arXiv 页面显示 2026-05-28 有 v2 camera-ready，Fast-dLLM-v2、SDAR 等在 2025 年后持续更新；这些工作发展很快，单表对比可能受 checkpoint、decoding setting、benchmark contamination 和 prompt protocol 影响。尤其 Gemini Diffusion 是 Google DeepMind 的实验 demo 页面，非同一开放 checkpoint / 同一评测脚本，因此只能作为速度质量现象参照，不宜当作严格 apples-to-apples baseline。\n\n脆弱 claim：论文说“strictly lossless generation”在 greedy decoding 下由式 (5) 的 exact match 很清楚；temperature <span class=\"math-inline\" data-tex=\"T&gt;0\"></span> 时作者提到 exact rejection sampling，但正文没有完整展开 proposal distribution、acceptance probability、top-k/top-p/penalty 等实际采样细节。如果生产环境使用 nucleus sampling、repetition penalty、grammar constraints 或 tool-call constraints，需要确认 verification 逻辑仍等价于目标分布。\n\n外部引用依据：\n- Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion, arXiv:2605.12825, https://arxiv.org/abs/2605.12825\n- DFlash: Block Diffusion for Flash Speculative Decoding, arXiv:2602.06036, https://arxiv.org/abs/2602.06036\n- Fast-dLLM v2: Efficient Block-Diffusion LLM, arXiv:2509.26328, https://arxiv.org/abs/2509.26328\n- SDAR: A Synergistic Diffusion-AutoRegression Paradigm for Scalable Sequence Generation, arXiv:2510.06303, https://arxiv.org/abs/2510.06303\n- Block Diffusion: Interpolating Between Autoregressive and Diffusion Language Models, arXiv:2503.09573, https://arxiv.org/abs/2503.09573\n- Large Language Diffusion Models, arXiv:2502.09992, https://arxiv.org/abs/2502.09992\n- LLaDA 1.5: Variance-Reduced Preference Optimization for Large Language Diffusion Models, arXiv:2505.19223, https://arxiv.org/abs/2505.19223\n- Dream 7B: Diffusion Large Language Models, arXiv:2508.15487, https://arxiv.org/abs/2508.15487\n- EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test, arXiv:2503.01840, https://arxiv.org/abs/2503.01840\n- Mercury: Ultra-Fast Language Models Based on Diffusion, arXiv:2506.17298, https://arxiv.org/abs/2506.17298\n- Gemini Diffusion, Google DeepMind, https://deepmind.google/models/gemini-diffusion/\n\n## 8. 方法细节\n\n### 算法流程\n\n1. 从预训练 AR LLM（实验中为 Qwen3-1.7B / 4B / 8B）出发，冻结原 backbone 与 AR attention path。\n2. 在每个 Transformer layer 旁路加入 diffusion attention module；源码实际包含 diffusion <span class=\"math-inline\" data-tex=\"Q/K/V/O\"></span> projection 与 diffusion q/k norm，训练时应只更新这些 diffusion path 参数，原 backbone 保持冻结（已据代码核对修订）。\n3. Prefill 阶段：AR view 对 prompt / clean context 做标准 causal forward pass，产生高质量历史 <span class=\"math-inline\" data-tex=\"(\\mathbf{K}_{\\text{AR}}, \\mathbf{V}_{\\text{AR}})\"></span>。\n4. 训练阶段：对长度 <span class=\"math-inline\" data-tex=\"L\"></span> 的 clean sequence 随机采样 <span class=\"math-inline\" data-tex=\"B\"></span> 个 anchor positions，每个 anchor 后取长度 <span class=\"math-inline\" data-tex=\"K\"></span> 的 block，保留第一个 token 作为 anchor，其余替换为 `<mask>`；diffusion view 在特殊 block mask 下预测该 block 内未来 token distribution，并用 forward KL 对齐 frozen AR teacher。\n5. 推理阶段：diffusion view 以当前 token 为 anchor，加上 <span class=\"math-inline\" data-tex=\"K-1\"></span> 个 `<mask>`，单次 forward 得到 <span class=\"math-inline\" data-tex=\"K\"></span> 个候选 token。\n6. Verification 阶段：frozen AR head 用一个 forward pass 对完整候选 block 计算 causal target probabilities；从左到右接受与 AR greedy prediction 一致的最长前缀。若第 <span class=\"math-inline\" data-tex=\"j\"></span> 个 token 不一致，则提交前 <span class=\"math-inline\" data-tex=\"j-1\"></span> 个候选和 AR correction token，并截断/同步 KV cache。\n7. 对 stochastic decoding，论文称使用 exact rejection sampling 对齐目标分布。\n\n### 关键公式\n\nAR 语言模型目标：\n\n\n<div class=\"math-display\">\\mathcal{L}_{\\text{AR}}(\\theta) = -\\mathbb{E}_{\\mathbf{x} \\sim \\mathcal{D}} \\left[ \\sum_{i=1}^N \\log p_{\\theta}(x_i \\mid \\mathbf{x}_{&lt;i}) \\right]</div>\n\n\nMasked Diffusion LM 目标：\n\n\n<div class=\"math-display\">\\mathcal{L}_{\\text{MDM}}(\\phi) = -\\mathbb{E}_{\\mathbf{x} \\sim \\mathcal{D}, t, \\mathbf{y}^t} \\left[ \\sum_{k \\in \\mathcal{M}} \\log p_{\\phi}(y_k^0 \\mid \\mathbf{c}, \\mathbf{y}^t) \\right]</div>\n\n\nDLM 的并行近似：\n\n\n<div class=\"math-display\">p_{\\text{DLM}}(\\mathbf{y}^0 \\mid \\mathbf{c}) \\approx \\prod_{k \\in \\mathcal{M}} p_{\\phi}(y_k^0 \\mid \\mathbf{c}, \\mathbf{y}^t)</div>\n\n\nOrthrus diffusion view attention：\n\n\n<div class=\"math-display\">\\mathbf{O}_{\\text{diff}} = \\text{Softmax}\\!\\left(\\frac{\\mathbf{Q}_{\\text{diff}}\\,[\\mathbf{K}_{\\text{AR}} \\,\\|\\, \\mathbf{K}_{\\text{diff}}]^{\\top}}{\\sqrt{d_{\\text{head}}}}\\right) [\\mathbf{V}_{\\text{AR}} \\,\\|\\, \\mathbf{V}_{\\text{diff}}]</div>\n\n\n其中 <span class=\"math-inline\" data-tex=\"[\\cdot\\|\\cdot]\"></span> 表示沿 sequence axis 拼接，<span class=\"math-inline\" data-tex=\"\\mathbf{O}_{\\text{diff}} \\in \\mathbb{R}^{K \\times d_{\\text{head}}}\"></span>。\n\nBlock corruption：\n\n\n<div class=\"math-display\">\\tilde{y}_{b,k} = \\begin{cases} x_{a_b} &amp; k = 1 \\\\ \\texttt{&lt;mask&gt;} &amp; k = 2, \\dots, K \\end{cases}</div>\n\n\nDiffusion view 的 training mask：\n\n\n<div class=\"math-display\">\\mathbf{M}_{\\text{diff}}[q, k] =\n\\underbrace{\\mathbf{1}[k &lt; L] \\cdot \\mathbf{1}[k \\leq a_b - 1]}_{\\text{causal AR context}}\n\\;\\;|\\;\\;\n\\underbrace{\\mathbf{1}[k \\geq L] \\cdot \\mathbf{1}\\!\\left[\\lfloor q/K \\rfloor = \\lfloor (k-L)/K \\rfloor\\right]}_{\\text{bidirectional within block}}</div>\n\n\nOrthrus 训练目标：\n\n\n<div class=\"math-display\">\\mathcal{L}_{\\text{Orthrus}} = \\mathbb{E}_{\\mathbf{x}, \\{a_b\\}} \\left[ \\sum_{b=1}^{B} \\sum_{k=1}^{K} D_{\\text{KL}}\\!\\left( p_{\\text{AR}}(\\cdot \\mid \\mathbf{x}_{\\leq a_b + k - 1}) \\;\\|\\; p_{\\text{diff}}(\\cdot \\mid \\mathbf{x}_{&lt; a_b}, \\tilde{\\mathbf{y}}_b) \\right) \\right]</div>\n\n\nGreedy consensus：\n\n\n<div class=\"math-display\">\\hat{y}_k = \\arg\\max_{v \\in \\mathcal{V}} p_{\\text{AR}}(v \\mid \\mathbf{x}_{\\le t}, \\hat{\\mathbf{y}}_{1:k-1})</div>\n\n\nEfficiency metric：\n\n\n<div class=\"math-display\">\\text{TPF} = \\frac{\\text{Total Generated Tokens}}{\\text{Total Forward Passes}}</div>\n\n\n### 所用模型 / backbone / 数据流\n\n- Backbone：Qwen3-1.7B、Qwen3-4B、Qwen3-8B。论文表 2 中 Orthrus-Qwen3-8B 参数量为 8.7B，说明新增 diffusion path 带来约 0.7B 参数。\n- 数据源：Nemotron-Post-Training-Dataset-v2，按 Chat / Math / Code 三域 1:1:1 平衡采样。\n- 数据规模：600K examples，经 sequence packing 得到 471,952 packed instances，总计 0.96B tokens。\n- 输入长度：max sequence length <span class=\"math-inline\" data-tex=\"L=2048\"></span>。\n- Block 设置：parallel block size <span class=\"math-inline\" data-tex=\"K=32\"></span>；每个 training sequence 采样 256 anchor blocks。\n- 训练信号：目标输出由 frozen AR head 直接生成，diffusion head 最小化 forward KL；公开仓库只保留了 diffusion training mask / forward 接口，没有提供 KL loss 与训练 loop 的实现（已据代码核对修订）。\n- 推理数据流：prompt -> AR prefill cache -> diffusion block projection -> AR verification -> accepted prefix append to shared cache -> 下一轮。\n\n### 算力资源需求\n\n论文明确给出的训练配置如下；公开仓库未提供训练脚本、FSDP 配置或数据处理脚本，因此这些数字仍主要来自论文而非可直接运行的代码配置（已据代码核对修订）：\n\n- 硬件：single 8xH200 GPU node。\n- 训练时长：作者在贡献里称 under 24 hours。\n- 并行和内存：PyTorch FSDP-2；micro-batch size = 1 per device；gradient accumulation steps = 16；global batch size = 128。\n- 精度：bfloat16。\n- 优化：cosine learning rate scheduler；peak learning rate <span class=\"math-inline\" data-tex=\"2 \\times 10^{-4}\"></span>；warmup ratio 0.05；gradient clipping 1.0。\n- Attention kernels：FlexAttention + FlashAttention-4 backend，用于自定义 training masks。\n- 训练轮数：2 epochs。\n- 训练 token：0.96B packed tokens。\n- 可训练参数：约 16% total parameters。\n\n估算：以 471,952 packed instances、global batch 128、2 epochs 计算，优化步数约为 <span class=\"math-inline\" data-tex=\"471{,}952 \\times 2 / 128 \\approx 7{,}374\"></span> steps。若 8B backbone 新增约 0.7B trainable parameters，但每步仍需要 frozen backbone forward 产生 teacher / cache，则训练计算量显著高于只训练一个小 adapter；不过无需 full-model backward，成本主要来自 frozen teacher forward、diffusion path forward/backward 与大规模 masked block attention。\n\n推理内存：论文附录报告 peak GPU memory penalty 约 100 MiB，KV cache overhead 为固定 <span class=\"math-inline\" data-tex=\"\\Delta \\approx 4.5\"></span> MiB，随 context length 近似 <span class=\"math-inline\" data-tex=\"O(1)\"></span>。该结论依赖 <span class=\"math-inline\" data-tex=\"K=32\"></span> 固定 block 和历史 AR cache 共享。\n\n## 9. 实验\n\n### 9.1 评测数据集\n\n- GSM8K：小学数学 word problems，检验基础 arithmetic reasoning。\n- MATH-500：从 MATH benchmark 取出的高难数学题，检验复杂多步推理。\n- AIME24 / AIME25：美国数学邀请赛题目，检验竞赛级数学推理。\n- HumanEval：Python 函数生成，使用单元测试评估 functional correctness。\n- MBPP：基础编程题，检验短代码生成能力。\n- Pseudo2code：把 procedural / pseudo-code 描述转成代码，强调结构化与长程序生成。\n- LiveCodeBench-v5：较新的代码生成评测，意在降低训练污染风险。\n- 长上下文吞吐实验：论文图 4 右侧比较不同 context length 到 40K 时的 end-to-end throughput。\n\n### 9.2 评测指标\n\n- Accuracy / pass rate：数学题和代码题的最终正确率，数学通常看答案匹配，代码看测试通过。\n- TPF（Effective Tokens Per Forward Pass）：总生成 token 数除以总 forward pass 数，用于隔离算法级并行效率。\n- Relative speedup：相对于 sequential AR baseline 的吞吐加速倍数。\n- Average Acceptance Length：每次 verification 平均接受的 token 数，衡量 draft 与 target distribution 的对齐程度。\n- Tokens per second / wall-clock throughput：真实部署相关吞吐，论文在 MATH-500 speed 图和 long-context 图中使用。\n- Memory footprint / KV cache overhead：peak GPU memory 和随 context length 增长的 KV cache 额外开销。\n\n### 9.3 主实验结果\n\n效率表中，Orthrus 在 8B 模型上表现最强：\n\n- Qwen3-8B greedy 平均 TPF = 5.39，平均 speedup = <span class=\"math-inline\" data-tex=\"5.36\\times\"></span>。\n- Qwen3-8B temperature <span class=\"math-inline\" data-tex=\"T=1\"></span> 平均 TPF = 4.43，平均 speedup = <span class=\"math-inline\" data-tex=\"5.02\\times\"></span>。\n- 最大 speedup 为 Pseudo2code / Qwen3-8B / greedy：TPF = 7.51，speedup = <span class=\"math-inline\" data-tex=\"7.83\\times\"></span>。\n- MATH-500 / Qwen3-8B / greedy：TPF = 6.35，speedup = <span class=\"math-inline\" data-tex=\"5.95\\times\"></span>；论文图中称 wall-clock 约 <span class=\"math-inline\" data-tex=\"6\\times\"></span>。\n\nSOTA diffusion 对比表中，Orthrus-Qwen3-8B 报告：\n\n- GSM8K 96.0，MATH-500 86.2，AIME-24 28.3，AIME-25 23.3，HumanEval 95.1，MBPP 93.4。\n- 对比 SDAR-Qwen3-8B：GSM8K 91.7，MATH-500 78.6，AIME-24 10.0，AIME-25 10.0，HumanEval 78.7，MBPP 72.0。\n- 对比 Fast-dLLM-v2：GSM8K 83.7，MATH-500 61.5，HumanEval 43.3，MBPP 28.2。\n- 对比 Gemini Diffusion：AIME-25 20.0，HumanEval 89.6，MBPP 76.0。\n\nSpeculative decoding 对比中，论文报告 MATH-500 上 Orthrus average acceptance length = 11.7，高于 DFlash 7.9 和 EAGLE-3 3.5。长上下文吞吐图声称 Orthrus 到 40K context 仍保持接近峰值吞吐，而 DFlash 随 context 增长明显退化。\n\n### 9.4 消融实验\n\n- Block size <span class=\"math-inline\" data-tex=\"K\"></span>：在 MATH-500 / Orthrus-Qwen3-8B 上，增大 <span class=\"math-inline\" data-tex=\"K\"></span> 提高 TPF；<span class=\"math-inline\" data-tex=\"K=32\"></span> 时 TPF = 6.35，较 <span class=\"math-inline\" data-tex=\"K=4\"></span> 有 3.6x throughput multiplier，且作者称 forward-pass latency 基本不随 <span class=\"math-inline\" data-tex=\"K\"></span> 增长。\n- Single-step vs multi-step denoising：multi-step 需要 2 passes，TPF = 3.53；Orthrus single-step 只需 1 个 diffusion projection pass，TPF = 6.35。作者据此选择 single-step。\n- KL vs CE 训练目标：在 MATH-500 上两者 accuracy 都为 86.2%，但 hard CE 的 TPF = 5.86，forward KL 的 TPF = 6.35。作者解释为 hard labels 学到的是数据表面 token，而 KL 更好贴合 AR teacher 的 full predictive distribution，verification rejection 更少。\n- Memory scaling：附录图报告 KV cache overhead 固定约 4.5 MiB，不随 sequence length 线性增长。\n\n![MATH-500 throughput vs accuracy](assets/2605.12825-orthrus/math500_speed.pdf)\n\n![Speculative decoding comparison](assets/2605.12825-orthrus/spec_two_figure.pdf)\n\n![Block size ablation](assets/2605.12825-orthrus/ablation_k.pdf)\n\n![Memory footprint scaling](assets/2605.12825-orthrus/memory_scaling.pdf)\n\n### 9.5 结果分析\n\n作者的分析：Orthrus 的性能来自结构性解耦。AR backbone 冻结，所以最终准确率继承 base Qwen3，而不会像 converted diffusion models 那样出现 conditional drift。Diffusion head 只负责提出候选，不承担最终分布正确性；AR head 的 intra-model consensus 保证输出与 base model 一致。共享 KV cache 让它比外部 speculative drafter 更适合长上下文，因为没有随 context 增长的第二份历史 cache。\n\nagent 的分析：实验最有说服力的部分是“保持 base accuracy + 提高 TPF + 内存不随 context 线性增加”的组合，尤其适合 serving 端追求 latency / throughput 的场景。但论文的质量优势几乎完全绑定到 base model，本质上是一个高接受率 drafter 训练问题；如果 base model 较弱、任务分布偏离训练三域、或采样策略复杂，diffusion head 的 acceptance length 可能下降，实际 speedup 会随之下降。另一个待复核点是与 DFlash/EAGLE-3 的 memory 和 long-context 对比应在同一 serving stack、相同 quantization、相同 batch / context / decoding policy 下独立验证。\n\n## 10. 代码实现观察\n\n### 10.1 仓库基本情况\n\n- 仓库地址：https://github.com/chiennv2000/orthrus；本地核对 commit 为 `0ac515d4c88118704114001cf7ddf20ff7f0898c`（`feat: add mlx backend support`）。\n- 顶层文件很少，主要是 `README.md`、`pyproject.toml`、`LICENSE` 与 `src/{configuration.py,model.py,model_mlx.py}`；没有 `train.py`、`scripts/`、`configs/`、数据处理脚本或 eval runner。\n- License 信号不一致：仓库根目录 `LICENSE` 是 MIT；`pyproject.toml:16` 写 `Apache-2.0`；Hugging Face model card / API 对 `chiennv/Orthrus-Qwen3-8B` 标为 `cc-by-4.0`。代码使用时应优先让作者澄清源码、权重和模型卡三者各自的 license。\n- README 提供 1.7B / 4B / 8B 三个 Hugging Face checkpoint 链接；HF API 抽查 8B checkpoint 显示 `model.safetensors`、`modeling_orthrus.py`、`auto_map: {\"AutoModelForCausalLM\": \"modeling_orthrus.OrthrusLM\"}`，因此 PyTorch quickstart 依赖 `trust_remote_code=True`。\n- README 明确写 vLLM / SGLang native integration 是 “Coming soon”，本仓库当前没有 vLLM 或 SGLang backend。\n\n### 10.2 方法实现核对\n\n- 与论文一致：`src/model.py:80-182` 继承 Qwen3 attention 并加入 diffusion attention path；AR pass 走原 `Qwen3Attention`，diffusion pass 使用 `q_proj_diff/k_proj_diff/v_proj_diff/o_proj_diff` 与 diffusion q/k norm。`src/model.py:145-154` 将历史 AR cache 的 key/value 与当前 diffusion block 的 key/value 拼接，符合 shared KV cache 的设计。\n- 与论文一致：training mask 的核心规则在 `src/model.py:47-77`。AR cache 部分通过 `kv_idx <= causal_limit[b, q_idx]` 限制每个 diffusion query 可看的 causal prefix；diffusion block 内通过 `q_block_id == kv_block_id` 允许同一 block 内互看。训练态 diffusion pass 强制要求 `causal_limit` 和 `ar_seq_len`，并用 FlexAttention block mask（`src/model.py:285-296`）。\n- 与论文一致：PyTorch `generate` 的 `use_diffusion_mode=True` 路径先用 AR prefill 生成第一个 token，再构造 `[anchor, <mask>, ...]` diffusion block（`src/model.py:447-477`），随后用同一模型 AR pass verify proposed block（`src/model.py:481-497`），最后 `past_key_values.crop(start_idx)` 截断未接受 token 的 cache（`src/model.py:531-532`）。\n- 与论文一致：greedy consensus 按最长相同前缀接受，随机采样路径也有接受率 `min(1, p/q)` 与 residual distribution 采样（`src/model.py:498-513`），对应论文中的 stochastic verification 思路。\n- 与论文不一致或需要修正原报告表述：公开源码新增的不只是 diffusion <span class=\"math-inline\" data-tex=\"Q/K/V\"></span>，还包括 `o_proj_diff` 和 diffusion q/k RMSNorm；因此“只训练 Q/K/V”应理解为“只训练 diffusion attention path”，严格说源码层面是 <span class=\"math-inline\" data-tex=\"Q/K/V/O\"></span> plus q/k norm。\n- 与论文不一致或未完全覆盖：`src/model_mlx.py` 的 Apple MLX 后端实现了双 path、共享 cache 和 greedy-style verification，但 temperature > 0 时只是分别采样 diffusion / AR token 后比较相等（`src/model_mlx.py:214-233`），没有 PyTorch 路径中的 rejection sampling / residual distribution，因此不能把 PyTorch 的 stochastic lossless 保证直接外推到 MLX 后端。\n- 论文未提及但代码中存在的工程细节：PyTorch diffusion training attention 使用 `torch.compile(flex_attention, dynamic=False)`，并在 kernel options 中设置 `BACKEND: \"FLASH\"` 和 sparse block size（`src/model.py:31-45`）。推理支持 `attn_implementation=\"sdpa\" | \"eager\" | \"flash_attention_2\" | \"flash_attention_4\"`，README 安装项还提示可装 `flash-attn-4[cu13]`。\n- 论文未提及但代码中存在的限制：当前 PyTorch `generate` 分配 `output_ids` 为 shape `(1, max_length + block_size)`（`src/model.py:422`），自定义 diffusion generation 路径实际按 batch size 1 写；普通 `GenerationMixin.generate` 只在 `use_diffusion_mode=False` 时使用。\n- 未在公开代码中找到：forward KL loss、teacher logits 生成、参数冻结策略、FSDP-2 包装、gradient accumulation、训练数据 packing、Nemotron 三域采样、benchmark/eval 脚本。\n\n### 10.3 真实算力规模\n\n- 从公开代码能确认的推理配置：HF 8B `config.json` 抽查显示 `block_size=32`、`mask_token_id=151669`、`dtype=bfloat16`、`max_position_embeddings=40960`、`num_hidden_layers=36`、`num_attention_heads=32`、`num_key_value_heads=8`，与论文的 <span class=\"math-inline\" data-tex=\"K=32\"></span>、长上下文到 40K、Qwen3-8B 设置一致。\n- 从公开代码能确认的依赖和硬件假设：`pyproject.toml` 要求 `torch>=2.10.0`、`transformers>=5.8.0`、`accelerate>=1.13.0`；README 额外要求 `flash-attn`，并提示支持 `flash-attn-4[cu13]`。这意味着 CUDA / PyTorch / Transformers 版本都偏新，训练侧 FlexAttention + Flash backend 对环境要求较高。\n- 论文中的训练规模（8xH200、micro-batch 1、grad accumulation 16、global batch 128、2 epochs、bf16、FSDP-2、warmup 0.05、grad clip 1.0、约 0.96B tokens）未在仓库配置文件中落地；公开仓库只能作为推理和模型结构证据，不能作为训练算力规模的可执行证据。\n- HF API 抽查 8B checkpoint 的 safetensors 参数量约 9.70B BF16 parameters；这高于 README 表格中的 base “Qwen3-8.0B”，符合额外 diffusion path 带来的参数增加。\n\n### 10.4 可复现性评价\n\n- 推理可复现性：中。README 给出 Hugging Face checkpoint 和 PyTorch quickstart，`use_diffusion_mode=True`、streamer 和 MLX Apple Silicon 示例都在公开代码中有对应实现；但依赖版本很新，且需要 `trust_remote_code=True` 与合适的 attention backend。\n- 训练可复现性：低。仓库没有训练脚本、loss 实现、数据下载/packing 脚本、FSDP 配置、seed、训练日志或 checkpoint 转换说明；普通研究者无法仅凭仓库复现论文中的 forward KL distillation 和 8xH200 训练流程。\n- 实验可复现性：低到中。模型权重公开，理论上可复跑部分下游评测和速度测试；但仓库没有官方 eval harness、prompt protocol、batch/context/quantization 设置、long-context throughput 脚本，也没有 DFlash/EAGLE-3 对照实验脚本。\n- 部署成熟度：当前更像 “HF remote-code inference release + MLX preview”。README 的 vLLM/SGLang 仍是 coming soon，因此生产 serving 需要等待专门 backend 或自行移植 cache crop / verification 逻辑。\n", "mindmap": "# Orthrus：通过双视角扩散实现内存高效的并行 token 生成\n## 研究问题\n- 动机\n- 关键瓶颈\n## 方法设计\n- 核心算法\n- 关键公式\n## 实验验证\n- 数据集\n- baseline\n- ablation\n## 批判视角\n- 前作关系\n- 局限\n## 代码实现\n- 工程约束\n- 可复现性"};</script>
+  <script src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.11.1/build/highlight.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markmap-autoloader@0.18.12"></script>
+  <script>
+    marked.setOptions({ gfm: true, breaks: false });
+    const article = document.querySelector("#article");
+    article.innerHTML = DOMPurify.sanitize(marked.parse(window.REPORT_PAYLOAD.markdown));
+
+    function slugify(text, index) {
+      return "sec-" + index + "-" + text.trim().toLowerCase()
+        .replace(/[^\w\u4e00-\u9fa5]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+    }
+
+    function sectionize() {
+      const original = Array.from(article.childNodes);
+      article.innerHTML = "";
+      let current = null;
+      let index = 0;
+      for (const node of original) {
+        if (node.nodeType === 1 && node.tagName === "H2") {
+          index += 1;
+          const title = node.textContent.trim();
+          const id = slugify(title, index);
+          node.id = id;
+          if (index <= 4) {
+            current = document.createElement("section");
+            current.className = "report-section";
+            current.appendChild(node);
+          } else {
+            current = document.createElement("details");
+            current.className = "report-section";
+            current.open = true;
+            const summary = document.createElement("summary");
+            summary.textContent = title;
+            summary.id = id;
+            const body = document.createElement("div");
+            body.className = "section-body";
+            current.appendChild(summary);
+            current.appendChild(body);
+          }
+          article.appendChild(current);
+          const sideLink = document.createElement("a");
+          sideLink.href = "#" + id;
+          sideLink.textContent = title;
+          sideLink.dataset.target = id;
+          document.querySelector("#side-links").appendChild(sideLink);
+          continue;
+        }
+        if (current) {
+          const body = current.querySelector(".section-body") || current;
+          body.appendChild(node);
+        } else {
+          article.appendChild(node);
+        }
+      }
+    }
+
+    function setupSidebar() {
+      const layout = document.querySelector("#reader-layout");
+      const sidebar = document.querySelector("#paper-side-toc");
+      const button = document.querySelector("#side-toggle");
+      const icon = button.querySelector(".side-toggle-icon");
+      const topbarToggle = document.querySelector("#topbar-toc-toggle");
+      const sideNav = document.querySelector("#side-links");
+      const links = Array.from(document.querySelectorAll("#side-links a"));
+
+      if (window.location.hash === "#side-toc") {
+        history.replaceState(null, "", window.location.pathname + window.location.search);
+        window.scrollTo({ top: 0, behavior: "auto" });
+      }
+
+      function readSavedState() {
+        try {
+          return window.localStorage && window.localStorage.getItem("paper-sidebar-collapsed") === "true";
+        } catch {
+          return false;
+        }
+      }
+
+      function writeSavedState(collapsed) {
+        try {
+          if (window.localStorage) {
+            window.localStorage.setItem("paper-sidebar-collapsed", String(collapsed));
+          }
+        } catch {
+          // Storage can be unavailable in restricted browser contexts.
+        }
+      }
+
+      function setCollapsed(collapsed) {
+        layout.classList.toggle("sidebar-collapsed", collapsed);
+        sidebar.classList.toggle("is-collapsed", collapsed);
+        button.setAttribute("aria-label", collapsed ? "展开目录" : "收起目录");
+        button.setAttribute("title", collapsed ? "展开目录" : "收起目录");
+        if (icon) icon.textContent = collapsed ? "‹" : "›";
+        writeSavedState(collapsed);
+      }
+
+      setCollapsed(readSavedState());
+      button.addEventListener("click", () => setCollapsed(!sidebar.classList.contains("is-collapsed")));
+      if (topbarToggle) {
+        topbarToggle.addEventListener("click", () => {
+          if (window.location.hash === "#side-toc") {
+            history.replaceState(null, "", window.location.pathname + window.location.search);
+          }
+          setCollapsed(!sidebar.classList.contains("is-collapsed"));
+        });
+      }
+
+      const targets = links
+        .map(link => document.getElementById(link.dataset.target))
+        .filter(Boolean);
+
+      function setActive(id) {
+        links.forEach(link => link.classList.toggle("is-active", link.dataset.target === id));
+        const activeLink = links.find(link => link.dataset.target === id);
+        if (activeLink && sideNav && !sidebar.classList.contains("is-collapsed")) {
+          const linkTop = activeLink.offsetTop;
+          const linkBottom = linkTop + activeLink.offsetHeight;
+          const navTop = sideNav.scrollTop;
+          const navBottom = navTop + sideNav.clientHeight;
+          if (linkTop < navTop) {
+            sideNav.scrollTop = Math.max(linkTop - 8, 0);
+          } else if (linkBottom > navBottom) {
+            sideNav.scrollTop = linkBottom - sideNav.clientHeight + 8;
+          }
+        }
+      }
+
+      function updateActiveFromScroll() {
+        if (!targets.length) return;
+        const offset = 150;
+        let active = targets[0];
+        for (const target of targets) {
+          if (target.getBoundingClientRect().top <= offset) {
+            active = target;
+          } else {
+            break;
+          }
+        }
+        setActive(active.id);
+      }
+
+      let ticking = false;
+      function requestActiveUpdate() {
+        if (ticking) return;
+        ticking = true;
+        window.requestAnimationFrame(() => {
+          ticking = false;
+          updateActiveFromScroll();
+        });
+      }
+
+      links.forEach(link => {
+        link.addEventListener("click", event => {
+          event.preventDefault();
+          const target = document.getElementById(link.dataset.target);
+          if (!target) return;
+          const parentDetails = target.closest("details.report-section");
+          if (parentDetails) parentDetails.open = true;
+          setActive(target.id);
+          history.pushState(null, "", "#" + target.id);
+          target.scrollIntoView({ block: "start", behavior: "auto" });
+          if (window.matchMedia("(max-width: 960px)").matches) {
+            setCollapsed(true);
+          }
+          window.setTimeout(updateActiveFromScroll, 80);
+        });
+      });
+
+      window.addEventListener("scroll", requestActiveUpdate, { passive: true });
+      window.addEventListener("resize", requestActiveUpdate);
+      window.addEventListener("hashchange", () => {
+        const id = decodeURIComponent(window.location.hash.slice(1));
+        if (id && document.getElementById(id)) setActive(id);
+        window.setTimeout(updateActiveFromScroll, 80);
+      });
+      if (window.location.hash) {
+        const id = decodeURIComponent(window.location.hash.slice(1));
+        if (id && document.getElementById(id)) setActive(id);
+      } else if (links[0]) {
+        setActive(links[0].dataset.target);
+      }
+      updateActiveFromScroll();
+    }
+
+    function setupMediaViewer() {
+      const viewer = document.querySelector("#media-viewer");
+      const content = document.querySelector("#media-content");
+      const title = document.querySelector("#media-title");
+      const closeButton = document.querySelector("#media-close");
+      if (!viewer || !content || !title || !closeButton) return null;
+
+      function close() {
+        viewer.classList.remove("is-open");
+        viewer.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("media-viewer-open");
+        content.innerHTML = "";
+      }
+
+      function open(src, type, label) {
+        content.innerHTML = "";
+        title.textContent = label || (type === "pdf" ? "PDF 图表" : "图表预览");
+        if (type === "pdf") {
+          const frame = document.createElement("iframe");
+          frame.src = src;
+          frame.title = title.textContent;
+          content.appendChild(frame);
+        } else {
+          const image = document.createElement("img");
+          image.src = src;
+          image.alt = label || "图表预览";
+          content.appendChild(image);
+        }
+        viewer.classList.add("is-open");
+        viewer.setAttribute("aria-hidden", "false");
+        document.body.classList.add("media-viewer-open");
+        closeButton.focus({ preventScroll: true });
+      }
+
+      closeButton.addEventListener("click", close);
+      viewer.addEventListener("click", event => {
+        if (event.target === viewer) close();
+      });
+      window.addEventListener("keydown", event => {
+        if (event.key === "Escape" && viewer.classList.contains("is-open")) close();
+      });
+
+      return { open, close };
+    }
+
+    function enhanceLinks() {
+      const mediaViewer = setupMediaViewer();
+      article.querySelectorAll("a[href]").forEach(a => {
+        const href = a.getAttribute("href") || "";
+        if (/^https?:\/\//.test(href)) a.target = "_blank";
+      });
+      article.querySelectorAll("img").forEach(img => {
+        const src = img.getAttribute("src") || "";
+        img.decoding = "async";
+        img.onerror = () => {
+          if (src.startsWith("../sources/")) {
+            img.src = src.replace("../sources/", "sources/");
+          }
+        };
+        if (src.endsWith(".pdf")) {
+          const object = document.createElement("object");
+          object.className = "figure-pdf";
+          object.type = "application/pdf";
+          object.data = src;
+          const fallback = document.createElement("button");
+          fallback.className = "figure-open";
+          fallback.type = "button";
+          fallback.textContent = "放大查看 PDF";
+          fallback.addEventListener("click", () => {
+            if (mediaViewer) mediaViewer.open(src, "pdf", img.getAttribute("alt") || "PDF 图表");
+          });
+          img.replaceWith(object);
+          object.insertAdjacentElement("afterend", fallback);
+        } else {
+          img.classList.add("media-thumb");
+          img.setAttribute("tabindex", "0");
+          img.setAttribute("role", "button");
+          img.setAttribute("title", "点击放大查看");
+          const openImage = () => {
+            if (mediaViewer) mediaViewer.open(img.currentSrc || img.src, "image", img.getAttribute("alt") || "图表预览");
+          };
+          img.addEventListener("click", openImage);
+          img.addEventListener("keydown", event => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              openImage();
+            }
+          });
+        }
+      });
+    }
+
+    function linkifyArxivIds(root) {
+      const re = /(?<![\w/.-])(?:arXiv:)?(\d{4}\.\d{4,5})(v\d+)?(?![\w/.-])/g;
+      const skipTags = new Set(["A", "CODE", "PRE", "SCRIPT", "STYLE", "TEXTAREA"]);
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+          const parent = node.parentElement;
+          if (!parent || skipTags.has(parent.tagName)) return NodeFilter.FILTER_REJECT;
+          re.lastIndex = 0;
+          return re.test(node.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+        }
+      });
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach(node => {
+        re.lastIndex = 0;
+        const frag = document.createDocumentFragment();
+        let last = 0;
+        for (const match of node.nodeValue.matchAll(re)) {
+          frag.appendChild(document.createTextNode(node.nodeValue.slice(last, match.index)));
+          const link = document.createElement("a");
+          link.href = "https://arxiv.org/abs/" + match[1];
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+          link.textContent = match[0];
+          frag.appendChild(link);
+          last = match.index + match[0].length;
+        }
+        frag.appendChild(document.createTextNode(node.nodeValue.slice(last)));
+        node.replaceWith(frag);
+      });
+    }
+
+    function renderDisplayMath() {
+      article.querySelectorAll(".math-display").forEach(el => {
+        const source = el.textContent.trim();
+        try {
+          katex.render(source, el, { displayMode: true, throwOnError: false });
+        } catch (error) {
+          el.classList.add("math-error");
+          el.textContent = source;
+        }
+      });
+    }
+
+    function renderInlineMath() {
+      article.querySelectorAll(".math-inline").forEach(el => {
+        const source = el.getAttribute("data-tex") || el.textContent.trim();
+        try {
+          katex.render(source, el, { displayMode: false, throwOnError: false });
+        } catch (error) {
+          el.classList.add("math-error");
+          el.textContent = source;
+        }
+      });
+    }
+
+    sectionize();
+    setupSidebar();
+    enhanceLinks();
+    linkifyArxivIds(article);
+    renderDisplayMath();
+    renderInlineMath();
+    renderMathInElement(article, {
+      delimiters: [
+        { left: "$", right: "$", display: false }
+      ],
+      ignoredClasses: ["math-display", "math-inline"],
+      throwOnError: false
+    });
+    if (window.hljs) {
+      hljs.highlightAll();
+    }
+  </script>
+</body>
+</html>

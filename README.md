@@ -1,0 +1,132 @@
+# AutoPaperReader
+
+AutoPaperReader 是一个自动化「找论文 -> 读论文 -> 写报告」的 agent 项目。
+
+它的目标是把一篇论文从检索、下载源码、分析论文、分析配套代码，到最终输出结构化中文阅读报告的流程串起来，并把产物（包括 Markdown 报告和 HTML 展示网页）统一组织到固定目录中。
+
+项目还会把这些逐篇报告汇总成一个轻量动态 wiki：`docs/index.html` 提供全文搜索、分类/代码/重要性/复习筛选和论文卡片，`docs/tags.html` 提供分类总览，`docs/papers.json` 提供机器可读索引，`docs/search_index.json` 提供正文检索索引。
+
+**注：建议开启 Agent Teams 特性 `export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`**
+
+## 项目目标
+
+- 根据论文标题、方法名或 arXiv 链接定位目标论文
+- 下载并解压 arXiv 源码
+- 在发现公开代码时自动拉取代码仓库
+- 派发子 agent 完成论文阅读和代码分析
+- 在 `docs/` 中生成结构化中文报告
+- 自动刷新 `docs/index.html` 作为个人论文 wiki 入口
+
+## 目录结构
+
+```text
+paper_reader/
+├── README.md
+├── LICENSE
+├── CLAUDE.md
+├── .claude/
+│   └── agents/
+│       ├── paper-analyst.md
+│       └── code-analyst.md
+├── docs/
+│   ├── index.html
+│   ├── tags.html
+│   ├── papers.json
+│   ├── search_index.json
+│   └── .gitkeep
+├── scripts/
+│   ├── build_wiki.py
+│   └── render_report_html.py
+└── sources/
+    └── .gitkeep
+```
+
+说明：
+
+- `CLAUDE.md` 是主线 agent 的工作流说明
+- `.claude/agents/` 存放子 agent 的执行规范
+- `sources/` 用于存放单篇论文的源码与代码仓库
+- `docs/` 用于存放论文阅读报告
+- `scripts/build_wiki.py` 用于扫描报告并生成 wiki 汇总页
+- `scripts/render_report_html.py` 是稳定 HTML 渲染兜底脚本，用于修复公式裸露、图片破图等展示问题
+
+## 工作流概览
+
+1. 输入论文题目、方法名或 arXiv 链接
+2. 主线 agent 定位论文并下载 arXiv 源码
+3. 若存在公开代码，则一并拉取代码仓库
+4. 派发 `paper-analyst` 生成论文阅读报告
+5. 若存在代码，再派发 `code-analyst` 补充实现观察
+6. 在 `docs/<slug>.md` 生成最终中文报告
+7. 在 `docs/<slug>.html` 生成单篇 HTML 报告
+8. 运行 `python3 scripts/build_wiki.py docs` 刷新 wiki 汇总
+
+## 产物约定
+
+每篇论文使用统一 slug 命名：
+
+```text
+<arxiv_id>-<short-name>
+```
+
+例如：
+
+```text
+2310.06825-mistral-7b
+1706.03762-attention
+```
+
+对应产物位置：
+
+- `sources/<slug>/arxiv/`：论文源码
+- `sources/<slug>/code/`：配套代码仓库
+- `docs/<slug>.md`：阅读报告
+- `docs/<slug>.html`：单篇阅读报告 HTML
+- `docs/index.html`：wiki 首页
+- `docs/tags.html`：分类总览
+- `docs/papers.json`：论文索引数据
+- `docs/search_index.json`：全文搜索索引
+
+## Wiki 分类
+
+每篇 `docs/<slug>.md` 建议以 YAML frontmatter 开头，便于 wiki 分类和筛选：
+
+```yaml
+---
+slug: 1706.03762-attention
+title: Attention Is All You Need
+title_zh: 注意力就是你所需要的一切
+title_en: Attention Is All You Need
+arxiv_id: "1706.03762"
+year: 2017
+authors:
+  - Vaswani et al.
+topics:
+  - Transformer
+methods:
+  - self-attention
+status: read
+importance: 5
+has_code: true
+---
+```
+
+如果报告缺少 frontmatter，`scripts/build_wiki.py` 会从标题、正文、arxiv id 和关键词中做兜底推断。
+
+手动刷新 wiki：
+
+```bash
+python3 scripts/build_wiki.py docs
+```
+
+手动重建某篇报告 HTML：
+
+```bash
+python3 scripts/render_report_html.py docs/<slug>.md docs/<slug>.html --slug <slug>
+```
+
+这个渲染器会把多行 `$$...$$` 公式转成显式 KaTeX block，并把本地论文图复制到 `docs/assets/<slug>/`，避免公式裸露或图片在 wiki 中破图。
+
+## License
+
+本项目使用 [MIT License](./LICENSE)。

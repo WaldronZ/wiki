@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>分类总览</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f3ee;
+      --panel: #fffdf8;
+      --ink: #222426;
+      --muted: #6b6f76;
+      --line: #ded8cd;
+      --accent: #2f6f73;
+      --accent-2: #8a5d3b;
+      --chip: #edf3f1;
+      --shadow: 0 14px 36px rgba(48, 44, 36, .08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "PingFang SC", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+      line-height: 1.65;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+    header { padding: 44px 0 22px; }
+    .eyebrow { color: var(--accent-2); font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    h1 { margin: 8px 0 10px; font-size: clamp(30px, 5vw, 56px); line-height: 1.08; letter-spacing: 0; }
+    .lead { max-width: 760px; margin: 0; color: var(--muted); font-size: 17px; }
+    .stats { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+    .stat, .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 999px;
+      padding: 7px 12px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      padding: 12px 0;
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+    }
+    .controls { display: grid; grid-template-columns: minmax(240px, 1fr) repeat(4, minmax(120px, auto)); gap: 10px; }
+    input, select {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--ink);
+      padding: 0 12px;
+      font: inherit;
+    }
+    main { padding: 28px 0 56px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+    }
+    .card h2 { margin: 0 0 8px; font-size: 20px; line-height: 1.25; letter-spacing: 0; }
+    .meta { color: var(--muted); font-size: 13px; }
+    .essence {
+      margin: 12px 0 0;
+      padding: 10px 12px;
+      border-left: 3px solid var(--accent);
+      border-radius: 7px;
+      background: var(--chip);
+      color: #2f5054;
+      font-size: 14px;
+    }
+    .excerpt { color: #3f4448; margin: 12px 0; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 12px; }
+    .chip { background: var(--chip); padding: 4px 9px; font-size: 12px; }
+    .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 0 11px;
+      font-size: 14px;
+      font-weight: 650;
+    }
+    .section-title { margin: 28px 0 12px; font-size: 22px; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 10px; }
+    .tag-pill {
+      display: inline-flex;
+      justify-content: space-between;
+      gap: 20px;
+      min-width: 150px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 10px 12px;
+    }
+    .empty {
+      border: 1px dashed var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+      padding: 28px;
+      color: var(--muted);
+    }
+    .card-flags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .flag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      border-radius: 999px;
+      background: #f7f3eb;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      padding: 0 8px;
+      font-size: 12px;
+    }
+    @media (max-width: 760px) {
+      .controls { grid-template-columns: 1fr; }
+      header { padding-top: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+
+<header class="shell">
+  <div class="eyebrow">AutoPaperReader Wiki</div>
+  <h1>分类总览</h1>
+  <p class="lead">按 topic 与 method 汇总论文。分类来自报告 frontmatter，缺失时由构建脚本根据关键词做轻量推断。</p>
+  <div class="stats">
+    <a class="stat" href="index.html">返回首页</a>
+    <span class="stat">分类 46</span>
+    <span class="stat">论文 5</span>
+  </div>
+</header>
+<main class="shell"><section><h2 class="section-title">Diffusion Language Models <span class="meta">2</span></h2><ul><li><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a> <span class="meta">2026</span></li>
+<li><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> <span class="meta">2026</span></li></ul></section>
+<section><h2 class="section-title">FlashAttention <span class="meta">2</span></h2><ul><li><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a> <span class="meta">2025</span></li>
+<li><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a> <span class="meta">2023</span></li></ul></section>
+<section><h2 class="section-title">KV cache <span class="meta">2</span></h2><ul><li><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a> <span class="meta">2026</span></li>
+<li><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a> <span class="meta">2025</span></li></ul></section>
+<section><h2 class="section-title">Speculative Decoding <span class="meta">2</span></h2><ul><li><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a> <span class="meta">2026</span></li>
+<li><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> <span class="meta">2026</span></li></ul></section>
+<section><h2 class="section-title">Attention kernel <span class="meta">1</span></h2><ul><li><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a> <span class="meta">2025</span></li></ul></section>
+<section><h2 class="section-title">block diffusion <span class="meta">1</span></h2><ul><li><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a> <span class="meta">2026</span></li></ul></section>
+<section><h2 class="section-title">block-sparse attention <span class="meta">1</span></h2><ul><li><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a> <span class="meta">2025</span></li></ul></section>
+<section><h2 class="section-title">composable KV-cache format <span class="meta">1</span></h2><ul><li><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a> <span class="meta">2025</span></li></ul></section>
+<section><h2 class="section-title">CUDA / GPU parallelism <span class="meta">1</span></h2><ul><li><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a> <span class="meta">2023</span></li></ul></section>
+<section><h2 class="section-title">CUDA Graph <span class="meta">1</span></h2><ul><li><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a> <span class="meta">2025</span></li></ul></section>
+<section><h2 class="section-title">Diffusion language models <span class="meta">1</span></h2><ul><li><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a> <span class="meta">2026</span></li></ul></section>
+<section><h2 class="section-title">dual-view attention <span class="meta">1</span></h2><ul><li><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a> <span class="meta">2026</span></li></ul></section>
+<section><h2 class="section-title">Efficient Attention <span class="meta">1</span></h2><ul><li><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a> <span class="meta">2023</span></li></ul></section>
+<section><h2 class="section-title">forward KL distillation <span class="meta">1</span></h2><ul><li><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a> <span class="meta">2026</span></li></ul></section>
+<section><h2 class="section-title">gated LoRA <span class="meta">1</span></h2><ul><li><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> <span class="meta">2026</span></li></ul></section>
+<section><h2 class="section-title">GPU Kernel Optimization <span class="meta">1</span></h2><ul><li><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a> <span class="meta">2023</span></li></ul></section>
+<section><h2 class="section-title">GPU systems <span class="meta">1</span></h2><ul><li><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a> <span class="meta">2025</span></li></ul></section>
+<section><h2 class="section-title">Inference optimization <span class="meta">1</span></h2><ul><li><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a> <span class="meta">2025</span></li></ul></section>
+<section><h2 class="section-title">intra-model consensus <span class="meta">1</span></h2><ul><li><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a> <span class="meta">2026</span></li></ul></section>
+<section><h2 class="section-title">introspective consistency <span class="meta">1</span></h2><ul><li><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> <span class="meta">2026</span></li></ul></section>
+<section><h2 class="section-title">introspective strided decoding <span class="meta">1</span></h2><ul><li><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> <span class="meta">2026</span></li></ul></section>
+<section><h2 class="section-title">JIT compilation <span class="meta">1</span></h2><ul><li><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a> <span class="meta">2025</span></li></ul></section>
+<section><h2 class="section-title">KV injection <span class="meta">1</span></h2><ul><li><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a> <span class="meta">2026</span></li></ul></section>
+<section><h2 class="section-title">LLM <span class="meta">1</span></h2><ul><li><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> <span class="meta">2026</span></li></ul></section>
+<section><h2 class="section-title">LLM Inference <span class="meta">1</span></h2><ul><li><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a> <span class="meta">2026</span></li></ul></section>
+<section><h2 class="section-title">LLM inference acceleration <span class="meta">1</span></h2><ul><li><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a> <span class="meta">2026</span></li></ul></section>
+<section><h2 class="section-title">LLM Serving <span class="meta">1</span></h2><ul><li><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> <span class="meta">2026</span></li></ul></section>
+<section><h2 class="section-title">LLM serving <span class="meta">1</span></h2><ul><li><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a> <span class="meta">2025</span></li></ul></section>
+<section><h2 class="section-title">load-balanced scheduling <span class="meta">1</span></h2><ul><li><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a> <span class="meta">2025</span></li></ul></section>
+<section><h2 class="section-title">logit-shifted causal training <span class="meta">1</span></h2><ul><li><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> <span class="meta">2026</span></li></ul></section>
+<section><h2 class="section-title">Long Context <span class="meta">1</span></h2><ul><li><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a> <span class="meta">2023</span></li></ul></section>
+<section><h2 class="section-title">masked diffusion <span class="meta">1</span></h2><ul><li><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a> <span class="meta">2026</span></li></ul></section>
+<section><h2 class="section-title">online softmax <span class="meta">1</span></h2><ul><li><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a> <span class="meta">2023</span></li></ul></section>
+<section><h2 class="section-title">p/q acceptance <span class="meta">1</span></h2><ul><li><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> <span class="meta">2026</span></li></ul></section>
+<section><h2 class="section-title">Parallel Decoding <span class="meta">1</span></h2><ul><li><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> <span class="meta">2026</span></li></ul></section>
+<section><h2 class="section-title">Parallel decoding <span class="meta">1</span></h2><ul><li><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a> <span class="meta">2026</span></li></ul></section>
+<section><h2 class="section-title">parallel drafting <span class="meta">1</span></h2><ul><li><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a> <span class="meta">2026</span></li></ul></section>
+<section><h2 class="section-title">Serving Systems <span class="meta">1</span></h2><ul><li><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a> <span class="meta">2026</span></li></ul></section>
+<section><h2 class="section-title">SGLang serving <span class="meta">1</span></h2><ul><li><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a> <span class="meta">2026</span></li></ul></section>
+<section><h2 class="section-title">shared KV cache <span class="meta">1</span></h2><ul><li><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a> <span class="meta">2026</span></li></ul></section>
+<section><h2 class="section-title">speculative decoding <span class="meta">1</span></h2><ul><li><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a> <span class="meta">2026</span></li></ul></section>
+<section><h2 class="section-title">Speculative decoding <span class="meta">1</span></h2><ul><li><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a> <span class="meta">2026</span></li></ul></section>
+<section><h2 class="section-title">target hidden features <span class="meta">1</span></h2><ul><li><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a> <span class="meta">2026</span></li></ul></section>
+<section><h2 class="section-title">tiling <span class="meta">1</span></h2><ul><li><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a> <span class="meta">2023</span></li></ul></section>
+<section><h2 class="section-title">Transformer <span class="meta">1</span></h2><ul><li><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a> <span class="meta">2023</span></li></ul></section>
+<section><h2 class="section-title">work partitioning <span class="meta">1</span></h2><ul><li><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a> <span class="meta">2023</span></li></ul></section></main>
+
+</body>
+</html>

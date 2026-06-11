@@ -1,0 +1,967 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DFlash：用于快速 speculative decoding 的块扩散方法</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.11.1/styles/github.min.css">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f7f8;
+      --paper: #ffffff;
+      --ink: #22262a;
+      --muted: #667078;
+      --line: #d8e0e5;
+      --accent: #2c6e73;
+      --accent-2: #6f5b8a;
+      --soft: #e7f0ed;
+      --soft-2: #eef0f5;
+      --shadow: 0 18px 45px rgba(31, 44, 52, .08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "PingFang SC", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+      line-height: 1.72;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .shell { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
+    .hero { padding: 16px 0 20px; }
+    .crumb { display: none; }
+    h1 { margin: 0 0 8px; font-size: clamp(30px, 5vw, 52px); line-height: 1.1; letter-spacing: 0; }
+    .subtitle { max-width: 820px; color: var(--muted); font-size: 18px; margin: 0; }
+    .meta-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 0; }
+    .pill, .hero-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--paper);
+      padding: 0 12px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .hero-link { color: var(--accent); font-weight: 700; }
+    .hero-link svg {
+      width: 15px;
+      height: 15px;
+      margin-right: 6px;
+      fill: currentColor;
+      flex: 0 0 auto;
+    }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .chips span {
+      border: 1px solid #cfdedc;
+      background: var(--soft);
+      color: #33595d;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 13px;
+    }
+    .panel {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    .mindmap-panel { padding: 22px; margin: 14px auto 18px; }
+    .panel-title { margin: 0 0 10px; font-size: 18px; }
+    .mind-overview {
+      display: grid;
+      grid-template-columns: minmax(180px, .42fr) 1fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+    .mind-root {
+      min-height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      border-radius: 8px;
+      border: 1px solid #cbdeda;
+      background: linear-gradient(180deg, #edf7f5, #ffffff);
+      color: #234e52;
+      font-size: clamp(20px, 2.4vw, 28px);
+      font-weight: 800;
+      line-height: 1.15;
+      padding: 20px;
+    }
+    .mind-branches {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 12px;
+    }
+    .mind-branch {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 12px;
+      min-height: 132px;
+    }
+    .mind-branch h3 {
+      margin: 0 0 6px;
+      font-size: 16px;
+      color: var(--accent);
+    }
+    .mind-branch ul {
+      margin: 0;
+      padding-left: 1.1em;
+      color: #4a5358;
+      font-size: 13.5px;
+      line-height: 1.5;
+    }
+    .mindmap-toggle {
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      overflow: hidden;
+    }
+    .mindmap-toggle summary {
+      cursor: pointer;
+      padding: 10px 14px;
+      color: var(--accent);
+      font-weight: 700;
+      list-style: none;
+    }
+    .mindmap-toggle summary::-webkit-details-marker { display: none; }
+    .markmap {
+      height: 520px;
+      border-top: 1px solid var(--line);
+      background: #fffdf8;
+      overflow: hidden;
+      pointer-events: none;
+      user-select: none;
+    }
+    .markmap svg {
+      width: 100%;
+      height: 520px;
+      display: block;
+      pointer-events: none;
+    }
+    .reader-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(210px, 248px);
+      gap: 14px;
+      align-items: start;
+      padding-bottom: 56px;
+      transition: grid-template-columns .18s ease;
+    }
+    .reader-layout.sidebar-collapsed {
+      grid-template-columns: minmax(0, 1fr) 44px;
+    }
+    .side-toc {
+      grid-column: 2;
+      grid-row: 1;
+      position: sticky;
+      top: 64px;
+      max-height: calc(100vh - 84px);
+      overflow: hidden;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    .side-toggle {
+      width: 100%;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      background: #ffffff;
+      color: var(--accent);
+      padding: 0 12px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 750;
+      cursor: pointer;
+    }
+    .side-toggle-icon {
+      width: 20px;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--muted);
+      background: #fff;
+      flex: 0 0 auto;
+    }
+    .side-toc nav {
+      max-height: calc(100vh - 130px);
+      overflow-y: auto;
+      padding: 8px;
+    }
+    .side-toc a {
+      display: block;
+      border-radius: 7px;
+      border: 1px solid transparent;
+      padding: 8px 10px;
+      color: #405059;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+    .side-toc a:hover,
+    .side-toc a.is-active {
+      background: var(--soft);
+      text-decoration: none;
+      border-color: #cbdeda;
+      color: #234e52;
+    }
+    .side-toc.is-collapsed .side-toggle {
+      width: 44px;
+      height: 44px;
+      min-height: 44px;
+      justify-content: center;
+      border-bottom: 0;
+      padding: 0;
+    }
+    .side-toc.is-collapsed {
+      width: 44px;
+      height: 44px;
+      justify-self: end;
+    }
+    .side-toc.is-collapsed nav,
+    .side-toc.is-collapsed .side-toggle-text {
+      display: none;
+    }
+    .article { grid-column: 1; grid-row: 1; min-width: 0; }
+    .report-section {
+      margin: 16px 0;
+      padding: 22px;
+      border-left: 5px solid var(--accent);
+      background: var(--paper);
+      border-radius: 8px;
+      border-top: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+    .report-section:nth-of-type(3) {
+      border-left-color: #6f5b8a;
+      background: linear-gradient(90deg, #f4f0fa 0, #fff 140px);
+    }
+    .report-section:nth-of-type(7) {
+      border-left-color: #9a623d;
+      background: linear-gradient(90deg, #f7f1ed 0, #fff 160px);
+    }
+    .report-section:nth-of-type(10) {
+      border-left-color: #3f6c88;
+      background: linear-gradient(90deg, #eef4f8 0, #fff 160px);
+    }
+    details.report-section { padding: 0; overflow: hidden; }
+    details.report-section summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 18px 22px;
+      font-size: 22px;
+      font-weight: 760;
+      line-height: 1.25;
+    }
+    details.report-section summary::-webkit-details-marker { display: none; }
+    details.report-section summary::after {
+      content: "收起";
+      float: right;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 500;
+      margin-top: 5px;
+    }
+    .report-section > h2,
+    details.report-section > summary {
+      scroll-margin-top: 96px;
+    }
+    details.report-section:not([open]) summary::after { content: "展开"; }
+    .section-body { padding: 0 22px 22px; }
+    .article > h1 {
+      margin: 18px 0;
+      padding: 18px 22px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      font-size: clamp(24px, 3vw, 34px);
+    }
+    h2, h3 { letter-spacing: 0; line-height: 1.32; }
+    h2 { margin: 0 0 12px; font-size: 24px; }
+    h3 { margin: 22px 0 8px; font-size: 19px; color: #293d42; }
+    p { margin: 10px 0; }
+    ul, ol { padding-left: 1.4em; }
+    li { margin: 5px 0; }
+    blockquote {
+      margin: 14px 0;
+      padding: 10px 14px;
+      border-left: 4px solid var(--accent-2);
+      background: var(--soft-2);
+      color: #51483f;
+      border-radius: 6px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      overflow: hidden;
+      border-radius: 8px;
+      display: block;
+      overflow-x: auto;
+    }
+    th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; }
+    th { background: #edf3f1; }
+    pre {
+      padding: 14px;
+      overflow-x: auto;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #f7f7f5;
+    }
+    code {
+      font-family: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .92em;
+    }
+    :not(pre) > code {
+      background: #eef1ef;
+      border-radius: 5px;
+      padding: 1px 5px;
+    }
+    .math-inline {
+      display: inline-block;
+      max-width: 100%;
+      vertical-align: baseline;
+    }
+    img, object.figure-pdf {
+      max-width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      display: block;
+      margin: 14px auto;
+    }
+    img.media-thumb { cursor: zoom-in; }
+    object.figure-pdf { width: 100%; min-height: 420px; }
+    .figure-fallback { display: block; margin: 8px 0 16px; font-size: 13px; color: var(--muted); }
+    .figure-open {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--paper);
+      color: var(--accent);
+      padding: 0 12px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .figure-open:hover { background: var(--soft); }
+    .media-viewer {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: none;
+      background: rgba(28, 31, 32, .72);
+      padding: 22px;
+    }
+    .media-viewer.is-open {
+      display: grid;
+      place-items: center;
+    }
+    .media-dialog {
+      position: relative;
+      width: min(1180px, 96vw);
+      height: min(860px, 92vh);
+      border-radius: 8px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, .28);
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      overflow: hidden;
+    }
+    .media-bar {
+      min-height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid var(--line);
+      padding: 0 10px 0 14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .media-title {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .media-close {
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .media-close:hover { background: var(--soft); }
+    .media-content {
+      min-height: 0;
+      overflow: auto;
+      padding: 14px;
+      display: grid;
+      place-items: center;
+      background: #f3f6f8;
+    }
+    .media-content img {
+      max-width: 100%;
+      max-height: calc(92vh - 88px);
+      object-fit: contain;
+      margin: 0;
+      cursor: default;
+    }
+    .media-content iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #fff;
+      border-radius: 6px;
+    }
+    body.media-viewer-open { overflow: hidden; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 75%, transparent);
+    }
+    .topbar-inner { min-height: 42px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .topbar a,
+    .topbar button {
+      border: 0;
+      background: transparent;
+      color: var(--accent);
+      padding: 0;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .topbar button:hover { text-decoration: underline; }
+    @media (max-width: 960px) {
+      .reader-layout,
+      .reader-layout.sidebar-collapsed {
+        display: block;
+      }
+      .side-toc {
+        position: sticky;
+        top: 42px;
+        z-index: 1;
+        margin-bottom: 16px;
+        max-height: none;
+        width: auto;
+        height: auto;
+        justify-self: stretch;
+      }
+      .side-toc nav {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        max-height: none;
+        padding: 8px;
+      }
+      .side-toc a {
+        white-space: nowrap;
+        border: 1px solid var(--line);
+        background: #fff;
+      }
+      .side-toc.is-collapsed .side-toggle {
+        width: 100%;
+        height: auto;
+        min-height: 44px;
+        justify-content: space-between;
+        border-bottom: 0;
+        padding: 0 12px;
+      }
+      .side-toc.is-collapsed {
+        width: auto;
+        height: auto;
+      }
+      .side-toc.is-collapsed .side-toggle-text {
+        display: inline;
+      }
+    }
+    @media (max-width: 760px) {
+      .hero { padding-top: 12px; }
+      .report-section { padding: 16px; }
+      details.report-section summary { padding: 15px 16px; font-size: 19px; }
+      .section-body { padding: 0 16px 16px; }
+      .mind-overview { grid-template-columns: 1fr; }
+      .mind-root { min-height: 120px; }
+      .markmap, .markmap svg { height: 360px; }
+    }
+  </style>
+</head>
+<body>
+  <script>
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    if (window.location.hash === "#side-toc") {
+      history.replaceState(null, "", window.location.pathname + window.location.search);
+      window.scrollTo(0, 0);
+    }
+  </script>
+  <div class="topbar">
+    <div class="shell topbar-inner">
+      <a href="index.html">论文 wiki</a>
+      <button id="topbar-toc-toggle" type="button">目录</button>
+    </div>
+  </div>
+  <header class="shell hero">
+    <div class="crumb">Paper Reading Report</div>
+    <h1>DFlash：用于快速 speculative decoding 的块扩散方法</h1>
+    <p class="subtitle">DFlash: Block Diffusion for Flash Speculative Decoding</p>
+    <div class="meta-row">
+      <span class="pill">Jian Chen, Yesheng Liang, Zhijian Liu</span>
+      <span class="pill">2026</span>
+      <span class="pill">2602.06036v1</span>
+      
+      <a class="hero-link" href="https://arxiv.org/abs/2602.06036"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3Z"></path><path d="M5 5h6v2H7v10h10v-4h2v6H5V5Z"></path></svg>arxiv</a>
+        <a class="hero-link" href="https://github.com/z-lab/dflash&gt;。本地核对的"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8.7 16.6-5-4.6 5-4.6 1.35 1.48L6.66 12l3.39 3.12L8.7 16.6Zm6.6 0-1.35-1.48L17.34 12l-3.39-3.12L15.3 7.4l5 4.6-5 4.6Z"></path></svg>code</a>
+    </div>
+    <div class="chips"><span>LLM Inference</span><span>Speculative Decoding</span><span>Diffusion Language Models</span><span>Serving Systems</span><span>block diffusion</span><span>speculative decoding</span><span>KV injection</span><span>target hidden features</span><span>parallel drafting</span></div>
+  </header>
+  <section class="shell panel mindmap-panel">
+    <h2 class="panel-title">内容脑图</h2>
+    <div class="mind-overview">
+  <div class="mind-root">DFlash：用于快速 speculative decoding 的块扩散方法</div>
+  <div class="mind-branches"><article class="mind-branch">
+  <h3>研究问题</h3>
+  <ul><li>动机</li><li>关键瓶颈</li></ul>
+</article><article class="mind-branch">
+  <h3>方法设计</h3>
+  <ul><li>核心算法</li><li>关键公式</li></ul>
+</article><article class="mind-branch">
+  <h3>实验验证</h3>
+  <ul><li>数据集</li><li>baseline</li><li>ablation</li></ul>
+</article><article class="mind-branch">
+  <h3>批判视角</h3>
+  <ul><li>前作关系</li><li>局限</li></ul>
+</article><article class="mind-branch">
+  <h3>代码实现</h3>
+  <ul><li>工程约束</li><li>可复现性</li></ul>
+</article></div>
+</div>
+    <details class="mindmap-toggle">
+      <summary>交互脑图</summary>
+      <div class="markmap"><script type="text/template"># DFlash：用于快速 speculative decoding 的块扩散方法
+## 研究问题
+- 动机
+- 关键瓶颈
+## 方法设计
+- 核心算法
+- 关键公式
+## 实验验证
+- 数据集
+- baseline
+- ablation
+## 批判视角
+- 前作关系
+- 局限
+## 代码实现
+- 工程约束
+- 可复现性</script></div>
+    </details>
+  </section>
+  <div class="shell reader-layout" id="reader-layout">
+    <aside class="side-toc" id="paper-side-toc">
+      <button class="side-toggle" id="side-toggle" type="button" aria-label="收起目录" title="收起目录">
+        <span class="side-toggle-text">目录</span>
+        <span class="side-toggle-icon" aria-hidden="true">›</span>
+      </button>
+      <nav id="side-links" aria-label="章节目录"></nav>
+    </aside>
+    <main class="article" id="article"></main>
+  </div>
+  <div class="media-viewer" id="media-viewer" aria-hidden="true">
+    <div class="media-dialog" role="dialog" aria-modal="true" aria-labelledby="media-title">
+      <div class="media-bar">
+        <div class="media-title" id="media-title">图表预览</div>
+        <button class="media-close" id="media-close" type="button" aria-label="关闭预览" title="关闭预览">×</button>
+      </div>
+      <div class="media-content" id="media-content"></div>
+    </div>
+  </div>
+  <script>window.REPORT_PAYLOAD = {"markdown": "# DFlash：用于快速 speculative decoding 的块扩散方法（DFlash: Block Diffusion for Flash Speculative Decoding）\n\n## 1. 基本情况\n\n- 题目（中 / 英）：DFlash：用于快速 speculative decoding 的块扩散方法 / DFlash: Block Diffusion for Flash Speculative Decoding。\n- 作者：Jian Chen, Yesheng Liang, Zhijian Liu。\n- 单位：UC San Diego。\n- arXiv 编号、提交日期、链接：本报告基于用户指定的 `arXiv:2602.06036v1`，提交于 2026-02-05；arXiv 链接为 <https://arxiv.org/abs/2602.06036v1>。需要注意，arXiv 页面显示该论文最新版本为 v2，提交于 2026-05-28，且 latest 页面标注为 ICML 2026 camera-ready；本文分析不默认吸收 v2 的正文改动。\n- PDF：<https://arxiv.org/pdf/2602.06036v1>。\n- 项目页：<https://z-lab.ai/projects/dflash>。\n- 代码仓库：<https://github.com/z-lab/dflash>。本地核对的 `LICENSE` 为 MIT；仓库提供 Transformers、SGLang、vLLM、MLX 等后端示例，其中 Transformers/MLX 有本仓库内实现，SGLang/vLLM 主要依赖外部 serving 后端（已据代码核对修订）。\n- 模型集合：<https://huggingface.co/collections/z-lab/dflash>。\n\n### 1.1 arXiv v1 / v2 差异说明\n\n用户补充询问的两个版本链接分别是 v1 <https://arxiv.org/pdf/2602.06036v1> 和 v2 <https://arxiv.org/pdf/2602.06036v2>。我对比了 arXiv 页面与两个版本的 e-print TeX source：v1 提交于 2026-02-05，v2 提交于 2026-05-28；v2 是 latest，并在 PDF / TeX 中切到 ICML 2026 accepted / camera-ready 样式，项目页也从 `https://z-lab.ai/projects/dflash` 更新为 `https://dflash.z-lab.ai`。\n\n核心方法与主结论没有本质变化：abstract 完全相同；`tables/results/main.tex` 和 `tables/results/reasoning.tex` 没有变化；DFlash 的主线仍是 lightweight block diffusion drafter、target hidden feature conditioning、KV injection、parallel drafting 与 target verification。也就是说，本报告中关于方法机制、主要 benchmark 结果和与 EAGLE-3 的主对比，可以继续视为 v1/v2 共同结论。\n\nv2 的主要新增内容集中在补充实验、附录和 camera-ready 合规项：\n\n- 正文实验小节从 “Performance on SGLang” 改为 “Performance on Serving Frameworks”，并提示附录新增更多模型和 vLLM 结果。\n- 新增 Long Context Adaptation：作者用 LongAlign-10K 的 1.6K samples 对 Qwen3.5-27B drafter 做 3 epochs 轻量微调，并在 LongBench 的 hotpotqa、qasper、gov_report 上报告 1K--32K context 的 acceptance length；结论是 base drafter 超过 4K 后退化，long-context fine-tuned drafter 在长上下文下维持或提升 acceptance length。\n- 新增 KV Injection vs. Input Fusion 消融：在 Qwen3-4B、5-layer drafter、block size 8 上比较 EAGLE-3-style input fusion 与 DFlash KV injection；结果支持“把 target features 作为每层 KV entry 注入”比只在输入层融合更有效。\n- 附录新增 KV Injection Mechanism and Memory Overhead，明确写出 target hidden features 先经共享投影 `W_c` 融合，再在每个 draft layer 作为额外 K/V entry；并估算 Qwen3.5-35B-A3B、`D=2048`、BF16 下共享投影约 42 MB，相对约 70 GB target model 很小。\n- 附录新增 More Models and vLLM：覆盖 Qwen3.5-4B/9B/35B-A3B、Qwen3.5-27B、Qwen3-Coder-Next、GPT-OSS-20B/120B，并给出 Qwen3.5-9B 的 vLLM throughput / speedup 表。\n- 新增 Impact Statement、Conflict of Interest Disclosure；acknowledgement 中增加 Qualcomm 和 Amazon support；参考文献新增 LongAlign、LongBench、vLLM / PagedAttention、GPT-OSS model card。\n\n因此，如果只是理解 DFlash 的核心想法和 v1 主实验，本报告原分析仍然成立；如果要引用 camera-ready 或部署侧证据，应优先引用 v2，尤其是长上下文适配、vLLM 支持、更多模型扩展和 KV injection 内存开销这几块。\n\n## 2. 核心贡献概述\n\n- 中文版：DFlash 把 diffusion language model 的角色从“独立生成器”改为 speculative decoding 中的轻量 parallel drafter：draft model 一次前向生成一个 token block，再由 target LLM 并行验证，从而保持 lossless 输出。它的关键设计是从 frozen target model 抽取多层 hidden features，经融合后注入 draft model 每层的 KV cache，使小型 block diffusion drafter 不必从零预测未来 token，而是借用 target 的上下文表示。\n- 英文版（abstract）：原文将核心方法概括为 “a lightweight block diffusion model for parallel drafting”，并声称 DFlash “achieves over 6x lossless acceleration”。这两处分别对应 abstract 的方法句和结果句。\n\n## 3. 一句话精髓（写给外行）\n\nDFlash 像让一个动作很快的速记员先把下一小段草稿同时写出来，再让严谨的主笔一眼核对，既不改掉主笔的文风，又省下逐字落笔的等待。\n\n## 4. 学术贡献清单\n\n### 4.1 动机的发现与阐明\n\n作者把 speculative decoding 的瓶颈定位在 drafter 侧，而不是 verifier 侧：传统 EAGLE/Medusa 类方法虽然让 target model 并行验证多个候选 token，但 drafter 仍常以 autoregressive 或 tree autoregressive 的方式逐步生成候选，`T_{\\text{draft}}` 随 speculative token 数增加而增长。与此同时，纯 diffusion LLM 虽能并行生成，却通常质量弱、denoising step 多、缺少高效 KV cache 支持。论文的动机是寻找一个中间点：让 diffusion 只负责 drafting，让 autoregressive target model 负责最终验证。\n\n### 4.2 方法的创新\n\n- 用 lightweight block diffusion model 一次前向预测一个 draft block，降低 autoregressive drafting 的串行成本。\n- 从 target model 多个层均匀抽取 hidden states，融合成 target context feature，并以 KV injection 形式注入 draft model 的每一层，而不是只把 target feature 拼到输入 embedding。\n- 训练时随机采样 response 中的 anchor token，把 anchor 后续位置作为 masked block，使训练情形贴近 speculative decoding 中“上轮 verifier 产生 bonus token，再 draft 下一块”的推理过程。\n- 对 block 内早期 token 使用指数衰减权重，因为早期 token 被拒会连带终止后续 token 的接受。\n- 共享 target model 的 token embedding 和 LM head，仅训练 draft Transformer layers，将 draft model 定位成 target 表示空间中的 diffusion adapter。\n\n### 4.3 实验上的核心结论\n\n在 Qwen3-4B/8B 的 Transformers 后端实验中，DFlash 在 thinking mode disabled 下平均达到约 4.9x（temperature=0）和 4.1x（temperature=1）加速，明显高于 EAGLE-3 的 tree size 16/60 设置；在 SGLang + B200 + FA4 的 serving 场景中，Qwen3-8B 在 Math500 concurrency=1 达到 5.1x throughput speedup。消融显示 5 层 draft model 通常是速度与接受长度的折中点，更多 target hidden features 能提升 acceptance length，较大训练 block size 可以较好泛化到较小推理 block size。\n\n## 5. 写作故事线\n\n论文的故事从 LLM inference 的顺序性瓶颈开始：现代 LLM 每次只生成一个 token，长 CoT reasoning 让这个瓶颈更突出。接着作者把现有 speculative decoding 描述成“已经能 lossless 验证，但 drafter 仍被串行性拖住”的方案，EAGLE-3 被设为主要对照对象：它利用 target feature，却仍需要 autoregressive drafting，速度上限约在 2-3x 的实用区间。\n\n第二个转折是 diffusion LLM。作者承认 diffusion 可以并行预测，但如果把 diffusion 当完整生成模型，会遇到质量不足、固定长度和多步 denoising 的问题。因此论文提出一个重新分工：diffusion 不必独立写出最终答案，只需提出候选 block；只要 verifier 仍是 target autoregressive LLM，输出质量就由 speculative decoding 的验证过程保证。\n\n第三个转折是“the target knows best”。单独的小型 diffusion drafter 在 appendix 的 naive baseline 中只能约 2-3x 加速，说明并行本身不够；DFlash 因此抽取 target model 的 hidden features，让 drafter 得到 target 的语义和潜在未来 token 信息。§3 的速度公式说明为什么 diffusion drafting 能降低 `T_{\\text{draft}}`，§4 进一步给出 KV injection、random anchor sampling、loss decay 和共享 embedding/LM head 等具体设计。\n\n实验部分按使用场景推进：先在 Transformers 后端与 EAGLE-3 做方法对比，再看 thinking mode 的 reasoning 生成，再在 SGLang/B200 上验证真实 serving throughput，最后用 ablation 证明 target features、draft depth、block size、随机 anchor 和 loss decay 各自的作用。\n\n可引用的论文图包括：\n\n![DFlash speedup comparison](assets/2602.06036-dflash/dflash_speedup.pdf)\n\n![DFlash inference design](assets/2602.06036-dflash/dflash_inference_design.pdf)\n\n![DFlash training attention](assets/2602.06036-dflash/dflash_attn.pdf)\n\n## 6. 核心参考文献\n\n- [1] Leviathan et al. 2023, *Fast Inference from Transformers via Speculative Decoding*, arXiv:2211.17192 — speculative decoding 的经典起点，提供 draft-then-verify 的 lossless 加速框架。\n- [2] Cai et al. 2024, *Medusa: Simple LLM Inference Acceleration Framework with Multiple Decoding Heads*, arXiv:2401.10774 — 代表 multi-head / tree attention 路线，不需要外部 draft model，是 DFlash 对比的另一类 speculative decoding 思路。\n- [3] Li et al. 2025, *EAGLE: Speculative Sampling Requires Rethinking Feature Uncertainty*, arXiv:2401.15077 — 引入 feature-level speculation，是“利用 target/internal feature 改善 drafter”的前身。\n- [4] Li et al. 2024, *EAGLE-2: Faster Inference of Language Models with Dynamic Draft Trees*, arXiv:2406.16858 — 提出 adaptive draft trees，构成 EAGLE 系列中 tree-based drafting 的关键背景。\n- [5] Li et al. 2025, *EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test*, arXiv:2503.01840 — 本文最主要 baseline；DFlash 继承“使用 target multi-layer features”的方向，但改为 block diffusion + KV injection。\n- [6] Arriola et al. 2025, *Block Diffusion: Interpolating Between Autoregressive and Diffusion Language Models*, arXiv:2503.09573 — DFlash 的 block diffusion 建模基础，提供“按块 autoregressive、块内 diffusion”的生成视角。\n- [7] Samragh et al. 2025, *Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential*, arXiv:2507.11851 — 支撑“target hidden features 隐含未来 token 信息”的关键观察。\n- [8] An et al. 2025, *PARD: Accelerating LLM Inference with Low-Cost PARallel Draft Model Adaptation*, arXiv:2504.18583 — 与 DFlash 同样追求 parallel drafting，但 PARD 更强调低成本适配和 target-independent draft model。\n- [9] Li et al. 2025, *DiffuSpec: Unlocking Diffusion Language Models for Speculative Decoding*, arXiv:2510.02358 — diffusion-as-drafter 的直接前作之一，训练免费但依赖 pretrained diffusion LM。\n- [10] Sandler et al. 2025, *SpecDiff-2: Scaling Diffusion Drafter Alignment For Faster Speculative Decoding*, arXiv:2511.00606 — 与 DFlash 同属 diffusion speculative decoding，侧重 discrete diffusion drafter 与 AR verifier 的 alignment。\n\n## 7. 批判性分析\n\nDFlash 的创新不是“首次把 diffusion 用于 speculative decoding”，而是把几个已有方向组合成更实用的工程点：speculative decoding 的 lossless verifier 机制来自 Leviathan et al.；target feature conditioning 来自 EAGLE 系列和 Your LLM Knows the Future；block diffusion 来自 Block Diffusion、Fast-dLLM v2 (arXiv:2509.26328)、SDAR (arXiv:2510.06303) 一脉；parallel draft 的部署目标也与 PARD、DiffuSpec、SpecDiff-2 相近。DFlash 的真正差异在于将这些元素压缩成 lightweight drafter，并用 KV injection 让 target features 在每个 draft layer 中持续存在。\n\n与 EAGLE-3 相比，DFlash 的方法差别不仅是 drafter 类型。EAGLE-3 已经从 feature prediction 转向 direct token prediction，并通过 multi-layer feature fusion 提高效果；DFlash 则认为 EAGLE-3 把 target features 只作为输入会随层数加深而稀释，于是将 fused feature 投影到每层 KV cache。这使 DFlash 的 draft depth 更可扩展，但也使 drafter 更强依赖 target 内部结构：换 target family、换 layer layout、换 backend 时，适配成本和 feature extraction 开销需要实证评估。\n\n与 DiffuSpec 和 SpecDiff-2 相比，DFlash 的论点是“不要用大型 diffusion LM 当 drafter”，因为 7B 级 drafter 的内存和 latency 会吃掉 acceptance length 的收益。这个批评方向有依据：DiffuSpec 是 training-free 地用 pretrained DLM 产出 draft；SpecDiff-2 则强调 diffusion drafter alignment，并报告最高约 5.5x average speed-up。DFlash 在 v1 中没有直接复现这些方法，理由是缺少开源实现，因此“优于 diffusion-based speculative decoding 前作”的结论主要来自间接比较，而非同一后端、同一模型、同一 benchmark 的完整横评。\n\n与 PARD 相比，DFlash 走的是 target-dependent 路线。PARD 强调把 autoregressive draft model 低成本适配成 parallel drafter，并具有 target-independent 属性；DFlash 则为了更高 acceptance length 主动读取 target hidden features。这意味着 DFlash 对单个 target 可能更快，但在多模型服务、模型频繁更新或无法访问内部 hidden states 的闭源模型场景中，PARD 的迁移成本可能更低。\n\n本文较脆弱的 claim 有三点。第一，速度高度依赖硬件和后端：Transformers、SGLang FA4、B200/H200、Spec-v2 overlap 等设置混在不同实验中，读者不能把所有 speedup 视作纯算法收益。第二，论文没有报告训练 GPU 数、训练时长、draft 参数量和 hidden-state cache 容量，导致训练成本和离线缓存成本难以复现。第三，v1 没有与 DiffuSpec / SpecDiff-2 / PARD 做统一代码复现，而是只与 EAGLE-3 做主对比；因此它的位置更像“对 EAGLE-3 路线的强工程替代”，而不是已完全终结 diffusion drafter 竞赛。\n\n外部核对来源包括 arXiv:2602.06036v1/v2 页面、项目页 <https://z-lab.ai/projects/dflash>、GitHub 仓库 <https://github.com/z-lab/dflash>、HF 模型集合 <https://huggingface.co/collections/z-lab/dflash>，以及上述 arXiv 前作：Fast Inference from Transformers via Speculative Decoding (arXiv:2211.17192)、Medusa (arXiv:2401.10774)、EAGLE-3 (arXiv:2503.01840)、Block Diffusion (arXiv:2503.09573)、PARD (arXiv:2504.18583)、Your LLM Knows the Future (arXiv:2507.11851)、Fast-dLLM v2 (arXiv:2509.26328)、DiffuSpec (arXiv:2510.02358)、SDAR (arXiv:2510.06303)、SpecDiff-2 (arXiv:2511.00606)。版本说明：arXiv latest 页面显示 v2 于 2026-05-28 提交并标注 ICML 2026 camera-ready；本报告仍基于 v1 源码。\n\n## 8. 方法细节\n\n### 算法流程\n\n1. Prefill / verification：target model <span class=\"math-inline\" data-tex=\"\\mathcal{M}_t\"></span> 对 prompt 或上一轮验证序列做正常前向，产生下一个 bonus token，并暴露若干层 hidden states。\n2. Feature extraction：从 target model 的浅层到深层均匀选择 5 个 hidden feature 层，拼接后经轻量 projection 融合为 target context feature。\n3. KV injection：将 fused target context feature 投影为 draft model 每一层的 Key/Value，并写入 draft model KV cache，使 draft layers 在整个 block 预测中持续条件化于 target 表示。\n4. Parallel drafting：draft model <span class=\"math-inline\" data-tex=\"\\mathcal{M}_d\"></span> 以最后一个 verified token / anchor token 为条件，用 block diffusion 在一次 forward 中并行预测后续 <span class=\"math-inline\" data-tex=\"\\gamma\"></span> 个 token。\n5. Verification：target model 对 draft block 并行验证，接受连续匹配的 prefix；若拒绝，从第一个不匹配处回退并采样 target token。由于最终 token 来自 standard speculative decoding 的接受/拒绝规则，输出分布保持 lossless。\n6. 循环：用 verifier 产生的新 clean token 作为下一块 anchor，继续 drafting。\n\n### 关键公式\n\n论文用平均每 token latency 表达 speculative decoding 的速度来源：\n\n\n<div class=\"math-display\">L = \\frac{T_{\\text{draft}} + T_{\\text{verify}}}{\\tau},</div>\n\n\n其中 <span class=\"math-inline\" data-tex=\"T_{\\text{draft}}\"></span> 是 draft 阶段耗时，<span class=\"math-inline\" data-tex=\"T_{\\text{verify}}\"></span> 是 target 并行验证耗时，<span class=\"math-inline\" data-tex=\"\\tau \\in [1, \\gamma + 1]\"></span> 是每轮期望接受 token 数（含 bonus token）。若 target 的 autoregressive per-token latency 为 <span class=\"math-inline\" data-tex=\"L_{\\text{target}}\"></span>，则 speedup 为：\n\n\n<div class=\"math-display\">\\eta = L_{\\text{target}} / L.</div>\n\n\nautoregressive drafter 的 draft cost 随 draft 长度线性增长：\n\n\n<div class=\"math-display\">T_{\\text{draft}} = \\gamma \\cdot t_{\\text{step}},</div>\n\n\n而 diffusion drafter 在一个 block 内并行生成，论文将其写作：\n\n\n<div class=\"math-display\">T_{\\text{draft}} = t_{\\text{parallel}}.</div>\n\n\n训练时，为了突出 block 内早期 token，DFlash 使用位置相关的 loss weight：\n\n\n<div class=\"math-display\">w_k = \\exp\\!\\left(-\\frac{k-1}{\\gamma}\\right),</div>\n\n\n其中 <span class=\"math-inline\" data-tex=\"k\"></span> 是 block 内 token 位置，<span class=\"math-inline\" data-tex=\"\\gamma\"></span> 控制衰减率。appendix 给出设置：block size 16 时 <span class=\"math-inline\" data-tex=\"\\gamma=7\"></span>，block size 10 时 <span class=\"math-inline\" data-tex=\"\\gamma=5\"></span>，block size 8 时 <span class=\"math-inline\" data-tex=\"\\gamma=4\"></span>。\n\n### 所用模型 / backbone / 数据流\n\n- Target model：LLaMA-3.1-8B-Instruct、Qwen3-4B、Qwen3-8B、Qwen3-Coder-30B-A3B-Instruct。\n- Draft model：5-layer DFlash draft model 为主，Qwen3-Coder 使用 8 layers；Qwen3 使用 block size 16，LLaMA-3.1 使用 block size 10。论文正文未直接列出 draft 参数量；公开 HF 集合中对应 draft checkpoint 大致为 Qwen3-4B DFlash 0.5B、Qwen3-8B DFlash 1B、Qwen3-Coder-30B-A3B DFlash 0.5B、LLaMA-3.1-8B DFlash 1B（这是基于当前模型页的补充信息，不一定完全等同 v1 camera-ready 前的所有实验 checkpoint）。\n- Target feature：论文主实验描述为抽取 5 层 hidden features；公开 Transformers 实现中，若 checkpoint config 没有显式给出 `dflash_config.target_layer_ids`，则默认按 draft 层数从 target 第 2 层到倒数第 3 层之间均匀选取，因此 5-layer drafter 对应 5 个 target features，但代码本身支持随 draft 层数变化（已据代码核对修订）。\n- 训练数据：约 800K samples，来自 NVIDIA Nemotron Post-Training Dataset V2 与 CodeAlpaca；作者不直接使用原始 response，而是用 target model 生成 responses 以对齐 target 分布。LLaMA-3.1 对比 EAGLE-3 时使用 UltraChat 和 ShareGPT，与 EAGLE-3 官方 checkpoint 的训练数据保持一致。\n- 训练过程：6 epochs，AdamW，learning rate <span class=\"math-inline\" data-tex=\"6 \\times 10^{-4}\"></span>，gradient clipping 1.0，cosine schedule，warmup ratio 0.04；最大序列长度 3072，Qwen3-Coder 为 4096；每条序列随机采样 512 个 anchor positions。训练可 online 计算 target hidden features，也可 offline 预计算并缓存。注意：这些训练超参来自论文，当前公开仓库没有训练脚本，因此不能由代码直接复现或核验（已据代码核对修订）。\n- Attention mask：训练时把多个 masked blocks 拼接到同一序列，通过 sparse attention mask 保证 block 内双向可见、block 间不可见，并允许访问相应注入的 target features；实现上依赖 Flex Attention 思路。当前公开仓库只含推理/benchmark 代码，未包含该训练 mask 构造实现（已据代码核对修订）。\n\n### 算力资源需求\n\n论文明确报告的推理/评测硬件如下：多数实验在 NVIDIA H200 GPU 上进行；SGLang throughput 表使用单张 B200 GPU + FlashAttention-4 backend；LLaMA-3.1 与 EAGLE-3 的 SGLang 对比也使用单张 B200 GPU。acknowledgement 提到 Modal、Yotta Labs、Eigen AI、InnoMatrix 提供 compute resources，但没有披露训练 GPU 数、训练时长或总 GPU-hours。\n\n估算如下：完整训练集约 800K samples，6 epochs，相当于约 4.8M sample-epochs；每个 sequence 最长 3072 tokens（Coder 为 4096），每条序列采 512 anchors。若采用 offline hidden-state caching，单样本缓存量大致随 `5 layers × seq_len × hidden_dim × dtype` 线性增长。例如 Qwen3-8B 若 hidden dim 约 4096、bf16，每个 3072-token sequence 的 5 层 hidden cache 约为 <span class=\"math-inline\" data-tex=\"5 \\times 3072 \\times 4096 \\times 2 \\approx 126\"></span> MB；800K 样本全量缓存不可行，实际应采用分片、压缩、按需生成或在线训练。若仅训练 0.5B-1B 级 draft layers，6 epochs 在多张 H200/B200 上应属于数十到数百 GPU-hours 量级；这只是根据参数量、样本数和序列长度的粗估，论文 v1 未提供可核验数字。\n\n## 9. 实验\n\n### 9.1 评测数据集\n\n- Math：GSM8K、MATH / Math500、AIME25；reasoning mode 还包含 GPQA。公开 `dflash.benchmark` 脚本实际只内置 `gsm8k` 与 `math500` 两个 math 数据集，AIME25/GPQA 未在该脚本中提供（已据代码核对修订）。\n- Code：HumanEval、MBPP、LiveCodeBench。公开 benchmark 脚本内置 HumanEval 与 MBPP，未内置 LiveCodeBench（已据代码核对修订）。\n- Chat：MT-Bench、Alpaca。公开 benchmark 脚本内置 MT-Bench，未内置 Alpaca（已据代码核对修订）。\n- Serving throughput：SGLang 场景在 Math500、HumanEval、LCB、MBPP 等任务上测 concurrency 1/4/8/16/32。\n\n### 9.2 评测指标\n\n- Average acceptance length <span class=\"math-inline\" data-tex=\"\\tau\"></span>：每个 speculative decoding cycle 中平均被接受的 token 数，包含 target model 产生的 bonus token。<span class=\"math-inline\" data-tex=\"\\tau\"></span> 越大，target verification 的一次前向摊到更多输出 token 上。\n- End-to-end decoding speedup：相对于 vanilla autoregressive decoding 的端到端加速倍数。\n- Throughput (tok/s)：SGLang 表中报告不同 concurrency 下的 tokens per second，并给出相对于 baseline 的倍数。\n\n### 9.3 主实验结果\n\n在 Qwen3 thinking mode disabled 的 Transformers 后端实验中，DFlash 对 Qwen3-4B 在 temperature=0 的平均 speedup 为 4.91x、平均 <span class=\"math-inline\" data-tex=\"\\tau=6.54\"></span>；Qwen3-8B 为 4.86x、平均 <span class=\"math-inline\" data-tex=\"\\tau=6.49\"></span>。同设定下 EAGLE-3 tree size 16 约为 1.8x，tree size 60 约为 2.0x，因此 DFlash 在该口径下大幅领先。\n\n在 temperature=1 的采样场景中，DFlash 对 Qwen3-4B 平均 4.24x、<span class=\"math-inline\" data-tex=\"\\tau=5.69\"></span>，对 Qwen3-8B 平均 4.03x、<span class=\"math-inline\" data-tex=\"\\tau=5.48\"></span>；相较 greedy decoding 接受长度下降，但仍明显高于 EAGLE-3。\n\n在 thinking mode enabled 的 reasoning 模型实验中，DFlash 对 Qwen3-4B 在 GPQA/MATH-500/AIME25 上 temperature=0 的 speedup 约为 4.23x/4.59x/4.39x，temperature=1 为 3.67x/3.93x/3.64x；Qwen3-8B 也保持约 3.7x-4.6x。\n\n在 SGLang + 单 B200 + FA4 backend 的 serving 测试中，DFlash 在 Qwen3-8B Math500 concurrency=1 达到 1175 tok/s，相对 baseline 230 tok/s 为 5.1x；concurrency 增加到 32 时 speedup 降为 2.8x。Qwen3-Coder-30B-A3B 在 HumanEval 上保持约 3.0x-3.5x，在 LCB 上约 2.3x-2.6x。\n\n在 LLaMA-3.1-8B-Instruct + SGLang + B200 对比中，DFlash 使用与 EAGLE-3 相同训练数据，在 GSM8K/HumanEval/Alpaca 上均优于 EAGLE-3 tree size 10 和 60；例如 HumanEval concurrency=1 下 DFlash 为 2.8x，EAGLE-3(10) 与 EAGLE-3(60) 均约 2.0x。\n\n### 9.4 消融实验\n\n- 无 target feature 的 naive diffusion drafter：5-layer block diffusion draft model 在 math benchmarks 上通常只有约 2-3x speedup，说明 parallel drafting 本身不足以得到高 acceptance length。\n- Draft layers：3/5/8 层都能工作；8 层 acceptance length 更高，但 draft latency 增加，5 层整体 speedup 最优或最平衡。\n- Target hidden features 数量：5 个 target hidden features 比 3 个更高，Math500 从 4.49x / <span class=\"math-inline\" data-tex=\"\\tau=5.38\"></span> 提升到 4.69x / <span class=\"math-inline\" data-tex=\"\\tau=5.64\"></span>。\n- Training-inference block size：block size 16 训练的模型能较好泛化到 block size 8 推理；反向从 block size 8 泛化到 16 效果较弱。作者据此提出未来可做 adaptive block-size scheduling。\n- Loss decay：appendix 的曲线表明指数衰减的 token weight 使 acceptance length 更快、更好收敛。\n- Random anchor sampling：相比 standard block construction，随机 anchor 采样在 Math500/HumanEval/MT-Bench 上同时提升 speedup 和 <span class=\"math-inline\" data-tex=\"\\tau\"></span>，例如 HumanEval 从 3.29x / 3.86 提升到 3.90x / 4.61。\n\n### 9.5 结果分析\n\n作者认为：DFlash 的优势来自两端同时改进。一端是 diffusion block drafting 让 draft cost 不再随 token 数线性增长，因此可以使用更深、更表达性的 drafter；另一端是 target hidden features 让小 drafter 获得 target model 的上下文能力，从而避免 naive diffusion drafter 的低 acceptance length。SGLang 实验说明该方法不只是 toy backend 上的 latency 优化，也能在实际 serving framework 中提高 throughput。\n\n我（agent）认为：DFlash 的实验最有说服力的是“同一任务下 acceptance length 与 throughput 同时升高”，因为它证明不是简单牺牲 verifier 开销换取更长 draft。相对薄弱的是跨方法公平性：DiffuSpec、SpecDiff-2、PARD 没有被复现，EAGLE-3 在不同表里使用的 tree size、Spec-v1/Spec-v2、backend 和 concurrency 设置也不完全一致。另一个需要关注的点是训练和部署的隐藏成本：target feature extraction、KV injection、hidden-state cache、backend kernel 支持都可能决定 DFlash 是否能在非 H200/B200 或非 SGLang/vLLM 环境中达到论文速度。\n\n## 10. 代码实现观察\n\n### 10.1 仓库基本情况\n\n- 仓库地址：<https://github.com/z-lab/dflash>；本地核对 commit 为 `94e4abc5e0c31b67bc1a9d30f1cc34ece28a8756`（`94e4abc update model list`）。\n- License：`LICENSE` 文件为 MIT License，版权归 Z Lab 2026。代码本身可较自由复用，但模型权重和上游 base model 仍需分别遵守 Hugging Face 页面与原模型 license。\n- 仓库内容很轻量：顶层只有 `README.md`、`pyproject.toml`、`LICENSE`、`dflash/model.py`、`dflash/model_mlx.py`、`dflash/benchmark.py` 等文件；未包含 `train.py`、训练 configs、训练数据处理脚本或 Dockerfile。\n- README 的 “Supported Models” 已明显晚于 arXiv v1，列出了 Gemma-4、MiniMax、Kimi、Qwen3.5/3.6、gpt-oss、Qwen3-Coder-Next 等新 draft 权重，也保留论文相关的 Qwen3-4B/8B、Qwen3-Coder-30B-A3B、LLaMA-3.1-8B-Instruct。README 明确说 training recipe “soon” 开源，说明当前仓库不是完整训练复现包。\n- 依赖按后端拆分：Transformers 额外依赖 `torch`、`transformers==4.57.1`、`accelerate`；SGLang 依赖一个 GitHub PR 分支；vLLM 依赖常规 `vllm`，但 Gemma4/SWA 模型需要指定 PR 或 Docker；MLX 固定 `mlx==0.31.2`、`mlx-lm==0.31.3`。\n\n### 10.2 方法实现核对\n\n- 与论文一致：Transformers 核心实现确实从 target hidden states 抽取多层 feature 并拼接。`sources/2602.06036-dflash/code/dflash/model.py:27` 的默认选层逻辑从 target 第 2 层到倒数第 3 层均匀取点，`model.py:39` 将这些 hidden states 在 hidden 维拼接；`model.py:317` 再用线性层把 `len(target_layer_ids) * hidden_size` 投回 draft hidden size。\n\n```python\n# sources/2602.06036-dflash/code/dflash/model.py:27\nstart = 1\nend = num_target_layers - 3\n\n# sources/2602.06036-dflash/code/dflash/model.py:44\nreturn torch.cat(selected_states, dim=-1)\n```\n\n- 与论文一致：KV injection 在代码中不是预先写入一个独立 target KV cache，而是在 draft attention 内把 `target_hidden` 投影出的 `k_ctx/v_ctx` 与 block 内 noisy token 的 `k_noise/v_noise` 拼接后一起注意力计算。对应实现见 `model.py:226` 到 `model.py:238`；这与论文“把 target context feature 投影为 draft layers 的 K/V 并注入”的描述等价，但工程形态更像每层 attention 的 context KV prefix。\n- 与论文一致：draft 阶段共享 target embedding 与 LM head。Transformers 版本在 `model.py:111` 用 `target.model.embed_tokens` 生成 noise embedding，在 `model.py:112` 用 `target.lm_head` 把 draft hidden state 转成 logits；MLX 版本在 `model_mlx.py:153` 到 `model_mlx.py:168` 通过 `bind()` 绑定 target 的 `embed_tokens` 与 `lm_head`。\n- 与论文一致：block diffusion 推理的 block 是一次 draft forward 并行预测。Transformers 版本在 `model.py:107` 到 `model.py:121` 构造 `[已验证 token + mask tokens]`，一次调用 draft model 后填入 `block_output_ids[:, 1:]`；MLX 版本在 `model_mlx.py:491` 到 `model_mlx.py:506` 做同样的 block 构造与 draft sampling。\n- 与论文一致：verification 仍是标准 speculative decoding 的连续 prefix 接受规则。Transformers 版本在 `model.py:126` 到 `model.py:140` 用 target 对 block 做一次前向，比较 draft tokens 与 target posterior，接受连续相等前缀，并把第一个不匹配处的 target token 写入输出。\n- 与论文不一致或需澄清：README 宣称支持 Transformers / SGLang / vLLM / MLX，但本仓库“核心可读实现”主要是 Transformers 的 Qwen3-style draft model 与 MLX 版本。SGLang/vLLM 的 DFlash 核心逻辑不在本仓库内：README 要求使用 SGLang PR、vLLM 0.20.1+、特定 vLLM PR 或 Docker；`dflash/benchmark.py` 对 SGLang/vLLM 只是 HTTP 客户端测速壳，调用 `/generate` 或 `/v1/chat/completions`，不实现服务端 speculative kernel。\n- 与论文不一致或需澄清：Transformers 后端实际限制更窄。README 写 “Only Qwen3 and LLaMA-3.1 models support the Transformers backend”，`benchmark.py:173` 还用正则排除了 Qwen3.5；因此 README 新模型列表中的 Qwen3.5/3.6、Gemma、Kimi、MiniMax、gpt-oss 等主要依赖 vLLM/SGLang/MLX 或远端权重的 `trust_remote_code`，不能直接套用本仓库 `dflash/model.py`。\n- 论文未提及但代码中存在的工程细节：Transformers benchmark 会优先使用 `flash_attn`，否则回退到 SDPA 并提示速度较低；测速时设定随机种子并打开 deterministic cuDNN。SGLang Quick Start 还暴露了 experimental schedule overlapping 环境变量，以及 `trtllm_mha` target attention、`fa4` draft attention、`mem-fraction-static 0.75`、`mamba-scheduler-strategy extra_buffer` 等部署参数。\n- 论文未提及但代码中存在的工程细节：MLX 版本为了支持更多结构做了 target layer hook 和 cache rollback。`model_mlx.py:284` 到 `model_mlx.py:290` 直接替换 target layers 来捕获 hidden states；`model_mlx.py:293` 到 `model_mlx.py:397` 对 gated-delta non-trimmable cache 做捕获和 rollback；`model_mlx.py:548` 每 256 个生成 token 清一次 MLX cache。这些是部署稳定性细节，论文正文没有展开。\n\n### 10.3 真实算力规模\n\n- 训练规模：公开仓库没有训练脚本、训练配置、训练日志或数据下载脚本，因此不能从代码还原真实 batch size、gradient accumulation、optimizer、lr schedule、world size、训练步数或训练时长。第 8 节列出的训练超参仍应视为论文信息，而非源码可复现实证。\n- Transformers benchmark：README 给的命令是 `torchrun --nproc_per_node=8 -m dflash.benchmark --backend transformers ... --max-samples 128`。代码中每个 rank 加载一份 target 与 draft 到本地 GPU，按 `range(rank, len(dataset), world_size)` 分片样本，不做 tensor parallel；默认 dtype 为 bf16，`max_new_tokens=2048`，block size 默认来自 draft config。\n- SGLang/vLLM serving benchmark：README 的 SGLang 示例使用 `--tp-size 1`、`--speculative-num-draft-tokens 16`、`--attention-backend trtllm_mha`、`--speculative-draft-attention-backend fa4`；vLLM 示例使用 `num_speculative_tokens: 15` 与 `--max-num-batched-tokens 32768`。这些是公开推理入口暴露出的真实部署参数，但硬件型号仍来自论文/README 描述而不是代码自动检测。\n- MLX benchmark：公开示例面向 Apple Silicon，README 称 MLX 实现测试于 Apple M5 Pro；`model_mlx.py` 会报告 `mx.get_peak_memory()`，但仓库没有固定显存/内存复现实验日志。\n- 与论文声称的算力对照：源码没有推翻论文的 H200/B200 推理硬件说法，但也没有提供训练 GPU 数、训练时长或完整 throughput 表复现脚本。公开 benchmark 只覆盖 `gsm8k`、`math500`、`humaneval`、`mbpp`、`mt-bench`，论文里的 AIME25、GPQA、LiveCodeBench、Alpaca 等结果需要另行准备数据和评测脚本。\n\n### 10.4 可复现性评价\n\n- 可复现性：中等偏低。推理 demo 和小规模测速可按 README 跑，且 Hugging Face 上提供多组 draft 权重；但完整训练复现不可用，论文主表的全部评测集合也未在仓库中一键覆盖。\n- 普通研究者按 README 跑通的主要前置条件是：对应 backend 的独立环境、HF 权重访问、足够显存/统一内存、Transformers 后端最好安装 `flash-attn`，SGLang/vLLM 后端还要匹配特定上游版本、PR 分支或 Docker 镜像。\n- 已知坑：Qwen3-4B/8B 的 DFlash draft 在 benchmark 中被明确禁止 `--enable-thinking`，因为这些 draft 没有用 thinking traces 训练；SGLang/vLLM 的 DFlash 行为依赖外部服务端是否真正启用 speculative algorithm，当前仓库 benchmark 只能读取服务返回的吞吐和部分 SGLang meta 信息。\n- 结论：代码实现基本支持论文核心推理机制，未发现核心算法方向上的反例；主要差异在开源范围和后端归属上，即训练 recipe、训练 mask/loss、完整实验脚本和部分 serving kernel 不在本仓库内。\n", "mindmap": "# DFlash：用于快速 speculative decoding 的块扩散方法\n## 研究问题\n- 动机\n- 关键瓶颈\n## 方法设计\n- 核心算法\n- 关键公式\n## 实验验证\n- 数据集\n- baseline\n- ablation\n## 批判视角\n- 前作关系\n- 局限\n## 代码实现\n- 工程约束\n- 可复现性"};</script>
+  <script src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.11.1/build/highlight.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markmap-autoloader@0.18.12"></script>
+  <script>
+    marked.setOptions({ gfm: true, breaks: false });
+    const article = document.querySelector("#article");
+    article.innerHTML = DOMPurify.sanitize(marked.parse(window.REPORT_PAYLOAD.markdown));
+
+    function slugify(text, index) {
+      return "sec-" + index + "-" + text.trim().toLowerCase()
+        .replace(/[^\w\u4e00-\u9fa5]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+    }
+
+    function sectionize() {
+      const original = Array.from(article.childNodes);
+      article.innerHTML = "";
+      let current = null;
+      let index = 0;
+      for (const node of original) {
+        if (node.nodeType === 1 && node.tagName === "H2") {
+          index += 1;
+          const title = node.textContent.trim();
+          const id = slugify(title, index);
+          node.id = id;
+          if (index <= 4) {
+            current = document.createElement("section");
+            current.className = "report-section";
+            current.appendChild(node);
+          } else {
+            current = document.createElement("details");
+            current.className = "report-section";
+            current.open = true;
+            const summary = document.createElement("summary");
+            summary.textContent = title;
+            summary.id = id;
+            const body = document.createElement("div");
+            body.className = "section-body";
+            current.appendChild(summary);
+            current.appendChild(body);
+          }
+          article.appendChild(current);
+          const sideLink = document.createElement("a");
+          sideLink.href = "#" + id;
+          sideLink.textContent = title;
+          sideLink.dataset.target = id;
+          document.querySelector("#side-links").appendChild(sideLink);
+          continue;
+        }
+        if (current) {
+          const body = current.querySelector(".section-body") || current;
+          body.appendChild(node);
+        } else {
+          article.appendChild(node);
+        }
+      }
+    }
+
+    function setupSidebar() {
+      const layout = document.querySelector("#reader-layout");
+      const sidebar = document.querySelector("#paper-side-toc");
+      const button = document.querySelector("#side-toggle");
+      const icon = button.querySelector(".side-toggle-icon");
+      const topbarToggle = document.querySelector("#topbar-toc-toggle");
+      const sideNav = document.querySelector("#side-links");
+      const links = Array.from(document.querySelectorAll("#side-links a"));
+
+      if (window.location.hash === "#side-toc") {
+        history.replaceState(null, "", window.location.pathname + window.location.search);
+        window.scrollTo({ top: 0, behavior: "auto" });
+      }
+
+      function readSavedState() {
+        try {
+          return window.localStorage && window.localStorage.getItem("paper-sidebar-collapsed") === "true";
+        } catch {
+          return false;
+        }
+      }
+
+      function writeSavedState(collapsed) {
+        try {
+          if (window.localStorage) {
+            window.localStorage.setItem("paper-sidebar-collapsed", String(collapsed));
+          }
+        } catch {
+          // Storage can be unavailable in restricted browser contexts.
+        }
+      }
+
+      function setCollapsed(collapsed) {
+        layout.classList.toggle("sidebar-collapsed", collapsed);
+        sidebar.classList.toggle("is-collapsed", collapsed);
+        button.setAttribute("aria-label", collapsed ? "展开目录" : "收起目录");
+        button.setAttribute("title", collapsed ? "展开目录" : "收起目录");
+        if (icon) icon.textContent = collapsed ? "‹" : "›";
+        writeSavedState(collapsed);
+      }
+
+      setCollapsed(readSavedState());
+      button.addEventListener("click", () => setCollapsed(!sidebar.classList.contains("is-collapsed")));
+      if (topbarToggle) {
+        topbarToggle.addEventListener("click", () => {
+          if (window.location.hash === "#side-toc") {
+            history.replaceState(null, "", window.location.pathname + window.location.search);
+          }
+          setCollapsed(!sidebar.classList.contains("is-collapsed"));
+        });
+      }
+
+      const targets = links
+        .map(link => document.getElementById(link.dataset.target))
+        .filter(Boolean);
+
+      function setActive(id) {
+        links.forEach(link => link.classList.toggle("is-active", link.dataset.target === id));
+        const activeLink = links.find(link => link.dataset.target === id);
+        if (activeLink && sideNav && !sidebar.classList.contains("is-collapsed")) {
+          const linkTop = activeLink.offsetTop;
+          const linkBottom = linkTop + activeLink.offsetHeight;
+          const navTop = sideNav.scrollTop;
+          const navBottom = navTop + sideNav.clientHeight;
+          if (linkTop < navTop) {
+            sideNav.scrollTop = Math.max(linkTop - 8, 0);
+          } else if (linkBottom > navBottom) {
+            sideNav.scrollTop = linkBottom - sideNav.clientHeight + 8;
+          }
+        }
+      }
+
+      function updateActiveFromScroll() {
+        if (!targets.length) return;
+        const offset = 150;
+        let active = targets[0];
+        for (const target of targets) {
+          if (target.getBoundingClientRect().top <= offset) {
+            active = target;
+          } else {
+            break;
+          }
+        }
+        setActive(active.id);
+      }
+
+      let ticking = false;
+      function requestActiveUpdate() {
+        if (ticking) return;
+        ticking = true;
+        window.requestAnimationFrame(() => {
+          ticking = false;
+          updateActiveFromScroll();
+        });
+      }
+
+      links.forEach(link => {
+        link.addEventListener("click", event => {
+          event.preventDefault();
+          const target = document.getElementById(link.dataset.target);
+          if (!target) return;
+          const parentDetails = target.closest("details.report-section");
+          if (parentDetails) parentDetails.open = true;
+          setActive(target.id);
+          history.pushState(null, "", "#" + target.id);
+          target.scrollIntoView({ block: "start", behavior: "auto" });
+          if (window.matchMedia("(max-width: 960px)").matches) {
+            setCollapsed(true);
+          }
+          window.setTimeout(updateActiveFromScroll, 80);
+        });
+      });
+
+      window.addEventListener("scroll", requestActiveUpdate, { passive: true });
+      window.addEventListener("resize", requestActiveUpdate);
+      window.addEventListener("hashchange", () => {
+        const id = decodeURIComponent(window.location.hash.slice(1));
+        if (id && document.getElementById(id)) setActive(id);
+        window.setTimeout(updateActiveFromScroll, 80);
+      });
+      if (window.location.hash) {
+        const id = decodeURIComponent(window.location.hash.slice(1));
+        if (id && document.getElementById(id)) setActive(id);
+      } else if (links[0]) {
+        setActive(links[0].dataset.target);
+      }
+      updateActiveFromScroll();
+    }
+
+    function setupMediaViewer() {
+      const viewer = document.querySelector("#media-viewer");
+      const content = document.querySelector("#media-content");
+      const title = document.querySelector("#media-title");
+      const closeButton = document.querySelector("#media-close");
+      if (!viewer || !content || !title || !closeButton) return null;
+
+      function close() {
+        viewer.classList.remove("is-open");
+        viewer.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("media-viewer-open");
+        content.innerHTML = "";
+      }
+
+      function open(src, type, label) {
+        content.innerHTML = "";
+        title.textContent = label || (type === "pdf" ? "PDF 图表" : "图表预览");
+        if (type === "pdf") {
+          const frame = document.createElement("iframe");
+          frame.src = src;
+          frame.title = title.textContent;
+          content.appendChild(frame);
+        } else {
+          const image = document.createElement("img");
+          image.src = src;
+          image.alt = label || "图表预览";
+          content.appendChild(image);
+        }
+        viewer.classList.add("is-open");
+        viewer.setAttribute("aria-hidden", "false");
+        document.body.classList.add("media-viewer-open");
+        closeButton.focus({ preventScroll: true });
+      }
+
+      closeButton.addEventListener("click", close);
+      viewer.addEventListener("click", event => {
+        if (event.target === viewer) close();
+      });
+      window.addEventListener("keydown", event => {
+        if (event.key === "Escape" && viewer.classList.contains("is-open")) close();
+      });
+
+      return { open, close };
+    }
+
+    function enhanceLinks() {
+      const mediaViewer = setupMediaViewer();
+      article.querySelectorAll("a[href]").forEach(a => {
+        const href = a.getAttribute("href") || "";
+        if (/^https?:\/\//.test(href)) a.target = "_blank";
+      });
+      article.querySelectorAll("img").forEach(img => {
+        const src = img.getAttribute("src") || "";
+        img.decoding = "async";
+        img.onerror = () => {
+          if (src.startsWith("../sources/")) {
+            img.src = src.replace("../sources/", "sources/");
+          }
+        };
+        if (src.endsWith(".pdf")) {
+          const object = document.createElement("object");
+          object.className = "figure-pdf";
+          object.type = "application/pdf";
+          object.data = src;
+          const fallback = document.createElement("button");
+          fallback.className = "figure-open";
+          fallback.type = "button";
+          fallback.textContent = "放大查看 PDF";
+          fallback.addEventListener("click", () => {
+            if (mediaViewer) mediaViewer.open(src, "pdf", img.getAttribute("alt") || "PDF 图表");
+          });
+          img.replaceWith(object);
+          object.insertAdjacentElement("afterend", fallback);
+        } else {
+          img.classList.add("media-thumb");
+          img.setAttribute("tabindex", "0");
+          img.setAttribute("role", "button");
+          img.setAttribute("title", "点击放大查看");
+          const openImage = () => {
+            if (mediaViewer) mediaViewer.open(img.currentSrc || img.src, "image", img.getAttribute("alt") || "图表预览");
+          };
+          img.addEventListener("click", openImage);
+          img.addEventListener("keydown", event => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              openImage();
+            }
+          });
+        }
+      });
+    }
+
+    function linkifyArxivIds(root) {
+      const re = /(?<![\w/.-])(?:arXiv:)?(\d{4}\.\d{4,5})(v\d+)?(?![\w/.-])/g;
+      const skipTags = new Set(["A", "CODE", "PRE", "SCRIPT", "STYLE", "TEXTAREA"]);
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+          const parent = node.parentElement;
+          if (!parent || skipTags.has(parent.tagName)) return NodeFilter.FILTER_REJECT;
+          re.lastIndex = 0;
+          return re.test(node.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+        }
+      });
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach(node => {
+        re.lastIndex = 0;
+        const frag = document.createDocumentFragment();
+        let last = 0;
+        for (const match of node.nodeValue.matchAll(re)) {
+          frag.appendChild(document.createTextNode(node.nodeValue.slice(last, match.index)));
+          const link = document.createElement("a");
+          link.href = "https://arxiv.org/abs/" + match[1];
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+          link.textContent = match[0];
+          frag.appendChild(link);
+          last = match.index + match[0].length;
+        }
+        frag.appendChild(document.createTextNode(node.nodeValue.slice(last)));
+        node.replaceWith(frag);
+      });
+    }
+
+    function renderDisplayMath() {
+      article.querySelectorAll(".math-display").forEach(el => {
+        const source = el.textContent.trim();
+        try {
+          katex.render(source, el, { displayMode: true, throwOnError: false });
+        } catch (error) {
+          el.classList.add("math-error");
+          el.textContent = source;
+        }
+      });
+    }
+
+    function renderInlineMath() {
+      article.querySelectorAll(".math-inline").forEach(el => {
+        const source = el.getAttribute("data-tex") || el.textContent.trim();
+        try {
+          katex.render(source, el, { displayMode: false, throwOnError: false });
+        } catch (error) {
+          el.classList.add("math-error");
+          el.textContent = source;
+        }
+      });
+    }
+
+    sectionize();
+    setupSidebar();
+    enhanceLinks();
+    linkifyArxivIds(article);
+    renderDisplayMath();
+    renderInlineMath();
+    renderMathInElement(article, {
+      delimiters: [
+        { left: "$", right: "$", display: false }
+      ],
+      ignoredClasses: ["math-display", "math-inline"],
+      throwOnError: false
+    });
+    if (window.hljs) {
+      hljs.highlightAll();
+    }
+  </script>
+</body>
+</html>
