@@ -1,0 +1,75 @@
+name: Taxonomy governance
+description: Propose a taxonomy merge, split, alias, workflow, or drift fix.
+title: "[Taxonomy] "
+labels:
+  - taxonomy
+body:
+  - type: dropdown
+    id: action
+    attributes:
+      label: Action type
+      options:
+        - merge labels
+        - split overloaded label
+        - add label alias
+        - adjust status workflow
+        - fix taxonomy drift
+        - update shared view
+    validations:
+      required: true
+  - type: dropdown
+    id: field
+    attributes:
+      label: Field
+      options:
+        - domains
+        - tracks
+        - problems
+        - topics
+        - methods
+        - research_line
+        - line_role
+        - status
+        - reading_stage
+        - review_stage
+        - shared_views
+    validations:
+      required: true
+  - type: input
+    id: current_value
+    attributes:
+      label: Current value
+      placeholder: "KV-cache"
+  - type: input
+    id: proposed_value
+    attributes:
+      label: Proposed value
+      placeholder: "KV Cache"
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Link to docs/taxonomy_actions.json, quality.html, facets.html, or affected reports.
+      placeholder: |
+        - docs/facets.html shows...
+        - docs/quality.html reports...
+        - affected slugs:
+    validations:
+      required: true
+  - type: textarea
+    id: migration
+    attributes:
+      label: Migration plan
+      description: Describe whether this needs taxonomy.json only, frontmatter edits, or generated wiki refresh.
+      placeholder: |
+        1. Update docs/guides/taxonomy.json
+        2. Apply metadata CSV patch
+        3. Run python3 scripts/build_wiki.py docs
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Governance checks
+      options:
+        - label: I checked whether this appears in docs/taxonomy_actions.json.
+        - label: I considered whether this should be a label alias instead of a rename.
+        - label: I considered whether this changes the active status workflow.

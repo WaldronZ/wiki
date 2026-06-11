@@ -88,6 +88,7 @@ paper_reader/
 - `scripts/apply_library_metadata.py` 用于把编辑后的 CSV 分类/状态字段安全写回报告 frontmatter，默认只 dry-run
 - `scripts/apply_taxonomy_aliases.py` 用于把 `quality.json` 中的标签别名建议安全合并到 `guides/taxonomy.json`，默认只 dry-run
 - `scripts/check_quality.py` 是本地一键质量门禁，和 GitHub Actions 使用同一组检查
+- `.github/ISSUE_TEMPLATE/` 和 `.github/PULL_REQUEST_TEMPLATE.md` 提供开源协作入口，用于规范论文候选、分类治理、报告质量问题和 PR 检查项
 
 ## 工作流概览
 
@@ -210,6 +211,8 @@ Example Paper,https://arxiv.org/abs/2601.00001,queued,high,LLM Serving;Batching,
 ```
 
 刷新后打开 `docs/inbox.html`，可以筛选候选论文、查看疑似重复项，并复制单篇论文的阅读任务给 agent 流程。
+
+开源协作时，可以直接用 GitHub issue forms 收集输入：`Paper intake` 对应新增候选论文，`Taxonomy governance` 对应标签合并、拆分、状态 workflow 调整，`Report quality issue` 对应元数据、渲染、重复报告或过期分析问题。PR 模板会要求说明是否更新生成物、是否影响当前 active workflow，以及是否通过质量门禁。
 
 提交前运行完整质量门禁：
 

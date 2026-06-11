@@ -1,0 +1,68 @@
+name: Paper intake
+description: Propose a paper to add to the reading inbox or wiki.
+title: "[Paper] "
+labels:
+  - paper-intake
+body:
+  - type: input
+    id: title
+    attributes:
+      label: Paper title
+      description: Use the official paper title when possible.
+      placeholder: "Attention Is All You Need"
+    validations:
+      required: true
+  - type: input
+    id: link
+    attributes:
+      label: Link
+      description: Prefer an arXiv abstract page, OpenReview page, DOI, or project page.
+      placeholder: "https://arxiv.org/abs/1706.03762"
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: Use high only when this should enter the next reading batch.
+      options:
+        - high
+        - medium
+        - low
+    validations:
+      required: true
+  - type: input
+    id: research_line
+    attributes:
+      label: Research line
+      description: Existing or proposed research line.
+      placeholder: "Efficient Attention Kernels"
+  - type: textarea
+    id: taxonomy
+    attributes:
+      label: Suggested taxonomy
+      description: Add domain, track, problem, topics, methods, and line role if known.
+      placeholder: |
+        domain:
+        track:
+        problem:
+        topics:
+        methods:
+        line_role:
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it matters
+      description: Explain the reason this paper belongs in the knowledge base.
+      placeholder: "This paper is a baseline for..."
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Intake checks
+      options:
+        - label: I searched the wiki for an existing report or duplicate inbox item.
+          required: true
+        - label: I included enough context for an agent to start the paper reader workflow.
+          required: true

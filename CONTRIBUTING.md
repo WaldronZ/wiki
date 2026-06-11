@@ -6,6 +6,19 @@ configuration, and quality checks in sync.
 
 ## Common Workflows
 
+### Triage Incoming Issues
+
+Use the issue forms to keep a large paper library manageable:
+
+1. `Paper intake` issues should either become `docs/inbox.csv` rows or be closed
+   as duplicates after checking `docs/inbox.html` and `docs/library.html`.
+2. `Taxonomy governance` issues should cite `docs/facets.html`,
+   `docs/taxonomy_actions.json`, `docs/quality.html`, or affected report slugs.
+3. `Report quality issue` issues should identify the report slug and whether the
+   fix touches markdown, rendered HTML, taxonomy config, or generation scripts.
+4. Prefer small PRs that resolve one intake batch, one taxonomy action, or one
+   quality queue at a time.
+
 ### Add Or Update A Paper
 
 1. Add or edit `docs/<slug>.md`.

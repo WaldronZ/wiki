@@ -1,0 +1,51 @@
+name: Report quality issue
+description: Report missing metadata, rendering problems, duplicate reports, or stale analysis.
+title: "[Quality] "
+labels:
+  - quality
+body:
+  - type: input
+    id: slug
+    attributes:
+      label: Report slug
+      placeholder: "2307.08691-flashattention-2"
+    validations:
+      required: true
+  - type: dropdown
+    id: issue_type
+    attributes:
+      label: Issue type
+      options:
+        - missing metadata
+        - incorrect taxonomy
+        - stale paper version
+        - broken HTML rendering
+        - broken image or formula
+        - duplicate report
+        - weak critical analysis
+        - code observation missing or stale
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Include links, page names, screenshots, or quality queue entries.
+      placeholder: |
+        Page:
+        Evidence:
+        Expected:
+    validations:
+      required: true
+  - type: textarea
+    id: suggested_fix
+    attributes:
+      label: Suggested fix
+      description: Optional, but useful for focused pull requests.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Quality checks
+      options:
+        - label: I checked docs/quality.html for related warnings.
+        - label: I checked whether docs/release.html marks this as publish-blocking.
