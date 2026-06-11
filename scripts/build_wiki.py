@@ -124,6 +124,7 @@ REVIEW_STAGE_VALUES = DEFAULT_REVIEW_STAGE_VALUES.copy()
 STATUS_WORKFLOWS: dict[str, dict[str, list[str]]] = {}
 SHARED_VIEWS: list[dict[str, Any]] = []
 ACTIVE_STATUS_WORKFLOW = ""
+QUICK_OPEN_PAPERS: list[dict[str, str]] = []
 
 
 def parse_args() -> argparse.Namespace:
@@ -1700,6 +1701,84 @@ def write_search_index(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     )
 
 
+def set_quick_open_papers(papers: list[dict[str, Any]]) -> None:
+    global QUICK_OPEN_PAPERS
+    QUICK_OPEN_PAPERS = [
+        {
+            "title": str(paper.get("title_zh") or paper.get("title") or paper["slug"]),
+            "href": paper.get("html_path") or paper.get("md_path") or "",
+            "meta": " · ".join(
+                str(part)
+                for part in [
+                    paper.get("research_line") or "Unassigned",
+                    paper.get("status") or "",
+                    paper.get("arxiv_id") or "",
+                ]
+                if part
+            ),
+            "kind": "paper",
+        }
+        for paper in papers
+        if paper.get("html_path") or paper.get("md_path")
+    ]
+
+
+def summarize_view_state(state: dict[str, Any]) -> str:
+    parts = [f"{key}={value}" for key, value in state.items() if str(value).strip()]
+    return ", ".join(parts[:4]) + (" ..." if len(parts) > 4 else "")
+
+
+def quick_open_entries() -> list[dict[str, str]]:
+    entries: list[dict[str, str]] = []
+    for page in wiki_pages_manifest():
+        entries.append(
+            {
+                "title": str(page["title"]),
+                "href": str(page["href"]),
+                "meta": str(page["description"]),
+                "kind": str(page["kind"]),
+            }
+        )
+    for file in data_files_manifest():
+        entries.append(
+            {
+                "title": f"Data: {file['href']}",
+                "href": str(file["href"]),
+                "meta": str(file["description"]),
+                "kind": "data",
+            }
+        )
+    for view in SHARED_VIEWS:
+        entries.append(
+            {
+                "title": f"View: {view['name']}",
+                "href": view_href(view),
+                "meta": f"{view.get('page') or 'all'} · {summarize_view_state(view.get('state') or {})}",
+                "kind": "view",
+            }
+        )
+    for playbook in governance_playbooks_manifest():
+        entries.append(
+            {
+                "title": f"Playbook: {playbook['label']}",
+                "href": "release.html",
+                "meta": str(playbook["description"]),
+                "kind": "playbook",
+            }
+        )
+    for recipe in command_recipes_manifest():
+        entries.append(
+            {
+                "title": f"Command: {recipe['label']}",
+                "href": "release.html",
+                "meta": str(recipe["command"]),
+                "kind": "command",
+            }
+        )
+    entries.extend(QUICK_OPEN_PAPERS)
+    return entries
+
+
 def page_shell(
     title: str,
     body: str,
@@ -1710,6 +1789,7 @@ def page_shell(
     embedded = ""
     css_extra = f"\n{extra_css}" if extra_css else ""
     quick_nav_prefix = json.dumps(base_prefix)
+    quick_entries_json = json.dumps(quick_open_entries(), ensure_ascii=False)
     if data is not None:
         embedded = (
             "<script>\n"
@@ -2005,6 +2085,23 @@ def page_shell(
       padding: 10px 12px;
       color: var(--ink);
     }}
+    .quick-item-title {{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }}
+    .quick-kind {{
+      flex: 0 0 auto;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #faf7f0;
+      color: var(--muted);
+      padding: 1px 7px;
+      font-size: 11px;
+      font-weight: 750;
+      text-transform: uppercase;
+    }}
     .quick-item:hover, .quick-item.is-active {{
       background: var(--chip);
       text-decoration: none;
@@ -2076,71 +2173,22 @@ def page_shell(
   const closeButton = document.querySelector("#quickClose");
   if (!openButton || !panel || !search || !list || !closeButton) return;
 
-  const pages = [
-    ["首页", "index.html", "总览、搜索和筛选"],
-    ["论文库表格", "library.html", "密集筛选、列管理和批量更新"],
-    ["管理控制台", "dashboard.html", "覆盖率、队列和运营指标"],
-    ["发布摘要", "release.html", "页面入口、数据文件和发布状态"],
-    ["集合视图", "collections.html", "共享视图和智能集合"],
-    ["分类工作台", "facets.html", "标签规模、长尾和过载分类"],
-    ["关联网络", "related.html", "标签共现和相似论文"],
-    ["研究缺口", "gaps.html", "下一步行动和线索缺口"],
-    ["状态看板", "board.html", "拖拽状态流"],
-    ["待处理池", "inbox.html", "候选论文队列"],
-    ["复习计划", "review.html", "待复习和建议日期"],
-    ["质量治理", "quality.html", "元数据和 taxonomy drift"],
-    ["分类治理", "taxonomy.html", "分类矩阵和状态工作流"],
-    ["时间轴", "timeline.html", "按年份浏览研究路线"],
-    ["研究矩阵", "matrix.html", "研究线和年份覆盖"],
-    ["研究线", "lines/index.html", "按研究脉络组织论文"],
-    ["分类总览", "tags.html", "标签聚合入口"],
-  ].map(([title, href, meta]) => ({{
-    title,
-    href: prefix + href,
-    meta,
-    kind: "page",
-  }}));
+  function withPrefix(href) {{
+    if (!href || href.startsWith("#") || href.startsWith("/") || /^[a-z][a-z0-9+.-]*:/i.test(href)) return href;
+    return prefix + href;
+  }}
 
-  const dataFiles = [
-    ["Data: papers.json", "papers.json", "论文索引、taxonomy 聚合、前端 controls"],
-    ["Data: search_index.json", "search_index.json", "正文全文检索索引"],
-    ["Data: stats.json", "stats.json", "运营统计、分类均衡和队列规模"],
-    ["Data: quality.json", "quality.json", "质量问题、taxonomy load 和 drift"],
-    ["Data: review.json", "review.json", "复习计划和建议日期"],
-    ["Data: taxonomy_actions.json", "taxonomy_actions.json", "可分派分类治理任务"],
-    ["Data: inbox.json", "inbox.json", "候选论文队列和重复项"],
-    ["Data: manifest.json", "manifest.json", "发布状态、入口清单和 command recipes"],
-  ].map(([title, href, meta]) => ({{
-    title,
-    href: prefix + href,
-    meta,
-    kind: "data",
-  }}));
-
-  const commands = [
-    ["Command: Build wiki", "release.html", "python3 scripts/build_wiki.py docs"],
-    ["Command: Quality gate", "release.html", "python3 scripts/check_quality.py docs"],
-    ["Command: Strict validation", "release.html", "python3 scripts/validate_wiki.py docs --strict-taxonomy"],
-    ["Command: Preview metadata CSV", "release.html", "python3 scripts/apply_library_metadata.py docs --input <csv>"],
-    ["Command: Apply metadata CSV", "release.html", "python3 scripts/apply_library_metadata.py docs --input <csv> --write"],
-    ["Command: Apply taxonomy aliases", "release.html", "python3 scripts/apply_taxonomy_aliases.py docs --write"],
-    ["Command: taxonomy_actions_markdown", "release.html", "python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md"],
-    ["Command: taxonomy_actions_project", "release.html", "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"],
-    ["Command: taxonomy_actions_patch", "release.html", "python3 scripts/export_taxonomy_actions.py docs --format patch --action merge_candidate --output docs/exports/taxonomy-action-patch.csv"],
-    ["Command: taxonomy_balance_project", "release.html", "python3 scripts/export_taxonomy_balance.py docs --format project --max-score 50 --output docs/exports/taxonomy-balance-project.csv"],
-    ["Command: taxonomy_load_csv", "release.html", "python3 scripts/export_taxonomy_load.py docs --format csv --output docs/exports/taxonomy-load.csv"],
-    ["Command: taxonomy_load_patch", "release.html", "python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv"],
-  ].map(([title, href, meta]) => ({{
-    title,
-    href: prefix + href,
-    meta,
-    kind: "command",
-  }}));
+  const quickEntries = {quick_entries_json}.map((entry) => ({{
+    ...entry,
+    href: withPrefix(entry.href || ""),
+    meta: entry.meta || "",
+    kind: entry.kind || "entry",
+  }})).filter((entry) => entry.title && entry.href);
 
   const dataPapers = (window.PAPER_WIKI && Array.isArray(window.PAPER_WIKI.papers))
     ? window.PAPER_WIKI.papers.map((paper) => ({{
         title: paper.title_zh || paper.title || paper.slug,
-        href: prefix + (paper.html_path || paper.md_path || ""),
+        href: withPrefix(paper.html_path || paper.md_path || ""),
         meta: [paper.research_line, paper.status, paper.arxiv_id].filter(Boolean).join(" · "),
         kind: "paper",
       }})).filter((item) => item.href)
@@ -2151,15 +2199,15 @@ def page_shell(
     meta: [row.dataset.line, row.dataset.status, row.dataset.arxivId].filter(Boolean).join(" · "),
     kind: "paper",
   }})).filter((item) => item.href);
-  const paperMap = new Map([...dataPapers, ...rowPapers].map((item) => [item.href, item]));
-  const papers = Array.from(paperMap.values());
-  const entries = [...pages, ...dataFiles, ...commands, ...papers];
+  const entryMap = new Map([...quickEntries, ...dataPapers, ...rowPapers].map((item) => [`${{item.kind}}:${{item.href}}:${{item.title}}`, item]));
+  const entries = Array.from(entryMap.values());
+  const kindPriority = {{ view: 5, page: 4, paper: 3, playbook: 2, command: 1, data: 1 }};
   let activeIndex = 0;
 
   function score(entry, query) {{
-    if (!query) return entry.kind === "page" ? 2 : 1;
+    if (!query) return kindPriority[entry.kind] || 1;
     const haystack = `${{entry.title}} ${{entry.meta}} ${{entry.href}}`.toLowerCase();
-    if (haystack.includes(query)) return entry.title.toLowerCase().includes(query) ? 3 : 2;
+    if (haystack.includes(query)) return (entry.title.toLowerCase().includes(query) ? 30 : 20) + (kindPriority[entry.kind] || 1);
     return 0;
   }}
 
@@ -2185,12 +2233,18 @@ def page_shell(
       link.className = `quick-item${{index === activeIndex ? " is-active" : ""}}`;
       link.href = entry.href;
       link.dataset.index = String(index);
+      const titleWrap = document.createElement("span");
+      titleWrap.className = "quick-item-title";
       const title = document.createElement("strong");
       title.textContent = entry.title;
+      const kind = document.createElement("span");
+      kind.className = "quick-kind";
+      kind.textContent = entry.kind;
+      titleWrap.append(title, kind);
       const meta = document.createElement("span");
       meta.className = "meta";
       meta.textContent = entry.meta || entry.href;
-      link.append(title, meta);
+      link.append(titleWrap, meta);
       return link;
     }}));
   }}
@@ -8797,6 +8851,7 @@ def render_tags(report_dir: Path, papers: list[dict[str, Any]]) -> None:
 def build_wiki(report_dir: Path) -> int:
     load_taxonomy_config(report_dir)
     papers = collect_papers(report_dir)
+    set_quick_open_papers(papers)
     inbox_items = load_inbox_items(report_dir, papers)
     write_json(report_dir, papers)
     write_quality_json(report_dir, papers)

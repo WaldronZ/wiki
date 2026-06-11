@@ -287,6 +287,23 @@
       padding: 10px 12px;
       color: var(--ink);
     }
+    .quick-item-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .quick-kind {
+      flex: 0 0 auto;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #faf7f0;
+      color: var(--muted);
+      padding: 1px 7px;
+      font-size: 11px;
+      font-weight: 750;
+      text-transform: uppercase;
+    }
     .quick-item:hover, .quick-item.is-active {
       background: var(--chip);
       text-decoration: none;
@@ -795,71 +812,22 @@ const taxonomyChangePapers = [{"slug": "2602.06036-dflash", "title": "DFlash：�
   const closeButton = document.querySelector("#quickClose");
   if (!openButton || !panel || !search || !list || !closeButton) return;
 
-  const pages = [
-    ["首页", "index.html", "总览、搜索和筛选"],
-    ["论文库表格", "library.html", "密集筛选、列管理和批量更新"],
-    ["管理控制台", "dashboard.html", "覆盖率、队列和运营指标"],
-    ["发布摘要", "release.html", "页面入口、数据文件和发布状态"],
-    ["集合视图", "collections.html", "共享视图和智能集合"],
-    ["分类工作台", "facets.html", "标签规模、长尾和过载分类"],
-    ["关联网络", "related.html", "标签共现和相似论文"],
-    ["研究缺口", "gaps.html", "下一步行动和线索缺口"],
-    ["状态看板", "board.html", "拖拽状态流"],
-    ["待处理池", "inbox.html", "候选论文队列"],
-    ["复习计划", "review.html", "待复习和建议日期"],
-    ["质量治理", "quality.html", "元数据和 taxonomy drift"],
-    ["分类治理", "taxonomy.html", "分类矩阵和状态工作流"],
-    ["时间轴", "timeline.html", "按年份浏览研究路线"],
-    ["研究矩阵", "matrix.html", "研究线和年份覆盖"],
-    ["研究线", "lines/index.html", "按研究脉络组织论文"],
-    ["分类总览", "tags.html", "标签聚合入口"],
-  ].map(([title, href, meta]) => ({
-    title,
-    href: prefix + href,
-    meta,
-    kind: "page",
-  }));
+  function withPrefix(href) {
+    if (!href || href.startsWith("#") || href.startsWith("/") || /^[a-z][a-z0-9+.-]*:/i.test(href)) return href;
+    return prefix + href;
+  }
 
-  const dataFiles = [
-    ["Data: papers.json", "papers.json", "论文索引、taxonomy 聚合、前端 controls"],
-    ["Data: search_index.json", "search_index.json", "正文全文检索索引"],
-    ["Data: stats.json", "stats.json", "运营统计、分类均衡和队列规模"],
-    ["Data: quality.json", "quality.json", "质量问题、taxonomy load 和 drift"],
-    ["Data: review.json", "review.json", "复习计划和建议日期"],
-    ["Data: taxonomy_actions.json", "taxonomy_actions.json", "可分派分类治理任务"],
-    ["Data: inbox.json", "inbox.json", "候选论文队列和重复项"],
-    ["Data: manifest.json", "manifest.json", "发布状态、入口清单和 command recipes"],
-  ].map(([title, href, meta]) => ({
-    title,
-    href: prefix + href,
-    meta,
-    kind: "data",
-  }));
-
-  const commands = [
-    ["Command: Build wiki", "release.html", "python3 scripts/build_wiki.py docs"],
-    ["Command: Quality gate", "release.html", "python3 scripts/check_quality.py docs"],
-    ["Command: Strict validation", "release.html", "python3 scripts/validate_wiki.py docs --strict-taxonomy"],
-    ["Command: Preview metadata CSV", "release.html", "python3 scripts/apply_library_metadata.py docs --input <csv>"],
-    ["Command: Apply metadata CSV", "release.html", "python3 scripts/apply_library_metadata.py docs --input <csv> --write"],
-    ["Command: Apply taxonomy aliases", "release.html", "python3 scripts/apply_taxonomy_aliases.py docs --write"],
-    ["Command: taxonomy_actions_markdown", "release.html", "python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md"],
-    ["Command: taxonomy_actions_project", "release.html", "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"],
-    ["Command: taxonomy_actions_patch", "release.html", "python3 scripts/export_taxonomy_actions.py docs --format patch --action merge_candidate --output docs/exports/taxonomy-action-patch.csv"],
-    ["Command: taxonomy_balance_project", "release.html", "python3 scripts/export_taxonomy_balance.py docs --format project --max-score 50 --output docs/exports/taxonomy-balance-project.csv"],
-    ["Command: taxonomy_load_csv", "release.html", "python3 scripts/export_taxonomy_load.py docs --format csv --output docs/exports/taxonomy-load.csv"],
-    ["Command: taxonomy_load_patch", "release.html", "python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv"],
-  ].map(([title, href, meta]) => ({
-    title,
-    href: prefix + href,
-    meta,
-    kind: "command",
-  }));
+  const quickEntries = [{"title": "首页", "href": "index.html", "meta": "卡片检索、筛选、研究线概览", "kind": "view"}, {"title": "论文库表格", "href": "library.html", "meta": "密集筛选、列管理、批量更新", "kind": "view"}, {"title": "管理控制台", "href": "dashboard.html", "meta": "覆盖率、队列和运营指标", "kind": "ops"}, {"title": "发布摘要", "href": "release.html", "meta": "页面入口、数据文件、质量状态", "kind": "ops"}, {"title": "集合视图", "href": "collections.html", "meta": "共享视图、智能集合、研究线入口", "kind": "view"}, {"title": "分类工作台", "href": "facets.html", "meta": "标签规模、长尾和过载分类", "kind": "ops"}, {"title": "关联网络", "href": "related.html", "meta": "标签共现、相似论文、孤岛论文", "kind": "analysis"}, {"title": "研究缺口", "href": "gaps.html", "meta": "下一步行动和研究线缺口", "kind": "ops"}, {"title": "状态看板", "href": "board.html", "meta": "拖拽式状态流和 CSV patch", "kind": "workflow"}, {"title": "待处理池", "href": "inbox.html", "meta": "候选论文队列和去重提示", "kind": "workflow"}, {"title": "复习计划", "href": "review.html", "meta": "待复习、需建计划、建议日期", "kind": "workflow"}, {"title": "质量治理", "href": "quality.html", "meta": "弱元数据、别名建议、taxonomy drift", "kind": "ops"}, {"title": "分类治理", "href": "taxonomy.html", "meta": "分类矩阵、状态工作流、治理队列", "kind": "ops"}, {"title": "时间轴", "href": "timeline.html", "meta": "按年份和研究线浏览论文演进", "kind": "analysis"}, {"title": "研究矩阵", "href": "matrix.html", "meta": "research line x year 覆盖", "kind": "analysis"}, {"title": "研究线", "href": "lines/index.html", "meta": "按研究脉络组织论文", "kind": "view"}, {"title": "分类总览", "href": "tags.html", "meta": "按标签聚合论文", "kind": "view"}, {"title": "Data: papers.json", "href": "papers.json", "meta": "论文索引、taxonomy 聚合、前端 controls", "kind": "data"}, {"title": "Data: search_index.json", "href": "search_index.json", "meta": "正文全文检索索引", "kind": "data"}, {"title": "Data: stats.json", "href": "stats.json", "meta": "运营统计、覆盖率和队列规模", "kind": "data"}, {"title": "Data: quality.json", "href": "quality.json", "meta": "质量问题、taxonomy load、taxonomy drift、标签别名建议", "kind": "data"}, {"title": "Data: review.json", "href": "review.json", "meta": "复习计划和建议 next_review", "kind": "data"}, {"title": "Data: taxonomy_actions.json", "href": "taxonomy_actions.json", "meta": "分类长尾、过载和空候选治理任务", "kind": "data"}, {"title": "Data: inbox.json", "href": "inbox.json", "meta": "候选论文队列和重复项", "kind": "data"}, {"title": "Data: manifest.json", "href": "manifest.json", "meta": "发布摘要和页面入口清单", "kind": "data"}, {"title": "View: 重点论文", "href": "library.html?importance=5&sort=importance", "meta": "all · importance=5, sort=importance", "kind": "view"}, {"title": "View: 未设置复习", "href": "index.html?review=none&sort=importance", "meta": "index · review=none, sort=importance", "kind": "view"}, {"title": "View: Attention Kernels", "href": "library.html?track=Attention+Kernels&sort=year", "meta": "library · track=Attention Kernels, sort=year", "kind": "view"}, {"title": "Playbook: Taxonomy merge batch", "href": "release.html", "meta": "Review merge candidates, prepare a metadata patch, dry-run it, then refresh quality gates.", "kind": "playbook"}, {"title": "Playbook: Taxonomy balance review", "href": "release.html", "meta": "Turn overloaded or sparse taxonomy buckets into project tasks before changing labels.", "kind": "playbook"}, {"title": "Playbook: Release readiness", "href": "release.html", "meta": "Rebuild the wiki, validate strict taxonomy, then run the full quality gate before publishing.", "kind": "playbook"}, {"title": "Command: Build wiki", "href": "release.html", "meta": "python3 scripts/build_wiki.py docs", "kind": "command"}, {"title": "Command: Quality gate", "href": "release.html", "meta": "python3 scripts/check_quality.py docs", "kind": "command"}, {"title": "Command: Strict validation", "href": "release.html", "meta": "python3 scripts/validate_wiki.py docs --strict-taxonomy", "kind": "command"}, {"title": "Command: Preview edited metadata CSV", "href": "release.html", "meta": "python3 scripts/apply_library_metadata.py docs --input <csv>", "kind": "command"}, {"title": "Command: Apply edited metadata CSV", "href": "release.html", "meta": "python3 scripts/apply_library_metadata.py docs --input <csv> --write", "kind": "command"}, {"title": "Command: Apply taxonomy aliases", "href": "release.html", "meta": "python3 scripts/apply_taxonomy_aliases.py docs --write", "kind": "command"}, {"title": "Command: Export taxonomy actions checklist", "href": "release.html", "meta": "python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md", "kind": "command"}, {"title": "Command: Export taxonomy action project tasks", "href": "release.html", "meta": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv", "kind": "command"}, {"title": "Command: Export taxonomy action patch template", "href": "release.html", "meta": "python3 scripts/export_taxonomy_actions.py docs --format patch --action merge_candidate --output docs/exports/taxonomy-action-patch.csv", "kind": "command"}, {"title": "Command: Export taxonomy balance project tasks", "href": "release.html", "meta": "python3 scripts/export_taxonomy_balance.py docs --format project --max-score 50 --output docs/exports/taxonomy-balance-project.csv", "kind": "command"}, {"title": "Command: Export taxonomy load audit CSV", "href": "release.html", "meta": "python3 scripts/export_taxonomy_load.py docs --format csv --output docs/exports/taxonomy-load.csv", "kind": "command"}, {"title": "Command: Export taxonomy load patch CSV", "href": "release.html", "meta": "python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv", "kind": "command"}, {"title": "DFlash：用于快速 speculative decoding 的块扩散方法", "href": "2602.06036-dflash.html", "meta": "Parallel Decoding with Diffusion Models · read · 2602.06036v1", "kind": "paper"}, {"title": "内省式扩散语言模型", "href": "2604.11035-introspective-dlm.html", "meta": "Parallel Decoding with Diffusion Models · read · 2604.11035v1", "kind": "paper"}, {"title": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成", "href": "2605.12825-orthrus.html", "meta": "Parallel Decoding with Diffusion Models · read · 2605.12825v2", "kind": "paper"}, {"title": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎", "href": "2501.01005-flashinfer.html", "meta": "Efficient Attention Kernels · read · 2501.01005v2", "kind": "paper"}, {"title": "FlashAttention-2：用更好的并行性与工作划分加速 Attention", "href": "2307.08691-flashattention-2.html", "meta": "Efficient Attention Kernels · read · 2307.08691v1", "kind": "paper"}].map((entry) => ({
+    ...entry,
+    href: withPrefix(entry.href || ""),
+    meta: entry.meta || "",
+    kind: entry.kind || "entry",
+  })).filter((entry) => entry.title && entry.href);
 
   const dataPapers = (window.PAPER_WIKI && Array.isArray(window.PAPER_WIKI.papers))
     ? window.PAPER_WIKI.papers.map((paper) => ({
         title: paper.title_zh || paper.title || paper.slug,
-        href: prefix + (paper.html_path || paper.md_path || ""),
+        href: withPrefix(paper.html_path || paper.md_path || ""),
         meta: [paper.research_line, paper.status, paper.arxiv_id].filter(Boolean).join(" · "),
         kind: "paper",
       })).filter((item) => item.href)
@@ -870,15 +838,15 @@ const taxonomyChangePapers = [{"slug": "2602.06036-dflash", "title": "DFlash：�
     meta: [row.dataset.line, row.dataset.status, row.dataset.arxivId].filter(Boolean).join(" · "),
     kind: "paper",
   })).filter((item) => item.href);
-  const paperMap = new Map([...dataPapers, ...rowPapers].map((item) => [item.href, item]));
-  const papers = Array.from(paperMap.values());
-  const entries = [...pages, ...dataFiles, ...commands, ...papers];
+  const entryMap = new Map([...quickEntries, ...dataPapers, ...rowPapers].map((item) => [`${item.kind}:${item.href}:${item.title}`, item]));
+  const entries = Array.from(entryMap.values());
+  const kindPriority = { view: 5, page: 4, paper: 3, playbook: 2, command: 1, data: 1 };
   let activeIndex = 0;
 
   function score(entry, query) {
-    if (!query) return entry.kind === "page" ? 2 : 1;
+    if (!query) return kindPriority[entry.kind] || 1;
     const haystack = `${entry.title} ${entry.meta} ${entry.href}`.toLowerCase();
-    if (haystack.includes(query)) return entry.title.toLowerCase().includes(query) ? 3 : 2;
+    if (haystack.includes(query)) return (entry.title.toLowerCase().includes(query) ? 30 : 20) + (kindPriority[entry.kind] || 1);
     return 0;
   }
 
@@ -904,12 +872,18 @@ const taxonomyChangePapers = [{"slug": "2602.06036-dflash", "title": "DFlash：�
       link.className = `quick-item${index === activeIndex ? " is-active" : ""}`;
       link.href = entry.href;
       link.dataset.index = String(index);
+      const titleWrap = document.createElement("span");
+      titleWrap.className = "quick-item-title";
       const title = document.createElement("strong");
       title.textContent = entry.title;
+      const kind = document.createElement("span");
+      kind.className = "quick-kind";
+      kind.textContent = entry.kind;
+      titleWrap.append(title, kind);
       const meta = document.createElement("span");
       meta.className = "meta";
       meta.textContent = entry.meta || entry.href;
-      link.append(title, meta);
+      link.append(titleWrap, meta);
       return link;
     }));
   }

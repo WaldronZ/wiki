@@ -132,7 +132,7 @@ paper_reader/
 - `docs/<slug>.md`：阅读报告
 - `docs/<slug>.html`：单篇阅读报告 HTML
 - `docs/index.html`：wiki 首页
-- 所有 wiki 汇总页：提供全局快速跳转，可搜索主要页面；在首页和论文库等带论文数据的页面可直接跳到单篇报告
+- 所有 wiki 汇总页：提供全局快速跳转，可搜索主要页面、机器数据、共享视图、治理 playbook、常用命令和全部单篇报告
 - `docs/library.html`：论文库表格，适合大量论文的密集筛选、排序、列管理、密度切换、状态体系切换和批量管理
 - `docs/board.html`：状态看板，按自定义 `status` 分列，也可临时新增状态列，拖拽后导出 `status_board_patch.csv`
 - `docs/inbox.csv`：候选论文待处理池源数据，可手动追加 id/title/link/status/priority/tags/note/added_at
