@@ -123,7 +123,7 @@ has_code: true
 
 如果想试一套新的状态流，不必先改所有报告：可以在 `docs/board.html` 新增临时状态列，把论文拖进去后导出 `status_board_patch.csv`，用 `scripts/apply_library_metadata.py` 预览或写回。确认这套状态值得长期保留后，再用 `docs/taxonomy.html` 的「状态工作流设计器」生成一个命名 workflow 片段，合并到 `status_workflows` 并切换 `active_status_workflow`，刷新 wiki 后它就会成为所有页面的正式下拉选项。
 
-`shared_views` 可以把常用筛选队列随仓库同步到首页和论文库表格。`page` 支持 `all`、`index`、`library`；`state` 使用 URL query 里的筛选键，例如 `importance`、`status`、`line`、`track`、`review`、`sort`：
+`shared_views` 可以把常用筛选队列随仓库同步到首页和论文库表格。最省事的方式是在 `docs/index.html` 或 `docs/library.html` 调好筛选后点击「复制共享视图」，把生成的 JSON 对象放进下面的 `shared_views` 列表。`page` 支持 `all`、`index`、`library`；`state` 使用 URL query 里的筛选键，例如 `importance`、`status`、`line`、`track`、`review`、`sort`：
 
 ```json
 {

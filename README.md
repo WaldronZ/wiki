@@ -195,7 +195,7 @@ has_code: true
 
 报告 frontmatter 的字段类型、必填项、评分范围和日期格式由 [`docs/guides/metadata.schema.json`](docs/guides/metadata.schema.json) 描述。`python3 scripts/validate_wiki.py docs --strict-taxonomy` 会同时校验 schema、报告元数据、分类漂移和生成页面，适合作为发布或开源协作前的质量门禁。
 
-首页和论文库表格的筛选、排序、分页状态会写入 URL query string。比如按研究线、重要性排序后复制浏览器地址，即可分享同一个论文列表视图。常用状态组合也可以保存为浏览器本地视图；团队共用队列可以写进 `docs/guides/taxonomy.json` 的 `shared_views`，随仓库同步到所有人的 wiki 下拉框里。
+首页和论文库表格的筛选、排序、分页状态会写入 URL query string。比如按研究线、重要性排序后复制浏览器地址，即可分享同一个论文列表视图。常用状态组合也可以保存为浏览器本地视图；需要团队共用时，点击「复制共享视图」即可把当前筛选生成 `shared_views` JSON，写进 `docs/guides/taxonomy.json` 后会随仓库同步到所有人的 wiki 下拉框里。
 
 手动刷新 wiki：
 

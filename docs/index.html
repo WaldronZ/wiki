@@ -409,6 +409,7 @@ window.PAPER_WIKI = {"papers": [{"slug": "2602.06036-dflash", "title": "DFlash: 
     <div class="results-actions">
       <select id="savedView" class="saved-view" aria-label="选择保存视图"><option value="">选择视图</option></select>
       <button id="saveView" class="button" type="button">保存视图</button>
+      <button id="copySharedView" class="button" type="button">复制共享视图</button>
       <button id="deleteView" class="button" type="button">删除视图</button>
       <button id="resetFilters" class="button" type="button">重置筛选</button>
     </div>
@@ -494,6 +495,7 @@ const prevPage = document.querySelector("#prevPage");
 const nextPage = document.querySelector("#nextPage");
 const savedView = document.querySelector("#savedView");
 const saveView = document.querySelector("#saveView");
+const copySharedView = document.querySelector("#copySharedView");
 const deleteView = document.querySelector("#deleteView");
 const searchTextBySlug = new Map((window.PAPER_WIKI.search_index || []).map(item => [item.slug, item.search_text || ""]));
 const sharedViews = window.PAPER_WIKI.shared_views || [];
@@ -581,6 +583,29 @@ function writeSavedViews(views) {
   } catch {
     window.alert("浏览器本地存储不可用，无法保存视图。");
     return false;
+  }
+}
+
+function sharedViewPayload(page) {
+  const name = window.prompt("共享视图名称");
+  if (!name || !name.trim()) return null;
+  const state = { ...currentState() };
+  delete state.page;
+  if (!Object.keys(state).length) {
+    window.alert("当前没有可共享的筛选条件。");
+    return null;
+  }
+  return { name: name.trim(), page, state };
+}
+
+async function copyJsonSnippet(payload) {
+  if (!payload) return;
+  const text = JSON.stringify(payload, null, 2);
+  try {
+    await navigator.clipboard.writeText(text);
+    window.alert("已复制 shared view JSON。");
+  } catch {
+    window.prompt("复制 shared view JSON", text);
   }
 }
 
@@ -723,6 +748,7 @@ saveView.addEventListener("click", () => {
   refreshSavedViews();
   savedView.value = "local:0";
 });
+copySharedView.addEventListener("click", () => copyJsonSnippet(sharedViewPayload("index")));
 deleteView.addEventListener("click", () => {
   if (!savedView.value || !savedView.value.startsWith("local:")) {
     if (savedView.value.startsWith("shared:")) window.alert("共享视图来自 taxonomy.json，不能在页面里删除。");
