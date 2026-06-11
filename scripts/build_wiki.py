@@ -4306,6 +4306,10 @@ def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
   </section>
   <section>
     <h2 class="section-title">分类粒度审计</h2>
+    <div class="results-bar">
+      <strong>{len(quality["taxonomy_load"])} 篇需要检查分类粒度</strong>
+      <div class="results-actions"><button id="downloadTaxonomyLoad" class="button" type="button">下载粒度 CSV</button></div>
+    </div>
     <div class="table-wrap">{taxonomy_load_table}</div>
   </section>
   <section>
@@ -4341,6 +4345,47 @@ document.querySelectorAll(".copy-quality-command").forEach(button => {{
   button.dataset.label = button.textContent;
   button.addEventListener("click", () => copyQualityCommand(button));
 }});
+
+const taxonomyLoadItems = window.PAPER_WIKI.taxonomy_load || [];
+const downloadTaxonomyLoad = document.querySelector("#downloadTaxonomyLoad");
+
+function qualityCsvCell(value) {{
+  const text = String(value ?? "");
+  return (text.includes(",") || text.includes('"') || text.includes("\\n"))
+    ? `"${{text.replaceAll('"', '""')}}"`
+    : text;
+}}
+
+function downloadTaxonomyLoadCsv() {{
+  if (!taxonomyLoadItems.length) {{
+    window.alert("当前没有分类粒度提示。");
+    return;
+  }}
+  const header = ["slug", "title", "research_line", "structure_count", "topic_count", "method_count", "tag_count", "signals", "recommendation"];
+  const rows = taxonomyLoadItems.map(item => [
+    item.slug,
+    item.title_zh || item.title,
+    item.research_line,
+    item.structure_count,
+    item.topic_count,
+    item.method_count,
+    item.tag_count,
+    (item.signals || []).join("; "),
+    item.recommendation,
+  ]);
+  const csv = [header, ...rows].map(row => row.map(qualityCsvCell).join(",")).join("\\n") + "\\n";
+  const blob = new Blob([csv], {{ type: "text/csv;charset=utf-8" }});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "taxonomy_load_audit.csv";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}}
+
+if (downloadTaxonomyLoad) downloadTaxonomyLoad.addEventListener("click", downloadTaxonomyLoadCsv);
 </script>
 """
     quality_css = "\n".join(
@@ -4363,7 +4408,10 @@ document.querySelectorAll(".copy-quality-command").forEach(button => {{
             "    }",
         ]
     )
-    (report_dir / "quality.html").write_text(page_shell("质量治理", body, extra_css=quality_css), encoding="utf-8")
+    (report_dir / "quality.html").write_text(
+        page_shell("质量治理", body, {"taxonomy_load": quality["taxonomy_load"]}, quality_css),
+        encoding="utf-8",
+    )
 
 
 def render_release(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:

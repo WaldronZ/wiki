@@ -352,6 +352,9 @@
   </style>
 </head>
 <body>
+<script>
+window.PAPER_WIKI = {"taxonomy_load": [{"slug": "2604.11035-introspective-dlm", "title": "Introspective Diffusion Language Models", "title_zh": "内省式扩散语言模型", "html_path": "2604.11035-introspective-dlm.html", "research_line": "Parallel Decoding with Diffusion Models", "structure_count": 4, "topic_count": 5, "method_count": 6, "tag_count": 11, "signals": ["dense_tags"], "recommendation": "检查 topic / method 是否过细，保留最能区分论文的标签。"}, {"slug": "2501.01005-flashinfer", "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving", "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎", "html_path": "2501.01005-flashinfer.html", "research_line": "Efficient Attention Kernels", "structure_count": 4, "topic_count": 5, "method_count": 6, "tag_count": 11, "signals": ["dense_tags"], "recommendation": "检查 topic / method 是否过细，保留最能区分论文的标签。"}]};
+</script>
 
 <button class="button quick-open" type="button" id="quickOpen">快速跳转</button>
 <div class="quick-panel" id="quickPanel" hidden>
@@ -404,6 +407,10 @@
   </section>
   <section>
     <h2 class="section-title">分类粒度审计</h2>
+    <div class="results-bar">
+      <strong>2 篇需要检查分类粒度</strong>
+      <div class="results-actions"><button id="downloadTaxonomyLoad" class="button" type="button">下载粒度 CSV</button></div>
+    </div>
     <div class="table-wrap"><table class="data-table"><thead><tr><th>论文</th><th>结构标签</th><th>Topic</th><th>Method</th><th>信号</th><th>建议</th></tr></thead><tbody><tr><td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a><div class="meta">Parallel Decoding with Diffusion Models</div></td><td>4</td><td>5</td><td>6</td><td><span class="flag">dense_tags</span></td><td>检查 topic / method 是否过细，保留最能区分论文的标签。</td></tr><tr><td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a><div class="meta">Efficient Attention Kernels</div></td><td>4</td><td>5</td><td>6</td><td><span class="flag">dense_tags</span></td><td>检查 topic / method 是否过细，保留最能区分论文的标签。</td></tr></tbody></table></div>
   </section>
   <section>
@@ -439,6 +446,47 @@ document.querySelectorAll(".copy-quality-command").forEach(button => {
   button.dataset.label = button.textContent;
   button.addEventListener("click", () => copyQualityCommand(button));
 });
+
+const taxonomyLoadItems = window.PAPER_WIKI.taxonomy_load || [];
+const downloadTaxonomyLoad = document.querySelector("#downloadTaxonomyLoad");
+
+function qualityCsvCell(value) {
+  const text = String(value ?? "");
+  return (text.includes(",") || text.includes('"') || text.includes("\n"))
+    ? `"${text.replaceAll('"', '""')}"`
+    : text;
+}
+
+function downloadTaxonomyLoadCsv() {
+  if (!taxonomyLoadItems.length) {
+    window.alert("当前没有分类粒度提示。");
+    return;
+  }
+  const header = ["slug", "title", "research_line", "structure_count", "topic_count", "method_count", "tag_count", "signals", "recommendation"];
+  const rows = taxonomyLoadItems.map(item => [
+    item.slug,
+    item.title_zh || item.title,
+    item.research_line,
+    item.structure_count,
+    item.topic_count,
+    item.method_count,
+    item.tag_count,
+    (item.signals || []).join("; "),
+    item.recommendation,
+  ]);
+  const csv = [header, ...rows].map(row => row.map(qualityCsvCell).join(",")).join("\n") + "\n";
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "taxonomy_load_audit.csv";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+if (downloadTaxonomyLoad) downloadTaxonomyLoad.addEventListener("click", downloadTaxonomyLoadCsv);
 </script>
 
 <script>

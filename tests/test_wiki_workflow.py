@@ -299,6 +299,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("Taxonomy Drift", quality_html)
             self.assertIn("分类粒度审计", quality_html)
             self.assertIn("sparse_tags", quality_html)
+            self.assertIn('id="downloadTaxonomyLoad"', quality_html)
+            self.assertIn("taxonomy_load_audit.csv", quality_html)
             self.assertIn("标签归一化建议", quality_html)
             self.assertIn("治理命令", quality_html)
             self.assertIn("copy-quality-command", quality_html)
