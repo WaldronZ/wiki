@@ -3226,6 +3226,8 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       <button id="selectVisible" class="button" type="button">选中当前页</button>
       <button id="selectFiltered" class="button" type="button">选中筛选结果</button>
       <button id="clearSelected" class="button" type="button">清除选择</button>
+      <button id="copySelectedMarkdown" class="button" type="button">复制选中清单</button>
+      <button id="copySelectedSlugs" class="button" type="button">复制 Slugs</button>
       <button id="previewPatch" class="button" type="button">预览 Patch</button>
       <button id="downloadPatch" class="button" type="button">下载 CSV</button>
       <button id="copyPatchDryRun" class="button" type="button">复制预览命令</button>
@@ -3342,6 +3344,8 @@ const selectFiltered = document.querySelector("#selectFiltered");
 const clearSelected = document.querySelector("#clearSelected");
 const previewPatch = document.querySelector("#previewPatch");
 const downloadPatch = document.querySelector("#downloadPatch");
+const copySelectedMarkdown = document.querySelector("#copySelectedMarkdown");
+const copySelectedSlugs = document.querySelector("#copySelectedSlugs");
 const copyPatchDryRun = document.querySelector("#copyPatchDryRun");
 const copyPatchWrite = document.querySelector("#copyPatchWrite");
 const bulkPreview = document.querySelector("#bulkPreview");
@@ -3798,6 +3802,8 @@ function updateBulkState() {{
   bulkCount.textContent = `已选 ${{selected}} 篇`;
   toggleVisible.checked = visible.length > 0 && visibleSelected === visible.length;
   toggleVisible.indeterminate = visibleSelected > 0 && visibleSelected < visible.length;
+  copySelectedMarkdown.disabled = selected === 0;
+  copySelectedSlugs.disabled = selected === 0;
   updateBulkPreview();
 }}
 
@@ -3941,6 +3947,41 @@ function exportRows(format) {{
     return `@misc{{${{bibtexKey(row)}},\\n${{body}}\\n}}`;
   }});
   downloadText("library.bib", entries.join("\\n\\n") + "\\n", "application/x-bibtex;charset=utf-8");
+}}
+
+function selectedMarkdown(rows) {{
+  const lines = ["# Selected Papers", ""];
+  rows.forEach(row => {{
+    const title = row.dataset.title || row.dataset.slug;
+    const report = row.dataset.href || "";
+    const label = report ? `[${{mdEscape(title)}}](${{report}})` : mdEscape(title);
+    const meta = [
+      row.dataset.year !== "0" ? row.dataset.year : "",
+      row.dataset.line,
+      row.dataset.status,
+      row.dataset.stage,
+      row.dataset.importance !== "0" ? `I${{row.dataset.importance}}` : "",
+    ].filter(Boolean).join(" · ");
+    lines.push(`- ${{label}}`);
+    if (row.dataset.titleZh && row.dataset.titleZh !== title) lines.push(`  - 中文：${{row.dataset.titleZh}}`);
+    if (meta) lines.push(`  - 元数据：${{meta}}`);
+    if (row.dataset.arxivUrl) lines.push(`  - arXiv：${{row.dataset.arxivUrl}}`);
+    if (row.dataset.codeUrl) lines.push(`  - 代码：${{row.dataset.codeUrl}}`);
+  }});
+  lines.push("");
+  return lines.join("\\n");
+}}
+
+function copySelectedRows(format) {{
+  const rows = selectedRows();
+  if (!rows.length) {{
+    window.alert("请先选择论文。");
+    return;
+  }}
+  const text = format === "slugs"
+    ? rows.map(row => row.dataset.slug).join("\\n") + "\\n"
+    : selectedMarkdown(rows);
+  copyText(text, format === "slugs" ? "复制选中 Slugs" : "复制选中清单");
 }}
 
 function patchCommand(write = false) {{
@@ -4181,6 +4222,8 @@ downloadPatch.addEventListener("click", () => {{
   if (rows.length) downloadCsv("metadata_patch.csv", rows);
 }});
 previewPatch.addEventListener("click", () => updateBulkPreview());
+copySelectedMarkdown.addEventListener("click", () => copySelectedRows("markdown"));
+copySelectedSlugs.addEventListener("click", () => copySelectedRows("slugs"));
 copyPatchDryRun.addEventListener("click", () => copyText(patchCommand(false), "复制 dry-run 命令"));
 copyPatchWrite.addEventListener("click", () => copyText(patchCommand(true), "复制写入命令"));
 [
