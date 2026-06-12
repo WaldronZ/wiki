@@ -2333,6 +2333,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn('id="taxonomyChangeField"', taxonomy_html)
             self.assertIn("taxonomy_change_patch.csv", taxonomy_html)
             self.assertIn("currentChanges", taxonomy_html)
+            self.assertIn('"source_field", "source_value", "previous_value", "next_value", "title", "href"', taxonomy_html)
+            self.assertIn('header.push("_list_mode")', taxonomy_html)
             self.assertIn("&quot;status_values&quot;: [", taxonomy_html)
             self.assertIn("triaged", taxonomy_html)
             self.assertIn("KV-cache -&gt; KV Cache", taxonomy_html)

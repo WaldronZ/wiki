@@ -20019,6 +20019,12 @@ const taxonomyChangePapers = {taxonomy_change_papers_json};
     return toValue;
   }}
 
+  function previousValue(paper, field) {{
+    const spec = fieldByName.get(field);
+    const value = fieldValue(paper, field);
+    return spec && spec.is_list ? value.join("; ") : value;
+  }}
+
   function currentChanges() {{
     const field = fieldSelect.value;
     const fromValue = fromSelect.value;
@@ -20029,6 +20035,7 @@ const taxonomyChangePapers = {taxonomy_change_papers_json};
       .map((paper) => ({{
         ...paper,
         field,
+        previousValue: previousValue(paper, field),
         nextValue: replacementValue(paper, field, fromValue, toValue),
       }}));
   }}
@@ -20068,9 +20075,20 @@ const taxonomyChangePapers = {taxonomy_change_papers_json};
 
   function downloadPatch() {{
     const field = fieldSelect.value;
+    const fromValue = fromSelect.value;
+    const spec = fieldByName.get(field);
     const changes = currentChanges();
     if (!changes.length) return;
-    downloadCsv("taxonomy_change_patch.csv", [["slug", field], ...changes.map((paper) => [paper.slug, paper.nextValue])]);
+    const header = ["slug", field];
+    if (spec && spec.is_list) header.push("_list_mode");
+    header.push("source_field", "source_value", "previous_value", "next_value", "title", "href");
+    const rows = changes.map((paper) => {{
+      const row = [paper.slug, paper.nextValue];
+      if (spec && spec.is_list) row.push("replace");
+      row.push(field, fromValue, paper.previousValue, paper.nextValue, paper.title, paper.href);
+      return row;
+    }});
+    downloadCsv("taxonomy_change_patch.csv", [header, ...rows]);
   }}
 
   fieldSelect.replaceChildren(...taxonomyChangeFields.map((field) => new Option(`${{field.label}} / ${{field.english}}`, field.field)));
