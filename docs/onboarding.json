@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T08:34:28",
+  "generated_at": "2026-06-12T08:48:18",
   "count": 5,
   "inbox_count": 0,
   "readiness_score": "100%",
@@ -333,6 +333,10 @@
     {
       "href": "guides/views.schema.json",
       "description": "views.json 视图目录和批量队列契约"
+    },
+    {
+      "href": "guides/presets.schema.json",
+      "description": "presets.json 批量治理 preset 契约"
     },
     {
       "href": "guides/taxonomy.json",

@@ -105,6 +105,7 @@ REQUIRED_PAGES = {
     "workflow.html",
     "status.html",
     "views.html",
+    "presets.html",
     "batch.html",
     "pivot.html",
     "compare.html",
@@ -150,6 +151,7 @@ REQUIRED_PAGES = {
     "workflow.json",
     "status.json",
     "views.json",
+    "presets.json",
     "batch.json",
     "collections.json",
     "coverage.json",
@@ -586,6 +588,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     workflow_path = report_dir / "workflow.json"
     status_path = report_dir / "status.json"
     views_path = report_dir / "views.json"
+    presets_path = report_dir / "presets.json"
     batch_path = report_dir / "batch.json"
     collections_path = report_dir / "collections.json"
     coverage_path = report_dir / "coverage.json"
@@ -637,6 +640,9 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         return
     if not views_path.exists():
         errors.append("missing views.json")
+        return
+    if not presets_path.exists():
+        errors.append("missing presets.json")
         return
     if not batch_path.exists():
         errors.append("missing batch.json")
@@ -715,6 +721,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     workflow_data = json.loads(workflow_path.read_text(encoding="utf-8"))
     status_data = json.loads(status_path.read_text(encoding="utf-8"))
     views_data = json.loads(views_path.read_text(encoding="utf-8"))
+    presets_data = json.loads(presets_path.read_text(encoding="utf-8"))
     batch_data = json.loads(batch_path.read_text(encoding="utf-8"))
     collections_data = json.loads(collections_path.read_text(encoding="utf-8"))
     coverage_data = json.loads(coverage_path.read_text(encoding="utf-8"))
@@ -1079,6 +1086,85 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     view_links = views_data.get("links")
     if not isinstance(view_links, dict) or not {"html", "index", "library", "collections", "status", "workflow", "quality"}.issubset(view_links):
         errors.append("views.json links missing required entries")
+
+    if presets_data.get("count") != len(report_slugs):
+        errors.append(f"presets.json count {presets_data.get('count')} != markdown report count {len(report_slugs)}")
+    required_presets = {
+        "preset_count",
+        "active_status_workflow",
+        "workflow_count",
+        "field_contract",
+        "field_candidates",
+        "presets",
+        "recommendations",
+        "commands",
+        "links",
+    }
+    missing_presets = sorted(required_presets - set(presets_data))
+    if missing_presets:
+        errors.append(f"presets.json missing keys: {', '.join(missing_presets)}")
+    preset_items = presets_data.get("presets")
+    if not isinstance(preset_items, list):
+        errors.append("presets.json presets must be a list")
+        preset_items = []
+    elif presets_data.get("preset_count") != len(preset_items):
+        errors.append("presets.json preset_count must match presets length")
+    preset_ids: set[str] = set()
+    for index, preset in enumerate(preset_items):
+        if not isinstance(preset, dict):
+            errors.append(f"presets.json presets[{index}] must be an object")
+            continue
+        for key in ("id", "label", "fields", "patch_columns", "compatible_workflows", "workflow_compatibility", "library_href"):
+            if key not in preset:
+                errors.append(f"presets.json presets[{index}] missing {key}")
+        preset_id = str(preset.get("id") or "")
+        if preset_id in preset_ids:
+            errors.append(f"presets.json duplicate preset id: {preset_id}")
+        if preset_id:
+            preset_ids.add(preset_id)
+        if not isinstance(preset.get("fields"), dict):
+            errors.append(f"presets.json presets[{index}].fields must be an object")
+        patch_columns = preset.get("patch_columns")
+        if not isinstance(patch_columns, list):
+            errors.append(f"presets.json presets[{index}].patch_columns must be a list")
+        elif "slug" not in patch_columns:
+            errors.append(f"presets.json presets[{index}].patch_columns must include slug")
+        if not isinstance(preset.get("compatible_workflows"), list):
+            errors.append(f"presets.json presets[{index}].compatible_workflows must be a list")
+        workflow_matrix = preset.get("workflow_compatibility")
+        if not isinstance(workflow_matrix, list):
+            errors.append(f"presets.json presets[{index}].workflow_compatibility must be a list")
+            workflow_matrix = []
+        for matrix_index, item in enumerate(workflow_matrix):
+            if not isinstance(item, dict):
+                errors.append(f"presets.json presets[{index}].workflow_compatibility[{matrix_index}] must be an object")
+                continue
+            for key in ("workflow", "compatible", "resolved_fields", "missing_fields"):
+                if key not in item:
+                    errors.append(f"presets.json presets[{index}].workflow_compatibility[{matrix_index}] missing {key}")
+            if not isinstance(item.get("compatible"), bool):
+                errors.append(f"presets.json presets[{index}].workflow_compatibility[{matrix_index}].compatible must be a boolean")
+            if not isinstance(item.get("resolved_fields"), dict):
+                errors.append(f"presets.json presets[{index}].workflow_compatibility[{matrix_index}].resolved_fields must be an object")
+            if not isinstance(item.get("missing_fields"), list):
+                errors.append(f"presets.json presets[{index}].workflow_compatibility[{matrix_index}].missing_fields must be a list")
+    field_contract = presets_data.get("field_contract")
+    if not isinstance(field_contract, list) or not field_contract:
+        errors.append("presets.json field_contract must be a non-empty list")
+    else:
+        contract_fields = {str(item.get("field") or "") for item in field_contract if isinstance(item, dict)}
+        for field in ("status", "reading_stage", "review_stage", "next_review_days", "list_mode"):
+            if field not in contract_fields:
+                errors.append(f"presets.json field_contract missing {field}")
+    if not isinstance(presets_data.get("field_candidates"), dict):
+        errors.append("presets.json field_candidates must be an object")
+    if not isinstance(presets_data.get("recommendations"), list):
+        errors.append("presets.json recommendations must be a list")
+    if not isinstance(presets_data.get("commands"), list):
+        errors.append("presets.json commands must be a list")
+    preset_links = presets_data.get("links")
+    if not isinstance(preset_links, dict) or not {"html", "library", "workflow", "status", "taxonomy", "schema", "config"}.issubset(preset_links):
+        errors.append("presets.json links missing required entries")
 
     if batch_data.get("count") != len(report_slugs):
         errors.append(f"batch.json count {batch_data.get('count')} != markdown report count {len(report_slugs)}")
@@ -2126,6 +2212,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         "guides/workflow.schema.json",
         "guides/status.schema.json",
         "guides/views.schema.json",
+        "guides/presets.schema.json",
     }
     missing_contract_files = sorted(expected_contract_files - manifest_contract_files)
     if missing_contract_files:
@@ -2587,6 +2674,49 @@ def validate_views_schema_contract(report_dir: Path, errors: list[str], warnings
     kind_enum = set((view_properties.get("kind") or {}).get("enum") or [])
     if not {"shared", "queue", "research_line", "workflow_status"}.issubset(kind_enum):
         errors.append("guides/views.schema.json: kind enum must include shared, queue, research_line, workflow_status")
+
+
+def validate_presets_schema_contract(report_dir: Path, errors: list[str], warnings: list[str]) -> None:
+    schema_path = report_dir / "guides" / "presets.schema.json"
+    if not schema_path.exists():
+        warnings.append("guides/presets.schema.json missing; external preset schema hints are unavailable")
+        return
+
+    try:
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        errors.append(f"guides/presets.schema.json: invalid JSON: {exc}")
+        return
+
+    if not isinstance(schema, dict):
+        errors.append("guides/presets.schema.json: root must be an object")
+        return
+    if not isinstance(schema.get("$schema"), str) or not schema.get("$schema", "").strip():
+        errors.append("guides/presets.schema.json: $schema must be a non-empty string")
+    if schema.get("type") != "object":
+        errors.append("guides/presets.schema.json: type must be object")
+    properties = schema.get("properties")
+    if not isinstance(properties, dict):
+        errors.append("guides/presets.schema.json: properties must be an object")
+        properties = {}
+    for key in ("field_contract", "field_candidates", "presets", "recommendations", "commands", "links"):
+        if key not in properties:
+            errors.append(f"guides/presets.schema.json: properties.{key} is required")
+    defs = schema.get("$defs")
+    if not isinstance(defs, dict):
+        errors.append("guides/presets.schema.json: $defs must be an object")
+        defs = {}
+    preset_def = defs.get("preset")
+    if not isinstance(preset_def, dict):
+        errors.append("guides/presets.schema.json: $defs.preset is required")
+        return
+    preset_required = set(preset_def.get("required") or [])
+    for key in ("id", "label", "fields", "patch_columns", "compatible_workflows", "workflow_compatibility", "library_href"):
+        if key not in preset_required:
+            errors.append(f"guides/presets.schema.json: $defs.preset.required missing {key}")
+    for def_name in ("preset_field", "workflow_compatibility", "preset_fields"):
+        if def_name not in defs:
+            errors.append(f"guides/presets.schema.json: $defs.{def_name} is required")
 
 
 def validate_facets_schema_contract(report_dir: Path, errors: list[str], warnings: list[str]) -> None:
@@ -3174,6 +3304,7 @@ def main() -> int:
         validate_workflow_schema_contract(report_dir, errors, warnings)
         validate_status_schema_contract(report_dir, errors, warnings)
         validate_views_schema_contract(report_dir, errors, warnings)
+        validate_presets_schema_contract(report_dir, errors, warnings)
         config = validate_taxonomy_config(report_dir, errors, warnings)
         validate_controlled_taxonomy(reports, config, errors, warnings, args.strict_taxonomy)
         validate_inbox_csv(report_dir, inbox_schema, errors, warnings)

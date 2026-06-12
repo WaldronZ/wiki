@@ -1,0 +1,251 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/autopaperreader/presets.schema.json",
+  "title": "AutoPaperReader Bulk Governance Presets",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "generated_at",
+    "count",
+    "preset_count",
+    "active_status_workflow",
+    "workflow_count",
+    "field_contract",
+    "field_candidates",
+    "presets",
+    "recommendations",
+    "commands",
+    "links"
+  ],
+  "properties": {
+    "generated_at": {
+      "type": "string",
+      "description": "ISO timestamp when the preset payload was generated."
+    },
+    "count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of reports represented by the wiki."
+    },
+    "preset_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "active_status_workflow": {
+      "type": "string"
+    },
+    "workflow_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "field_contract": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/preset_field"
+      }
+    },
+    "field_candidates": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "presets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/preset"
+      }
+    },
+    "recommendations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "commands": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "links": {
+      "type": "object",
+      "required": [
+        "html",
+        "library",
+        "workflow",
+        "status",
+        "taxonomy",
+        "schema",
+        "config"
+      ],
+      "properties": {
+        "html": { "type": "string" },
+        "library": { "type": "string" },
+        "workflow": { "type": "string" },
+        "status": { "type": "string" },
+        "taxonomy": { "type": "string" },
+        "schema": { "type": "string" },
+        "config": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "preset_fields": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "status": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "array", "items": { "type": "string" } }
+          ]
+        },
+        "reading_stage": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "array", "items": { "type": "string" } }
+          ]
+        },
+        "review_stage": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "array", "items": { "type": "string" } }
+          ]
+        },
+        "next_review_days": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "importance": {
+          "oneOf": [
+            { "type": "integer", "minimum": 1, "maximum": 5 },
+            { "type": "string", "enum": ["1", "2", "3", "4", "5"] }
+          ]
+        },
+        "research_line": { "type": "string" },
+        "line_role": { "type": "string" },
+        "domains": { "type": "array", "items": { "type": "string" } },
+        "tracks": { "type": "array", "items": { "type": "string" } },
+        "problems": { "type": "array", "items": { "type": "string" } },
+        "topics": { "type": "array", "items": { "type": "string" } },
+        "methods": { "type": "array", "items": { "type": "string" } },
+        "list_mode": {
+          "type": "string",
+          "enum": ["replace", "append", "remove"]
+        }
+      }
+    },
+    "preset_field": {
+      "type": "object",
+      "required": [
+        "field",
+        "patch_column",
+        "kind",
+        "candidate_source",
+        "write_mode",
+        "description"
+      ],
+      "properties": {
+        "field": { "type": "string", "minLength": 1 },
+        "patch_column": { "type": "string", "minLength": 1 },
+        "kind": { "type": "string", "minLength": 1 },
+        "candidate_source": { "type": "string" },
+        "write_mode": { "type": "string" },
+        "description": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "workflow_compatibility": {
+      "type": "object",
+      "required": [
+        "workflow",
+        "compatible",
+        "resolved_fields",
+        "missing_fields"
+      ],
+      "properties": {
+        "workflow": { "type": "string", "minLength": 1 },
+        "compatible": { "type": "boolean" },
+        "resolved_fields": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "missing_fields": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "field",
+              "candidates",
+              "accepted_values"
+            ],
+            "properties": {
+              "field": { "type": "string" },
+              "candidates": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "accepted_values": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "preset": {
+      "type": "object",
+      "required": [
+        "id",
+        "label",
+        "description",
+        "fields",
+        "field_count",
+        "patch_columns",
+        "compatible_workflows",
+        "workflow_compatibility",
+        "library_href"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "description": { "type": "string" },
+        "fields": { "$ref": "#/$defs/preset_fields" },
+        "field_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "patch_columns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "compatible_workflows": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "workflow_compatibility": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/workflow_compatibility"
+          }
+        },
+        "library_href": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  }
+}

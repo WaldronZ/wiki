@@ -44,6 +44,7 @@ GENERATED_FIXED_PATHS = (
     "workflow.json",
     "status.json",
     "views.json",
+    "presets.json",
     "batch.json",
     "collections.json",
     "coverage.json",
@@ -66,6 +67,7 @@ GENERATED_FIXED_PATHS = (
     "workflow.html",
     "status.html",
     "views.html",
+    "presets.html",
     "batch.html",
     "pivot.html",
     "compare.html",
@@ -2162,6 +2164,281 @@ def write_status_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     )
 
 
+PRESET_FIELD_CONTRACT: list[dict[str, str]] = [
+    {
+        "field": "status",
+        "patch_column": "status",
+        "kind": "workflow",
+        "candidate_source": "status_workflows.*.status_values",
+        "write_mode": "replace",
+        "description": "论文在当前 workflow 中的主状态。",
+    },
+    {
+        "field": "reading_stage",
+        "patch_column": "reading_stage",
+        "kind": "workflow",
+        "candidate_source": "status_workflows.*.reading_stage_values",
+        "write_mode": "replace",
+        "description": "阅读深度或实现核对阶段。",
+    },
+    {
+        "field": "review_stage",
+        "patch_column": "review_stage",
+        "kind": "workflow",
+        "candidate_source": "status_workflows.*.review_stage_values",
+        "write_mode": "replace",
+        "description": "复习队列阶段。",
+    },
+    {
+        "field": "next_review_days",
+        "patch_column": "next_review",
+        "kind": "schedule",
+        "candidate_source": "relative days from today",
+        "write_mode": "replace",
+        "description": "生成 CSV patch 时转换为下次复习日期。",
+    },
+    {
+        "field": "importance",
+        "patch_column": "importance",
+        "kind": "score",
+        "candidate_source": "1..5",
+        "write_mode": "replace",
+        "description": "论文优先级或重要性评分。",
+    },
+    {
+        "field": "research_line",
+        "patch_column": "research_line",
+        "kind": "taxonomy",
+        "candidate_source": "papers.research_line",
+        "write_mode": "replace",
+        "description": "研究线。",
+    },
+    {
+        "field": "line_role",
+        "patch_column": "line_role",
+        "kind": "taxonomy",
+        "candidate_source": "role_order",
+        "write_mode": "replace",
+        "description": "论文在研究线中的角色。",
+    },
+    {
+        "field": "domains",
+        "patch_column": "domains",
+        "kind": "taxonomy_list",
+        "candidate_source": "papers.domains",
+        "write_mode": "replace|append|remove",
+        "description": "领域标签列表。",
+    },
+    {
+        "field": "tracks",
+        "patch_column": "tracks",
+        "kind": "taxonomy_list",
+        "candidate_source": "papers.tracks",
+        "write_mode": "replace|append|remove",
+        "description": "技术路线标签列表。",
+    },
+    {
+        "field": "problems",
+        "patch_column": "problems",
+        "kind": "taxonomy_list",
+        "candidate_source": "papers.problems",
+        "write_mode": "replace|append|remove",
+        "description": "问题标签列表。",
+    },
+    {
+        "field": "topics",
+        "patch_column": "topics",
+        "kind": "taxonomy_list",
+        "candidate_source": "papers.topics",
+        "write_mode": "replace|append|remove",
+        "description": "主题标签列表。",
+    },
+    {
+        "field": "methods",
+        "patch_column": "methods",
+        "kind": "taxonomy_list",
+        "candidate_source": "papers.methods",
+        "write_mode": "replace|append|remove",
+        "description": "方法标签列表。",
+    },
+    {
+        "field": "list_mode",
+        "patch_column": "_list_mode",
+        "kind": "patch_control",
+        "candidate_source": "replace|append|remove",
+        "write_mode": "control",
+        "description": "列表字段批量写入模式。",
+    },
+]
+PRESET_FIELD_ORDER = [item["field"] for item in PRESET_FIELD_CONTRACT]
+PRESET_PATCH_COLUMN_BY_FIELD = {item["field"]: item["patch_column"] for item in PRESET_FIELD_CONTRACT}
+PRESET_LIST_FIELDS = {"domains", "tracks", "problems", "topics", "methods"}
+PRESET_WORKFLOW_FIELDS = {
+    "status": "status_values",
+    "reading_stage": "reading_stage_values",
+    "review_stage": "review_stage_values",
+}
+
+
+def preset_values(value: Any) -> list[str]:
+    if isinstance(value, list):
+        return [str(item).strip() for item in value if str(item).strip()]
+    if value is None:
+        return []
+    text = str(value).strip()
+    return [text] if text else []
+
+
+def preset_patch_columns(fields: dict[str, Any]) -> list[str]:
+    columns = ["slug"]
+    list_mode = str(fields.get("list_mode") or "").strip()
+    if list_mode and list_mode != "replace" and any(field in fields for field in PRESET_LIST_FIELDS):
+        columns.append("_list_mode")
+    for field in PRESET_FIELD_ORDER:
+        if field == "list_mode" or field not in fields:
+            continue
+        column = PRESET_PATCH_COLUMN_BY_FIELD.get(field, field)
+        if column not in columns:
+            columns.append(column)
+    return columns
+
+
+def preset_workflow_compatibility(
+    fields: dict[str, Any],
+    workflows: dict[str, dict[str, list[str]]],
+) -> list[dict[str, Any]]:
+    matrix: list[dict[str, Any]] = []
+    for workflow_name, workflow in workflows.items():
+        resolved: dict[str, str] = {}
+        missing: list[dict[str, Any]] = []
+        for field, workflow_key in PRESET_WORKFLOW_FIELDS.items():
+            if field not in fields:
+                continue
+            configured_values = [str(value) for value in workflow.get(workflow_key, [])]
+            configured_lookup = {value.lower(): value for value in configured_values}
+            candidates = preset_values(fields.get(field))
+            match = next((configured_lookup[value.lower()] for value in candidates if value.lower() in configured_lookup), "")
+            if match:
+                resolved[field] = match
+            else:
+                missing.append(
+                    {
+                        "field": field,
+                        "candidates": candidates,
+                        "accepted_values": configured_values,
+                    }
+                )
+        matrix.append(
+            {
+                "workflow": workflow_name,
+                "compatible": not missing,
+                "resolved_fields": resolved,
+                "missing_fields": missing,
+            }
+        )
+    return matrix
+
+
+def preset_candidate_summary(papers: list[dict[str, Any]]) -> dict[str, list[str]]:
+    candidates: dict[str, list[str]] = {
+        "status": STATUS_VALUES.copy(),
+        "reading_stage": READING_STAGE_VALUES.copy(),
+        "review_stage": REVIEW_STAGE_VALUES.copy(),
+        "importance": ["1", "2", "3", "4", "5"],
+        "line_role": list(ROLE_ORDER.keys()),
+        "list_mode": ["replace", "append", "remove"],
+    }
+    for field in ("research_line", "domains", "tracks", "problems", "topics", "methods"):
+        seen: Counter[str] = Counter()
+        for paper in papers:
+            value = paper.get(field)
+            values = value if isinstance(value, list) else [value]
+            for item in values:
+                text = str(item or "").strip()
+                if text and text != "Unassigned":
+                    seen[text] += 1
+        candidates[field] = [label for label, _count in seen.most_common(30)]
+    return candidates
+
+
+def build_presets_payload(papers: list[dict[str, Any]]) -> dict[str, Any]:
+    controls = control_options()
+    workflows = controls.get("status_workflows") or {}
+    if not isinstance(workflows, dict) or not workflows:
+        workflows = {
+            controls.get("active_status_workflow") or "default": {
+                "status_values": controls.get("status") or [],
+                "reading_stage_values": controls.get("reading_stage") or [],
+                "review_stage_values": controls.get("review_stage") or [],
+            }
+        }
+    presets: list[dict[str, Any]] = []
+    for index, preset in enumerate(controls.get("bulk_presets") or [], start=1):
+        if not isinstance(preset, dict):
+            continue
+        fields = preset.get("fields") or {}
+        if not isinstance(fields, dict):
+            continue
+        workflow_matrix = preset_workflow_compatibility(fields, workflows)
+        compatible_workflows = [
+            item["workflow"]
+            for item in workflow_matrix
+            if item.get("compatible")
+        ]
+        preset_id = str(preset.get("id") or f"preset_{index}").strip()
+        presets.append(
+            {
+                "id": preset_id,
+                "label": str(preset.get("label") or preset_id).strip(),
+                "description": str(preset.get("description") or "").strip(),
+                "fields": fields,
+                "field_count": len(fields),
+                "patch_columns": preset_patch_columns(fields),
+                "compatible_workflows": compatible_workflows,
+                "workflow_compatibility": workflow_matrix,
+                "library_href": "library.html",
+            }
+        )
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": len(papers),
+        "preset_count": len(presets),
+        "active_status_workflow": controls.get("active_status_workflow") or "",
+        "workflow_count": len(workflows),
+        "field_contract": PRESET_FIELD_CONTRACT,
+        "field_candidates": preset_candidate_summary(papers),
+        "presets": presets,
+        "recommendations": [
+            "把常用批量动作写进 docs/guides/taxonomy.json 的 bulk_presets，避免每次在页面里临时拼 CSV。",
+            "当一套 preset 要跨 personal/research/implementation workflow 复用时，优先使用各 workflow 都存在的候选值。",
+            "DMG 或桌面端可以读取 presets.json，把 preset 渲染为菜单项，再把 patch_columns 映射成批量写回表格。",
+        ],
+        "commands": [
+            "python3 scripts/apply_library_metadata.py docs --input <metadata_patch.csv>",
+            "python3 scripts/apply_library_metadata.py docs --input <metadata_patch.csv> --write",
+            "python3 scripts/build_wiki.py docs",
+            "python3 scripts/validate_wiki.py docs --strict-taxonomy",
+        ],
+        "links": {
+            "html": "presets.html",
+            "library": "library.html",
+            "workflow": "workflow.html",
+            "status": "status.html",
+            "taxonomy": "taxonomy.html",
+            "schema": "guides/presets.schema.json",
+            "config": "guides/taxonomy.json",
+        },
+    }
+
+
+def write_presets_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_presets_payload(papers)
+    (report_dir / "presets.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
 BATCH_DIMENSIONS = [
     {"key": "research_line", "label": "研究线", "query": "line", "multi": False, "paper_key": "research_line"},
     {"key": "line_role", "label": "研究角色", "query": "role", "multi": False, "paper_key": "line_role"},
@@ -4075,6 +4352,7 @@ def wiki_pages_manifest() -> list[dict[str, str]]:
         {"title": "工作流中心", "href": "workflow.html", "kind": "workflow", "description": "状态体系对比、分布和漂移审计"},
         {"title": "状态选择器", "href": "status.html", "kind": "workflow", "description": "动态选择状态体系、阶段和值并生成可分享视图"},
         {"title": "视图目录", "href": "views.html", "kind": "workflow", "description": "共享视图、系统队列和状态/研究线视图目录"},
+        {"title": "治理预设", "href": "presets.html", "kind": "workflow", "description": "批量治理 preset、字段写入和 workflow 兼容性"},
         {"title": "批次规划", "href": "batch.html", "kind": "ops", "description": "按分类、状态和复习缺口切分可执行论文批次"},
         {"title": "分类透视表", "href": "pivot.html", "kind": "analysis", "description": "任意两个分类维度交叉分析论文分布"},
         {"title": "论文对比", "href": "compare.html", "kind": "analysis", "description": "并排比较候选论文的分类、状态和质量信号"},
@@ -4115,6 +4393,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "workflow.json", "description": "状态工作流配置、分布和漂移审计"},
         {"href": "status.json", "description": "运行时状态选择器、状态字段选项和论文状态快照"},
         {"href": "views.json", "description": "共享视图、系统队列、研究线和状态工作流视图目录"},
+        {"href": "presets.json", "description": "批量治理 preset、字段写入和 workflow 兼容性"},
         {"href": "batch.json", "description": "按分类、状态和治理缺口生成的可执行论文批次"},
         {"href": "collections.json", "description": "共享视图、智能集合和研究线集合的机器可读入口"},
         {"href": "coverage.json", "description": "研究线分类覆盖、字段缺口、缺失 slug 和 owner 信号"},
@@ -4154,6 +4433,7 @@ def contract_files_manifest() -> list[dict[str, str]]:
         {"href": "guides/workflow.schema.json", "description": "workflow.json 状态工作流审计契约"},
         {"href": "guides/status.schema.json", "description": "status.json 状态选择器和写回命令契约"},
         {"href": "guides/views.schema.json", "description": "views.json 视图目录和批量队列契约"},
+        {"href": "guides/presets.schema.json", "description": "presets.json 批量治理 preset 契约"},
         {"href": "guides/taxonomy.json", "description": "分类别名、状态工作流和共享视图配置"},
     ]
 
@@ -10009,6 +10289,158 @@ readStatusUrl();
 </script>
 """
     (report_dir / "status.html").write_text(page_shell("状态选择器", body, extra_css=status_css), encoding="utf-8")
+
+
+def render_presets(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_presets_payload(papers)
+
+    def fields_cell(fields: dict[str, Any]) -> str:
+        chips = []
+        for field in PRESET_FIELD_ORDER:
+            if field not in fields:
+                continue
+            value = fields[field]
+            if isinstance(value, list):
+                value_text = " / ".join(str(item) for item in value)
+            else:
+                value_text = str(value)
+            chips.append(f"<span class=\"chip\"><strong>{html.escape(field)}</strong> {html.escape(value_text)}</span>")
+        return '<div class="preset-chips">' + "".join(chips) + "</div>" if chips else '<span class="meta">无字段</span>'
+
+    def workflow_cell(matrix: list[dict[str, Any]]) -> str:
+        items = []
+        for item in matrix:
+            compatible = bool(item.get("compatible"))
+            cls = "ok" if compatible else "warn"
+            label = f"{item.get('workflow')} ✓" if compatible else f"{item.get('workflow')} !"
+            detail = ""
+            if not compatible:
+                missing = item.get("missing_fields") or []
+                detail = " · " + ", ".join(str(missing_item.get("field")) for missing_item in missing if isinstance(missing_item, dict))
+            items.append(f'<span class="compat {cls}">{html.escape(label)}{html.escape(detail)}</span>')
+        return '<div class="compat-list">' + "".join(items) + "</div>" if items else '<span class="meta">暂无 workflow</span>'
+
+    rows = []
+    for preset in payload["presets"]:
+        fields_json = html.escape(json.dumps(preset["fields"], ensure_ascii=False, sort_keys=True))
+        columns = ", ".join(str(column) for column in preset["patch_columns"])
+        rows.append(
+            "<tr>"
+            f'<td><strong>{html.escape(str(preset["label"]))}</strong><div class="meta">{html.escape(str(preset["id"]))}</div><div class="meta">{html.escape(str(preset["description"]))}</div></td>'
+            f"<td>{fields_cell(preset['fields'])}<details><summary>字段 JSON</summary><pre><code>{fields_json}</code></pre></details></td>"
+            f"<td><code>{html.escape(columns)}</code></td>"
+            f"<td>{workflow_cell(preset['workflow_compatibility'])}</td>"
+            f'<td><a href="{html.escape(str(preset["library_href"]))}">打开论文库</a></td>'
+            "</tr>"
+        )
+    if not rows:
+        rows.append('<tr><td colspan="5" class="empty">还没有配置 bulk_presets。</td></tr>')
+
+    field_rows = "".join(
+        "<tr>"
+        f"<td><code>{html.escape(str(item['field']))}</code></td>"
+        f"<td><code>{html.escape(str(item['patch_column']))}</code></td>"
+        f"<td>{html.escape(str(item['kind']))}</td>"
+        f"<td>{html.escape(str(item['candidate_source']))}</td>"
+        f"<td>{html.escape(str(item['write_mode']))}</td>"
+        f"<td>{html.escape(str(item['description']))}</td>"
+        "</tr>"
+        for item in payload["field_contract"]
+    )
+    command_buttons = "".join(
+        f'<button class="button copy-preset-command" type="button" data-command="{html.escape(command, quote=True)}">{html.escape(command)}</button>'
+        for command in payload["commands"]
+    )
+    recommendation_html = "".join(f"<li>{html.escape(item)}</li>" for item in payload["recommendations"])
+    presets_json = json.dumps(payload, ensure_ascii=False).replace("</", "<\\/")
+    presets_css = """
+    .preset-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .preset-panel {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .preset-panel h2 { margin: 0 0 8px; font-size: 18px; }
+    .preset-chips, .compat-list, .command-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .preset-chips .chip { border-radius: 8px; }
+    .compat {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 4px 9px;
+      font-size: 13px;
+      color: var(--muted);
+      background: var(--panel);
+    }
+    .compat.ok { color: #27624e; background: #edf7f0; border-color: #bddfc8; }
+    .compat.warn { color: #8a5d1c; background: #fff7dc; border-color: #ead18d; }
+    details { margin-top: 8px; }
+    pre {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      background: #f3efe6;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+    }
+    .data-table td { vertical-align: top; }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Bulk governance</div>
+  <h1>治理预设</h1>
+  <p class="lead">把论文库里的批量状态迁移、复习安排和分类写回动作整理成可读、可校验、可被桌面端复用的 preset 目录。</p>
+  <div class="stats">
+    <a class="stat" href="presets.json">Presets JSON</a>
+    <a class="stat" href="guides/presets.schema.json">Schema</a>
+    <a class="stat" href="library.html">论文库</a>
+    <a class="stat" href="workflow.html">工作流中心</a>
+    <span class="stat">preset {payload["preset_count"]}</span>
+    <span class="stat">workflow {payload["workflow_count"]}</span>
+    <span class="stat">active {html.escape(str(payload["active_status_workflow"] or "-"))}</span>
+  </div>
+</header>
+<main class="shell">
+  <section class="preset-summary">
+    <div class="preset-panel"><h2>推荐流程</h2><ol>{recommendation_html}</ol></div>
+    <div class="preset-panel"><h2>命令</h2><div class="command-list">{command_buttons}</div></div>
+  </section>
+  <section class="overview">
+    <h2>Preset 目录</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>Preset</th><th>写入字段</th><th>Patch columns</th><th>Workflow 兼容</th><th>入口</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div>
+  </section>
+  <section class="overview">
+    <h2>字段契约</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>字段</th><th>CSV 列</th><th>类型</th><th>候选来源</th><th>写入模式</th><th>说明</th></tr></thead><tbody>{field_rows}</tbody></table></div>
+  </section>
+</main>
+<script>
+const presetsPayload = {presets_json};
+async function copyPresetCommand(value, fallbackTitle) {{
+  try {{
+    await navigator.clipboard.writeText(value);
+  }} catch (error) {{
+    window.prompt(fallbackTitle, value);
+  }}
+}}
+document.querySelectorAll(".copy-preset-command").forEach(button => {{
+  button.dataset.label = button.textContent;
+  button.addEventListener("click", async () => {{
+    await copyPresetCommand(button.dataset.command || "", "复制命令");
+    button.textContent = "已复制";
+    setTimeout(() => button.textContent = button.dataset.label, 1200);
+  }});
+}});
+</script>
+"""
+    (report_dir / "presets.html").write_text(page_shell("治理预设", body, extra_css=presets_css), encoding="utf-8")
 
 
 def render_batch(report_dir: Path, papers: list[dict[str, Any]]) -> None:
@@ -20168,6 +20600,7 @@ def build_wiki(report_dir: Path) -> int:
     write_workflow_json(report_dir, papers)
     write_status_json(report_dir, papers)
     write_views_json(report_dir, papers)
+    write_presets_json(report_dir, papers)
     write_batch_json(report_dir, papers)
     write_collections_json(report_dir, papers)
     write_coverage_json(report_dir, papers)
@@ -20193,6 +20626,7 @@ def build_wiki(report_dir: Path) -> int:
     render_workflow(report_dir, papers)
     render_status(report_dir, papers)
     render_views(report_dir, papers)
+    render_presets(report_dir, papers)
     render_batch(report_dir, papers)
     render_pivot(report_dir, papers)
     render_compare(report_dir, papers)
