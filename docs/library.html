@@ -542,6 +542,38 @@
     }
     .density-control { margin-top: 12px; justify-content: space-between; }
     .density-control select { min-width: 128px; }
+    .row-details { margin-top: 8px; }
+    .row-details summary {
+      width: fit-content;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+      list-style: none;
+    }
+    .row-details summary::-webkit-details-marker { display: none; }
+    .row-detail-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--chip);
+    }
+    .row-detail-grid > div {
+      display: grid;
+      gap: 5px;
+      min-width: 0;
+    }
+    .row-detail-grid > div > span:first-child {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+    }
+    .row-detail-grid .chips { margin: 0; padding: 0; }
+    .row-detail-grid .flag { width: fit-content; }
     .library-table [data-col].is-hidden-column { display: none; }
     .library-table[data-density="compact"] th,
     .library-table[data-density="compact"] td { padding: 6px 8px; font-size: 13px; }
@@ -930,6 +962,15 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
     <strong><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a></strong>
     <div class="meta">DFlash: Block Diffusion for Flash Speculative Decoding</div>
     <div class="meta">2026 / Jian Chen, Yesheng Liang, Zhijian Liu / 2602.06036v1</div>
+    <details class="row-details">
+      <summary>单篇详情</summary>
+      <div class="row-detail-grid">
+        <div><span>结构分类</span><div class="chips"><span class="chip">LLM Systems</span><span class="chip">Inference Acceleration</span><span class="chip">Parallel Decoding</span><span class="chip">Lossless Speculative Decoding</span></div></div>
+        <div><span>主题 / 方法</span><div class="chips"><span class="chip">Diffusion Language Models</span><span class="chip">LLM Inference</span><span class="chip">LLM Serving</span><span class="chip">Speculative Decoding</span><span class="chip">block diffusion</span><span class="chip">KV injection</span><span class="chip">parallel drafting</span><span class="chip">Speculative Decoding</span><span class="chip">target hidden features</span></div></div>
+        <div><span>评分</span><div class="score-grid"><span>I 4</span><span>C 4</span><span>R 3</span></div></div>
+        <div><span>代码</span><span class="flag">有</span></div>
+      </div>
+    </details>
   </td>
   <td data-col="line"><a href="lines/parallel-decoding-with-diffusion-models.html">Parallel Decoding with Diffusion Models</a><div class="meta">followup</div></td>
   <td class="library-taxonomy" data-col="structure"><div class="chips"><span class="chip">LLM Systems</span><span class="chip">Inference Acceleration</span><span class="chip">Parallel Decoding</span><span class="chip">Lossless Speculative Decoding</span></div></td>
@@ -969,6 +1010,15 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
     <strong><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a></strong>
     <div class="meta">Introspective Diffusion Language Models</div>
     <div class="meta">2026 / Yifan Yu, Yuqing Jian, Junxiong Wang / 2604.11035v1</div>
+    <details class="row-details">
+      <summary>单篇详情</summary>
+      <div class="row-detail-grid">
+        <div><span>结构分类</span><div class="chips"><span class="chip">LLM Systems</span><span class="chip">Inference Acceleration</span><span class="chip">Parallel Decoding</span><span class="chip">Parallel Diffusion Decoding</span></div></div>
+        <div><span>主题 / 方法</span><div class="chips"><span class="chip">Diffusion Language Models</span><span class="chip">LLM</span><span class="chip">LLM Serving</span><span class="chip">Parallel Decoding</span><span class="chip">Speculative Decoding</span><span class="chip">gated LoRA</span><span class="chip">introspective consistency</span><span class="chip">introspective strided decoding</span><span class="chip">logit-shifted causal training</span><span class="chip">p/q acceptance</span><span class="chip">SGLang serving</span></div></div>
+        <div><span>评分</span><div class="score-grid"><span>I 5</span><span>C 4</span><span>R 3</span></div></div>
+        <div><span>代码</span><span class="flag">有</span></div>
+      </div>
+    </details>
   </td>
   <td data-col="line"><a href="lines/parallel-decoding-with-diffusion-models.html">Parallel Decoding with Diffusion Models</a><div class="meta">foundation</div></td>
   <td class="library-taxonomy" data-col="structure"><div class="chips"><span class="chip">LLM Systems</span><span class="chip">Inference Acceleration</span><span class="chip">Parallel Decoding</span><span class="chip">Parallel Diffusion Decoding</span></div></td>
@@ -1008,6 +1058,15 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
     <strong><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></strong>
     <div class="meta">Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion</div>
     <div class="meta">2026 / Chien Van Nguyen, Chaitra Hegde, Van Cuong Pham / 2605.12825v2</div>
+    <details class="row-details">
+      <summary>单篇详情</summary>
+      <div class="row-detail-grid">
+        <div><span>结构分类</span><div class="chips"><span class="chip">LLM Systems</span><span class="chip">Inference Acceleration</span><span class="chip">Parallel Decoding</span><span class="chip">Memory-Efficient Parallel Token Generation</span></div></div>
+        <div><span>主题 / 方法</span><div class="chips"><span class="chip">Diffusion Language Models</span><span class="chip">KV Cache</span><span class="chip">LLM Inference</span><span class="chip">Parallel Decoding</span><span class="chip">Speculative Decoding</span><span class="chip">dual-view attention</span><span class="chip">forward KL distillation</span><span class="chip">intra-model consensus</span><span class="chip">masked diffusion</span><span class="chip">shared KV cache</span></div></div>
+        <div><span>评分</span><div class="score-grid"><span>I 4</span><span>C 4</span><span>R 3</span></div></div>
+        <div><span>代码</span><span class="flag">有</span></div>
+      </div>
+    </details>
   </td>
   <td data-col="line"><a href="lines/parallel-decoding-with-diffusion-models.html">Parallel Decoding with Diffusion Models</a><div class="meta">variant</div></td>
   <td class="library-taxonomy" data-col="structure"><div class="chips"><span class="chip">LLM Systems</span><span class="chip">Inference Acceleration</span><span class="chip">Parallel Decoding</span><span class="chip">Memory-Efficient Parallel Token Generation</span></div></td>
@@ -1047,6 +1106,15 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
     <strong><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></strong>
     <div class="meta">FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving</div>
     <div class="meta">2025 / Zihao Ye, Lequn Chen, Ruihang Lai / 2501.01005v2</div>
+    <details class="row-details">
+      <summary>单篇详情</summary>
+      <div class="row-detail-grid">
+        <div><span>结构分类</span><div class="chips"><span class="chip">LLM Systems</span><span class="chip">Attention Kernels</span><span class="chip">Inference Serving Systems</span><span class="chip">Customizable Attention Serving</span></div></div>
+        <div><span>主题 / 方法</span><div class="chips"><span class="chip">Attention Kernels</span><span class="chip">GPU Systems</span><span class="chip">Inference Optimization</span><span class="chip">KV Cache</span><span class="chip">LLM Serving</span><span class="chip">block-sparse attention</span><span class="chip">composable KV-cache format</span><span class="chip">CUDA Graph</span><span class="chip">FlashAttention</span><span class="chip">JIT compilation</span><span class="chip">load-balanced scheduling</span></div></div>
+        <div><span>评分</span><div class="score-grid"><span>I 4</span><span>C 4</span><span>R 4</span></div></div>
+        <div><span>代码</span><span class="flag">有</span></div>
+      </div>
+    </details>
   </td>
   <td data-col="line"><a href="lines/efficient-attention-kernels.html">Efficient Attention Kernels</a><div class="meta">system</div></td>
   <td class="library-taxonomy" data-col="structure"><div class="chips"><span class="chip">LLM Systems</span><span class="chip">Attention Kernels</span><span class="chip">Inference Serving Systems</span><span class="chip">Customizable Attention Serving</span></div></td>
@@ -1086,6 +1154,15 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
     <strong><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></strong>
     <div class="meta">FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning</div>
     <div class="meta">2023 / Tri Dao / 2307.08691v1</div>
+    <details class="row-details">
+      <summary>单篇详情</summary>
+      <div class="row-detail-grid">
+        <div><span>结构分类</span><div class="chips"><span class="chip">LLM Systems</span><span class="chip">Attention Kernels</span><span class="chip">Efficient Exact Attention</span></div></div>
+        <div><span>主题 / 方法</span><div class="chips"><span class="chip">Efficient Attention</span><span class="chip">GPU Kernel Optimization</span><span class="chip">Long Context</span><span class="chip">Transformer</span><span class="chip">CUDA / GPU parallelism</span><span class="chip">FlashAttention</span><span class="chip">online softmax</span><span class="chip">tiling</span><span class="chip">work partitioning</span></div></div>
+        <div><span>评分</span><div class="score-grid"><span>I 5</span><span>C 4</span><span>R 4</span></div></div>
+        <div><span>代码</span><span class="flag">有</span></div>
+      </div>
+    </details>
   </td>
   <td data-col="line"><a href="lines/efficient-attention-kernels.html">Efficient Attention Kernels</a><div class="meta">foundation</div></td>
   <td class="library-taxonomy" data-col="structure"><div class="chips"><span class="chip">LLM Systems</span><span class="chip">Attention Kernels</span><span class="chip">Efficient Exact Attention</span></div></td>

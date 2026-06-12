@@ -8693,6 +8693,9 @@ def render_library_row(paper: dict[str, Any]) -> str:
         review_bits.append(f'下次 {html.escape(next_review)}')
     if not review_bits:
         review_bits.append("未设置复习")
+    structure_detail = render_inline_chips(domain_track_problem, 10) or '<span class="meta">无</span>'
+    tags_detail = render_inline_chips(topics_methods, 12) or '<span class="meta">无</span>'
+    code_label = "有" if paper.get("has_code") else "无"
 
     return f"""<tr
   data-search="{html.escape(search_text, quote=True)}"
@@ -8724,13 +8727,22 @@ def render_library_row(paper: dict[str, Any]) -> str:
     <strong><a href="{html.escape(link)}">{html.escape(paper["title_zh"] or paper["title"])}</a></strong>
     <div class="meta">{html.escape(paper.get("title_en") or "")}</div>
     <div class="meta">{html.escape(" / ".join(str(part) for part in [paper.get("year"), authors, paper.get("arxiv_id")] if part))}</div>
+    <details class="row-details">
+      <summary>单篇详情</summary>
+      <div class="row-detail-grid">
+        <div><span>结构分类</span><div class="chips">{structure_detail}</div></div>
+        <div><span>主题 / 方法</span><div class="chips">{tags_detail}</div></div>
+        <div><span>评分</span><div class="score-grid"><span>I {html.escape(str(paper.get("importance") or "-"))}</span><span>C {html.escape(str(paper.get("confidence") or "-"))}</span><span>R {html.escape(str(paper.get("reproducibility") or "-"))}</span></div></div>
+        <div><span>代码</span><span class="flag">{code_label}</span></div>
+      </div>
+    </details>
   </td>
   <td data-col="line">{line_html}<div class="meta">{html.escape(str(paper.get("line_role") or ""))}</div></td>
   <td class="library-taxonomy" data-col="structure"><div class="chips">{render_inline_chips(domain_track_problem, 4)}</div></td>
   <td class="library-taxonomy" data-col="tags"><div class="chips">{render_inline_chips(topics_methods, 5)}</div></td>
   <td data-col="state"><div class="status-stack"><span class="flag">{html.escape(str(paper.get("status") or "unknown"))}</span><span class="flag">{html.escape(str(paper.get("reading_stage") or "未分阶段"))}</span><span class="meta">{" · ".join(review_bits)}</span></div></td>
   <td data-col="scores"><div class="score-grid"><span>I {html.escape(str(paper.get("importance") or "-"))}</span><span>C {html.escape(str(paper.get("confidence") or "-"))}</span><span>R {html.escape(str(paper.get("reproducibility") or "-"))}</span></div></td>
-  <td data-col="code">{"有" if paper.get("has_code") else "无"}</td>
+  <td data-col="code">{code_label}</td>
   <td data-col="actions"><div class="library-actions">{"".join(links)}</div></td>
 </tr>"""
 
@@ -8883,6 +8895,38 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     }
     .density-control { margin-top: 12px; justify-content: space-between; }
     .density-control select { min-width: 128px; }
+    .row-details { margin-top: 8px; }
+    .row-details summary {
+      width: fit-content;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+      list-style: none;
+    }
+    .row-details summary::-webkit-details-marker { display: none; }
+    .row-detail-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--chip);
+    }
+    .row-detail-grid > div {
+      display: grid;
+      gap: 5px;
+      min-width: 0;
+    }
+    .row-detail-grid > div > span:first-child {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+    }
+    .row-detail-grid .chips { margin: 0; padding: 0; }
+    .row-detail-grid .flag { width: fit-content; }
     .library-table [data-col].is-hidden-column { display: none; }
     .library-table[data-density="compact"] th,
     .library-table[data-density="compact"] td { padding: 6px 8px; font-size: 13px; }
