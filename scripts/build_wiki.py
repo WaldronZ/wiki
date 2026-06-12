@@ -5217,6 +5217,14 @@ def command_recipes_manifest() -> list[dict[str, Any]]:
             "mutates": False,
         },
         {
+            "id": "validate_catalog_bootstrap_bundle",
+            "kind": "quality",
+            "label": "Validate desktop bootstrap bundle",
+            "command": "python3 scripts/validate_catalog_bundle.py docs/exports/bootstrap-bundle.json --report-dir docs --require-payloads",
+            "output": "terminal validation result",
+            "mutates": False,
+        },
+        {
             "id": "queues_markdown",
             "kind": "export",
             "label": "Export operational queue checklist",
@@ -15957,6 +15965,7 @@ def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
         ("导出统一项目任务", "python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv"),
         ("导出桌面启动包", "python3 scripts/export_catalog_bundle.py docs --output docs/exports/bootstrap-bundle.json"),
         ("导出桌面启动清单", "python3 scripts/export_catalog_bundle.py docs --no-payloads --output docs/exports/bootstrap-manifest.json"),
+        ("校验桌面启动包", "python3 scripts/validate_catalog_bundle.py docs/exports/bootstrap-bundle.json --report-dir docs --require-payloads"),
         ("导出运营队列清单", "python3 scripts/export_queues.py docs --output docs/exports/queues.md"),
         ("导出运营队列项目任务", "python3 scripts/export_queues.py docs --format project --severity high --output docs/exports/queues-project.csv"),
         ("导出运营队列复习 patch", "python3 scripts/export_queues.py docs --format patch --queue missing-review-plan --field review_stage --set-value due --output docs/exports/queues-review-patch.csv"),

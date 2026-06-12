@@ -1142,6 +1142,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv", quality_html)
             self.assertIn("python3 scripts/export_catalog_bundle.py docs --output docs/exports/bootstrap-bundle.json", quality_html)
             self.assertIn("python3 scripts/export_catalog_bundle.py docs --no-payloads --output docs/exports/bootstrap-manifest.json", quality_html)
+            self.assertIn("python3 scripts/validate_catalog_bundle.py docs/exports/bootstrap-bundle.json --report-dir docs --require-payloads", quality_html)
             self.assertIn("python3 scripts/export_queues.py docs --format project --severity high --output docs/exports/queues-project.csv", quality_html)
             self.assertIn("python3 scripts/export_queues.py docs --format patch --queue missing-review-plan --field review_stage --set-value due --output docs/exports/queues-review-patch.csv", quality_html)
             self.assertIn("python3 scripts/export_cohorts.py docs --format project --action singleton --output docs/exports/cohorts-project.csv", quality_html)
@@ -1248,6 +1249,14 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("papers", bundle_files["papers.json"]["top_level_keys"])
             self.assertIn("payload", bundle_files["papers.json"])
             self.assertEqual(bundle_files["papers.json"]["payload"]["count"], 2)
+            bundle_validate = self.run_cmd(
+                "scripts/validate_catalog_bundle.py",
+                str(bootstrap_bundle_path),
+                "--report-dir",
+                str(report_dir),
+                "--require-payloads",
+            )
+            self.assertIn("Bundle validation passed", bundle_validate.stdout)
 
             bootstrap_manifest_path = report_dir / "exports" / "bootstrap-manifest.json"
             self.run_cmd(
@@ -1266,6 +1275,28 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(bootstrap_manifest["summary"]["file_count"], 2)
             self.assertEqual(bootstrap_manifest["summary"]["payload_count"], 0)
             self.assertNotIn("payload", bootstrap_manifest["files"][0])
+            manifest_validate = self.run_cmd(
+                "scripts/validate_catalog_bundle.py",
+                str(bootstrap_manifest_path),
+                "--report-dir",
+                str(report_dir),
+                "--metadata-only",
+            )
+            self.assertIn("Bundle validation passed", manifest_validate.stdout)
+
+            corrupt_bundle_path = report_dir / "exports" / "bootstrap-corrupt.json"
+            corrupt_bundle = json.loads(bootstrap_bundle_path.read_text(encoding="utf-8"))
+            corrupt_bundle["files"][0]["sha256"] = "0" * 64
+            corrupt_bundle_path.write_text(json.dumps(corrupt_bundle), encoding="utf-8")
+            corrupt_validate = self.run_cmd(
+                "scripts/validate_catalog_bundle.py",
+                str(corrupt_bundle_path),
+                "--report-dir",
+                str(report_dir),
+                check=False,
+            )
+            self.assertNotEqual(corrupt_validate.returncode, 0)
+            self.assertIn("sha256 mismatch", corrupt_validate.stderr)
 
             invalid_bundle = self.run_cmd(
                 "scripts/export_catalog_bundle.py",
