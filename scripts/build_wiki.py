@@ -6798,6 +6798,46 @@ def render_command(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
     payload = build_command_center_payload(report_dir, papers, inbox_items)
     lanes = payload["lanes"]
     lane_html = "".join(render_command_lane(lane) for lane in lanes)
+    focus_actions = [
+        {
+            "title": "今天先读什么",
+            "href": "priority.html",
+            "body": "按复习、分类、代码和阅读阶段合成论文级优先级。",
+            "meta": f'{payload["summary"]["high_priority_papers"]} high',
+        },
+        {
+            "title": "整理论文库",
+            "href": "library.html",
+            "body": "密集筛选、批量选择、导出清单和 metadata patch。",
+            "meta": f'{payload["count"]} papers',
+        },
+        {
+            "title": "导入新论文",
+            "href": "intake.html",
+            "body": "粘贴链接、去重、路由，再进入正式阅读队列。",
+            "meta": f'{payload["inbox_count"]} inbox',
+        },
+        {
+            "title": "治理分类",
+            "href": "registry.html",
+            "body": "处理标签定义、过载、长尾、alias 和 owner 信号。",
+            "meta": f'{payload["summary"]["taxonomy_registry_high"]} high risk',
+        },
+        {
+            "title": "发布检查",
+            "href": "release.html",
+            "body": "查看质量门、产物清单、开源上手和数据契约。",
+            "meta": "ready" if payload["publish_ready"] else "needs work",
+        },
+    ]
+    focus_html = "".join(
+        f"""<a class="focus-action" href="{html.escape(item["href"])}">
+  <span>{html.escape(item["meta"])}</span>
+  <strong>{html.escape(item["title"])}</strong>
+  <em>{html.escape(item["body"])}</em>
+</a>"""
+        for item in focus_actions
+    )
     persona_options = "".join(
         f'<option value="{html.escape(persona, quote=True)}">{html.escape(persona)}</option>'
         for persona in sorted({str(lane.get("persona") or "") for lane in lanes if lane.get("persona")})
@@ -6812,6 +6852,56 @@ def render_command(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
     )
     payload_json = json.dumps(payload, ensure_ascii=False).replace("</", "<\\/")
     command_css = """
+    .focus-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 10px;
+      margin: 0 0 18px;
+    }
+    .focus-action {
+      display: grid;
+      gap: 6px;
+      min-height: 136px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--panel);
+      padding: 14px;
+      color: var(--ink);
+    }
+    .focus-action:hover {
+      border-color: #8c959f;
+      text-decoration: none;
+    }
+    .focus-action span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .focus-action strong {
+      font-size: 18px;
+      line-height: 1.25;
+    }
+    .focus-action em {
+      color: var(--muted);
+      font-size: 13px;
+      font-style: normal;
+      line-height: 1.45;
+    }
+    .advanced-command {
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--panel);
+    }
+    .advanced-command > summary {
+      cursor: pointer;
+      padding: 12px 14px;
+      color: var(--ink);
+      font-weight: 650;
+    }
+    .advanced-command-inner {
+      border-top: 1px solid var(--line);
+      padding: 14px;
+    }
     .command-toolbar {
       display: grid;
       grid-template-columns: minmax(220px, 1fr) minmax(160px, 220px) auto auto;
@@ -6945,7 +7035,13 @@ def render_command(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
       <strong id="commandVisible">{len(lanes)} / {len(lanes)} 场景</strong>
       <button class="button" id="copyCommandBootstrap" type="button">复制接入 JSON</button>
     </div>
-    <div class="command-lanes" id="commandLanes">{lane_html}</div>
+    <div class="focus-actions">{focus_html}</div>
+    <details class="advanced-command">
+      <summary>高级场景与批量命令</summary>
+      <div class="advanced-command-inner">
+        <div class="command-lanes" id="commandLanes">{lane_html}</div>
+      </div>
+    </details>
   </section>
 </main>
 <script>
@@ -7717,7 +7813,33 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]], inbox_items: li
     }
     cards = "\n".join(render_card(paper) for paper in papers)
     line_overview = render_line_overview(papers)
-    lane_cards = "".join(render_index_lane(lane) for lane in command_payload["lanes"])
+    core_lane_ids = {"daily_reading", "paper_intake", "taxonomy_governance", "release_open_source"}
+    lane_cards = "".join(
+        render_index_lane(lane)
+        for lane in command_payload["lanes"]
+        if str(lane.get("id") or "") in core_lane_ids
+    )
+    advanced_links = [
+        ("Command JSON", "command.json"),
+        ("Manifest JSON", "manifest.json"),
+        ("批次规划", "batch.html"),
+        ("状态看板", "board.html"),
+        ("复习计划", "review.html"),
+        ("管理控制台", "dashboard.html"),
+        ("集合视图", "collections.html"),
+        ("关联网络", "related.html"),
+        ("研究缺口", "gaps.html"),
+        ("质量治理", "quality.html"),
+        ("时间轴", "timeline.html"),
+        ("研究矩阵", "matrix.html"),
+        ("研究线", "lines/index.html"),
+        ("分类总览", "tags.html"),
+        ("Papers JSON", "papers.json"),
+    ]
+    advanced_link_html = "".join(
+        f'<a class="chip" href="{html.escape(href)}">{html.escape(label)}</a>'
+        for label, href in advanced_links
+    )
     command_next = "".join(
         "<tr>"
         f'<td><a href="{html.escape(str(item["href"]))}">{html.escape(str(item["label"]))}</a></td>'
@@ -7759,6 +7881,22 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]], inbox_items: li
     .home-command-panel .data-table {
       border: 0;
       background: transparent;
+    }
+    .home-secondary-links {
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--panel);
+    }
+    .home-secondary-links summary {
+      cursor: pointer;
+      padding: 10px 12px;
+      font-weight: 650;
+    }
+    .home-secondary-links .chips {
+      border-top: 1px solid var(--line);
+      padding: 12px;
+      margin: 0;
     }
     .home-lanes {
       display: grid;
@@ -7831,32 +7969,17 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]], inbox_items: li
   <div class="stats">
     <span class="stat">论文 {len(papers)}</span>
     <span class="stat">研究线 {len(taxonomy["research_lines"])}</span>
-    <span class="stat">分类 {len(data["tags"])}</span>
     <span class="stat">高优先级论文 {command_payload["summary"]["high_priority_papers"]}</span>
     <span class="stat">行动 {command_payload["summary"]["actions"]}</span>
-    <span class="stat">High {command_payload["summary"]["high_actions"]}</span>
-    <span class="stat">最近更新 {html.escape(data["generated_at"])}</span>
     <a class="stat" href="command.html">命令中心</a>
     <a class="stat" href="priority.html">优先级决策台</a>
     <a class="stat" href="library.html">论文库表格</a>
-    <a class="stat" href="batch.html">批次规划</a>
-    <a class="stat" href="board.html">状态看板</a>
-    <a class="stat" href="inbox.html">待处理池</a>
-    <a class="stat" href="review.html">复习计划</a>
-    <a class="stat" href="dashboard.html">管理控制台</a>
-    <a class="stat" href="collections.html">集合视图</a>
-    <a class="stat" href="related.html">关联网络</a>
-    <a class="stat" href="gaps.html">研究缺口</a>
-    <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
-    <a class="stat" href="timeline.html">时间轴</a>
-    <a class="stat" href="matrix.html">研究矩阵</a>
-    <a class="stat" href="lines/index.html">研究线</a>
-    <a class="stat" href="tags.html">分类总览</a>
-    <a class="stat" href="quality.json">质量 JSON</a>
-    <a class="stat" href="stats.json">统计 JSON</a>
-    <a class="stat" href="papers.json">JSON 索引</a>
   </div>
+  <details class="home-secondary-links">
+    <summary>更多页面与数据</summary>
+    <div class="chips">{advanced_link_html}</div>
+  </details>
 </header>
 <div class="toolbar">
   <div class="shell controls">
@@ -7889,6 +8012,7 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]], inbox_items: li
       <div class="links">
         <a class="button" href="command.json">Command JSON</a>
         <a class="button" href="manifest.json">Manifest JSON</a>
+        <a class="button" href="command.html">全部场景</a>
       </div>
     </aside>
   </section>
