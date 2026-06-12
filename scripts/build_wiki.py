@@ -8213,6 +8213,17 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     }
     .bulk-panel .bulk-count { color: var(--muted); font-weight: 700; white-space: nowrap; }
     .bulk-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .bulk-workflow-meta {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+    }
+    .bulk-workflow-meta strong { color: var(--text); }
     .bulk-taxonomy {
       grid-column: 1 / -1;
       border-top: 1px solid var(--line);
@@ -8518,6 +8529,7 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <select id="bulkReviewStage"><option value="">复习阶段</option>{render_value_options(controls["review_stage"])}</select>
     <input id="bulkNextReview" type="date" aria-label="下次复习日期">
     <select id="bulkImportance"><option value="">重要性</option><option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select>
+    <div id="bulkWorkflowMeta" class="bulk-workflow-meta" aria-live="polite">状态体系加载中。</div>
     <div class="bulk-actions">
       <button id="selectVisible" class="button" type="button">选中当前页</button>
       <button id="selectFiltered" class="button" type="button">选中筛选结果</button>
@@ -8647,6 +8659,7 @@ const bulkStage = document.querySelector("#bulkStage");
 const bulkReviewStage = document.querySelector("#bulkReviewStage");
 const bulkNextReview = document.querySelector("#bulkNextReview");
 const bulkImportance = document.querySelector("#bulkImportance");
+const bulkWorkflowMeta = document.querySelector("#bulkWorkflowMeta");
 const bulkListMode = document.querySelector("#bulkListMode");
 const bulkResearchLine = document.querySelector("#bulkResearchLine");
 const bulkLineRole = document.querySelector("#bulkLineRole");
@@ -8749,6 +8762,13 @@ function statusValuesForWorkflow(name) {{
   return workflowValuesFor(name, "status_values", fallbackStatusValues, observedStatusValues);
 }}
 
+function workflowFieldValues(name, key) {{
+  if (key === "status_values") return statusValuesForWorkflow(name);
+  if (key === "reading_stage_values") return workflowValuesFor(name, key, fallbackStageValues, observedStageValues);
+  if (key === "review_stage_values") return workflowValuesFor(name, key, fallbackReviewStageValues, observedReviewStageValues);
+  return [];
+}}
+
 function workflowValuesFor(name, key, fallbackValues, observedValues) {{
   const workflow = statusWorkflows[name] || {{}};
   const configured = Array.isArray(workflow[key]) ? workflow[key] : fallbackValues;
@@ -8780,13 +8800,55 @@ function populateStatusWorkflowOptions() {{
 }}
 
 function populateBulkPresetOptions() {{
+  const current = bulkPreset.value;
+  const workflowName = statusWorkflow.value || activeStatusWorkflow;
   bulkPreset.replaceChildren(new Option("治理 preset", ""));
   bulkPresets.forEach(preset => {{
     if (!preset || !preset.id) return;
-    const option = new Option(preset.label || preset.id, preset.id);
-    option.title = preset.description || "";
+    const compatibility = presetCompatibility(preset, workflowName);
+    const suffix = compatibility.compatible ? "可用" : "需调整";
+    const option = new Option(`${{preset.label || preset.id}} · ${{suffix}}`, preset.id);
+    option.title = [preset.description || "", compatibility.note].filter(Boolean).join(" / ");
+    option.dataset.compatible = compatibility.compatible ? "yes" : "no";
     bulkPreset.appendChild(option);
   }});
+  bulkPreset.value = Array.from(bulkPreset.options).some(option => option.value === current) ? current : "";
+}}
+
+function presetCompatibility(preset, workflowName) {{
+  const fields = preset && preset.fields ? preset.fields : {{}};
+  const specs = [
+    ["status", "status_values"],
+    ["reading_stage", "reading_stage_values"],
+    ["review_stage", "review_stage_values"],
+  ];
+  const missing = [];
+  specs.forEach(([field, key]) => {{
+    const candidates = presetFieldCandidates(fields[field]);
+    if (!candidates.length) return;
+    const available = workflowFieldValues(workflowName, key);
+    const absent = candidates.filter(candidate => !available.includes(candidate));
+    if (absent.length) missing.push(`${{field}}=${{absent.join("|")}}`);
+  }});
+  return {{
+    compatible: missing.length === 0,
+    note: missing.length ? `当前 workflow 缺少 ${{missing.join(", ")}}` : `兼容当前 workflow ${{workflowName || "default"}}`,
+  }};
+}}
+
+function updateBulkWorkflowMeta() {{
+  const workflowName = statusWorkflow.value || activeStatusWorkflow;
+  const statusValues = statusValuesForWorkflow(workflowName);
+  const stageValues = workflowFieldValues(workflowName, "reading_stage_values");
+  const reviewValues = workflowFieldValues(workflowName, "review_stage_values");
+  const compatiblePresetCount = bulkPresets.filter(preset => presetCompatibility(preset, workflowName).compatible).length;
+  bulkWorkflowMeta.innerHTML = `
+    <span>当前状态体系 <strong>${{workflowName || "default"}}</strong></span>
+    <span>status ${{statusValues.length}}</span>
+    <span>reading ${{stageValues.length}}</span>
+    <span>review ${{reviewValues.length}}</span>
+    <span>preset ${{compatiblePresetCount}}/${{bulkPresets.length}} 可用</span>
+  `;
 }}
 
 function applyStatusWorkflow() {{
@@ -8800,6 +8862,8 @@ function applyStatusWorkflow() {{
   replaceWorkflowOptions(bulkStage, "阅读阶段", stageValues, "stage", false);
   replaceWorkflowOptions(reviewStage, "复习阶段", reviewStageValues, "reviewStage", true);
   replaceWorkflowOptions(bulkReviewStage, "复习阶段", reviewStageValues, "reviewStage", false);
+  populateBulkPresetOptions();
+  updateBulkWorkflowMeta();
 }}
 
 function pageLimit() {{
@@ -9586,10 +9650,14 @@ function updateBulkPreview() {{
   const listModeLabel = listFields.length
     ? `；分类字段以 ${{bulkListMode.options[bulkListMode.selectedIndex].textContent}} 写入`
     : "";
+  const workflowName = statusWorkflow.value || activeStatusWorkflow;
+  const preset = bulkPresets.find(item => item && item.id === bulkPreset.value);
+  const presetNote = preset ? `；preset ${{preset.label || preset.id}}（${{presetCompatibility(preset, workflowName).note}}）` : "";
   const sample = selected.slice(0, 8).map(row => `<span>${{row.dataset.slug}}</span>`).join("");
   const more = selected.length > 8 ? `<span>+${{selected.length - 8}}</span>` : "";
   bulkPreview.innerHTML = `
     <div><strong>${{selected.length}}</strong> 篇论文，字段 <strong>${{fields.join(", ")}}</strong>${{listModeLabel}}</div>
+    <div class="meta">状态体系：${{workflowName || "default"}}${{presetNote}}</div>
     <div class="bulk-preview-list">${{sample}}${{more}}</div>
     <code>${{patchCommand(false)}}</code>
   `;
@@ -9809,7 +9877,6 @@ densityMode.addEventListener("input", () => {{
 }});
 
 populateStatusWorkflowOptions();
-populateBulkPresetOptions();
 readStateFromUrl();
 refreshSavedViews();
 applyLibraryPrefs(readLibraryPrefs());
