@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>分类成熟度</title>
+  <title>运营队列</title>
   <style>
     :root {
       color-scheme: light;
@@ -350,43 +350,30 @@
       .data-table { display: block; overflow-x: auto; }
       header { padding-top: 28px; }
     }
-.curation-summary {
+.queue-summary {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
       gap: 12px;
       margin-bottom: 18px;
     }
-    .curation-panel {
+    .queue-card {
+      display: grid;
+      gap: 6px;
       border: 1px solid var(--line);
       background: var(--panel);
       border-radius: 8px;
       padding: 14px;
     }
-    .curation-panel h2 { margin: 0 0 8px; font-size: 18px; }
-    .curation-panel strong { display: block; font-size: 30px; line-height: 1.1; }
-    .curation-tools {
+    .queue-card strong { font-size: 30px; line-height: 1.1; }
+    .queue-card a { color: var(--accent); font-weight: 800; }
+    .queue-tools {
       display: grid;
-      grid-template-columns: minmax(220px, 2fr) minmax(150px, 1fr) minmax(150px, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 10px;
       margin-bottom: 14px;
     }
-    .curation-chips, .command-list { display: flex; flex-wrap: wrap; gap: 8px; }
-    .curation-chips .chip { border-radius: 8px; }
-    .score-track {
-      width: 100%;
-      height: 8px;
-      margin-top: 6px;
-      border-radius: 999px;
-      background: #ece4d8;
-      overflow: hidden;
-    }
-    .score-track span {
-      display: block;
-      height: 100%;
-      background: var(--accent);
-    }
+    .command-list { display: flex; flex-wrap: wrap; gap: 8px; }
     .data-table td { vertical-align: top; }
-    @media (max-width: 760px) { .curation-tools { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -403,101 +390,93 @@
 </div>
 
 <header class="shell">
-  <div class="eyebrow">Taxonomy curation</div>
-  <h1>分类成熟度</h1>
-  <p class="lead">按论文逐条检查研究线、结构分类、topic/method、阅读状态和复习计划，把大库治理拆成可执行的补齐队列。</p>
+  <div class="eyebrow">Operational queues</div>
+  <h1>运营队列</h1>
+  <p class="lead">把论文库里的缺分类、缺复习、到期复习、代码未检查和高优先级待读沉淀成可分享、可校验、可被桌面端读取的任务队列。</p>
   <div class="stats">
-    <a class="stat" href="curation.json">Curation JSON</a>
-    <a class="stat" href="guides/curation.schema.json">Schema</a>
-    <a class="stat" href="quality.html">质量治理</a>
-    <a class="stat" href="facets.html">分类工作台</a>
-    <span class="stat">论文 5</span>
+    <a class="stat" href="queues.json">Queues JSON</a>
+    <a class="stat" href="guides/queues.schema.json">Schema</a>
+    <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="presets.html">治理预设</a>
+    <a class="stat" href="actions.html">行动中心</a>
+    <span class="stat">队列 2/5</span>
   </div>
 </header>
 <main class="shell">
-  <section class="curation-summary">
-    <div class="curation-panel"><span class="meta">平均成熟度</span><strong>88.0</strong><span class="meta">0-100</span></div>
-    <div class="curation-panel"><span class="meta">Ready</span><strong>0</strong><span class="meta">可作为展示基线</span></div>
-    <div class="curation-panel"><span class="meta">待治理</span><strong>5</strong><span class="meta">needs curation</span></div>
-    <div class="curation-panel"><h2>建议</h2><ol><li>先处理 score 最低且缺 research_line/domain/track/problem 的论文，它们最影响大库导航。</li><li>对 weak_fields 使用 metadata patch 批量追加 topic/method，避免只有单一标签导致检索入口过窄。</li><li>把 ready 队列作为可开源展示基线，把 triage/needs_curation 队列作为每周治理任务。</li></ol></div>
+  <section class="queue-summary">
+    <section class="queue-card"><span>论文</span><strong>5</strong><span>papers</span></section>
+    <section class="queue-card"><span>队列命中</span><strong>10</strong><span>queue hits</span></section>
+    <section class="queue-card"><span>有代码未检查</span><strong>5</strong><a href="library.html?code=yes&amp;sort=importance">medium · code_check</a></section><section class="queue-card"><span>缺复习计划</span><strong>5</strong><a href="library.html?review=none&amp;sort=importance">medium · schedule_review</a></section>
+    <section class="queue-card"><span>建议</span><ol><li>先处理 high 队列：缺分类会影响所有筛选入口，到期复习会影响长期记忆。</li><li>把 recurring 队列沉淀成 bulk_presets，避免每次手动拼 metadata_patch.csv。</li><li>桌面端或 DMG 可以读取 queues.json，把队列渲染为侧边栏任务入口。</li></ol></section>
   </section>
   <section class="overview">
-    <h2>字段缺口</h2>
-    <div class="table-wrap"><table class="data-table"><thead><tr><th>字段</th><th>缺失</th><th>稀疏</th><th>入口</th></tr></thead><tbody><tr><td><code>next_review</code></td><td>5</td><td>0</td><td><a href="library.html">论文库</a></td></tr><tr><td><code>review_stage</code></td><td>5</td><td>0</td><td><a href="library.html">论文库</a></td></tr></tbody></table></div>
-  </section>
-  <section class="overview">
-    <div class="results-bar"><h2>论文清单</h2><span id="curationCount" class="meta"></span></div>
-    <div class="curation-tools">
-      <input id="curationSearch" type="search" placeholder="搜索标题、slug、研究线、字段">
-      <select id="curationLevel"><option value="">全部成熟度</option><option value="usable">usable (5)</option></select>
-      <select id="curationField"><option value="">全部字段</option><option value="research_line">research_line (0)</option><option value="line_role">line_role (0)</option><option value="domains">domains (0)</option><option value="tracks">tracks (0)</option><option value="problems">problems (0)</option><option value="topics">topics (0)</option><option value="methods">methods (0)</option><option value="status">status (0)</option><option value="reading_stage">reading_stage (0)</option><option value="review_stage">review_stage (5)</option><option value="importance">importance (0)</option><option value="next_review">next_review (5)</option><option value="has_code">has_code (0)</option></select>
+    <div class="results-bar"><h2>队列清单</h2><span id="queueCount" class="meta"></span></div>
+    <div class="queue-tools">
+      <select id="queueSeverity"><option value="">全部优先级</option><option value="high">high</option><option value="medium">medium</option><option value="low">low</option></select>
+      <select id="queuePreset"><option value="">全部 preset</option><option value="manual">manual</option><option value="schedule_review">schedule_review</option><option value="code_check">code_check</option><option value="deep_read">deep_read</option></select>
     </div>
-    <div class="table-wrap"><table class="data-table"><thead><tr><th>论文</th><th>分数</th><th>研究线</th><th>缺失字段</th><th>稀疏字段</th><th>建议</th></tr></thead><tbody id="curationRows"><tr data-level="usable" data-fields="review_stage next_review domains tracks problems" data-search="2307.08691-flashattention-2 flashattention-2: faster attention with better parallelism and work partitioning flashattention-2：用更好的并行性与工作划分加速 attention efficient attention kernels foundation read 补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。 review_stage next_review domains tracks problems">
-  <td><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a><div class="meta">2307.08691-flashattention-2</div></td>
-  <td><strong>88</strong><div class="score-track"><span style="width: 88%"></span></div><div class="meta">usable</div></td>
-  <td>Efficient Attention Kernels<div class="meta">foundation</div></td>
-  <td><div class="curation-chips"><span class="chip">review_stage</span><span class="chip">next_review</span></div></td>
-  <td><div class="curation-chips"><span class="chip">domains</span><span class="chip">tracks</span><span class="chip">problems</span></div></td>
-  <td>补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。<div class="meta">patch: slug, review_stage, next_review, domains, tracks, problems</div></td>
-</tr><tr data-level="usable" data-fields="review_stage next_review domains problems" data-search="2501.01005-flashinfer flashinfer: efficient and customizable attention engine for llm inference serving flashinfer：面向 llm 推理服务的高效可定制 attention 引擎 efficient attention kernels system read 补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。 review_stage next_review domains problems">
-  <td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a><div class="meta">2501.01005-flashinfer</div></td>
-  <td><strong>88</strong><div class="score-track"><span style="width: 88%"></span></div><div class="meta">usable</div></td>
-  <td>Efficient Attention Kernels<div class="meta">system</div></td>
-  <td><div class="curation-chips"><span class="chip">review_stage</span><span class="chip">next_review</span></div></td>
-  <td><div class="curation-chips"><span class="chip">domains</span><span class="chip">problems</span></div></td>
-  <td>补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。<div class="meta">patch: slug, review_stage, next_review, domains, problems</div></td>
-</tr><tr data-level="usable" data-fields="review_stage next_review domains problems" data-search="2602.06036-dflash dflash: block diffusion for flash speculative decoding dflash：用于快速 speculative decoding 的块扩散方法 parallel decoding with diffusion models followup read 补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。 review_stage next_review domains problems">
-  <td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a><div class="meta">2602.06036-dflash</div></td>
-  <td><strong>88</strong><div class="score-track"><span style="width: 88%"></span></div><div class="meta">usable</div></td>
-  <td>Parallel Decoding with Diffusion Models<div class="meta">followup</div></td>
-  <td><div class="curation-chips"><span class="chip">review_stage</span><span class="chip">next_review</span></div></td>
-  <td><div class="curation-chips"><span class="chip">domains</span><span class="chip">problems</span></div></td>
-  <td>补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。<div class="meta">patch: slug, review_stage, next_review, domains, problems</div></td>
-</tr><tr data-level="usable" data-fields="review_stage next_review domains problems" data-search="2604.11035-introspective-dlm introspective diffusion language models 内省式扩散语言模型 parallel decoding with diffusion models foundation read 补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。 review_stage next_review domains problems">
-  <td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a><div class="meta">2604.11035-introspective-dlm</div></td>
-  <td><strong>88</strong><div class="score-track"><span style="width: 88%"></span></div><div class="meta">usable</div></td>
-  <td>Parallel Decoding with Diffusion Models<div class="meta">foundation</div></td>
-  <td><div class="curation-chips"><span class="chip">review_stage</span><span class="chip">next_review</span></div></td>
-  <td><div class="curation-chips"><span class="chip">domains</span><span class="chip">problems</span></div></td>
-  <td>补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。<div class="meta">patch: slug, review_stage, next_review, domains, problems</div></td>
-</tr><tr data-level="usable" data-fields="review_stage next_review domains problems" data-search="2605.12825-orthrus orthrus: memory-efficient parallel token generation via dual-view diffusion orthrus：通过双视角扩散实现内存高效的并行 token 生成 parallel decoding with diffusion models variant read 补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。 review_stage next_review domains problems">
-  <td><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a><div class="meta">2605.12825-orthrus</div></td>
-  <td><strong>88</strong><div class="score-track"><span style="width: 88%"></span></div><div class="meta">usable</div></td>
-  <td>Parallel Decoding with Diffusion Models<div class="meta">variant</div></td>
-  <td><div class="curation-chips"><span class="chip">review_stage</span><span class="chip">next_review</span></div></td>
-  <td><div class="curation-chips"><span class="chip">domains</span><span class="chip">problems</span></div></td>
-  <td>补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。<div class="meta">patch: slug, review_stage, next_review, domains, problems</div></td>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>队列</th><th>论文</th><th>优先级</th><th>建议字段</th><th>样例</th><th>说明</th></tr></thead><tbody id="queueRows"><tr data-severity="high" data-preset="manual">
+  <td><a href="library.html?sort=updated"><strong>缺分类</strong></a><div class="meta">missing-taxonomy</div></td>
+  <td>0<div class="meta">0.0%</div></td>
+  <td><span class="flag">high</span><div class="meta">manual</div></td>
+  <td>domains, topics, methods</td>
+  <td><span class="meta">无样例</span></td>
+  <td>缺 domain、topic 或 method 的论文，适合先补 frontmatter 分类。</td>
+</tr><tr data-severity="medium" data-preset="schedule_review">
+  <td><a href="library.html?review=none&amp;sort=importance"><strong>缺复习计划</strong></a><div class="meta">missing-review-plan</div></td>
+  <td>5<div class="meta">100.0%</div></td>
+  <td><span class="flag">medium</span><div class="meta">schedule_review</div></td>
+  <td>review_stage, next_review</td>
+  <td><a href="2307.08691-flashattention-2.html">2307.08691-flashattention-2</a> · <a href="2604.11035-introspective-dlm.html">2604.11035-introspective-dlm</a> · <a href="2602.06036-dflash.html">2602.06036-dflash</a> · <a href="2501.01005-flashinfer.html">2501.01005-flashinfer</a> · <a href="2605.12825-orthrus.html">2605.12825-orthrus</a></td>
+  <td>没有 next_review 的论文，适合批量安排复习日期。</td>
+</tr><tr data-severity="high" data-preset="schedule_review">
+  <td><a href="library.html?review=due&amp;sort=importance"><strong>到期复习</strong></a><div class="meta">due-review</div></td>
+  <td>0<div class="meta">0.0%</div></td>
+  <td><span class="flag">high</span><div class="meta">schedule_review</div></td>
+  <td>review_stage, next_review</td>
+  <td><span class="meta">无样例</span></td>
+  <td>next_review 已到期的论文，适合立即进入复习队列。</td>
+</tr><tr data-severity="medium" data-preset="code_check">
+  <td><a href="library.html?code=yes&amp;sort=importance"><strong>有代码未检查</strong></a><div class="meta">code-unchecked</div></td>
+  <td>5<div class="meta">100.0%</div></td>
+  <td><span class="flag">medium</span><div class="meta">code_check</div></td>
+  <td>reading_stage, review_stage, next_review</td>
+  <td><a href="2307.08691-flashattention-2.html">2307.08691-flashattention-2</a> · <a href="2604.11035-introspective-dlm.html">2604.11035-introspective-dlm</a> · <a href="2602.06036-dflash.html">2602.06036-dflash</a> · <a href="2501.01005-flashinfer.html">2501.01005-flashinfer</a> · <a href="2605.12825-orthrus.html">2605.12825-orthrus</a></td>
+  <td>已标记有代码但阅读阶段还不是 code_checked 的论文。</td>
+</tr><tr data-severity="high" data-preset="deep_read">
+  <td><a href="library.html?importance=4&amp;sort=importance"><strong>高优先级待读</strong></a><div class="meta">high-priority-unread</div></td>
+  <td>0<div class="meta">0.0%</div></td>
+  <td><span class="flag">high</span><div class="meta">deep_read</div></td>
+  <td>status, reading_stage, next_review</td>
+  <td><span class="meta">无样例</span></td>
+  <td>重要性不低于 4 且仍处在未读、排队或分流状态的核心论文。</td>
 </tr></tbody></table></div>
   </section>
   <section class="overview">
     <h2>命令</h2>
-    <div class="command-list"><button class="button copy-curation-command" type="button" data-command="python3 scripts/apply_library_metadata.py docs --input &lt;curation_patch.csv&gt;">python3 scripts/apply_library_metadata.py docs --input &lt;curation_patch.csv&gt;</button><button class="button copy-curation-command" type="button" data-command="python3 scripts/apply_library_metadata.py docs --input &lt;curation_patch.csv&gt; --write">python3 scripts/apply_library_metadata.py docs --input &lt;curation_patch.csv&gt; --write</button><button class="button copy-curation-command" type="button" data-command="python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv">python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv</button><button class="button copy-curation-command" type="button" data-command="python3 scripts/build_wiki.py docs">python3 scripts/build_wiki.py docs</button><button class="button copy-curation-command" type="button" data-command="python3 scripts/validate_wiki.py docs --strict-taxonomy">python3 scripts/validate_wiki.py docs --strict-taxonomy</button></div>
+    <div class="command-list"><button class="button copy-queue-command" type="button" data-command="python3 scripts/build_wiki.py docs">python3 scripts/build_wiki.py docs</button><button class="button copy-queue-command" type="button" data-command="python3 scripts/apply_library_metadata.py docs --input &lt;metadata_patch.csv&gt;">python3 scripts/apply_library_metadata.py docs --input &lt;metadata_patch.csv&gt;</button><button class="button copy-queue-command" type="button" data-command="python3 scripts/apply_library_metadata.py docs --input &lt;metadata_patch.csv&gt; --write">python3 scripts/apply_library_metadata.py docs --input &lt;metadata_patch.csv&gt; --write</button></div>
   </section>
 </main>
 <script>
-const curationPayload = {"generated_at": "2026-06-12T09:29:03", "count": 5, "average_score": 88.0, "ready_count": 0, "needs_curation_count": 5, "level_counts": {"usable": 5}, "field_gap_counts": {"next_review": 5, "review_stage": 5}, "weak_field_counts": {"domains": 5, "problems": 5, "tracks": 1}, "field_contract": [{"field": "research_line", "label": "研究线", "weight": 15, "kind": "taxonomy", "patch_column": "research_line"}, {"field": "line_role", "label": "研究角色", "weight": 8, "kind": "taxonomy", "patch_column": "line_role"}, {"field": "domains", "label": "Domain", "weight": 8, "kind": "taxonomy_list", "patch_column": "domains"}, {"field": "tracks", "label": "Track", "weight": 8, "kind": "taxonomy_list", "patch_column": "tracks"}, {"field": "problems", "label": "Problem", "weight": 8, "kind": "taxonomy_list", "patch_column": "problems"}, {"field": "topics", "label": "Topic", "weight": 8, "kind": "taxonomy_list", "patch_column": "topics"}, {"field": "methods", "label": "Method", "weight": 8, "kind": "taxonomy_list", "patch_column": "methods"}, {"field": "status", "label": "状态", "weight": 8, "kind": "workflow", "patch_column": "status"}, {"field": "reading_stage", "label": "阅读阶段", "weight": 7, "kind": "workflow", "patch_column": "reading_stage"}, {"field": "review_stage", "label": "复习阶段", "weight": 6, "kind": "workflow", "patch_column": "review_stage"}, {"field": "importance", "label": "重要性", "weight": 5, "kind": "priority", "patch_column": "importance"}, {"field": "next_review", "label": "下次复习", "weight": 6, "kind": "review", "patch_column": "next_review"}, {"field": "has_code", "label": "代码状态", "weight": 5, "kind": "evidence", "patch_column": "has_code"}], "papers": [{"slug": "2307.08691-flashattention-2", "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning", "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention", "href": "2307.08691-flashattention-2.html", "year": 2023, "research_line": "Efficient Attention Kernels", "line_role": "foundation", "status": "read", "reading_stage": "deep_read", "review_stage": "", "importance": 5, "score": 88, "level": "usable", "missing_fields": ["review_stage", "next_review"], "weak_fields": ["domains", "tracks", "problems"], "field_status": {"research_line": {"present": true, "count": 1, "weight": 15}, "line_role": {"present": true, "count": 1, "weight": 8}, "domains": {"present": true, "count": 1, "weight": 8}, "tracks": {"present": true, "count": 1, "weight": 8}, "problems": {"present": true, "count": 1, "weight": 8}, "topics": {"present": true, "count": 4, "weight": 8}, "methods": {"present": true, "count": 5, "weight": 8}, "status": {"present": true, "count": 1, "weight": 8}, "reading_stage": {"present": true, "count": 1, "weight": 7}, "review_stage": {"present": false, "count": 0, "weight": 6}, "importance": {"present": true, "count": 1, "weight": 5}, "next_review": {"present": false, "count": 0, "weight": 6}, "has_code": {"present": true, "count": 1, "weight": 5}}, "patch_columns": ["slug", "review_stage", "next_review", "domains", "tracks", "problems"], "actions": ["补齐缺失 frontmatter 字段", "扩充稀疏 taxonomy 标签", "安排复习日期"], "recommendation": "补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。"}, {"slug": "2501.01005-flashinfer", "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving", "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎", "href": "2501.01005-flashinfer.html", "year": 2025, "research_line": "Efficient Attention Kernels", "line_role": "system", "status": "read", "reading_stage": "deep_read", "review_stage": "", "importance": 4, "score": 88, "level": "usable", "missing_fields": ["review_stage", "next_review"], "weak_fields": ["domains", "problems"], "field_status": {"research_line": {"present": true, "count": 1, "weight": 15}, "line_role": {"present": true, "count": 1, "weight": 8}, "domains": {"present": true, "count": 1, "weight": 8}, "tracks": {"present": true, "count": 2, "weight": 8}, "problems": {"present": true, "count": 1, "weight": 8}, "topics": {"present": true, "count": 5, "weight": 8}, "methods": {"present": true, "count": 6, "weight": 8}, "status": {"present": true, "count": 1, "weight": 8}, "reading_stage": {"present": true, "count": 1, "weight": 7}, "review_stage": {"present": false, "count": 0, "weight": 6}, "importance": {"present": true, "count": 1, "weight": 5}, "next_review": {"present": false, "count": 0, "weight": 6}, "has_code": {"present": true, "count": 1, "weight": 5}}, "patch_columns": ["slug", "review_stage", "next_review", "domains", "problems"], "actions": ["补齐缺失 frontmatter 字段", "扩充稀疏 taxonomy 标签", "安排复习日期"], "recommendation": "补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。"}, {"slug": "2602.06036-dflash", "title": "DFlash: Block Diffusion for Flash Speculative Decoding", "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法", "href": "2602.06036-dflash.html", "year": 2026, "research_line": "Parallel Decoding with Diffusion Models", "line_role": "followup", "status": "read", "reading_stage": "deep_read", "review_stage": "", "importance": 4, "score": 88, "level": "usable", "missing_fields": ["review_stage", "next_review"], "weak_fields": ["domains", "problems"], "field_status": {"research_line": {"present": true, "count": 1, "weight": 15}, "line_role": {"present": true, "count": 1, "weight": 8}, "domains": {"present": true, "count": 1, "weight": 8}, "tracks": {"present": true, "count": 2, "weight": 8}, "problems": {"present": true, "count": 1, "weight": 8}, "topics": {"present": true, "count": 4, "weight": 8}, "methods": {"present": true, "count": 5, "weight": 8}, "status": {"present": true, "count": 1, "weight": 8}, "reading_stage": {"present": true, "count": 1, "weight": 7}, "review_stage": {"present": false, "count": 0, "weight": 6}, "importance": {"present": true, "count": 1, "weight": 5}, "next_review": {"present": false, "count": 0, "weight": 6}, "has_code": {"present": true, "count": 1, "weight": 5}}, "patch_columns": ["slug", "review_stage", "next_review", "domains", "problems"], "actions": ["补齐缺失 frontmatter 字段", "扩充稀疏 taxonomy 标签", "安排复习日期"], "recommendation": "补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。"}, {"slug": "2604.11035-introspective-dlm", "title": "Introspective Diffusion Language Models", "title_zh": "内省式扩散语言模型", "href": "2604.11035-introspective-dlm.html", "year": 2026, "research_line": "Parallel Decoding with Diffusion Models", "line_role": "foundation", "status": "read", "reading_stage": "deep_read", "review_stage": "", "importance": 5, "score": 88, "level": "usable", "missing_fields": ["review_stage", "next_review"], "weak_fields": ["domains", "problems"], "field_status": {"research_line": {"present": true, "count": 1, "weight": 15}, "line_role": {"present": true, "count": 1, "weight": 8}, "domains": {"present": true, "count": 1, "weight": 8}, "tracks": {"present": true, "count": 2, "weight": 8}, "problems": {"present": true, "count": 1, "weight": 8}, "topics": {"present": true, "count": 5, "weight": 8}, "methods": {"present": true, "count": 6, "weight": 8}, "status": {"present": true, "count": 1, "weight": 8}, "reading_stage": {"present": true, "count": 1, "weight": 7}, "review_stage": {"present": false, "count": 0, "weight": 6}, "importance": {"present": true, "count": 1, "weight": 5}, "next_review": {"present": false, "count": 0, "weight": 6}, "has_code": {"present": true, "count": 1, "weight": 5}}, "patch_columns": ["slug", "review_stage", "next_review", "domains", "problems"], "actions": ["补齐缺失 frontmatter 字段", "扩充稀疏 taxonomy 标签", "安排复习日期"], "recommendation": "补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。"}, {"slug": "2605.12825-orthrus", "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion", "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成", "href": "2605.12825-orthrus.html", "year": 2026, "research_line": "Parallel Decoding with Diffusion Models", "line_role": "variant", "status": "read", "reading_stage": "deep_read", "review_stage": "", "importance": 4, "score": 88, "level": "usable", "missing_fields": ["review_stage", "next_review"], "weak_fields": ["domains", "problems"], "field_status": {"research_line": {"present": true, "count": 1, "weight": 15}, "line_role": {"present": true, "count": 1, "weight": 8}, "domains": {"present": true, "count": 1, "weight": 8}, "tracks": {"present": true, "count": 2, "weight": 8}, "problems": {"present": true, "count": 1, "weight": 8}, "topics": {"present": true, "count": 5, "weight": 8}, "methods": {"present": true, "count": 5, "weight": 8}, "status": {"present": true, "count": 1, "weight": 8}, "reading_stage": {"present": true, "count": 1, "weight": 7}, "review_stage": {"present": false, "count": 0, "weight": 6}, "importance": {"present": true, "count": 1, "weight": 5}, "next_review": {"present": false, "count": 0, "weight": 6}, "has_code": {"present": true, "count": 1, "weight": 5}}, "patch_columns": ["slug", "review_stage", "next_review", "domains", "problems"], "actions": ["补齐缺失 frontmatter 字段", "扩充稀疏 taxonomy 标签", "安排复习日期"], "recommendation": "补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。"}], "queues": {"triage": [], "needs_curation": [], "missing_research_line": [], "missing_taxonomy": [], "missing_review": ["2307.08691-flashattention-2", "2501.01005-flashinfer", "2602.06036-dflash", "2604.11035-introspective-dlm", "2605.12825-orthrus"], "ready": []}, "recommendations": ["先处理 score 最低且缺 research_line/domain/track/problem 的论文，它们最影响大库导航。", "对 weak_fields 使用 metadata patch 批量追加 topic/method，避免只有单一标签导致检索入口过窄。", "把 ready 队列作为可开源展示基线，把 triage/needs_curation 队列作为每周治理任务。"], "commands": ["python3 scripts/apply_library_metadata.py docs --input <curation_patch.csv>", "python3 scripts/apply_library_metadata.py docs --input <curation_patch.csv> --write", "python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv", "python3 scripts/build_wiki.py docs", "python3 scripts/validate_wiki.py docs --strict-taxonomy"], "links": {"html": "curation.html", "library": "library.html", "quality": "quality.html", "facets": "facets.html", "registry": "registry.html", "coverage": "coverage.html", "schema": "guides/curation.schema.json"}};
-const curationRows = Array.from(document.querySelectorAll("#curationRows tr"));
-const curationSearch = document.querySelector("#curationSearch");
-const curationLevel = document.querySelector("#curationLevel");
-const curationField = document.querySelector("#curationField");
-const curationCount = document.querySelector("#curationCount");
+const queuesPayload = {"generated_at": "2026-06-12T09:29:03", "today": "2026-06-12", "count": 5, "queue_count": 5, "non_empty_queue_count": 2, "queued_paper_total": 10, "severity_counts": {"medium": 2}, "preset_counts": {"code_check": 1, "schedule_review": 1}, "queues": [{"id": "missing-taxonomy", "label": "缺分类", "severity": "high", "preset": "", "description": "缺 domain、topic 或 method 的论文，适合先补 frontmatter 分类。", "recommended_fields": ["domains", "topics", "methods"], "count": 0, "share": 0.0, "view_state": {"sort": "updated"}, "href": "library.html?sort=updated", "slugs": [], "sample_papers": []}, {"id": "missing-review-plan", "label": "缺复习计划", "severity": "medium", "preset": "schedule_review", "description": "没有 next_review 的论文，适合批量安排复习日期。", "recommended_fields": ["review_stage", "next_review"], "count": 5, "share": 1.0, "view_state": {"review": "none", "sort": "importance"}, "href": "library.html?review=none&sort=importance", "slugs": ["2307.08691-flashattention-2", "2604.11035-introspective-dlm", "2602.06036-dflash", "2501.01005-flashinfer", "2605.12825-orthrus"], "sample_papers": [{"slug": "2307.08691-flashattention-2", "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning", "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention", "href": "2307.08691-flashattention-2.html"}, {"slug": "2604.11035-introspective-dlm", "title": "Introspective Diffusion Language Models", "title_zh": "内省式扩散语言模型", "href": "2604.11035-introspective-dlm.html"}, {"slug": "2602.06036-dflash", "title": "DFlash: Block Diffusion for Flash Speculative Decoding", "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法", "href": "2602.06036-dflash.html"}, {"slug": "2501.01005-flashinfer", "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving", "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎", "href": "2501.01005-flashinfer.html"}, {"slug": "2605.12825-orthrus", "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion", "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成", "href": "2605.12825-orthrus.html"}]}, {"id": "due-review", "label": "到期复习", "severity": "high", "preset": "schedule_review", "description": "next_review 已到期的论文，适合立即进入复习队列。", "recommended_fields": ["review_stage", "next_review"], "count": 0, "share": 0.0, "view_state": {"review": "due", "sort": "importance"}, "href": "library.html?review=due&sort=importance", "slugs": [], "sample_papers": []}, {"id": "code-unchecked", "label": "有代码未检查", "severity": "medium", "preset": "code_check", "description": "已标记有代码但阅读阶段还不是 code_checked 的论文。", "recommended_fields": ["reading_stage", "review_stage", "next_review"], "count": 5, "share": 1.0, "view_state": {"code": "yes", "sort": "importance"}, "href": "library.html?code=yes&sort=importance", "slugs": ["2307.08691-flashattention-2", "2604.11035-introspective-dlm", "2602.06036-dflash", "2501.01005-flashinfer", "2605.12825-orthrus"], "sample_papers": [{"slug": "2307.08691-flashattention-2", "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning", "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention", "href": "2307.08691-flashattention-2.html"}, {"slug": "2604.11035-introspective-dlm", "title": "Introspective Diffusion Language Models", "title_zh": "内省式扩散语言模型", "href": "2604.11035-introspective-dlm.html"}, {"slug": "2602.06036-dflash", "title": "DFlash: Block Diffusion for Flash Speculative Decoding", "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法", "href": "2602.06036-dflash.html"}, {"slug": "2501.01005-flashinfer", "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving", "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎", "href": "2501.01005-flashinfer.html"}, {"slug": "2605.12825-orthrus", "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion", "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成", "href": "2605.12825-orthrus.html"}]}, {"id": "high-priority-unread", "label": "高优先级待读", "severity": "high", "preset": "deep_read", "description": "重要性不低于 4 且仍处在未读、排队或分流状态的核心论文。", "recommended_fields": ["status", "reading_stage", "next_review"], "count": 0, "share": 0.0, "view_state": {"importance": "4", "sort": "importance"}, "href": "library.html?importance=4&sort=importance", "slugs": [], "sample_papers": []}], "top_queues": [{"id": "code-unchecked", "label": "有代码未检查", "severity": "medium", "preset": "code_check", "description": "已标记有代码但阅读阶段还不是 code_checked 的论文。", "recommended_fields": ["reading_stage", "review_stage", "next_review"], "count": 5, "share": 1.0, "view_state": {"code": "yes", "sort": "importance"}, "href": "library.html?code=yes&sort=importance", "slugs": ["2307.08691-flashattention-2", "2604.11035-introspective-dlm", "2602.06036-dflash", "2501.01005-flashinfer", "2605.12825-orthrus"], "sample_papers": [{"slug": "2307.08691-flashattention-2", "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning", "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention", "href": "2307.08691-flashattention-2.html"}, {"slug": "2604.11035-introspective-dlm", "title": "Introspective Diffusion Language Models", "title_zh": "内省式扩散语言模型", "href": "2604.11035-introspective-dlm.html"}, {"slug": "2602.06036-dflash", "title": "DFlash: Block Diffusion for Flash Speculative Decoding", "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法", "href": "2602.06036-dflash.html"}, {"slug": "2501.01005-flashinfer", "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving", "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎", "href": "2501.01005-flashinfer.html"}, {"slug": "2605.12825-orthrus", "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion", "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成", "href": "2605.12825-orthrus.html"}]}, {"id": "missing-review-plan", "label": "缺复习计划", "severity": "medium", "preset": "schedule_review", "description": "没有 next_review 的论文，适合批量安排复习日期。", "recommended_fields": ["review_stage", "next_review"], "count": 5, "share": 1.0, "view_state": {"review": "none", "sort": "importance"}, "href": "library.html?review=none&sort=importance", "slugs": ["2307.08691-flashattention-2", "2604.11035-introspective-dlm", "2602.06036-dflash", "2501.01005-flashinfer", "2605.12825-orthrus"], "sample_papers": [{"slug": "2307.08691-flashattention-2", "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning", "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention", "href": "2307.08691-flashattention-2.html"}, {"slug": "2604.11035-introspective-dlm", "title": "Introspective Diffusion Language Models", "title_zh": "内省式扩散语言模型", "href": "2604.11035-introspective-dlm.html"}, {"slug": "2602.06036-dflash", "title": "DFlash: Block Diffusion for Flash Speculative Decoding", "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法", "href": "2602.06036-dflash.html"}, {"slug": "2501.01005-flashinfer", "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving", "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎", "href": "2501.01005-flashinfer.html"}, {"slug": "2605.12825-orthrus", "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion", "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成", "href": "2605.12825-orthrus.html"}]}], "recommendations": ["先处理 high 队列：缺分类会影响所有筛选入口，到期复习会影响长期记忆。", "把 recurring 队列沉淀成 bulk_presets，避免每次手动拼 metadata_patch.csv。", "桌面端或 DMG 可以读取 queues.json，把队列渲染为侧边栏任务入口。"], "commands": ["python3 scripts/build_wiki.py docs", "python3 scripts/apply_library_metadata.py docs --input <metadata_patch.csv>", "python3 scripts/apply_library_metadata.py docs --input <metadata_patch.csv> --write"], "links": {"html": "queues.html", "library": "library.html", "actions": "actions.html", "batch": "batch.html", "presets": "presets.html", "curation": "curation.html", "schema": "guides/queues.schema.json"}};
+const queueRows = Array.from(document.querySelectorAll("#queueRows tr"));
+const queueSeverity = document.querySelector("#queueSeverity");
+const queuePreset = document.querySelector("#queuePreset");
+const queueCount = document.querySelector("#queueCount");
 
-function renderCurationRows() {
-  const query = (curationSearch.value || "").trim().toLowerCase();
-  const level = curationLevel.value || "";
-  const field = curationField.value || "";
+function renderQueueRows() {
+  const severity = queueSeverity.value || "";
+  const preset = queuePreset.value || "";
   let visible = 0;
-  curationRows.forEach(row => {
-    const matches = (!query || (row.dataset.search || "").includes(query))
-      && (!level || row.dataset.level === level)
-      && (!field || (` ${row.dataset.fields || ""} `).includes(` ${field} `));
+  queueRows.forEach(row => {
+    const matches = (!severity || row.dataset.severity === severity) && (!preset || row.dataset.preset === preset);
     row.hidden = !matches;
     if (matches) visible += 1;
   });
-  curationCount.textContent = `${visible} / ${curationRows.length}`;
+  queueCount.textContent = `${visible} / ${queueRows.length}`;
 }
 
-async function copyCurationCommand(value, fallbackTitle) {
+async function copyQueueCommand(value, fallbackTitle) {
   try {
     await navigator.clipboard.writeText(value);
   } catch (error) {
@@ -505,17 +484,17 @@ async function copyCurationCommand(value, fallbackTitle) {
   }
 }
 
-document.querySelectorAll(".copy-curation-command").forEach(button => {
+document.querySelectorAll(".copy-queue-command").forEach(button => {
   button.dataset.label = button.textContent;
   button.addEventListener("click", async () => {
-    await copyCurationCommand(button.dataset.command || "", "复制命令");
+    await copyQueueCommand(button.dataset.command || "", "复制命令");
     button.textContent = "已复制";
     setTimeout(() => button.textContent = button.dataset.label, 1200);
   });
 });
 
-[curationSearch, curationLevel, curationField].forEach(control => control.addEventListener("input", renderCurationRows));
-renderCurationRows();
+[queueSeverity, queuePreset].forEach(control => control.addEventListener("input", renderQueueRows));
+renderQueueRows();
 </script>
 
 <script>

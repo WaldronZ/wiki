@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/autopaperreader/queues.schema.json",
+  "title": "AutoPaperReader Operational Queues",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "generated_at",
+    "today",
+    "count",
+    "queue_count",
+    "non_empty_queue_count",
+    "queued_paper_total",
+    "severity_counts",
+    "preset_counts",
+    "queues",
+    "top_queues",
+    "recommendations",
+    "commands",
+    "links"
+  ],
+  "properties": {
+    "generated_at": { "type": "string" },
+    "today": { "type": "string" },
+    "count": { "type": "integer", "minimum": 0 },
+    "queue_count": { "type": "integer", "minimum": 0 },
+    "non_empty_queue_count": { "type": "integer", "minimum": 0 },
+    "queued_paper_total": { "type": "integer", "minimum": 0 },
+    "severity_counts": {
+      "type": "object",
+      "additionalProperties": { "type": "integer", "minimum": 0 }
+    },
+    "preset_counts": {
+      "type": "object",
+      "additionalProperties": { "type": "integer", "minimum": 0 }
+    },
+    "queues": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/queue" }
+    },
+    "top_queues": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/queue" }
+    },
+    "recommendations": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "commands": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "links": {
+      "type": "object",
+      "required": [
+        "html",
+        "library",
+        "actions",
+        "batch",
+        "presets",
+        "curation",
+        "schema"
+      ],
+      "properties": {
+        "html": { "type": "string" },
+        "library": { "type": "string" },
+        "actions": { "type": "string" },
+        "batch": { "type": "string" },
+        "presets": { "type": "string" },
+        "curation": { "type": "string" },
+        "schema": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "sample_paper": {
+      "type": "object",
+      "required": [
+        "slug",
+        "title",
+        "href"
+      ],
+      "properties": {
+        "slug": { "type": "string", "minLength": 1 },
+        "title": { "type": "string" },
+        "title_zh": { "type": "string" },
+        "href": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "queue": {
+      "type": "object",
+      "required": [
+        "id",
+        "label",
+        "severity",
+        "preset",
+        "description",
+        "recommended_fields",
+        "count",
+        "share",
+        "view_state",
+        "href",
+        "slugs",
+        "sample_papers"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ]
+        },
+        "preset": { "type": "string" },
+        "description": { "type": "string" },
+        "recommended_fields": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "count": { "type": "integer", "minimum": 0 },
+        "share": { "type": "number", "minimum": 0, "maximum": 1 },
+        "view_state": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "href": { "type": "string" },
+        "slugs": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "sample_papers": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/sample_paper" }
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

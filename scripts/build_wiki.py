@@ -42,6 +42,7 @@ GENERATED_FIXED_PATHS = (
     "taxonomy_actions.json",
     "actions.json",
     "command.json",
+    "queues.json",
     "cohorts.json",
     "workflow.json",
     "status.json",
@@ -93,6 +94,7 @@ GENERATED_FIXED_PATHS = (
     "release.html",
     "actions.html",
     "command.html",
+    "queues.html",
     "cohorts.html",
     "snapshot.html",
     "collections.html",
@@ -2177,6 +2179,167 @@ def build_cohorts_payload(papers: list[dict[str, Any]]) -> dict[str, Any]:
 def write_cohorts_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     payload = build_cohorts_payload(papers)
     (report_dir / "cohorts.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
+QUEUE_DEFINITIONS = [
+    {
+        "id": "missing-taxonomy",
+        "label": "缺分类",
+        "severity": "high",
+        "preset": "",
+        "description": "缺 domain、topic 或 method 的论文，适合先补 frontmatter 分类。",
+        "view_state": {"sort": "updated"},
+        "recommended_fields": ["domains", "topics", "methods"],
+    },
+    {
+        "id": "missing-review-plan",
+        "label": "缺复习计划",
+        "severity": "medium",
+        "preset": "schedule_review",
+        "description": "没有 next_review 的论文，适合批量安排复习日期。",
+        "view_state": {"review": "none", "sort": "importance"},
+        "recommended_fields": ["review_stage", "next_review"],
+    },
+    {
+        "id": "due-review",
+        "label": "到期复习",
+        "severity": "high",
+        "preset": "schedule_review",
+        "description": "next_review 已到期的论文，适合立即进入复习队列。",
+        "view_state": {"review": "due", "sort": "importance"},
+        "recommended_fields": ["review_stage", "next_review"],
+    },
+    {
+        "id": "code-unchecked",
+        "label": "有代码未检查",
+        "severity": "medium",
+        "preset": "code_check",
+        "description": "已标记有代码但阅读阶段还不是 code_checked 的论文。",
+        "view_state": {"code": "yes", "sort": "importance"},
+        "recommended_fields": ["reading_stage", "review_stage", "next_review"],
+    },
+    {
+        "id": "high-priority-unread",
+        "label": "高优先级待读",
+        "severity": "high",
+        "preset": "deep_read",
+        "description": "重要性不低于 4 且仍处在未读、排队或分流状态的核心论文。",
+        "view_state": {"importance": "4", "sort": "importance"},
+        "recommended_fields": ["status", "reading_stage", "next_review"],
+    },
+]
+
+
+def queue_matches(paper: dict[str, Any], queue_id: str, today: str) -> bool:
+    if queue_id == "missing-taxonomy":
+        return not paper.get("domains") or not paper.get("topics") or not paper.get("methods")
+    if queue_id == "missing-review-plan":
+        return not str(paper.get("next_review") or "").strip()
+    if queue_id == "due-review":
+        next_review = str(paper.get("next_review") or "").strip()
+        return bool(next_review and next_review <= today)
+    if queue_id == "code-unchecked":
+        return bool(paper.get("has_code")) and str(paper.get("reading_stage") or "") != "code_checked"
+    if queue_id == "high-priority-unread":
+        try:
+            importance = int(paper.get("importance") or 0)
+        except (TypeError, ValueError):
+            importance = 0
+        status = str(paper.get("status") or "").strip()
+        return importance >= 4 and status in {"", "queued", "unread", "triaged"}
+    return False
+
+
+def queue_library_href(view_state: dict[str, str]) -> str:
+    params = {key: value for key, value in view_state.items() if value}
+    return page_query_href("library.html", **params)
+
+
+def queue_sort_key(paper: dict[str, Any]) -> tuple[int, str, str]:
+    try:
+        importance = int(paper.get("importance") or 0)
+    except (TypeError, ValueError):
+        importance = 0
+    return (-importance, str(paper.get("next_review") or "9999-12-31"), str(paper.get("title") or ""))
+
+
+def build_queues_payload(papers: list[dict[str, Any]]) -> dict[str, Any]:
+    today = dt.date.today().isoformat()
+    total = len(papers)
+    queues: list[dict[str, Any]] = []
+    for definition in QUEUE_DEFINITIONS:
+        queue_id = str(definition["id"])
+        items = sorted(
+            [paper for paper in papers if queue_matches(paper, queue_id, today)],
+            key=queue_sort_key,
+        )
+        view_state = dict(definition.get("view_state") or {})
+        queues.append(
+            {
+                "id": queue_id,
+                "label": str(definition["label"]),
+                "severity": str(definition["severity"]),
+                "preset": str(definition.get("preset") or ""),
+                "description": str(definition["description"]),
+                "recommended_fields": list(definition.get("recommended_fields") or []),
+                "count": len(items),
+                "share": round(len(items) / total, 4) if total else 0,
+                "view_state": view_state,
+                "href": queue_library_href(view_state),
+                "slugs": [str(paper["slug"]) for paper in items],
+                "sample_papers": [
+                    {
+                        "slug": paper["slug"],
+                        "title": paper.get("title") or "",
+                        "title_zh": paper.get("title_zh") or "",
+                        "href": paper_href(paper),
+                    }
+                    for paper in items[:8]
+                ],
+            }
+        )
+    non_empty = [queue for queue in queues if int(queue["count"]) > 0]
+    severity_counts = Counter(str(queue["severity"]) for queue in non_empty)
+    preset_counts = Counter(str(queue["preset"] or "manual") for queue in non_empty)
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "today": today,
+        "count": total,
+        "queue_count": len(queues),
+        "non_empty_queue_count": len(non_empty),
+        "queued_paper_total": sum(int(queue["count"]) for queue in queues),
+        "severity_counts": dict(sorted(severity_counts.items())),
+        "preset_counts": dict(sorted(preset_counts.items())),
+        "queues": queues,
+        "top_queues": sorted(non_empty, key=lambda queue: (-int(queue["count"]), str(queue["severity"]), str(queue["label"])))[:12],
+        "recommendations": [
+            "先处理 high 队列：缺分类会影响所有筛选入口，到期复习会影响长期记忆。",
+            "把 recurring 队列沉淀成 bulk_presets，避免每次手动拼 metadata_patch.csv。",
+            "桌面端或 DMG 可以读取 queues.json，把队列渲染为侧边栏任务入口。",
+        ],
+        "commands": [
+            "python3 scripts/build_wiki.py docs",
+            "python3 scripts/apply_library_metadata.py docs --input <metadata_patch.csv>",
+            "python3 scripts/apply_library_metadata.py docs --input <metadata_patch.csv> --write",
+        ],
+        "links": {
+            "html": "queues.html",
+            "library": "library.html",
+            "actions": "actions.html",
+            "batch": "batch.html",
+            "presets": "presets.html",
+            "curation": "curation.html",
+            "schema": "guides/queues.schema.json",
+        },
+    }
+
+
+def write_queues_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_queues_payload(papers)
+    (report_dir / "queues.json").write_text(
         json.dumps(payload, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
@@ -4451,7 +4614,7 @@ def build_catalog_payload(report_dir: Path, papers: list[dict[str, Any]], inbox_
         {
             "name": "Desktop sync bootstrap",
             "command": "read docs/catalog.json, docs/papers.json, docs/search_index.json",
-            "uses": ["catalog.json", "papers.json", "search_index.json", "workflow.json", "status.json", "views.json", "presets.json", "curation.json", "cohorts.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
+            "uses": ["catalog.json", "papers.json", "search_index.json", "workflow.json", "status.json", "views.json", "presets.json", "curation.json", "queues.json", "cohorts.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
             "outputs": ["local searchable paper library"],
         },
         {
@@ -4478,7 +4641,7 @@ def build_catalog_payload(report_dir: Path, papers: list[dict[str, Any]], inbox_
         "data_resources": data_resources,
         "contracts": contracts,
         "integration_recipes": integration_recipes,
-        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "status.json", "views.json", "presets.json", "curation.json", "cohorts.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
+        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "status.json", "views.json", "presets.json", "curation.json", "queues.json", "cohorts.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
     }
 
 
@@ -4502,7 +4665,7 @@ def write_catalog_placeholders(report_dir: Path) -> None:
         "data_resources": [],
         "contracts": [],
         "integration_recipes": [],
-        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "status.json", "views.json", "presets.json", "curation.json", "cohorts.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
+        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "status.json", "views.json", "presets.json", "curation.json", "queues.json", "cohorts.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
     }
     (report_dir / "catalog.json").write_text(
         json.dumps(payload, ensure_ascii=False, indent=2),
@@ -4696,6 +4859,7 @@ def wiki_pages_manifest() -> list[dict[str, str]]:
         {"title": "发布摘要", "href": "release.html", "kind": "ops", "description": "页面入口、数据文件、质量状态"},
         {"title": "治理快照", "href": "snapshot.html", "kind": "ops", "description": "当前发布基线、队列和治理策略快照"},
         {"title": "行动中心", "href": "actions.html", "kind": "ops", "description": "统一运营队列和可分派任务"},
+        {"title": "运营队列", "href": "queues.html", "kind": "ops", "description": "缺分类、复习、代码检查和高优先级待读队列"},
         {"title": "分类组合", "href": "cohorts.html", "kind": "analysis", "description": "分类组合队列、过载组合和专题候选"},
         {"title": "集合视图", "href": "collections.html", "kind": "view", "description": "共享视图、智能集合、研究线入口"},
         {"title": "分类均衡", "href": "balance.html", "kind": "ops", "description": "分类维度健康度、长尾和过载复盘"},
@@ -4746,6 +4910,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "taxonomy_actions.json", "description": "分类长尾、过载和空候选治理任务"},
         {"href": "actions.json", "description": "统一行动队列，汇总质量、复习、分类和 inbox 任务"},
         {"href": "command.json", "description": "场景化命令中心，组织页面入口、队列、数据和推荐命令"},
+        {"href": "queues.json", "description": "运营队列、推荐 preset 和批量写回入口"},
         {"href": "cohorts.json", "description": "分类组合队列、过载组合和专题候选"},
         {"href": "workflow.json", "description": "状态工作流配置、分布和漂移审计"},
         {"href": "status.json", "description": "运行时状态选择器、状态字段选项和论文状态快照"},
@@ -4793,6 +4958,7 @@ def contract_files_manifest() -> list[dict[str, str]]:
         {"href": "guides/views.schema.json", "description": "views.json 视图目录和批量队列契约"},
         {"href": "guides/presets.schema.json", "description": "presets.json 批量治理 preset 契约"},
         {"href": "guides/curation.schema.json", "description": "curation.json 逐篇分类成熟度契约"},
+        {"href": "guides/queues.schema.json", "description": "queues.json 运营队列契约"},
         {"href": "guides/cohorts.schema.json", "description": "cohorts.json 分类组合队列契约"},
         {"href": "guides/taxonomy.json", "description": "分类别名、状态工作流和共享视图配置"},
     ]
@@ -15258,6 +15424,144 @@ renderCurationRows();
     (report_dir / "curation.html").write_text(page_shell("分类成熟度", body, extra_css=curation_css), encoding="utf-8")
 
 
+def render_queues(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_queues_payload(papers)
+
+    def sample_links(samples: list[dict[str, Any]]) -> str:
+        links = [
+            f'<a href="{html.escape(str(item.get("href") or ""))}">{html.escape(str(item.get("slug") or ""))}</a>'
+            for item in samples[:5]
+            if isinstance(item, dict)
+        ]
+        more = len(samples) - len(links)
+        return " · ".join(links) + (f" · +{more}" if more > 0 else "") if links else '<span class="meta">无样例</span>'
+
+    rows = []
+    for queue in payload["queues"]:
+        fields = ", ".join(str(field) for field in queue["recommended_fields"]) or "manual"
+        rows.append(
+            f"""<tr data-severity="{html.escape(str(queue['severity']), quote=True)}" data-preset="{html.escape(str(queue['preset'] or 'manual'), quote=True)}">
+  <td><a href="{html.escape(str(queue['href']))}"><strong>{html.escape(str(queue['label']))}</strong></a><div class="meta">{html.escape(str(queue['id']))}</div></td>
+  <td>{int(queue['count'])}<div class="meta">{round(float(queue['share']) * 100, 1)}%</div></td>
+  <td><span class="flag">{html.escape(str(queue['severity']))}</span><div class="meta">{html.escape(str(queue['preset'] or 'manual'))}</div></td>
+  <td>{html.escape(fields)}</td>
+  <td>{sample_links(queue.get('sample_papers') or [])}</td>
+  <td>{html.escape(str(queue['description']))}</td>
+</tr>"""
+        )
+    command_buttons = "".join(
+        f'<button class="button copy-queue-command" type="button" data-command="{html.escape(command, quote=True)}">{html.escape(command)}</button>'
+        for command in payload["commands"]
+    )
+    recommendation_html = "".join(f"<li>{html.escape(item)}</li>" for item in payload["recommendations"])
+    queue_cards = "".join(
+        f'<section class="queue-card"><span>{html.escape(str(queue["label"]))}</span><strong>{int(queue["count"])}</strong><a href="{html.escape(str(queue["href"]))}">{html.escape(str(queue["severity"]))} · {html.escape(str(queue["preset"] or "manual"))}</a></section>'
+        for queue in payload["top_queues"]
+    ) or '<section class="queue-card"><span>当前健康</span><strong>0</strong><span>没有待处理队列</span></section>'
+    queues_json = json.dumps(payload, ensure_ascii=False).replace("</", "<\\/")
+    queues_css = """
+    .queue-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .queue-card {
+      display: grid;
+      gap: 6px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .queue-card strong { font-size: 30px; line-height: 1.1; }
+    .queue-card a { color: var(--accent); font-weight: 800; }
+    .queue-tools {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .command-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .data-table td { vertical-align: top; }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Operational queues</div>
+  <h1>运营队列</h1>
+  <p class="lead">把论文库里的缺分类、缺复习、到期复习、代码未检查和高优先级待读沉淀成可分享、可校验、可被桌面端读取的任务队列。</p>
+  <div class="stats">
+    <a class="stat" href="queues.json">Queues JSON</a>
+    <a class="stat" href="guides/queues.schema.json">Schema</a>
+    <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="presets.html">治理预设</a>
+    <a class="stat" href="actions.html">行动中心</a>
+    <span class="stat">队列 {payload["non_empty_queue_count"]}/{payload["queue_count"]}</span>
+  </div>
+</header>
+<main class="shell">
+  <section class="queue-summary">
+    <section class="queue-card"><span>论文</span><strong>{payload["count"]}</strong><span>papers</span></section>
+    <section class="queue-card"><span>队列命中</span><strong>{payload["queued_paper_total"]}</strong><span>queue hits</span></section>
+    {queue_cards}
+    <section class="queue-card"><span>建议</span><ol>{recommendation_html}</ol></section>
+  </section>
+  <section class="overview">
+    <div class="results-bar"><h2>队列清单</h2><span id="queueCount" class="meta"></span></div>
+    <div class="queue-tools">
+      <select id="queueSeverity"><option value="">全部优先级</option><option value="high">high</option><option value="medium">medium</option><option value="low">low</option></select>
+      <select id="queuePreset"><option value="">全部 preset</option><option value="manual">manual</option><option value="schedule_review">schedule_review</option><option value="code_check">code_check</option><option value="deep_read">deep_read</option></select>
+    </div>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>队列</th><th>论文</th><th>优先级</th><th>建议字段</th><th>样例</th><th>说明</th></tr></thead><tbody id="queueRows">{"".join(rows)}</tbody></table></div>
+  </section>
+  <section class="overview">
+    <h2>命令</h2>
+    <div class="command-list">{command_buttons}</div>
+  </section>
+</main>
+<script>
+const queuesPayload = {queues_json};
+const queueRows = Array.from(document.querySelectorAll("#queueRows tr"));
+const queueSeverity = document.querySelector("#queueSeverity");
+const queuePreset = document.querySelector("#queuePreset");
+const queueCount = document.querySelector("#queueCount");
+
+function renderQueueRows() {{
+  const severity = queueSeverity.value || "";
+  const preset = queuePreset.value || "";
+  let visible = 0;
+  queueRows.forEach(row => {{
+    const matches = (!severity || row.dataset.severity === severity) && (!preset || row.dataset.preset === preset);
+    row.hidden = !matches;
+    if (matches) visible += 1;
+  }});
+  queueCount.textContent = `${{visible}} / ${{queueRows.length}}`;
+}}
+
+async function copyQueueCommand(value, fallbackTitle) {{
+  try {{
+    await navigator.clipboard.writeText(value);
+  }} catch (error) {{
+    window.prompt(fallbackTitle, value);
+  }}
+}}
+
+document.querySelectorAll(".copy-queue-command").forEach(button => {{
+  button.dataset.label = button.textContent;
+  button.addEventListener("click", async () => {{
+    await copyQueueCommand(button.dataset.command || "", "复制命令");
+    button.textContent = "已复制";
+    setTimeout(() => button.textContent = button.dataset.label, 1200);
+  }});
+}});
+
+[queueSeverity, queuePreset].forEach(control => control.addEventListener("input", renderQueueRows));
+renderQueueRows();
+</script>
+"""
+    (report_dir / "queues.html").write_text(page_shell("运营队列", body, extra_css=queues_css), encoding="utf-8")
+
+
 def render_cohorts(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     payload = build_cohorts_payload(papers)
 
@@ -21463,6 +21767,7 @@ def build_wiki(report_dir: Path) -> int:
     write_taxonomy_actions_json(report_dir, papers)
     write_actions_json(report_dir, papers, inbox_items)
     write_command_json(report_dir, papers, inbox_items)
+    write_queues_json(report_dir, papers)
     write_cohorts_json(report_dir, papers)
     write_stats_json(report_dir, papers)
     write_workflow_json(report_dir, papers)
@@ -21515,6 +21820,7 @@ def build_wiki(report_dir: Path) -> int:
     render_quality(report_dir, papers, inbox_items)
     render_actions(report_dir, papers, inbox_items)
     render_command(report_dir, papers, inbox_items)
+    render_queues(report_dir, papers)
     render_cohorts(report_dir, papers)
     render_dashboard(report_dir, papers)
     render_collections(report_dir, papers)

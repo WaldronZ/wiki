@@ -40,6 +40,7 @@ function htmlFiles() {
     "freshness.html",
     "dashboard.html",
     "release.html",
+    "queues.html",
     "cohorts.html",
     "snapshot.html",
     "actions.html",

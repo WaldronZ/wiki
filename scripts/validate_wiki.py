@@ -127,6 +127,7 @@ REQUIRED_PAGES = {
     "freshness.html",
     "dashboard.html",
     "release.html",
+    "queues.html",
     "cohorts.html",
     "snapshot.html",
     "collections.html",
@@ -151,6 +152,7 @@ REQUIRED_PAGES = {
     "taxonomy_actions.json",
     "actions.json",
     "command.json",
+    "queues.json",
     "cohorts.json",
     "workflow.json",
     "status.json",
@@ -590,6 +592,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     taxonomy_actions_path = report_dir / "taxonomy_actions.json"
     actions_path = report_dir / "actions.json"
     command_path = report_dir / "command.json"
+    queues_path = report_dir / "queues.json"
     cohorts_path = report_dir / "cohorts.json"
     workflow_path = report_dir / "workflow.json"
     status_path = report_dir / "status.json"
@@ -640,6 +643,9 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         return
     if not command_path.exists():
         errors.append("missing command.json")
+        return
+    if not queues_path.exists():
+        errors.append("missing queues.json")
         return
     if not cohorts_path.exists():
         errors.append("missing cohorts.json")
@@ -731,6 +737,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     taxonomy_actions_data = json.loads(taxonomy_actions_path.read_text(encoding="utf-8"))
     actions_data = json.loads(actions_path.read_text(encoding="utf-8"))
     command_data = json.loads(command_path.read_text(encoding="utf-8"))
+    queues_data = json.loads(queues_path.read_text(encoding="utf-8"))
     cohorts_data = json.loads(cohorts_path.read_text(encoding="utf-8"))
     workflow_data = json.loads(workflow_path.read_text(encoding="utf-8"))
     status_data = json.loads(status_path.read_text(encoding="utf-8"))
@@ -1036,6 +1043,92 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
             errors.append(f"command.json lanes[{index}].commands must be a list")
     if not isinstance(command_data.get("recommended_next"), list):
         errors.append("command.json recommended_next must be a list")
+
+    if queues_data.get("count") != len(report_slugs):
+        errors.append(f"queues.json count {queues_data.get('count')} != markdown report count {len(report_slugs)}")
+    required_queues = {
+        "today",
+        "queue_count",
+        "non_empty_queue_count",
+        "queued_paper_total",
+        "severity_counts",
+        "preset_counts",
+        "queues",
+        "top_queues",
+        "recommendations",
+        "commands",
+        "links",
+    }
+    missing_queues = sorted(required_queues - set(queues_data))
+    if missing_queues:
+        errors.append(f"queues.json missing keys: {', '.join(missing_queues)}")
+    queue_items = queues_data.get("queues")
+    if not isinstance(queue_items, list):
+        errors.append("queues.json queues must be a list")
+        queue_items = []
+    elif queues_data.get("queue_count") != len(queue_items):
+        errors.append("queues.json queue_count must match queues length")
+    valid_queue_severities = {"high", "medium", "low"}
+    queue_ids: set[str] = set()
+    non_empty_count = 0
+    queued_paper_total = 0
+    for index, queue in enumerate(queue_items):
+        if not isinstance(queue, dict):
+            errors.append(f"queues.json queues[{index}] must be an object")
+            continue
+        for key in ("id", "label", "severity", "preset", "description", "recommended_fields", "count", "share", "view_state", "href", "slugs", "sample_papers"):
+            if key not in queue:
+                errors.append(f"queues.json queues[{index}] missing {key}")
+        queue_id = str(queue.get("id") or "")
+        if queue_id in queue_ids:
+            errors.append(f"queues.json duplicate queue id: {queue_id}")
+        if queue_id:
+            queue_ids.add(queue_id)
+        if queue.get("severity") not in valid_queue_severities:
+            errors.append(f"queues.json queues[{index}].severity is invalid")
+        if not isinstance(queue.get("recommended_fields"), list):
+            errors.append(f"queues.json queues[{index}].recommended_fields must be a list")
+        if not isinstance(queue.get("view_state"), dict):
+            errors.append(f"queues.json queues[{index}].view_state must be an object")
+        count = queue.get("count")
+        if not isinstance(count, int) or isinstance(count, bool) or count < 0:
+            errors.append(f"queues.json queues[{index}].count must be a non-negative integer")
+            count = 0
+        if count > 0:
+            non_empty_count += 1
+        queued_paper_total += int(count)
+        slugs = queue.get("slugs")
+        if not isinstance(slugs, list):
+            errors.append(f"queues.json queues[{index}].slugs must be a list")
+        else:
+            unknown_slugs = sorted(str(slug) for slug in slugs if str(slug) not in report_slugs)
+            if unknown_slugs:
+                errors.append(f"queues.json queues[{index}] references unknown slugs: {unknown_slugs}")
+        sample_papers = queue.get("sample_papers")
+        if not isinstance(sample_papers, list):
+            errors.append(f"queues.json queues[{index}].sample_papers must be a list")
+        else:
+            sample_slugs = sorted(str(paper.get("slug") or "") for paper in sample_papers if isinstance(paper, dict))
+            unknown_sample_slugs = [slug for slug in sample_slugs if slug and slug not in report_slugs]
+            if unknown_sample_slugs:
+                errors.append(f"queues.json queues[{index}] references unknown sample paper slugs: {unknown_sample_slugs}")
+    if queues_data.get("non_empty_queue_count") != non_empty_count:
+        errors.append("queues.json non_empty_queue_count must match non-empty queues")
+    if queues_data.get("queued_paper_total") != queued_paper_total:
+        errors.append("queues.json queued_paper_total must match queue counts")
+    top_queues = queues_data.get("top_queues")
+    if not isinstance(top_queues, list):
+        errors.append("queues.json top_queues must be a list")
+    else:
+        top_queue_ids = sorted(str(queue.get("id") or "") for queue in top_queues if isinstance(queue, dict))
+        unknown_top_queue_ids = [queue_id for queue_id in top_queue_ids if queue_id and queue_id not in queue_ids]
+        if unknown_top_queue_ids:
+            errors.append(f"queues.json top_queues reference unknown queue ids: {unknown_top_queue_ids}")
+    if not isinstance(queues_data.get("commands"), list):
+        errors.append("queues.json commands must be a list")
+    queue_links = queues_data.get("links")
+    if not isinstance(queue_links, dict) or not {"html", "library", "actions", "batch", "presets", "curation", "schema"}.issubset(queue_links):
+        errors.append("queues.json links missing required entries")
 
     if cohorts_data.get("count") != len(report_slugs):
         errors.append(f"cohorts.json count {cohorts_data.get('count')} != markdown report count {len(report_slugs)}")
@@ -2387,6 +2480,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         "guides/views.schema.json",
         "guides/presets.schema.json",
         "guides/curation.schema.json",
+        "guides/queues.schema.json",
         "guides/cohorts.schema.json",
     }
     missing_contract_files = sorted(expected_contract_files - manifest_contract_files)
@@ -2980,6 +3074,48 @@ def validate_cohorts_schema_contract(report_dir: Path, errors: list[str], warnin
             errors.append(f"guides/cohorts.schema.json: $defs.{def_name} is required")
 
 
+def validate_queues_schema_contract(report_dir: Path, errors: list[str], warnings: list[str]) -> None:
+    schema_path = report_dir / "guides" / "queues.schema.json"
+    if not schema_path.exists():
+        warnings.append("guides/queues.schema.json missing; external queue schema hints are unavailable")
+        return
+
+    try:
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        errors.append(f"guides/queues.schema.json: invalid JSON: {exc}")
+        return
+
+    if not isinstance(schema, dict):
+        errors.append("guides/queues.schema.json: root must be an object")
+        return
+    if not isinstance(schema.get("$schema"), str) or not schema.get("$schema", "").strip():
+        errors.append("guides/queues.schema.json: $schema must be a non-empty string")
+    if schema.get("type") != "object":
+        errors.append("guides/queues.schema.json: type must be object")
+    properties = schema.get("properties")
+    if not isinstance(properties, dict):
+        errors.append("guides/queues.schema.json: properties must be an object")
+        properties = {}
+    for key in ("queues", "top_queues", "recommendations", "commands", "links"):
+        if key not in properties:
+            errors.append(f"guides/queues.schema.json: properties.{key} is required")
+    defs = schema.get("$defs")
+    if not isinstance(defs, dict):
+        errors.append("guides/queues.schema.json: $defs must be an object")
+        defs = {}
+    queue_def = defs.get("queue")
+    if not isinstance(queue_def, dict):
+        errors.append("guides/queues.schema.json: $defs.queue is required")
+        return
+    queue_required = set(queue_def.get("required") or [])
+    for key in ("id", "label", "severity", "preset", "count", "slugs", "sample_papers", "href"):
+        if key not in queue_required:
+            errors.append(f"guides/queues.schema.json: $defs.queue.required missing {key}")
+    if "sample_paper" not in defs:
+        errors.append("guides/queues.schema.json: $defs.sample_paper is required")
+
+
 def validate_facets_schema_contract(report_dir: Path, errors: list[str], warnings: list[str]) -> None:
     schema_path = report_dir / "guides" / "facets.schema.json"
     if not schema_path.exists():
@@ -3567,6 +3703,7 @@ def main() -> int:
         validate_views_schema_contract(report_dir, errors, warnings)
         validate_presets_schema_contract(report_dir, errors, warnings)
         validate_curation_schema_contract(report_dir, errors, warnings)
+        validate_queues_schema_contract(report_dir, errors, warnings)
         validate_cohorts_schema_contract(report_dir, errors, warnings)
         config = validate_taxonomy_config(report_dir, errors, warnings)
         validate_controlled_taxonomy(reports, config, errors, warnings, args.strict_taxonomy)

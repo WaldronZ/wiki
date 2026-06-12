@@ -292,6 +292,10 @@ class WikiWorkflowTest(unittest.TestCase):
             (ROOT / "docs" / "guides" / "curation.schema.json").read_text(encoding="utf-8"),
             encoding="utf-8",
         )
+        (guides_dir / "queues.schema.json").write_text(
+            (ROOT / "docs" / "guides" / "queues.schema.json").read_text(encoding="utf-8"),
+            encoding="utf-8",
+        )
         (guides_dir / "cohorts.schema.json").write_text(
             (ROOT / "docs" / "guides" / "cohorts.schema.json").read_text(encoding="utf-8"),
             encoding="utf-8",
@@ -350,6 +354,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "freshness.html",
                 "dashboard.html",
                 "release.html",
+                "queues.html",
                 "cohorts.html",
                 "command.html",
                 "snapshot.html",
@@ -374,6 +379,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "taxonomy_actions.json",
                 "actions.json",
                 "command.json",
+                "queues.json",
                 "cohorts.json",
                 "workflow.json",
                 "status.json",
@@ -453,6 +459,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("View: Kernel 方向", index_html)
             self.assertIn("Playbook: Release readiness", index_html)
             self.assertIn('"href": "actions.html"', index_html)
+            self.assertIn('"href": "queues.html"', index_html)
             self.assertIn('"href": "cohorts.html"', index_html)
             self.assertIn('"href": "workflow.html"', index_html)
             self.assertIn('"href": "status.html"', index_html)
@@ -475,6 +482,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn('"href": "balance.html"', index_html)
             self.assertIn('"href": "coverage.html"', index_html)
             self.assertIn("Data: manifest.json", index_html)
+            self.assertIn("Data: queues.json", index_html)
             self.assertIn("Data: cohorts.json", index_html)
             self.assertIn("Data: workflow.json", index_html)
             self.assertIn("Data: status.json", index_html)
@@ -772,6 +780,21 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn('id="pivotRowDim"', pivot_html)
             self.assertIn('id="pivotColDim"', pivot_html)
             self.assertIn("Classification Pivot", pivot_html)
+            queues = json.loads((report_dir / "queues.json").read_text(encoding="utf-8"))
+            self.assertEqual(queues["count"], 2)
+            self.assertEqual(queues["queue_count"], 5)
+            self.assertIn("queues", queues)
+            self.assertIn("top_queues", queues)
+            self.assertIn("missing-taxonomy", {item["id"] for item in queues["queues"]})
+            self.assertIn("due-review", {item["id"] for item in queues["queues"]})
+            self.assertTrue(any(item["preset"] == "schedule_review" for item in queues["queues"]))
+            self.assertTrue(any("apply_library_metadata.py" in command for command in queues["commands"]))
+            queues_html = (report_dir / "queues.html").read_text(encoding="utf-8")
+            self.assertIn("运营队列", queues_html)
+            self.assertIn("Queues JSON", queues_html)
+            self.assertIn('id="queueSeverity"', queues_html)
+            self.assertIn('id="queuePreset"', queues_html)
+            self.assertIn("function renderQueueRows", queues_html)
             cohorts = json.loads((report_dir / "cohorts.json").read_text(encoding="utf-8"))
             self.assertEqual(cohorts["count"], 2)
             self.assertGreater(cohorts["cohort_count"], 0)
@@ -950,6 +973,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("registry.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("facets.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("curation.json", {item["href"] for item in catalog["data_resources"]})
+            self.assertIn("queues.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("cohorts.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("status.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("views.html", {item["href"] for item in catalog["pages"]})
@@ -958,6 +982,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("dedupe.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("registry.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("curation.html", {item["href"] for item in catalog["pages"]})
+            self.assertIn("queues.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("cohorts.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("command.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("roadmap.html", {item["href"] for item in catalog["pages"]})
@@ -973,6 +998,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("top_level_keys", catalog_resources["catalog.json"])
             self.assertIn("catalog.json", catalog["recommended_bootstrap_files"])
             self.assertIn("views.json", catalog["recommended_bootstrap_files"])
+            self.assertIn("queues.json", catalog["recommended_bootstrap_files"])
             self.assertIn("cohorts.json", catalog["recommended_bootstrap_files"])
             catalog_html = (report_dir / "catalog.html").read_text(encoding="utf-8")
             self.assertIn("数据目录", catalog_html)
@@ -1669,6 +1695,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("dedupe.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("registry.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("curation.html", {item["href"] for item in manifest["pages"]})
+            self.assertIn("queues.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("cohorts.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("actions.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("freshness.html", {item["href"] for item in manifest["pages"]})
@@ -1702,6 +1729,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("registry.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("facets.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("curation.json", {item["href"] for item in manifest["data_files"]})
+            self.assertIn("queues.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("cohorts.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("freshness.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("manifest.json", {item["href"] for item in manifest["data_files"]})
@@ -1720,6 +1748,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("guides/views.schema.json", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/presets.schema.json", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/curation.schema.json", {item["href"] for item in manifest["contract_files"]})
+            self.assertIn("guides/queues.schema.json", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/cohorts.schema.json", {item["href"] for item in manifest["contract_files"]})
             artifact_by_href = {item["href"]: item for item in manifest["artifact_inventory"]}
             self.assertEqual(artifact_by_href["index.html"]["status"], "ok")
@@ -1742,6 +1771,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(artifact_by_href["guides/views.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/presets.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/curation.schema.json"]["kind"], "contract")
+            self.assertEqual(artifact_by_href["guides/queues.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/cohorts.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["workflow.html"]["status"], "ok")
             self.assertRegex(artifact_by_href["workflow.html"]["sha256"], r"^[0-9a-f]{64}$")
@@ -1763,6 +1793,10 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertRegex(artifact_by_href["curation.html"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["curation.json"]["status"], "ok")
             self.assertRegex(artifact_by_href["curation.json"]["sha256"], r"^[0-9a-f]{64}$")
+            self.assertEqual(artifact_by_href["queues.html"]["status"], "ok")
+            self.assertRegex(artifact_by_href["queues.html"]["sha256"], r"^[0-9a-f]{64}$")
+            self.assertEqual(artifact_by_href["queues.json"]["status"], "ok")
+            self.assertRegex(artifact_by_href["queues.json"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["cohorts.html"]["status"], "ok")
             self.assertRegex(artifact_by_href["cohorts.html"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["cohorts.json"]["status"], "ok")
@@ -2983,6 +3017,21 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("guides/cohorts.schema.json: properties.cohorts is required", result.stderr)
             self.assertIn("guides/cohorts.schema.json: $defs must be an object", result.stderr)
+
+    def test_invalid_queues_schema_fails_validation(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_name:
+            report_dir = self.make_report_dir(Path(tmp_name))
+            self.run_cmd("scripts/build_wiki.py", str(report_dir))
+
+            (report_dir / "guides" / "queues.schema.json").write_text(
+                json.dumps({"$schema": "https://json-schema.org/draft/2020-12/schema", "type": "object", "properties": {}}),
+                encoding="utf-8",
+            )
+            result = self.run_cmd("scripts/validate_wiki.py", str(report_dir), check=False)
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("guides/queues.schema.json: properties.queues is required", result.stderr)
+            self.assertIn("guides/queues.schema.json: $defs must be an object", result.stderr)
 
     def test_invalid_facets_schema_fails_validation(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_name:
