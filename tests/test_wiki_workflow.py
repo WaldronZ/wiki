@@ -1135,6 +1135,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("python3 scripts/apply_shared_views.py docs --input &lt;shared_views.json&gt; --write", quality_html)
             self.assertIn("python3 scripts/apply_status_workflow.py docs --input &lt;taxonomy_status_workflow.json&gt; --write", quality_html)
             self.assertIn("python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv", quality_html)
+            self.assertIn("python3 scripts/export_catalog_bundle.py docs --output docs/exports/bootstrap-bundle.json", quality_html)
+            self.assertIn("python3 scripts/export_catalog_bundle.py docs --no-payloads --output docs/exports/bootstrap-manifest.json", quality_html)
             self.assertIn("python3 scripts/export_queues.py docs --format project --severity high --output docs/exports/queues-project.csv", quality_html)
             self.assertIn("python3 scripts/export_queues.py docs --format patch --queue missing-review-plan --field review_stage --set-value due --output docs/exports/queues-review-patch.csv", quality_html)
             self.assertIn("python3 scripts/export_cohorts.py docs --format project --action singleton --output docs/exports/cohorts-project.csv", quality_html)
@@ -1220,6 +1222,55 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("风险队列", snapshot_html)
             self.assertIn("治理策略", snapshot_html)
             self.assertIn("Artifact Hashes", snapshot_html)
+
+            bootstrap_bundle_path = report_dir / "exports" / "bootstrap-bundle.json"
+            self.run_cmd(
+                "scripts/export_catalog_bundle.py",
+                str(report_dir),
+                "--output",
+                str(bootstrap_bundle_path),
+            )
+            bootstrap_bundle = json.loads(bootstrap_bundle_path.read_text(encoding="utf-8"))
+            self.assertEqual(bootstrap_bundle["summary"]["mode"], "recommended")
+            self.assertEqual(bootstrap_bundle["summary"]["missing_count"], 0)
+            self.assertGreaterEqual(bootstrap_bundle["summary"]["file_count"], 10)
+            bundle_files = {item["href"]: item for item in bootstrap_bundle["files"]}
+            self.assertIn("catalog.json", bundle_files)
+            self.assertIn("papers.json", bundle_files)
+            self.assertIn("search_index.json", bundle_files)
+            self.assertIn("workflow.json", bundle_files)
+            self.assertRegex(bundle_files["papers.json"]["sha256"], r"^[0-9a-f]{64}$")
+            self.assertIn("papers", bundle_files["papers.json"]["top_level_keys"])
+            self.assertIn("payload", bundle_files["papers.json"])
+            self.assertEqual(bundle_files["papers.json"]["payload"]["count"], 2)
+
+            bootstrap_manifest_path = report_dir / "exports" / "bootstrap-manifest.json"
+            self.run_cmd(
+                "scripts/export_catalog_bundle.py",
+                str(report_dir),
+                "--no-payloads",
+                "--include",
+                "papers.json",
+                "--include",
+                "workflow.json",
+                "--output",
+                str(bootstrap_manifest_path),
+            )
+            bootstrap_manifest = json.loads(bootstrap_manifest_path.read_text(encoding="utf-8"))
+            self.assertEqual(bootstrap_manifest["summary"]["mode"], "explicit")
+            self.assertEqual(bootstrap_manifest["summary"]["file_count"], 2)
+            self.assertEqual(bootstrap_manifest["summary"]["payload_count"], 0)
+            self.assertNotIn("payload", bootstrap_manifest["files"][0])
+
+            invalid_bundle = self.run_cmd(
+                "scripts/export_catalog_bundle.py",
+                str(report_dir),
+                "--include",
+                "not-in-catalog.json",
+                check=False,
+            )
+            self.assertNotEqual(invalid_bundle.returncode, 0)
+            self.assertIn("is not listed in catalog.json", invalid_bundle.stderr)
 
             actions_export_path = report_dir / "exports" / "actions.md"
             self.run_cmd(
