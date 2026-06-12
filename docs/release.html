@@ -7,15 +7,15 @@
   <style>
     :root {
       color-scheme: light;
-      --bg: #f8f9fb;
-      --panel: #ffffff;
-      --ink: #1f2328;
-      --muted: #656d76;
-      --line: #d8dee4;
-      --accent: #0969da;
-      --accent-2: #57606a;
-      --chip: #f6f8fa;
-      --shadow: none;
+      --bg: #f6f3ee;
+      --panel: #fffdf8;
+      --ink: #222426;
+      --muted: #6b6f76;
+      --line: #ded8cd;
+      --accent: #2f6f73;
+      --accent-2: #8a5d3b;
+      --chip: #edf3f1;
+      --shadow: 0 14px 36px rgba(48, 44, 36, .08);
     }
     * { box-sizing: border-box; }
     body {
@@ -23,84 +23,56 @@
       background: var(--bg);
       color: var(--ink);
       font-family: "PingFang SC", "Noto Sans SC", system-ui, -apple-system, sans-serif;
-      line-height: 1.55;
+      line-height: 1.65;
     }
     a { color: var(--accent); text-decoration: none; }
     a:hover { text-decoration: underline; }
-    .shell { width: min(1160px, calc(100% - 32px)); margin: 0 auto; }
-    header { padding: 30px 0 16px; }
-    .eyebrow { color: var(--accent-2); font-size: 12px; font-weight: 650; letter-spacing: 0; text-transform: none; }
-    h1 { margin: 6px 0 8px; font-size: 38px; line-height: 1.12; letter-spacing: 0; }
-    .lead { max-width: 820px; margin: 0; color: var(--muted); font-size: 15px; }
-    .stats { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+    header { padding: 44px 0 22px; }
+    .eyebrow { color: var(--accent-2); font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    h1 { margin: 8px 0 10px; font-size: clamp(30px, 5vw, 56px); line-height: 1.08; letter-spacing: 0; }
+    .lead { max-width: 760px; margin: 0; color: var(--muted); font-size: 17px; }
+    .stats { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
     .stat, .chip {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
       border: 1px solid var(--line);
-      background: transparent;
-      border-radius: 6px;
-      padding: 5px 9px;
+      background: var(--panel);
+      border-radius: 999px;
+      padding: 7px 12px;
       color: var(--muted);
-      font-size: 13px;
+      font-size: 14px;
     }
     .toolbar {
       position: sticky;
       top: 0;
       z-index: 2;
-      padding: 10px 0;
-      background: rgba(248, 249, 251, .96);
-      border-bottom: 1px solid var(--line);
+      padding: 12px 0;
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
     }
     .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(138px, 1fr)); gap: 10px; }
     .controls input[type="search"] { grid-column: span 2; min-width: 260px; }
-    .filter-panel {
-      display: grid;
-      gap: 10px;
-    }
-    .primary-filter-row,
-    .advanced-filter-grid {
-      display: grid;
-      grid-template-columns: minmax(240px, 2fr) repeat(auto-fit, minmax(138px, 1fr));
-      gap: 10px;
-      align-items: center;
-    }
-    .primary-filter-row input[type="search"] { min-width: 0; }
-    .advanced-filters {
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      background: var(--panel);
-    }
-    .advanced-filters summary {
-      cursor: pointer;
-      padding: 9px 11px;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 650;
-    }
-    .advanced-filter-grid {
-      border-top: 1px solid var(--line);
-      padding: 10px;
-      grid-template-columns: repeat(auto-fit, minmax(138px, 1fr));
-    }
     input, select {
       width: 100%;
-      min-height: 38px;
+      min-height: 42px;
       border: 1px solid var(--line);
-      border-radius: 6px;
+      border-radius: 8px;
       background: var(--panel);
       color: var(--ink);
       padding: 0 12px;
       font: inherit;
     }
-    main { padding: 20px 0 48px; }
-    .overview { margin-bottom: 24px; }
-    .line-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+    main { padding: 28px 0 56px; }
+    .overview { margin-bottom: 30px; }
+    .line-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
     .line-card {
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 6px;
-      padding: 14px;
+      border-radius: 8px;
+      padding: 15px;
     }
     .line-card h2 { margin: 0 0 8px; font-size: 18px; line-height: 1.25; }
     .line-card ul { margin: 10px 0 0; padding-left: 18px; }
@@ -109,8 +81,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 10px;
-      margin: 0 0 14px;
+      gap: 12px;
+      margin: 0 0 16px;
       color: var(--muted);
     }
     .results-actions { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -120,18 +92,18 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      margin-top: 18px;
+      margin-top: 22px;
       color: var(--muted);
     }
     .pager[hidden] { display: none; }
-    .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 18px 0; }
+    .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin: 24px 0; }
     .metric-card {
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 6px;
-      padding: 14px;
+      border-radius: 8px;
+      padding: 16px;
     }
-    .metric-card strong { display: block; font-size: 24px; line-height: 1.1; }
+    .metric-card strong { display: block; font-size: 28px; line-height: 1.1; }
     .metric-card span { color: var(--muted); font-size: 13px; }
     .data-table {
       width: 100%;
@@ -139,20 +111,20 @@
       overflow: hidden;
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 6px;
+      border-radius: 8px;
     }
     .data-table th, .data-table td {
       border-bottom: 1px solid var(--line);
-      padding: 9px 11px;
+      padding: 10px 12px;
       text-align: left;
       vertical-align: top;
     }
-    .data-table th { color: var(--muted); font-size: 12px; font-weight: 650; }
+    .data-table th { color: var(--muted); font-size: 13px; font-weight: 700; }
     .data-table tr:last-child td { border-bottom: 0; }
     .table-wrap {
       overflow-x: auto;
       border: 1px solid var(--line);
-      border-radius: 6px;
+      border-radius: 8px;
       background: var(--panel);
     }
     .library-table {
@@ -162,7 +134,7 @@
     }
     .library-table th, .library-table td {
       border-bottom: 1px solid var(--line);
-      padding: 9px 11px;
+      padding: 10px 12px;
       text-align: left;
       vertical-align: top;
       font-size: 14px;
@@ -171,11 +143,11 @@
       position: sticky;
       top: 0;
       z-index: 1;
-      background: #f6f8fa;
+      background: #f0ebe1;
       color: var(--muted);
       font-size: 12px;
-      font-weight: 650;
-      text-transform: none;
+      font-weight: 750;
+      text-transform: uppercase;
     }
     .library-table tr:last-child td { border-bottom: 0; }
     .library-table tr[hidden] { display: none; }
@@ -187,61 +159,44 @@
     .score-grid { display: grid; grid-template-columns: repeat(3, minmax(42px, 1fr)); gap: 6px; }
     .score-grid span {
       border: 1px solid var(--line);
-      border-radius: 6px;
-      background: var(--chip);
+      border-radius: 8px;
+      background: #faf7f0;
       padding: 4px 6px;
       color: var(--muted);
       font-size: 12px;
       text-align: center;
     }
-    .queue-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+    .queue-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
     .queue-list { margin: 0; padding-left: 18px; }
     .queue-list li { margin: 8px 0; }
-    .taxonomy-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px; }
+    .taxonomy-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
     .taxonomy-panel {
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 6px;
-      padding: 14px;
+      border-radius: 8px;
+      padding: 16px;
     }
     .taxonomy-panel h2 { margin: 0 0 10px; font-size: 20px; }
     .taxonomy-panel .data-table { border: 0; }
     .matrix-link { display: inline-flex; min-width: 32px; justify-content: center; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 12px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; }
     .card {
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 6px;
+      border-radius: 8px;
       box-shadow: var(--shadow);
-      padding: 16px;
-      min-height: 190px;
+      padding: 18px;
+      min-height: 260px;
       display: flex;
       flex-direction: column;
     }
     .card h2 { margin: 0 0 8px; font-size: 20px; line-height: 1.25; letter-spacing: 0; }
-    .card details {
-      margin-top: 12px;
-      border-top: 1px solid var(--line);
-      padding-top: 10px;
-    }
-    .card details summary {
-      cursor: pointer;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 650;
-    }
-    .card details[open] summary { margin-bottom: 8px; }
-    .card details .card-flags { margin-top: 8px; }
-    .card details .chips {
-      margin-top: 8px;
-      padding-top: 0;
-    }
     .line-detail { display: grid; gap: 18px; }
     .role-section {
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 6px;
-      padding: 16px;
+      border-radius: 8px;
+      padding: 18px;
     }
     .role-section h2 { margin: 0 0 12px; font-size: 20px; }
     .paper-row {
@@ -259,31 +214,29 @@
       margin: 12px 0 0;
       padding: 10px 12px;
       border-left: 3px solid var(--accent);
-      border-radius: 4px;
+      border-radius: 7px;
       background: var(--chip);
-      color: var(--ink);
+      color: #2f5054;
       font-size: 14px;
     }
-    .excerpt { color: var(--ink); margin: 12px 0; }
+    .excerpt { color: #3f4448; margin: 12px 0; }
     .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 12px; }
-    .chip { background: var(--chip); padding: 3px 8px; font-size: 12px; }
+    .chip { background: var(--chip); padding: 4px 9px; font-size: 12px; }
     .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
-    .card > .links { margin-top: auto; padding-top: 14px; }
     .button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 34px;
+      min-height: 36px;
       border: 1px solid var(--line);
-      border-radius: 6px;
-      background: var(--panel);
-      padding: 0 10px;
-      font-size: 13px;
-      font-weight: 600;
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 0 11px;
+      font-size: 14px;
+      font-weight: 650;
       color: var(--accent);
       cursor: pointer;
     }
-    .button:hover { border-color: #8c959f; text-decoration: none; }
     .button:disabled { cursor: not-allowed; opacity: .45; }
     .quick-open {
       position: fixed;
@@ -291,7 +244,7 @@
       bottom: 18px;
       z-index: 80;
       min-width: 92px;
-      box-shadow: 0 8px 24px rgba(31, 35, 40, .12);
+      box-shadow: var(--shadow);
     }
     .quick-panel[hidden] { display: none; }
     .quick-panel {
@@ -301,7 +254,7 @@
       display: grid;
       place-items: start center;
       padding: 74px 16px 16px;
-      background: rgba(31, 35, 40, .18);
+      background: rgba(34, 36, 38, .28);
     }
     .quick-dialog {
       width: min(680px, 100%);
@@ -309,9 +262,9 @@
       display: grid;
       grid-template-rows: auto 1fr;
       border: 1px solid var(--line);
-      border-radius: 6px;
+      border-radius: 8px;
       background: var(--panel);
-      box-shadow: 0 16px 48px rgba(31, 35, 40, .16);
+      box-shadow: 0 24px 80px rgba(28, 31, 32, .24);
       overflow: hidden;
     }
     .quick-head {
@@ -330,7 +283,7 @@
       display: grid;
       gap: 2px;
       width: 100%;
-      border-radius: 6px;
+      border-radius: 8px;
       padding: 10px 12px;
       color: var(--ink);
     }
@@ -343,13 +296,13 @@
     .quick-kind {
       flex: 0 0 auto;
       border: 1px solid var(--line);
-      border-radius: 6px;
-      background: var(--chip);
+      border-radius: 999px;
+      background: #faf7f0;
       color: var(--muted);
       padding: 1px 7px;
       font-size: 11px;
-      font-weight: 650;
-      text-transform: none;
+      font-weight: 750;
+      text-transform: uppercase;
     }
     .quick-item:hover, .quick-item.is-active {
       background: var(--chip);
@@ -357,48 +310,45 @@
     }
     .quick-item strong { line-height: 1.25; }
     .quick-empty { padding: 24px; color: var(--muted); }
-    .section-title { margin: 24px 0 10px; font-size: 20px; }
-    .tag-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .section-title { margin: 28px 0 12px; font-size: 22px; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 10px; }
     .tag-pill {
       display: inline-flex;
       justify-content: space-between;
       gap: 20px;
       min-width: 150px;
       border: 1px solid var(--line);
-      border-radius: 6px;
+      border-radius: 8px;
       background: var(--panel);
-      padding: 9px 11px;
+      padding: 10px 12px;
     }
     .empty {
       border: 1px dashed var(--line);
       background: var(--panel);
-      border-radius: 6px;
-      padding: 22px;
+      border-radius: 8px;
+      padding: 28px;
       color: var(--muted);
     }
-    .card-flags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .card-flags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
     .flag {
       display: inline-flex;
       align-items: center;
-      min-height: 22px;
-      border-radius: 6px;
-      background: var(--chip);
+      min-height: 24px;
+      border-radius: 999px;
+      background: #f7f3eb;
       border: 1px solid var(--line);
       color: var(--muted);
-      padding: 0 7px;
+      padding: 0 8px;
       font-size: 12px;
     }
     @media (max-width: 760px) {
       .controls { grid-template-columns: 1fr; }
-      .primary-filter-row,
-      .advanced-filter-grid { grid-template-columns: 1fr; }
       .controls input[type="search"] { grid-column: auto; min-width: 0; }
       .results-bar { align-items: flex-start; flex-direction: column; }
       .pager { justify-content: flex-start; flex-wrap: wrap; }
       .paper-row { grid-template-columns: 1fr; }
       .data-table { display: block; overflow-x: auto; }
       header { padding-top: 28px; }
-      h1 { font-size: 30px; }
     }
 .config-snippet {
       margin: 0;
@@ -467,7 +417,7 @@
   </section>
   <section>
     <h2 class="section-title">Artifact Inventory</h2>
-    <div class="table-wrap"><table class="data-table"><thead><tr><th>产物</th><th>类型</th><th>状态</th><th>Bytes</th><th>SHA-256</th></tr></thead><tbody><tr><td><a href="index.html">index.html</a><div class="meta">卡片检索、筛选、研究线概览</div></td><td>page</td><td><span class="flag">ok</span></td><td>299865</td><td><code>671535c99402eadd07027405524c3a9a983890b0c4cc436ab2c0bf39e8aa55c1</code></td></tr><tr><td><a href="command.html">command.html</a><div class="meta">按使用场景组织入口、队列、数据和命令</div></td><td>page</td><td><span class="flag">ok</span></td><td>111076</td><td><code>21e16d1a8f06905b43fc4e3d9776a12cabb0473760547c7244538061e7da7333</code></td></tr><tr><td><a href="library.html">library.html</a><div class="meta">密集筛选、列管理、批量更新</div></td><td>page</td><td><span class="flag">ok</span></td><td>159244</td><td><code>122496f091fe0bcbc4af46abdeb75a698bda91b1c76a22d6ed71870f36f7db7b</code></td></tr><tr><td><a href="dashboard.html">dashboard.html</a><div class="meta">覆盖率、队列和运营指标</div></td><td>page</td><td><span class="flag">ok</span></td><td>52543</td><td><code>1c18354272b89ae8bb48e39d1673966a0261b5a89b3244473037560a7d1e3f6f</code></td></tr><tr><td><a href="release.html">release.html</a><div class="meta">页面入口、数据文件、质量状态</div></td><td>page</td><td><span class="flag">generated_after_inventory</span></td><td>-</td><td><code>-</code></td></tr><tr><td><a href="snapshot.html">snapshot.html</a><div class="meta">当前发布基线、队列和治理策略快照</div></td><td>page</td><td><span class="flag">ok</span></td><td>64285</td><td><code>5d17a583df2cb1ef4a4bda4da63f536e5b7e5efb24675a4e2344263489d6425b</code></td></tr><tr><td><a href="actions.html">actions.html</a><div class="meta">统一运营队列和可分派任务</div></td><td>page</td><td><span class="flag">ok</span></td><td>146354</td><td><code>64ed88ef0a290c2b0d2ae965469f78d77b7fa79aab32dae3f05138e4171f79c9</code></td></tr><tr><td><a href="priority.html">priority.html</a><div class="meta">按论文聚合复习、分类、代码和阅读优先级</div></td><td>page</td><td><span class="flag">ok</span></td><td>70765</td><td><code>c2a1abf8a3a7bbf0dcb6232aa0eeaf20a0bea8c1cc0f6956e7a9e367f2b0b436</code></td></tr><tr><td><a href="queues.html">queues.html</a><div class="meta">缺分类、复习、代码检查和高优先级待读队列</div></td><td>page</td><td><span class="flag">ok</span></td><td>61439</td><td><code>674e4a310ffb99dc463dcce4724d6eb6521a4d45d9993bc797492a850a209ad1</code></td></tr><tr><td><a href="cohorts.html">cohorts.html</a><div class="meta">分类组合队列、过载组合和专题候选</div></td><td>page</td><td><span class="flag">ok</span></td><td>427803</td><td><code>f14af617e8e4ccb058a45e72dc02531ae06a95b49af4abbd9d84d73cadca699c</code></td></tr><tr><td><a href="collections.html">collections.html</a><div class="meta">共享视图、智能集合、研究线入口</div></td><td>page</td><td><span class="flag">ok</span></td><td>51252</td><td><code>87f24a82c0c6af5042b9e6cc32cd8fa68246956e8400f830abbc39653b3ba898</code></td></tr><tr><td><a href="balance.html">balance.html</a><div class="meta">分类维度健康度、长尾和过载复盘</div></td><td>page</td><td><span class="flag">ok</span></td><td>58765</td><td><code>f1b5df584217261430f2dd2785d500f767880c0649b4c06e33c9c071a961cecd</code></td></tr><tr><td><a href="coverage.html">coverage.html</a><div class="meta">研究线 x 分类字段覆盖缺口</div></td><td>page</td><td><span class="flag">ok</span></td><td>62270</td><td><code>5fc50da5a464043e8aaa5201c750c456dc22fb58f6f62deec7007a29ac86ea2a</code></td></tr><tr><td><a href="facets.html">facets.html</a><div class="meta">标签规模、长尾和过载分类</div></td><td>page</td><td><span class="flag">ok</span></td><td>110123</td><td><code>8ce15763dd5c92527ed1fa1b3d159efa1cf9822c2bcadeb46e98b6aadae99ac2</code></td></tr><tr><td><a href="related.html">related.html</a><div class="meta">标签共现、相似论文、孤岛论文</div></td><td>page</td><td><span class="flag">ok</span></td><td>64345</td><td><code>3fa5818718b263ac2c428ffbc808e129c7a930767ce89e4eb8556e618356face</code></td></tr><tr><td><a href="gaps.html">gaps.html</a><div class="meta">下一步行动和研究线缺口</div></td><td>page</td><td><span class="flag">ok</span></td><td>52584</td><td><code>dff340b21fbdacff52ebee5dd105906fdf3ef5e9c3ad3c2ac5a649e1eb5ca480</code></td></tr><tr><td><a href="board.html">board.html</a><div class="meta">拖拽式状态流和 CSV patch</div></td><td>page</td><td><span class="flag">ok</span></td><td>67079</td><td><code>642312656021adff956e6f974f089d3a263bcb2ba3373789e420b1160f885663</code></td></tr><tr><td><a href="workflow.html">workflow.html</a><div class="meta">状态体系对比、分布和漂移审计</div></td><td>page</td><td><span class="flag">ok</span></td><td>54024</td><td><code>88897ef04a9b62d11ca93cc7b600e2ef737b95e055240e545976a732dbb25ff8</code></td></tr><tr><td><a href="status.html">status.html</a><div class="meta">动态选择状态体系、阶段和值并生成可分享视图</div></td><td>page</td><td><span class="flag">ok</span></td><td>84942</td><td><code>a663e4bc77080c3124adcb65324491a93ee5aab1e60c4914b41b659d9b121d56</code></td></tr><tr><td><a href="views.html">views.html</a><div class="meta">共享视图、系统队列和状态/研究线视图目录</div></td><td>page</td><td><span class="flag">ok</span></td><td>119878</td><td><code>98b786d2412032d369b3a7bc1ee7130226a66c8dd45c70c9a9bac14e90a16f29</code></td></tr><tr><td><a href="presets.html">presets.html</a><div class="meta">批量治理 preset、字段写入和 workflow 兼容性</div></td><td>page</td><td><span class="flag">ok</span></td><td>64269</td><td><code>aef8ec511969b4a54a6e8b4f5c4e53c1ce31498c41e950feba4f9069c7cd0a50</code></td></tr><tr><td><a href="batch.html">batch.html</a><div class="meta">按分类、状态和复习缺口切分可执行论文批次</div></td><td>page</td><td><span class="flag">ok</span></td><td>125059</td><td><code>c60f847eca7365b3134c492106661321a1b99b25977ac9ce8cf82c3ef9174d51</code></td></tr><tr><td><a href="pivot.html">pivot.html</a><div class="meta">任意两个分类维度交叉分析论文分布</div></td><td>page</td><td><span class="flag">ok</span></td><td>67267</td><td><code>9420a4469d70d4bff8df0ee3c1cbdd98a06560b839174bdf74a800d95e7682a6</code></td></tr><tr><td><a href="compare.html">compare.html</a><div class="meta">并排比较候选论文的分类、状态和质量信号</div></td><td>page</td><td><span class="flag">ok</span></td><td>75229</td><td><code>9953725e22229aaab6bad972d3e95fe4d804357ee03cc872b364fc1947d167b9</code></td></tr><tr><td><a href="taxonomy_map.html">taxonomy_map.html</a><div class="meta">分类节点、共现边和研究线簇</div></td><td>page</td><td><span class="flag">ok</span></td><td>137041</td><td><code>bd04f3fc1e21a2464b60d50692aa2fdd3b51ffd7d53338128e40cb7e342dd8e9</code></td></tr><tr><td><a href="clusters.html">clusters.html</a><div class="meta">研究线簇、拆分候选和代表论文</div></td><td>page</td><td><span class="flag">ok</span></td><td>55103</td><td><code>77c99d48438b92e2b791ff5afff3273447d654099832a6ad8f8dd0f49045930a</code></td></tr><tr><td><a href="roadmap.html">roadmap.html</a><div class="meta">按研究线组织阶段、里程碑和下一步计划</div></td><td>page</td><td><span class="flag">ok</span></td><td>65780</td><td><code>3366f4d37aafcf86fd582db3d8b936c3d21fef0a0603414e9065d39dae0a2f3b</code></td></tr><tr><td><a href="scale.html">scale.html</a><div class="meta">大规模论文库容量、风险和扩展建议</div></td><td>page</td><td><span class="flag">ok</span></td><td>56354</td><td><code>e356acd18d90451bf5296b5771f5911ec0e757719149c15f0806498d853b6256</code></td></tr><tr><td><a href="ownership.html">ownership.html</a><div class="meta">研究线 owner、工作量和治理队列</div></td><td>page</td><td><span class="flag">ok</span></td><td>53104</td><td><code>5560108dd5a74c87aed1ca8334a29fa7055f64a373ee0c8f3041983317427ee2</code></td></tr><tr><td><a href="routing.html">routing.html</a><div class="meta">新论文研究线和标签推荐</div></td><td>page</td><td><span class="flag">ok</span></td><td>145504</td><td><code>8c1aec89c76f135453525ad6a5fcd53b81fbf4062e40ac0d604707b276107226</code></td></tr><tr><td><a href="onboarding.html">onboarding.html</a><div class="meta">贡献路径、质量门和数据契约</div></td><td>page</td><td><span class="flag">ok</span></td><td>64565</td><td><code>0ba707155ba6c6837a760416bef644954582b5ae6f7410e436087488722ea803</code></td></tr><tr><td><a href="catalog.html">catalog.html</a><div class="meta">机器数据、页面和契约的接入目录</div></td><td>page</td><td><span class="flag">ok</span></td><td>71791</td><td><code>c84171afcc733717545a2cf9b7fc160af20dba0864104fe592817a1d4d37a219</code></td></tr><tr><td><a href="intake.html">intake.html</a><div class="meta">批量粘贴论文链接、去重并导出 inbox CSV</div></td><td>page</td><td><span class="flag">ok</span></td><td>62721</td><td><code>e644b3984469f2494822048a707a5e6c3fe75e88aa47353664ef98a286ee9bf8</code></td></tr><tr><td><a href="inbox.html">inbox.html</a><div class="meta">候选论文队列和去重提示</div></td><td>page</td><td><span class="flag">ok</span></td><td>50751</td><td><code>a9d7e9dc1954ebc3df2ef79636d2811064c6e2f42181ce58dd4c8f5f292811f7</code></td></tr><tr><td><a href="dedupe.html">dedupe.html</a><div class="meta">库内报告、候选论文和导入队列重复项治理</div></td><td>page</td><td><span class="flag">ok</span></td><td>52658</td><td><code>fb34e3cb54526d09fb27602953b945951d89c5676ccc6dfa792b83ede341b8e3</code></td></tr><tr><td><a href="registry.html">registry.html</a><div class="meta">分类标签字典、alias 和跨字段治理</div></td><td>page</td><td><span class="flag">ok</span></td><td>226670</td><td><code>48d6fa0cc71fb5804defc2ec59f88f4a8fe3e6b8a85a50c0dbe1e8668467564f</code></td></tr><tr><td><a href="curation.html">curation.html</a><div class="meta">逐篇论文分类完整度、缺口和补齐队列</div></td><td>page</td><td><span class="flag">ok</span></td><td>68375</td><td><code>1bcbf5228c287c6428d80a40cad64296dec1b16e63c14397a9ac342c6398aa28</code></td></tr><tr><td><a href="review.html">review.html</a><div class="meta">待复习、需建计划、建议日期</div></td><td>page</td><td><span class="flag">ok</span></td><td>52901</td><td><code>8db5ebc0a14520b59140ef01c0af7229c7a30671026caebf07196a3b5bc213eb</code></td></tr><tr><td><a href="freshness.html">freshness.html</a><div class="meta">报告新鲜度、过期分析和研究线维护</div></td><td>page</td><td><span class="flag">ok</span></td><td>60766</td><td><code>4fd84188c0abaa05915df3c55b777abc4b0606f50c2c35a7bd9f1d0ad6a69ba4</code></td></tr><tr><td><a href="quality.html">quality.html</a><div class="meta">弱元数据、别名建议、taxonomy drift</div></td><td>page</td><td><span class="flag">ok</span></td><td>65028</td><td><code>8b6f72d319cce37ed69f5a1b2193c716e6dd82da997ea7b85081c3211184e34c</code></td></tr><tr><td><a href="taxonomy.html">taxonomy.html</a><div class="meta">分类矩阵、状态工作流、治理队列</div></td><td>page</td><td><span class="flag">ok</span></td><td>89728</td><td><code>f79d510927723b6cb0b6766850bf6825ace6ea00b306de2e644af4c79dbabbba</code></td></tr><tr><td><a href="timeline.html">timeline.html</a><div class="meta">按年份和研究线浏览论文演进</div></td><td>page</td><td><span class="flag">ok</span></td><td>79717</td><td><code>77c0a6fafa3a402fa812ee17a1df2e1e100c596849fe1c87fad578f02b5c0c78</code></td></tr><tr><td><a href="matrix.html">matrix.html</a><div class="meta">research line x year 覆盖</div></td><td>page</td><td><span class="flag">ok</span></td><td>73843</td><td><code>2c82ca87e5ff1ed3a4544332e46682a9945d54a48cc0c94a55cfa10c86da479b</code></td></tr><tr><td><a href="lines/index.html">lines/index.html</a><div class="meta">按研究脉络组织论文</div></td><td>page</td><td><span class="flag">ok</span></td><td>46269</td><td><code>344bd7e4f28eae5ecac9508052a5ff4f263d26dc73820ec7442c79fa02dfda31</code></td></tr><tr><td><a href="tags.html">tags.html</a><div class="meta">按标签聚合论文</div></td><td>page</td><td><span class="flag">ok</span></td><td>61486</td><td><code>90291d4f56cea4e8a5a6711038d95e3f0f1b1c1f0967435de0f9d175c0e26131</code></td></tr><tr><td><a href="papers.json">papers.json</a><div class="meta">论文索引、taxonomy 聚合、前端 controls</div></td><td>data</td><td><span class="flag">ok</span></td><td>25809</td><td><code>6216a5bcb9e6673af9ae109cd06886fbc833b349c7b605659b7866044084b457</code></td></tr><tr><td><a href="search_index.json">search_index.json</a><div class="meta">正文全文检索索引</div></td><td>data</td><td><span class="flag">ok</span></td><td>171390</td><td><code>579be3e758459426baee7f1b525eba92ace91310fe5b69cce13cd0064b9f532e</code></td></tr><tr><td><a href="stats.json">stats.json</a><div class="meta">运营统计、覆盖率和队列规模</div></td><td>data</td><td><span class="flag">ok</span></td><td>20163</td><td><code>10001a0e3f09ad61299360c9740705251d497f3ee57d98f01d06b97d53863fe0</code></td></tr><tr><td><a href="quality.json">quality.json</a><div class="meta">质量问题、taxonomy load、taxonomy drift、标签别名建议</div></td><td>data</td><td><span class="flag">ok</span></td><td>5329</td><td><code>1b9ef209a98861649d825759648da40a4bb39f6281665910d42017e76d58d872</code></td></tr><tr><td><a href="review.json">review.json</a><div class="meta">复习计划和建议 next_review</div></td><td>data</td><td><span class="flag">ok</span></td><td>3602</td><td><code>628556f7388d1db6d9fd3119773ef05848b27744dcd1545e58cd7e1e1a335bb4</code></td></tr><tr><td><a href="freshness.json">freshness.json</a><div class="meta">报告新鲜度、过期分析和研究线维护队列</div></td><td>data</td><td><span class="flag">ok</span></td><td>5002</td><td><code>c74e41eb53a9234cc2289c59abe5ee4f716dd1c7ea1ff6715cedebdb78913969</code></td></tr><tr><td><a href="taxonomy_actions.json">taxonomy_actions.json</a><div class="meta">分类长尾、过载和空候选治理任务</div></td><td>data</td><td><span class="flag">ok</span></td><td>23950</td><td><code>c5f49a851a57224d02190e09a5379d31c58c7b90f6e2d71d063daea87bba05a7</code></td></tr><tr><td><a href="actions.json">actions.json</a><div class="meta">统一行动队列，汇总质量、复习、分类和 inbox 任务</div></td><td>data</td><td><span class="flag">ok</span></td><td>35075</td><td><code>175ae8321e03446ec3991da98863db3c97c1000a825ca4e8be2813cef8cc3dd1</code></td></tr><tr><td><a href="priority.json">priority.json</a><div class="meta">论文级优先级决策数据，聚合复习、分类、代码和阅读信号</div></td><td>data</td><td><span class="flag">ok</span></td><td>24239</td><td><code>4c9592774b768df71e273b467c0c462c1329a5808b279ae5301574f0cf7f02c7</code></td></tr><tr><td><a href="command.json">command.json</a><div class="meta">场景化命令中心，组织页面入口、队列、数据和推荐命令</div></td><td>data</td><td><span class="flag">ok</span></td><td>26219</td><td><code>b6667af056ec7cc3605edb67735efb9daf63d09f63dc743016572cce2659cc00</code></td></tr><tr><td><a href="queues.json">queues.json</a><div class="meta">运营队列、推荐 preset 和批量写回入口</div></td><td>data</td><td><span class="flag">ok</span></td><td>11441</td><td><code>92d0a9e5d81094fc267016acfeb066dd43a137ef994a81f6d2518ead0ffaf0aa</code></td></tr><tr><td><a href="cohorts.json">cohorts.json</a><div class="meta">分类组合队列、过载组合和专题候选</div></td><td>data</td><td><span class="flag">ok</span></td><td>252700</td><td><code>bf007c69d2b57b9c93f3b9da204fb9e20d95d6aad0d2ff79e0502149363b0e0b</code></td></tr><tr><td><a href="workflow.json">workflow.json</a><div class="meta">状态工作流配置、分布和漂移审计</div></td><td>data</td><td><span class="flag">ok</span></td><td>22107</td><td><code>9c76e09541800de451b9a2fe635126c75d016b150ec9f725ff7239d0985fd047</code></td></tr><tr><td><a href="status.json">status.json</a><div class="meta">运行时状态选择器、状态字段选项和论文状态快照</div></td><td>data</td><td><span class="flag">ok</span></td><td>25213</td><td><code>224774cc8dca78eea27be79a9b97af1e46c4ad85ad315ecb96b079521ef8cb92</code></td></tr><tr><td><a href="views.json">views.json</a><div class="meta">共享视图、系统队列、研究线和状态工作流视图目录</div></td><td>data</td><td><span class="flag">ok</span></td><td>42350</td><td><code>ba98b785d54aa5675211d2ad5a4bd5ca909e242e520c7bb654ac77a9317053fb</code></td></tr><tr><td><a href="presets.json">presets.json</a><div class="meta">批量治理 preset、字段写入和 workflow 兼容性</div></td><td>data</td><td><span class="flag">ok</span></td><td>12424</td><td><code>f33db18c89b50291c95ebbcfd0cba7008877cbc12798dafb0147562373b48bd9</code></td></tr><tr><td><a href="batch.json">batch.json</a><div class="meta">按分类、状态和治理缺口生成的可执行论文批次</div></td><td>data</td><td><span class="flag">ok</span></td><td>72682</td><td><code>68755540d0e3e5908207425af786bfc5ddb143ef7c8f6d3a5845e8d941b3b8cd</code></td></tr><tr><td><a href="collections.json">collections.json</a><div class="meta">共享视图、智能集合和研究线集合的机器可读入口</div></td><td>data</td><td><span class="flag">ok</span></td><td>20590</td><td><code>8defbe85f4699ece08db425a83402ffde266d8be6a0947b0c91c8917cb40967f</code></td></tr><tr><td><a href="coverage.json">coverage.json</a><div class="meta">研究线分类覆盖、字段缺口、缺失 slug 和 owner 信号</div></td><td>data</td><td><span class="flag">ok</span></td><td>7965</td><td><code>37f6a9709cbfbbe966f406aec574bc572590c09338ceecb2bf34bc887bddd47d</code></td></tr><tr><td><a href="gaps.json">gaps.json</a><div class="meta">研究线缺口、下一步行动和运营队列</div></td><td>data</td><td><span class="flag">ok</span></td><td>10304</td><td><code>7a55368a81831037cf3e41eb907e041ac8823c7f7176b0002f467262d282cc83</code></td></tr><tr><td><a href="pivot.json">pivot.json</a><div class="meta">分类透视表维度、论文投影和交叉分布</div></td><td>data</td><td><span class="flag">ok</span></td><td>19198</td><td><code>0e2de211e6e68b71e3ce9b34e6ae3127145dcefd5946cb276b644e5f6d7033e1</code></td></tr><tr><td><a href="compare.json">compare.json</a><div class="meta">论文对比视图数据和推荐对比集合</div></td><td>data</td><td><span class="flag">ok</span></td><td>25002</td><td><code>2e596b3291c076bd28e6a99641323b1a507883ea093231827b8da47279fcc43c</code></td></tr><tr><td><a href="taxonomy_map.json">taxonomy_map.json</a><div class="meta">分类节点、共现边、研究线簇和图谱治理建议</div></td><td>data</td><td><span class="flag">ok</span></td><td>104382</td><td><code>c51ca346eafda5741e66a05940c8518c9f4d40f209299e5269902e5c1711cd26</code></td></tr><tr><td><a href="clusters.json">clusters.json</a><div class="meta">研究线簇、拆分候选和代表论文</div></td><td>data</td><td><span class="flag">ok</span></td><td>8477</td><td><code>6ad52437472f793242e97d92d66a5f05ff93f821dc14da45af801c137194624e</code></td></tr><tr><td><a href="roadmap.json">roadmap.json</a><div class="meta">研究线路线图、阶段覆盖、里程碑和下一步计划</div></td><td>data</td><td><span class="flag">ok</span></td><td>13953</td><td><code>1ea5f3bd8c5dad5197daf4b87cf72fa54223709d07bf53292ed472461ce49552</code></td></tr><tr><td><a href="scale.json">scale.json</a><div class="meta">规模就绪评分、容量投影和大库治理风险</div></td><td>data</td><td><span class="flag">ok</span></td><td>5956</td><td><code>79daffc622a3c3b2b39c92e837f243ebeda0cb5ba61e6534d6d48b5d71204790</code></td></tr><tr><td><a href="ownership.json">ownership.json</a><div class="meta">研究线 owner、工作量和治理队列</div></td><td>data</td><td><span class="flag">ok</span></td><td>4183</td><td><code>085030bcc6f0b24f9f3536453284fd6d76d050fca09ad5edcd7ed2643bbffc37</code></td></tr><tr><td><a href="routing.json">routing.json</a><div class="meta">新论文分类路由画像和推荐权重</div></td><td>data</td><td><span class="flag">ok</span></td><td>177428</td><td><code>dc894eb3d95bde1a1fc64757ab57c6b1ee3c159630864d479969288f876de20d</code></td></tr><tr><td><a href="onboarding.json">onboarding.json</a><div class="meta">开源贡献路径、质量门和数据契约清单</div></td><td>data</td><td><span class="flag">ok</span></td><td>12446</td><td><code>ac06f9f06b90e40c026d2297aeec93d5296b35f763e5cf2266bffd821c49dac8</code></td></tr><tr><td><a href="catalog.json">catalog.json</a><div class="meta">机器数据、页面入口和契约字段目录</div></td><td>data</td><td><span class="flag">ok</span></td><td>57787</td><td><code>fdf9a4ecadeacc2e8085298add1c8f699ef775d5c1b131c7a704366958918bd6</code></td></tr><tr><td><a href="snapshot.json">snapshot.json</a><div class="meta">当前知识库治理快照和发布基线</div></td><td>data</td><td><span class="flag">ok</span></td><td>21276</td><td><code>d3bff817f666a66a15d1fd543f76beccf77c063a780cfc8fb3bc8739f201fa0f</code></td></tr><tr><td><a href="intake.json">intake.json</a><div class="meta">批量导入去重索引、默认字段和 inbox CSV 契约</div></td><td>data</td><td><span class="flag">ok</span></td><td>5735</td><td><code>303c4eef2fd9053b05a4bdda40a78795c144ea118b705a72f3dcf1451ac6cb23</code></td></tr><tr><td><a href="inbox.json">inbox.json</a><div class="meta">候选论文队列和重复项</div></td><td>data</td><td><span class="flag">ok</span></td><td>130</td><td><code>16088a733262361546376c706fdad3a3676e45a635dcee5fc3d953ee66e1bf50</code></td></tr><tr><td><a href="dedupe.json">dedupe.json</a><div class="meta">重复报告、候选重复项和去重建议</div></td><td>data</td><td><span class="flag">ok</span></td><td>932</td><td><code>f7e368e47b497e9debea5ca4346d7927af0953329eb47743443180259a2c39b9</code></td></tr><tr><td><a href="registry.json">registry.json</a><div class="meta">分类标签注册表、alias、字段复用和治理信号</div></td><td>data</td><td><span class="flag">ok</span></td><td>134091</td><td><code>9a396a66bad24229d7aaeaea62b02c9ff4e24ed91ab99d985e6d7ebf30011a5d</code></td></tr><tr><td><a href="facets.json">facets.json</a><div class="meta">分类字段目录、候选值规模和治理动作</div></td><td>data</td><td><span class="flag">ok</span></td><td>43210</td><td><code>ab6dccdff2756a4a26c17a43f0d7e677f9711799f16aad665bd9a5f8d94343c3</code></td></tr><tr><td><a href="curation.json">curation.json</a><div class="meta">逐篇论文分类成熟度、缺失字段和补齐建议</div></td><td>data</td><td><span class="flag">ok</span></td><td>16069</td><td><code>575b81bb63b3cdef7898f843c8ef9e0c30d448003822d782b07f9616c146b3fe</code></td></tr><tr><td><a href="manifest.json">manifest.json</a><div class="meta">发布摘要和页面入口清单</div></td><td>data</td><td><span class="flag">generated_after_inventory</span></td><td>-</td><td><code>-</code></td></tr><tr><td><a href="guides/report.template.md">guides/report.template.md</a><div class="meta">中文论文阅读报告模板</div></td><td>contract</td><td><span class="flag">ok</span></td><td>3075</td><td><code>698233eb11b0d1f212ef9f1dad719735f337031c5a8ba4c4e142370c5deb3254</code></td></tr><tr><td><a href="guides/metadata.schema.json">guides/metadata.schema.json</a><div class="meta">报告 frontmatter 字段契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>1673</td><td><code>246d8f345ead3ced56403a313d89bae2042820432274758166e557c39c04716b</code></td></tr><tr><td><a href="guides/inbox.schema.json">guides/inbox.schema.json</a><div class="meta">候选论文 inbox.csv 字段契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>1121</td><td><code>074a6f551809f6d2e301e2d4a3769125a8c7159fc2f1d35f0aff8e3bc9f963b7</code></td></tr><tr><td><a href="guides/taxonomy.schema.json">guides/taxonomy.schema.json</a><div class="meta">taxonomy.json 配置字段契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>9767</td><td><code>8d267b0dc8eb139976a055f95c857c04ad29b2898e6ca85d77d412b8161b6927</code></td></tr><tr><td><a href="guides/facets.schema.json">guides/facets.schema.json</a><div class="meta">facets.json 分类字段目录契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>4521</td><td><code>8e2ba10996059896e63d5ba6150ea338ec0f4e500418706b199c2f7e9d29389a</code></td></tr><tr><td><a href="guides/batch.schema.json">guides/batch.schema.json</a><div class="meta">batch.json 批量规划数据契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>4344</td><td><code>cf440ceba72985d305792239676a6d7e2f96b98333fef72a76b7e8367ef8353c</code></td></tr><tr><td><a href="guides/actions.schema.json">guides/actions.schema.json</a><div class="meta">actions.json 统一行动队列契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>2822</td><td><code>748a9ca75664585496db6f51b31ef95f1108890707a82041d22c8f69c3162eda</code></td></tr><tr><td><a href="guides/catalog.schema.json">guides/catalog.schema.json</a><div class="meta">catalog.json 集成目录契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>4136</td><td><code>5ec248fedc035fdd5d912238c917fc2c0aeb7fc087dc2d8f4f78a9a9262e5ec0</code></td></tr><tr><td><a href="guides/bootstrap_bundle.schema.json">guides/bootstrap_bundle.schema.json</a><div class="meta">bootstrap bundle 桌面启动包契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>3899</td><td><code>17c20d72166c046a1bec2bc5362859653ec670f430bd6ea6c28609da90f020bd</code></td></tr><tr><td><a href="guides/manifest.schema.json">guides/manifest.schema.json</a><div class="meta">manifest.json 发布清单契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>4212</td><td><code>a837409ad9d49793511db524497fc567c4e399eaeb156dbe201433739906c3a8</code></td></tr><tr><td><a href="guides/snapshot.schema.json">guides/snapshot.schema.json</a><div class="meta">snapshot.json 治理快照契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>3727</td><td><code>790013aad4f3042e0081f1d8999b1e7f9aae63f7a503bfcda2e36ece4d0357fc</code></td></tr><tr><td><a href="guides/workflow.schema.json">guides/workflow.schema.json</a><div class="meta">workflow.json 状态工作流审计契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>6876</td><td><code>4a7acbd5f49c3f9c4140d47376dce37aa956016bb14ed898951f3d7acfced912</code></td></tr><tr><td><a href="guides/status.schema.json">guides/status.schema.json</a><div class="meta">status.json 状态选择器和写回命令契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>6793</td><td><code>f88ebd3db6828514ddde67e1fdb1e577c955cca9131f3ad0b43d30f728c9677b</code></td></tr><tr><td><a href="guides/views.schema.json">guides/views.schema.json</a><div class="meta">views.json 视图目录和批量队列契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>5409</td><td><code>8fe654726250cf183de71e5e897bbcd3cd27db099c4db7567d605e2b7ae9517d</code></td></tr><tr><td><a href="guides/presets.schema.json">guides/presets.schema.json</a><div class="meta">presets.json 批量治理 preset 契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>6440</td><td><code>06c026c954c7bbfce2f6587edffbf0de2418d4597218cbd691b66c742aebef40</code></td></tr><tr><td><a href="guides/curation.schema.json">guides/curation.schema.json</a><div class="meta">curation.json 逐篇分类成熟度契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>5729</td><td><code>66fb59d3f3d8c58337d36c1f70b954e2135427de780428a110a9aa19abc8e21a</code></td></tr><tr><td><a href="guides/queues.schema.json">guides/queues.schema.json</a><div class="meta">queues.json 运营队列契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>3690</td><td><code>74b5252711b6ec3d497fd2e81b68eda5cea41a97775d0432cafac79659049a90</code></td></tr><tr><td><a href="guides/cohorts.schema.json">guides/cohorts.schema.json</a><div class="meta">cohorts.json 分类组合队列契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>4591</td><td><code>58b2ae2405c6e35496c63f7973c982705ac9f80cf5b321d53bc37c095c3a9190</code></td></tr><tr><td><a href="guides/taxonomy.json">guides/taxonomy.json</a><div class="meta">分类别名、状态工作流和共享视图配置</div></td><td>contract</td><td><span class="flag">ok</span></td><td>10287</td><td><code>4f6ae80a3ab9a48b34f1b27dcd88692aa3b132d0065ee65a9d44767f3953db4a</code></td></tr></tbody></table></div>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>产物</th><th>类型</th><th>状态</th><th>Bytes</th><th>SHA-256</th></tr></thead><tbody><tr><td><a href="index.html">index.html</a><div class="meta">卡片检索、筛选、研究线概览</div></td><td>page</td><td><span class="flag">ok</span></td><td>289069</td><td><code>ec38ca4b8d5e537b8b79ea253bcbcf2cd4bd4b5cc9410b768a53b2e3e1d79d53</code></td></tr><tr><td><a href="command.html">command.html</a><div class="meta">按使用场景组织入口、队列、数据和命令</div></td><td>page</td><td><span class="flag">ok</span></td><td>107467</td><td><code>727e5cd36616eb05afc23b73bfee07dbcadbc8c18547f03db0eace49eed9d946</code></td></tr><tr><td><a href="library.html">library.html</a><div class="meta">密集筛选、列管理、批量更新</div></td><td>page</td><td><span class="flag">ok</span></td><td>145198</td><td><code>ce0ffa4edb86317e145d360d16e5e793daa4d945e13413fd8f6cfe03e3c1026c</code></td></tr><tr><td><a href="dashboard.html">dashboard.html</a><div class="meta">覆盖率、队列和运营指标</div></td><td>page</td><td><span class="flag">ok</span></td><td>51213</td><td><code>c113c64368608b74e7d6b3368a8b4964b62de76e97940fbd4d20fb0bcaa5819f</code></td></tr><tr><td><a href="release.html">release.html</a><div class="meta">页面入口、数据文件、质量状态</div></td><td>page</td><td><span class="flag">generated_after_inventory</span></td><td>-</td><td><code>-</code></td></tr><tr><td><a href="snapshot.html">snapshot.html</a><div class="meta">当前发布基线、队列和治理策略快照</div></td><td>page</td><td><span class="flag">ok</span></td><td>62955</td><td><code>d7b8f6af69e667636141e8611c08c86b505b53032e001bc7b8ab15749ba2b655</code></td></tr><tr><td><a href="actions.html">actions.html</a><div class="meta">统一运营队列和可分派任务</div></td><td>page</td><td><span class="flag">ok</span></td><td>145024</td><td><code>1b614f942a1887ce02a6d221f0be73fae9ea90de047acb8f9fde54a462e21fab</code></td></tr><tr><td><a href="priority.html">priority.html</a><div class="meta">按论文聚合复习、分类、代码和阅读优先级</div></td><td>page</td><td><span class="flag">ok</span></td><td>69435</td><td><code>37286e4b1ba445f130a092cdc1d524c688b27ac6f5c2eb2dcc678d91396fc6ae</code></td></tr><tr><td><a href="queues.html">queues.html</a><div class="meta">缺分类、复习、代码检查和高优先级待读队列</div></td><td>page</td><td><span class="flag">ok</span></td><td>60109</td><td><code>e2b6f33075469ecd19f3b765ed154fb1a79c0324f025ec8cef92e895d8d564ce</code></td></tr><tr><td><a href="cohorts.html">cohorts.html</a><div class="meta">分类组合队列、过载组合和专题候选</div></td><td>page</td><td><span class="flag">ok</span></td><td>426473</td><td><code>3252714e35d3da0fe3fb47ac13925fcc6eb4a520e39fba5e5b95933094fc2a9a</code></td></tr><tr><td><a href="collections.html">collections.html</a><div class="meta">共享视图、智能集合、研究线入口</div></td><td>page</td><td><span class="flag">ok</span></td><td>49922</td><td><code>5b4284bce5b4fe9e001d5cb34e4a779d16ea34c6cddc92abc8d5af36b2b46e66</code></td></tr><tr><td><a href="balance.html">balance.html</a><div class="meta">分类维度健康度、长尾和过载复盘</div></td><td>page</td><td><span class="flag">ok</span></td><td>57437</td><td><code>fd476ee01717342dbdafc03dfb74119904d0a42b5d97005338cb9b1812dc4c41</code></td></tr><tr><td><a href="coverage.html">coverage.html</a><div class="meta">研究线 x 分类字段覆盖缺口</div></td><td>page</td><td><span class="flag">ok</span></td><td>60942</td><td><code>96f31b358798f1c42d839002eafa8034eda28b156d97b12c95557103cb60734f</code></td></tr><tr><td><a href="facets.html">facets.html</a><div class="meta">标签规模、长尾和过载分类</div></td><td>page</td><td><span class="flag">ok</span></td><td>108793</td><td><code>63aa446fabc7b639e64b52a48787ec35bfc178350d5d01aeab89f361d9e5761f</code></td></tr><tr><td><a href="related.html">related.html</a><div class="meta">标签共现、相似论文、孤岛论文</div></td><td>page</td><td><span class="flag">ok</span></td><td>63015</td><td><code>372935b6e4c31fe067b6a26fd576d5fd4b8693f6ba35e2ea6165970344b3ea5e</code></td></tr><tr><td><a href="gaps.html">gaps.html</a><div class="meta">下一步行动和研究线缺口</div></td><td>page</td><td><span class="flag">ok</span></td><td>51254</td><td><code>f6e75d443bbf98d663a7d0ec46d9087c95dacf80f00272bc55a354d2b8bd6de2</code></td></tr><tr><td><a href="board.html">board.html</a><div class="meta">拖拽式状态流和 CSV patch</div></td><td>page</td><td><span class="flag">ok</span></td><td>65751</td><td><code>c882481286a46874e0632bba4771e2d0ee47501f6585842f04eff3d90aa386b6</code></td></tr><tr><td><a href="workflow.html">workflow.html</a><div class="meta">状态体系对比、分布和漂移审计</div></td><td>page</td><td><span class="flag">ok</span></td><td>52694</td><td><code>58eb7b6ffb0f27fdac53b1a337f7e85b8b961474405a09cba4c4495cea7a00f5</code></td></tr><tr><td><a href="status.html">status.html</a><div class="meta">动态选择状态体系、阶段和值并生成可分享视图</div></td><td>page</td><td><span class="flag">ok</span></td><td>83612</td><td><code>64a2f49910277e5699bc4c3fe1edbc596aca208217aef96cc15541177d962049</code></td></tr><tr><td><a href="views.html">views.html</a><div class="meta">共享视图、系统队列和状态/研究线视图目录</div></td><td>page</td><td><span class="flag">ok</span></td><td>118538</td><td><code>fc36c82fd37bbb1a3253738f6bd4f49e1f159cde020e51038645172782c679f4</code></td></tr><tr><td><a href="presets.html">presets.html</a><div class="meta">批量治理 preset、字段写入和 workflow 兼容性</div></td><td>page</td><td><span class="flag">ok</span></td><td>62941</td><td><code>0f82d0b3abd44140cceeb0981a9161e98ee3b9b3d7f4e0c22c8a3e696b351f8d</code></td></tr><tr><td><a href="batch.html">batch.html</a><div class="meta">按分类、状态和复习缺口切分可执行论文批次</div></td><td>page</td><td><span class="flag">ok</span></td><td>123729</td><td><code>ff76dc0cfb37a2ff12100331823c3d5a194f3c8a7501df1d3a0b15d394abde48</code></td></tr><tr><td><a href="pivot.html">pivot.html</a><div class="meta">任意两个分类维度交叉分析论文分布</div></td><td>page</td><td><span class="flag">ok</span></td><td>65937</td><td><code>4715074435aea6073f0f4c559f821afe1e1b295df59a1c4a6c7ff940d3c9e4cf</code></td></tr><tr><td><a href="compare.html">compare.html</a><div class="meta">并排比较候选论文的分类、状态和质量信号</div></td><td>page</td><td><span class="flag">ok</span></td><td>73903</td><td><code>c6ee7f27450b7199628238cf9b1e94c7e85625f9859effa99a355d1800a0d331</code></td></tr><tr><td><a href="taxonomy_map.html">taxonomy_map.html</a><div class="meta">分类节点、共现边和研究线簇</div></td><td>page</td><td><span class="flag">ok</span></td><td>135711</td><td><code>2ec3312627e194f1eee13b1311cdc150f85ce81f7c39e840e9be5750d2425d62</code></td></tr><tr><td><a href="clusters.html">clusters.html</a><div class="meta">研究线簇、拆分候选和代表论文</div></td><td>page</td><td><span class="flag">ok</span></td><td>53775</td><td><code>6551053c82365860784ef12f0fc8a8edd2eb12426c27b481c3ba60e495d951c0</code></td></tr><tr><td><a href="roadmap.html">roadmap.html</a><div class="meta">按研究线组织阶段、里程碑和下一步计划</div></td><td>page</td><td><span class="flag">ok</span></td><td>64450</td><td><code>3bcf4113bfb46aa98b0428c6bd45016296f80c7813fd019ebf41676b57e7e8b0</code></td></tr><tr><td><a href="scale.html">scale.html</a><div class="meta">大规模论文库容量、风险和扩展建议</div></td><td>page</td><td><span class="flag">ok</span></td><td>55024</td><td><code>d1bfa25e4009e25ed18d9b0d18421d4aa045828139bbcd1f055107e611688810</code></td></tr><tr><td><a href="ownership.html">ownership.html</a><div class="meta">研究线 owner、工作量和治理队列</div></td><td>page</td><td><span class="flag">ok</span></td><td>51778</td><td><code>a7ebd98d57b4c09b14ecde186e1d878450a8407ea55dc2e0362a4a0b8dd3887d</code></td></tr><tr><td><a href="routing.html">routing.html</a><div class="meta">新论文研究线和标签推荐</div></td><td>page</td><td><span class="flag">ok</span></td><td>144176</td><td><code>fc052182509515a749caa472e34cb68ab344ff4f31e0efbf57bdf5e06b4c9227</code></td></tr><tr><td><a href="onboarding.html">onboarding.html</a><div class="meta">贡献路径、质量门和数据契约</div></td><td>page</td><td><span class="flag">ok</span></td><td>63235</td><td><code>63ebac3d47d30263a61a2944c719d2c95ca915d697715da3638b0b1efbdf3494</code></td></tr><tr><td><a href="catalog.html">catalog.html</a><div class="meta">机器数据、页面和契约的接入目录</div></td><td>page</td><td><span class="flag">ok</span></td><td>70461</td><td><code>e252e4d961b66b8bd92f3a40680c1c904ddfb36e16452a13711266bd978b2a93</code></td></tr><tr><td><a href="intake.html">intake.html</a><div class="meta">批量粘贴论文链接、去重并导出 inbox CSV</div></td><td>page</td><td><span class="flag">ok</span></td><td>61391</td><td><code>2304c95de1cf8c8f544495a4d5cbe285da0daf52a0181409869cbaea5d2ae4c1</code></td></tr><tr><td><a href="inbox.html">inbox.html</a><div class="meta">候选论文队列和去重提示</div></td><td>page</td><td><span class="flag">ok</span></td><td>49421</td><td><code>e0f3006b9d41ba92b5f9f7716fee397800b0792baf98b0a4a0bc584cc2072721</code></td></tr><tr><td><a href="dedupe.html">dedupe.html</a><div class="meta">库内报告、候选论文和导入队列重复项治理</div></td><td>page</td><td><span class="flag">ok</span></td><td>51328</td><td><code>033741ecc182f02c0fbf31a33565d23221dedbe220f8c5e51bfb31f666f61a3c</code></td></tr><tr><td><a href="registry.html">registry.html</a><div class="meta">分类标签字典、alias 和跨字段治理</div></td><td>page</td><td><span class="flag">ok</span></td><td>225340</td><td><code>ffeb088b6d6d9df3a82e236423b94541877ca95ae2d5e6eb0f52adceaf689056</code></td></tr><tr><td><a href="curation.html">curation.html</a><div class="meta">逐篇论文分类完整度、缺口和补齐队列</div></td><td>page</td><td><span class="flag">ok</span></td><td>67047</td><td><code>12bc60029b3b42323583382666a3957afc5aa2bc0f13db593fdc9543415f13d0</code></td></tr><tr><td><a href="review.html">review.html</a><div class="meta">待复习、需建计划、建议日期</div></td><td>page</td><td><span class="flag">ok</span></td><td>51571</td><td><code>a50883d5a4372063a9635b09c4b42b804590264a9e65ce47a297d216d8f09997</code></td></tr><tr><td><a href="freshness.html">freshness.html</a><div class="meta">报告新鲜度、过期分析和研究线维护</div></td><td>page</td><td><span class="flag">ok</span></td><td>59436</td><td><code>5d3977a90813c93c9c91961f6259a0f52b305efc6af303fde35d34329fd70d37</code></td></tr><tr><td><a href="quality.html">quality.html</a><div class="meta">弱元数据、别名建议、taxonomy drift</div></td><td>page</td><td><span class="flag">ok</span></td><td>63698</td><td><code>01e4d6e06d7204715a76d6e305837cc7b16b8bb7dd938050ca9fbaab9a789afb</code></td></tr><tr><td><a href="taxonomy.html">taxonomy.html</a><div class="meta">分类矩阵、状态工作流、治理队列</div></td><td>page</td><td><span class="flag">ok</span></td><td>88398</td><td><code>e86455940928c22a0b58fff3b8bcb367520e045ce7ca54a2398802e2a80edc22</code></td></tr><tr><td><a href="timeline.html">timeline.html</a><div class="meta">按年份和研究线浏览论文演进</div></td><td>page</td><td><span class="flag">ok</span></td><td>78391</td><td><code>b43fd57edbb3914c61d0625809ba42e9a0ef50c2e90e4ae2d5d08b212ed67301</code></td></tr><tr><td><a href="matrix.html">matrix.html</a><div class="meta">research line x year 覆盖</div></td><td>page</td><td><span class="flag">ok</span></td><td>72511</td><td><code>9294ca9407817a2ad70e7f4da538b9e2360bb69f93cf73308722cecdd75dea49</code></td></tr><tr><td><a href="lines/index.html">lines/index.html</a><div class="meta">按研究脉络组织论文</div></td><td>page</td><td><span class="flag">ok</span></td><td>44939</td><td><code>d0850cc5a46f7e9e6f41b51e497d4e66dd7020d01e11d837d8a5d5c31962b504</code></td></tr><tr><td><a href="tags.html">tags.html</a><div class="meta">按标签聚合论文</div></td><td>page</td><td><span class="flag">ok</span></td><td>60156</td><td><code>d6fb14b4a176ce2e6b5ccaeeefe4b75efe245dfb11cec1e3360e044913d61b98</code></td></tr><tr><td><a href="papers.json">papers.json</a><div class="meta">论文索引、taxonomy 聚合、前端 controls</div></td><td>data</td><td><span class="flag">ok</span></td><td>25809</td><td><code>6216a5bcb9e6673af9ae109cd06886fbc833b349c7b605659b7866044084b457</code></td></tr><tr><td><a href="search_index.json">search_index.json</a><div class="meta">正文全文检索索引</div></td><td>data</td><td><span class="flag">ok</span></td><td>171390</td><td><code>579be3e758459426baee7f1b525eba92ace91310fe5b69cce13cd0064b9f532e</code></td></tr><tr><td><a href="stats.json">stats.json</a><div class="meta">运营统计、覆盖率和队列规模</div></td><td>data</td><td><span class="flag">ok</span></td><td>20163</td><td><code>10001a0e3f09ad61299360c9740705251d497f3ee57d98f01d06b97d53863fe0</code></td></tr><tr><td><a href="quality.json">quality.json</a><div class="meta">质量问题、taxonomy load、taxonomy drift、标签别名建议</div></td><td>data</td><td><span class="flag">ok</span></td><td>5329</td><td><code>1b9ef209a98861649d825759648da40a4bb39f6281665910d42017e76d58d872</code></td></tr><tr><td><a href="review.json">review.json</a><div class="meta">复习计划和建议 next_review</div></td><td>data</td><td><span class="flag">ok</span></td><td>3602</td><td><code>628556f7388d1db6d9fd3119773ef05848b27744dcd1545e58cd7e1e1a335bb4</code></td></tr><tr><td><a href="freshness.json">freshness.json</a><div class="meta">报告新鲜度、过期分析和研究线维护队列</div></td><td>data</td><td><span class="flag">ok</span></td><td>5002</td><td><code>c74e41eb53a9234cc2289c59abe5ee4f716dd1c7ea1ff6715cedebdb78913969</code></td></tr><tr><td><a href="taxonomy_actions.json">taxonomy_actions.json</a><div class="meta">分类长尾、过载和空候选治理任务</div></td><td>data</td><td><span class="flag">ok</span></td><td>23950</td><td><code>c5f49a851a57224d02190e09a5379d31c58c7b90f6e2d71d063daea87bba05a7</code></td></tr><tr><td><a href="actions.json">actions.json</a><div class="meta">统一行动队列，汇总质量、复习、分类和 inbox 任务</div></td><td>data</td><td><span class="flag">ok</span></td><td>35075</td><td><code>175ae8321e03446ec3991da98863db3c97c1000a825ca4e8be2813cef8cc3dd1</code></td></tr><tr><td><a href="priority.json">priority.json</a><div class="meta">论文级优先级决策数据，聚合复习、分类、代码和阅读信号</div></td><td>data</td><td><span class="flag">ok</span></td><td>24239</td><td><code>4c9592774b768df71e273b467c0c462c1329a5808b279ae5301574f0cf7f02c7</code></td></tr><tr><td><a href="command.json">command.json</a><div class="meta">场景化命令中心，组织页面入口、队列、数据和推荐命令</div></td><td>data</td><td><span class="flag">ok</span></td><td>26219</td><td><code>b6667af056ec7cc3605edb67735efb9daf63d09f63dc743016572cce2659cc00</code></td></tr><tr><td><a href="queues.json">queues.json</a><div class="meta">运营队列、推荐 preset 和批量写回入口</div></td><td>data</td><td><span class="flag">ok</span></td><td>11441</td><td><code>92d0a9e5d81094fc267016acfeb066dd43a137ef994a81f6d2518ead0ffaf0aa</code></td></tr><tr><td><a href="cohorts.json">cohorts.json</a><div class="meta">分类组合队列、过载组合和专题候选</div></td><td>data</td><td><span class="flag">ok</span></td><td>252700</td><td><code>bf007c69d2b57b9c93f3b9da204fb9e20d95d6aad0d2ff79e0502149363b0e0b</code></td></tr><tr><td><a href="workflow.json">workflow.json</a><div class="meta">状态工作流配置、分布和漂移审计</div></td><td>data</td><td><span class="flag">ok</span></td><td>22107</td><td><code>9c76e09541800de451b9a2fe635126c75d016b150ec9f725ff7239d0985fd047</code></td></tr><tr><td><a href="status.json">status.json</a><div class="meta">运行时状态选择器、状态字段选项和论文状态快照</div></td><td>data</td><td><span class="flag">ok</span></td><td>25213</td><td><code>224774cc8dca78eea27be79a9b97af1e46c4ad85ad315ecb96b079521ef8cb92</code></td></tr><tr><td><a href="views.json">views.json</a><div class="meta">共享视图、系统队列、研究线和状态工作流视图目录</div></td><td>data</td><td><span class="flag">ok</span></td><td>42350</td><td><code>ba98b785d54aa5675211d2ad5a4bd5ca909e242e520c7bb654ac77a9317053fb</code></td></tr><tr><td><a href="presets.json">presets.json</a><div class="meta">批量治理 preset、字段写入和 workflow 兼容性</div></td><td>data</td><td><span class="flag">ok</span></td><td>12424</td><td><code>f33db18c89b50291c95ebbcfd0cba7008877cbc12798dafb0147562373b48bd9</code></td></tr><tr><td><a href="batch.json">batch.json</a><div class="meta">按分类、状态和治理缺口生成的可执行论文批次</div></td><td>data</td><td><span class="flag">ok</span></td><td>72682</td><td><code>68755540d0e3e5908207425af786bfc5ddb143ef7c8f6d3a5845e8d941b3b8cd</code></td></tr><tr><td><a href="collections.json">collections.json</a><div class="meta">共享视图、智能集合和研究线集合的机器可读入口</div></td><td>data</td><td><span class="flag">ok</span></td><td>20590</td><td><code>8defbe85f4699ece08db425a83402ffde266d8be6a0947b0c91c8917cb40967f</code></td></tr><tr><td><a href="coverage.json">coverage.json</a><div class="meta">研究线分类覆盖、字段缺口、缺失 slug 和 owner 信号</div></td><td>data</td><td><span class="flag">ok</span></td><td>7965</td><td><code>37f6a9709cbfbbe966f406aec574bc572590c09338ceecb2bf34bc887bddd47d</code></td></tr><tr><td><a href="gaps.json">gaps.json</a><div class="meta">研究线缺口、下一步行动和运营队列</div></td><td>data</td><td><span class="flag">ok</span></td><td>10304</td><td><code>7a55368a81831037cf3e41eb907e041ac8823c7f7176b0002f467262d282cc83</code></td></tr><tr><td><a href="pivot.json">pivot.json</a><div class="meta">分类透视表维度、论文投影和交叉分布</div></td><td>data</td><td><span class="flag">ok</span></td><td>19198</td><td><code>0e2de211e6e68b71e3ce9b34e6ae3127145dcefd5946cb276b644e5f6d7033e1</code></td></tr><tr><td><a href="compare.json">compare.json</a><div class="meta">论文对比视图数据和推荐对比集合</div></td><td>data</td><td><span class="flag">ok</span></td><td>25002</td><td><code>2e596b3291c076bd28e6a99641323b1a507883ea093231827b8da47279fcc43c</code></td></tr><tr><td><a href="taxonomy_map.json">taxonomy_map.json</a><div class="meta">分类节点、共现边、研究线簇和图谱治理建议</div></td><td>data</td><td><span class="flag">ok</span></td><td>104382</td><td><code>c51ca346eafda5741e66a05940c8518c9f4d40f209299e5269902e5c1711cd26</code></td></tr><tr><td><a href="clusters.json">clusters.json</a><div class="meta">研究线簇、拆分候选和代表论文</div></td><td>data</td><td><span class="flag">ok</span></td><td>8477</td><td><code>6ad52437472f793242e97d92d66a5f05ff93f821dc14da45af801c137194624e</code></td></tr><tr><td><a href="roadmap.json">roadmap.json</a><div class="meta">研究线路线图、阶段覆盖、里程碑和下一步计划</div></td><td>data</td><td><span class="flag">ok</span></td><td>13953</td><td><code>1ea5f3bd8c5dad5197daf4b87cf72fa54223709d07bf53292ed472461ce49552</code></td></tr><tr><td><a href="scale.json">scale.json</a><div class="meta">规模就绪评分、容量投影和大库治理风险</div></td><td>data</td><td><span class="flag">ok</span></td><td>5956</td><td><code>79daffc622a3c3b2b39c92e837f243ebeda0cb5ba61e6534d6d48b5d71204790</code></td></tr><tr><td><a href="ownership.json">ownership.json</a><div class="meta">研究线 owner、工作量和治理队列</div></td><td>data</td><td><span class="flag">ok</span></td><td>4183</td><td><code>085030bcc6f0b24f9f3536453284fd6d76d050fca09ad5edcd7ed2643bbffc37</code></td></tr><tr><td><a href="routing.json">routing.json</a><div class="meta">新论文分类路由画像和推荐权重</div></td><td>data</td><td><span class="flag">ok</span></td><td>177428</td><td><code>dc894eb3d95bde1a1fc64757ab57c6b1ee3c159630864d479969288f876de20d</code></td></tr><tr><td><a href="onboarding.json">onboarding.json</a><div class="meta">开源贡献路径、质量门和数据契约清单</div></td><td>data</td><td><span class="flag">ok</span></td><td>12446</td><td><code>ac06f9f06b90e40c026d2297aeec93d5296b35f763e5cf2266bffd821c49dac8</code></td></tr><tr><td><a href="catalog.json">catalog.json</a><div class="meta">机器数据、页面入口和契约字段目录</div></td><td>data</td><td><span class="flag">ok</span></td><td>57787</td><td><code>fdf9a4ecadeacc2e8085298add1c8f699ef775d5c1b131c7a704366958918bd6</code></td></tr><tr><td><a href="snapshot.json">snapshot.json</a><div class="meta">当前知识库治理快照和发布基线</div></td><td>data</td><td><span class="flag">ok</span></td><td>21276</td><td><code>437821f3183f12678bc6d85c26197bd571f66a9ad4b087ea778075cf1018e8dc</code></td></tr><tr><td><a href="intake.json">intake.json</a><div class="meta">批量导入去重索引、默认字段和 inbox CSV 契约</div></td><td>data</td><td><span class="flag">ok</span></td><td>5735</td><td><code>303c4eef2fd9053b05a4bdda40a78795c144ea118b705a72f3dcf1451ac6cb23</code></td></tr><tr><td><a href="inbox.json">inbox.json</a><div class="meta">候选论文队列和重复项</div></td><td>data</td><td><span class="flag">ok</span></td><td>130</td><td><code>16088a733262361546376c706fdad3a3676e45a635dcee5fc3d953ee66e1bf50</code></td></tr><tr><td><a href="dedupe.json">dedupe.json</a><div class="meta">重复报告、候选重复项和去重建议</div></td><td>data</td><td><span class="flag">ok</span></td><td>932</td><td><code>f7e368e47b497e9debea5ca4346d7927af0953329eb47743443180259a2c39b9</code></td></tr><tr><td><a href="registry.json">registry.json</a><div class="meta">分类标签注册表、alias、字段复用和治理信号</div></td><td>data</td><td><span class="flag">ok</span></td><td>134091</td><td><code>9a396a66bad24229d7aaeaea62b02c9ff4e24ed91ab99d985e6d7ebf30011a5d</code></td></tr><tr><td><a href="facets.json">facets.json</a><div class="meta">分类字段目录、候选值规模和治理动作</div></td><td>data</td><td><span class="flag">ok</span></td><td>43210</td><td><code>ab6dccdff2756a4a26c17a43f0d7e677f9711799f16aad665bd9a5f8d94343c3</code></td></tr><tr><td><a href="curation.json">curation.json</a><div class="meta">逐篇论文分类成熟度、缺失字段和补齐建议</div></td><td>data</td><td><span class="flag">ok</span></td><td>16069</td><td><code>575b81bb63b3cdef7898f843c8ef9e0c30d448003822d782b07f9616c146b3fe</code></td></tr><tr><td><a href="manifest.json">manifest.json</a><div class="meta">发布摘要和页面入口清单</div></td><td>data</td><td><span class="flag">generated_after_inventory</span></td><td>-</td><td><code>-</code></td></tr><tr><td><a href="guides/report.template.md">guides/report.template.md</a><div class="meta">中文论文阅读报告模板</div></td><td>contract</td><td><span class="flag">ok</span></td><td>3075</td><td><code>698233eb11b0d1f212ef9f1dad719735f337031c5a8ba4c4e142370c5deb3254</code></td></tr><tr><td><a href="guides/metadata.schema.json">guides/metadata.schema.json</a><div class="meta">报告 frontmatter 字段契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>1673</td><td><code>246d8f345ead3ced56403a313d89bae2042820432274758166e557c39c04716b</code></td></tr><tr><td><a href="guides/inbox.schema.json">guides/inbox.schema.json</a><div class="meta">候选论文 inbox.csv 字段契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>1121</td><td><code>074a6f551809f6d2e301e2d4a3769125a8c7159fc2f1d35f0aff8e3bc9f963b7</code></td></tr><tr><td><a href="guides/taxonomy.schema.json">guides/taxonomy.schema.json</a><div class="meta">taxonomy.json 配置字段契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>9767</td><td><code>8d267b0dc8eb139976a055f95c857c04ad29b2898e6ca85d77d412b8161b6927</code></td></tr><tr><td><a href="guides/facets.schema.json">guides/facets.schema.json</a><div class="meta">facets.json 分类字段目录契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>4521</td><td><code>8e2ba10996059896e63d5ba6150ea338ec0f4e500418706b199c2f7e9d29389a</code></td></tr><tr><td><a href="guides/batch.schema.json">guides/batch.schema.json</a><div class="meta">batch.json 批量规划数据契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>4344</td><td><code>cf440ceba72985d305792239676a6d7e2f96b98333fef72a76b7e8367ef8353c</code></td></tr><tr><td><a href="guides/actions.schema.json">guides/actions.schema.json</a><div class="meta">actions.json 统一行动队列契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>2822</td><td><code>748a9ca75664585496db6f51b31ef95f1108890707a82041d22c8f69c3162eda</code></td></tr><tr><td><a href="guides/catalog.schema.json">guides/catalog.schema.json</a><div class="meta">catalog.json 集成目录契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>4136</td><td><code>5ec248fedc035fdd5d912238c917fc2c0aeb7fc087dc2d8f4f78a9a9262e5ec0</code></td></tr><tr><td><a href="guides/bootstrap_bundle.schema.json">guides/bootstrap_bundle.schema.json</a><div class="meta">bootstrap bundle 桌面启动包契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>3899</td><td><code>17c20d72166c046a1bec2bc5362859653ec670f430bd6ea6c28609da90f020bd</code></td></tr><tr><td><a href="guides/manifest.schema.json">guides/manifest.schema.json</a><div class="meta">manifest.json 发布清单契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>4212</td><td><code>a837409ad9d49793511db524497fc567c4e399eaeb156dbe201433739906c3a8</code></td></tr><tr><td><a href="guides/snapshot.schema.json">guides/snapshot.schema.json</a><div class="meta">snapshot.json 治理快照契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>3727</td><td><code>790013aad4f3042e0081f1d8999b1e7f9aae63f7a503bfcda2e36ece4d0357fc</code></td></tr><tr><td><a href="guides/workflow.schema.json">guides/workflow.schema.json</a><div class="meta">workflow.json 状态工作流审计契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>6876</td><td><code>4a7acbd5f49c3f9c4140d47376dce37aa956016bb14ed898951f3d7acfced912</code></td></tr><tr><td><a href="guides/status.schema.json">guides/status.schema.json</a><div class="meta">status.json 状态选择器和写回命令契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>6793</td><td><code>f88ebd3db6828514ddde67e1fdb1e577c955cca9131f3ad0b43d30f728c9677b</code></td></tr><tr><td><a href="guides/views.schema.json">guides/views.schema.json</a><div class="meta">views.json 视图目录和批量队列契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>5409</td><td><code>8fe654726250cf183de71e5e897bbcd3cd27db099c4db7567d605e2b7ae9517d</code></td></tr><tr><td><a href="guides/presets.schema.json">guides/presets.schema.json</a><div class="meta">presets.json 批量治理 preset 契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>6440</td><td><code>06c026c954c7bbfce2f6587edffbf0de2418d4597218cbd691b66c742aebef40</code></td></tr><tr><td><a href="guides/curation.schema.json">guides/curation.schema.json</a><div class="meta">curation.json 逐篇分类成熟度契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>5729</td><td><code>66fb59d3f3d8c58337d36c1f70b954e2135427de780428a110a9aa19abc8e21a</code></td></tr><tr><td><a href="guides/queues.schema.json">guides/queues.schema.json</a><div class="meta">queues.json 运营队列契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>3690</td><td><code>74b5252711b6ec3d497fd2e81b68eda5cea41a97775d0432cafac79659049a90</code></td></tr><tr><td><a href="guides/cohorts.schema.json">guides/cohorts.schema.json</a><div class="meta">cohorts.json 分类组合队列契约</div></td><td>contract</td><td><span class="flag">ok</span></td><td>4591</td><td><code>58b2ae2405c6e35496c63f7973c982705ac9f80cf5b321d53bc37c095c3a9190</code></td></tr><tr><td><a href="guides/taxonomy.json">guides/taxonomy.json</a><div class="meta">分类别名、状态工作流和共享视图配置</div></td><td>contract</td><td><span class="flag">ok</span></td><td>10287</td><td><code>4f6ae80a3ab9a48b34f1b27dcd88692aa3b132d0065ee65a9d44767f3953db4a</code></td></tr></tbody></table></div>
   </section>
   <section>
     <h2 class="section-title">队列规模</h2>

@@ -6798,46 +6798,6 @@ def render_command(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
     payload = build_command_center_payload(report_dir, papers, inbox_items)
     lanes = payload["lanes"]
     lane_html = "".join(render_command_lane(lane) for lane in lanes)
-    focus_actions = [
-        {
-            "title": "今天先读什么",
-            "href": "priority.html",
-            "body": "按复习、分类、代码和阅读阶段合成论文级优先级。",
-            "meta": f'{payload["summary"]["high_priority_papers"]} high',
-        },
-        {
-            "title": "整理论文库",
-            "href": "library.html",
-            "body": "密集筛选、批量选择、导出清单和 metadata patch。",
-            "meta": f'{payload["count"]} papers',
-        },
-        {
-            "title": "导入新论文",
-            "href": "intake.html",
-            "body": "粘贴链接、去重、路由，再进入正式阅读队列。",
-            "meta": f'{payload["inbox_count"]} inbox',
-        },
-        {
-            "title": "治理分类",
-            "href": "registry.html",
-            "body": "处理标签定义、过载、长尾、alias 和 owner 信号。",
-            "meta": f'{payload["summary"]["taxonomy_registry_high"]} high risk',
-        },
-        {
-            "title": "发布检查",
-            "href": "release.html",
-            "body": "查看质量门、产物清单、开源上手和数据契约。",
-            "meta": "ready" if payload["publish_ready"] else "needs work",
-        },
-    ]
-    focus_html = "".join(
-        f"""<a class="focus-action" href="{html.escape(item["href"])}">
-  <span>{html.escape(item["meta"])}</span>
-  <strong>{html.escape(item["title"])}</strong>
-  <em>{html.escape(item["body"])}</em>
-</a>"""
-        for item in focus_actions
-    )
     persona_options = "".join(
         f'<option value="{html.escape(persona, quote=True)}">{html.escape(persona)}</option>'
         for persona in sorted({str(lane.get("persona") or "") for lane in lanes if lane.get("persona")})
@@ -6852,56 +6812,6 @@ def render_command(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
     )
     payload_json = json.dumps(payload, ensure_ascii=False).replace("</", "<\\/")
     command_css = """
-    .focus-actions {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-      gap: 10px;
-      margin: 0 0 18px;
-    }
-    .focus-action {
-      display: grid;
-      gap: 6px;
-      min-height: 136px;
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      background: var(--panel);
-      padding: 14px;
-      color: var(--ink);
-    }
-    .focus-action:hover {
-      border-color: #8c959f;
-      text-decoration: none;
-    }
-    .focus-action span {
-      color: var(--muted);
-      font-size: 12px;
-    }
-    .focus-action strong {
-      font-size: 18px;
-      line-height: 1.25;
-    }
-    .focus-action em {
-      color: var(--muted);
-      font-size: 13px;
-      font-style: normal;
-      line-height: 1.45;
-    }
-    .advanced-command {
-      margin-top: 14px;
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      background: var(--panel);
-    }
-    .advanced-command > summary {
-      cursor: pointer;
-      padding: 12px 14px;
-      color: var(--ink);
-      font-weight: 650;
-    }
-    .advanced-command-inner {
-      border-top: 1px solid var(--line);
-      padding: 14px;
-    }
     .command-toolbar {
       display: grid;
       grid-template-columns: minmax(220px, 1fr) minmax(160px, 220px) auto auto;
@@ -7035,13 +6945,7 @@ def render_command(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
       <strong id="commandVisible">{len(lanes)} / {len(lanes)} 场景</strong>
       <button class="button" id="copyCommandBootstrap" type="button">复制接入 JSON</button>
     </div>
-    <div class="focus-actions">{focus_html}</div>
-    <details class="advanced-command">
-      <summary>高级场景与批量命令</summary>
-      <div class="advanced-command-inner">
-        <div class="command-lanes" id="commandLanes">{lane_html}</div>
-      </div>
-    </details>
+    <div class="command-lanes" id="commandLanes">{lane_html}</div>
   </section>
 </main>
 <script>
@@ -7225,15 +7129,15 @@ def page_shell(
   <style>
     :root {{
       color-scheme: light;
-      --bg: #f8f9fb;
-      --panel: #ffffff;
-      --ink: #1f2328;
-      --muted: #656d76;
-      --line: #d8dee4;
-      --accent: #0969da;
-      --accent-2: #57606a;
-      --chip: #f6f8fa;
-      --shadow: none;
+      --bg: #f6f3ee;
+      --panel: #fffdf8;
+      --ink: #222426;
+      --muted: #6b6f76;
+      --line: #ded8cd;
+      --accent: #2f6f73;
+      --accent-2: #8a5d3b;
+      --chip: #edf3f1;
+      --shadow: 0 14px 36px rgba(48, 44, 36, .08);
     }}
     * {{ box-sizing: border-box; }}
     body {{
@@ -7241,84 +7145,56 @@ def page_shell(
       background: var(--bg);
       color: var(--ink);
       font-family: "PingFang SC", "Noto Sans SC", system-ui, -apple-system, sans-serif;
-      line-height: 1.55;
+      line-height: 1.65;
     }}
     a {{ color: var(--accent); text-decoration: none; }}
     a:hover {{ text-decoration: underline; }}
-    .shell {{ width: min(1160px, calc(100% - 32px)); margin: 0 auto; }}
-    header {{ padding: 30px 0 16px; }}
-    .eyebrow {{ color: var(--accent-2); font-size: 12px; font-weight: 650; letter-spacing: 0; text-transform: none; }}
-    h1 {{ margin: 6px 0 8px; font-size: 38px; line-height: 1.12; letter-spacing: 0; }}
-    .lead {{ max-width: 820px; margin: 0; color: var(--muted); font-size: 15px; }}
-    .stats {{ display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }}
+    .shell {{ width: min(1180px, calc(100% - 32px)); margin: 0 auto; }}
+    header {{ padding: 44px 0 22px; }}
+    .eyebrow {{ color: var(--accent-2); font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }}
+    h1 {{ margin: 8px 0 10px; font-size: clamp(30px, 5vw, 56px); line-height: 1.08; letter-spacing: 0; }}
+    .lead {{ max-width: 760px; margin: 0; color: var(--muted); font-size: 17px; }}
+    .stats {{ display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }}
     .stat, .chip {{
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
       border: 1px solid var(--line);
-      background: transparent;
-      border-radius: 6px;
-      padding: 5px 9px;
+      background: var(--panel);
+      border-radius: 999px;
+      padding: 7px 12px;
       color: var(--muted);
-      font-size: 13px;
+      font-size: 14px;
     }}
     .toolbar {{
       position: sticky;
       top: 0;
       z-index: 2;
-      padding: 10px 0;
-      background: rgba(248, 249, 251, .96);
-      border-bottom: 1px solid var(--line);
+      padding: 12px 0;
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
     }}
     .controls {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(138px, 1fr)); gap: 10px; }}
     .controls input[type="search"] {{ grid-column: span 2; min-width: 260px; }}
-    .filter-panel {{
-      display: grid;
-      gap: 10px;
-    }}
-    .primary-filter-row,
-    .advanced-filter-grid {{
-      display: grid;
-      grid-template-columns: minmax(240px, 2fr) repeat(auto-fit, minmax(138px, 1fr));
-      gap: 10px;
-      align-items: center;
-    }}
-    .primary-filter-row input[type="search"] {{ min-width: 0; }}
-    .advanced-filters {{
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      background: var(--panel);
-    }}
-    .advanced-filters summary {{
-      cursor: pointer;
-      padding: 9px 11px;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 650;
-    }}
-    .advanced-filter-grid {{
-      border-top: 1px solid var(--line);
-      padding: 10px;
-      grid-template-columns: repeat(auto-fit, minmax(138px, 1fr));
-    }}
     input, select {{
       width: 100%;
-      min-height: 38px;
+      min-height: 42px;
       border: 1px solid var(--line);
-      border-radius: 6px;
+      border-radius: 8px;
       background: var(--panel);
       color: var(--ink);
       padding: 0 12px;
       font: inherit;
     }}
-    main {{ padding: 20px 0 48px; }}
-    .overview {{ margin-bottom: 24px; }}
-    .line-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }}
+    main {{ padding: 28px 0 56px; }}
+    .overview {{ margin-bottom: 30px; }}
+    .line-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }}
     .line-card {{
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 6px;
-      padding: 14px;
+      border-radius: 8px;
+      padding: 15px;
     }}
     .line-card h2 {{ margin: 0 0 8px; font-size: 18px; line-height: 1.25; }}
     .line-card ul {{ margin: 10px 0 0; padding-left: 18px; }}
@@ -7327,8 +7203,8 @@ def page_shell(
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 10px;
-      margin: 0 0 14px;
+      gap: 12px;
+      margin: 0 0 16px;
       color: var(--muted);
     }}
     .results-actions {{ display: flex; gap: 10px; flex-wrap: wrap; }}
@@ -7338,18 +7214,18 @@ def page_shell(
       align-items: center;
       justify-content: center;
       gap: 10px;
-      margin-top: 18px;
+      margin-top: 22px;
       color: var(--muted);
     }}
     .pager[hidden] {{ display: none; }}
-    .metric-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 18px 0; }}
+    .metric-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin: 24px 0; }}
     .metric-card {{
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 6px;
-      padding: 14px;
+      border-radius: 8px;
+      padding: 16px;
     }}
-    .metric-card strong {{ display: block; font-size: 24px; line-height: 1.1; }}
+    .metric-card strong {{ display: block; font-size: 28px; line-height: 1.1; }}
     .metric-card span {{ color: var(--muted); font-size: 13px; }}
     .data-table {{
       width: 100%;
@@ -7357,20 +7233,20 @@ def page_shell(
       overflow: hidden;
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 6px;
+      border-radius: 8px;
     }}
     .data-table th, .data-table td {{
       border-bottom: 1px solid var(--line);
-      padding: 9px 11px;
+      padding: 10px 12px;
       text-align: left;
       vertical-align: top;
     }}
-    .data-table th {{ color: var(--muted); font-size: 12px; font-weight: 650; }}
+    .data-table th {{ color: var(--muted); font-size: 13px; font-weight: 700; }}
     .data-table tr:last-child td {{ border-bottom: 0; }}
     .table-wrap {{
       overflow-x: auto;
       border: 1px solid var(--line);
-      border-radius: 6px;
+      border-radius: 8px;
       background: var(--panel);
     }}
     .library-table {{
@@ -7380,7 +7256,7 @@ def page_shell(
     }}
     .library-table th, .library-table td {{
       border-bottom: 1px solid var(--line);
-      padding: 9px 11px;
+      padding: 10px 12px;
       text-align: left;
       vertical-align: top;
       font-size: 14px;
@@ -7389,11 +7265,11 @@ def page_shell(
       position: sticky;
       top: 0;
       z-index: 1;
-      background: #f6f8fa;
+      background: #f0ebe1;
       color: var(--muted);
       font-size: 12px;
-      font-weight: 650;
-      text-transform: none;
+      font-weight: 750;
+      text-transform: uppercase;
     }}
     .library-table tr:last-child td {{ border-bottom: 0; }}
     .library-table tr[hidden] {{ display: none; }}
@@ -7405,61 +7281,44 @@ def page_shell(
     .score-grid {{ display: grid; grid-template-columns: repeat(3, minmax(42px, 1fr)); gap: 6px; }}
     .score-grid span {{
       border: 1px solid var(--line);
-      border-radius: 6px;
-      background: var(--chip);
+      border-radius: 8px;
+      background: #faf7f0;
       padding: 4px 6px;
       color: var(--muted);
       font-size: 12px;
       text-align: center;
     }}
-    .queue-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }}
+    .queue-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }}
     .queue-list {{ margin: 0; padding-left: 18px; }}
     .queue-list li {{ margin: 8px 0; }}
-    .taxonomy-board {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px; }}
+    .taxonomy-board {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }}
     .taxonomy-panel {{
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 6px;
-      padding: 14px;
+      border-radius: 8px;
+      padding: 16px;
     }}
     .taxonomy-panel h2 {{ margin: 0 0 10px; font-size: 20px; }}
     .taxonomy-panel .data-table {{ border: 0; }}
     .matrix-link {{ display: inline-flex; min-width: 32px; justify-content: center; }}
-    .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 12px; }}
+    .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; }}
     .card {{
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 6px;
+      border-radius: 8px;
       box-shadow: var(--shadow);
-      padding: 16px;
-      min-height: 190px;
+      padding: 18px;
+      min-height: 260px;
       display: flex;
       flex-direction: column;
     }}
     .card h2 {{ margin: 0 0 8px; font-size: 20px; line-height: 1.25; letter-spacing: 0; }}
-    .card details {{
-      margin-top: 12px;
-      border-top: 1px solid var(--line);
-      padding-top: 10px;
-    }}
-    .card details summary {{
-      cursor: pointer;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 650;
-    }}
-    .card details[open] summary {{ margin-bottom: 8px; }}
-    .card details .card-flags {{ margin-top: 8px; }}
-    .card details .chips {{
-      margin-top: 8px;
-      padding-top: 0;
-    }}
     .line-detail {{ display: grid; gap: 18px; }}
     .role-section {{
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 6px;
-      padding: 16px;
+      border-radius: 8px;
+      padding: 18px;
     }}
     .role-section h2 {{ margin: 0 0 12px; font-size: 20px; }}
     .paper-row {{
@@ -7477,31 +7336,29 @@ def page_shell(
       margin: 12px 0 0;
       padding: 10px 12px;
       border-left: 3px solid var(--accent);
-      border-radius: 4px;
+      border-radius: 7px;
       background: var(--chip);
-      color: var(--ink);
+      color: #2f5054;
       font-size: 14px;
     }}
-    .excerpt {{ color: var(--ink); margin: 12px 0; }}
+    .excerpt {{ color: #3f4448; margin: 12px 0; }}
     .chips {{ display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 12px; }}
-    .chip {{ background: var(--chip); padding: 3px 8px; font-size: 12px; }}
+    .chip {{ background: var(--chip); padding: 4px 9px; font-size: 12px; }}
     .links {{ display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }}
-    .card > .links {{ margin-top: auto; padding-top: 14px; }}
     .button {{
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 34px;
+      min-height: 36px;
       border: 1px solid var(--line);
-      border-radius: 6px;
-      background: var(--panel);
-      padding: 0 10px;
-      font-size: 13px;
-      font-weight: 600;
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 0 11px;
+      font-size: 14px;
+      font-weight: 650;
       color: var(--accent);
       cursor: pointer;
     }}
-    .button:hover {{ border-color: #8c959f; text-decoration: none; }}
     .button:disabled {{ cursor: not-allowed; opacity: .45; }}
     .quick-open {{
       position: fixed;
@@ -7509,7 +7366,7 @@ def page_shell(
       bottom: 18px;
       z-index: 80;
       min-width: 92px;
-      box-shadow: 0 8px 24px rgba(31, 35, 40, .12);
+      box-shadow: var(--shadow);
     }}
     .quick-panel[hidden] {{ display: none; }}
     .quick-panel {{
@@ -7519,7 +7376,7 @@ def page_shell(
       display: grid;
       place-items: start center;
       padding: 74px 16px 16px;
-      background: rgba(31, 35, 40, .18);
+      background: rgba(34, 36, 38, .28);
     }}
     .quick-dialog {{
       width: min(680px, 100%);
@@ -7527,9 +7384,9 @@ def page_shell(
       display: grid;
       grid-template-rows: auto 1fr;
       border: 1px solid var(--line);
-      border-radius: 6px;
+      border-radius: 8px;
       background: var(--panel);
-      box-shadow: 0 16px 48px rgba(31, 35, 40, .16);
+      box-shadow: 0 24px 80px rgba(28, 31, 32, .24);
       overflow: hidden;
     }}
     .quick-head {{
@@ -7548,7 +7405,7 @@ def page_shell(
       display: grid;
       gap: 2px;
       width: 100%;
-      border-radius: 6px;
+      border-radius: 8px;
       padding: 10px 12px;
       color: var(--ink);
     }}
@@ -7561,13 +7418,13 @@ def page_shell(
     .quick-kind {{
       flex: 0 0 auto;
       border: 1px solid var(--line);
-      border-radius: 6px;
-      background: var(--chip);
+      border-radius: 999px;
+      background: #faf7f0;
       color: var(--muted);
       padding: 1px 7px;
       font-size: 11px;
-      font-weight: 650;
-      text-transform: none;
+      font-weight: 750;
+      text-transform: uppercase;
     }}
     .quick-item:hover, .quick-item.is-active {{
       background: var(--chip);
@@ -7575,48 +7432,45 @@ def page_shell(
     }}
     .quick-item strong {{ line-height: 1.25; }}
     .quick-empty {{ padding: 24px; color: var(--muted); }}
-    .section-title {{ margin: 24px 0 10px; font-size: 20px; }}
-    .tag-list {{ display: flex; flex-wrap: wrap; gap: 8px; }}
+    .section-title {{ margin: 28px 0 12px; font-size: 22px; }}
+    .tag-list {{ display: flex; flex-wrap: wrap; gap: 10px; }}
     .tag-pill {{
       display: inline-flex;
       justify-content: space-between;
       gap: 20px;
       min-width: 150px;
       border: 1px solid var(--line);
-      border-radius: 6px;
+      border-radius: 8px;
       background: var(--panel);
-      padding: 9px 11px;
+      padding: 10px 12px;
     }}
     .empty {{
       border: 1px dashed var(--line);
       background: var(--panel);
-      border-radius: 6px;
-      padding: 22px;
+      border-radius: 8px;
+      padding: 28px;
       color: var(--muted);
     }}
-    .card-flags {{ display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }}
+    .card-flags {{ display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }}
     .flag {{
       display: inline-flex;
       align-items: center;
-      min-height: 22px;
-      border-radius: 6px;
-      background: var(--chip);
+      min-height: 24px;
+      border-radius: 999px;
+      background: #f7f3eb;
       border: 1px solid var(--line);
       color: var(--muted);
-      padding: 0 7px;
+      padding: 0 8px;
       font-size: 12px;
     }}
     @media (max-width: 760px) {{
       .controls {{ grid-template-columns: 1fr; }}
-      .primary-filter-row,
-      .advanced-filter-grid {{ grid-template-columns: 1fr; }}
       .controls input[type="search"] {{ grid-column: auto; min-width: 0; }}
       .results-bar {{ align-items: flex-start; flex-direction: column; }}
       .pager {{ justify-content: flex-start; flex-wrap: wrap; }}
       .paper-row {{ grid-template-columns: 1fr; }}
       .data-table {{ display: block; overflow-x: auto; }}
       header {{ padding-top: 28px; }}
-      h1 {{ font-size: 30px; }}
     }}{css_extra}
   </style>
 </head>
@@ -7806,7 +7660,7 @@ def render_line_overview(papers: list[dict[str, Any]]) -> str:
 
     return f"""
 <section class="overview">
-  <h2 class="section-title">研究线概览</h2>
+  <h2 class="section-title">研究路径</h2>
   <div class="line-grid">{''.join(cards)}</div>
 </section>
 """
@@ -7862,173 +7716,11 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]], inbox_items: li
     }
     cards = "\n".join(render_card(paper) for paper in papers)
     line_overview = render_line_overview(papers)
-    core_lane_ids = {"daily_reading", "paper_intake", "taxonomy_governance"}
-    lane_cards = "".join(
-        render_index_lane(lane)
-        for lane in command_payload["lanes"]
-        if str(lane.get("id") or "") in core_lane_ids
-    )
-    advanced_links = [
-        ("命令中心", "command.html"),
-        ("发布摘要", "release.html"),
-        ("开源上手", "onboarding.html"),
-        ("Command JSON", "command.json"),
-        ("Manifest JSON", "manifest.json"),
-        ("批次规划", "batch.html"),
-        ("状态看板", "board.html"),
-        ("复习计划", "review.html"),
-        ("管理控制台", "dashboard.html"),
-        ("集合视图", "collections.html"),
-        ("关联网络", "related.html"),
-        ("研究缺口", "gaps.html"),
-        ("质量治理", "quality.html"),
-        ("时间轴", "timeline.html"),
-        ("研究矩阵", "matrix.html"),
-        ("研究线", "lines/index.html"),
-        ("分类总览", "tags.html"),
-        ("Papers JSON", "papers.json"),
-    ]
-    advanced_link_html = "".join(
-        f'<a class="chip" href="{html.escape(href)}">{html.escape(label)}</a>'
-        for label, href in advanced_links
-    )
-    command_next = "".join(
-        "<tr>"
-        f'<td><a href="{html.escape(str(item["href"]))}">{html.escape(str(item["label"]))}</a></td>'
-        f"<td>{html.escape(str(item['count']))}</td>"
-        f"<td>{html.escape(str(item['reason']))}</td>"
-        "</tr>"
-        for item in command_payload["recommended_next"]
-    )
     index_css = """
-    .home-hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(320px, .9fr);
-      gap: 18px;
-      align-items: start;
-      margin-top: 22px;
-    }
-    .home-primary-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 18px;
-    }
-    .home-primary-actions .button {
-      min-width: 110px;
-    }
     .button.primary {
       background: var(--accent);
       border-color: var(--accent);
       color: #fff;
-    }
-    .home-command-panel {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-      padding: 16px;
-    }
-    .home-command-panel h2 {
-      margin: 0 0 10px;
-      font-size: 20px;
-      letter-spacing: 0;
-    }
-    .home-command-panel .data-table {
-      border: 0;
-      background: transparent;
-    }
-    .home-secondary-links {
-      margin-top: 14px;
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      background: var(--panel);
-    }
-    .home-secondary-links summary {
-      cursor: pointer;
-      padding: 10px 12px;
-      font-weight: 650;
-    }
-    .home-secondary-links .chips {
-      border-top: 1px solid var(--line);
-      padding: 12px;
-      margin: 0;
-    }
-    .home-lanes {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 14px;
-      margin-top: 14px;
-    }
-    .home-lane {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 12px;
-      align-items: start;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-      padding: 16px;
-    }
-    .home-lane-main h2 {
-      margin: 6px 0 6px;
-      font-size: 20px;
-      letter-spacing: 0;
-    }
-    .home-lane-main p {
-      margin: 0 0 8px;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-    .home-lane-actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: end;
-    }
-    .home-lane .chips {
-      grid-column: 1 / -1;
-      margin-top: 0;
-      padding-top: 0;
-    }
-    .home-next {
-      grid-column: 1 / -1;
-      color: var(--muted);
-      font-size: 13px;
-      border-top: 1px solid color-mix(in srgb, var(--line) 72%, transparent);
-      padding-top: 10px;
-    }
-    .home-view-panel {
-      position: relative;
-    }
-    .home-view-panel summary {
-      cursor: pointer;
-      list-style: none;
-    }
-    .home-view-panel summary::-webkit-details-marker {
-      display: none;
-    }
-    .home-view-menu {
-      position: absolute;
-      right: 0;
-      top: calc(100% + 8px);
-      z-index: 25;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      width: min(340px, calc(100vw - 32px));
-      padding: 12px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-      box-shadow: var(--shadow);
-    }
-    .home-view-menu .button {
-      flex: 1 1 130px;
-    }
-    @media (max-width: 860px) {
-      .home-hero { grid-template-columns: 1fr; }
-      .home-lane { grid-template-columns: 1fr; }
-      .home-lane-actions { justify-content: start; }
     }
     """
     empty = """
@@ -8041,83 +7733,46 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]], inbox_items: li
 <header class="shell">
   <div class="eyebrow">AutoPaperReader Wiki</div>
   <h1>我的论文知识库</h1>
-  <p class="lead">这里汇总每一篇独立阅读报告。默认只保留阅读、导入和分类治理三条主路径，其它运营页面收进更多入口。</p>
-  <div class="home-primary-actions">
-    <a class="button primary" href="priority.html">读论文</a>
-    <a class="button" href="intake.html">导入论文</a>
-    <a class="button" href="registry.html">管分类</a>
-  </div>
+  <p class="lead">只保留两条主路径：先沿研究路径理解脉络，再用论文检索定位具体报告。</p>
   <div class="stats">
     <span class="stat">论文 {len(papers)}</span>
-    <span class="stat">研究线 {len(taxonomy["research_lines"])}</span>
-    <span class="stat">高优先级论文 {command_payload["summary"]["high_priority_papers"]}</span>
-    <span class="stat">行动 {command_payload["summary"]["actions"]}</span>
+    <span class="stat">研究路径 {len(taxonomy["research_lines"])}</span>
+    <span class="stat">分类 {len(data["tags"])}</span>
   </div>
-  <details class="home-secondary-links">
-    <summary>更多页面与数据</summary>
-    <div class="chips">{advanced_link_html}</div>
-  </details>
 </header>
 <div class="toolbar">
-  <div class="shell filter-panel">
-    <div class="primary-filter-row">
-      <input id="search" type="search" placeholder="全文搜索：标题、作者、主题、方法、正文关键词">
-      <select id="line"><option value="">全部研究线</option>{render_topic_options(taxonomy["research_lines"])}</select>
-      <select id="status"><option value="">全部状态</option>{render_topic_options(taxonomy["statuses"])}</select>
-      <select id="sort"><option value="default">默认排序</option><option value="importance">重要性优先</option><option value="updated">最近更新</option><option value="year">年份新到旧</option><option value="reading">阅读时间短到长</option><option value="title">标题 A-Z</option></select>
-      <select id="pageSize"><option value="12">每页 12 篇</option><option value="24">每页 24 篇</option><option value="48">每页 48 篇</option><option value="all">显示全部</option></select>
-    </div>
-    <details class="advanced-filters">
-      <summary>高级筛选</summary>
-      <div class="advanced-filter-grid">
-        <select id="domain"><option value="">全部领域</option>{render_topic_options(taxonomy["domains"])}</select>
-        <select id="role"><option value="">全部角色</option>{render_topic_options(taxonomy["line_roles"])}</select>
-        <select id="statusWorkflow" aria-label="状态体系"></select>
-        <select id="topic"><option value="">全部主题</option>{render_topic_options(taxonomy["topics"])}</select>
-        <select id="method"><option value="">全部方法</option>{render_topic_options(taxonomy["methods"])}</select>
-        <select id="stage"><option value="">阅读阶段</option>{render_topic_options(taxonomy["reading_stages"])}</select>
-        <select id="code"><option value="">代码状态</option><option value="yes">有代码观察</option><option value="no">无代码观察</option></select>
-        <select id="importance"><option value="">重要性</option><option value="5">5 星</option><option value="4">4 星及以上</option><option value="3">3 星及以上</option></select>
-        <select id="reviewStage"><option value="">复习阶段</option>{render_topic_options(taxonomy["review_stages"])}</select>
-        <select id="review"><option value="">复习时间</option><option value="due">待复习</option><option value="none">未设置复习</option></select>
-      </div>
-    </details>
+  <div class="shell controls">
+    <input id="search" type="search" placeholder="全文搜索：标题、作者、主题、方法、正文关键词">
+    <select id="domain"><option value="">全部领域</option>{render_topic_options(taxonomy["domains"])}</select>
+    <select id="line"><option value="">全部研究线</option>{render_topic_options(taxonomy["research_lines"])}</select>
+    <select id="role"><option value="">全部角色</option>{render_topic_options(taxonomy["line_roles"])}</select>
+    <select id="statusWorkflow" aria-label="状态体系"></select>
+    <select id="topic"><option value="">全部主题</option>{render_topic_options(taxonomy["topics"])}</select>
+    <select id="method"><option value="">全部方法</option>{render_topic_options(taxonomy["methods"])}</select>
+    <select id="status"><option value="">全部状态</option>{render_topic_options(taxonomy["statuses"])}</select>
+    <select id="stage"><option value="">阅读阶段</option>{render_topic_options(taxonomy["reading_stages"])}</select>
+    <select id="code"><option value="">代码状态</option><option value="yes">有代码观察</option><option value="no">无代码观察</option></select>
+    <select id="importance"><option value="">重要性</option><option value="5">5 星</option><option value="4">4 星及以上</option><option value="3">3 星及以上</option></select>
+    <select id="reviewStage"><option value="">复习阶段</option>{render_topic_options(taxonomy["review_stages"])}</select>
+    <select id="review"><option value="">复习时间</option><option value="due">待复习</option><option value="none">未设置复习</option></select>
+    <select id="sort"><option value="default">默认排序</option><option value="importance">重要性优先</option><option value="updated">最近更新</option><option value="year">年份新到旧</option><option value="reading">阅读时间短到长</option><option value="title">标题 A-Z</option></select>
+    <select id="pageSize"><option value="12">每页 12 篇</option><option value="24">每页 24 篇</option><option value="48">每页 48 篇</option><option value="all">显示全部</option></select>
   </div>
 </div>
 <main class="shell">
-  <section class="home-hero">
-    <div>
-      <h2 class="section-title">按场景进入</h2>
-      <div class="home-lanes">{lane_cards}</div>
-    </div>
-    <aside class="home-command-panel">
-      <h2>推荐下一步</h2>
-      <div class="table-wrap"><table class="data-table"><thead><tr><th>行动</th><th>数量</th><th>原因</th></tr></thead><tbody>{command_next}</tbody></table></div>
-      <div class="links">
-        <a class="button" href="command.html">全部场景</a>
-        <a class="button" href="actions.html">行动队列</a>
-        <a class="button" href="quality.html">质量治理</a>
-      </div>
-    </aside>
-  </section>
   {line_overview}
   <h2 class="section-title">论文检索</h2>
   <div class="results-bar">
     <strong id="resultCount">显示 {len(papers)} / {len(papers)} 篇</strong>
     <div class="results-actions">
       <select id="savedView" class="saved-view" aria-label="选择保存视图"><option value="">选择视图</option></select>
+      <button id="saveView" class="button" type="button">保存视图</button>
+      <button id="copyCurrentLink" class="button" type="button">复制当前链接</button>
+      <button id="copySharedView" class="button" type="button">复制共享视图</button>
+      <button id="deleteView" class="button" type="button">删除视图</button>
+      <button id="exportSavedViews" class="button" type="button">导出视图</button>
+      <button id="importSavedViews" class="button" type="button">导入视图</button>
       <button id="resetFilters" class="button" type="button">重置筛选</button>
-      <details class="home-view-panel">
-        <summary class="button">视图操作</summary>
-        <div class="home-view-menu">
-          <button id="saveView" class="button" type="button">保存视图</button>
-          <button id="copyCurrentLink" class="button" type="button">复制当前链接</button>
-          <button id="copySharedView" class="button" type="button">复制共享视图</button>
-          <button id="deleteView" class="button" type="button">删除视图</button>
-          <button id="exportSavedViews" class="button" type="button">导出视图</button>
-          <button id="importSavedViews" class="button" type="button">导入视图</button>
-        </div>
-      </details>
     </div>
   </div>
   <div id="cards" class="grid">{cards if papers else empty}</div>
@@ -8412,12 +8067,10 @@ function card(p) {{
   const link = p.html_path || p.md_path;
   const tags = [...(p.domains || []), ...(p.topics || []), ...(p.methods || [])].map(t => `<span class="chip">${{esc(t)}}</span>`).join("");
   const authors = (p.authors || []).slice(0, 4).join(", ");
-  const primaryFlags = [
+  const flags = [
     p.reading_time_min ? `${{esc(p.reading_time_min)}} min` : "",
     p.importance ? `重要性 ${{esc(p.importance)}}` : "",
     p.research_line ? `研究线 ${{esc(p.research_line)}}` : "",
-  ].filter(Boolean).map(item => `<span class="flag">${{item}}</span>`).join("");
-  const detailFlags = [
     p.line_role ? `角色 ${{esc(p.line_role)}}` : "",
     p.reading_stage ? `阅读 ${{esc(p.reading_stage)}}` : "",
     p.review_stage ? `复习 ${{esc(p.review_stage)}}` : "",
@@ -8427,19 +8080,15 @@ function card(p) {{
     <h2><a href="${{esc(link)}}">${{esc(p.title_zh || p.title)}}</a></h2>
     ${{p.title_en ? `<div class="meta">${{esc(p.title_en)}}</div>` : ""}}
     <div class="meta">${{esc([p.year, authors, p.arxiv_id].filter(Boolean).join(" / "))}}</div>
-    <div class="card-flags">${{primaryFlags}}</div>
+    <div class="card-flags">${{flags}}</div>
+    ${{p.essence ? `<p class="essence">${{esc(p.essence)}}</p>` : ""}}
+    <p class="excerpt">${{esc(p.excerpt || "暂无摘要。")}}</p>
     <div class="links">
       <a class="button" href="${{esc(link)}}">阅读报告</a>
       ${{p.arxiv_url ? `<a class="button" href="${{esc(p.arxiv_url)}}">arxiv</a>` : ""}}
       ${{p.code_url ? `<a class="button" href="${{esc(p.code_url)}}">code</a>` : ""}}
     </div>
-    <details>
-      <summary>摘要与标签</summary>
-      <div class="card-flags">${{detailFlags}}</div>
-      ${{p.essence ? `<p class="essence">${{esc(p.essence)}}</p>` : ""}}
-      <p class="excerpt">${{esc(p.excerpt || "暂无摘要。")}}</p>
-      <div class="chips">${{tags}}</div>
-    </details>
+    <div class="chips">${{tags}}</div>
   </article>`;
 }}
 
@@ -8628,19 +8277,16 @@ def render_card(paper: dict[str, Any]) -> str:
         links.append(f'<a class="button" href="{html.escape(paper["code_url"])}">code</a>')
     title_en = f'<div class="meta">{html.escape(paper["title_en"])}</div>' if paper.get("title_en") else ""
     meta = " / ".join(str(part) for part in [paper.get("year"), authors, paper.get("arxiv_id")] if part)
-    primary_flags = [
+    flags = [
         f'{paper["reading_time_min"]} min' if paper.get("reading_time_min") else "",
         f'重要性 {paper["importance"]}' if paper.get("importance") else "",
         f'研究线 {paper["research_line"]}' if paper.get("research_line") else "",
-    ]
-    detail_flags = [
         f'角色 {paper["line_role"]}' if paper.get("line_role") else "",
         f'阅读 {paper["reading_stage"]}' if paper.get("reading_stage") else "",
         f'复习 {paper["review_stage"]}' if paper.get("review_stage") else "",
         f'下次 {paper["next_review"]}' if paper.get("next_review") else "",
     ]
-    primary_flag_html = "".join(f'<span class="flag">{html.escape(flag)}</span>' for flag in primary_flags if flag)
-    detail_flag_html = "".join(f'<span class="flag">{html.escape(flag)}</span>' for flag in detail_flags if flag)
+    flag_html = "".join(f'<span class="flag">{html.escape(flag)}</span>' for flag in flags if flag)
     essence = (
         f'<p class="essence">{html.escape(paper["essence"])}</p>'
         if paper.get("essence")
@@ -8650,15 +8296,11 @@ def render_card(paper: dict[str, Any]) -> str:
   <h2><a href="{html.escape(link)}">{html.escape(paper["title_zh"] or paper["title"])}</a></h2>
   {title_en}
   <div class="meta">{html.escape(meta)}</div>
-  <div class="card-flags">{primary_flag_html}</div>
+  <div class="card-flags">{flag_html}</div>
+  {essence}
+  <p class="excerpt">{html.escape(paper.get("excerpt") or "暂无摘要。")}</p>
   <div class="links">{''.join(links)}</div>
-  <details>
-    <summary>摘要与标签</summary>
-    <div class="card-flags">{detail_flag_html}</div>
-    {essence}
-    <p class="excerpt">{html.escape(paper.get("excerpt") or "暂无摘要。")}</p>
-    <div class="chips">{tags}</div>
-  </details>
+  <div class="chips">{tags}</div>
 </article>"""
 
 
@@ -8726,9 +8368,6 @@ def render_library_row(paper: dict[str, Any]) -> str:
         review_bits.append(f'下次 {html.escape(next_review)}')
     if not review_bits:
         review_bits.append("未设置复习")
-    structure_detail = render_inline_chips(domain_track_problem, 10) or '<span class="meta">无</span>'
-    tags_detail = render_inline_chips(topics_methods, 12) or '<span class="meta">无</span>'
-    code_label = "有" if paper.get("has_code") else "无"
 
     return f"""<tr
   data-search="{html.escape(search_text, quote=True)}"
@@ -8760,22 +8399,13 @@ def render_library_row(paper: dict[str, Any]) -> str:
     <strong><a href="{html.escape(link)}">{html.escape(paper["title_zh"] or paper["title"])}</a></strong>
     <div class="meta">{html.escape(paper.get("title_en") or "")}</div>
     <div class="meta">{html.escape(" / ".join(str(part) for part in [paper.get("year"), authors, paper.get("arxiv_id")] if part))}</div>
-    <details class="row-details">
-      <summary>单篇详情</summary>
-      <div class="row-detail-grid">
-        <div><span>结构分类</span><div class="chips">{structure_detail}</div></div>
-        <div><span>主题 / 方法</span><div class="chips">{tags_detail}</div></div>
-        <div><span>评分</span><div class="score-grid"><span>I {html.escape(str(paper.get("importance") or "-"))}</span><span>C {html.escape(str(paper.get("confidence") or "-"))}</span><span>R {html.escape(str(paper.get("reproducibility") or "-"))}</span></div></div>
-        <div><span>代码</span><span class="flag">{code_label}</span></div>
-      </div>
-    </details>
   </td>
   <td data-col="line">{line_html}<div class="meta">{html.escape(str(paper.get("line_role") or ""))}</div></td>
   <td class="library-taxonomy" data-col="structure"><div class="chips">{render_inline_chips(domain_track_problem, 4)}</div></td>
   <td class="library-taxonomy" data-col="tags"><div class="chips">{render_inline_chips(topics_methods, 5)}</div></td>
   <td data-col="state"><div class="status-stack"><span class="flag">{html.escape(str(paper.get("status") or "unknown"))}</span><span class="flag">{html.escape(str(paper.get("reading_stage") or "未分阶段"))}</span><span class="meta">{" · ".join(review_bits)}</span></div></td>
   <td data-col="scores"><div class="score-grid"><span>I {html.escape(str(paper.get("importance") or "-"))}</span><span>C {html.escape(str(paper.get("confidence") or "-"))}</span><span>R {html.escape(str(paper.get("reproducibility") or "-"))}</span></div></td>
-  <td data-col="code">{code_label}</td>
+  <td data-col="code">{"有" if paper.get("has_code") else "无"}</td>
   <td data-col="actions"><div class="library-actions">{"".join(links)}</div></td>
 </tr>"""
 
@@ -8786,68 +8416,16 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     controls = control_options()
     data = {"shared_views": shared_views_for("library"), "controls": controls}
     bulk_css = """
-    .library-secondary-nav {
-      width: 100%;
-      margin-top: 4px;
-    }
-    .library-secondary-nav summary {
-      cursor: pointer;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 750;
-      list-style: none;
-    }
-    .library-secondary-nav summary::-webkit-details-marker { display: none; }
-    .library-secondary-nav .stats { margin-top: 8px; }
-    .library-workspace-panel {
-      margin: 0 0 16px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-    }
-    .library-workspace-panel > summary {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 11px 12px;
-      cursor: pointer;
-      list-style: none;
-      font-weight: 800;
-    }
-    .library-workspace-panel > summary::-webkit-details-marker { display: none; }
-    .library-workspace-panel[open] > summary { border-bottom: 1px solid var(--line); }
-    .library-workspace-panel .meta { font-weight: 650; }
-    .library-workspace-body {
-      display: grid;
-      gap: 10px;
-      padding: 12px;
-      background: var(--bg);
-    }
     .bulk-panel {
-      margin: 0 0 16px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-    }
-    .bulk-panel summary {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 11px 12px;
-      cursor: pointer;
-      list-style: none;
-      font-weight: 800;
-    }
-    .bulk-panel summary::-webkit-details-marker { display: none; }
-    .bulk-panel[open] summary { border-bottom: 1px solid var(--line); }
-    .bulk-panel-body {
       display: grid;
       grid-template-columns: minmax(120px, auto) repeat(auto-fit, minmax(150px, 1fr));
       gap: 10px;
       align-items: center;
+      margin: 0 0 16px;
       padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
     }
     .bulk-panel .bulk-count { color: var(--muted); font-weight: 700; white-space: nowrap; }
     .bulk-actions { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -8915,17 +8493,17 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     .bulk-preview-list span {
       padding: 2px 6px;
       border: 1px solid var(--line);
-      border-radius: 6px;
+      border-radius: 999px;
       background: var(--panel);
       color: var(--text);
       font-size: 12px;
       font-weight: 700;
     }
     .row-check, .header-check { width: 18px; min-height: 18px; padding: 0; }
-    .action-panel { position: relative; }
-    .action-panel summary { list-style: none; cursor: pointer; }
-    .action-panel summary::-webkit-details-marker { display: none; }
-    .action-menu {
+    .column-panel { position: relative; }
+    .column-panel summary { list-style: none; cursor: pointer; }
+    .column-panel summary::-webkit-details-marker { display: none; }
+    .column-menu {
       position: absolute;
       right: 0;
       top: calc(100% + 8px);
@@ -8937,11 +8515,7 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       background: var(--panel);
       box-shadow: var(--shadow);
     }
-    .action-menu.wide { width: min(420px, calc(100vw - 32px)); }
-    .action-menu .bulk-actions { margin-top: 8px; }
-    .action-menu .meta { margin: 0 0 8px; }
     .column-menu h3 { margin: 0 0 8px; font-size: 14px; }
-    .column-presets { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
     .column-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
     .column-options label, .density-control {
       display: flex;
@@ -8953,38 +8527,6 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     }
     .density-control { margin-top: 12px; justify-content: space-between; }
     .density-control select { min-width: 128px; }
-    .row-details { margin-top: 8px; }
-    .row-details summary {
-      width: fit-content;
-      cursor: pointer;
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 750;
-      list-style: none;
-    }
-    .row-details summary::-webkit-details-marker { display: none; }
-    .row-detail-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 8px;
-      margin-top: 8px;
-      padding: 8px;
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      background: var(--chip);
-    }
-    .row-detail-grid > div {
-      display: grid;
-      gap: 5px;
-      min-width: 0;
-    }
-    .row-detail-grid > div > span:first-child {
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 750;
-    }
-    .row-detail-grid .chips { margin: 0; padding: 0; }
-    .row-detail-grid .flag { width: fit-content; }
     .library-table [data-col].is-hidden-column { display: none; }
     .library-table[data-density="compact"] th,
     .library-table[data-density="compact"] td { padding: 6px 8px; font-size: 13px; }
@@ -9010,7 +8552,7 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       max-width: 280px;
       min-height: 30px;
       border: 1px solid var(--line);
-      border-radius: 6px;
+      border-radius: 999px;
       background: var(--chip);
       color: var(--ink);
       padding: 0 10px;
@@ -9031,34 +8573,11 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       color: var(--muted);
       font-weight: 850;
     }
-    .library-assist-panel {
-      margin: 0 0 16px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-    }
-    .library-workspace-body .bulk-panel,
-    .library-workspace-body .library-assist-panel {
-      margin: 0;
-    }
-    .library-assist-panel > summary {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 11px 12px;
-      cursor: pointer;
-      list-style: none;
-      font-weight: 800;
-    }
-    .library-assist-panel > summary::-webkit-details-marker { display: none; }
-    .library-assist-panel[open] > summary { border-bottom: 1px solid var(--line); }
-    .library-assist-body { padding: 12px; }
     .library-insights {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
       gap: 12px;
-      margin: 0 0 12px;
+      margin: 0 0 16px;
     }
     .insight-card {
       min-height: 116px;
@@ -9105,9 +8624,9 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     .queue-advisor {
       border: 1px solid var(--line);
       border-radius: 8px;
-      background: var(--bg);
+      background: var(--panel);
       padding: 14px;
-      margin: 0;
+      margin: 0 0 16px;
     }
     .advisor-grid {
       display: grid;
@@ -9143,55 +8662,43 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <div class="stats">
     <a class="stat" href="index.html">卡片首页</a>
     <a class="stat" href="batch.html">批次规划</a>
+    <a class="stat" href="dashboard.html">管理控制台</a>
+    <a class="stat" href="collections.html">集合视图</a>
+    <a class="stat" href="related.html">关联网络</a>
+    <a class="stat" href="gaps.html">研究缺口</a>
+    <a class="stat" href="board.html">状态看板</a>
+    <a class="stat" href="inbox.html">待处理池</a>
+    <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
+    <a class="stat" href="timeline.html">时间轴</a>
+    <a class="stat" href="matrix.html">研究矩阵</a>
+    <a class="stat" href="lines/index.html">研究线</a>
+    <a class="stat" href="tags.html">分类总览</a>
+    <a class="stat" href="quality.json">质量 JSON</a>
+    <a class="stat" href="stats.json">统计 JSON</a>
     <span class="stat">论文 {len(papers)}</span>
-    <details class="library-secondary-nav">
-      <summary>更多入口与数据</summary>
-      <div class="stats">
-        <a class="stat" href="dashboard.html">管理控制台</a>
-        <a class="stat" href="collections.html">集合视图</a>
-        <a class="stat" href="related.html">关联网络</a>
-        <a class="stat" href="gaps.html">研究缺口</a>
-        <a class="stat" href="board.html">状态看板</a>
-        <a class="stat" href="inbox.html">待处理池</a>
-        <a class="stat" href="review.html">复习计划</a>
-        <a class="stat" href="timeline.html">时间轴</a>
-        <a class="stat" href="matrix.html">研究矩阵</a>
-        <a class="stat" href="lines/index.html">研究线</a>
-        <a class="stat" href="tags.html">分类总览</a>
-        <a class="stat" href="quality.json">质量 JSON</a>
-        <a class="stat" href="stats.json">统计 JSON</a>
-      </div>
-    </details>
   </div>
 </header>
 <div class="toolbar">
-  <div class="shell filter-panel">
-    <div class="primary-filter-row">
-      <input id="search" type="search" placeholder="搜索标题、作者、研究线、分类、状态">
-      <select id="line"><option value="">全部研究线</option>{render_topic_options(taxonomy["research_lines"])}</select>
-      <select id="status"><option value="">全部状态</option>{render_topic_options(taxonomy["statuses"])}</select>
-      <select id="review"><option value="">复习队列</option><option value="due">到期复习</option><option value="none">未设置复习</option><option value="planned">已设置复习</option></select>
-      <select id="sort"><option value="default">默认排序</option><option value="importance">重要性优先</option><option value="updated">最近更新</option><option value="year">年份新到旧</option><option value="title">标题 A-Z</option></select>
-      <select id="pageSize"><option value="50">每页 50 篇</option><option value="100">每页 100 篇</option><option value="200">每页 200 篇</option><option value="all">显示全部</option></select>
-    </div>
-    <details class="advanced-filters">
-      <summary>高级筛选</summary>
-      <div class="advanced-filter-grid">
-        <select id="domain"><option value="">全部领域</option>{render_topic_options(taxonomy["domains"])}</select>
-        <select id="track"><option value="">全部方向</option>{render_topic_options(taxonomy["tracks"])}</select>
-        <select id="problem"><option value="">全部问题</option>{render_topic_options(taxonomy["problems"])}</select>
-        <select id="topic"><option value="">全部主题</option>{render_topic_options(taxonomy["topics"])}</select>
-        <select id="method"><option value="">全部方法</option>{render_topic_options(taxonomy["methods"])}</select>
-        <select id="role"><option value="">全部角色</option>{render_topic_options(taxonomy["line_roles"])}</select>
-        <select id="statusWorkflow" aria-label="状态体系"></select>
-        <select id="stage"><option value="">阅读阶段</option>{render_topic_options(taxonomy["reading_stages"])}</select>
-        <select id="reviewStage"><option value="">复习阶段</option>{render_topic_options(taxonomy["review_stages"])}</select>
-        <select id="code"><option value="">代码状态</option><option value="yes">有代码</option><option value="no">无代码</option></select>
-        <select id="importance"><option value="">重要性</option><option value="5">5 星</option><option value="4">4 星及以上</option><option value="3">3 星及以上</option></select>
-      </div>
-    </details>
+  <div class="shell controls">
+    <input id="search" type="search" placeholder="搜索标题、作者、研究线、分类、状态">
+    <select id="domain"><option value="">全部领域</option>{render_topic_options(taxonomy["domains"])}</select>
+    <select id="track"><option value="">全部方向</option>{render_topic_options(taxonomy["tracks"])}</select>
+    <select id="problem"><option value="">全部问题</option>{render_topic_options(taxonomy["problems"])}</select>
+    <select id="topic"><option value="">全部主题</option>{render_topic_options(taxonomy["topics"])}</select>
+    <select id="method"><option value="">全部方法</option>{render_topic_options(taxonomy["methods"])}</select>
+    <select id="line"><option value="">全部研究线</option>{render_topic_options(taxonomy["research_lines"])}</select>
+    <select id="role"><option value="">全部角色</option>{render_topic_options(taxonomy["line_roles"])}</select>
+    <select id="statusWorkflow" aria-label="状态体系"></select>
+    <select id="status"><option value="">全部状态</option>{render_topic_options(taxonomy["statuses"])}</select>
+    <select id="stage"><option value="">阅读阶段</option>{render_topic_options(taxonomy["reading_stages"])}</select>
+    <select id="reviewStage"><option value="">复习阶段</option>{render_topic_options(taxonomy["review_stages"])}</select>
+    <select id="review"><option value="">复习队列</option><option value="due">到期复习</option><option value="none">未设置复习</option><option value="planned">已设置复习</option></select>
+    <select id="code"><option value="">代码状态</option><option value="yes">有代码</option><option value="no">无代码</option></select>
+    <select id="importance"><option value="">重要性</option><option value="5">5 星</option><option value="4">4 星及以上</option><option value="3">3 星及以上</option></select>
+    <select id="sort"><option value="default">默认排序</option><option value="importance">重要性优先</option><option value="updated">最近更新</option><option value="year">年份新到旧</option><option value="title">标题 A-Z</option></select>
+    <select id="pageSize"><option value="50">每页 50 篇</option><option value="100">每页 100 篇</option><option value="200">每页 200 篇</option><option value="all">显示全部</option></select>
   </div>
 </div>
 <main class="shell">
@@ -9199,132 +8706,108 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <strong id="resultCount">显示 {len(papers)} / {len(papers)} 篇</strong>
     <div class="results-actions">
       <select id="savedView" class="saved-view" aria-label="选择保存视图"><option value="">选择视图</option></select>
-      <details class="action-panel">
+      <button id="saveView" class="button" type="button">保存视图</button>
+      <button id="copyCurrentLink" class="button" type="button">复制当前链接</button>
+      <button id="copySharedView" class="button" type="button">复制共享视图</button>
+      <button id="deleteView" class="button" type="button">删除视图</button>
+      <button id="exportSavedViews" class="button" type="button">导出视图</button>
+      <button id="importSavedViews" class="button" type="button">导入视图</button>
+      <details class="column-panel">
         <summary class="button">列设置</summary>
-        <div class="action-menu column-menu" id="columnMenu">
+        <div class="column-menu" id="columnMenu">
           <h3>显示列</h3>
-          <div class="column-presets">
-            <button id="scanColumns" class="button" type="button">扫描视图</button>
-            <button id="fullColumns" class="button" type="button">完整视图</button>
-          </div>
           <div class="column-options">
             <label><input type="checkbox" data-column-toggle="title" checked disabled>论文</label>
             <label><input type="checkbox" data-column-toggle="line" checked>研究线</label>
-            <label><input type="checkbox" data-column-toggle="structure">结构分类</label>
-            <label><input type="checkbox" data-column-toggle="tags">主题 / 方法</label>
+            <label><input type="checkbox" data-column-toggle="structure" checked>结构分类</label>
+            <label><input type="checkbox" data-column-toggle="tags" checked>主题 / 方法</label>
             <label><input type="checkbox" data-column-toggle="state" checked>状态</label>
-            <label><input type="checkbox" data-column-toggle="scores">评分</label>
-            <label><input type="checkbox" data-column-toggle="code">代码</label>
+            <label><input type="checkbox" data-column-toggle="scores" checked>评分</label>
+            <label><input type="checkbox" data-column-toggle="code" checked>代码</label>
             <label><input type="checkbox" data-column-toggle="actions" checked>操作</label>
           </div>
           <label class="density-control"><span>表格密度</span><select id="densityMode"><option value="compact">紧凑</option><option value="normal">标准</option><option value="comfortable">舒适</option></select></label>
         </div>
       </details>
+      <button id="exportMarkdown" class="button" type="button">导出清单</button>
+      <button id="exportCsv" class="button" type="button">导出 CSV</button>
+      <button id="exportBibtex" class="button" type="button">导出 BibTeX</button>
       <button id="resetFilters" class="button" type="button">重置筛选</button>
-      <details class="action-panel">
-        <summary class="button">更多操作</summary>
-        <div class="action-menu wide" id="libraryMoreActions">
-          <p class="meta">保存视图、分享筛选和导出当前结果。</p>
-          <div class="bulk-actions">
-            <button id="saveView" class="button" type="button">保存视图</button>
-            <button id="copyCurrentLink" class="button" type="button">复制当前链接</button>
-            <button id="copySharedView" class="button" type="button">复制共享视图</button>
-            <button id="deleteView" class="button" type="button">删除视图</button>
-            <button id="exportSavedViews" class="button" type="button">导出视图</button>
-            <button id="importSavedViews" class="button" type="button">导入视图</button>
-            <button id="exportMarkdown" class="button" type="button">导出清单</button>
-            <button id="exportCsv" class="button" type="button">导出 CSV</button>
-            <button id="exportBibtex" class="button" type="button">导出 BibTeX</button>
-          </div>
-        </div>
-      </details>
     </div>
   </div>
   <div class="active-filters" id="activeFilters" aria-live="polite"></div>
-  <details class="library-workspace-panel">
-    <summary><span>整理工作区</span><span id="libraryWorkspaceMeta" class="meta">批量编辑、统计洞察和队列建议</span></summary>
-    <div class="library-workspace-body">
-      <details class="bulk-panel">
-        <summary><span>批量编辑与写回</span><span id="bulkCount" class="bulk-count">已选 0 篇</span></summary>
-        <div class="bulk-panel-body">
-          <select id="bulkPreset"><option value="">治理 preset</option></select>
-          <button id="applyBulkPreset" class="button" type="button">套用 preset</button>
-          <select id="bulkStatus"><option value="">状态</option>{render_value_options(controls["status"])}</select>
-          <select id="bulkStage"><option value="">阅读阶段</option>{render_value_options(controls["reading_stage"])}</select>
-          <select id="bulkReviewStage"><option value="">复习阶段</option>{render_value_options(controls["review_stage"])}</select>
-          <input id="bulkNextReview" type="date" aria-label="下次复习日期">
-          <select id="bulkImportance"><option value="">重要性</option><option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select>
-          <div id="bulkWorkflowMeta" class="bulk-workflow-meta" aria-live="polite">状态体系加载中。</div>
-          <div class="bulk-actions">
-            <button id="selectVisible" class="button" type="button">选中当前页</button>
-            <button id="selectFiltered" class="button" type="button">选中筛选结果</button>
-            <button id="clearSelected" class="button" type="button">清除选择</button>
-            <button id="copySelectedMarkdown" class="button" type="button">复制选中清单</button>
-            <button id="copySelectedSlugs" class="button" type="button">复制 Slugs</button>
-            <button id="previewPatch" class="button" type="button">预览 Patch</button>
-            <button id="downloadPatch" class="button" type="button">下载 CSV</button>
-            <button id="copyPatchDryRun" class="button" type="button">复制预览命令</button>
-            <button id="copyPatchWrite" class="button" type="button">复制写入命令</button>
-          </div>
-          <details class="bulk-taxonomy">
-            <summary>批量分类字段</summary>
-            <div class="bulk-taxonomy-grid">
-              <label><span>分类写入方式</span><select id="bulkListMode"><option value="replace">替换原分类</option><option value="append">追加到原分类</option><option value="remove">从原分类移除</option></select></label>
-              <label><span>研究线</span><input id="bulkResearchLine" list="researchLineOptions" type="text" placeholder="Research line"></label>
-              <label><span>研究线角色</span><select id="bulkLineRole"><option value="">角色</option>{render_value_options(controls["line_role"])}</select></label>
-              <label><span>Domain</span><input id="bulkDomains" list="domainOptions" type="text" placeholder="多个值用 ; 分隔"></label>
-              <label><span>Track</span><input id="bulkTracks" list="trackOptions" type="text" placeholder="多个值用 ; 分隔"></label>
-              <label><span>Problem</span><input id="bulkProblems" list="problemOptions" type="text" placeholder="多个值用 ; 分隔"></label>
-              <label><span>Topics</span><input id="bulkTopics" list="topicOptions" type="text" placeholder="多个值用 ; 分隔"></label>
-              <label><span>Methods</span><input id="bulkMethods" list="methodOptions" type="text" placeholder="多个值用 ; 分隔"></label>
-              <div class="bulk-hint">分类写入方式只影响 domains / tracks / problems / topics / methods；状态、日期、重要性和研究线字段仍按输入值写入。下载后先 dry-run，再用 --write 写回。</div>
-            </div>
-          </details>
-          <div id="bulkPreview" class="bulk-preview" aria-live="polite">选择论文和字段后显示 patch 摘要。</div>
-        </div>
-      </details>
-      <details class="library-assist-panel">
-        <summary><span>分析与队列建议</span><span class="meta">当前筛选统计、热点标签和智能队列</span></summary>
-        <div class="library-assist-body">
-          <section class="library-insights" id="libraryInsights" aria-live="polite">
-            <div class="insight-card">
-              <span>当前队列</span>
-              <strong id="insightTotal">0</strong>
-              <div class="meta" id="insightCoverage">-</div>
-            </div>
-            <div class="insight-card">
-              <span>Status 分布</span>
-              <ul class="insight-list" id="insightStatuses"></ul>
-            </div>
-            <div class="insight-card">
-              <span>研究线分布</span>
-              <ul class="insight-list" id="insightLines"></ul>
-            </div>
-            <div class="insight-card">
-              <span>Topic 热点</span>
-              <ul class="insight-list" id="insightTopics"></ul>
-            </div>
-            <div class="insight-card">
-              <span>Method 热点</span>
-              <ul class="insight-list" id="insightMethods"></ul>
-            </div>
-            <div class="insight-card">
-              <span>覆盖与优先级</span>
-              <strong id="insightReviewGap">0</strong>
-              <div class="meta" id="insightPriority">-</div>
-            </div>
-          </section>
-          <section class="queue-advisor" id="queueAdvisorPanel">
-            <div class="results-bar">
-              <strong>智能队列建议</strong>
-              <span id="advisorCount" class="meta">基于当前筛选结果</span>
-            </div>
-            <div id="queueAdvisor" class="advisor-grid" aria-live="polite"></div>
-          </section>
-        </div>
-      </details>
+  <div class="bulk-panel">
+    <span id="bulkCount" class="bulk-count">已选 0 篇</span>
+    <select id="bulkPreset"><option value="">治理 preset</option></select>
+    <button id="applyBulkPreset" class="button" type="button">套用 preset</button>
+    <select id="bulkStatus"><option value="">状态</option>{render_value_options(controls["status"])}</select>
+    <select id="bulkStage"><option value="">阅读阶段</option>{render_value_options(controls["reading_stage"])}</select>
+    <select id="bulkReviewStage"><option value="">复习阶段</option>{render_value_options(controls["review_stage"])}</select>
+    <input id="bulkNextReview" type="date" aria-label="下次复习日期">
+    <select id="bulkImportance"><option value="">重要性</option><option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select>
+    <div id="bulkWorkflowMeta" class="bulk-workflow-meta" aria-live="polite">状态体系加载中。</div>
+    <div class="bulk-actions">
+      <button id="selectVisible" class="button" type="button">选中当前页</button>
+      <button id="selectFiltered" class="button" type="button">选中筛选结果</button>
+      <button id="clearSelected" class="button" type="button">清除选择</button>
+      <button id="copySelectedMarkdown" class="button" type="button">复制选中清单</button>
+      <button id="copySelectedSlugs" class="button" type="button">复制 Slugs</button>
+      <button id="previewPatch" class="button" type="button">预览 Patch</button>
+      <button id="downloadPatch" class="button" type="button">下载 CSV</button>
+      <button id="copyPatchDryRun" class="button" type="button">复制预览命令</button>
+      <button id="copyPatchWrite" class="button" type="button">复制写入命令</button>
     </div>
-  </details>
+    <details class="bulk-taxonomy">
+      <summary>批量分类字段</summary>
+      <div class="bulk-taxonomy-grid">
+        <label><span>分类写入方式</span><select id="bulkListMode"><option value="replace">替换原分类</option><option value="append">追加到原分类</option><option value="remove">从原分类移除</option></select></label>
+        <label><span>研究线</span><input id="bulkResearchLine" list="researchLineOptions" type="text" placeholder="Research line"></label>
+        <label><span>研究线角色</span><select id="bulkLineRole"><option value="">角色</option>{render_value_options(controls["line_role"])}</select></label>
+        <label><span>Domain</span><input id="bulkDomains" list="domainOptions" type="text" placeholder="多个值用 ; 分隔"></label>
+        <label><span>Track</span><input id="bulkTracks" list="trackOptions" type="text" placeholder="多个值用 ; 分隔"></label>
+        <label><span>Problem</span><input id="bulkProblems" list="problemOptions" type="text" placeholder="多个值用 ; 分隔"></label>
+        <label><span>Topics</span><input id="bulkTopics" list="topicOptions" type="text" placeholder="多个值用 ; 分隔"></label>
+        <label><span>Methods</span><input id="bulkMethods" list="methodOptions" type="text" placeholder="多个值用 ; 分隔"></label>
+        <div class="bulk-hint">分类写入方式只影响 domains / tracks / problems / topics / methods；状态、日期、重要性和研究线字段仍按输入值写入。下载后先 dry-run，再用 --write 写回。</div>
+      </div>
+    </details>
+    <div id="bulkPreview" class="bulk-preview" aria-live="polite">选择论文和字段后显示 patch 摘要。</div>
+  </div>
+  <section class="library-insights" id="libraryInsights" aria-live="polite">
+    <div class="insight-card">
+      <span>当前队列</span>
+      <strong id="insightTotal">0</strong>
+      <div class="meta" id="insightCoverage">-</div>
+    </div>
+    <div class="insight-card">
+      <span>Status 分布</span>
+      <ul class="insight-list" id="insightStatuses"></ul>
+    </div>
+    <div class="insight-card">
+      <span>研究线分布</span>
+      <ul class="insight-list" id="insightLines"></ul>
+    </div>
+    <div class="insight-card">
+      <span>Topic 热点</span>
+      <ul class="insight-list" id="insightTopics"></ul>
+    </div>
+    <div class="insight-card">
+      <span>Method 热点</span>
+      <ul class="insight-list" id="insightMethods"></ul>
+    </div>
+    <div class="insight-card">
+      <span>覆盖与优先级</span>
+      <strong id="insightReviewGap">0</strong>
+      <div class="meta" id="insightPriority">-</div>
+    </div>
+  </section>
+  <section class="queue-advisor" id="queueAdvisorPanel">
+    <div class="results-bar">
+      <strong>智能队列建议</strong>
+      <span id="advisorCount" class="meta">基于当前筛选结果</span>
+    </div>
+    <div id="queueAdvisor" class="advisor-grid" aria-live="polite"></div>
+  </section>
   <datalist id="researchLineOptions">{render_datalist_options(taxonomy["research_lines"])}</datalist>
   <datalist id="domainOptions">{render_datalist_options(taxonomy["domains"])}</datalist>
   <datalist id="trackOptions">{render_datalist_options(taxonomy["tracks"])}</datalist>
@@ -9379,7 +8862,6 @@ const deleteView = document.querySelector("#deleteView");
 const exportSavedViews = document.querySelector("#exportSavedViews");
 const importSavedViews = document.querySelector("#importSavedViews");
 const activeFilters = document.querySelector("#activeFilters");
-const libraryWorkspaceMeta = document.querySelector("#libraryWorkspaceMeta");
 const exportMarkdown = document.querySelector("#exportMarkdown");
 const exportCsv = document.querySelector("#exportCsv");
 const exportBibtex = document.querySelector("#exportBibtex");
@@ -9423,8 +8905,6 @@ const insightReviewGap = document.querySelector("#insightReviewGap");
 const insightPriority = document.querySelector("#insightPriority");
 const queueAdvisor = document.querySelector("#queueAdvisor");
 const advisorCount = document.querySelector("#advisorCount");
-const scanColumns = document.querySelector("#scanColumns");
-const fullColumns = document.querySelector("#fullColumns");
 const columnToggles = Array.from(document.querySelectorAll("[data-column-toggle]"));
 const densityMode = document.querySelector("#densityMode");
 const sharedViews = window.PAPER_WIKI.shared_views || [];
@@ -9443,18 +8923,6 @@ let currentPage = 1;
 let currentRankedRows = [...allRows];
 const savedViewsKey = "autopaperreader:library:savedViews";
 const libraryPrefsKey = "autopaperreader:library:prefs";
-const libraryPrefsVersion = "scan-columns-v1";
-const scanColumnDefaults = {{
-  title: true,
-  line: true,
-  structure: false,
-  tags: false,
-  state: true,
-  scores: false,
-  code: false,
-  actions: true,
-}};
-const fullColumnDefaults = Object.fromEntries(columnToggles.map(toggle => [toggle.dataset.columnToggle, true]));
 const controls = [
   ["q", search],
   ["domain", domain],
@@ -9642,26 +9110,17 @@ function controlDisplayValue(key, el) {{
   return cleanOptionLabel(option ? option.textContent : el.value);
 }}
 
-function selectedViewName() {{
-  if (!savedView.value) return "";
-  const [source, indexText] = savedView.value.split(":");
-  const index = Number(indexText);
-  const view = source === "shared" ? sharedViews[index] : readSavedViews()[index];
-  return view ? String(view.name || "") : "";
-}}
-
 function renderActiveFilters() {{
   const state = currentState();
   const entries = Object.entries(state)
     .filter(([key]) => controlsByKey.has(key) && !hiddenActiveFilterKeys.has(key));
-  const viewName = selectedViewName();
   activeFilters.replaceChildren();
   if (!entries.length) {{
-    activeFilters.textContent = viewName ? `当前视图：${{viewName}}` : "未设置筛选条件";
+    activeFilters.textContent = "未设置筛选条件";
     return;
   }}
   const label = document.createElement("span");
-  label.textContent = viewName ? `当前视图：${{viewName}}` : `当前筛选 ${{entries.length}} 项`;
+  label.textContent = "当前筛选";
   activeFilters.appendChild(label);
   entries.forEach(([key]) => {{
     const el = controlsByKey.get(key);
@@ -9682,7 +9141,6 @@ function renderActiveFilters() {{
 function clearActiveFilter(key) {{
   const el = controlsByKey.get(key);
   if (!el) return;
-  savedView.value = "";
   el.value = defaultValueFor(key);
   if (key === "workflow") applyStatusWorkflow();
   currentPage = 1;
@@ -9797,9 +9255,8 @@ async function copyJsonSnippet(payload) {{
 
 function defaultLibraryPrefs() {{
   return {{
-    version: libraryPrefsVersion,
     density: "normal",
-    columns: {{ ...scanColumnDefaults }},
+    columns: Object.fromEntries(columnToggles.map(toggle => [toggle.dataset.columnToggle, true])),
   }};
 }}
 
@@ -9807,9 +9264,7 @@ function readLibraryPrefs() {{
   const defaults = defaultLibraryPrefs();
   try {{
     const stored = JSON.parse(localStorage.getItem(libraryPrefsKey) || "{{}}");
-    if (stored.version !== libraryPrefsVersion) return defaults;
     return {{
-      version: libraryPrefsVersion,
       density: ["compact", "normal", "comfortable"].includes(stored.density) ? stored.density : defaults.density,
       columns: {{ ...defaults.columns, ...(stored.columns || {{}}), title: true }},
     }};
@@ -9828,7 +9283,6 @@ function writeLibraryPrefs(prefs) {{
 
 function collectLibraryPrefs() {{
   return {{
-    version: libraryPrefsVersion,
     density: densityMode.value || "normal",
     columns: Object.fromEntries(columnToggles.map(toggle => [
       toggle.dataset.columnToggle,
@@ -9850,12 +9304,6 @@ function applyLibraryPrefs(prefs) {{
     const alwaysVisible = key === "select" || key === "title";
     cell.classList.toggle("is-hidden-column", !alwaysVisible && prefs.columns[key] === false);
   }});
-}}
-
-function applyColumnPreset(columns) {{
-  const prefs = {{ ...collectLibraryPrefs(), columns: {{ ...columns, title: true }} }};
-  applyLibraryPrefs(prefs);
-  writeLibraryPrefs(prefs);
 }}
 
 function refreshSavedViews() {{
@@ -9898,14 +9346,6 @@ function visibleRows() {{
 
 function selectedRows() {{
   return allRows.filter(row => row.querySelector(".row-check").checked);
-}}
-
-function updateWorkspaceMeta() {{
-  const selected = selectedRows().length;
-  const visible = visibleRows().length;
-  const filtered = currentRankedRows.length;
-  const selectedPart = selected ? ` · 已选 ${{selected}} 篇` : "";
-  libraryWorkspaceMeta.textContent = `筛选 ${{filtered}} 篇 · 当前页 ${{visible}} 篇${{selectedPart}}`;
 }}
 
 function matchesReviewQueue(row, value, today = localDateString()) {{
@@ -10167,7 +9607,6 @@ function updateBulkState() {{
   toggleVisible.indeterminate = visibleSelected > 0 && visibleSelected < visible.length;
   copySelectedMarkdown.disabled = selected === 0;
   copySelectedSlugs.disabled = selected === 0;
-  updateWorkspaceMeta();
   updateBulkPreview();
 }}
 
@@ -10495,7 +9934,6 @@ function render() {{
 }}
 
 controls.forEach(([, el]) => el.addEventListener("input", () => {{
-  savedView.value = "";
   if (el === statusWorkflow) applyStatusWorkflow();
   currentPage = 1;
   render();
@@ -10510,7 +9948,6 @@ queueAdvisor.addEventListener("click", (event) => {{
   selectAdvisorQueue(button.dataset.queueId || "", button.dataset.queueAction === "apply");
 }});
 resetFilters.addEventListener("click", () => {{
-  savedView.value = "";
   controls.forEach(([key, el]) => {{
     el.value = defaultValueFor(key);
   }});
@@ -10649,8 +10086,6 @@ columnToggles.forEach(toggle => toggle.addEventListener("change", () => {{
   applyLibraryPrefs(prefs);
   writeLibraryPrefs(prefs);
 }}));
-scanColumns.addEventListener("click", () => applyColumnPreset(scanColumnDefaults));
-fullColumns.addEventListener("click", () => applyColumnPreset(fullColumnDefaults));
 densityMode.addEventListener("input", () => {{
   const prefs = collectLibraryPrefs();
   applyLibraryPrefs(prefs);
@@ -10810,7 +10245,7 @@ def render_board(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       color: var(--muted);
       font-weight: 800;
       border: 1px solid var(--line);
-      border-radius: 6px;
+      border-radius: 999px;
       padding: 2px 8px;
     }
     .board-dropzone {
@@ -11945,7 +11380,7 @@ def render_presets(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       display: inline-flex;
       align-items: center;
       border: 1px solid var(--line);
-      border-radius: 6px;
+      border-radius: 999px;
       padding: 4px 9px;
       font-size: 13px;
       color: var(--muted);
@@ -13103,7 +12538,7 @@ def render_compare(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       gap: 8px;
       padding: 6px 10px;
       border: 1px solid var(--line);
-      border-radius: 6px;
+      border-radius: 999px;
       background: var(--panel);
       color: var(--muted);
       font-size: 13px;
@@ -13112,7 +12547,7 @@ def render_compare(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       width: 22px;
       height: 22px;
       border: 1px solid var(--line);
-      border-radius: 6px;
+      border-radius: 999px;
       background: var(--bg);
       color: var(--muted);
       cursor: pointer;
@@ -13468,7 +12903,7 @@ def render_clusters(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     }
     .cluster-chip, .cluster-papers a {
       border: 1px solid var(--line);
-      border-radius: 6px;
+      border-radius: 999px;
       padding: 3px 7px;
       background: var(--panel);
       color: var(--text);
@@ -14192,7 +13627,7 @@ def render_ownership(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       align-items: center;
       gap: 5px;
       border: 1px solid var(--line);
-      border-radius: 6px;
+      border-radius: 999px;
       padding: 3px 7px;
       background: var(--panel);
       font-size: 12px;
@@ -14205,7 +13640,7 @@ def render_ownership(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     }
     .line-links a {
       border: 1px solid var(--line);
-      border-radius: 6px;
+      border-radius: 999px;
       padding: 3px 7px;
       background: var(--panel);
       color: var(--text);
@@ -14388,7 +13823,7 @@ def render_routing(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     .routing-tags a,
     .routing-tags span {
       border: 1px solid var(--line);
-      border-radius: 6px;
+      border-radius: 999px;
       padding: 3px 7px;
       background: var(--panel);
       color: var(--text);
@@ -16226,7 +15661,7 @@ def render_curation(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       width: 100%;
       height: 8px;
       margin-top: 6px;
-      border-radius: 6px;
+      border-radius: 999px;
       background: #ece4d8;
       overflow: hidden;
     }
@@ -18119,7 +17554,7 @@ def render_views(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       min-height: 40px;
       border: 1px solid var(--line);
       border-radius: 8px;
-      background: var(--panel);
+      background: #fffdf8;
       color: var(--ink);
       padding: 8px 10px;
       font: inherit;
@@ -18158,7 +17593,7 @@ def render_views(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       min-height: 40px;
       border: 1px solid var(--line);
       border-radius: 8px;
-      background: var(--panel);
+      background: #fffdf8;
       color: var(--ink);
       padding: 8px 10px;
       font: inherit;
@@ -19290,7 +18725,7 @@ def render_balance(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     .balance-meter {
       width: 120px;
       height: 8px;
-      border-radius: 6px;
+      border-radius: 999px;
       background: #eadfce;
       overflow: hidden;
       margin-top: 6px;
@@ -19655,7 +19090,7 @@ def render_coverage(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     .balance-meter {
       width: 120px;
       height: 8px;
-      border-radius: 6px;
+      border-radius: 999px;
       background: #eadfce;
       overflow: hidden;
       margin-top: 6px;
@@ -21515,7 +20950,7 @@ def render_timeline(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       height: 10px;
       margin-top: 17px;
       border: 2px solid var(--accent);
-      border-radius: 6px;
+      border-radius: 999px;
       background: var(--bg);
       z-index: 1;
     }
@@ -21564,7 +20999,7 @@ def render_timeline(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       max-width: 280px;
       min-height: 30px;
       border: 1px solid var(--line);
-      border-radius: 6px;
+      border-radius: 999px;
       background: var(--chip);
       color: var(--ink);
       padding: 0 10px;
@@ -22036,7 +21471,7 @@ def render_matrix(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       min-height: 54px;
       border: 1px solid var(--line);
       border-radius: 8px;
-      background: var(--chip);
+      background: #faf7f0;
       color: var(--ink);
       cursor: pointer;
       font: inherit;
@@ -22114,7 +21549,7 @@ def render_matrix(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       max-width: 280px;
       min-height: 30px;
       border: 1px solid var(--line);
-      border-radius: 6px;
+      border-radius: 999px;
       background: var(--chip);
       color: var(--ink);
       padding: 0 10px;
