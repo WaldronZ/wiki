@@ -8841,6 +8841,7 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       box-shadow: var(--shadow);
     }
     .column-menu h3 { margin: 0 0 8px; font-size: 14px; }
+    .column-presets { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
     .column-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
     .column-options label, .density-control {
       display: flex;
@@ -9048,14 +9049,18 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         <summary class="button">列设置</summary>
         <div class="column-menu" id="columnMenu">
           <h3>显示列</h3>
+          <div class="column-presets">
+            <button id="scanColumns" class="button" type="button">扫描视图</button>
+            <button id="fullColumns" class="button" type="button">完整视图</button>
+          </div>
           <div class="column-options">
             <label><input type="checkbox" data-column-toggle="title" checked disabled>论文</label>
             <label><input type="checkbox" data-column-toggle="line" checked>研究线</label>
-            <label><input type="checkbox" data-column-toggle="structure" checked>结构分类</label>
-            <label><input type="checkbox" data-column-toggle="tags" checked>主题 / 方法</label>
+            <label><input type="checkbox" data-column-toggle="structure">结构分类</label>
+            <label><input type="checkbox" data-column-toggle="tags">主题 / 方法</label>
             <label><input type="checkbox" data-column-toggle="state" checked>状态</label>
-            <label><input type="checkbox" data-column-toggle="scores" checked>评分</label>
-            <label><input type="checkbox" data-column-toggle="code" checked>代码</label>
+            <label><input type="checkbox" data-column-toggle="scores">评分</label>
+            <label><input type="checkbox" data-column-toggle="code">代码</label>
             <label><input type="checkbox" data-column-toggle="actions" checked>操作</label>
           </div>
           <label class="density-control"><span>表格密度</span><select id="densityMode"><option value="compact">紧凑</option><option value="normal">标准</option><option value="comfortable">舒适</option></select></label>
@@ -9237,6 +9242,8 @@ const insightReviewGap = document.querySelector("#insightReviewGap");
 const insightPriority = document.querySelector("#insightPriority");
 const queueAdvisor = document.querySelector("#queueAdvisor");
 const advisorCount = document.querySelector("#advisorCount");
+const scanColumns = document.querySelector("#scanColumns");
+const fullColumns = document.querySelector("#fullColumns");
 const columnToggles = Array.from(document.querySelectorAll("[data-column-toggle]"));
 const densityMode = document.querySelector("#densityMode");
 const sharedViews = window.PAPER_WIKI.shared_views || [];
@@ -9255,6 +9262,18 @@ let currentPage = 1;
 let currentRankedRows = [...allRows];
 const savedViewsKey = "autopaperreader:library:savedViews";
 const libraryPrefsKey = "autopaperreader:library:prefs";
+const libraryPrefsVersion = "scan-columns-v1";
+const scanColumnDefaults = {{
+  title: true,
+  line: true,
+  structure: false,
+  tags: false,
+  state: true,
+  scores: false,
+  code: false,
+  actions: true,
+}};
+const fullColumnDefaults = Object.fromEntries(columnToggles.map(toggle => [toggle.dataset.columnToggle, true]));
 const controls = [
   ["q", search],
   ["domain", domain],
@@ -9587,8 +9606,9 @@ async function copyJsonSnippet(payload) {{
 
 function defaultLibraryPrefs() {{
   return {{
+    version: libraryPrefsVersion,
     density: "normal",
-    columns: Object.fromEntries(columnToggles.map(toggle => [toggle.dataset.columnToggle, true])),
+    columns: {{ ...scanColumnDefaults }},
   }};
 }}
 
@@ -9596,7 +9616,9 @@ function readLibraryPrefs() {{
   const defaults = defaultLibraryPrefs();
   try {{
     const stored = JSON.parse(localStorage.getItem(libraryPrefsKey) || "{{}}");
+    if (stored.version !== libraryPrefsVersion) return defaults;
     return {{
+      version: libraryPrefsVersion,
       density: ["compact", "normal", "comfortable"].includes(stored.density) ? stored.density : defaults.density,
       columns: {{ ...defaults.columns, ...(stored.columns || {{}}), title: true }},
     }};
@@ -9615,6 +9637,7 @@ function writeLibraryPrefs(prefs) {{
 
 function collectLibraryPrefs() {{
   return {{
+    version: libraryPrefsVersion,
     density: densityMode.value || "normal",
     columns: Object.fromEntries(columnToggles.map(toggle => [
       toggle.dataset.columnToggle,
@@ -9636,6 +9659,12 @@ function applyLibraryPrefs(prefs) {{
     const alwaysVisible = key === "select" || key === "title";
     cell.classList.toggle("is-hidden-column", !alwaysVisible && prefs.columns[key] === false);
   }});
+}}
+
+function applyColumnPreset(columns) {{
+  const prefs = {{ ...collectLibraryPrefs(), columns: {{ ...columns, title: true }} }};
+  applyLibraryPrefs(prefs);
+  writeLibraryPrefs(prefs);
 }}
 
 function refreshSavedViews() {{
@@ -10418,6 +10447,8 @@ columnToggles.forEach(toggle => toggle.addEventListener("change", () => {{
   applyLibraryPrefs(prefs);
   writeLibraryPrefs(prefs);
 }}));
+scanColumns.addEventListener("click", () => applyColumnPreset(scanColumnDefaults));
+fullColumns.addEventListener("click", () => applyColumnPreset(fullColumnDefaults));
 densityMode.addEventListener("input", () => {{
   const prefs = collectLibraryPrefs();
   applyLibraryPrefs(prefs);
