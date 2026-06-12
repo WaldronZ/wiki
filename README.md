@@ -174,6 +174,7 @@ paper_reader/
 - `scripts/export_ownership.py` 用于把 `ownership.json` 中的 owner 工作量、风险队列和研究线责任导出成 checklist、审计 CSV 或项目任务 CSV
 - `scripts/export_roadmap.py` 用于把 `roadmap.json` 中的研究线风险、角色缺口和下一步行动导出成路线 checklist、审计 CSV 或项目任务 CSV
 - `scripts/export_taxonomy_actions.py` 用于把 `taxonomy_actions.json` 导出成 Markdown checklist、审计 CSV 或项目任务 CSV，便于分派分类治理任务
+- `scripts/export_taxonomy_change.py` 用于把任意分类/状态字段的旧值改名为新值，导出可审计且可写回的 metadata patch CSV
 - `scripts/export_taxonomy_balance.py` 用于把 `stats.json` 中的分类均衡度导出成复盘 checklist、CSV 或项目任务 CSV
 - `scripts/export_taxonomy_load.py` 用于把 `quality.json` 中的分类粒度审计导出成 Markdown checklist、审计 CSV 或可写回的分类 patch CSV
 - `scripts/export_taxonomy_registry.py` 用于把 `registry.json` 导出成标签治理 checklist、审计 CSV、项目任务 CSV 或可写回的分类 patch CSV
@@ -467,6 +468,7 @@ python3 scripts/export_taxonomy_actions.py docs --format csv --severity high --o
 python3 scripts/export_taxonomy_actions.py docs --format csv --field topics --severity high --output docs/exports/topic-actions.csv
 python3 scripts/export_taxonomy_actions.py docs --format project --assignee taxonomy-owner --task-status ready --output docs/exports/taxonomy-project.csv
 python3 scripts/export_taxonomy_actions.py docs --format patch --action merge_candidate --target-value "Unified Label" --output docs/exports/taxonomy-action-patch.csv
+python3 scripts/export_taxonomy_change.py docs --field topics --from-value "Old Topic" --to-value "New Topic" --output docs/exports/taxonomy-change-patch.csv
 python3 scripts/export_taxonomy_balance.py docs --format project --max-score 50 --assignee taxonomy-owner --output docs/exports/taxonomy-balance-project.csv
 python3 scripts/export_taxonomy_load.py docs --format csv --signal dense_tags --output docs/exports/taxonomy-load.csv
 python3 scripts/export_taxonomy_load.py docs --format patch --signal sparse_tags --output docs/exports/taxonomy-load-patch.csv

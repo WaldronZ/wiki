@@ -1148,6 +1148,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("python3 scripts/export_cohorts.py docs --format project --action singleton --output docs/exports/cohorts-project.csv", quality_html)
             self.assertIn("python3 scripts/export_cohorts.py docs --format patch --action topic_candidate --field topics --set-value &lt;topic&gt; --list-mode append --output docs/exports/cohorts-topic-patch.csv", quality_html)
             self.assertIn("python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv", quality_html)
+            self.assertIn("python3 scripts/export_taxonomy_change.py docs --field topics --from-value &lt;old&gt; --to-value &lt;new&gt; --output docs/exports/taxonomy-change-patch.csv", quality_html)
             self.assertIn("python3 scripts/export_taxonomy_balance.py docs --format project --max-score 50 --output docs/exports/taxonomy-balance-project.csv", quality_html)
             self.assertIn("python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv", quality_html)
             self.assertIn("python3 scripts/export_batches.py docs --format patch --gap review --field review_stage --set-value due --output docs/exports/batches-review-patch.csv", quality_html)
@@ -2151,6 +2152,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(recipe_by_id["taxonomy_registry_project"]["output"], "docs/exports/taxonomy-registry-project.csv")
             self.assertEqual(recipe_by_id["taxonomy_balance_project"]["output"], "docs/exports/taxonomy-balance-project.csv")
             self.assertEqual(recipe_by_id["taxonomy_actions_patch"]["output"], "docs/exports/taxonomy-action-patch.csv")
+            self.assertEqual(recipe_by_id["taxonomy_change_patch"]["output"], "docs/exports/taxonomy-change-patch.csv")
             self.assertEqual(recipe_by_id["batches_markdown"]["output"], "docs/exports/batches.md")
             self.assertEqual(recipe_by_id["batches_project"]["output"], "docs/exports/batches-project.csv")
             self.assertEqual(recipe_by_id["batches_review_patch"]["output"], "docs/exports/batches-review-patch.csv")
@@ -2565,6 +2567,67 @@ class WikiWorkflowTest(unittest.TestCase):
                 str(taxonomy_patch_path),
             )
             self.assertIn("DRY", taxonomy_patch_apply.stdout)
+
+            taxonomy_change_path = report_dir / "exports" / "taxonomy-change-patch.csv"
+            self.run_cmd(
+                "scripts/export_taxonomy_change.py",
+                str(report_dir),
+                "--field",
+                "topics",
+                "--from-value",
+                "Attention Kernels",
+                "--to-value",
+                "Attention Mechanisms",
+                "--output",
+                str(taxonomy_change_path),
+            )
+            taxonomy_change_rows = list(csv.DictReader(taxonomy_change_path.read_text(encoding="utf-8").splitlines()))
+            self.assertTrue(taxonomy_change_rows)
+            self.assertIn("_list_mode", taxonomy_change_rows[0])
+            self.assertEqual(taxonomy_change_rows[0]["_list_mode"], "replace")
+            self.assertEqual(taxonomy_change_rows[0]["source_field"], "topics")
+            self.assertEqual(taxonomy_change_rows[0]["source_value"], "Attention Kernels")
+            self.assertIn("Attention Mechanisms", taxonomy_change_rows[0]["topics"])
+            taxonomy_change_apply = self.run_cmd(
+                "scripts/apply_library_metadata.py",
+                str(report_dir),
+                "--input",
+                str(taxonomy_change_path),
+            )
+            self.assertIn("DRY", taxonomy_change_apply.stdout)
+
+            status_change_path = report_dir / "exports" / "status-change-patch.csv"
+            self.run_cmd(
+                "scripts/export_taxonomy_change.py",
+                str(report_dir),
+                "--field",
+                "status",
+                "--from-value",
+                "read",
+                "--to-value",
+                "queued",
+                "--output",
+                str(status_change_path),
+            )
+            status_change_rows = list(csv.DictReader(status_change_path.read_text(encoding="utf-8").splitlines()))
+            self.assertTrue(status_change_rows)
+            self.assertNotIn("_list_mode", status_change_rows[0])
+            self.assertEqual(status_change_rows[0]["status"], "queued")
+
+            empty_change = self.run_cmd(
+                "scripts/export_taxonomy_change.py",
+                str(report_dir),
+                "--field",
+                "topics",
+                "--from-value",
+                "Not A Topic",
+                "--to-value",
+                "Still Not A Topic",
+                "--fail-if-empty",
+                check=False,
+            )
+            self.assertNotEqual(empty_change.returncode, 0)
+            self.assertIn("No papers matched", empty_change.stderr)
 
             taxonomy_balance_path = report_dir / "exports" / "taxonomy-balance.md"
             self.run_cmd(

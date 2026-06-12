@@ -5169,6 +5169,14 @@ def command_recipes_manifest() -> list[dict[str, Any]]:
             "mutates": False,
         },
         {
+            "id": "taxonomy_change_patch",
+            "kind": "export",
+            "label": "Export taxonomy value change patch",
+            "command": "python3 scripts/export_taxonomy_change.py docs --field topics --from-value <old> --to-value <new> --output docs/exports/taxonomy-change-patch.csv",
+            "output": "docs/exports/taxonomy-change-patch.csv",
+            "mutates": False,
+        },
+        {
             "id": "taxonomy_registry_markdown",
             "kind": "export",
             "label": "Export taxonomy registry checklist",
@@ -15993,6 +16001,7 @@ def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
         ("导出高优先级 CSV", "python3 scripts/export_taxonomy_actions.py docs --format csv --severity high --output docs/exports/taxonomy-actions.csv"),
         ("导出项目任务", "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"),
         ("导出合并补丁模板", "python3 scripts/export_taxonomy_actions.py docs --format patch --action merge_candidate --output docs/exports/taxonomy-action-patch.csv"),
+        ("导出标签重命名 patch", "python3 scripts/export_taxonomy_change.py docs --field topics --from-value <old> --to-value <new> --output docs/exports/taxonomy-change-patch.csv"),
         ("导出均衡任务", "python3 scripts/export_taxonomy_balance.py docs --format project --max-score 50 --output docs/exports/taxonomy-balance-project.csv"),
         ("导出粒度审计", "python3 scripts/export_taxonomy_load.py docs --format csv --output docs/exports/taxonomy-load.csv"),
         ("导出分类补丁", "python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv"),
