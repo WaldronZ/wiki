@@ -121,6 +121,7 @@ REQUIRED_PAGES = {
     "inbox.html",
     "dedupe.html",
     "registry.html",
+    "curation.html",
     "quality.html",
     "review.html",
     "freshness.html",
@@ -142,6 +143,7 @@ REQUIRED_PAGES = {
     "dedupe.json",
     "registry.json",
     "facets.json",
+    "curation.json",
     "quality.json",
     "review.json",
     "freshness.json",
@@ -581,6 +583,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     papers_path = report_dir / "papers.json"
     search_path = report_dir / "search_index.json"
     quality_path = report_dir / "quality.json"
+    curation_path = report_dir / "curation.json"
     review_path = report_dir / "review.json"
     taxonomy_actions_path = report_dir / "taxonomy_actions.json"
     actions_path = report_dir / "actions.json"
@@ -619,6 +622,9 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         return
     if not quality_path.exists():
         errors.append("missing quality.json")
+        return
+    if not curation_path.exists():
+        errors.append("missing curation.json")
         return
     if not review_path.exists():
         errors.append("missing review.json")
@@ -714,6 +720,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     papers_data = json.loads(papers_path.read_text(encoding="utf-8"))
     search_data = json.loads(search_path.read_text(encoding="utf-8"))
     quality_data = json.loads(quality_path.read_text(encoding="utf-8"))
+    curation_data = json.loads(curation_path.read_text(encoding="utf-8"))
     review_data = json.loads(review_path.read_text(encoding="utf-8"))
     taxonomy_actions_data = json.loads(taxonomy_actions_path.read_text(encoding="utf-8"))
     actions_data = json.loads(actions_path.read_text(encoding="utf-8"))
@@ -800,6 +807,80 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         errors.append(f"quality.json missing keys: {', '.join(missing_quality)}")
     if not isinstance(quality_data.get("taxonomy_drift"), list):
         errors.append("quality.json taxonomy_drift must be a list")
+
+    if curation_data.get("count") != len(report_slugs):
+        errors.append(f"curation.json count {curation_data.get('count')} != markdown report count {len(report_slugs)}")
+    required_curation = {
+        "average_score",
+        "ready_count",
+        "needs_curation_count",
+        "level_counts",
+        "field_gap_counts",
+        "weak_field_counts",
+        "field_contract",
+        "papers",
+        "queues",
+        "recommendations",
+        "commands",
+        "links",
+    }
+    missing_curation = sorted(required_curation - set(curation_data))
+    if missing_curation:
+        errors.append(f"curation.json missing keys: {', '.join(missing_curation)}")
+    curation_items = curation_data.get("papers")
+    if not isinstance(curation_items, list):
+        errors.append("curation.json papers must be a list")
+        curation_items = []
+    curation_slugs = {item.get("slug") for item in curation_items if isinstance(item, dict)}
+    if curation_slugs != report_slugs:
+        errors.append(
+            "curation.json paper slugs do not match markdown reports: "
+            f"missing={sorted(report_slugs - curation_slugs)}, extra={sorted(curation_slugs - report_slugs)}"
+        )
+    valid_curation_levels = {"ready", "usable", "needs_curation", "triage"}
+    for index, item in enumerate(curation_items):
+        if not isinstance(item, dict):
+            errors.append(f"curation.json papers[{index}] must be an object")
+            continue
+        for key in ("slug", "href", "score", "level", "missing_fields", "weak_fields", "field_status", "patch_columns", "actions", "recommendation"):
+            if key not in item:
+                errors.append(f"curation.json papers[{index}] missing {key}")
+        score = item.get("score")
+        if not isinstance(score, int) or isinstance(score, bool) or score < 0 or score > 100:
+            errors.append(f"curation.json papers[{index}].score must be an integer between 0 and 100")
+        if item.get("level") not in valid_curation_levels:
+            errors.append(f"curation.json papers[{index}].level is invalid")
+        if not isinstance(item.get("missing_fields"), list):
+            errors.append(f"curation.json papers[{index}].missing_fields must be a list")
+        if not isinstance(item.get("weak_fields"), list):
+            errors.append(f"curation.json papers[{index}].weak_fields must be a list")
+        if not isinstance(item.get("field_status"), dict):
+            errors.append(f"curation.json papers[{index}].field_status must be an object")
+        patch_columns = item.get("patch_columns")
+        if not isinstance(patch_columns, list):
+            errors.append(f"curation.json papers[{index}].patch_columns must be a list")
+        elif "slug" not in patch_columns:
+            errors.append(f"curation.json papers[{index}].patch_columns must include slug")
+    curation_queues = curation_data.get("queues")
+    if not isinstance(curation_queues, dict):
+        errors.append("curation.json queues must be an object")
+        curation_queues = {}
+    curation_queue_slugs = {
+        slug
+        for value in curation_queues.values()
+        if isinstance(value, list)
+        for slug in value
+    }
+    unknown_curation_slugs = sorted(str(slug) for slug in curation_queue_slugs if slug not in report_slugs)
+    if unknown_curation_slugs:
+        errors.append(f"curation.json queues reference unknown slugs: {unknown_curation_slugs}")
+    if not isinstance(curation_data.get("field_contract"), list) or not curation_data.get("field_contract"):
+        errors.append("curation.json field_contract must be a non-empty list")
+    if not isinstance(curation_data.get("commands"), list):
+        errors.append("curation.json commands must be a list")
+    curation_links = curation_data.get("links")
+    if not isinstance(curation_links, dict) or not {"html", "library", "quality", "facets", "registry", "coverage", "schema"}.issubset(curation_links):
+        errors.append("curation.json links missing required entries")
 
     review_item_slugs = {item.get("slug") for item in review_data.get("items", [])}
     review_queues = review_data.get("queues") or {}
@@ -2213,6 +2294,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         "guides/status.schema.json",
         "guides/views.schema.json",
         "guides/presets.schema.json",
+        "guides/curation.schema.json",
     }
     missing_contract_files = sorted(expected_contract_files - manifest_contract_files)
     if missing_contract_files:
@@ -2717,6 +2799,49 @@ def validate_presets_schema_contract(report_dir: Path, errors: list[str], warnin
     for def_name in ("preset_field", "workflow_compatibility", "preset_fields"):
         if def_name not in defs:
             errors.append(f"guides/presets.schema.json: $defs.{def_name} is required")
+
+
+def validate_curation_schema_contract(report_dir: Path, errors: list[str], warnings: list[str]) -> None:
+    schema_path = report_dir / "guides" / "curation.schema.json"
+    if not schema_path.exists():
+        warnings.append("guides/curation.schema.json missing; external curation schema hints are unavailable")
+        return
+
+    try:
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        errors.append(f"guides/curation.schema.json: invalid JSON: {exc}")
+        return
+
+    if not isinstance(schema, dict):
+        errors.append("guides/curation.schema.json: root must be an object")
+        return
+    if not isinstance(schema.get("$schema"), str) or not schema.get("$schema", "").strip():
+        errors.append("guides/curation.schema.json: $schema must be a non-empty string")
+    if schema.get("type") != "object":
+        errors.append("guides/curation.schema.json: type must be object")
+    properties = schema.get("properties")
+    if not isinstance(properties, dict):
+        errors.append("guides/curation.schema.json: properties must be an object")
+        properties = {}
+    for key in ("field_contract", "papers", "queues", "recommendations", "commands", "links"):
+        if key not in properties:
+            errors.append(f"guides/curation.schema.json: properties.{key} is required")
+    defs = schema.get("$defs")
+    if not isinstance(defs, dict):
+        errors.append("guides/curation.schema.json: $defs must be an object")
+        defs = {}
+    paper_def = defs.get("curation_paper")
+    if not isinstance(paper_def, dict):
+        errors.append("guides/curation.schema.json: $defs.curation_paper is required")
+        return
+    paper_required = set(paper_def.get("required") or [])
+    for key in ("slug", "href", "score", "level", "missing_fields", "weak_fields", "field_status", "patch_columns"):
+        if key not in paper_required:
+            errors.append(f"guides/curation.schema.json: $defs.curation_paper.required missing {key}")
+    for def_name in ("curation_field", "field_status"):
+        if def_name not in defs:
+            errors.append(f"guides/curation.schema.json: $defs.{def_name} is required")
 
 
 def validate_facets_schema_contract(report_dir: Path, errors: list[str], warnings: list[str]) -> None:
@@ -3305,6 +3430,7 @@ def main() -> int:
         validate_status_schema_contract(report_dir, errors, warnings)
         validate_views_schema_contract(report_dir, errors, warnings)
         validate_presets_schema_contract(report_dir, errors, warnings)
+        validate_curation_schema_contract(report_dir, errors, warnings)
         config = validate_taxonomy_config(report_dir, errors, warnings)
         validate_controlled_taxonomy(reports, config, errors, warnings, args.strict_taxonomy)
         validate_inbox_csv(report_dir, inbox_schema, errors, warnings)

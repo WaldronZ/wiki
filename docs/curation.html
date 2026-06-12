@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>研究路线图</title>
+  <title>分类成熟度</title>
   <style>
     :root {
       color-scheme: light;
@@ -350,80 +350,43 @@
       .data-table { display: block; overflow-x: auto; }
       header { padding-top: 28px; }
     }
-.roadmap-layout {
+.curation-summary {
       display: grid;
-      grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
-      gap: 16px;
-      align-items: start;
-    }
-    .roadmap-panel {
-      position: sticky;
-      top: 82px;
-      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
       gap: 12px;
+      margin-bottom: 18px;
+    }
+    .curation-panel {
       border: 1px solid var(--line);
-      border-radius: 8px;
       background: var(--panel);
+      border-radius: 8px;
       padding: 14px;
     }
-    .roadmap-card {
+    .curation-panel h2 { margin: 0 0 8px; font-size: 18px; }
+    .curation-panel strong { display: block; font-size: 30px; line-height: 1.1; }
+    .curation-tools {
       display: grid;
-      gap: 12px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-      padding: 16px;
+      grid-template-columns: minmax(220px, 2fr) minmax(150px, 1fr) minmax(150px, 1fr);
+      gap: 10px;
       margin-bottom: 14px;
     }
-    .roadmap-card header {
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 0;
+    .curation-chips, .command-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .curation-chips .chip { border-radius: 8px; }
+    .score-track {
+      width: 100%;
+      height: 8px;
+      margin-top: 6px;
+      border-radius: 999px;
+      background: #ece4d8;
+      overflow: hidden;
     }
-    .roadmap-card h2 {
-      margin: 0;
-      font-size: 20px;
-      line-height: 1.25;
+    .score-track span {
+      display: block;
+      height: 100%;
+      background: var(--accent);
     }
-    .roadmap-score {
-      min-width: 48px;
-      height: 42px;
-      display: grid;
-      place-items: center;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #edf3f1;
-      color: var(--accent);
-      font-weight: 800;
-    }
-    .roadmap-sections {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 10px;
-    }
-    .roadmap-mini {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 10px;
-      background: color-mix(in srgb, var(--panel) 88%, white);
-    }
-    .roadmap-mini h3 {
-      margin: 0 0 6px;
-      font-size: 14px;
-      line-height: 1.3;
-    }
-    .roadmap-list {
-      margin: 0;
-      padding-left: 18px;
-      color: var(--muted);
-    }
-    .roadmap-list li { margin: 3px 0; }
-    .roadmap-card[hidden] { display: none; }
-    @media (max-width: 920px) {
-      .roadmap-layout { grid-template-columns: 1fr; }
-      .roadmap-panel { position: static; }
-    }
+    .data-table td { vertical-align: top; }
+    @media (max-width: 760px) { .curation-tools { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -440,182 +403,119 @@
 </div>
 
 <header class="shell">
-  <div class="eyebrow">Research Roadmap</div>
-  <h1>研究路线图</h1>
-  <p class="lead">把每条 research line 组织成可执行路线：阶段覆盖、里程碑年份、代表论文、维护风险和下一步行动。适合论文库变大后做季度规划或开源协作分工。</p>
+  <div class="eyebrow">Taxonomy curation</div>
+  <h1>分类成熟度</h1>
+  <p class="lead">按论文逐条检查研究线、结构分类、topic/method、阅读状态和复习计划，把大库治理拆成可执行的补齐队列。</p>
   <div class="stats">
-    <a class="stat" href="roadmap.json">Roadmap JSON</a>
-    <a class="stat" href="lines/index.html">研究线</a>
-    <a class="stat" href="clusters.html">研究簇</a>
-    <a class="stat" href="gaps.html">研究缺口</a>
-    <a class="stat" href="timeline.html">时间轴</a>
-    <a class="stat" href="matrix.html">研究矩阵</a>
-    <a class="stat" href="intake.html">批量导入</a>
+    <a class="stat" href="curation.json">Curation JSON</a>
+    <a class="stat" href="guides/curation.schema.json">Schema</a>
+    <a class="stat" href="quality.html">质量治理</a>
+    <a class="stat" href="facets.html">分类工作台</a>
     <span class="stat">论文 5</span>
-    <span class="stat">研究线 2</span>
-    <span class="stat">行动 6</span>
   </div>
 </header>
 <main class="shell">
-  <section class="roadmap-layout">
-    <aside class="roadmap-panel">
-      <input id="roadmapSearch" type="search" placeholder="搜索研究线、owner、标签、论文">
-      <select id="roadmapRisk"><option value="">全部风险</option><option value="high">high</option><option value="medium">medium</option><option value="low">low</option></select>
-      <select id="roadmapOwner"><option value="">全部 owner</option><option value="decoding-owner">decoding-owner</option><option value="kernel-owner">kernel-owner</option></select>
-      <select id="roadmapRoleGap"><option value="">全部角色覆盖</option><option value="yes">有缺口</option><option value="no">角色完整</option></select>
-      <button class="button" id="downloadRoadmapCsv" type="button">下载路线 CSV</button>
-      <button class="button" id="copyRoadmapMarkdown" type="button">复制 Markdown 路线图</button>
-      <button class="button" id="resetRoadmap" type="button">重置</button>
-      <div class="meta" id="roadmapCount">准备加载路线图</div>
-    </aside>
-    <div>
-      <section>
-        <h2 class="section-title">优先行动</h2>
-        <div class="table-wrap"><table class="data-table"><thead><tr><th>优先级</th><th>研究线</th><th>类型</th><th>行动</th><th>入口</th></tr></thead><tbody><tr><td>67</td><td><a href="library.html?line=Parallel+Decoding+with+Diffusion+Models">Parallel Decoding with Diffusion Models</a></td><td>review_plan</td><td>补复习计划 3 篇</td><td><a href="review.html?line=Parallel+Decoding+with+Diffusion+Models">打开</a></td></tr><tr><td>63</td><td><a href="library.html?line=Efficient+Attention+Kernels">Efficient Attention Kernels</a></td><td>review_plan</td><td>补复习计划 2 篇</td><td><a href="review.html?line=Efficient+Attention+Kernels">打开</a></td></tr><tr><td>50</td><td><a href="library.html?line=Efficient+Attention+Kernels">Efficient Attention Kernels</a></td><td>taxonomy_load</td><td>审分类粒度 1 篇</td><td><a href="quality.html?line=Efficient+Attention+Kernels">打开</a></td></tr><tr><td>50</td><td><a href="library.html?line=Parallel+Decoding+with+Diffusion+Models">Parallel Decoding with Diffusion Models</a></td><td>taxonomy_load</td><td>审分类粒度 1 篇</td><td><a href="quality.html?line=Parallel+Decoding+with+Diffusion+Models">打开</a></td></tr><tr><td>46</td><td><a href="library.html?line=Parallel+Decoding+with+Diffusion+Models">Parallel Decoding with Diffusion Models</a></td><td>role_gap</td><td>补齐角色：baseline, main, system</td><td><a href="library.html?line=Parallel+Decoding+with+Diffusion+Models">打开</a></td></tr><tr><td>32</td><td><a href="library.html?line=Efficient+Attention+Kernels">Efficient Attention Kernels</a></td><td>role_gap</td><td>补齐角色：baseline, main</td><td><a href="library.html?line=Efficient+Attention+Kernels">打开</a></td></tr></tbody></table></div>
-      </section>
-      <section>
-        <h2 class="section-title">研究线路线</h2>
-        <div id="roadmapCards"></div>
-      </section>
+  <section class="curation-summary">
+    <div class="curation-panel"><span class="meta">平均成熟度</span><strong>88.0</strong><span class="meta">0-100</span></div>
+    <div class="curation-panel"><span class="meta">Ready</span><strong>0</strong><span class="meta">可作为展示基线</span></div>
+    <div class="curation-panel"><span class="meta">待治理</span><strong>5</strong><span class="meta">needs curation</span></div>
+    <div class="curation-panel"><h2>建议</h2><ol><li>先处理 score 最低且缺 research_line/domain/track/problem 的论文，它们最影响大库导航。</li><li>对 weak_fields 使用 metadata patch 批量追加 topic/method，避免只有单一标签导致检索入口过窄。</li><li>把 ready 队列作为可开源展示基线，把 triage/needs_curation 队列作为每周治理任务。</li></ol></div>
+  </section>
+  <section class="overview">
+    <h2>字段缺口</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>字段</th><th>缺失</th><th>稀疏</th><th>入口</th></tr></thead><tbody><tr><td><code>next_review</code></td><td>5</td><td>0</td><td><a href="library.html">论文库</a></td></tr><tr><td><code>review_stage</code></td><td>5</td><td>0</td><td><a href="library.html">论文库</a></td></tr></tbody></table></div>
+  </section>
+  <section class="overview">
+    <div class="results-bar"><h2>论文清单</h2><span id="curationCount" class="meta"></span></div>
+    <div class="curation-tools">
+      <input id="curationSearch" type="search" placeholder="搜索标题、slug、研究线、字段">
+      <select id="curationLevel"><option value="">全部成熟度</option><option value="usable">usable (5)</option></select>
+      <select id="curationField"><option value="">全部字段</option><option value="research_line">research_line (0)</option><option value="line_role">line_role (0)</option><option value="domains">domains (0)</option><option value="tracks">tracks (0)</option><option value="problems">problems (0)</option><option value="topics">topics (0)</option><option value="methods">methods (0)</option><option value="status">status (0)</option><option value="reading_stage">reading_stage (0)</option><option value="review_stage">review_stage (5)</option><option value="importance">importance (0)</option><option value="next_review">next_review (5)</option><option value="has_code">has_code (0)</option></select>
     </div>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>论文</th><th>分数</th><th>研究线</th><th>缺失字段</th><th>稀疏字段</th><th>建议</th></tr></thead><tbody id="curationRows"><tr data-level="usable" data-fields="review_stage next_review domains tracks problems" data-search="2307.08691-flashattention-2 flashattention-2: faster attention with better parallelism and work partitioning flashattention-2：用更好的并行性与工作划分加速 attention efficient attention kernels foundation read 补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。 review_stage next_review domains tracks problems">
+  <td><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a><div class="meta">2307.08691-flashattention-2</div></td>
+  <td><strong>88</strong><div class="score-track"><span style="width: 88%"></span></div><div class="meta">usable</div></td>
+  <td>Efficient Attention Kernels<div class="meta">foundation</div></td>
+  <td><div class="curation-chips"><span class="chip">review_stage</span><span class="chip">next_review</span></div></td>
+  <td><div class="curation-chips"><span class="chip">domains</span><span class="chip">tracks</span><span class="chip">problems</span></div></td>
+  <td>补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。<div class="meta">patch: slug, review_stage, next_review, domains, tracks, problems</div></td>
+</tr><tr data-level="usable" data-fields="review_stage next_review domains problems" data-search="2501.01005-flashinfer flashinfer: efficient and customizable attention engine for llm inference serving flashinfer：面向 llm 推理服务的高效可定制 attention 引擎 efficient attention kernels system read 补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。 review_stage next_review domains problems">
+  <td><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a><div class="meta">2501.01005-flashinfer</div></td>
+  <td><strong>88</strong><div class="score-track"><span style="width: 88%"></span></div><div class="meta">usable</div></td>
+  <td>Efficient Attention Kernels<div class="meta">system</div></td>
+  <td><div class="curation-chips"><span class="chip">review_stage</span><span class="chip">next_review</span></div></td>
+  <td><div class="curation-chips"><span class="chip">domains</span><span class="chip">problems</span></div></td>
+  <td>补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。<div class="meta">patch: slug, review_stage, next_review, domains, problems</div></td>
+</tr><tr data-level="usable" data-fields="review_stage next_review domains problems" data-search="2602.06036-dflash dflash: block diffusion for flash speculative decoding dflash：用于快速 speculative decoding 的块扩散方法 parallel decoding with diffusion models followup read 补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。 review_stage next_review domains problems">
+  <td><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a><div class="meta">2602.06036-dflash</div></td>
+  <td><strong>88</strong><div class="score-track"><span style="width: 88%"></span></div><div class="meta">usable</div></td>
+  <td>Parallel Decoding with Diffusion Models<div class="meta">followup</div></td>
+  <td><div class="curation-chips"><span class="chip">review_stage</span><span class="chip">next_review</span></div></td>
+  <td><div class="curation-chips"><span class="chip">domains</span><span class="chip">problems</span></div></td>
+  <td>补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。<div class="meta">patch: slug, review_stage, next_review, domains, problems</div></td>
+</tr><tr data-level="usable" data-fields="review_stage next_review domains problems" data-search="2604.11035-introspective-dlm introspective diffusion language models 内省式扩散语言模型 parallel decoding with diffusion models foundation read 补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。 review_stage next_review domains problems">
+  <td><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a><div class="meta">2604.11035-introspective-dlm</div></td>
+  <td><strong>88</strong><div class="score-track"><span style="width: 88%"></span></div><div class="meta">usable</div></td>
+  <td>Parallel Decoding with Diffusion Models<div class="meta">foundation</div></td>
+  <td><div class="curation-chips"><span class="chip">review_stage</span><span class="chip">next_review</span></div></td>
+  <td><div class="curation-chips"><span class="chip">domains</span><span class="chip">problems</span></div></td>
+  <td>补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。<div class="meta">patch: slug, review_stage, next_review, domains, problems</div></td>
+</tr><tr data-level="usable" data-fields="review_stage next_review domains problems" data-search="2605.12825-orthrus orthrus: memory-efficient parallel token generation via dual-view diffusion orthrus：通过双视角扩散实现内存高效的并行 token 生成 parallel decoding with diffusion models variant read 补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。 review_stage next_review domains problems">
+  <td><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a><div class="meta">2605.12825-orthrus</div></td>
+  <td><strong>88</strong><div class="score-track"><span style="width: 88%"></span></div><div class="meta">usable</div></td>
+  <td>Parallel Decoding with Diffusion Models<div class="meta">variant</div></td>
+  <td><div class="curation-chips"><span class="chip">review_stage</span><span class="chip">next_review</span></div></td>
+  <td><div class="curation-chips"><span class="chip">domains</span><span class="chip">problems</span></div></td>
+  <td>补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。<div class="meta">patch: slug, review_stage, next_review, domains, problems</div></td>
+</tr></tbody></table></div>
+  </section>
+  <section class="overview">
+    <h2>命令</h2>
+    <div class="command-list"><button class="button copy-curation-command" type="button" data-command="python3 scripts/apply_library_metadata.py docs --input &lt;curation_patch.csv&gt;">python3 scripts/apply_library_metadata.py docs --input &lt;curation_patch.csv&gt;</button><button class="button copy-curation-command" type="button" data-command="python3 scripts/apply_library_metadata.py docs --input &lt;curation_patch.csv&gt; --write">python3 scripts/apply_library_metadata.py docs --input &lt;curation_patch.csv&gt; --write</button><button class="button copy-curation-command" type="button" data-command="python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv">python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv</button><button class="button copy-curation-command" type="button" data-command="python3 scripts/build_wiki.py docs">python3 scripts/build_wiki.py docs</button><button class="button copy-curation-command" type="button" data-command="python3 scripts/validate_wiki.py docs --strict-taxonomy">python3 scripts/validate_wiki.py docs --strict-taxonomy</button></div>
   </section>
 </main>
 <script>
-const roadmapPayload = {"generated_at": "2026-06-12T09:00:16", "count": 5, "line_count": 2, "risk_counts": {"medium": 2}, "recommended_roles": ["foundation", "baseline", "main", "system"], "roadmaps": [{"id": "parallel-decoding-with-diffusion-models", "line": "Parallel Decoding with Diffusion Models", "href": "lines/parallel-decoding-with-diffusion-models.html", "library_href": "library.html?line=Parallel+Decoding+with+Diffusion+Models", "count": 3, "owner": "decoding-owner", "team": "generation", "cadence": "biweekly", "risk": "medium", "score": 57, "first_year": 2026, "latest_year": 2026, "year_span": 1, "role_counts": {"foundation": 1, "variant": 1, "followup": 1}, "missing_roles": ["baseline", "main", "system"], "top_topics": [{"name": "Diffusion Language Models", "count": 3}, {"name": "Speculative Decoding", "count": 3}, {"name": "LLM Serving", "count": 2}, {"name": "Parallel Decoding", "count": 2}, {"name": "LLM Inference", "count": 2}, {"name": "LLM", "count": 1}, {"name": "KV Cache", "count": 1}], "top_methods": [{"name": "gated LoRA", "count": 1}, {"name": "introspective consistency", "count": 1}, {"name": "introspective strided decoding", "count": 1}, {"name": "logit-shifted causal training", "count": 1}, {"name": "p/q acceptance", "count": 1}, {"name": "SGLang serving", "count": 1}, {"name": "dual-view attention", "count": 1}, {"name": "forward KL distillation", "count": 1}], "milestones": [{"year": 2026, "count": 3, "roles": {"foundation": 1, "variant": 1, "followup": 1}, "representative_slugs": ["2604.11035-introspective-dlm", "2605.12825-orthrus", "2602.06036-dflash"]}], "representative_papers": [{"slug": "2604.11035-introspective-dlm", "title": "Introspective Diffusion Language Models", "title_zh": "内省式扩散语言模型", "year": 2026, "role": "foundation", "status": "read", "importance": 5, "has_code": true, "topics": ["Diffusion Language Models", "LLM", "LLM Serving", "Parallel Decoding", "Speculative Decoding"], "methods": ["gated LoRA", "introspective consistency", "introspective strided decoding", "logit-shifted causal training", "p/q acceptance", "SGLang serving"], "href": "2604.11035-introspective-dlm.html"}, {"slug": "2605.12825-orthrus", "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion", "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成", "year": 2026, "role": "variant", "status": "read", "importance": 4, "has_code": true, "topics": ["Diffusion Language Models", "KV Cache", "LLM Inference", "Parallel Decoding", "Speculative Decoding"], "methods": ["dual-view attention", "forward KL distillation", "intra-model consensus", "masked diffusion", "shared KV cache"], "href": "2605.12825-orthrus.html"}, {"slug": "2602.06036-dflash", "title": "DFlash: Block Diffusion for Flash Speculative Decoding", "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法", "year": 2026, "role": "followup", "status": "read", "importance": 4, "has_code": true, "topics": ["Diffusion Language Models", "LLM Inference", "LLM Serving", "Speculative Decoding"], "methods": ["block diffusion", "KV injection", "parallel drafting", "Speculative Decoding", "target hidden features"], "href": "2602.06036-dflash.html"}], "queues": {"missing_taxonomy": [], "taxonomy_load": ["2604.11035-introspective-dlm"], "needs_review_plan": ["2604.11035-introspective-dlm", "2605.12825-orthrus", "2602.06036-dflash"], "no_review": ["2604.11035-introspective-dlm", "2605.12825-orthrus", "2602.06036-dflash"], "no_code_observation": []}, "actions": [{"type": "role_gap", "priority": 46, "label": "补齐角色：baseline, main, system", "href": "library.html?line=Parallel+Decoding+with+Diffusion+Models", "slugs": []}, {"type": "review_plan", "priority": 67, "label": "补复习计划 3 篇", "href": "review.html?line=Parallel+Decoding+with+Diffusion+Models", "slugs": ["2604.11035-introspective-dlm", "2605.12825-orthrus", "2602.06036-dflash"]}, {"type": "taxonomy_load", "priority": 50, "label": "审分类粒度 1 篇", "href": "quality.html?line=Parallel+Decoding+with+Diffusion+Models", "slugs": ["2604.11035-introspective-dlm"]}]}, {"id": "efficient-attention-kernels", "line": "Efficient Attention Kernels", "href": "lines/efficient-attention-kernels.html", "library_href": "library.html?line=Efficient+Attention+Kernels", "count": 2, "owner": "kernel-owner", "team": "systems", "cadence": "monthly", "risk": "medium", "score": 70, "first_year": 2023, "latest_year": 2025, "year_span": 3, "role_counts": {"foundation": 1, "system": 1}, "missing_roles": ["baseline", "main"], "top_topics": [{"name": "Efficient Attention", "count": 1}, {"name": "GPU Kernel Optimization", "count": 1}, {"name": "Long Context", "count": 1}, {"name": "Transformer", "count": 1}, {"name": "Attention Kernels", "count": 1}, {"name": "GPU Systems", "count": 1}, {"name": "Inference Optimization", "count": 1}, {"name": "KV Cache", "count": 1}], "top_methods": [{"name": "FlashAttention", "count": 2}, {"name": "CUDA / GPU parallelism", "count": 1}, {"name": "online softmax", "count": 1}, {"name": "tiling", "count": 1}, {"name": "work partitioning", "count": 1}, {"name": "block-sparse attention", "count": 1}, {"name": "composable KV-cache format", "count": 1}, {"name": "CUDA Graph", "count": 1}], "milestones": [{"year": 2023, "count": 1, "roles": {"foundation": 1}, "representative_slugs": ["2307.08691-flashattention-2"]}, {"year": 2025, "count": 1, "roles": {"system": 1}, "representative_slugs": ["2501.01005-flashinfer"]}], "representative_papers": [{"slug": "2307.08691-flashattention-2", "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning", "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention", "year": 2023, "role": "foundation", "status": "read", "importance": 5, "has_code": true, "topics": ["Efficient Attention", "GPU Kernel Optimization", "Long Context", "Transformer"], "methods": ["CUDA / GPU parallelism", "FlashAttention", "online softmax", "tiling", "work partitioning"], "href": "2307.08691-flashattention-2.html"}, {"slug": "2501.01005-flashinfer", "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving", "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎", "year": 2025, "role": "system", "status": "read", "importance": 4, "has_code": true, "topics": ["Attention Kernels", "GPU Systems", "Inference Optimization", "KV Cache", "LLM Serving"], "methods": ["block-sparse attention", "composable KV-cache format", "CUDA Graph", "FlashAttention", "JIT compilation", "load-balanced scheduling"], "href": "2501.01005-flashinfer.html"}], "queues": {"missing_taxonomy": [], "taxonomy_load": ["2501.01005-flashinfer"], "needs_review_plan": ["2307.08691-flashattention-2", "2501.01005-flashinfer"], "no_review": ["2307.08691-flashattention-2", "2501.01005-flashinfer"], "no_code_observation": []}, "actions": [{"type": "role_gap", "priority": 32, "label": "补齐角色：baseline, main", "href": "library.html?line=Efficient+Attention+Kernels", "slugs": []}, {"type": "review_plan", "priority": 63, "label": "补复习计划 2 篇", "href": "review.html?line=Efficient+Attention+Kernels", "slugs": ["2307.08691-flashattention-2", "2501.01005-flashinfer"]}, {"type": "taxonomy_load", "priority": 50, "label": "审分类粒度 1 篇", "href": "quality.html?line=Efficient+Attention+Kernels", "slugs": ["2501.01005-flashinfer"]}]}], "actions": [{"line": "Parallel Decoding with Diffusion Models", "risk": "medium", "score": 57, "type": "review_plan", "priority": 67, "label": "补复习计划 3 篇", "href": "review.html?line=Parallel+Decoding+with+Diffusion+Models", "slugs": ["2604.11035-introspective-dlm", "2605.12825-orthrus", "2602.06036-dflash"]}, {"line": "Efficient Attention Kernels", "risk": "medium", "score": 70, "type": "review_plan", "priority": 63, "label": "补复习计划 2 篇", "href": "review.html?line=Efficient+Attention+Kernels", "slugs": ["2307.08691-flashattention-2", "2501.01005-flashinfer"]}, {"line": "Efficient Attention Kernels", "risk": "medium", "score": 70, "type": "taxonomy_load", "priority": 50, "label": "审分类粒度 1 篇", "href": "quality.html?line=Efficient+Attention+Kernels", "slugs": ["2501.01005-flashinfer"]}, {"line": "Parallel Decoding with Diffusion Models", "risk": "medium", "score": 57, "type": "taxonomy_load", "priority": 50, "label": "审分类粒度 1 篇", "href": "quality.html?line=Parallel+Decoding+with+Diffusion+Models", "slugs": ["2604.11035-introspective-dlm"]}, {"line": "Parallel Decoding with Diffusion Models", "risk": "medium", "score": 57, "type": "role_gap", "priority": 46, "label": "补齐角色：baseline, main, system", "href": "library.html?line=Parallel+Decoding+with+Diffusion+Models", "slugs": []}, {"line": "Efficient Attention Kernels", "risk": "medium", "score": 70, "type": "role_gap", "priority": 32, "label": "补齐角色：baseline, main", "href": "library.html?line=Efficient+Attention+Kernels", "slugs": []}], "links": {"library": "library.html", "lines": "lines/index.html", "clusters": "clusters.html", "gaps": "gaps.html", "timeline": "timeline.html", "matrix": "matrix.html", "intake": "intake.html"}};
-const roadmapSearch = document.querySelector("#roadmapSearch");
-const roadmapRisk = document.querySelector("#roadmapRisk");
-const roadmapOwner = document.querySelector("#roadmapOwner");
-const roadmapRoleGap = document.querySelector("#roadmapRoleGap");
-const roadmapCount = document.querySelector("#roadmapCount");
-const roadmapCards = document.querySelector("#roadmapCards");
+const curationPayload = {"generated_at": "2026-06-12T09:00:16", "count": 5, "average_score": 88.0, "ready_count": 0, "needs_curation_count": 5, "level_counts": {"usable": 5}, "field_gap_counts": {"next_review": 5, "review_stage": 5}, "weak_field_counts": {"domains": 5, "problems": 5, "tracks": 1}, "field_contract": [{"field": "research_line", "label": "研究线", "weight": 15, "kind": "taxonomy", "patch_column": "research_line"}, {"field": "line_role", "label": "研究角色", "weight": 8, "kind": "taxonomy", "patch_column": "line_role"}, {"field": "domains", "label": "Domain", "weight": 8, "kind": "taxonomy_list", "patch_column": "domains"}, {"field": "tracks", "label": "Track", "weight": 8, "kind": "taxonomy_list", "patch_column": "tracks"}, {"field": "problems", "label": "Problem", "weight": 8, "kind": "taxonomy_list", "patch_column": "problems"}, {"field": "topics", "label": "Topic", "weight": 8, "kind": "taxonomy_list", "patch_column": "topics"}, {"field": "methods", "label": "Method", "weight": 8, "kind": "taxonomy_list", "patch_column": "methods"}, {"field": "status", "label": "状态", "weight": 8, "kind": "workflow", "patch_column": "status"}, {"field": "reading_stage", "label": "阅读阶段", "weight": 7, "kind": "workflow", "patch_column": "reading_stage"}, {"field": "review_stage", "label": "复习阶段", "weight": 6, "kind": "workflow", "patch_column": "review_stage"}, {"field": "importance", "label": "重要性", "weight": 5, "kind": "priority", "patch_column": "importance"}, {"field": "next_review", "label": "下次复习", "weight": 6, "kind": "review", "patch_column": "next_review"}, {"field": "has_code", "label": "代码状态", "weight": 5, "kind": "evidence", "patch_column": "has_code"}], "papers": [{"slug": "2307.08691-flashattention-2", "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning", "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention", "href": "2307.08691-flashattention-2.html", "year": 2023, "research_line": "Efficient Attention Kernels", "line_role": "foundation", "status": "read", "reading_stage": "deep_read", "review_stage": "", "importance": 5, "score": 88, "level": "usable", "missing_fields": ["review_stage", "next_review"], "weak_fields": ["domains", "tracks", "problems"], "field_status": {"research_line": {"present": true, "count": 1, "weight": 15}, "line_role": {"present": true, "count": 1, "weight": 8}, "domains": {"present": true, "count": 1, "weight": 8}, "tracks": {"present": true, "count": 1, "weight": 8}, "problems": {"present": true, "count": 1, "weight": 8}, "topics": {"present": true, "count": 4, "weight": 8}, "methods": {"present": true, "count": 5, "weight": 8}, "status": {"present": true, "count": 1, "weight": 8}, "reading_stage": {"present": true, "count": 1, "weight": 7}, "review_stage": {"present": false, "count": 0, "weight": 6}, "importance": {"present": true, "count": 1, "weight": 5}, "next_review": {"present": false, "count": 0, "weight": 6}, "has_code": {"present": true, "count": 1, "weight": 5}}, "patch_columns": ["slug", "review_stage", "next_review", "domains", "tracks", "problems"], "actions": ["补齐缺失 frontmatter 字段", "扩充稀疏 taxonomy 标签", "安排复习日期"], "recommendation": "补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。"}, {"slug": "2501.01005-flashinfer", "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving", "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎", "href": "2501.01005-flashinfer.html", "year": 2025, "research_line": "Efficient Attention Kernels", "line_role": "system", "status": "read", "reading_stage": "deep_read", "review_stage": "", "importance": 4, "score": 88, "level": "usable", "missing_fields": ["review_stage", "next_review"], "weak_fields": ["domains", "problems"], "field_status": {"research_line": {"present": true, "count": 1, "weight": 15}, "line_role": {"present": true, "count": 1, "weight": 8}, "domains": {"present": true, "count": 1, "weight": 8}, "tracks": {"present": true, "count": 2, "weight": 8}, "problems": {"present": true, "count": 1, "weight": 8}, "topics": {"present": true, "count": 5, "weight": 8}, "methods": {"present": true, "count": 6, "weight": 8}, "status": {"present": true, "count": 1, "weight": 8}, "reading_stage": {"present": true, "count": 1, "weight": 7}, "review_stage": {"present": false, "count": 0, "weight": 6}, "importance": {"present": true, "count": 1, "weight": 5}, "next_review": {"present": false, "count": 0, "weight": 6}, "has_code": {"present": true, "count": 1, "weight": 5}}, "patch_columns": ["slug", "review_stage", "next_review", "domains", "problems"], "actions": ["补齐缺失 frontmatter 字段", "扩充稀疏 taxonomy 标签", "安排复习日期"], "recommendation": "补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。"}, {"slug": "2602.06036-dflash", "title": "DFlash: Block Diffusion for Flash Speculative Decoding", "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法", "href": "2602.06036-dflash.html", "year": 2026, "research_line": "Parallel Decoding with Diffusion Models", "line_role": "followup", "status": "read", "reading_stage": "deep_read", "review_stage": "", "importance": 4, "score": 88, "level": "usable", "missing_fields": ["review_stage", "next_review"], "weak_fields": ["domains", "problems"], "field_status": {"research_line": {"present": true, "count": 1, "weight": 15}, "line_role": {"present": true, "count": 1, "weight": 8}, "domains": {"present": true, "count": 1, "weight": 8}, "tracks": {"present": true, "count": 2, "weight": 8}, "problems": {"present": true, "count": 1, "weight": 8}, "topics": {"present": true, "count": 4, "weight": 8}, "methods": {"present": true, "count": 5, "weight": 8}, "status": {"present": true, "count": 1, "weight": 8}, "reading_stage": {"present": true, "count": 1, "weight": 7}, "review_stage": {"present": false, "count": 0, "weight": 6}, "importance": {"present": true, "count": 1, "weight": 5}, "next_review": {"present": false, "count": 0, "weight": 6}, "has_code": {"present": true, "count": 1, "weight": 5}}, "patch_columns": ["slug", "review_stage", "next_review", "domains", "problems"], "actions": ["补齐缺失 frontmatter 字段", "扩充稀疏 taxonomy 标签", "安排复习日期"], "recommendation": "补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。"}, {"slug": "2604.11035-introspective-dlm", "title": "Introspective Diffusion Language Models", "title_zh": "内省式扩散语言模型", "href": "2604.11035-introspective-dlm.html", "year": 2026, "research_line": "Parallel Decoding with Diffusion Models", "line_role": "foundation", "status": "read", "reading_stage": "deep_read", "review_stage": "", "importance": 5, "score": 88, "level": "usable", "missing_fields": ["review_stage", "next_review"], "weak_fields": ["domains", "problems"], "field_status": {"research_line": {"present": true, "count": 1, "weight": 15}, "line_role": {"present": true, "count": 1, "weight": 8}, "domains": {"present": true, "count": 1, "weight": 8}, "tracks": {"present": true, "count": 2, "weight": 8}, "problems": {"present": true, "count": 1, "weight": 8}, "topics": {"present": true, "count": 5, "weight": 8}, "methods": {"present": true, "count": 6, "weight": 8}, "status": {"present": true, "count": 1, "weight": 8}, "reading_stage": {"present": true, "count": 1, "weight": 7}, "review_stage": {"present": false, "count": 0, "weight": 6}, "importance": {"present": true, "count": 1, "weight": 5}, "next_review": {"present": false, "count": 0, "weight": 6}, "has_code": {"present": true, "count": 1, "weight": 5}}, "patch_columns": ["slug", "review_stage", "next_review", "domains", "problems"], "actions": ["补齐缺失 frontmatter 字段", "扩充稀疏 taxonomy 标签", "安排复习日期"], "recommendation": "补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。"}, {"slug": "2605.12825-orthrus", "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion", "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成", "href": "2605.12825-orthrus.html", "year": 2026, "research_line": "Parallel Decoding with Diffusion Models", "line_role": "variant", "status": "read", "reading_stage": "deep_read", "review_stage": "", "importance": 4, "score": 88, "level": "usable", "missing_fields": ["review_stage", "next_review"], "weak_fields": ["domains", "problems"], "field_status": {"research_line": {"present": true, "count": 1, "weight": 15}, "line_role": {"present": true, "count": 1, "weight": 8}, "domains": {"present": true, "count": 1, "weight": 8}, "tracks": {"present": true, "count": 2, "weight": 8}, "problems": {"present": true, "count": 1, "weight": 8}, "topics": {"present": true, "count": 5, "weight": 8}, "methods": {"present": true, "count": 5, "weight": 8}, "status": {"present": true, "count": 1, "weight": 8}, "reading_stage": {"present": true, "count": 1, "weight": 7}, "review_stage": {"present": false, "count": 0, "weight": 6}, "importance": {"present": true, "count": 1, "weight": 5}, "next_review": {"present": false, "count": 0, "weight": 6}, "has_code": {"present": true, "count": 1, "weight": 5}}, "patch_columns": ["slug", "review_stage", "next_review", "domains", "problems"], "actions": ["补齐缺失 frontmatter 字段", "扩充稀疏 taxonomy 标签", "安排复习日期"], "recommendation": "补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。"}], "queues": {"triage": [], "needs_curation": [], "missing_research_line": [], "missing_taxonomy": [], "missing_review": ["2307.08691-flashattention-2", "2501.01005-flashinfer", "2602.06036-dflash", "2604.11035-introspective-dlm", "2605.12825-orthrus"], "ready": []}, "recommendations": ["先处理 score 最低且缺 research_line/domain/track/problem 的论文，它们最影响大库导航。", "对 weak_fields 使用 metadata patch 批量追加 topic/method，避免只有单一标签导致检索入口过窄。", "把 ready 队列作为可开源展示基线，把 triage/needs_curation 队列作为每周治理任务。"], "commands": ["python3 scripts/apply_library_metadata.py docs --input <curation_patch.csv>", "python3 scripts/apply_library_metadata.py docs --input <curation_patch.csv> --write", "python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv", "python3 scripts/build_wiki.py docs", "python3 scripts/validate_wiki.py docs --strict-taxonomy"], "links": {"html": "curation.html", "library": "library.html", "quality": "quality.html", "facets": "facets.html", "registry": "registry.html", "coverage": "coverage.html", "schema": "guides/curation.schema.json"}};
+const curationRows = Array.from(document.querySelectorAll("#curationRows tr"));
+const curationSearch = document.querySelector("#curationSearch");
+const curationLevel = document.querySelector("#curationLevel");
+const curationField = document.querySelector("#curationField");
+const curationCount = document.querySelector("#curationCount");
 
-function roadmapEscape(value) {
-  return String(value ?? "").replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char]));
+function renderCurationRows() {
+  const query = (curationSearch.value || "").trim().toLowerCase();
+  const level = curationLevel.value || "";
+  const field = curationField.value || "";
+  let visible = 0;
+  curationRows.forEach(row => {
+    const matches = (!query || (row.dataset.search || "").includes(query))
+      && (!level || row.dataset.level === level)
+      && (!field || (` ${row.dataset.fields || ""} `).includes(` ${field} `));
+    row.hidden = !matches;
+    if (matches) visible += 1;
+  });
+  curationCount.textContent = `${visible} / ${curationRows.length}`;
 }
 
-function roadmapCsvCell(value) {
-  const text = String(value ?? "");
-  return (text.includes(",") || text.includes('"') || text.includes("\n"))
-    ? `"${text.replaceAll('"', '""')}"`
-    : text;
-}
-
-function roadmapSearchText(item) {
-  return [
-    item.line,
-    item.owner,
-    item.team,
-    item.cadence,
-    ...(item.missing_roles || []),
-    ...(item.top_topics || []).map(topic => topic.name),
-    ...(item.top_methods || []).map(method => method.name),
-    ...(item.representative_papers || []).flatMap(paper => [paper.slug, paper.title, paper.title_zh]),
-    ...(item.actions || []).map(action => action.label),
-  ].join(" ").toLowerCase();
-}
-
-function filteredRoadmaps() {
-  const q = roadmapSearch.value.trim().toLowerCase();
-  return (roadmapPayload.roadmaps || []).filter(item => (
-    (!q || roadmapSearchText(item).includes(q))
-    && (!roadmapRisk.value || item.risk === roadmapRisk.value)
-    && (!roadmapOwner.value || item.owner === roadmapOwner.value)
-    && (!roadmapRoleGap.value || (roadmapRoleGap.value === "yes" ? (item.missing_roles || []).length : !(item.missing_roles || []).length))
-  ));
-}
-
-function chips(values) {
-  return (values || []).map(value => `<span class="chip">${roadmapEscape(value)}</span>`).join("");
-}
-
-function countChips(values) {
-  return (values || []).map(item => `<span class="chip">${roadmapEscape(item.name)} ${item.count}</span>`).join("");
-}
-
-function renderRoadmapCards() {
-  const items = filteredRoadmaps();
-  roadmapCount.textContent = `显示 ${items.length} / ${roadmapPayload.line_count} 条研究线`;
-  roadmapCards.innerHTML = items.map(item => {
-    const milestones = (item.milestones || []).map(milestone => `${milestone.year}:${milestone.count}`).join(" · ") || "-";
-    const papers = (item.representative_papers || []).map(paper => `<li><a href="${roadmapEscape(paper.href)}">${roadmapEscape(paper.title_zh || paper.title || paper.slug)}</a> <span class="meta">${roadmapEscape(paper.role)} · ${roadmapEscape(paper.year)}</span></li>`).join("") || '<li class="meta">暂无代表论文。</li>';
-    const actions = (item.actions || []).slice(0, 5).map(action => `<li><a href="${roadmapEscape(action.href)}">${roadmapEscape(action.label)}</a></li>`).join("");
-    return `<article class="roadmap-card" data-risk="${roadmapEscape(item.risk)}">
-      <header>
-        <div>
-          <h2><a href="${roadmapEscape(item.href)}">${roadmapEscape(item.line)}</a></h2>
-          <div class="meta">${roadmapEscape(item.owner || "unassigned")}${item.team ? " · " + roadmapEscape(item.team) : ""}${item.cadence ? " · " + roadmapEscape(item.cadence) : ""}</div>
-        </div>
-        <div class="roadmap-score">${item.score}</div>
-      </header>
-      <div class="card-flags"><span class="flag">${roadmapEscape(item.risk)}</span><span class="flag">${item.count} 篇</span><span class="flag">${roadmapEscape(item.first_year || "-")}-${roadmapEscape(item.latest_year || "-")}</span></div>
-      <div class="roadmap-sections">
-        <section class="roadmap-mini"><h3>角色覆盖</h3><div class="chips">${chips(Object.entries(item.role_counts || {}).map(([role, count]) => `${role} ${count}`))}</div><div class="meta">缺口：${(item.missing_roles || []).join(", ") || "-"}</div></section>
-        <section class="roadmap-mini"><h3>里程碑</h3><div class="meta">${roadmapEscape(milestones)}</div></section>
-        <section class="roadmap-mini"><h3>Top Topics</h3><div class="chips">${countChips(item.top_topics)}</div></section>
-        <section class="roadmap-mini"><h3>Top Methods</h3><div class="chips">${countChips(item.top_methods)}</div></section>
-      </div>
-      <div class="roadmap-sections">
-        <section class="roadmap-mini"><h3>代表论文</h3><ol class="roadmap-list">${papers}</ol></section>
-        <section class="roadmap-mini"><h3>下一步</h3><ol class="roadmap-list">${actions || '<li class="meta">保持观察。</li>'}</ol></section>
-      </div>
-    </article>`;
-  }).join("") || '<div class="empty">没有匹配路线。</div>';
-}
-
-function roadmapsToCsv(items) {
-  const header = ["line", "owner", "team", "risk", "score", "count", "first_year", "latest_year", "missing_roles", "top_action"];
-  return [header, ...items.map(item => [
-    item.line,
-    item.owner,
-    item.team,
-    item.risk,
-    item.score,
-    item.count,
-    item.first_year || "",
-    item.latest_year || "",
-    (item.missing_roles || []).join(";"),
-    ((item.actions || [])[0] || {}).label || "",
-  ])].map(row => row.map(roadmapCsvCell).join(",")).join("\n") + "\n";
-}
-
-function markdownPlan(items) {
-  return items.map(item => {
-    const actions = (item.actions || []).slice(0, 5).map(action => `- [ ] ${action.label}`).join("\n");
-    return `## ${item.line}\n- Owner: ${item.owner || "unassigned"}\n- Risk: ${item.risk} / score ${item.score}\n- Papers: ${item.count}\n- Missing roles: ${(item.missing_roles || []).join(", ") || "-"}\n${actions}`;
-  }).join("\n\n");
-}
-
-function downloadText(filename, text, type) {
-  const blob = new Blob([text], { type });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = filename;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  URL.revokeObjectURL(url);
-}
-
-async function copyText(text, fallbackTitle) {
+async function copyCurationCommand(value, fallbackTitle) {
   try {
-    await navigator.clipboard.writeText(text);
-  } catch {
-    window.prompt(fallbackTitle, text);
+    await navigator.clipboard.writeText(value);
+  } catch (error) {
+    window.prompt(fallbackTitle, value);
   }
 }
 
-[roadmapSearch, roadmapRisk, roadmapOwner, roadmapRoleGap].forEach(control => control.addEventListener("input", renderRoadmapCards));
-document.querySelector("#downloadRoadmapCsv").addEventListener("click", () => downloadText("research_roadmap.csv", roadmapsToCsv(filteredRoadmaps()), "text/csv;charset=utf-8"));
-document.querySelector("#copyRoadmapMarkdown").addEventListener("click", () => copyText(markdownPlan(filteredRoadmaps()), "复制 Markdown 路线图"));
-document.querySelector("#resetRoadmap").addEventListener("click", () => {
-  roadmapSearch.value = "";
-  roadmapRisk.value = "";
-  roadmapOwner.value = "";
-  roadmapRoleGap.value = "";
-  renderRoadmapCards();
+document.querySelectorAll(".copy-curation-command").forEach(button => {
+  button.dataset.label = button.textContent;
+  button.addEventListener("click", async () => {
+    await copyCurationCommand(button.dataset.command || "", "复制命令");
+    button.textContent = "已复制";
+    setTimeout(() => button.textContent = button.dataset.label, 1200);
+  });
 });
-renderRoadmapCards();
+
+[curationSearch, curationLevel, curationField].forEach(control => control.addEventListener("input", renderCurationRows));
+renderCurationRows();
 </script>
 
 <script>

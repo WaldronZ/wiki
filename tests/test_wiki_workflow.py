@@ -288,6 +288,10 @@ class WikiWorkflowTest(unittest.TestCase):
             (ROOT / "docs" / "guides" / "presets.schema.json").read_text(encoding="utf-8"),
             encoding="utf-8",
         )
+        (guides_dir / "curation.schema.json").write_text(
+            (ROOT / "docs" / "guides" / "curation.schema.json").read_text(encoding="utf-8"),
+            encoding="utf-8",
+        )
         for slug, text in {
             "2601.00001-alpha-paper": REPORT_A,
             "2501.00002-beta-paper": REPORT_B,
@@ -336,6 +340,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "inbox.html",
                 "dedupe.html",
                 "registry.html",
+                "curation.html",
                 "quality.html",
                 "review.html",
                 "freshness.html",
@@ -386,6 +391,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "dedupe.json",
                 "registry.json",
                 "facets.json",
+                "curation.json",
                 "snapshot.json",
                 "manifest.json",
                 "lines/index.html",
@@ -458,6 +464,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn('"href": "intake.html"', index_html)
             self.assertIn('"href": "dedupe.html"', index_html)
             self.assertIn('"href": "registry.html"', index_html)
+            self.assertIn('"href": "curation.html"', index_html)
             self.assertIn('"href": "balance.html"', index_html)
             self.assertIn('"href": "coverage.html"', index_html)
             self.assertIn("Data: manifest.json", index_html)
@@ -478,6 +485,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("Data: intake.json", index_html)
             self.assertIn("Data: dedupe.json", index_html)
             self.assertIn("Data: registry.json", index_html)
+            self.assertIn("Data: curation.json", index_html)
             self.assertIn("Data: snapshot.json", index_html)
             self.assertIn('"href": "snapshot.html"', index_html)
             self.assertIn("Command: Export taxonomy balance project tasks", index_html)
@@ -904,12 +912,14 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("dedupe.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("registry.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("facets.json", {item["href"] for item in catalog["data_resources"]})
+            self.assertIn("curation.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("status.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("views.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("presets.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("intake.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("dedupe.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("registry.html", {item["href"] for item in catalog["pages"]})
+            self.assertIn("curation.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("command.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("roadmap.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("index.html", {item["href"] for item in catalog["pages"]})
@@ -1005,6 +1015,26 @@ class WikiWorkflowTest(unittest.TestCase):
             facets_html = (report_dir / "facets.html").read_text(encoding="utf-8")
             self.assertIn("Facets JSON", facets_html)
             self.assertIn("facets.json", facets_html)
+            curation = json.loads((report_dir / "curation.json").read_text(encoding="utf-8"))
+            self.assertEqual(curation["count"], 2)
+            self.assertEqual({item["slug"] for item in curation["papers"]}, {"2601.00001-alpha-paper", "2501.00002-beta-paper"})
+            self.assertIn("average_score", curation)
+            self.assertIn("needs_curation", curation["queues"])
+            self.assertIn("missing_review", curation["queues"])
+            self.assertIn("research_line", {item["field"] for item in curation["field_contract"]})
+            alpha_curation = next(item for item in curation["papers"] if item["slug"] == "2601.00001-alpha-paper")
+            self.assertIn(alpha_curation["level"], {"ready", "usable", "needs_curation", "triage"})
+            self.assertIn("slug", alpha_curation["patch_columns"])
+            self.assertIn("field_status", alpha_curation)
+            self.assertTrue(any("apply_library_metadata.py" in command for command in curation["commands"]))
+            curation_html = (report_dir / "curation.html").read_text(encoding="utf-8")
+            self.assertIn("分类成熟度", curation_html)
+            self.assertIn("Curation JSON", curation_html)
+            self.assertIn('id="curationSearch"', curation_html)
+            self.assertIn('id="curationLevel"', curation_html)
+            self.assertIn('id="curationField"', curation_html)
+            self.assertIn("function renderCurationRows", curation_html)
+            self.assertIn("curation_patch.csv", curation_html)
             quality = json.loads((report_dir / "quality.json").read_text(encoding="utf-8"))
             self.assertIn("taxonomy_drift", quality)
             self.assertEqual(quality["taxonomy_drift"], [])
@@ -1598,6 +1628,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("intake.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("dedupe.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("registry.html", {item["href"] for item in manifest["pages"]})
+            self.assertIn("curation.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("actions.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("freshness.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("balance.html", {item["href"] for item in manifest["pages"]})
@@ -1629,6 +1660,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("dedupe.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("registry.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("facets.json", {item["href"] for item in manifest["data_files"]})
+            self.assertIn("curation.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("freshness.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("manifest.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("guides/report.template.md", {item["href"] for item in manifest["contract_files"]})
@@ -1645,6 +1677,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("guides/status.schema.json", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/views.schema.json", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/presets.schema.json", {item["href"] for item in manifest["contract_files"]})
+            self.assertIn("guides/curation.schema.json", {item["href"] for item in manifest["contract_files"]})
             artifact_by_href = {item["href"]: item for item in manifest["artifact_inventory"]}
             self.assertEqual(artifact_by_href["index.html"]["status"], "ok")
             self.assertEqual(artifact_by_href["command.html"]["status"], "ok")
@@ -1665,6 +1698,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(artifact_by_href["guides/status.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/views.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/presets.schema.json"]["kind"], "contract")
+            self.assertEqual(artifact_by_href["guides/curation.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["workflow.html"]["status"], "ok")
             self.assertRegex(artifact_by_href["workflow.html"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["workflow.json"]["status"], "ok")
@@ -1681,6 +1715,10 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertRegex(artifact_by_href["presets.html"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["presets.json"]["status"], "ok")
             self.assertRegex(artifact_by_href["presets.json"]["sha256"], r"^[0-9a-f]{64}$")
+            self.assertEqual(artifact_by_href["curation.html"]["status"], "ok")
+            self.assertRegex(artifact_by_href["curation.html"]["sha256"], r"^[0-9a-f]{64}$")
+            self.assertEqual(artifact_by_href["curation.json"]["status"], "ok")
+            self.assertRegex(artifact_by_href["curation.json"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["batch.html"]["status"], "ok")
             self.assertRegex(artifact_by_href["batch.html"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["batch.json"]["status"], "ok")
@@ -2867,6 +2905,21 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("guides/presets.schema.json: properties.presets is required", result.stderr)
             self.assertIn("guides/presets.schema.json: $defs must be an object", result.stderr)
+
+    def test_invalid_curation_schema_fails_validation(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_name:
+            report_dir = self.make_report_dir(Path(tmp_name))
+            self.run_cmd("scripts/build_wiki.py", str(report_dir))
+
+            (report_dir / "guides" / "curation.schema.json").write_text(
+                json.dumps({"$schema": "https://json-schema.org/draft/2020-12/schema", "type": "object", "properties": {}}),
+                encoding="utf-8",
+            )
+            result = self.run_cmd("scripts/validate_wiki.py", str(report_dir), check=False)
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("guides/curation.schema.json: properties.papers is required", result.stderr)
+            self.assertIn("guides/curation.schema.json: $defs must be an object", result.stderr)
 
     def test_invalid_facets_schema_fails_validation(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_name:

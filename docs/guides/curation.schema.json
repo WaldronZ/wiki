@@ -1,0 +1,251 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/autopaperreader/curation.schema.json",
+  "title": "AutoPaperReader Taxonomy Curation Maturity",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "generated_at",
+    "count",
+    "average_score",
+    "ready_count",
+    "needs_curation_count",
+    "level_counts",
+    "field_gap_counts",
+    "weak_field_counts",
+    "field_contract",
+    "papers",
+    "queues",
+    "recommendations",
+    "commands",
+    "links"
+  ],
+  "properties": {
+    "generated_at": {
+      "type": "string",
+      "description": "ISO timestamp when the curation payload was generated."
+    },
+    "count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of reports represented by the wiki."
+    },
+    "average_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "ready_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "needs_curation_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "level_counts": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "field_gap_counts": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "weak_field_counts": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "field_contract": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/curation_field"
+      }
+    },
+    "papers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/curation_paper"
+      }
+    },
+    "queues": {
+      "type": "object",
+      "required": [
+        "triage",
+        "needs_curation",
+        "missing_research_line",
+        "missing_taxonomy",
+        "missing_review",
+        "ready"
+      ],
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "recommendations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "commands": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "links": {
+      "type": "object",
+      "required": [
+        "html",
+        "library",
+        "quality",
+        "facets",
+        "registry",
+        "coverage",
+        "schema"
+      ],
+      "properties": {
+        "html": { "type": "string" },
+        "library": { "type": "string" },
+        "quality": { "type": "string" },
+        "facets": { "type": "string" },
+        "registry": { "type": "string" },
+        "coverage": { "type": "string" },
+        "schema": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "curation_field": {
+      "type": "object",
+      "required": [
+        "field",
+        "label",
+        "weight",
+        "kind",
+        "patch_column"
+      ],
+      "properties": {
+        "field": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "weight": { "type": "integer", "minimum": 0 },
+        "kind": { "type": "string", "minLength": 1 },
+        "patch_column": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": true
+    },
+    "field_status": {
+      "type": "object",
+      "required": [
+        "present",
+        "count",
+        "weight"
+      ],
+      "properties": {
+        "present": { "type": "boolean" },
+        "count": { "type": "integer", "minimum": 0 },
+        "weight": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": true
+    },
+    "curation_paper": {
+      "type": "object",
+      "required": [
+        "slug",
+        "title",
+        "href",
+        "research_line",
+        "score",
+        "level",
+        "missing_fields",
+        "weak_fields",
+        "field_status",
+        "patch_columns",
+        "actions",
+        "recommendation"
+      ],
+      "properties": {
+        "slug": { "type": "string", "minLength": 1 },
+        "title": { "type": "string" },
+        "title_zh": { "type": "string" },
+        "href": { "type": "string" },
+        "year": {
+          "type": [
+            "integer",
+            "string"
+          ]
+        },
+        "research_line": { "type": "string" },
+        "line_role": { "type": "string" },
+        "status": { "type": "string" },
+        "reading_stage": { "type": "string" },
+        "review_stage": { "type": "string" },
+        "importance": {
+          "type": [
+            "integer",
+            "string"
+          ]
+        },
+        "score": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "level": {
+          "type": "string",
+          "enum": [
+            "ready",
+            "usable",
+            "needs_curation",
+            "triage"
+          ]
+        },
+        "missing_fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "weak_fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "field_status": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/field_status"
+          }
+        },
+        "patch_columns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "recommendation": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  }
+}

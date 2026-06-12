@@ -36,6 +36,7 @@ GENERATED_FIXED_PATHS = (
     "registry.json",
     "facets.json",
     "quality.json",
+    "curation.json",
     "review.json",
     "freshness.json",
     "taxonomy_actions.json",
@@ -84,6 +85,7 @@ GENERATED_FIXED_PATHS = (
     "dedupe.html",
     "registry.html",
     "quality.html",
+    "curation.html",
     "review.html",
     "freshness.html",
     "dashboard.html",
@@ -1823,6 +1825,189 @@ def write_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
 def write_quality_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     payload = build_quality_report(papers)
     (report_dir / "quality.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
+CURATION_FIELDS: list[dict[str, Any]] = [
+    {"field": "research_line", "label": "研究线", "weight": 15, "kind": "taxonomy", "patch_column": "research_line"},
+    {"field": "line_role", "label": "研究角色", "weight": 8, "kind": "taxonomy", "patch_column": "line_role"},
+    {"field": "domains", "label": "Domain", "weight": 8, "kind": "taxonomy_list", "patch_column": "domains"},
+    {"field": "tracks", "label": "Track", "weight": 8, "kind": "taxonomy_list", "patch_column": "tracks"},
+    {"field": "problems", "label": "Problem", "weight": 8, "kind": "taxonomy_list", "patch_column": "problems"},
+    {"field": "topics", "label": "Topic", "weight": 8, "kind": "taxonomy_list", "patch_column": "topics"},
+    {"field": "methods", "label": "Method", "weight": 8, "kind": "taxonomy_list", "patch_column": "methods"},
+    {"field": "status", "label": "状态", "weight": 8, "kind": "workflow", "patch_column": "status"},
+    {"field": "reading_stage", "label": "阅读阶段", "weight": 7, "kind": "workflow", "patch_column": "reading_stage"},
+    {"field": "review_stage", "label": "复习阶段", "weight": 6, "kind": "workflow", "patch_column": "review_stage"},
+    {"field": "importance", "label": "重要性", "weight": 5, "kind": "priority", "patch_column": "importance"},
+    {"field": "next_review", "label": "下次复习", "weight": 6, "kind": "review", "patch_column": "next_review"},
+    {"field": "has_code", "label": "代码状态", "weight": 5, "kind": "evidence", "patch_column": "has_code"},
+]
+CURATION_LIST_FIELDS = {"domains", "tracks", "problems", "topics", "methods"}
+
+
+def curation_field_present(paper: dict[str, Any], field: str) -> bool:
+    value = paper.get(field)
+    if field == "research_line":
+        return bool(str(value or "").strip()) and str(value or "").strip() != "Unassigned"
+    if field == "has_code":
+        return bool(value)
+    if isinstance(value, list):
+        return any(str(item or "").strip() for item in value)
+    if isinstance(value, (int, float)):
+        return bool(value)
+    return bool(str(value or "").strip())
+
+
+def curation_level(score: int) -> str:
+    if score >= 90:
+        return "ready"
+    if score >= 75:
+        return "usable"
+    if score >= 55:
+        return "needs_curation"
+    return "triage"
+
+
+def curation_recommendation(level: str, missing_fields: list[str], weak_fields: list[str]) -> str:
+    if level == "ready":
+        return "分类和状态元数据已足够用于检索、批量管理和开源展示。"
+    if any(field in missing_fields for field in ("research_line", "domains", "tracks", "problems")):
+        return "优先补齐研究线与结构分类，让论文进入正确的长期知识架构。"
+    if any(field in missing_fields for field in ("topics", "methods")) or weak_fields:
+        return "补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。"
+    if any(field in missing_fields for field in ("status", "reading_stage", "review_stage", "next_review")):
+        return "补齐阅读状态与复习字段，方便后续批量调度。"
+    return "检查低分字段并用 metadata patch 批量补齐。"
+
+
+def curation_paper_item(paper: dict[str, Any]) -> dict[str, Any]:
+    score = 0
+    missing_fields: list[str] = []
+    weak_fields: list[str] = []
+    field_status: dict[str, dict[str, Any]] = {}
+    for spec in CURATION_FIELDS:
+        field = str(spec["field"])
+        present = curation_field_present(paper, field)
+        if present:
+            score += int(spec["weight"])
+        else:
+            missing_fields.append(field)
+        value = paper.get(field)
+        count = len(value) if isinstance(value, list) else (1 if present else 0)
+        if field in CURATION_LIST_FIELDS and 0 < count < 2:
+            weak_fields.append(field)
+        field_status[field] = {
+            "present": present,
+            "count": count,
+            "weight": int(spec["weight"]),
+        }
+    score = min(score, 100)
+    level = curation_level(score)
+    patch_columns = ["slug"]
+    for field in missing_fields + weak_fields:
+        spec = next((item for item in CURATION_FIELDS if item["field"] == field), {})
+        column = str(spec.get("patch_column") or field)
+        if column not in patch_columns:
+            patch_columns.append(column)
+    actions = []
+    if missing_fields:
+        actions.append("补齐缺失 frontmatter 字段")
+    if weak_fields:
+        actions.append("扩充稀疏 taxonomy 标签")
+    if "next_review" in missing_fields:
+        actions.append("安排复习日期")
+    if "has_code" in missing_fields:
+        actions.append("补充代码实现观察或标记无代码")
+    return {
+        "slug": paper["slug"],
+        "title": paper.get("title") or "",
+        "title_zh": paper.get("title_zh") or "",
+        "href": paper_href(paper),
+        "year": paper.get("year") or "",
+        "research_line": paper.get("research_line") or "Unassigned",
+        "line_role": paper.get("line_role") or "",
+        "status": paper.get("status") or "",
+        "reading_stage": paper.get("reading_stage") or "",
+        "review_stage": paper.get("review_stage") or "",
+        "importance": paper.get("importance") or "",
+        "score": score,
+        "level": level,
+        "missing_fields": missing_fields,
+        "weak_fields": weak_fields,
+        "field_status": field_status,
+        "patch_columns": patch_columns,
+        "actions": actions,
+        "recommendation": curation_recommendation(level, missing_fields, weak_fields),
+    }
+
+
+def build_curation_payload(papers: list[dict[str, Any]]) -> dict[str, Any]:
+    items = sorted(
+        [curation_paper_item(paper) for paper in papers],
+        key=lambda item: (int(item["score"]), str(item["research_line"]).lower(), str(item["title"]).lower()),
+    )
+    level_counts = Counter(str(item["level"]) for item in items)
+    field_gap_counts: Counter[str] = Counter()
+    weak_field_counts: Counter[str] = Counter()
+    for item in items:
+        field_gap_counts.update(str(field) for field in item["missing_fields"])
+        weak_field_counts.update(str(field) for field in item["weak_fields"])
+    total = len(items)
+    ready_count = level_counts.get("ready", 0)
+    needs_curation = total - ready_count
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": total,
+        "average_score": round(sum(int(item["score"]) for item in items) / total, 1) if total else 100,
+        "ready_count": ready_count,
+        "needs_curation_count": needs_curation,
+        "level_counts": dict(sorted(level_counts.items())),
+        "field_gap_counts": dict(sorted(field_gap_counts.items())),
+        "weak_field_counts": dict(sorted(weak_field_counts.items())),
+        "field_contract": CURATION_FIELDS,
+        "papers": items,
+        "queues": {
+            "triage": [item["slug"] for item in items if item["level"] == "triage"],
+            "needs_curation": [item["slug"] for item in items if item["level"] in {"triage", "needs_curation"}],
+            "missing_research_line": [item["slug"] for item in items if "research_line" in item["missing_fields"]],
+            "missing_taxonomy": [
+                item["slug"]
+                for item in items
+                if any(field in item["missing_fields"] for field in ("domains", "tracks", "problems", "topics", "methods"))
+            ],
+            "missing_review": [item["slug"] for item in items if "next_review" in item["missing_fields"]],
+            "ready": [item["slug"] for item in items if item["level"] == "ready"],
+        },
+        "recommendations": [
+            "先处理 score 最低且缺 research_line/domain/track/problem 的论文，它们最影响大库导航。",
+            "对 weak_fields 使用 metadata patch 批量追加 topic/method，避免只有单一标签导致检索入口过窄。",
+            "把 ready 队列作为可开源展示基线，把 triage/needs_curation 队列作为每周治理任务。",
+        ],
+        "commands": [
+            "python3 scripts/apply_library_metadata.py docs --input <curation_patch.csv>",
+            "python3 scripts/apply_library_metadata.py docs --input <curation_patch.csv> --write",
+            "python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv",
+            "python3 scripts/build_wiki.py docs",
+            "python3 scripts/validate_wiki.py docs --strict-taxonomy",
+        ],
+        "links": {
+            "html": "curation.html",
+            "library": "library.html",
+            "quality": "quality.html",
+            "facets": "facets.html",
+            "registry": "registry.html",
+            "coverage": "coverage.html",
+            "schema": "guides/curation.schema.json",
+        },
+    }
+
+
+def write_curation_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_curation_payload(papers)
+    (report_dir / "curation.json").write_text(
         json.dumps(payload, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
@@ -4097,7 +4282,7 @@ def build_catalog_payload(report_dir: Path, papers: list[dict[str, Any]], inbox_
         {
             "name": "Desktop sync bootstrap",
             "command": "read docs/catalog.json, docs/papers.json, docs/search_index.json",
-            "uses": ["catalog.json", "papers.json", "search_index.json", "workflow.json", "status.json", "views.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
+            "uses": ["catalog.json", "papers.json", "search_index.json", "workflow.json", "status.json", "views.json", "presets.json", "curation.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
             "outputs": ["local searchable paper library"],
         },
         {
@@ -4124,7 +4309,7 @@ def build_catalog_payload(report_dir: Path, papers: list[dict[str, Any]], inbox_
         "data_resources": data_resources,
         "contracts": contracts,
         "integration_recipes": integration_recipes,
-        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "status.json", "views.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
+        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "status.json", "views.json", "presets.json", "curation.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
     }
 
 
@@ -4148,7 +4333,7 @@ def write_catalog_placeholders(report_dir: Path) -> None:
         "data_resources": [],
         "contracts": [],
         "integration_recipes": [],
-        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "status.json", "views.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
+        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "status.json", "views.json", "presets.json", "curation.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
     }
     (report_dir / "catalog.json").write_text(
         json.dumps(payload, ensure_ascii=False, indent=2),
@@ -4368,6 +4553,7 @@ def wiki_pages_manifest() -> list[dict[str, str]]:
         {"title": "待处理池", "href": "inbox.html", "kind": "workflow", "description": "候选论文队列和去重提示"},
         {"title": "去重工作台", "href": "dedupe.html", "kind": "ops", "description": "库内报告、候选论文和导入队列重复项治理"},
         {"title": "标签注册表", "href": "registry.html", "kind": "ops", "description": "分类标签字典、alias 和跨字段治理"},
+        {"title": "分类成熟度", "href": "curation.html", "kind": "ops", "description": "逐篇论文分类完整度、缺口和补齐队列"},
         {"title": "复习计划", "href": "review.html", "kind": "workflow", "description": "待复习、需建计划、建议日期"},
         {"title": "时效治理", "href": "freshness.html", "kind": "ops", "description": "报告新鲜度、过期分析和研究线维护"},
         {"title": "质量治理", "href": "quality.html", "kind": "ops", "description": "弱元数据、别名建议、taxonomy drift"},
@@ -4414,6 +4600,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "dedupe.json", "description": "重复报告、候选重复项和去重建议"},
         {"href": "registry.json", "description": "分类标签注册表、alias、字段复用和治理信号"},
         {"href": "facets.json", "description": "分类字段目录、候选值规模和治理动作"},
+        {"href": "curation.json", "description": "逐篇论文分类成熟度、缺失字段和补齐建议"},
         {"href": "manifest.json", "description": "发布摘要和页面入口清单"},
     ]
 
@@ -4434,6 +4621,7 @@ def contract_files_manifest() -> list[dict[str, str]]:
         {"href": "guides/status.schema.json", "description": "status.json 状态选择器和写回命令契约"},
         {"href": "guides/views.schema.json", "description": "views.json 视图目录和批量队列契约"},
         {"href": "guides/presets.schema.json", "description": "presets.json 批量治理 preset 契约"},
+        {"href": "guides/curation.schema.json", "description": "curation.json 逐篇分类成熟度契约"},
         {"href": "guides/taxonomy.json", "description": "分类别名、状态工作流和共享视图配置"},
     ]
 
@@ -14564,6 +14752,193 @@ def render_taxonomy_load_row(item: dict[str, Any]) -> str:
     )
 
 
+def render_curation(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_curation_payload(papers)
+
+    def chips(values: list[str], empty: str = "无") -> str:
+        if not values:
+            return f'<span class="meta">{html.escape(empty)}</span>'
+        return '<div class="curation-chips">' + "".join(
+            f'<span class="chip">{html.escape(str(value))}</span>' for value in values
+        ) + "</div>"
+
+    rows = []
+    for item in payload["papers"]:
+        search_text = " ".join(
+            str(value or "")
+            for value in (
+                item.get("slug"),
+                item.get("title"),
+                item.get("title_zh"),
+                item.get("research_line"),
+                item.get("line_role"),
+                item.get("status"),
+                item.get("recommendation"),
+                " ".join(item.get("missing_fields") or []),
+                " ".join(item.get("weak_fields") or []),
+            )
+        ).lower()
+        field_tokens = " ".join([*item.get("missing_fields", []), *item.get("weak_fields", [])])
+        rows.append(
+            f"""<tr data-level="{html.escape(str(item['level']), quote=True)}" data-fields="{html.escape(field_tokens, quote=True)}" data-search="{html.escape(search_text, quote=True)}">
+  <td><a href="{html.escape(str(item['href']))}">{html.escape(str(item.get('title_zh') or item.get('title') or item['slug']))}</a><div class="meta">{html.escape(str(item['slug']))}</div></td>
+  <td><strong>{int(item['score'])}</strong><div class="score-track"><span style="width: {int(item['score'])}%"></span></div><div class="meta">{html.escape(str(item['level']))}</div></td>
+  <td>{html.escape(str(item.get('research_line') or 'Unassigned'))}<div class="meta">{html.escape(str(item.get('line_role') or 'no role'))}</div></td>
+  <td>{chips(item.get('missing_fields') or [], '无缺失')}</td>
+  <td>{chips(item.get('weak_fields') or [], '无稀疏字段')}</td>
+  <td>{html.escape(str(item.get('recommendation') or ''))}<div class="meta">patch: {html.escape(', '.join(str(column) for column in item.get('patch_columns', [])))}</div></td>
+</tr>"""
+        )
+    if not rows:
+        rows.append('<tr><td colspan="6" class="empty">暂无论文。</td></tr>')
+
+    level_options = "".join(
+        f'<option value="{html.escape(level)}">{html.escape(level)} ({count})</option>'
+        for level, count in sorted(payload["level_counts"].items())
+    )
+    field_options = "".join(
+        f'<option value="{html.escape(str(item["field"]))}">{html.escape(str(item["field"]))} ({payload["field_gap_counts"].get(item["field"], 0)})</option>'
+        for item in payload["field_contract"]
+    )
+    gap_rows = "".join(
+        "<tr>"
+        f"<td><code>{html.escape(field)}</code></td>"
+        f"<td>{int(count)}</td>"
+        f"<td>{int(payload['weak_field_counts'].get(field, 0))}</td>"
+        '<td><a href="library.html">论文库</a></td>'
+        "</tr>"
+        for field, count in sorted(payload["field_gap_counts"].items(), key=lambda value: (-value[1], value[0]))
+    ) or '<tr><td colspan="4" class="empty">没有缺失字段。</td></tr>'
+    command_buttons = "".join(
+        f'<button class="button copy-curation-command" type="button" data-command="{html.escape(command, quote=True)}">{html.escape(command)}</button>'
+        for command in payload["commands"]
+    )
+    recommendation_html = "".join(f"<li>{html.escape(item)}</li>" for item in payload["recommendations"])
+    curation_json = json.dumps(payload, ensure_ascii=False).replace("</", "<\\/")
+    curation_css = """
+    .curation-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .curation-panel {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .curation-panel h2 { margin: 0 0 8px; font-size: 18px; }
+    .curation-panel strong { display: block; font-size: 30px; line-height: 1.1; }
+    .curation-tools {
+      display: grid;
+      grid-template-columns: minmax(220px, 2fr) minmax(150px, 1fr) minmax(150px, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .curation-chips, .command-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .curation-chips .chip { border-radius: 8px; }
+    .score-track {
+      width: 100%;
+      height: 8px;
+      margin-top: 6px;
+      border-radius: 999px;
+      background: #ece4d8;
+      overflow: hidden;
+    }
+    .score-track span {
+      display: block;
+      height: 100%;
+      background: var(--accent);
+    }
+    .data-table td { vertical-align: top; }
+    @media (max-width: 760px) { .curation-tools { grid-template-columns: 1fr; } }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Taxonomy curation</div>
+  <h1>分类成熟度</h1>
+  <p class="lead">按论文逐条检查研究线、结构分类、topic/method、阅读状态和复习计划，把大库治理拆成可执行的补齐队列。</p>
+  <div class="stats">
+    <a class="stat" href="curation.json">Curation JSON</a>
+    <a class="stat" href="guides/curation.schema.json">Schema</a>
+    <a class="stat" href="quality.html">质量治理</a>
+    <a class="stat" href="facets.html">分类工作台</a>
+    <span class="stat">论文 {payload["count"]}</span>
+  </div>
+</header>
+<main class="shell">
+  <section class="curation-summary">
+    <div class="curation-panel"><span class="meta">平均成熟度</span><strong>{payload["average_score"]}</strong><span class="meta">0-100</span></div>
+    <div class="curation-panel"><span class="meta">Ready</span><strong>{payload["ready_count"]}</strong><span class="meta">可作为展示基线</span></div>
+    <div class="curation-panel"><span class="meta">待治理</span><strong>{payload["needs_curation_count"]}</strong><span class="meta">needs curation</span></div>
+    <div class="curation-panel"><h2>建议</h2><ol>{recommendation_html}</ol></div>
+  </section>
+  <section class="overview">
+    <h2>字段缺口</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>字段</th><th>缺失</th><th>稀疏</th><th>入口</th></tr></thead><tbody>{gap_rows}</tbody></table></div>
+  </section>
+  <section class="overview">
+    <div class="results-bar"><h2>论文清单</h2><span id="curationCount" class="meta"></span></div>
+    <div class="curation-tools">
+      <input id="curationSearch" type="search" placeholder="搜索标题、slug、研究线、字段">
+      <select id="curationLevel"><option value="">全部成熟度</option>{level_options}</select>
+      <select id="curationField"><option value="">全部字段</option>{field_options}</select>
+    </div>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>论文</th><th>分数</th><th>研究线</th><th>缺失字段</th><th>稀疏字段</th><th>建议</th></tr></thead><tbody id="curationRows">{"".join(rows)}</tbody></table></div>
+  </section>
+  <section class="overview">
+    <h2>命令</h2>
+    <div class="command-list">{command_buttons}</div>
+  </section>
+</main>
+<script>
+const curationPayload = {curation_json};
+const curationRows = Array.from(document.querySelectorAll("#curationRows tr"));
+const curationSearch = document.querySelector("#curationSearch");
+const curationLevel = document.querySelector("#curationLevel");
+const curationField = document.querySelector("#curationField");
+const curationCount = document.querySelector("#curationCount");
+
+function renderCurationRows() {{
+  const query = (curationSearch.value || "").trim().toLowerCase();
+  const level = curationLevel.value || "";
+  const field = curationField.value || "";
+  let visible = 0;
+  curationRows.forEach(row => {{
+    const matches = (!query || (row.dataset.search || "").includes(query))
+      && (!level || row.dataset.level === level)
+      && (!field || (` ${{row.dataset.fields || ""}} `).includes(` ${{field}} `));
+    row.hidden = !matches;
+    if (matches) visible += 1;
+  }});
+  curationCount.textContent = `${{visible}} / ${{curationRows.length}}`;
+}}
+
+async function copyCurationCommand(value, fallbackTitle) {{
+  try {{
+    await navigator.clipboard.writeText(value);
+  }} catch (error) {{
+    window.prompt(fallbackTitle, value);
+  }}
+}}
+
+document.querySelectorAll(".copy-curation-command").forEach(button => {{
+  button.dataset.label = button.textContent;
+  button.addEventListener("click", async () => {{
+    await copyCurationCommand(button.dataset.command || "", "复制命令");
+    button.textContent = "已复制";
+    setTimeout(() => button.textContent = button.dataset.label, 1200);
+  }});
+}});
+
+[curationSearch, curationLevel, curationField].forEach(control => control.addEventListener("input", renderCurationRows));
+renderCurationRows();
+</script>
+"""
+    (report_dir / "curation.html").write_text(page_shell("分类成熟度", body, extra_css=curation_css), encoding="utf-8")
+
+
 def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
     quality = build_quality_report(papers)
     issue_rows = "".join(render_quality_issue_row(issue) for issue in quality["issues"])
@@ -20591,6 +20966,7 @@ def build_wiki(report_dir: Path) -> int:
     inbox_items = load_inbox_items(report_dir, papers)
     write_json(report_dir, papers)
     write_quality_json(report_dir, papers)
+    write_curation_json(report_dir, papers)
     write_review_json(report_dir, papers)
     write_freshness_json(report_dir, papers)
     write_taxonomy_actions_json(report_dir, papers)
@@ -20641,6 +21017,7 @@ def build_wiki(report_dir: Path) -> int:
     render_inbox(report_dir, inbox_items)
     render_dedupe(report_dir, papers, inbox_items)
     render_registry(report_dir, papers)
+    render_curation(report_dir, papers)
     render_review(report_dir, papers)
     render_freshness(report_dir, papers)
     render_quality(report_dir, papers, inbox_items)
