@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/autopaperreader/snapshot.schema.json",
+  "title": "AutoPaperReader governance snapshot",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "generated_at": {"type": "string"},
+    "snapshot_id": {"type": "string", "pattern": "^[0-9a-f]{16}$"},
+    "name": {"type": "string", "minLength": 1},
+    "count": {"type": "integer", "minimum": 0},
+    "publish_ready": {"type": "boolean"},
+    "publish_checks": {
+      "type": "object",
+      "additionalProperties": {"type": "boolean"}
+    },
+    "quality_score": {"type": "number", "minimum": 0},
+    "coverage": {"type": "object"},
+    "queue_sizes": {"type": "object"},
+    "risk_queue_sizes": {
+      "type": "object",
+      "additionalProperties": {"type": "integer", "minimum": 0}
+    },
+    "action_groups": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/action_group"}
+    },
+    "governance_policy": {"type": "object"},
+    "active_status_workflow": {"type": "string"},
+    "research_lines": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/research_line"}
+    },
+    "artifact_summary": {"$ref": "#/$defs/artifact_summary"},
+    "links": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "release": {"type": "string", "minLength": 1},
+        "manifest": {"type": "string", "minLength": 1},
+        "quality": {"type": "string", "minLength": 1},
+        "actions": {"type": "string", "minLength": 1},
+        "stats": {"type": "string", "minLength": 1}
+      },
+      "required": ["release", "manifest", "quality", "actions", "stats"]
+    }
+  },
+  "required": [
+    "generated_at",
+    "snapshot_id",
+    "name",
+    "count",
+    "publish_ready",
+    "publish_checks",
+    "quality_score",
+    "coverage",
+    "queue_sizes",
+    "risk_queue_sizes",
+    "action_groups",
+    "governance_policy",
+    "active_status_workflow",
+    "research_lines",
+    "artifact_summary",
+    "links"
+  ],
+  "$defs": {
+    "action_group": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "group": {"type": "string", "minLength": 1},
+        "count": {"type": "integer", "minimum": 0}
+      },
+      "required": ["group", "count"]
+    },
+    "research_line": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "count": {"type": "integer", "minimum": 0},
+        "owner": {"type": "string"},
+        "team": {"type": "string"},
+        "cadence": {"type": "string"},
+        "roles": {"type": "object"},
+        "code_coverage": {"type": "string"},
+        "avg_importance": {"type": "number", "minimum": 0}
+      },
+      "required": ["name", "count"]
+    },
+    "artifact_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "count": {"type": "integer", "minimum": 0},
+        "missing": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "hashes": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/artifact_hash"}
+        }
+      },
+      "required": ["count", "missing", "hashes"]
+    },
+    "artifact_hash": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "href": {"type": "string", "minLength": 1},
+        "kind": {"type": "string", "enum": ["page", "data", "contract"]},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "status": {"type": "string", "enum": ["ok", "missing", "generated_after_inventory"]}
+      },
+      "required": ["href", "kind", "sha256", "status"]
+    }
+  }
+}

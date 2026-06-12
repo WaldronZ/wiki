@@ -2122,6 +2122,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         "guides/actions.schema.json",
         "guides/catalog.schema.json",
         "guides/manifest.schema.json",
+        "guides/snapshot.schema.json",
         "guides/workflow.schema.json",
         "guides/status.schema.json",
         "guides/views.schema.json",
@@ -2794,6 +2795,64 @@ def validate_manifest_schema_contract(report_dir: Path, errors: list[str], warni
                 errors.append("guides/manifest.schema.json: artifact kind enum must include page, data, contract")
 
 
+def validate_snapshot_schema_contract(report_dir: Path, errors: list[str], warnings: list[str]) -> None:
+    schema_path = report_dir / "guides" / "snapshot.schema.json"
+    if not schema_path.exists():
+        warnings.append("guides/snapshot.schema.json missing; external governance-snapshot schema hints are unavailable")
+        return
+
+    try:
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        errors.append(f"guides/snapshot.schema.json: invalid JSON: {exc}")
+        return
+
+    if not isinstance(schema, dict):
+        errors.append("guides/snapshot.schema.json: root must be an object")
+        return
+    if not isinstance(schema.get("$schema"), str) or not schema.get("$schema", "").strip():
+        errors.append("guides/snapshot.schema.json: $schema must be a non-empty string")
+    if schema.get("type") != "object":
+        errors.append("guides/snapshot.schema.json: type must be object")
+    properties = schema.get("properties")
+    if not isinstance(properties, dict):
+        errors.append("guides/snapshot.schema.json: properties must be an object")
+        properties = {}
+    for key in ("snapshot_id", "publish_ready", "risk_queue_sizes", "action_groups", "research_lines", "artifact_summary", "links"):
+        if key not in properties:
+            errors.append(f"guides/snapshot.schema.json: properties.{key} is required")
+    defs = schema.get("$defs")
+    if not isinstance(defs, dict):
+        errors.append("guides/snapshot.schema.json: $defs must be an object")
+        defs = {}
+    for def_name, required_keys in {
+        "action_group": ("group", "count"),
+        "research_line": ("name", "count"),
+        "artifact_summary": ("count", "missing", "hashes"),
+        "artifact_hash": ("href", "kind", "sha256", "status"),
+    }.items():
+        item_def = defs.get(def_name)
+        if not isinstance(item_def, dict):
+            errors.append(f"guides/snapshot.schema.json: $defs.{def_name} is required")
+            continue
+        required = set(item_def.get("required") or [])
+        for key in required_keys:
+            if key not in required:
+                errors.append(f"guides/snapshot.schema.json: $defs.{def_name}.required missing {key}")
+    artifact_hash_def = defs.get("artifact_hash")
+    if isinstance(artifact_hash_def, dict):
+        artifact_properties = artifact_hash_def.get("properties")
+        if not isinstance(artifact_properties, dict):
+            errors.append("guides/snapshot.schema.json: $defs.artifact_hash.properties must be an object")
+        else:
+            kind_enum = set((artifact_properties.get("kind") or {}).get("enum") or [])
+            if not {"page", "data", "contract"}.issubset(kind_enum):
+                errors.append("guides/snapshot.schema.json: artifact hash kind enum must include page, data, contract")
+            status_enum = set((artifact_properties.get("status") or {}).get("enum") or [])
+            if not {"ok", "missing", "generated_after_inventory"}.issubset(status_enum):
+                errors.append("guides/snapshot.schema.json: artifact hash status enum must include ok, missing, generated_after_inventory")
+
+
 def validate_status_schema_contract(report_dir: Path, errors: list[str], warnings: list[str]) -> None:
     schema_path = report_dir / "guides" / "status.schema.json"
     if not schema_path.exists():
@@ -3040,6 +3099,7 @@ def main() -> int:
         validate_actions_schema_contract(report_dir, errors, warnings)
         validate_catalog_schema_contract(report_dir, errors, warnings)
         validate_manifest_schema_contract(report_dir, errors, warnings)
+        validate_snapshot_schema_contract(report_dir, errors, warnings)
         validate_workflow_schema_contract(report_dir, errors, warnings)
         validate_status_schema_contract(report_dir, errors, warnings)
         validate_views_schema_contract(report_dir, errors, warnings)

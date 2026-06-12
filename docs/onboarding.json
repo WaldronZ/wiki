@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-06-12T08:14:14",
+  "generated_at": "2026-06-12T08:20:28",
   "count": 5,
   "inbox_count": 0,
   "readiness_score": "100%",
-  "readiness_passed": 21,
-  "readiness_total": 21,
+  "readiness_passed": 22,
+  "readiness_total": 22,
   "readiness_checks": [
     {
       "path": "README.md",
@@ -106,6 +106,12 @@
       "path": "docs/guides/manifest.schema.json",
       "label": "Manifest schema",
       "href": "guides/manifest.schema.json",
+      "exists": true
+    },
+    {
+      "path": "docs/guides/snapshot.schema.json",
+      "label": "Snapshot schema",
+      "href": "guides/snapshot.schema.json",
       "exists": true
     },
     {
@@ -311,6 +317,10 @@
     {
       "href": "guides/manifest.schema.json",
       "description": "manifest.json 发布清单契约"
+    },
+    {
+      "href": "guides/snapshot.schema.json",
+      "description": "snapshot.json 治理快照契约"
     },
     {
       "href": "guides/workflow.schema.json",

@@ -254,6 +254,10 @@ class WikiWorkflowTest(unittest.TestCase):
             (ROOT / "docs" / "guides" / "manifest.schema.json").read_text(encoding="utf-8"),
             encoding="utf-8",
         )
+        (guides_dir / "snapshot.schema.json").write_text(
+            (ROOT / "docs" / "guides" / "snapshot.schema.json").read_text(encoding="utf-8"),
+            encoding="utf-8",
+        )
         (guides_dir / "workflow.schema.json").write_text(
             (ROOT / "docs" / "guides" / "workflow.schema.json").read_text(encoding="utf-8"),
             encoding="utf-8",
@@ -1048,6 +1052,9 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(snapshot["active_status_workflow"], "research")
             self.assertEqual(snapshot["artifact_summary"]["missing"], [])
             self.assertTrue(snapshot["artifact_summary"]["hashes"])
+            self.assertIn("links", snapshot)
+            self.assertIn("manifest", snapshot["links"])
+            self.assertIn("href", snapshot["artifact_summary"]["hashes"][0])
             snapshot_html = (report_dir / "snapshot.html").read_text(encoding="utf-8")
             self.assertIn("治理快照", snapshot_html)
             self.assertIn("Snapshot JSON", snapshot_html)
@@ -1577,6 +1584,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("guides/actions.schema.json", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/catalog.schema.json", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/manifest.schema.json", {item["href"] for item in manifest["contract_files"]})
+            self.assertIn("guides/snapshot.schema.json", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/workflow.schema.json", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/status.schema.json", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/views.schema.json", {item["href"] for item in manifest["contract_files"]})
@@ -1595,6 +1603,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(artifact_by_href["guides/actions.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/catalog.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/manifest.schema.json"]["kind"], "contract")
+            self.assertEqual(artifact_by_href["guides/snapshot.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/workflow.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/status.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/views.schema.json"]["kind"], "contract")
@@ -2835,6 +2844,21 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("guides/manifest.schema.json: properties.publish_ready is required", result.stderr)
             self.assertIn("guides/manifest.schema.json: $defs must be an object", result.stderr)
+
+    def test_invalid_snapshot_schema_fails_validation(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_name:
+            report_dir = self.make_report_dir(Path(tmp_name))
+            self.run_cmd("scripts/build_wiki.py", str(report_dir))
+
+            (report_dir / "guides" / "snapshot.schema.json").write_text(
+                json.dumps({"$schema": "https://json-schema.org/draft/2020-12/schema", "type": "object", "properties": {}}),
+                encoding="utf-8",
+            )
+            result = self.run_cmd("scripts/validate_wiki.py", str(report_dir), check=False)
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("guides/snapshot.schema.json: properties.snapshot_id is required", result.stderr)
+            self.assertIn("guides/snapshot.schema.json: $defs must be an object", result.stderr)
 
     def test_invalid_status_schema_fails_validation(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_name:
