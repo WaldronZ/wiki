@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T08:25:44",
+  "generated_at": "2026-06-12T08:34:28",
   "count": 5,
   "readiness_score": 59,
   "readiness_label": "needs_governance",
@@ -20,7 +20,7 @@
     {
       "href": "papers.json",
       "exists": true,
-      "size_bytes": 23786
+      "size_bytes": 25809
     },
     {
       "href": "search_index.json",
@@ -30,7 +30,7 @@
     {
       "href": "stats.json",
       "exists": true,
-      "size_bytes": 18140
+      "size_bytes": 20163
     },
     {
       "href": "quality.json",
@@ -70,7 +70,7 @@
     {
       "href": "compare.json",
       "exists": true,
-      "size_bytes": 22979
+      "size_bytes": 25002
     },
     {
       "href": "taxonomy_map.json",
@@ -161,7 +161,7 @@
     {
       "paper_count": 100,
       "search_index_bytes": 3427800,
-      "papers_json_bytes": 475720,
+      "papers_json_bytes": 516180,
       "taxonomy_map_bytes": 2087640,
       "estimated_actions": 1240,
       "recommended_mode": "static wiki"
@@ -169,7 +169,7 @@
     {
       "paper_count": 500,
       "search_index_bytes": 17139000,
-      "papers_json_bytes": 2378600,
+      "papers_json_bytes": 2580900,
       "taxonomy_map_bytes": 10438200,
       "estimated_actions": 6200,
       "recommended_mode": "static wiki"
@@ -177,7 +177,7 @@
     {
       "paper_count": 1000,
       "search_index_bytes": 34278000,
-      "papers_json_bytes": 4757200,
+      "papers_json_bytes": 5161800,
       "taxonomy_map_bytes": 20876400,
       "estimated_actions": 12400,
       "recommended_mode": "split indexes"
@@ -185,7 +185,7 @@
     {
       "paper_count": 5000,
       "search_index_bytes": 171390000,
-      "papers_json_bytes": 23786000,
+      "papers_json_bytes": 25809000,
       "taxonomy_map_bytes": 104382000,
       "estimated_actions": 62000,
       "recommended_mode": "desktop cache / paged indexes"

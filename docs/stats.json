@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T08:25:44",
+  "generated_at": "2026-06-12T08:34:28",
   "count": 5,
   "quality_score": 92.0,
   "controls": {
@@ -99,6 +99,91 @@
         "state": {
           "track": "Attention Kernels",
           "sort": "year"
+        }
+      }
+    ],
+    "bulk_presets": [
+      {
+        "id": "triage",
+        "label": "标记待分流",
+        "description": "把一批论文推进到初筛/分流队列，并安排一周内复看。",
+        "fields": {
+          "status": [
+            "triaged",
+            "unread"
+          ],
+          "reading_stage": [
+            "skimmed",
+            "skim"
+          ],
+          "review_stage": [
+            "fresh"
+          ],
+          "next_review_days": 7
+        }
+      },
+      {
+        "id": "deep_read",
+        "label": "进入深读",
+        "description": "把筛选出的核心论文推进到深读队列。",
+        "fields": {
+          "status": [
+            "reading",
+            "triaged"
+          ],
+          "reading_stage": [
+            "deep_read"
+          ],
+          "review_stage": [
+            "fresh"
+          ],
+          "next_review_days": 14
+        }
+      },
+      {
+        "id": "code_check",
+        "label": "补代码检查",
+        "description": "把论文推进到代码检查/实现核对队列。",
+        "fields": {
+          "status": [
+            "reading",
+            "read"
+          ],
+          "reading_stage": [
+            "code_checked",
+            "deep_read"
+          ],
+          "review_stage": [
+            "reviewed",
+            "fresh"
+          ],
+          "next_review_days": 30
+        }
+      },
+      {
+        "id": "schedule_review",
+        "label": "安排复习",
+        "description": "为当前筛选队列补一个近期复习日期。",
+        "fields": {
+          "review_stage": [
+            "due",
+            "fresh"
+          ],
+          "next_review_days": 14
+        }
+      },
+      {
+        "id": "archive",
+        "label": "归档队列",
+        "description": "把一批不再活跃的论文移到归档状态。",
+        "fields": {
+          "status": [
+            "archived",
+            "read"
+          ],
+          "review_stage": [
+            "reviewed"
+          ]
         }
       }
     ],

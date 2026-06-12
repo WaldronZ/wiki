@@ -548,7 +548,7 @@
 </head>
 <body>
 <script>
-window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"importance": "5", "sort": "importance"}}, {"name": "Attention Kernels", "state": {"track": "Attention Kernels", "sort": "year"}}], "controls": {"active_status_workflow": "personal", "status": ["unread", "skimmed", "reading", "read", "archived"], "reading_stage": ["skim", "normal_read", "deep_read", "code_checked"], "review_stage": ["fresh", "due", "reviewed"], "status_workflows": {"personal": {"status_values": ["unread", "skimmed", "reading", "read", "archived"], "reading_stage_values": ["skim", "normal_read", "deep_read", "code_checked"], "review_stage_values": ["fresh", "due", "reviewed"]}, "research": {"status_values": ["inbox", "triaged", "reading", "implemented", "cited", "archived"], "reading_stage_values": ["skim", "normal_read", "deep_read", "code_checked", "reproduced"], "review_stage_values": ["fresh", "due", "reviewed", "evergreen"]}}, "line_role": ["foundation", "baseline", "main", "system", "variant", "followup", "survey"], "shared_views": [{"name": "重点论文", "page": "all", "state": {"importance": "5", "sort": "importance"}}, {"name": "未设置复习", "page": "index", "state": {"review": "none", "sort": "importance"}}, {"name": "Attention Kernels", "page": "library", "state": {"track": "Attention Kernels", "sort": "year"}}], "governance_policy": {"taxonomy_load": {"min_structure_labels": 3, "min_tags": 3, "max_tags": 10, "max_methods": 8}, "taxonomy_actions": {"singleton_max_count": 1, "watch_share": 0.4, "watch_min_count": 4, "split_share": 0.6, "split_min_count": 5}, "taxonomy_balance": {"high_score_below": 45, "medium_score_below": 70, "singleton_medium_count": 3, "unused_medium_count": 3}, "coverage": {"high_score_below": 70, "medium_score_below": 90, "missing_high_min": 2}}, "research_line_owners": {"Efficient Attention Kernels": {"owner": "kernel-owner", "team": "systems", "cadence": "monthly", "note": "Review new GPU kernel and serving papers."}, "Parallel Decoding with Diffusion Models": {"owner": "decoding-owner", "team": "generation", "cadence": "biweekly", "note": "Track diffusion language model and speculative decoding updates."}}, "label_definitions": {"domains": {"LLM Systems": {"description": "Systems-oriented papers about serving, inference, kernels, memory, and scalability for language models.", "owner": "systems", "status": "active"}}, "research_line": {"Efficient Attention Kernels": {"description": "Papers about exact or approximate attention kernels, GPU execution, and serving-time attention engines.", "owner": "kernel-owner", "status": "active"}, "Parallel Decoding with Diffusion Models": {"description": "Papers that use diffusion-style or speculative mechanisms for parallel token generation.", "owner": "decoding-owner", "status": "active"}}, "topics": {"Attention Kernels": {"description": "Attention implementation, scheduling, and memory-layout techniques used by LLM inference systems.", "owner": "kernel-owner", "status": "active"}, "Parallel Decoding": {"description": "Methods that generate or verify multiple tokens per step rather than strictly left-to-right one-token decoding.", "owner": "decoding-owner", "status": "active"}, "Speculative Decoding": {"description": "Draft-and-verify decoding methods that preserve target-model output distribution while improving latency.", "owner": "decoding-owner", "status": "active"}}, "methods": {"FlashAttention": {"description": "IO-aware exact attention kernel family that reduces HBM traffic with tiling and online softmax.", "owner": "kernel-owner", "status": "active"}, "Speculative Decoding": {"description": "Use a draft process and acceptance rule to accelerate autoregressive generation.", "owner": "decoding-owner", "status": "active"}}, "status": {"unread": {"description": "Known paper that has not been opened or routed into a reading pass yet.", "owner": "workflow", "status": "active"}, "skimmed": {"description": "Paper has received a quick pass; keep it visible for deeper reading or triage.", "owner": "workflow", "status": "active"}, "reading": {"description": "Currently being read, annotated, reproduced, or used for an active synthesis task.", "owner": "workflow", "status": "active"}, "read": {"description": "Main report is stable enough to use as reference material.", "owner": "workflow", "status": "active"}, "archived": {"description": "Kept for provenance but no longer active in current queues or weekly review.", "owner": "workflow", "status": "active"}, "inbox": {"description": "Research workflow entry state for candidate papers that need triage.", "owner": "workflow", "status": "active"}, "triaged": {"description": "Research candidate has been classified and assigned a likely next action.", "owner": "workflow", "status": "active"}, "implemented": {"description": "Core idea or code path has been implemented, reproduced, or mapped to local code.", "owner": "workflow", "status": "active"}, "cited": {"description": "Paper has been used in a writeup, roadmap, experiment note, or related synthesis.", "owner": "workflow", "status": "active"}}, "reading_stage": {"skim": {"description": "Fast pass for scope, claims, and whether the paper belongs in this library.", "owner": "workflow", "status": "active"}, "normal_read": {"description": "Standard reading pass focused on method, experiments, and limitations.", "owner": "workflow", "status": "active"}, "deep_read": {"description": "Detailed pass including equations, assumptions, ablations, and cross-paper comparison.", "owner": "workflow", "status": "active"}, "code_checked": {"description": "Implementation, repository structure, or reproducibility notes have been checked.", "owner": "workflow", "status": "active"}, "reproduced": {"description": "Key result, benchmark, or implementation behavior has been reproduced locally or in a controlled experiment.", "owner": "workflow", "status": "active"}}, "review_stage": {"fresh": {"description": "Recently reviewed; no immediate spaced-review action is needed.", "owner": "workflow", "status": "active"}, "due": {"description": "Ready for scheduled review, synthesis, or update against newer related work.", "owner": "workflow", "status": "active"}, "reviewed": {"description": "Completed the planned review checkpoint.", "owner": "workflow", "status": "active"}, "evergreen": {"description": "Stable foundational paper worth keeping in recurring review or teaching sets.", "owner": "workflow", "status": "active"}}}}};
+window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"importance": "5", "sort": "importance"}}, {"name": "Attention Kernels", "state": {"track": "Attention Kernels", "sort": "year"}}], "controls": {"active_status_workflow": "personal", "status": ["unread", "skimmed", "reading", "read", "archived"], "reading_stage": ["skim", "normal_read", "deep_read", "code_checked"], "review_stage": ["fresh", "due", "reviewed"], "status_workflows": {"personal": {"status_values": ["unread", "skimmed", "reading", "read", "archived"], "reading_stage_values": ["skim", "normal_read", "deep_read", "code_checked"], "review_stage_values": ["fresh", "due", "reviewed"]}, "research": {"status_values": ["inbox", "triaged", "reading", "implemented", "cited", "archived"], "reading_stage_values": ["skim", "normal_read", "deep_read", "code_checked", "reproduced"], "review_stage_values": ["fresh", "due", "reviewed", "evergreen"]}}, "line_role": ["foundation", "baseline", "main", "system", "variant", "followup", "survey"], "shared_views": [{"name": "重点论文", "page": "all", "state": {"importance": "5", "sort": "importance"}}, {"name": "未设置复习", "page": "index", "state": {"review": "none", "sort": "importance"}}, {"name": "Attention Kernels", "page": "library", "state": {"track": "Attention Kernels", "sort": "year"}}], "bulk_presets": [{"id": "triage", "label": "标记待分流", "description": "把一批论文推进到初筛/分流队列，并安排一周内复看。", "fields": {"status": ["triaged", "unread"], "reading_stage": ["skimmed", "skim"], "review_stage": ["fresh"], "next_review_days": 7}}, {"id": "deep_read", "label": "进入深读", "description": "把筛选出的核心论文推进到深读队列。", "fields": {"status": ["reading", "triaged"], "reading_stage": ["deep_read"], "review_stage": ["fresh"], "next_review_days": 14}}, {"id": "code_check", "label": "补代码检查", "description": "把论文推进到代码检查/实现核对队列。", "fields": {"status": ["reading", "read"], "reading_stage": ["code_checked", "deep_read"], "review_stage": ["reviewed", "fresh"], "next_review_days": 30}}, {"id": "schedule_review", "label": "安排复习", "description": "为当前筛选队列补一个近期复习日期。", "fields": {"review_stage": ["due", "fresh"], "next_review_days": 14}}, {"id": "archive", "label": "归档队列", "description": "把一批不再活跃的论文移到归档状态。", "fields": {"status": ["archived", "read"], "review_stage": ["reviewed"]}}], "governance_policy": {"taxonomy_load": {"min_structure_labels": 3, "min_tags": 3, "max_tags": 10, "max_methods": 8}, "taxonomy_actions": {"singleton_max_count": 1, "watch_share": 0.4, "watch_min_count": 4, "split_share": 0.6, "split_min_count": 5}, "taxonomy_balance": {"high_score_below": 45, "medium_score_below": 70, "singleton_medium_count": 3, "unused_medium_count": 3}, "coverage": {"high_score_below": 70, "medium_score_below": 90, "missing_high_min": 2}}, "research_line_owners": {"Efficient Attention Kernels": {"owner": "kernel-owner", "team": "systems", "cadence": "monthly", "note": "Review new GPU kernel and serving papers."}, "Parallel Decoding with Diffusion Models": {"owner": "decoding-owner", "team": "generation", "cadence": "biweekly", "note": "Track diffusion language model and speculative decoding updates."}}, "label_definitions": {"domains": {"LLM Systems": {"description": "Systems-oriented papers about serving, inference, kernels, memory, and scalability for language models.", "owner": "systems", "status": "active"}}, "research_line": {"Efficient Attention Kernels": {"description": "Papers about exact or approximate attention kernels, GPU execution, and serving-time attention engines.", "owner": "kernel-owner", "status": "active"}, "Parallel Decoding with Diffusion Models": {"description": "Papers that use diffusion-style or speculative mechanisms for parallel token generation.", "owner": "decoding-owner", "status": "active"}}, "topics": {"Attention Kernels": {"description": "Attention implementation, scheduling, and memory-layout techniques used by LLM inference systems.", "owner": "kernel-owner", "status": "active"}, "Parallel Decoding": {"description": "Methods that generate or verify multiple tokens per step rather than strictly left-to-right one-token decoding.", "owner": "decoding-owner", "status": "active"}, "Speculative Decoding": {"description": "Draft-and-verify decoding methods that preserve target-model output distribution while improving latency.", "owner": "decoding-owner", "status": "active"}}, "methods": {"FlashAttention": {"description": "IO-aware exact attention kernel family that reduces HBM traffic with tiling and online softmax.", "owner": "kernel-owner", "status": "active"}, "Speculative Decoding": {"description": "Use a draft process and acceptance rule to accelerate autoregressive generation.", "owner": "decoding-owner", "status": "active"}}, "status": {"unread": {"description": "Known paper that has not been opened or routed into a reading pass yet.", "owner": "workflow", "status": "active"}, "skimmed": {"description": "Paper has received a quick pass; keep it visible for deeper reading or triage.", "owner": "workflow", "status": "active"}, "reading": {"description": "Currently being read, annotated, reproduced, or used for an active synthesis task.", "owner": "workflow", "status": "active"}, "read": {"description": "Main report is stable enough to use as reference material.", "owner": "workflow", "status": "active"}, "archived": {"description": "Kept for provenance but no longer active in current queues or weekly review.", "owner": "workflow", "status": "active"}, "inbox": {"description": "Research workflow entry state for candidate papers that need triage.", "owner": "workflow", "status": "active"}, "triaged": {"description": "Research candidate has been classified and assigned a likely next action.", "owner": "workflow", "status": "active"}, "implemented": {"description": "Core idea or code path has been implemented, reproduced, or mapped to local code.", "owner": "workflow", "status": "active"}, "cited": {"description": "Paper has been used in a writeup, roadmap, experiment note, or related synthesis.", "owner": "workflow", "status": "active"}}, "reading_stage": {"skim": {"description": "Fast pass for scope, claims, and whether the paper belongs in this library.", "owner": "workflow", "status": "active"}, "normal_read": {"description": "Standard reading pass focused on method, experiments, and limitations.", "owner": "workflow", "status": "active"}, "deep_read": {"description": "Detailed pass including equations, assumptions, ablations, and cross-paper comparison.", "owner": "workflow", "status": "active"}, "code_checked": {"description": "Implementation, repository structure, or reproducibility notes have been checked.", "owner": "workflow", "status": "active"}, "reproduced": {"description": "Key result, benchmark, or implementation behavior has been reproduced locally or in a controlled experiment.", "owner": "workflow", "status": "active"}}, "review_stage": {"fresh": {"description": "Recently reviewed; no immediate spaced-review action is needed.", "owner": "workflow", "status": "active"}, "due": {"description": "Ready for scheduled review, synthesis, or update against newer related work.", "owner": "workflow", "status": "active"}, "reviewed": {"description": "Completed the planned review checkpoint.", "owner": "workflow", "status": "active"}, "evergreen": {"description": "Stable foundational paper worth keeping in recurring review or teaching sets.", "owner": "workflow", "status": "active"}}}}};
 </script>
 
 <button class="button quick-open" type="button" id="quickOpen">快速跳转</button>
@@ -645,14 +645,7 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
   <div class="active-filters" id="activeFilters" aria-live="polite"></div>
   <div class="bulk-panel">
     <span id="bulkCount" class="bulk-count">已选 0 篇</span>
-    <select id="bulkPreset">
-      <option value="">治理 preset</option>
-      <option value="triage">标记待分流</option>
-      <option value="deep_read">进入深读</option>
-      <option value="code_check">补代码检查</option>
-      <option value="schedule_review">安排复习</option>
-      <option value="archive">归档队列</option>
-    </select>
+    <select id="bulkPreset"><option value="">治理 preset</option></select>
     <button id="applyBulkPreset" class="button" type="button">套用 preset</button>
     <select id="bulkStatus"><option value="">状态</option><option value="unread">unread</option><option value="skimmed">skimmed</option><option value="reading">reading</option><option value="read">read</option><option value="archived">archived</option></select>
     <select id="bulkStage"><option value="">阅读阶段</option><option value="skim">skim</option><option value="normal_read">normal_read</option><option value="deep_read">deep_read</option><option value="code_checked">code_checked</option></select>
@@ -1007,6 +1000,7 @@ const densityMode = document.querySelector("#densityMode");
 const sharedViews = window.PAPER_WIKI.shared_views || [];
 const wikiControls = window.PAPER_WIKI.controls || {};
 const statusWorkflows = wikiControls.status_workflows || {};
+const bulkPresets = Array.isArray(wikiControls.bulk_presets) ? wikiControls.bulk_presets : [];
 const listPatchFields = new Set(["domains", "tracks", "problems", "topics", "methods"]);
 const activeStatusWorkflow = wikiControls.active_status_workflow || Object.keys(statusWorkflows)[0] || "default";
 const fallbackStatusValues = Array.isArray(wikiControls.status) ? wikiControls.status : [];
@@ -1102,6 +1096,16 @@ function populateStatusWorkflowOptions() {
     return new Option(label, name);
   }));
   statusWorkflow.value = workflowNames.includes(activeStatusWorkflow) ? activeStatusWorkflow : workflowNames[0] || "";
+}
+
+function populateBulkPresetOptions() {
+  bulkPreset.replaceChildren(new Option("治理 preset", ""));
+  bulkPresets.forEach(preset => {
+    if (!preset || !preset.id) return;
+    const option = new Option(preset.label || preset.id, preset.id);
+    option.title = preset.description || "";
+    bulkPreset.appendChild(option);
+  });
 }
 
 function applyStatusWorkflow() {
@@ -1418,43 +1422,51 @@ function setSelectFromCandidates(select, candidates) {
   return true;
 }
 
-function applyBulkGovernancePreset(name) {
-  const applied = [];
-  const setStatus = (...values) => {
-    if (setSelectFromCandidates(bulkStatus, values)) applied.push("status");
-  };
-  const setStage = (...values) => {
-    if (setSelectFromCandidates(bulkStage, values)) applied.push("reading_stage");
-  };
-  const setReview = (...values) => {
-    if (setSelectFromCandidates(bulkReviewStage, values)) applied.push("review_stage");
-  };
-  if (name === "triage") {
-    setStatus("triaged", "unread");
-    setStage("skimmed");
-    setReview("fresh");
-    bulkNextReview.value = dateAfterDays(7);
-    applied.push("next_review");
-  } else if (name === "deep_read") {
-    setStatus("reading", "triaged");
-    setStage("deep_read", "skimmed");
-    setReview("fresh");
-    bulkNextReview.value = dateAfterDays(14);
-    applied.push("next_review");
-  } else if (name === "code_check") {
-    setStatus("reading", "read");
-    setStage("code_checked", "deep_read");
-    setReview("reviewed", "fresh");
-    bulkNextReview.value = dateAfterDays(30);
-    applied.push("next_review");
-  } else if (name === "schedule_review") {
-    setReview("due", "fresh");
-    bulkNextReview.value = dateAfterDays(14);
-    applied.push("next_review");
-  } else if (name === "archive") {
-    setStatus("archived", "read");
-    setReview("reviewed");
+function presetFieldCandidates(value) {
+  return Array.isArray(value)
+    ? value.map(item => String(item || "").trim()).filter(Boolean)
+    : String(value || "").trim()
+      ? [String(value).trim()]
+      : [];
+}
+
+function setTextFromPreset(input, value) {
+  if (Array.isArray(value)) {
+    input.value = value.map(item => String(item || "").trim()).filter(Boolean).join("; ");
+  } else {
+    input.value = String(value || "").trim();
   }
+  return Boolean(input.value);
+}
+
+function applyBulkGovernancePreset(name) {
+  const preset = bulkPresets.find(item => item && item.id === name);
+  if (!preset) {
+    window.alert("没有找到这个治理 preset。");
+    return;
+  }
+  const fields = preset.fields || {};
+  const applied = [];
+  if (fields.status && setSelectFromCandidates(bulkStatus, presetFieldCandidates(fields.status))) applied.push("status");
+  if (fields.reading_stage && setSelectFromCandidates(bulkStage, presetFieldCandidates(fields.reading_stage))) applied.push("reading_stage");
+  if (fields.review_stage && setSelectFromCandidates(bulkReviewStage, presetFieldCandidates(fields.review_stage))) applied.push("review_stage");
+  if (Number.isInteger(fields.next_review_days) && fields.next_review_days >= 0) {
+    bulkNextReview.value = dateAfterDays(fields.next_review_days);
+    applied.push("next_review");
+  }
+  if (fields.importance && setSelectFromCandidates(bulkImportance, presetFieldCandidates(fields.importance))) applied.push("importance");
+  if (fields.research_line && setTextFromPreset(bulkResearchLine, fields.research_line)) applied.push("research_line");
+  if (fields.line_role && setSelectFromCandidates(bulkLineRole, presetFieldCandidates(fields.line_role))) applied.push("line_role");
+  [
+    ["domains", bulkDomains],
+    ["tracks", bulkTracks],
+    ["problems", bulkProblems],
+    ["topics", bulkTopics],
+    ["methods", bulkMethods],
+  ].forEach(([field, input]) => {
+    if (fields[field] && setTextFromPreset(input, fields[field])) applied.push(field);
+  });
+  if (fields.list_mode && selectHasValue(bulkListMode, fields.list_mode)) bulkListMode.value = fields.list_mode;
   if (!applied.length) {
     window.alert("当前 workflow 没有匹配这个 preset 的候选状态。");
     return;
@@ -2010,6 +2022,7 @@ densityMode.addEventListener("input", () => {
 });
 
 populateStatusWorkflowOptions();
+populateBulkPresetOptions();
 readStateFromUrl();
 refreshSavedViews();
 applyLibraryPrefs(readLibraryPrefs());

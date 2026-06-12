@@ -2221,6 +2221,7 @@ def validate_taxonomy_config(report_dir: Path, errors: list[str], warnings: list
         "$schema",
         "label_aliases",
         "shared_views",
+        "bulk_presets",
         "research_line_owners",
         "label_definitions",
         "governance_policy",
@@ -2400,6 +2401,74 @@ def validate_taxonomy_config(report_dir: Path, errors: list[str], warnings: list
                     f"guides/taxonomy.json: shared_views[{index}].state has unknown keys: {', '.join(unknown_state)}"
                 )
 
+    bulk_presets = config.get("bulk_presets", [])
+    allowed_preset_fields = {
+        "status",
+        "reading_stage",
+        "review_stage",
+        "next_review_days",
+        "importance",
+        "research_line",
+        "line_role",
+        "domains",
+        "tracks",
+        "problems",
+        "topics",
+        "methods",
+        "list_mode",
+    }
+    if bulk_presets is not None and not isinstance(bulk_presets, list):
+        errors.append("guides/taxonomy.json: bulk_presets must be a list")
+    elif isinstance(bulk_presets, list):
+        seen_ids: set[str] = set()
+        for index, preset in enumerate(bulk_presets):
+            if not isinstance(preset, dict):
+                errors.append(f"guides/taxonomy.json: bulk_presets[{index}] must be an object")
+                continue
+            preset_id = preset.get("id")
+            if not isinstance(preset_id, str) or not preset_id.strip():
+                errors.append(f"guides/taxonomy.json: bulk_presets[{index}].id must be a non-empty string")
+            else:
+                normalized_id = preset_id.strip().lower()
+                if normalized_id in seen_ids:
+                    errors.append(f"guides/taxonomy.json: bulk_presets has duplicate id '{preset_id}'")
+                seen_ids.add(normalized_id)
+            label = preset.get("label")
+            if not isinstance(label, str) or not label.strip():
+                errors.append(f"guides/taxonomy.json: bulk_presets[{index}].label must be a non-empty string")
+            description = preset.get("description")
+            if description is not None and not isinstance(description, str):
+                errors.append(f"guides/taxonomy.json: bulk_presets[{index}].description must be a string")
+            fields = preset.get("fields")
+            if not isinstance(fields, dict) or not fields:
+                errors.append(f"guides/taxonomy.json: bulk_presets[{index}].fields must be a non-empty object")
+                continue
+            unknown_preset_fields = sorted(set(fields) - allowed_preset_fields)
+            if unknown_preset_fields:
+                errors.append(
+                    f"guides/taxonomy.json: bulk_presets[{index}].fields has unknown keys: "
+                    f"{', '.join(unknown_preset_fields)}"
+                )
+            for field, value in fields.items():
+                if field not in allowed_preset_fields:
+                    continue
+                if field == "next_review_days":
+                    if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+                        errors.append(f"guides/taxonomy.json: bulk_presets[{index}].fields.next_review_days must be a non-negative integer")
+                elif field == "importance":
+                    if isinstance(value, int) and not isinstance(value, bool):
+                        if value < 1 or value > 5:
+                            errors.append(f"guides/taxonomy.json: bulk_presets[{index}].fields.importance must be between 1 and 5")
+                    elif not (isinstance(value, str) and value in {"1", "2", "3", "4", "5"}):
+                        errors.append(f"guides/taxonomy.json: bulk_presets[{index}].fields.importance must be between 1 and 5")
+                elif field == "list_mode":
+                    if value not in {"replace", "append", "remove"}:
+                        errors.append(f"guides/taxonomy.json: bulk_presets[{index}].fields.list_mode must be one of replace, append, remove")
+                elif isinstance(value, list):
+                    validate_string_list(value, f"guides/taxonomy.json: bulk_presets[{index}].fields.{field}", errors, allow_none=False)
+                elif not isinstance(value, str) or not value.strip():
+                    errors.append(f"guides/taxonomy.json: bulk_presets[{index}].fields.{field} must be a non-empty string or list")
+
     policy = config.get("governance_policy", {})
     if policy is not None and policy != {} and not isinstance(policy, dict):
         errors.append("guides/taxonomy.json: governance_policy must be an object")
@@ -2460,6 +2529,8 @@ def validate_taxonomy_schema_contract(report_dir: Path, errors: list[str], warni
         errors.append("guides/taxonomy.schema.json: properties.status_workflows is required")
     if "shared_views" not in (schema.get("properties") or {}):
         errors.append("guides/taxonomy.schema.json: properties.shared_views is required")
+    if "bulk_presets" not in (schema.get("properties") or {}):
+        errors.append("guides/taxonomy.schema.json: properties.bulk_presets is required")
     if "research_line_owners" not in (schema.get("properties") or {}):
         errors.append("guides/taxonomy.schema.json: properties.research_line_owners is required")
     if "label_definitions" not in (schema.get("properties") or {}):

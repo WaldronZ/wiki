@@ -144,6 +144,59 @@ DEFAULT_ROLE_ORDER = [
 DEFAULT_STATUS_VALUES = ["unread", "skimmed", "reading", "read", "archived"]
 DEFAULT_READING_STAGE_VALUES = ["skim", "normal_read", "deep_read", "code_checked"]
 DEFAULT_REVIEW_STAGE_VALUES = ["fresh", "due", "reviewed"]
+DEFAULT_BULK_PRESETS: list[dict[str, Any]] = [
+    {
+        "id": "triage",
+        "label": "标记待分流",
+        "description": "把一批论文推进到初筛/分流队列，并安排一周内复看。",
+        "fields": {
+            "status": ["triaged", "unread"],
+            "reading_stage": ["skimmed", "skim"],
+            "review_stage": ["fresh"],
+            "next_review_days": 7,
+        },
+    },
+    {
+        "id": "deep_read",
+        "label": "进入深读",
+        "description": "把筛选出的核心论文推进到深读队列。",
+        "fields": {
+            "status": ["reading", "triaged"],
+            "reading_stage": ["deep_read"],
+            "review_stage": ["fresh"],
+            "next_review_days": 14,
+        },
+    },
+    {
+        "id": "code_check",
+        "label": "补代码检查",
+        "description": "把论文推进到代码检查/实现核对队列。",
+        "fields": {
+            "status": ["reading", "read"],
+            "reading_stage": ["code_checked", "deep_read"],
+            "review_stage": ["reviewed", "fresh"],
+            "next_review_days": 30,
+        },
+    },
+    {
+        "id": "schedule_review",
+        "label": "安排复习",
+        "description": "为当前筛选队列补一个近期复习日期。",
+        "fields": {
+            "review_stage": ["due", "fresh"],
+            "next_review_days": 14,
+        },
+    },
+    {
+        "id": "archive",
+        "label": "归档队列",
+        "description": "把一批不再活跃的论文移到归档状态。",
+        "fields": {
+            "status": ["archived", "read"],
+            "review_stage": ["reviewed"],
+        },
+    },
+]
 DEFAULT_GOVERNANCE_POLICY: dict[str, Any] = {
     "taxonomy_load": {
         "min_structure_labels": 3,
@@ -200,6 +253,7 @@ REVIEW_STAGE_VALUES = DEFAULT_REVIEW_STAGE_VALUES.copy()
 STATUS_WORKFLOWS: dict[str, dict[str, list[str]]] = {}
 SHARED_VIEWS: list[dict[str, Any]] = []
 ACTIVE_STATUS_WORKFLOW = ""
+BULK_PRESETS: list[dict[str, Any]] = json.loads(json.dumps(DEFAULT_BULK_PRESETS))
 GOVERNANCE_POLICY: dict[str, Any] = json.loads(json.dumps(DEFAULT_GOVERNANCE_POLICY))
 RESEARCH_LINE_OWNERS: dict[str, dict[str, str]] = {}
 LABEL_DEFINITIONS: dict[str, dict[str, dict[str, str]]] = {}
@@ -236,7 +290,7 @@ def parse_args() -> argparse.Namespace:
 
 def load_taxonomy_config(report_dir: Path) -> None:
     """Load optional taxonomy normalization config for this report directory."""
-    global LABEL_ALIASES, ROLE_ORDER, STATUS_VALUES, READING_STAGE_VALUES, REVIEW_STAGE_VALUES, STATUS_WORKFLOWS, SHARED_VIEWS, ACTIVE_STATUS_WORKFLOW, GOVERNANCE_POLICY, RESEARCH_LINE_OWNERS, LABEL_DEFINITIONS
+    global LABEL_ALIASES, ROLE_ORDER, STATUS_VALUES, READING_STAGE_VALUES, REVIEW_STAGE_VALUES, STATUS_WORKFLOWS, SHARED_VIEWS, ACTIVE_STATUS_WORKFLOW, BULK_PRESETS, GOVERNANCE_POLICY, RESEARCH_LINE_OWNERS, LABEL_DEFINITIONS
 
     LABEL_ALIASES = DEFAULT_LABEL_ALIASES.copy()
     ROLE_ORDER = {role: index for index, role in enumerate(DEFAULT_ROLE_ORDER)}
@@ -246,6 +300,7 @@ def load_taxonomy_config(report_dir: Path) -> None:
     STATUS_WORKFLOWS = {}
     SHARED_VIEWS = []
     ACTIVE_STATUS_WORKFLOW = ""
+    BULK_PRESETS = json.loads(json.dumps(DEFAULT_BULK_PRESETS))
     GOVERNANCE_POLICY = json.loads(json.dumps(DEFAULT_GOVERNANCE_POLICY))
     RESEARCH_LINE_OWNERS = {}
     LABEL_DEFINITIONS = {}
@@ -293,6 +348,7 @@ def load_taxonomy_config(report_dir: Path) -> None:
         },
     )
     SHARED_VIEWS = configured_shared_views(config)
+    BULK_PRESETS = configured_bulk_presets(config)
     GOVERNANCE_POLICY = configured_governance_policy(config)
     RESEARCH_LINE_OWNERS = configured_research_line_owners(config)
     LABEL_DEFINITIONS = configured_label_definitions(config)
@@ -358,6 +414,71 @@ def configured_shared_views(config: dict[str, Any]) -> list[dict[str, Any]]:
         if normalized_state:
             cleaned.append({"name": name, "page": page, "state": normalized_state})
     return cleaned
+
+
+def configured_bulk_presets(config: dict[str, Any]) -> list[dict[str, Any]]:
+    presets = config.get("bulk_presets")
+    if not isinstance(presets, list) or not presets:
+        return json.loads(json.dumps(DEFAULT_BULK_PRESETS))
+    cleaned: list[dict[str, Any]] = []
+    allowed_fields = {
+        "status",
+        "reading_stage",
+        "review_stage",
+        "next_review_days",
+        "importance",
+        "research_line",
+        "line_role",
+        "domains",
+        "tracks",
+        "problems",
+        "topics",
+        "methods",
+        "list_mode",
+    }
+    for preset in presets:
+        if not isinstance(preset, dict):
+            continue
+        preset_id = str(preset.get("id") or "").strip()
+        label = str(preset.get("label") or preset_id).strip()
+        fields = preset.get("fields") or {}
+        if not preset_id or not label or not isinstance(fields, dict):
+            continue
+        normalized_fields: dict[str, Any] = {}
+        for field, value in fields.items():
+            field_name = str(field).strip()
+            if field_name not in allowed_fields:
+                continue
+            if field_name == "next_review_days":
+                if isinstance(value, int) and not isinstance(value, bool) and value >= 0:
+                    normalized_fields[field_name] = value
+                continue
+            if field_name == "importance":
+                if isinstance(value, int) and not isinstance(value, bool) and 1 <= value <= 5:
+                    normalized_fields[field_name] = value
+                elif isinstance(value, str) and value.strip() in {"1", "2", "3", "4", "5"}:
+                    normalized_fields[field_name] = value.strip()
+                continue
+            if field_name == "list_mode":
+                if value in {"replace", "append", "remove"}:
+                    normalized_fields[field_name] = value
+                continue
+            if isinstance(value, list):
+                values = [str(item).strip() for item in value if str(item).strip()]
+                if values:
+                    normalized_fields[field_name] = values
+            elif str(value).strip():
+                normalized_fields[field_name] = str(value).strip()
+        if normalized_fields:
+            cleaned.append(
+                {
+                    "id": preset_id,
+                    "label": label,
+                    "description": str(preset.get("description") or "").strip(),
+                    "fields": normalized_fields,
+                }
+            )
+    return cleaned or json.loads(json.dumps(DEFAULT_BULK_PRESETS))
 
 
 def configured_governance_policy(config: dict[str, Any]) -> dict[str, Any]:
@@ -466,6 +587,7 @@ def control_options() -> dict[str, Any]:
         },
         "line_role": list(ROLE_ORDER.keys()),
         "shared_views": SHARED_VIEWS.copy(),
+        "bulk_presets": json.loads(json.dumps(BULK_PRESETS)),
         "governance_policy": json.loads(json.dumps(GOVERNANCE_POLICY)),
         "research_line_owners": json.loads(json.dumps(RESEARCH_LINE_OWNERS)),
         "label_definitions": json.loads(json.dumps(LABEL_DEFINITIONS)),
@@ -7500,14 +7622,7 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <div class="active-filters" id="activeFilters" aria-live="polite"></div>
   <div class="bulk-panel">
     <span id="bulkCount" class="bulk-count">已选 0 篇</span>
-    <select id="bulkPreset">
-      <option value="">治理 preset</option>
-      <option value="triage">标记待分流</option>
-      <option value="deep_read">进入深读</option>
-      <option value="code_check">补代码检查</option>
-      <option value="schedule_review">安排复习</option>
-      <option value="archive">归档队列</option>
-    </select>
+    <select id="bulkPreset"><option value="">治理 preset</option></select>
     <button id="applyBulkPreset" class="button" type="button">套用 preset</button>
     <select id="bulkStatus"><option value="">状态</option>{render_value_options(controls["status"])}</select>
     <select id="bulkStage"><option value="">阅读阶段</option>{render_value_options(controls["reading_stage"])}</select>
@@ -7668,6 +7783,7 @@ const densityMode = document.querySelector("#densityMode");
 const sharedViews = window.PAPER_WIKI.shared_views || [];
 const wikiControls = window.PAPER_WIKI.controls || {{}};
 const statusWorkflows = wikiControls.status_workflows || {{}};
+const bulkPresets = Array.isArray(wikiControls.bulk_presets) ? wikiControls.bulk_presets : [];
 const listPatchFields = new Set(["domains", "tracks", "problems", "topics", "methods"]);
 const activeStatusWorkflow = wikiControls.active_status_workflow || Object.keys(statusWorkflows)[0] || "default";
 const fallbackStatusValues = Array.isArray(wikiControls.status) ? wikiControls.status : [];
@@ -7763,6 +7879,16 @@ function populateStatusWorkflowOptions() {{
     return new Option(label, name);
   }}));
   statusWorkflow.value = workflowNames.includes(activeStatusWorkflow) ? activeStatusWorkflow : workflowNames[0] || "";
+}}
+
+function populateBulkPresetOptions() {{
+  bulkPreset.replaceChildren(new Option("治理 preset", ""));
+  bulkPresets.forEach(preset => {{
+    if (!preset || !preset.id) return;
+    const option = new Option(preset.label || preset.id, preset.id);
+    option.title = preset.description || "";
+    bulkPreset.appendChild(option);
+  }});
 }}
 
 function applyStatusWorkflow() {{
@@ -8079,43 +8205,51 @@ function setSelectFromCandidates(select, candidates) {{
   return true;
 }}
 
-function applyBulkGovernancePreset(name) {{
-  const applied = [];
-  const setStatus = (...values) => {{
-    if (setSelectFromCandidates(bulkStatus, values)) applied.push("status");
-  }};
-  const setStage = (...values) => {{
-    if (setSelectFromCandidates(bulkStage, values)) applied.push("reading_stage");
-  }};
-  const setReview = (...values) => {{
-    if (setSelectFromCandidates(bulkReviewStage, values)) applied.push("review_stage");
-  }};
-  if (name === "triage") {{
-    setStatus("triaged", "unread");
-    setStage("skimmed");
-    setReview("fresh");
-    bulkNextReview.value = dateAfterDays(7);
-    applied.push("next_review");
-  }} else if (name === "deep_read") {{
-    setStatus("reading", "triaged");
-    setStage("deep_read", "skimmed");
-    setReview("fresh");
-    bulkNextReview.value = dateAfterDays(14);
-    applied.push("next_review");
-  }} else if (name === "code_check") {{
-    setStatus("reading", "read");
-    setStage("code_checked", "deep_read");
-    setReview("reviewed", "fresh");
-    bulkNextReview.value = dateAfterDays(30);
-    applied.push("next_review");
-  }} else if (name === "schedule_review") {{
-    setReview("due", "fresh");
-    bulkNextReview.value = dateAfterDays(14);
-    applied.push("next_review");
-  }} else if (name === "archive") {{
-    setStatus("archived", "read");
-    setReview("reviewed");
+function presetFieldCandidates(value) {{
+  return Array.isArray(value)
+    ? value.map(item => String(item || "").trim()).filter(Boolean)
+    : String(value || "").trim()
+      ? [String(value).trim()]
+      : [];
+}}
+
+function setTextFromPreset(input, value) {{
+  if (Array.isArray(value)) {{
+    input.value = value.map(item => String(item || "").trim()).filter(Boolean).join("; ");
+  }} else {{
+    input.value = String(value || "").trim();
   }}
+  return Boolean(input.value);
+}}
+
+function applyBulkGovernancePreset(name) {{
+  const preset = bulkPresets.find(item => item && item.id === name);
+  if (!preset) {{
+    window.alert("没有找到这个治理 preset。");
+    return;
+  }}
+  const fields = preset.fields || {{}};
+  const applied = [];
+  if (fields.status && setSelectFromCandidates(bulkStatus, presetFieldCandidates(fields.status))) applied.push("status");
+  if (fields.reading_stage && setSelectFromCandidates(bulkStage, presetFieldCandidates(fields.reading_stage))) applied.push("reading_stage");
+  if (fields.review_stage && setSelectFromCandidates(bulkReviewStage, presetFieldCandidates(fields.review_stage))) applied.push("review_stage");
+  if (Number.isInteger(fields.next_review_days) && fields.next_review_days >= 0) {{
+    bulkNextReview.value = dateAfterDays(fields.next_review_days);
+    applied.push("next_review");
+  }}
+  if (fields.importance && setSelectFromCandidates(bulkImportance, presetFieldCandidates(fields.importance))) applied.push("importance");
+  if (fields.research_line && setTextFromPreset(bulkResearchLine, fields.research_line)) applied.push("research_line");
+  if (fields.line_role && setSelectFromCandidates(bulkLineRole, presetFieldCandidates(fields.line_role))) applied.push("line_role");
+  [
+    ["domains", bulkDomains],
+    ["tracks", bulkTracks],
+    ["problems", bulkProblems],
+    ["topics", bulkTopics],
+    ["methods", bulkMethods],
+  ].forEach(([field, input]) => {{
+    if (fields[field] && setTextFromPreset(input, fields[field])) applied.push(field);
+  }});
+  if (fields.list_mode && selectHasValue(bulkListMode, fields.list_mode)) bulkListMode.value = fields.list_mode;
   if (!applied.length) {{
     window.alert("当前 workflow 没有匹配这个 preset 的候选状态。");
     return;
@@ -8671,6 +8805,7 @@ densityMode.addEventListener("input", () => {{
 }});
 
 populateStatusWorkflowOptions();
+populateBulkPresetOptions();
 readStateFromUrl();
 refreshSavedViews();
 applyLibraryPrefs(readLibraryPrefs());

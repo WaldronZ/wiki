@@ -145,6 +145,20 @@ class WikiWorkflowTest(unittest.TestCase):
                             "state": {"track": "Attention Kernels", "sort": "year"},
                         },
                     ],
+                    "bulk_presets": [
+                        {
+                            "id": "meeting_queue",
+                            "label": "周会队列",
+                            "description": "把筛选出的论文排进周会复盘。",
+                            "fields": {
+                                "status": ["triaged", "unread"],
+                                "reading_stage": ["deep_read"],
+                                "review_stage": ["due", "fresh"],
+                                "next_review_days": 3,
+                                "importance": 5,
+                            },
+                        }
+                    ],
                     "research_line_owners": {
                         "LLM Serving": {
                             "owner": "serving-owner",
@@ -487,7 +501,10 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("applyBulkGovernancePreset", library_html)
             self.assertIn("dateAfterDays", library_html)
             self.assertIn("selectHasValue", library_html)
-            self.assertIn("补代码检查", library_html)
+            self.assertIn("bulkPresets", library_html)
+            self.assertIn("populateBulkPresetOptions", library_html)
+            self.assertIn("周会队列", library_html)
+            self.assertIn('"next_review_days": 3', library_html)
             self.assertIn('id="bulkStage"', library_html)
             self.assertIn('id="bulkReviewStage"', library_html)
             self.assertIn('id="bulkImportance"', library_html)
@@ -1519,6 +1536,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(stats["controls"]["research_line_owners"]["LLM Serving"]["owner"], "serving-owner")
             self.assertEqual(stats["controls"]["review_stage"], ["fresh", "due", "reviewed"])
             self.assertIn("research", stats["controls"]["status_workflows"])
+            self.assertEqual(stats["controls"]["bulk_presets"][0]["id"], "meeting_queue")
+            self.assertEqual(stats["controls"]["bulk_presets"][0]["fields"]["next_review_days"], 3)
             self.assertEqual(stats["controls"]["governance_policy"]["taxonomy_load"]["min_tags"], 5)
             self.assertTrue(stats["taxonomy_balance"])
             balance_by_field = {item["field"]: item for item in stats["taxonomy_balance"]}
@@ -2714,6 +2733,20 @@ class WikiWorkflowTest(unittest.TestCase):
                             {"name": "bad", "page": "sidebar", "state": {"unknown": "x"}},
                             {"name": "", "page": "all", "state": {}},
                         ],
+                        "bulk_presets": [
+                            {
+                                "id": "",
+                                "label": "",
+                                "description": 123,
+                                "fields": {
+                                    "status": ["read", "read"],
+                                    "next_review_days": -1,
+                                    "importance": 9,
+                                    "list_mode": "merge",
+                                    "unknown": "x",
+                                },
+                            }
+                        ],
                         "research_line_owners": {
                             "": {"owner": "nobody"},
                             "Broken Line": {"owner": "", "unknown": "x"},
@@ -2738,6 +2771,12 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("shared_views[0].page", result.stderr)
             self.assertIn("shared_views[0].state has unknown keys", result.stderr)
             self.assertIn("shared_views[1].name", result.stderr)
+            self.assertIn("bulk_presets[0].id", result.stderr)
+            self.assertIn("bulk_presets[0].description", result.stderr)
+            self.assertIn("bulk_presets[0].fields has unknown keys", result.stderr)
+            self.assertIn("bulk_presets[0].fields.next_review_days", result.stderr)
+            self.assertIn("bulk_presets[0].fields.importance", result.stderr)
+            self.assertIn("bulk_presets[0].fields.list_mode", result.stderr)
             self.assertIn("research_line_owners keys must be non-empty strings", result.stderr)
             self.assertIn("research_line_owners.Broken Line has unknown keys", result.stderr)
             self.assertIn("research_line_owners.Broken Line.owner", result.stderr)
@@ -2760,6 +2799,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("guides/taxonomy.schema.json: type must be object", result.stderr)
             self.assertIn("properties.status_workflows is required", result.stderr)
             self.assertIn("properties.shared_views is required", result.stderr)
+            self.assertIn("properties.bulk_presets is required", result.stderr)
 
     def test_invalid_views_schema_fails_validation(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_name:

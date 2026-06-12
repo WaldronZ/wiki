@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T08:25:44",
+  "generated_at": "2026-06-12T08:34:28",
   "snapshot_id": "89f0dcec1638050c",
   "name": "AutoPaperReader Wiki",
   "count": 5,
@@ -127,7 +127,7 @@
       {
         "href": "index.html",
         "kind": "page",
-        "sha256": "3a61541d24fee122c747dc27d512270e2573e47918ef4ca48b4b8f4ce60ba23d",
+        "sha256": "5a478f2eb083abe956aaf1b6db34847679619a9e0d49bc65476a73f46d4ac41a",
         "status": "ok"
       },
       {
@@ -139,7 +139,7 @@
       {
         "href": "library.html",
         "kind": "page",
-        "sha256": "a9b24e222139ae009ae41a1f5c635f47a4813a3873288b66bccdd8f923caf431",
+        "sha256": "5e60a7d25d7fce3abafcccf293925dd811ace06c194fddf991bd8448e3a7003b",
         "status": "ok"
       },
       {
@@ -229,7 +229,7 @@
       {
         "href": "compare.html",
         "kind": "page",
-        "sha256": "0d187106f911eb19b64508d863206da4dcbc84bef3d979cd2daa75c54c826af9",
+        "sha256": "447a01a305728afd50725c3a2d97cbc3454e9a01bc238858399c4591d6f6bc6f",
         "status": "ok"
       },
       {
@@ -253,7 +253,7 @@
       {
         "href": "scale.html",
         "kind": "page",
-        "sha256": "89e0fcfb9ce532c3045491fa476c77b1d639462b206ada7a1715f810e57f0114",
+        "sha256": "a1b35212d396acf8e62aff54a1fef1bbf6de73a1c9b81e1563be88d5b1303eab",
         "status": "ok"
       },
       {
@@ -277,7 +277,7 @@
       {
         "href": "catalog.html",
         "kind": "page",
-        "sha256": "e9c57b404d1ee435a7b4d6f8c17ee940fb4d5b44b44f6da58b327ff5e18c93a8",
+        "sha256": "5438c8abe3dbef3425df0d67bd9c8598ff2ef2a0a19885626ba90b436123713e",
         "status": "ok"
       },
       {
@@ -331,13 +331,13 @@
       {
         "href": "timeline.html",
         "kind": "page",
-        "sha256": "575bbb423c6d020f9ac28d6bde26a6dde4101e27ca52f038d0aa7ca688e06adb",
+        "sha256": "efe1f11413bd97208583a68c1612d1adf299e3a95a2dc7acff30b633170726f1",
         "status": "ok"
       },
       {
         "href": "matrix.html",
         "kind": "page",
-        "sha256": "6d5a704c08608d95131383a4bdbf15b9802f925136b3bdc3700e15c00ea6b35a",
+        "sha256": "c926c9c5a459e38827c97a282d35dba64e51fc1ad850c3379b208393000651c0",
         "status": "ok"
       },
       {
@@ -355,7 +355,7 @@
       {
         "href": "papers.json",
         "kind": "data",
-        "sha256": "47e1c18b287afe0a03736ba554d891218ac522ca207aa4614444f54010f41b18",
+        "sha256": "6216a5bcb9e6673af9ae109cd06886fbc833b349c7b605659b7866044084b457",
         "status": "ok"
       },
       {
@@ -367,7 +367,7 @@
       {
         "href": "stats.json",
         "kind": "data",
-        "sha256": "21398321161ea6e53882bbca7fa3875dbf5e0f9e99c7449115e7608d67cb2823",
+        "sha256": "10001a0e3f09ad61299360c9740705251d497f3ee57d98f01d06b97d53863fe0",
         "status": "ok"
       },
       {
@@ -457,7 +457,7 @@
       {
         "href": "compare.json",
         "kind": "data",
-        "sha256": "9b059eb66708216ee48d444175175454e923b76fffa00fb25adc523315be0a7a",
+        "sha256": "2e596b3291c076bd28e6a99641323b1a507883ea093231827b8da47279fcc43c",
         "status": "ok"
       },
       {
@@ -481,7 +481,7 @@
       {
         "href": "scale.json",
         "kind": "data",
-        "sha256": "1b9d3c58cfa2230bec806b618554bc451b20a518feec2b9edead8ed7d424edac",
+        "sha256": "79daffc622a3c3b2b39c92e837f243ebeda0cb5ba61e6534d6d48b5d71204790",
         "status": "ok"
       },
       {
@@ -505,7 +505,7 @@
       {
         "href": "catalog.json",
         "kind": "data",
-        "sha256": "6e36f62a6a0001afcb2e20925784a6f8109a3002721bbe0090c45f085c1e13d4",
+        "sha256": "d1b9fe44400873b8b9208f191029ed26f614985b813daae3cf09e6488e50d782",
         "status": "ok"
       },
       {
@@ -559,7 +559,7 @@
       {
         "href": "guides/taxonomy.schema.json",
         "kind": "contract",
-        "sha256": "2d1b626cb70b713f6a63c9cc5bbcee95e9d57881a4b0c4b15f5c4937a4c11de4",
+        "sha256": "8d267b0dc8eb139976a055f95c857c04ad29b2898e6ca85d77d412b8161b6927",
         "status": "ok"
       },
       {
@@ -619,7 +619,7 @@
       {
         "href": "guides/taxonomy.json",
         "kind": "contract",
-        "sha256": "b09873f53b4d1b8534aa48bb623d0b7bf74ab6abb1817f7d4e7e81fc650aa491",
+        "sha256": "4f6ae80a3ab9a48b34f1b27dcd88692aa3b132d0065ee65a9d44767f3953db4a",
         "status": "ok"
       }
     ]
