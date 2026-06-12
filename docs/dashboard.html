@@ -214,11 +214,28 @@
       border-radius: 6px;
       box-shadow: var(--shadow);
       padding: 16px;
-      min-height: 230px;
+      min-height: 190px;
       display: flex;
       flex-direction: column;
     }
     .card h2 { margin: 0 0 8px; font-size: 20px; line-height: 1.25; letter-spacing: 0; }
+    .card details {
+      margin-top: 12px;
+      border-top: 1px solid var(--line);
+      padding-top: 10px;
+    }
+    .card details summary {
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 650;
+    }
+    .card details[open] summary { margin-bottom: 8px; }
+    .card details .card-flags { margin-top: 8px; }
+    .card details .chips {
+      margin-top: 8px;
+      padding-top: 0;
+    }
     .line-detail { display: grid; gap: 18px; }
     .role-section {
       background: var(--panel);
@@ -251,6 +268,7 @@
     .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 12px; }
     .chip { background: var(--chip); padding: 3px 8px; font-size: 12px; }
     .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    .card > .links { margin-top: auto; padding-top: 14px; }
     .button {
       display: inline-flex;
       align-items: center;
@@ -417,7 +435,7 @@
     <a class="stat" href="tags.html">分类总览</a>
     <a class="stat" href="quality.json">质量 JSON</a>
     <a class="stat" href="stats.json">统计 JSON</a>
-    <span class="stat">生成时间 2026-06-12T11:14:32</span>
+    <span class="stat">生成时间 2026-06-12T11:22:50</span>
   </div>
 </header>
 <main class="shell">

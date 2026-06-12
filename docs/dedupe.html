@@ -214,11 +214,28 @@
       border-radius: 6px;
       box-shadow: var(--shadow);
       padding: 16px;
-      min-height: 230px;
+      min-height: 190px;
       display: flex;
       flex-direction: column;
     }
     .card h2 { margin: 0 0 8px; font-size: 20px; line-height: 1.25; letter-spacing: 0; }
+    .card details {
+      margin-top: 12px;
+      border-top: 1px solid var(--line);
+      padding-top: 10px;
+    }
+    .card details summary {
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 650;
+    }
+    .card details[open] summary { margin-bottom: 8px; }
+    .card details .card-flags { margin-top: 8px; }
+    .card details .chips {
+      margin-top: 8px;
+      padding-top: 0;
+    }
     .line-detail { display: grid; gap: 18px; }
     .role-section {
       background: var(--panel);
@@ -251,6 +268,7 @@
     .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 12px; }
     .chip { background: var(--chip); padding: 3px 8px; font-size: 12px; }
     .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    .card > .links { margin-top: auto; padding-top: 14px; }
     .button {
       display: inline-flex;
       align-items: center;
@@ -386,7 +404,7 @@
 </head>
 <body>
 <script>
-window.PAPER_WIKI = {"generated_at": "2026-06-12T11:14:32", "count": 5, "inbox_count": 0, "duplicate_report_count": 0, "inbox_duplicate_count": 0, "group_count": 0, "report_groups": [], "inbox_groups": [], "summary": {"high": 0, "medium": 0, "low": 0, "clean_reports": true, "clean_inbox": true}, "csv_columns": ["scope", "kind", "key", "severity", "count", "slugs", "item_ids", "recommended_action"], "commands": ["python3 scripts/check_quality.py docs", "python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv", "python3 scripts/apply_library_metadata.py docs --input <dedupe_patch.csv>", "python3 scripts/apply_inbox_items.py docs --input <candidate_csv> --write"], "links": {"quality": "quality.html", "inbox": "inbox.html", "actions": "actions.html", "library": "library.html"}};
+window.PAPER_WIKI = {"generated_at": "2026-06-12T11:22:50", "count": 5, "inbox_count": 0, "duplicate_report_count": 0, "inbox_duplicate_count": 0, "group_count": 0, "report_groups": [], "inbox_groups": [], "summary": {"high": 0, "medium": 0, "low": 0, "clean_reports": true, "clean_inbox": true}, "csv_columns": ["scope", "kind", "key", "severity", "count", "slugs", "item_ids", "recommended_action"], "commands": ["python3 scripts/check_quality.py docs", "python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv", "python3 scripts/apply_library_metadata.py docs --input <dedupe_patch.csv>", "python3 scripts/apply_inbox_items.py docs --input <candidate_csv> --write"], "links": {"quality": "quality.html", "inbox": "inbox.html", "actions": "actions.html", "library": "library.html"}};
 </script>
 
 <button class="button quick-open" type="button" id="quickOpen">快速跳转</button>
@@ -414,7 +432,7 @@ window.PAPER_WIKI = {"generated_at": "2026-06-12T11:14:32", "count": 5, "inbox_c
     <a class="stat" href="dedupe.json">Dedupe JSON</a>
     <span class="stat">论文 5</span>
     <span class="stat">候选 0</span>
-    <span class="stat">生成时间 2026-06-12T11:14:32</span>
+    <span class="stat">生成时间 2026-06-12T11:22:50</span>
   </div>
 </header>
 <main class="shell">

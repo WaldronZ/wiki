@@ -7432,11 +7432,28 @@ def page_shell(
       border-radius: 6px;
       box-shadow: var(--shadow);
       padding: 16px;
-      min-height: 230px;
+      min-height: 190px;
       display: flex;
       flex-direction: column;
     }}
     .card h2 {{ margin: 0 0 8px; font-size: 20px; line-height: 1.25; letter-spacing: 0; }}
+    .card details {{
+      margin-top: 12px;
+      border-top: 1px solid var(--line);
+      padding-top: 10px;
+    }}
+    .card details summary {{
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 650;
+    }}
+    .card details[open] summary {{ margin-bottom: 8px; }}
+    .card details .card-flags {{ margin-top: 8px; }}
+    .card details .chips {{
+      margin-top: 8px;
+      padding-top: 0;
+    }}
     .line-detail {{ display: grid; gap: 18px; }}
     .role-section {{
       background: var(--panel);
@@ -7469,6 +7486,7 @@ def page_shell(
     .chips {{ display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 12px; }}
     .chip {{ background: var(--chip); padding: 3px 8px; font-size: 12px; }}
     .links {{ display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }}
+    .card > .links {{ margin-top: auto; padding-top: 14px; }}
     .button {{
       display: inline-flex;
       align-items: center;
@@ -8361,10 +8379,12 @@ function card(p) {{
   const link = p.html_path || p.md_path;
   const tags = [...(p.domains || []), ...(p.topics || []), ...(p.methods || [])].map(t => `<span class="chip">${{esc(t)}}</span>`).join("");
   const authors = (p.authors || []).slice(0, 4).join(", ");
-  const flags = [
+  const primaryFlags = [
     p.reading_time_min ? `${{esc(p.reading_time_min)}} min` : "",
     p.importance ? `重要性 ${{esc(p.importance)}}` : "",
     p.research_line ? `研究线 ${{esc(p.research_line)}}` : "",
+  ].filter(Boolean).map(item => `<span class="flag">${{item}}</span>`).join("");
+  const detailFlags = [
     p.line_role ? `角色 ${{esc(p.line_role)}}` : "",
     p.reading_stage ? `阅读 ${{esc(p.reading_stage)}}` : "",
     p.review_stage ? `复习 ${{esc(p.review_stage)}}` : "",
@@ -8374,15 +8394,19 @@ function card(p) {{
     <h2><a href="${{esc(link)}}">${{esc(p.title_zh || p.title)}}</a></h2>
     ${{p.title_en ? `<div class="meta">${{esc(p.title_en)}}</div>` : ""}}
     <div class="meta">${{esc([p.year, authors, p.arxiv_id].filter(Boolean).join(" / "))}}</div>
-    <div class="card-flags">${{flags}}</div>
-    ${{p.essence ? `<p class="essence">${{esc(p.essence)}}</p>` : ""}}
-    <p class="excerpt">${{esc(p.excerpt || "暂无摘要。")}}</p>
+    <div class="card-flags">${{primaryFlags}}</div>
     <div class="links">
       <a class="button" href="${{esc(link)}}">阅读报告</a>
       ${{p.arxiv_url ? `<a class="button" href="${{esc(p.arxiv_url)}}">arxiv</a>` : ""}}
       ${{p.code_url ? `<a class="button" href="${{esc(p.code_url)}}">code</a>` : ""}}
     </div>
-    <div class="chips">${{tags}}</div>
+    <details>
+      <summary>摘要与标签</summary>
+      <div class="card-flags">${{detailFlags}}</div>
+      ${{p.essence ? `<p class="essence">${{esc(p.essence)}}</p>` : ""}}
+      <p class="excerpt">${{esc(p.excerpt || "暂无摘要。")}}</p>
+      <div class="chips">${{tags}}</div>
+    </details>
   </article>`;
 }}
 
@@ -8571,16 +8595,19 @@ def render_card(paper: dict[str, Any]) -> str:
         links.append(f'<a class="button" href="{html.escape(paper["code_url"])}">code</a>')
     title_en = f'<div class="meta">{html.escape(paper["title_en"])}</div>' if paper.get("title_en") else ""
     meta = " / ".join(str(part) for part in [paper.get("year"), authors, paper.get("arxiv_id")] if part)
-    flags = [
+    primary_flags = [
         f'{paper["reading_time_min"]} min' if paper.get("reading_time_min") else "",
         f'重要性 {paper["importance"]}' if paper.get("importance") else "",
         f'研究线 {paper["research_line"]}' if paper.get("research_line") else "",
+    ]
+    detail_flags = [
         f'角色 {paper["line_role"]}' if paper.get("line_role") else "",
         f'阅读 {paper["reading_stage"]}' if paper.get("reading_stage") else "",
         f'复习 {paper["review_stage"]}' if paper.get("review_stage") else "",
         f'下次 {paper["next_review"]}' if paper.get("next_review") else "",
     ]
-    flag_html = "".join(f'<span class="flag">{html.escape(flag)}</span>' for flag in flags if flag)
+    primary_flag_html = "".join(f'<span class="flag">{html.escape(flag)}</span>' for flag in primary_flags if flag)
+    detail_flag_html = "".join(f'<span class="flag">{html.escape(flag)}</span>' for flag in detail_flags if flag)
     essence = (
         f'<p class="essence">{html.escape(paper["essence"])}</p>'
         if paper.get("essence")
@@ -8590,11 +8617,15 @@ def render_card(paper: dict[str, Any]) -> str:
   <h2><a href="{html.escape(link)}">{html.escape(paper["title_zh"] or paper["title"])}</a></h2>
   {title_en}
   <div class="meta">{html.escape(meta)}</div>
-  <div class="card-flags">{flag_html}</div>
-  {essence}
-  <p class="excerpt">{html.escape(paper.get("excerpt") or "暂无摘要。")}</p>
+  <div class="card-flags">{primary_flag_html}</div>
   <div class="links">{''.join(links)}</div>
-  <div class="chips">{tags}</div>
+  <details>
+    <summary>摘要与标签</summary>
+    <div class="card-flags">{detail_flag_html}</div>
+    {essence}
+    <p class="excerpt">{html.escape(paper.get("excerpt") or "暂无摘要。")}</p>
+    <div class="chips">{tags}</div>
+  </details>
 </article>"""
 
 
