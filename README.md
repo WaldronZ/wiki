@@ -198,7 +198,7 @@ paper_reader/
 - `docs/index.html`：wiki 首页
 - 所有 wiki 汇总页：提供全局快速跳转，可搜索主要页面、机器数据、共享视图、治理 playbook、常用命令和全部单篇报告
 - `docs/command.html`：命令中心，按 daily reading、paper intake、taxonomy governance、workflow/status、research synthesis 和 release/open-source 场景组织入口、队列和命令
-- `docs/library.html`：论文库表格，适合大量论文的密集筛选、排序、列管理、密度切换、状态体系切换和批量管理
+- `docs/library.html`：论文库表格，适合大量论文的密集筛选、排序、列管理、密度切换、状态体系切换、治理 preset 和批量管理
 - `docs/board.html`：状态看板，按自定义 `status` 分列，可动态切换 `status_workflows` 并保留 URL 状态，也可临时新增状态列，拖拽后导出 `status_board_patch.csv`
 - `docs/workflow.html`：工作流中心，集中对比多套 `status_workflows`、active workflow 分布、状态定义覆盖、未配置状态 drift、空字段和绑定 workflow 的共享视图
 - `docs/status.html`：状态选择器，运行时动态选择 workflow/status/reading stage/review stage，并生成可跳转 URL、共享视图 JSON、workflow 配置片段和可 dry-run 的状态写回 patch
@@ -472,7 +472,7 @@ python3 scripts/apply_library_metadata.py docs --input docs/library.csv --write
 python3 scripts/build_wiki.py docs
 ```
 
-`docs/library.html` 也支持先按 `domains` / `tracks` / `problems` / `topics` / `methods` 等分类维度筛选论文、在多套 `status_workflows` 间动态切换 `status` / `reading_stage` / `review_stage` 的候选项，并按到期复习、未设置复习或已设置复习直接筛出维护队列；它会实时显示当前筛选结果的状态分布、研究线分布、topic/method 热点、代码覆盖、taxonomy 覆盖和复习计划缺口。当前筛选条件会显示成可逐个移除的 chips，方便从复杂队列中快速放宽某个约束。它还支持复制当前筛选/排序链接、按场景隐藏/显示列、切换紧凑/标准/舒适密度、保存并导入/导出常用队列、勾选当前页或一键选中全部筛选结果，把已选论文复制成 Markdown 清单或纯 slug 列表，批量选择 `status` / `reading_stage` / `review_stage` / `next_review` / `importance`，也可以展开「批量分类字段」为所选论文设置 `research_line` / `line_role` / `domains` / `tracks` / `problems` / `topics` / `methods`，并为多值分类选择替换、追加或移除写入方式。页面会在下载 `metadata_patch.csv` 前显示 patch 摘要、影响字段和样例 slug，并可直接复制 dry-run / writeback 命令；列设置和密度偏好会保存在浏览器本地。也可以把当前筛选和排序结果直接导出为 `reading_list.md`、`library_filtered.csv` 或 `library.bib`。`docs/board.html` 支持把论文卡片拖到新的状态列，然后下载 `status_board_patch.csv`。下载后用同一个写回脚本预览和应用：
+`docs/library.html` 也支持先按 `domains` / `tracks` / `problems` / `topics` / `methods` 等分类维度筛选论文、在多套 `status_workflows` 间动态切换 `status` / `reading_stage` / `review_stage` 的候选项，并按到期复习、未设置复习或已设置复习直接筛出维护队列；它会实时显示当前筛选结果的状态分布、研究线分布、topic/method 热点、代码覆盖、taxonomy 覆盖和复习计划缺口。当前筛选条件会显示成可逐个移除的 chips，方便从复杂队列中快速放宽某个约束。它还支持复制当前筛选/排序链接、按场景隐藏/显示列、切换紧凑/标准/舒适密度、保存并导入/导出常用队列、勾选当前页或一键选中全部筛选结果，把已选论文复制成 Markdown 清单或纯 slug 列表，批量选择 `status` / `reading_stage` / `review_stage` / `next_review` / `importance`，或套用“待分流、进入深读、补代码检查、安排复习、归档”等治理 preset；preset 会尊重当前 workflow 已配置的候选值，只填入可用字段。也可以展开「批量分类字段」为所选论文设置 `research_line` / `line_role` / `domains` / `tracks` / `problems` / `topics` / `methods`，并为多值分类选择替换、追加或移除写入方式。页面会在下载 `metadata_patch.csv` 前显示 patch 摘要、影响字段和样例 slug，并可直接复制 dry-run / writeback 命令；列设置和密度偏好会保存在浏览器本地。也可以把当前筛选和排序结果直接导出为 `reading_list.md`、`library_filtered.csv` 或 `library.bib`。`docs/board.html` 支持把论文卡片拖到新的状态列，然后下载 `status_board_patch.csv`。下载后用同一个写回脚本预览和应用：
 
 ```bash
 python3 scripts/apply_library_metadata.py docs --input ~/Downloads/metadata_patch.csv

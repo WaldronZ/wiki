@@ -7500,6 +7500,15 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   <div class="active-filters" id="activeFilters" aria-live="polite"></div>
   <div class="bulk-panel">
     <span id="bulkCount" class="bulk-count">已选 0 篇</span>
+    <select id="bulkPreset">
+      <option value="">治理 preset</option>
+      <option value="triage">标记待分流</option>
+      <option value="deep_read">进入深读</option>
+      <option value="code_check">补代码检查</option>
+      <option value="schedule_review">安排复习</option>
+      <option value="archive">归档队列</option>
+    </select>
+    <button id="applyBulkPreset" class="button" type="button">套用 preset</button>
     <select id="bulkStatus"><option value="">状态</option>{render_value_options(controls["status"])}</select>
     <select id="bulkStage"><option value="">阅读阶段</option>{render_value_options(controls["reading_stage"])}</select>
     <select id="bulkReviewStage"><option value="">复习阶段</option>{render_value_options(controls["review_stage"])}</select>
@@ -7620,6 +7629,8 @@ const exportBibtex = document.querySelector("#exportBibtex");
 const rowChecks = allRows.map(row => row.querySelector(".row-check"));
 const toggleVisible = document.querySelector("#toggleVisible");
 const bulkCount = document.querySelector("#bulkCount");
+const bulkPreset = document.querySelector("#bulkPreset");
+const applyBulkPreset = document.querySelector("#applyBulkPreset");
 const bulkStatus = document.querySelector("#bulkStatus");
 const bulkStage = document.querySelector("#bulkStage");
 const bulkReviewStage = document.querySelector("#bulkReviewStage");
@@ -8049,6 +8060,67 @@ function percentLabel(count, total) {{
 function localDateString(date = new Date()) {{
   const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
   return local.toISOString().slice(0, 10);
+}}
+
+function dateAfterDays(days) {{
+  const date = new Date();
+  date.setDate(date.getDate() + days);
+  return localDateString(date);
+}}
+
+function selectHasValue(select, value) {{
+  return Array.from(select.options).some(option => option.value === value);
+}}
+
+function setSelectFromCandidates(select, candidates) {{
+  const value = candidates.find(candidate => selectHasValue(select, candidate));
+  if (!value) return false;
+  select.value = value;
+  return true;
+}}
+
+function applyBulkGovernancePreset(name) {{
+  const applied = [];
+  const setStatus = (...values) => {{
+    if (setSelectFromCandidates(bulkStatus, values)) applied.push("status");
+  }};
+  const setStage = (...values) => {{
+    if (setSelectFromCandidates(bulkStage, values)) applied.push("reading_stage");
+  }};
+  const setReview = (...values) => {{
+    if (setSelectFromCandidates(bulkReviewStage, values)) applied.push("review_stage");
+  }};
+  if (name === "triage") {{
+    setStatus("triaged", "unread");
+    setStage("skimmed");
+    setReview("fresh");
+    bulkNextReview.value = dateAfterDays(7);
+    applied.push("next_review");
+  }} else if (name === "deep_read") {{
+    setStatus("reading", "triaged");
+    setStage("deep_read", "skimmed");
+    setReview("fresh");
+    bulkNextReview.value = dateAfterDays(14);
+    applied.push("next_review");
+  }} else if (name === "code_check") {{
+    setStatus("reading", "read");
+    setStage("code_checked", "deep_read");
+    setReview("reviewed", "fresh");
+    bulkNextReview.value = dateAfterDays(30);
+    applied.push("next_review");
+  }} else if (name === "schedule_review") {{
+    setReview("due", "fresh");
+    bulkNextReview.value = dateAfterDays(14);
+    applied.push("next_review");
+  }} else if (name === "archive") {{
+    setStatus("archived", "read");
+    setReview("reviewed");
+  }}
+  if (!applied.length) {{
+    window.alert("当前 workflow 没有匹配这个 preset 的候选状态。");
+    return;
+  }}
+  updateBulkPreview();
 }}
 
 function countBy(rows, getter) {{
@@ -8561,7 +8633,15 @@ copySelectedMarkdown.addEventListener("click", () => copySelectedRows("markdown"
 copySelectedSlugs.addEventListener("click", () => copySelectedRows("slugs"));
 copyPatchDryRun.addEventListener("click", () => copyText(patchCommand(false), "复制 dry-run 命令"));
 copyPatchWrite.addEventListener("click", () => copyText(patchCommand(true), "复制写入命令"));
+applyBulkPreset.addEventListener("click", () => {{
+  if (!bulkPreset.value) {{
+    window.alert("请选择一个治理 preset。");
+    return;
+  }}
+  applyBulkGovernancePreset(bulkPreset.value);
+}});
 [
+  bulkPreset,
   bulkStatus,
   bulkStage,
   bulkReviewStage,

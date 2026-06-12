@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T08:20:28",
+  "generated_at": "2026-06-12T08:25:44",
   "name": "AutoPaperReader Wiki",
   "count": 5,
   "publish_ready": false,
@@ -1032,8 +1032,8 @@
       "description": "密集筛选、列管理、批量更新",
       "exists": true,
       "status": "ok",
-      "size_bytes": 126513,
-      "sha256": "e9db40ebff2cc49aad1a871ed1aad7ab57857f50eee120b217b3cd49c9923069",
+      "size_bytes": 129236,
+      "sha256": "a9b24e222139ae009ae41a1f5c635f47a4813a3873288b66bccdd8f923caf431",
       "hash_mode": "raw"
     },
     {
@@ -1053,7 +1053,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 107922,
-      "sha256": "7069e798bb238336213e4694bf2eede72d91ee2d9f67b7c61ffe3e3d5de1ace3",
+      "sha256": "c455454d052eec54cbe761a993b4232d479640c69a2290d9c64b224573471310",
       "hash_mode": "raw"
     },
     {
@@ -1063,7 +1063,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 58106,
-      "sha256": "4e298f0da93899be7a925a918eafea5c86f7bfa593acb5286b3130e034bf527a",
+      "sha256": "688a9ae25e6434d30688dfcfc8dcd4c727795d7eb85bce5f0f4ce50e30741a15",
       "hash_mode": "raw"
     },
     {
@@ -1673,7 +1673,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 18445,
-      "sha256": "93f6ee0ff08973d8ec86f501f7650f145f09b187b12518601b5499400de9b469",
+      "sha256": "b848db93c9d0dea8459a46cba1753b6b2daf8c506e6b5e18682ca8d2f3e3837b",
       "hash_mode": "normalized"
     },
     {
