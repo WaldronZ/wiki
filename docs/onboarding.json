@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T09:56:14",
+  "generated_at": "2026-06-12T10:02:11",
   "count": 5,
   "inbox_count": 0,
   "readiness_score": "100%",
@@ -313,6 +313,10 @@
     {
       "href": "guides/catalog.schema.json",
       "description": "catalog.json 集成目录契约"
+    },
+    {
+      "href": "guides/bootstrap_bundle.schema.json",
+      "description": "bootstrap bundle 桌面启动包契约"
     },
     {
       "href": "guides/manifest.schema.json",

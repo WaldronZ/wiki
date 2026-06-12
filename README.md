@@ -109,6 +109,7 @@ paper_reader/
 │   │   ├── batch.schema.json
 │   │   ├── actions.schema.json
 │   │   ├── catalog.schema.json
+│   │   ├── bootstrap_bundle.schema.json
 │   │   ├── manifest.schema.json
 │   │   ├── snapshot.schema.json
 │   │   ├── workflow.schema.json
@@ -304,6 +305,7 @@ paper_reader/
 - `docs/guides/batch.schema.json`：`batch.json` 批量规划契约，用于桌面端/DMG/外部脚本读取批次维度、批量任务、样例 slug 和导出命令
 - `docs/guides/actions.schema.json`：`actions.json` 统一行动队列契约，用于桌面端/DMG/外部脚本读取待办分组、优先级、来源、命令和相关论文
 - `docs/guides/catalog.schema.json`：`catalog.json` 集成目录契约，用于桌面端/DMG/外部脚本发现页面、机器数据、契约文件和 bootstrap recipe
+- `docs/guides/bootstrap_bundle.schema.json`：`export_catalog_bundle.py` 导出的 bootstrap bundle 契约，用于桌面端/DMG/外部脚本校验启动包、artifact hash 和可嵌入 payload
 - `docs/guides/manifest.schema.json`：`manifest.json` 发布清单契约，用于 CI、桌面端/DMG/外部脚本读取发布状态、artifact hash、命令 recipe 和治理 playbook
 - `docs/guides/snapshot.schema.json`：`snapshot.json` 治理快照契约，用于 CI、桌面端/DMG/外部脚本读取 snapshot_id、风险队列、治理策略、研究线和 artifact hash
 - `docs/guides/workflow.schema.json`：`workflow.json` 状态工作流审计契约，用于桌面端/DMG/外部脚本读取 workflow 分布、drift、空字段和治理建议

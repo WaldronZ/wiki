@@ -3334,6 +3334,62 @@ def validate_catalog_schema_contract(report_dir: Path, errors: list[str], warnin
                 errors.append("guides/catalog.schema.json: page kind enum must include view, ops, workflow, analysis, planning")
 
 
+def validate_bootstrap_bundle_schema_contract(report_dir: Path, errors: list[str], warnings: list[str]) -> None:
+    schema_path = report_dir / "guides" / "bootstrap_bundle.schema.json"
+    if not schema_path.exists():
+        warnings.append("guides/bootstrap_bundle.schema.json missing; external bootstrap-bundle schema hints are unavailable")
+        return
+
+    try:
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        errors.append(f"guides/bootstrap_bundle.schema.json: invalid JSON: {exc}")
+        return
+
+    if not isinstance(schema, dict):
+        errors.append("guides/bootstrap_bundle.schema.json: root must be an object")
+        return
+    if not isinstance(schema.get("$schema"), str) or not schema.get("$schema", "").strip():
+        errors.append("guides/bootstrap_bundle.schema.json: $schema must be a non-empty string")
+    if schema.get("type") != "object":
+        errors.append("guides/bootstrap_bundle.schema.json: type must be object")
+    properties = schema.get("properties")
+    if not isinstance(properties, dict):
+        errors.append("guides/bootstrap_bundle.schema.json: properties must be an object")
+        properties = {}
+    for key in ("generated_at", "report_dir", "source_catalog", "summary", "files", "missing", "errors"):
+        if key not in properties:
+            errors.append(f"guides/bootstrap_bundle.schema.json: properties.{key} is required")
+    defs = schema.get("$defs")
+    if not isinstance(defs, dict):
+        errors.append("guides/bootstrap_bundle.schema.json: $defs must be an object")
+        defs = {}
+    for def_name, required_keys in {
+        "source_catalog": ("href", "generated_at", "count", "data_file_count", "recommended_bootstrap_files"),
+        "summary": ("file_count", "payload_count", "missing_count", "error_count", "total_size_bytes", "mode"),
+        "file": ("href", "exists", "size_bytes", "sha256", "top_level_keys", "collections", "error"),
+        "collection": ("key", "type", "count"),
+        "error": ("href", "error"),
+    }.items():
+        item_def = defs.get(def_name)
+        if not isinstance(item_def, dict):
+            errors.append(f"guides/bootstrap_bundle.schema.json: $defs.{def_name} is required")
+            continue
+        required = set(item_def.get("required") or [])
+        for key in required_keys:
+            if key not in required:
+                errors.append(f"guides/bootstrap_bundle.schema.json: $defs.{def_name}.required missing {key}")
+    summary_def = defs.get("summary")
+    if isinstance(summary_def, dict):
+        summary_properties = summary_def.get("properties")
+        if not isinstance(summary_properties, dict):
+            errors.append("guides/bootstrap_bundle.schema.json: $defs.summary.properties must be an object")
+        else:
+            mode_enum = set((summary_properties.get("mode") or {}).get("enum") or [])
+            if not {"recommended", "explicit", "all_data"}.issubset(mode_enum):
+                errors.append("guides/bootstrap_bundle.schema.json: summary mode enum must include recommended, explicit, all_data")
+
+
 def validate_manifest_schema_contract(report_dir: Path, errors: list[str], warnings: list[str]) -> None:
     schema_path = report_dir / "guides" / "manifest.schema.json"
     if not schema_path.exists():
@@ -3696,6 +3752,7 @@ def main() -> int:
         validate_batch_schema_contract(report_dir, errors, warnings)
         validate_actions_schema_contract(report_dir, errors, warnings)
         validate_catalog_schema_contract(report_dir, errors, warnings)
+        validate_bootstrap_bundle_schema_contract(report_dir, errors, warnings)
         validate_manifest_schema_contract(report_dir, errors, warnings)
         validate_snapshot_schema_contract(report_dir, errors, warnings)
         validate_workflow_schema_contract(report_dir, errors, warnings)

@@ -4954,6 +4954,7 @@ def contract_files_manifest() -> list[dict[str, str]]:
         {"href": "guides/batch.schema.json", "description": "batch.json 批量规划数据契约"},
         {"href": "guides/actions.schema.json", "description": "actions.json 统一行动队列契约"},
         {"href": "guides/catalog.schema.json", "description": "catalog.json 集成目录契约"},
+        {"href": "guides/bootstrap_bundle.schema.json", "description": "bootstrap bundle 桌面启动包契约"},
         {"href": "guides/manifest.schema.json", "description": "manifest.json 发布清单契约"},
         {"href": "guides/snapshot.schema.json", "description": "snapshot.json 治理快照契约"},
         {"href": "guides/workflow.schema.json", "description": "workflow.json 状态工作流审计契约"},
