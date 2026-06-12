@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T10:18:37",
+  "generated_at": "2026-06-12T10:29:22",
   "count": 5,
   "inbox_count": 0,
   "lane_count": 6,
@@ -9,6 +9,7 @@
   "summary": {
     "papers": 5,
     "actions": 62,
+    "high_priority_papers": 5,
     "high_actions": 3,
     "medium_actions": 59,
     "due_review": 0,
@@ -25,13 +26,19 @@
       "title": "Daily Reading",
       "description": "日常阅读、筛选、复习和状态推进。适合每天打开的主工作区。",
       "persona": "reader",
-      "primary_href": "library.html",
+      "primary_href": "priority.html",
       "pages": [
         {
           "title": "首页",
           "href": "index.html",
           "kind": "view",
           "description": "卡片检索、筛选、研究线概览"
+        },
+        {
+          "title": "优先级决策台",
+          "href": "priority.html",
+          "kind": "ops",
+          "description": "按论文聚合复习、分类、代码和阅读优先级"
         },
         {
           "title": "论文库表格",
@@ -80,6 +87,10 @@
           "description": "正文全文检索索引"
         },
         {
+          "href": "priority.json",
+          "description": "论文级优先级决策数据，聚合复习、分类、代码和阅读信号"
+        },
+        {
           "href": "batch.json",
           "description": "按分类、状态和治理缺口生成的可执行论文批次"
         },
@@ -117,9 +128,9 @@
           "hint": "library size"
         },
         {
-          "label": "待复习",
-          "value": 0,
-          "hint": "due review"
+          "label": "高优先级",
+          "value": 5,
+          "hint": "priority high"
         },
         {
           "label": "缺计划",
@@ -128,9 +139,9 @@
         }
       ],
       "next_actions": [
-        "打开 library.html 继续密集筛选和批量编辑。",
-        "处理 review.json 中 due 或 needs_plan 的论文。",
-        "用 board.html 把正在读的论文拖到下一状态。"
+        "先打开 priority.html 选择今天最该处理的论文。",
+        "再进入 library.html 做密集筛选和批量编辑。",
+        "处理 review.json 中 due 或 needs_plan 的论文。"
       ]
     },
     {
@@ -645,6 +656,12 @@
           "href": "actions.html",
           "kind": "ops",
           "description": "统一运营队列和可分派任务"
+        },
+        {
+          "title": "优先级决策台",
+          "href": "priority.html",
+          "kind": "ops",
+          "description": "按论文聚合复习、分类、代码和阅读优先级"
         }
       ],
       "data_files": [
@@ -671,6 +688,10 @@
         {
           "href": "actions.json",
           "description": "统一行动队列，汇总质量、复习、分类和 inbox 任务"
+        },
+        {
+          "href": "priority.json",
+          "description": "论文级优先级决策数据，聚合复习、分类、代码和阅读信号"
         }
       ],
       "commands": [
@@ -725,6 +746,12 @@
   ],
   "recommended_next": [
     {
+      "label": "处理高优先级论文",
+      "href": "priority.html?urgency=high",
+      "count": 5,
+      "reason": "论文级优先级聚合了复习、分类、代码和阅读阶段。"
+    },
+    {
       "label": "处理高优先级行动",
       "href": "actions.html?severity=high",
       "count": 3,
@@ -751,6 +778,7 @@
   ],
   "links": {
     "library": "library.html",
+    "priority": "priority.html",
     "actions": "actions.html",
     "registry": "registry.html",
     "workflow": "workflow.html",

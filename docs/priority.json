@@ -1,0 +1,600 @@
+{
+  "generated_at": "2026-06-12T10:29:22",
+  "today": "2026-06-12",
+  "count": 5,
+  "summary": {
+    "urgency": {
+      "high": 5
+    },
+    "categories": {
+      "review": 5
+    },
+    "top_count": 5
+  },
+  "top_items": [
+    {
+      "slug": "2604.11035-introspective-dlm",
+      "title": "Introspective Diffusion Language Models",
+      "title_zh": "内省式扩散语言模型",
+      "href": "2604.11035-introspective-dlm.html",
+      "research_line": "Parallel Decoding with Diffusion Models",
+      "line_role": "foundation",
+      "year": 2026,
+      "importance": 5,
+      "status": "read",
+      "reading_stage": "deep_read",
+      "review_stage": "",
+      "next_review": "2026-06-18",
+      "priority_score": 140,
+      "urgency": "high",
+      "category": "review",
+      "category_label": "复习",
+      "reasons": [
+        "缺复习计划：建议 2026-06-18",
+        "弱元数据：next_review, review_stage",
+        "分类粒度偏密，适合做标签归一化"
+      ],
+      "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review",
+      "commands": [
+        "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
+        "python3 scripts/apply_review_plan.py docs --write",
+        "python3 scripts/export_taxonomy_load.py docs --format csv --signal dense_tags --output docs/exports/taxonomy-load.csv"
+      ],
+      "action_ids": [
+        "taxonomy_action:split_candidate:domains:LLM Systems",
+        "taxonomy_action:split_candidate:status:read",
+        "taxonomy_action:split_candidate:reading_stage:deep_read",
+        "review_plan:2604.11035-introspective-dlm",
+        "taxonomy_action:merge_candidate:topics:LLM",
+        "taxonomy_dense:2604.11035-introspective-dlm",
+        "taxonomy_action:merge_candidate:methods:SGLang serving",
+        "taxonomy_action:merge_candidate:methods:gated LoRA"
+      ],
+      "queue_hits": [
+        {
+          "id": "missing-review-plan",
+          "label": "缺复习计划",
+          "severity": "medium",
+          "preset": "schedule_review",
+          "href": "library.html?review=none&sort=importance"
+        },
+        {
+          "id": "code-unchecked",
+          "label": "有代码未检查",
+          "severity": "medium",
+          "preset": "code_check",
+          "href": "library.html?code=yes&sort=importance"
+        }
+      ]
+    },
+    {
+      "slug": "2307.08691-flashattention-2",
+      "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning",
+      "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
+      "href": "2307.08691-flashattention-2.html",
+      "research_line": "Efficient Attention Kernels",
+      "line_role": "foundation",
+      "year": 2023,
+      "importance": 5,
+      "status": "read",
+      "reading_stage": "deep_read",
+      "review_stage": "",
+      "next_review": "2026-06-25",
+      "priority_score": 132,
+      "urgency": "high",
+      "category": "review",
+      "category_label": "复习",
+      "reasons": [
+        "缺复习计划：建议 2026-06-25",
+        "弱元数据：next_review, review_stage"
+      ],
+      "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review",
+      "commands": [
+        "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
+        "python3 scripts/apply_review_plan.py docs --write"
+      ],
+      "action_ids": [
+        "taxonomy_action:split_candidate:domains:LLM Systems",
+        "taxonomy_action:split_candidate:status:read",
+        "taxonomy_action:split_candidate:reading_stage:deep_read",
+        "review_plan:2307.08691-flashattention-2",
+        "taxonomy_action:merge_candidate:topics:Efficient Attention",
+        "taxonomy_action:merge_candidate:topics:GPU Kernel Optimization",
+        "taxonomy_action:merge_candidate:topics:Long Context",
+        "taxonomy_action:merge_candidate:topics:Transformer"
+      ],
+      "queue_hits": [
+        {
+          "id": "missing-review-plan",
+          "label": "缺复习计划",
+          "severity": "medium",
+          "preset": "schedule_review",
+          "href": "library.html?review=none&sort=importance"
+        },
+        {
+          "id": "code-unchecked",
+          "label": "有代码未检查",
+          "severity": "medium",
+          "preset": "code_check",
+          "href": "library.html?code=yes&sort=importance"
+        }
+      ]
+    },
+    {
+      "slug": "2501.01005-flashinfer",
+      "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
+      "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
+      "href": "2501.01005-flashinfer.html",
+      "research_line": "Efficient Attention Kernels",
+      "line_role": "system",
+      "year": 2025,
+      "importance": 4,
+      "status": "read",
+      "reading_stage": "deep_read",
+      "review_stage": "",
+      "next_review": "2026-07-11",
+      "priority_score": 128,
+      "urgency": "high",
+      "category": "review",
+      "category_label": "复习",
+      "reasons": [
+        "缺复习计划：建议 2026-07-11",
+        "弱元数据：next_review, review_stage",
+        "分类粒度偏密，适合做标签归一化"
+      ],
+      "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review",
+      "commands": [
+        "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
+        "python3 scripts/apply_review_plan.py docs --write",
+        "python3 scripts/export_taxonomy_load.py docs --format csv --signal dense_tags --output docs/exports/taxonomy-load.csv"
+      ],
+      "action_ids": [
+        "taxonomy_action:split_candidate:domains:LLM Systems",
+        "taxonomy_action:split_candidate:status:read",
+        "taxonomy_action:split_candidate:reading_stage:deep_read",
+        "review_plan:2501.01005-flashinfer",
+        "taxonomy_action:merge_candidate:topics:Attention Kernels",
+        "taxonomy_action:merge_candidate:topics:GPU Systems",
+        "taxonomy_action:merge_candidate:topics:Inference Optimization",
+        "taxonomy_dense:2501.01005-flashinfer"
+      ],
+      "queue_hits": [
+        {
+          "id": "missing-review-plan",
+          "label": "缺复习计划",
+          "severity": "medium",
+          "preset": "schedule_review",
+          "href": "library.html?review=none&sort=importance"
+        },
+        {
+          "id": "code-unchecked",
+          "label": "有代码未检查",
+          "severity": "medium",
+          "preset": "code_check",
+          "href": "library.html?code=yes&sort=importance"
+        }
+      ]
+    },
+    {
+      "slug": "2602.06036-dflash",
+      "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
+      "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
+      "href": "2602.06036-dflash.html",
+      "research_line": "Parallel Decoding with Diffusion Models",
+      "line_role": "followup",
+      "year": 2026,
+      "importance": 4,
+      "status": "read",
+      "reading_stage": "deep_read",
+      "review_stage": "",
+      "next_review": "2026-07-04",
+      "priority_score": 120,
+      "urgency": "high",
+      "category": "review",
+      "category_label": "复习",
+      "reasons": [
+        "缺复习计划：建议 2026-07-04",
+        "弱元数据：next_review, review_stage"
+      ],
+      "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review",
+      "commands": [
+        "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
+        "python3 scripts/apply_review_plan.py docs --write"
+      ],
+      "action_ids": [
+        "taxonomy_action:split_candidate:domains:LLM Systems",
+        "taxonomy_action:split_candidate:status:read",
+        "taxonomy_action:split_candidate:reading_stage:deep_read",
+        "review_plan:2602.06036-dflash",
+        "taxonomy_action:merge_candidate:methods:KV injection",
+        "taxonomy_action:merge_candidate:methods:Speculative Decoding",
+        "taxonomy_action:merge_candidate:methods:block diffusion",
+        "taxonomy_action:merge_candidate:methods:parallel drafting"
+      ],
+      "queue_hits": [
+        {
+          "id": "missing-review-plan",
+          "label": "缺复习计划",
+          "severity": "medium",
+          "preset": "schedule_review",
+          "href": "library.html?review=none&sort=importance"
+        },
+        {
+          "id": "code-unchecked",
+          "label": "有代码未检查",
+          "severity": "medium",
+          "preset": "code_check",
+          "href": "library.html?code=yes&sort=importance"
+        }
+      ]
+    },
+    {
+      "slug": "2605.12825-orthrus",
+      "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion",
+      "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+      "href": "2605.12825-orthrus.html",
+      "research_line": "Parallel Decoding with Diffusion Models",
+      "line_role": "variant",
+      "year": 2026,
+      "importance": 4,
+      "status": "read",
+      "reading_stage": "deep_read",
+      "review_stage": "",
+      "next_review": "2026-07-04",
+      "priority_score": 120,
+      "urgency": "high",
+      "category": "review",
+      "category_label": "复习",
+      "reasons": [
+        "缺复习计划：建议 2026-07-04",
+        "弱元数据：next_review, review_stage"
+      ],
+      "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review",
+      "commands": [
+        "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
+        "python3 scripts/apply_review_plan.py docs --write"
+      ],
+      "action_ids": [
+        "taxonomy_action:split_candidate:domains:LLM Systems",
+        "taxonomy_action:split_candidate:status:read",
+        "taxonomy_action:split_candidate:reading_stage:deep_read",
+        "review_plan:2605.12825-orthrus",
+        "taxonomy_action:merge_candidate:methods:dual-view attention",
+        "taxonomy_action:merge_candidate:methods:forward KL distillation",
+        "taxonomy_action:merge_candidate:methods:intra-model consensus",
+        "taxonomy_action:merge_candidate:methods:masked diffusion"
+      ],
+      "queue_hits": [
+        {
+          "id": "missing-review-plan",
+          "label": "缺复习计划",
+          "severity": "medium",
+          "preset": "schedule_review",
+          "href": "library.html?review=none&sort=importance"
+        },
+        {
+          "id": "code-unchecked",
+          "label": "有代码未检查",
+          "severity": "medium",
+          "preset": "code_check",
+          "href": "library.html?code=yes&sort=importance"
+        }
+      ]
+    }
+  ],
+  "items": [
+    {
+      "slug": "2604.11035-introspective-dlm",
+      "title": "Introspective Diffusion Language Models",
+      "title_zh": "内省式扩散语言模型",
+      "href": "2604.11035-introspective-dlm.html",
+      "research_line": "Parallel Decoding with Diffusion Models",
+      "line_role": "foundation",
+      "year": 2026,
+      "importance": 5,
+      "status": "read",
+      "reading_stage": "deep_read",
+      "review_stage": "",
+      "next_review": "2026-06-18",
+      "priority_score": 140,
+      "urgency": "high",
+      "category": "review",
+      "category_label": "复习",
+      "reasons": [
+        "缺复习计划：建议 2026-06-18",
+        "弱元数据：next_review, review_stage",
+        "分类粒度偏密，适合做标签归一化"
+      ],
+      "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review",
+      "commands": [
+        "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
+        "python3 scripts/apply_review_plan.py docs --write",
+        "python3 scripts/export_taxonomy_load.py docs --format csv --signal dense_tags --output docs/exports/taxonomy-load.csv"
+      ],
+      "action_ids": [
+        "taxonomy_action:split_candidate:domains:LLM Systems",
+        "taxonomy_action:split_candidate:status:read",
+        "taxonomy_action:split_candidate:reading_stage:deep_read",
+        "review_plan:2604.11035-introspective-dlm",
+        "taxonomy_action:merge_candidate:topics:LLM",
+        "taxonomy_dense:2604.11035-introspective-dlm",
+        "taxonomy_action:merge_candidate:methods:SGLang serving",
+        "taxonomy_action:merge_candidate:methods:gated LoRA"
+      ],
+      "queue_hits": [
+        {
+          "id": "missing-review-plan",
+          "label": "缺复习计划",
+          "severity": "medium",
+          "preset": "schedule_review",
+          "href": "library.html?review=none&sort=importance"
+        },
+        {
+          "id": "code-unchecked",
+          "label": "有代码未检查",
+          "severity": "medium",
+          "preset": "code_check",
+          "href": "library.html?code=yes&sort=importance"
+        }
+      ]
+    },
+    {
+      "slug": "2307.08691-flashattention-2",
+      "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning",
+      "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
+      "href": "2307.08691-flashattention-2.html",
+      "research_line": "Efficient Attention Kernels",
+      "line_role": "foundation",
+      "year": 2023,
+      "importance": 5,
+      "status": "read",
+      "reading_stage": "deep_read",
+      "review_stage": "",
+      "next_review": "2026-06-25",
+      "priority_score": 132,
+      "urgency": "high",
+      "category": "review",
+      "category_label": "复习",
+      "reasons": [
+        "缺复习计划：建议 2026-06-25",
+        "弱元数据：next_review, review_stage"
+      ],
+      "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review",
+      "commands": [
+        "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
+        "python3 scripts/apply_review_plan.py docs --write"
+      ],
+      "action_ids": [
+        "taxonomy_action:split_candidate:domains:LLM Systems",
+        "taxonomy_action:split_candidate:status:read",
+        "taxonomy_action:split_candidate:reading_stage:deep_read",
+        "review_plan:2307.08691-flashattention-2",
+        "taxonomy_action:merge_candidate:topics:Efficient Attention",
+        "taxonomy_action:merge_candidate:topics:GPU Kernel Optimization",
+        "taxonomy_action:merge_candidate:topics:Long Context",
+        "taxonomy_action:merge_candidate:topics:Transformer"
+      ],
+      "queue_hits": [
+        {
+          "id": "missing-review-plan",
+          "label": "缺复习计划",
+          "severity": "medium",
+          "preset": "schedule_review",
+          "href": "library.html?review=none&sort=importance"
+        },
+        {
+          "id": "code-unchecked",
+          "label": "有代码未检查",
+          "severity": "medium",
+          "preset": "code_check",
+          "href": "library.html?code=yes&sort=importance"
+        }
+      ]
+    },
+    {
+      "slug": "2501.01005-flashinfer",
+      "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
+      "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
+      "href": "2501.01005-flashinfer.html",
+      "research_line": "Efficient Attention Kernels",
+      "line_role": "system",
+      "year": 2025,
+      "importance": 4,
+      "status": "read",
+      "reading_stage": "deep_read",
+      "review_stage": "",
+      "next_review": "2026-07-11",
+      "priority_score": 128,
+      "urgency": "high",
+      "category": "review",
+      "category_label": "复习",
+      "reasons": [
+        "缺复习计划：建议 2026-07-11",
+        "弱元数据：next_review, review_stage",
+        "分类粒度偏密，适合做标签归一化"
+      ],
+      "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review",
+      "commands": [
+        "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
+        "python3 scripts/apply_review_plan.py docs --write",
+        "python3 scripts/export_taxonomy_load.py docs --format csv --signal dense_tags --output docs/exports/taxonomy-load.csv"
+      ],
+      "action_ids": [
+        "taxonomy_action:split_candidate:domains:LLM Systems",
+        "taxonomy_action:split_candidate:status:read",
+        "taxonomy_action:split_candidate:reading_stage:deep_read",
+        "review_plan:2501.01005-flashinfer",
+        "taxonomy_action:merge_candidate:topics:Attention Kernels",
+        "taxonomy_action:merge_candidate:topics:GPU Systems",
+        "taxonomy_action:merge_candidate:topics:Inference Optimization",
+        "taxonomy_dense:2501.01005-flashinfer"
+      ],
+      "queue_hits": [
+        {
+          "id": "missing-review-plan",
+          "label": "缺复习计划",
+          "severity": "medium",
+          "preset": "schedule_review",
+          "href": "library.html?review=none&sort=importance"
+        },
+        {
+          "id": "code-unchecked",
+          "label": "有代码未检查",
+          "severity": "medium",
+          "preset": "code_check",
+          "href": "library.html?code=yes&sort=importance"
+        }
+      ]
+    },
+    {
+      "slug": "2602.06036-dflash",
+      "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
+      "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
+      "href": "2602.06036-dflash.html",
+      "research_line": "Parallel Decoding with Diffusion Models",
+      "line_role": "followup",
+      "year": 2026,
+      "importance": 4,
+      "status": "read",
+      "reading_stage": "deep_read",
+      "review_stage": "",
+      "next_review": "2026-07-04",
+      "priority_score": 120,
+      "urgency": "high",
+      "category": "review",
+      "category_label": "复习",
+      "reasons": [
+        "缺复习计划：建议 2026-07-04",
+        "弱元数据：next_review, review_stage"
+      ],
+      "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review",
+      "commands": [
+        "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
+        "python3 scripts/apply_review_plan.py docs --write"
+      ],
+      "action_ids": [
+        "taxonomy_action:split_candidate:domains:LLM Systems",
+        "taxonomy_action:split_candidate:status:read",
+        "taxonomy_action:split_candidate:reading_stage:deep_read",
+        "review_plan:2602.06036-dflash",
+        "taxonomy_action:merge_candidate:methods:KV injection",
+        "taxonomy_action:merge_candidate:methods:Speculative Decoding",
+        "taxonomy_action:merge_candidate:methods:block diffusion",
+        "taxonomy_action:merge_candidate:methods:parallel drafting"
+      ],
+      "queue_hits": [
+        {
+          "id": "missing-review-plan",
+          "label": "缺复习计划",
+          "severity": "medium",
+          "preset": "schedule_review",
+          "href": "library.html?review=none&sort=importance"
+        },
+        {
+          "id": "code-unchecked",
+          "label": "有代码未检查",
+          "severity": "medium",
+          "preset": "code_check",
+          "href": "library.html?code=yes&sort=importance"
+        }
+      ]
+    },
+    {
+      "slug": "2605.12825-orthrus",
+      "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion",
+      "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+      "href": "2605.12825-orthrus.html",
+      "research_line": "Parallel Decoding with Diffusion Models",
+      "line_role": "variant",
+      "year": 2026,
+      "importance": 4,
+      "status": "read",
+      "reading_stage": "deep_read",
+      "review_stage": "",
+      "next_review": "2026-07-04",
+      "priority_score": 120,
+      "urgency": "high",
+      "category": "review",
+      "category_label": "复习",
+      "reasons": [
+        "缺复习计划：建议 2026-07-04",
+        "弱元数据：next_review, review_stage"
+      ],
+      "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review",
+      "commands": [
+        "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
+        "python3 scripts/apply_review_plan.py docs --write"
+      ],
+      "action_ids": [
+        "taxonomy_action:split_candidate:domains:LLM Systems",
+        "taxonomy_action:split_candidate:status:read",
+        "taxonomy_action:split_candidate:reading_stage:deep_read",
+        "review_plan:2605.12825-orthrus",
+        "taxonomy_action:merge_candidate:methods:dual-view attention",
+        "taxonomy_action:merge_candidate:methods:forward KL distillation",
+        "taxonomy_action:merge_candidate:methods:intra-model consensus",
+        "taxonomy_action:merge_candidate:methods:masked diffusion"
+      ],
+      "queue_hits": [
+        {
+          "id": "missing-review-plan",
+          "label": "缺复习计划",
+          "severity": "medium",
+          "preset": "schedule_review",
+          "href": "library.html?review=none&sort=importance"
+        },
+        {
+          "id": "code-unchecked",
+          "label": "有代码未检查",
+          "severity": "medium",
+          "preset": "code_check",
+          "href": "library.html?code=yes&sort=importance"
+        }
+      ]
+    }
+  ],
+  "line_summary": [
+    {
+      "research_line": "Parallel Decoding with Diffusion Models",
+      "count": 3,
+      "average_score": 126.7,
+      "high": 3,
+      "medium": 0,
+      "top_slug": "2604.11035-introspective-dlm"
+    },
+    {
+      "research_line": "Efficient Attention Kernels",
+      "count": 2,
+      "average_score": 130.0,
+      "high": 2,
+      "medium": 0,
+      "top_slug": "2307.08691-flashattention-2"
+    }
+  ],
+  "csv_columns": [
+    "slug",
+    "priority_score",
+    "urgency",
+    "category",
+    "recommended_action",
+    "research_line",
+    "status",
+    "next_review",
+    "reasons",
+    "href"
+  ],
+  "commands": [
+    "python3 scripts/export_actions.py docs --output docs/exports/actions.md",
+    "python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv",
+    "python3 scripts/apply_library_metadata.py docs --input <metadata_patch.csv>"
+  ],
+  "links": {
+    "html": "priority.html",
+    "json": "priority.json",
+    "actions": "actions.html",
+    "queues": "queues.html",
+    "library": "library.html",
+    "review": "review.html",
+    "quality": "quality.html"
+  }
+}

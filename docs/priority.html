@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>研究线年份矩阵</title>
+  <title>优先级决策台</title>
   <style>
     :root {
       color-scheme: light;
@@ -350,174 +350,36 @@
       .data-table { display: block; overflow-x: auto; }
       header { padding-top: 28px; }
     }
-.matrix-layout {
+.priority-controls {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
-      gap: 16px;
-      align-items: start;
-    }
-    .matrix-table-wrap {
-      overflow-x: auto;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-    }
-    .research-matrix {
-      width: 100%;
-      min-width: 760px;
-      border-collapse: collapse;
-    }
-    .research-matrix th,
-    .research-matrix td {
-      border-bottom: 1px solid var(--line);
-      border-right: 1px solid var(--line);
-      padding: 8px;
-      vertical-align: middle;
-    }
-    .research-matrix thead th {
-      position: sticky;
-      top: 0;
-      z-index: 1;
-      background: #f0ebe1;
-      color: var(--muted);
-      font-size: 13px;
-      text-align: center;
-    }
-    .research-matrix tbody th {
-      position: sticky;
-      left: 0;
-      z-index: 1;
-      width: 220px;
-      background: var(--panel);
-      text-align: left;
-    }
-    .research-matrix tbody th span {
-      display: block;
-      line-height: 1.3;
-    }
-    .research-matrix tbody th small {
-      color: var(--muted);
-      font-weight: 650;
-    }
-    .research-matrix tr[hidden] { display: none; }
-    .matrix-cell {
-      display: grid;
-      place-items: center;
-      gap: 3px;
-      width: 100%;
-      min-width: 76px;
-      min-height: 54px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #faf7f0;
-      color: var(--ink);
-      cursor: pointer;
-      font: inherit;
-    }
-    .matrix-cell strong {
-      font-size: 18px;
-      line-height: 1;
-    }
-    .matrix-cell span {
-      max-width: 120px;
-      overflow: hidden;
-      color: var(--muted);
-      font-size: 11px;
-      line-height: 1.25;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .matrix-cell.heat-0 { opacity: .35; }
-    .matrix-cell.heat-1 { background: #edf3f1; }
-    .matrix-cell.heat-2 { background: #d9ebe8; }
-    .matrix-cell.heat-3 { background: #b9d9d6; }
-    .matrix-cell.heat-4 { background: #86bbb7; }
-    .matrix-cell.heat-5 { background: #4f9691; color: #fff; }
-    .matrix-cell.heat-5 span { color: #eef8f6; }
-    .matrix-cell.active {
-      outline: 3px solid color-mix(in srgb, var(--accent) 48%, transparent);
-      outline-offset: 2px;
-    }
-    .matrix-detail {
-      position: sticky;
-      top: 86px;
-      display: grid;
-      gap: 12px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-      padding: 16px;
-    }
-    .matrix-detail h2 {
-      margin: 0;
-      font-size: 20px;
-      line-height: 1.25;
-    }
-    .matrix-detail-list {
-      display: grid;
+      grid-template-columns: minmax(240px, 2fr) repeat(4, minmax(140px, 1fr)) auto auto;
       gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
     }
-    .matrix-paper {
-      display: grid;
-      gap: 6px;
-      padding: 10px;
+    .priority-controls input,
+    .priority-controls select {
+      width: 100%;
       border: 1px solid var(--line);
       border-radius: 8px;
-      background: #fffaf2;
-    }
-    .matrix-paper h3 {
-      margin: 0;
-      font-size: 15px;
-      line-height: 1.35;
-    }
-    .active-filters {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 8px;
-      min-height: 34px;
-      margin: -4px 0 16px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-    .active-filter-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      max-width: 280px;
-      min-height: 30px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: var(--chip);
+      background: var(--panel);
+      padding: 10px 12px;
       color: var(--ink);
-      padding: 0 10px;
       font: inherit;
-      cursor: pointer;
     }
-    .active-filter-chip span {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+    .priority-table {
+      min-width: 1180px;
     }
-    .active-filter-chip b {
-      color: var(--muted);
-      font-weight: 750;
+    .priority-table code {
+      white-space: normal;
+      overflow-wrap: anywhere;
     }
-    .active-filter-chip::after {
-      content: "x";
-      color: var(--muted);
-      font-weight: 850;
-    }
-    @media (max-width: 980px) {
-      .matrix-layout { grid-template-columns: 1fr; }
-      .matrix-detail { position: static; }
+    @media (max-width: 1000px) {
+      .priority-controls { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-<script>
-window.PAPER_WIKI = {"papers": [{"slug": "2602.06036-dflash", "title": "DFlash: Block Diffusion for Flash Speculative Decoding", "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法", "title_en": "DFlash: Block Diffusion for Flash Speculative Decoding", "line": "Parallel Decoding with Diffusion Models", "year": "2026", "role": "followup", "status": "read", "reading_stage": "deep_read", "importance": 4, "has_code": true, "href": "2602.06036-dflash.html", "topics": ["Diffusion Language Models", "LLM Inference", "LLM Serving", "Speculative Decoding"], "methods": ["block diffusion", "KV injection", "parallel drafting", "Speculative Decoding"]}, {"slug": "2604.11035-introspective-dlm", "title": "Introspective Diffusion Language Models", "title_zh": "内省式扩散语言模型", "title_en": "Introspective Diffusion Language Models", "line": "Parallel Decoding with Diffusion Models", "year": "2026", "role": "foundation", "status": "read", "reading_stage": "deep_read", "importance": 5, "has_code": true, "href": "2604.11035-introspective-dlm.html", "topics": ["Diffusion Language Models", "LLM", "LLM Serving", "Parallel Decoding"], "methods": ["gated LoRA", "introspective consistency", "introspective strided decoding", "logit-shifted causal training"]}, {"slug": "2605.12825-orthrus", "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion", "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成", "title_en": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion", "line": "Parallel Decoding with Diffusion Models", "year": "2026", "role": "variant", "status": "read", "reading_stage": "deep_read", "importance": 4, "has_code": true, "href": "2605.12825-orthrus.html", "topics": ["Diffusion Language Models", "KV Cache", "LLM Inference", "Parallel Decoding"], "methods": ["dual-view attention", "forward KL distillation", "intra-model consensus", "masked diffusion"]}, {"slug": "2501.01005-flashinfer", "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving", "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎", "title_en": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving", "line": "Efficient Attention Kernels", "year": "2025", "role": "system", "status": "read", "reading_stage": "deep_read", "importance": 4, "has_code": true, "href": "2501.01005-flashinfer.html", "topics": ["Attention Kernels", "GPU Systems", "Inference Optimization", "KV Cache"], "methods": ["block-sparse attention", "composable KV-cache format", "CUDA Graph", "FlashAttention"]}, {"slug": "2307.08691-flashattention-2", "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning", "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention", "title_en": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning", "line": "Efficient Attention Kernels", "year": "2023", "role": "foundation", "status": "read", "reading_stage": "deep_read", "importance": 5, "has_code": true, "href": "2307.08691-flashattention-2.html", "topics": ["Efficient Attention", "GPU Kernel Optimization", "Long Context", "Transformer"], "methods": ["CUDA / GPU parallelism", "FlashAttention", "online softmax", "tiling"]}], "controls": {"active_status_workflow": "personal", "status": ["unread", "skimmed", "reading", "read", "archived"], "reading_stage": ["skim", "normal_read", "deep_read", "code_checked"], "review_stage": ["fresh", "due", "reviewed"], "status_workflows": {"personal": {"status_values": ["unread", "skimmed", "reading", "read", "archived"], "reading_stage_values": ["skim", "normal_read", "deep_read", "code_checked"], "review_stage_values": ["fresh", "due", "reviewed"]}, "research": {"status_values": ["inbox", "triaged", "reading", "implemented", "cited", "archived"], "reading_stage_values": ["skim", "normal_read", "deep_read", "code_checked", "reproduced"], "review_stage_values": ["fresh", "due", "reviewed", "evergreen"]}}, "line_role": ["foundation", "baseline", "main", "system", "variant", "followup", "survey"], "bulk_presets": [{"id": "triage", "label": "标记待分流", "description": "把一批论文推进到初筛/分流队列，并安排一周内复看。", "fields": {"status": ["triaged", "unread"], "reading_stage": ["skimmed", "skim"], "review_stage": ["fresh"], "next_review_days": 7}}, {"id": "deep_read", "label": "进入深读", "description": "把筛选出的核心论文推进到深读队列。", "fields": {"status": ["reading", "triaged"], "reading_stage": ["deep_read"], "review_stage": ["fresh"], "next_review_days": 14}}, {"id": "code_check", "label": "补代码检查", "description": "把论文推进到代码检查/实现核对队列。", "fields": {"status": ["reading", "read"], "reading_stage": ["code_checked", "deep_read"], "review_stage": ["reviewed", "fresh"], "next_review_days": 30}}, {"id": "schedule_review", "label": "安排复习", "description": "为当前筛选队列补一个近期复习日期。", "fields": {"review_stage": ["due", "fresh"], "next_review_days": 14}}, {"id": "archive", "label": "归档队列", "description": "把一批不再活跃的论文移到归档状态。", "fields": {"status": ["archived", "read"], "review_stage": ["reviewed"]}}], "governance_policy": {"taxonomy_load": {"min_structure_labels": 3, "min_tags": 3, "max_tags": 10, "max_methods": 8}, "taxonomy_actions": {"singleton_max_count": 1, "watch_share": 0.4, "watch_min_count": 4, "split_share": 0.6, "split_min_count": 5}, "taxonomy_balance": {"high_score_below": 45, "medium_score_below": 70, "singleton_medium_count": 3, "unused_medium_count": 3}, "coverage": {"high_score_below": 70, "medium_score_below": 90, "missing_high_min": 2}}, "research_line_owners": {"Efficient Attention Kernels": {"owner": "kernel-owner", "team": "systems", "cadence": "monthly", "note": "Review new GPU kernel and serving papers."}, "Parallel Decoding with Diffusion Models": {"owner": "decoding-owner", "team": "generation", "cadence": "biweekly", "note": "Track diffusion language model and speculative decoding updates."}}, "label_definitions": {"domains": {"LLM Systems": {"description": "Systems-oriented papers about serving, inference, kernels, memory, and scalability for language models.", "owner": "systems", "status": "active"}}, "research_line": {"Efficient Attention Kernels": {"description": "Papers about exact or approximate attention kernels, GPU execution, and serving-time attention engines.", "owner": "kernel-owner", "status": "active"}, "Parallel Decoding with Diffusion Models": {"description": "Papers that use diffusion-style or speculative mechanisms for parallel token generation.", "owner": "decoding-owner", "status": "active"}}, "topics": {"Attention Kernels": {"description": "Attention implementation, scheduling, and memory-layout techniques used by LLM inference systems.", "owner": "kernel-owner", "status": "active"}, "Parallel Decoding": {"description": "Methods that generate or verify multiple tokens per step rather than strictly left-to-right one-token decoding.", "owner": "decoding-owner", "status": "active"}, "Speculative Decoding": {"description": "Draft-and-verify decoding methods that preserve target-model output distribution while improving latency.", "owner": "decoding-owner", "status": "active"}}, "methods": {"FlashAttention": {"description": "IO-aware exact attention kernel family that reduces HBM traffic with tiling and online softmax.", "owner": "kernel-owner", "status": "active"}, "Speculative Decoding": {"description": "Use a draft process and acceptance rule to accelerate autoregressive generation.", "owner": "decoding-owner", "status": "active"}}, "status": {"unread": {"description": "Known paper that has not been opened or routed into a reading pass yet.", "owner": "workflow", "status": "active"}, "skimmed": {"description": "Paper has received a quick pass; keep it visible for deeper reading or triage.", "owner": "workflow", "status": "active"}, "reading": {"description": "Currently being read, annotated, reproduced, or used for an active synthesis task.", "owner": "workflow", "status": "active"}, "read": {"description": "Main report is stable enough to use as reference material.", "owner": "workflow", "status": "active"}, "archived": {"description": "Kept for provenance but no longer active in current queues or weekly review.", "owner": "workflow", "status": "active"}, "inbox": {"description": "Research workflow entry state for candidate papers that need triage.", "owner": "workflow", "status": "active"}, "triaged": {"description": "Research candidate has been classified and assigned a likely next action.", "owner": "workflow", "status": "active"}, "implemented": {"description": "Core idea or code path has been implemented, reproduced, or mapped to local code.", "owner": "workflow", "status": "active"}, "cited": {"description": "Paper has been used in a writeup, roadmap, experiment note, or related synthesis.", "owner": "workflow", "status": "active"}}, "reading_stage": {"skim": {"description": "Fast pass for scope, claims, and whether the paper belongs in this library.", "owner": "workflow", "status": "active"}, "normal_read": {"description": "Standard reading pass focused on method, experiments, and limitations.", "owner": "workflow", "status": "active"}, "deep_read": {"description": "Detailed pass including equations, assumptions, ablations, and cross-paper comparison.", "owner": "workflow", "status": "active"}, "code_checked": {"description": "Implementation, repository structure, or reproducibility notes have been checked.", "owner": "workflow", "status": "active"}, "reproduced": {"description": "Key result, benchmark, or implementation behavior has been reproduced locally or in a controlled experiment.", "owner": "workflow", "status": "active"}}, "review_stage": {"fresh": {"description": "Recently reviewed; no immediate spaced-review action is needed.", "owner": "workflow", "status": "active"}, "due": {"description": "Ready for scheduled review, synthesis, or update against newer related work.", "owner": "workflow", "status": "active"}, "reviewed": {"description": "Completed the planned review checkpoint.", "owner": "workflow", "status": "active"}, "evergreen": {"description": "Stable foundational paper worth keeping in recurring review or teaching sets.", "owner": "workflow", "status": "active"}}}}};
-</script>
 
 <button class="button quick-open" type="button" id="quickOpen">快速跳转</button>
 <div class="quick-panel" id="quickPanel" hidden>
@@ -531,357 +393,216 @@ window.PAPER_WIKI = {"papers": [{"slug": "2602.06036-dflash", "title": "DFlash: 
 </div>
 
 <header class="shell">
-  <div class="eyebrow">Research Matrix</div>
-  <h1>研究线年份矩阵</h1>
-  <p class="lead">用矩阵方式查看每条研究线在不同年份的论文覆盖，快速发现高密度阶段、空档年份和需要补读的方向。</p>
+  <div class="eyebrow">Priority Desk</div>
+  <h1>优先级决策台</h1>
+  <p class="lead">把复习、分类、元数据、代码观察和阅读阶段合并成论文级排序，帮你在论文变多后判断“现在最该处理哪篇”。</p>
   <div class="stats">
-    <a class="stat" href="index.html">卡片首页</a>
+    <a class="stat" href="index.html">返回首页</a>
     <a class="stat" href="library.html">论文库表格</a>
-    <a class="stat" href="timeline.html">时间轴</a>
-    <a class="stat" href="matrix.html">研究矩阵</a>
-    <a class="stat" href="dashboard.html">管理控制台</a>
-    <a class="stat" href="collections.html">集合视图</a>
-    <a class="stat" href="related.html">关联网络</a>
-    <a class="stat" href="gaps.html">研究缺口</a>
-    <a class="stat" href="taxonomy.html">分类治理</a>
-    <a class="stat" href="lines/index.html">研究线</a>
+    <a class="stat" href="actions.html">行动中心</a>
+    <a class="stat" href="queues.html">运营队列</a>
+    <a class="stat" href="review.html">复习计划</a>
+    <a class="stat" href="priority.json">Priority JSON</a>
     <span class="stat">论文 5</span>
-    <span class="stat">年份 3</span>
-    <span class="stat">研究线 2</span>
+    <span class="stat">高优先级 5</span>
+    <span class="stat">Top 5</span>
   </div>
 </header>
-<div class="toolbar">
-  <div class="shell controls">
-    <input id="matrixSearch" type="search" placeholder="搜索研究线">
-    <select id="matrixTrack"><option value="">全部方向</option><option value="Inference Acceleration">Inference Acceleration (3)</option><option value="Parallel Decoding">Parallel Decoding (3)</option><option value="Attention Kernels">Attention Kernels (2)</option><option value="Inference Serving Systems">Inference Serving Systems (1)</option></select>
-    <select id="matrixWorkflow" aria-label="状态体系"></select>
-    <select id="matrixStatus"><option value="">全部状态</option><option value="read">read (5)</option><option value="archived">archived (0)</option><option value="reading">reading (0)</option><option value="skimmed">skimmed (0)</option><option value="unread">unread (0)</option></select>
-    <select id="matrixImportance"><option value="">重要性</option><option value="5">含 5 星</option><option value="4">含 4 星及以上</option><option value="3">含 3 星及以上</option></select>
-  </div>
-</div>
 <main class="shell">
-  <div class="results-bar">
-    <strong id="matrixCount">显示 2 / 2 条研究线</strong>
-    <div class="results-actions">
-      <button id="matrixCopyLink" class="button" type="button">复制当前链接</button>
-      <button id="matrixReset" class="button" type="button">重置筛选</button>
+  <section class="metric-grid">
+    <section class="metric-card"><span>高优先级</span><strong>5</strong><span>需要立即处理</span></section>
+    <section class="metric-card"><span>中优先级</span><strong>0</strong><span>本周维护队列</span></section>
+    <section class="metric-card"><span>分类治理</span><strong>0</strong><span>标签 / drift / 粒度</span></section>
+    <section class="metric-card"><span>复习相关</span><strong>5</strong><span>到期或缺计划</span></section>
+  </section>
+  <section>
+    <h2 class="section-title">研究线压力</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>研究线</th><th>论文</th><th>平均分</th><th>高</th><th>中</th><th>Top slug</th></tr></thead><tbody><tr><td><a href="library.html?line=Parallel+Decoding+with+Diffusion+Models">Parallel Decoding with Diffusion Models</a></td><td>3</td><td>126.7</td><td>3</td><td>0</td><td>2604.11035-introspective-dlm</td></tr><tr><td><a href="library.html?line=Efficient+Attention+Kernels">Efficient Attention Kernels</a></td><td>2</td><td>130.0</td><td>2</td><td>0</td><td>2307.08691-flashattention-2</td></tr></tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">论文级优先队列</h2>
+    <div class="priority-controls">
+      <input id="prioritySearch" type="search" placeholder="搜索标题、slug、研究线、原因">
+      <select id="priorityUrgency"><option value="">全部优先级</option><option value="high">高 (5)</option></select>
+      <select id="priorityCategory"><option value="">全部类型</option><option value="review">review (5)</option></select>
+      <select id="priorityLine"><option value="">全部研究线</option><option value="Parallel Decoding with Diffusion Models">Parallel Decoding with Diffusion Models (3)</option><option value="Efficient Attention Kernels">Efficient Attention Kernels (2)</option></select>
+      <select id="prioritySort"><option value="priority">优先级</option><option value="line">研究线</option><option value="category">类型</option><option value="title">标题</option></select>
+      <strong id="priorityCount">5 项</strong>
+      <button id="downloadPriorityCsv" class="button" type="button">下载当前 CSV</button>
+      <button id="copyPriorityMarkdown" class="button" type="button">复制队列</button>
     </div>
-  </div>
-  <div class="active-filters" id="matrixActiveFilters" aria-live="polite"></div>
-  <div class="matrix-layout">
-    <div class="matrix-table-wrap">
-      <table class="research-matrix">
-        <thead><tr><th>研究线</th><th>2026</th><th>2025</th><th>2023</th></tr></thead>
-        <tbody><tr class="matrix-row"
+    <div class="table-wrap">
+      <table class="data-table priority-table"><thead><tr><th>优先级</th><th>论文</th><th>研究线</th><th>建议动作</th><th>原因</th><th>命中队列</th><th>状态</th><th>命令</th></tr></thead><tbody id="priorityRows"><tr
+  data-search="2604.11035-introspective-dlm introspective diffusion language models 内省式扩散语言模型 parallel decoding with diffusion models review 复习 high 立即处理：复习论文并更新 last_reviewed / next_review 缺复习计划：建议 2026-06-18 弱元数据：next_review, review_stage 分类粒度偏密，适合做标签归一化"
+  data-urgency="high"
+  data-category="review"
   data-line="Parallel Decoding with Diffusion Models"
-  data-search="parallel decoding with diffusion models"
-  data-tracks="Inference Acceleration|Parallel Decoding"
-  data-statuses="read"
-  data-importance="5">
-  <th scope="row"><span>Parallel Decoding with Diffusion Models</span><small>3 篇</small></th>
-  <td>
-  <button class="matrix-cell heat-5" type="button"
-    data-line="Parallel Decoding with Diffusion Models"
-    data-year="2026"
-    data-count="3"
-    aria-label="Parallel Decoding with Diffusion Models 2026 3 篇">
-    <strong>3</strong>
-    <span>DFlash：用于快速 speculative decoding 的块扩散方法; 内省式扩散语言模型; Orthrus：通过双视角扩散实现内存高效的并行 token 生成</span>
-  </button>
-</td><td>
-  <button class="matrix-cell heat-0" type="button"
-    data-line="Parallel Decoding with Diffusion Models"
-    data-year="2025"
-    data-count="0"
-    aria-label="Parallel Decoding with Diffusion Models 2025 0 篇">
-    <strong></strong>
-    <span></span>
-  </button>
-</td><td>
-  <button class="matrix-cell heat-0" type="button"
-    data-line="Parallel Decoding with Diffusion Models"
-    data-year="2023"
-    data-count="0"
-    aria-label="Parallel Decoding with Diffusion Models 2023 0 篇">
-    <strong></strong>
-    <span></span>
-  </button>
-</td>
-</tr><tr class="matrix-row"
+  data-score="140"
+  data-slug="2604.11035-introspective-dlm">
+  <td><span class="flag">高</span><div class="meta">P140</div></td>
+  <td class="library-title"><strong><a href="2604.11035-introspective-dlm.html">内省式扩散语言模型</a></strong><div class="meta">2604.11035-introspective-dlm</div></td>
+  <td>Parallel Decoding with Diffusion Models<div class="meta">foundation</div></td>
+  <td><span class="flag">复习</span><div class="meta">立即处理：复习论文并更新 last_reviewed / next_review</div></td>
+  <td><div class="chips"><span class="chip">缺复习计划：建议 2026-06-18</span><span class="chip">弱元数据：next_review, review_stage</span><span class="chip">分类粒度偏密，适合做标签归一化</span></div></td>
+  <td><div class="chips"><span class="chip">缺复习计划</span><span class="chip">有代码未检查</span></div></td>
+  <td>2026-06-18<div class="meta">read / deep_read</div></td>
+  <td><code>python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv</code></td>
+</tr><tr
+  data-search="2307.08691-flashattention-2 flashattention-2: faster attention with better parallelism and work partitioning flashattention-2：用更好的并行性与工作划分加速 attention efficient attention kernels review 复习 high 立即处理：复习论文并更新 last_reviewed / next_review 缺复习计划：建议 2026-06-25 弱元数据：next_review, review_stage"
+  data-urgency="high"
+  data-category="review"
   data-line="Efficient Attention Kernels"
-  data-search="efficient attention kernels"
-  data-tracks="Attention Kernels|Inference Serving Systems"
-  data-statuses="read"
-  data-importance="5">
-  <th scope="row"><span>Efficient Attention Kernels</span><small>2 篇</small></th>
-  <td>
-  <button class="matrix-cell heat-0" type="button"
-    data-line="Efficient Attention Kernels"
-    data-year="2026"
-    data-count="0"
-    aria-label="Efficient Attention Kernels 2026 0 篇">
-    <strong></strong>
-    <span></span>
-  </button>
-</td><td>
-  <button class="matrix-cell heat-2" type="button"
-    data-line="Efficient Attention Kernels"
-    data-year="2025"
-    data-count="1"
-    aria-label="Efficient Attention Kernels 2025 1 篇">
-    <strong>1</strong>
-    <span>FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</span>
-  </button>
-</td><td>
-  <button class="matrix-cell heat-2" type="button"
-    data-line="Efficient Attention Kernels"
-    data-year="2023"
-    data-count="1"
-    aria-label="Efficient Attention Kernels 2023 1 篇">
-    <strong>1</strong>
-    <span>FlashAttention-2：用更好的并行性与工作划分加速 Attention</span>
-  </button>
-</td>
-</tr></tbody>
-      </table>
+  data-score="132"
+  data-slug="2307.08691-flashattention-2">
+  <td><span class="flag">高</span><div class="meta">P132</div></td>
+  <td class="library-title"><strong><a href="2307.08691-flashattention-2.html">FlashAttention-2：用更好的并行性与工作划分加速 Attention</a></strong><div class="meta">2307.08691-flashattention-2</div></td>
+  <td>Efficient Attention Kernels<div class="meta">foundation</div></td>
+  <td><span class="flag">复习</span><div class="meta">立即处理：复习论文并更新 last_reviewed / next_review</div></td>
+  <td><div class="chips"><span class="chip">缺复习计划：建议 2026-06-25</span><span class="chip">弱元数据：next_review, review_stage</span></div></td>
+  <td><div class="chips"><span class="chip">缺复习计划</span><span class="chip">有代码未检查</span></div></td>
+  <td>2026-06-25<div class="meta">read / deep_read</div></td>
+  <td><code>python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv</code></td>
+</tr><tr
+  data-search="2501.01005-flashinfer flashinfer: efficient and customizable attention engine for llm inference serving flashinfer：面向 llm 推理服务的高效可定制 attention 引擎 efficient attention kernels review 复习 high 立即处理：复习论文并更新 last_reviewed / next_review 缺复习计划：建议 2026-07-11 弱元数据：next_review, review_stage 分类粒度偏密，适合做标签归一化"
+  data-urgency="high"
+  data-category="review"
+  data-line="Efficient Attention Kernels"
+  data-score="128"
+  data-slug="2501.01005-flashinfer">
+  <td><span class="flag">高</span><div class="meta">P128</div></td>
+  <td class="library-title"><strong><a href="2501.01005-flashinfer.html">FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎</a></strong><div class="meta">2501.01005-flashinfer</div></td>
+  <td>Efficient Attention Kernels<div class="meta">system</div></td>
+  <td><span class="flag">复习</span><div class="meta">立即处理：复习论文并更新 last_reviewed / next_review</div></td>
+  <td><div class="chips"><span class="chip">缺复习计划：建议 2026-07-11</span><span class="chip">弱元数据：next_review, review_stage</span><span class="chip">分类粒度偏密，适合做标签归一化</span></div></td>
+  <td><div class="chips"><span class="chip">缺复习计划</span><span class="chip">有代码未检查</span></div></td>
+  <td>2026-07-11<div class="meta">read / deep_read</div></td>
+  <td><code>python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv</code></td>
+</tr><tr
+  data-search="2602.06036-dflash dflash: block diffusion for flash speculative decoding dflash：用于快速 speculative decoding 的块扩散方法 parallel decoding with diffusion models review 复习 high 立即处理：复习论文并更新 last_reviewed / next_review 缺复习计划：建议 2026-07-04 弱元数据：next_review, review_stage"
+  data-urgency="high"
+  data-category="review"
+  data-line="Parallel Decoding with Diffusion Models"
+  data-score="120"
+  data-slug="2602.06036-dflash">
+  <td><span class="flag">高</span><div class="meta">P120</div></td>
+  <td class="library-title"><strong><a href="2602.06036-dflash.html">DFlash：用于快速 speculative decoding 的块扩散方法</a></strong><div class="meta">2602.06036-dflash</div></td>
+  <td>Parallel Decoding with Diffusion Models<div class="meta">followup</div></td>
+  <td><span class="flag">复习</span><div class="meta">立即处理：复习论文并更新 last_reviewed / next_review</div></td>
+  <td><div class="chips"><span class="chip">缺复习计划：建议 2026-07-04</span><span class="chip">弱元数据：next_review, review_stage</span></div></td>
+  <td><div class="chips"><span class="chip">缺复习计划</span><span class="chip">有代码未检查</span></div></td>
+  <td>2026-07-04<div class="meta">read / deep_read</div></td>
+  <td><code>python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv</code></td>
+</tr><tr
+  data-search="2605.12825-orthrus orthrus: memory-efficient parallel token generation via dual-view diffusion orthrus：通过双视角扩散实现内存高效的并行 token 生成 parallel decoding with diffusion models review 复习 high 立即处理：复习论文并更新 last_reviewed / next_review 缺复习计划：建议 2026-07-04 弱元数据：next_review, review_stage"
+  data-urgency="high"
+  data-category="review"
+  data-line="Parallel Decoding with Diffusion Models"
+  data-score="120"
+  data-slug="2605.12825-orthrus">
+  <td><span class="flag">高</span><div class="meta">P120</div></td>
+  <td class="library-title"><strong><a href="2605.12825-orthrus.html">Orthrus：通过双视角扩散实现内存高效的并行 token 生成</a></strong><div class="meta">2605.12825-orthrus</div></td>
+  <td>Parallel Decoding with Diffusion Models<div class="meta">variant</div></td>
+  <td><span class="flag">复习</span><div class="meta">立即处理：复习论文并更新 last_reviewed / next_review</div></td>
+  <td><div class="chips"><span class="chip">缺复习计划：建议 2026-07-04</span><span class="chip">弱元数据：next_review, review_stage</span></div></td>
+  <td><div class="chips"><span class="chip">缺复习计划</span><span class="chip">有代码未检查</span></div></td>
+  <td>2026-07-04<div class="meta">read / deep_read</div></td>
+  <td><code>python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv</code></td>
+</tr></tbody></table>
     </div>
-    <aside class="matrix-detail" aria-live="polite">
-      <h2 id="matrixDetailTitle">选择一个格子</h2>
-      <p id="matrixDetailMeta" class="meta">点击矩阵中的数字，查看该研究线该年份的论文。</p>
-      <div id="matrixDetailList" class="matrix-detail-list"></div>
-    </aside>
-  </div>
+  </section>
 </main>
 <script>
-const matrixRows = Array.from(document.querySelectorAll(".matrix-row"));
-const matrixCells = Array.from(document.querySelectorAll(".matrix-cell"));
-const matrixSearch = document.querySelector("#matrixSearch");
-const matrixTrack = document.querySelector("#matrixTrack");
-const matrixWorkflow = document.querySelector("#matrixWorkflow");
-const matrixStatus = document.querySelector("#matrixStatus");
-const matrixImportance = document.querySelector("#matrixImportance");
-const matrixReset = document.querySelector("#matrixReset");
-const matrixCopyLink = document.querySelector("#matrixCopyLink");
-const matrixActiveFilters = document.querySelector("#matrixActiveFilters");
-const matrixCount = document.querySelector("#matrixCount");
-const matrixDetailTitle = document.querySelector("#matrixDetailTitle");
-const matrixDetailMeta = document.querySelector("#matrixDetailMeta");
-const matrixDetailList = document.querySelector("#matrixDetailList");
-const matrixPapers = window.PAPER_WIKI.papers || [];
-const matrixControls = window.PAPER_WIKI.controls || {};
-const matrixWorkflows = matrixControls.status_workflows || {};
-const activeMatrixWorkflow = matrixControls.active_status_workflow || Object.keys(matrixWorkflows)[0] || "default";
-const fallbackMatrixStatuses = Array.isArray(matrixControls.status) ? matrixControls.status : [];
-const observedMatrixStatuses = Array.from(new Set(matrixPapers.map(paper => paper.status).filter(Boolean)));
-const matrixStateControls = [
-  ["q", matrixSearch],
-  ["track", matrixTrack],
-  ["workflow", matrixWorkflow],
-  ["status", matrixStatus],
-  ["importance", matrixImportance],
-];
-const matrixControlsByKey = new Map(matrixStateControls);
-const matrixFilterLabels = {
-  q: "搜索",
-  track: "方向",
-  workflow: "状态体系",
-  status: "状态",
-  importance: "重要性",
-};
+const priorityItems = [{"slug": "2604.11035-introspective-dlm", "title": "Introspective Diffusion Language Models", "title_zh": "内省式扩散语言模型", "href": "2604.11035-introspective-dlm.html", "research_line": "Parallel Decoding with Diffusion Models", "line_role": "foundation", "year": 2026, "importance": 5, "status": "read", "reading_stage": "deep_read", "review_stage": "", "next_review": "2026-06-18", "priority_score": 140, "urgency": "high", "category": "review", "category_label": "复习", "reasons": ["缺复习计划：建议 2026-06-18", "弱元数据：next_review, review_stage", "分类粒度偏密，适合做标签归一化"], "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review", "commands": ["python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv", "python3 scripts/apply_review_plan.py docs --write", "python3 scripts/export_taxonomy_load.py docs --format csv --signal dense_tags --output docs/exports/taxonomy-load.csv"], "action_ids": ["taxonomy_action:split_candidate:domains:LLM Systems", "taxonomy_action:split_candidate:status:read", "taxonomy_action:split_candidate:reading_stage:deep_read", "review_plan:2604.11035-introspective-dlm", "taxonomy_action:merge_candidate:topics:LLM", "taxonomy_dense:2604.11035-introspective-dlm", "taxonomy_action:merge_candidate:methods:SGLang serving", "taxonomy_action:merge_candidate:methods:gated LoRA"], "queue_hits": [{"id": "missing-review-plan", "label": "缺复习计划", "severity": "medium", "preset": "schedule_review", "href": "library.html?review=none&sort=importance"}, {"id": "code-unchecked", "label": "有代码未检查", "severity": "medium", "preset": "code_check", "href": "library.html?code=yes&sort=importance"}]}, {"slug": "2307.08691-flashattention-2", "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning", "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention", "href": "2307.08691-flashattention-2.html", "research_line": "Efficient Attention Kernels", "line_role": "foundation", "year": 2023, "importance": 5, "status": "read", "reading_stage": "deep_read", "review_stage": "", "next_review": "2026-06-25", "priority_score": 132, "urgency": "high", "category": "review", "category_label": "复习", "reasons": ["缺复习计划：建议 2026-06-25", "弱元数据：next_review, review_stage"], "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review", "commands": ["python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv", "python3 scripts/apply_review_plan.py docs --write"], "action_ids": ["taxonomy_action:split_candidate:domains:LLM Systems", "taxonomy_action:split_candidate:status:read", "taxonomy_action:split_candidate:reading_stage:deep_read", "review_plan:2307.08691-flashattention-2", "taxonomy_action:merge_candidate:topics:Efficient Attention", "taxonomy_action:merge_candidate:topics:GPU Kernel Optimization", "taxonomy_action:merge_candidate:topics:Long Context", "taxonomy_action:merge_candidate:topics:Transformer"], "queue_hits": [{"id": "missing-review-plan", "label": "缺复习计划", "severity": "medium", "preset": "schedule_review", "href": "library.html?review=none&sort=importance"}, {"id": "code-unchecked", "label": "有代码未检查", "severity": "medium", "preset": "code_check", "href": "library.html?code=yes&sort=importance"}]}, {"slug": "2501.01005-flashinfer", "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving", "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎", "href": "2501.01005-flashinfer.html", "research_line": "Efficient Attention Kernels", "line_role": "system", "year": 2025, "importance": 4, "status": "read", "reading_stage": "deep_read", "review_stage": "", "next_review": "2026-07-11", "priority_score": 128, "urgency": "high", "category": "review", "category_label": "复习", "reasons": ["缺复习计划：建议 2026-07-11", "弱元数据：next_review, review_stage", "分类粒度偏密，适合做标签归一化"], "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review", "commands": ["python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv", "python3 scripts/apply_review_plan.py docs --write", "python3 scripts/export_taxonomy_load.py docs --format csv --signal dense_tags --output docs/exports/taxonomy-load.csv"], "action_ids": ["taxonomy_action:split_candidate:domains:LLM Systems", "taxonomy_action:split_candidate:status:read", "taxonomy_action:split_candidate:reading_stage:deep_read", "review_plan:2501.01005-flashinfer", "taxonomy_action:merge_candidate:topics:Attention Kernels", "taxonomy_action:merge_candidate:topics:GPU Systems", "taxonomy_action:merge_candidate:topics:Inference Optimization", "taxonomy_dense:2501.01005-flashinfer"], "queue_hits": [{"id": "missing-review-plan", "label": "缺复习计划", "severity": "medium", "preset": "schedule_review", "href": "library.html?review=none&sort=importance"}, {"id": "code-unchecked", "label": "有代码未检查", "severity": "medium", "preset": "code_check", "href": "library.html?code=yes&sort=importance"}]}, {"slug": "2602.06036-dflash", "title": "DFlash: Block Diffusion for Flash Speculative Decoding", "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法", "href": "2602.06036-dflash.html", "research_line": "Parallel Decoding with Diffusion Models", "line_role": "followup", "year": 2026, "importance": 4, "status": "read", "reading_stage": "deep_read", "review_stage": "", "next_review": "2026-07-04", "priority_score": 120, "urgency": "high", "category": "review", "category_label": "复习", "reasons": ["缺复习计划：建议 2026-07-04", "弱元数据：next_review, review_stage"], "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review", "commands": ["python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv", "python3 scripts/apply_review_plan.py docs --write"], "action_ids": ["taxonomy_action:split_candidate:domains:LLM Systems", "taxonomy_action:split_candidate:status:read", "taxonomy_action:split_candidate:reading_stage:deep_read", "review_plan:2602.06036-dflash", "taxonomy_action:merge_candidate:methods:KV injection", "taxonomy_action:merge_candidate:methods:Speculative Decoding", "taxonomy_action:merge_candidate:methods:block diffusion", "taxonomy_action:merge_candidate:methods:parallel drafting"], "queue_hits": [{"id": "missing-review-plan", "label": "缺复习计划", "severity": "medium", "preset": "schedule_review", "href": "library.html?review=none&sort=importance"}, {"id": "code-unchecked", "label": "有代码未检查", "severity": "medium", "preset": "code_check", "href": "library.html?code=yes&sort=importance"}]}, {"slug": "2605.12825-orthrus", "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion", "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成", "href": "2605.12825-orthrus.html", "research_line": "Parallel Decoding with Diffusion Models", "line_role": "variant", "year": 2026, "importance": 4, "status": "read", "reading_stage": "deep_read", "review_stage": "", "next_review": "2026-07-04", "priority_score": 120, "urgency": "high", "category": "review", "category_label": "复习", "reasons": ["缺复习计划：建议 2026-07-04", "弱元数据：next_review, review_stage"], "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review", "commands": ["python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv", "python3 scripts/apply_review_plan.py docs --write"], "action_ids": ["taxonomy_action:split_candidate:domains:LLM Systems", "taxonomy_action:split_candidate:status:read", "taxonomy_action:split_candidate:reading_stage:deep_read", "review_plan:2605.12825-orthrus", "taxonomy_action:merge_candidate:methods:dual-view attention", "taxonomy_action:merge_candidate:methods:forward KL distillation", "taxonomy_action:merge_candidate:methods:intra-model consensus", "taxonomy_action:merge_candidate:methods:masked diffusion"], "queue_hits": [{"id": "missing-review-plan", "label": "缺复习计划", "severity": "medium", "preset": "schedule_review", "href": "library.html?review=none&sort=importance"}, {"id": "code-unchecked", "label": "有代码未检查", "severity": "medium", "preset": "code_check", "href": "library.html?code=yes&sort=importance"}]}];
+const prioritySearch = document.querySelector("#prioritySearch");
+const priorityUrgency = document.querySelector("#priorityUrgency");
+const priorityCategory = document.querySelector("#priorityCategory");
+const priorityLine = document.querySelector("#priorityLine");
+const prioritySort = document.querySelector("#prioritySort");
+const priorityCount = document.querySelector("#priorityCount");
+const priorityBody = document.querySelector("#priorityRows");
+const priorityRows = Array.from(document.querySelectorAll("#priorityRows tr"));
+const downloadPriorityCsv = document.querySelector("#downloadPriorityCsv");
+const copyPriorityMarkdown = document.querySelector("#copyPriorityMarkdown");
+const priorityUrgencyRank = { high: 0, medium: 1, low: 2, watch: 3 };
 
-function matrixTokens(value) {
-  return String(value || "").split("|").filter(Boolean);
+function priorityCsvCell(value) {
+  const text = String(value ?? "");
+  return (text.includes(",") || text.includes('"') || text.includes("\n"))
+    ? `"${text.replaceAll('"', '""')}"`
+    : text;
 }
 
-function esc(value) {
-  return String(value ?? "").replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char]));
+function visiblePriorityRows() {
+  return priorityRows.filter(row => !row.hidden);
 }
 
-function orderedMatrixValues(values) {
-  return Array.from(new Set(values.map(value => String(value || "").trim()).filter(Boolean)));
-}
-
-function matrixWorkflowValues(name) {
-  const workflow = matrixWorkflows[name] || {};
-  const configured = Array.isArray(workflow.status_values) ? workflow.status_values : fallbackMatrixStatuses;
-  return orderedMatrixValues([...configured, ...observedMatrixStatuses]);
-}
-
-function populateMatrixWorkflowOptions() {
-  const names = Object.keys(matrixWorkflows);
-  const workflowNames = names.length ? names : [activeMatrixWorkflow];
-  matrixWorkflow.replaceChildren(...workflowNames.map(name => {
-    const label = name === activeMatrixWorkflow ? `${name} (默认)` : name;
-    return new Option(label, name);
-  }));
-  matrixWorkflow.value = workflowNames.includes(activeMatrixWorkflow) ? activeMatrixWorkflow : workflowNames[0] || "";
-}
-
-function applyMatrixWorkflow() {
-  const current = matrixStatus.value;
-  const values = matrixWorkflowValues(matrixWorkflow.value || activeMatrixWorkflow);
-  matrixStatus.replaceChildren(new Option("全部状态", ""));
-  values.forEach(value => {
-    const count = matrixPapers.filter(paper => paper.status === value).length;
-    matrixStatus.appendChild(new Option(`${value} (${count})`, value));
-  });
-  matrixStatus.value = values.includes(current) ? current : "";
-}
-
-function matrixDefaultValue(key) {
-  return key === "workflow" ? activeMatrixWorkflow : "";
-}
-
-function matrixState() {
-  const state = {};
-  matrixStateControls.forEach(([key, control]) => {
-    const defaultValue = matrixDefaultValue(key);
-    if (control.value && control.value !== defaultValue) state[key] = control.value;
-  });
-  return state;
-}
-
-function matrixCleanOptionLabel(label) {
-  return String(label || "").replace(/\s\(\d+\)$/, "").replace(/\s\(默认\)$/, "");
-}
-
-function matrixDisplayValue(key, control) {
-  if (key === "q") return control.value.trim();
-  const option = control.options && control.selectedIndex >= 0 ? control.options[control.selectedIndex] : null;
-  return matrixCleanOptionLabel(option ? option.textContent : control.value);
-}
-
-function renderMatrixActiveFilters() {
-  const state = matrixState();
-  const entries = Object.entries(state).filter(([key]) => matrixControlsByKey.has(key));
-  matrixActiveFilters.replaceChildren();
-  if (!entries.length) {
-    matrixActiveFilters.textContent = "未设置筛选条件";
-    return;
-  }
-  const prefix = document.createElement("span");
-  prefix.textContent = "当前筛选";
-  matrixActiveFilters.appendChild(prefix);
-  entries.forEach(([key]) => {
-    const control = matrixControlsByKey.get(key);
-    const chip = document.createElement("button");
-    chip.className = "active-filter-chip";
-    chip.type = "button";
-    chip.dataset.filterKey = key;
-    chip.title = `移除${matrixFilterLabels[key] || key}筛选`;
-    const name = document.createElement("b");
-    name.textContent = matrixFilterLabels[key] || key;
-    const value = document.createElement("span");
-    value.textContent = matrixDisplayValue(key, control);
-    chip.append(name, value);
-    matrixActiveFilters.appendChild(chip);
+function sortPriorityRows(rows) {
+  const mode = prioritySort.value;
+  return [...rows].sort((a, b) => {
+    if (mode === "line") return a.dataset.line.localeCompare(b.dataset.line) || Number(b.dataset.score || 0) - Number(a.dataset.score || 0);
+    if (mode === "category") return a.dataset.category.localeCompare(b.dataset.category) || Number(b.dataset.score || 0) - Number(a.dataset.score || 0);
+    if (mode === "title") return a.dataset.search.localeCompare(b.dataset.search);
+    const urgency = (priorityUrgencyRank[a.dataset.urgency] ?? 9) - (priorityUrgencyRank[b.dataset.urgency] ?? 9);
+    return urgency || Number(b.dataset.score || 0) - Number(a.dataset.score || 0) || a.dataset.slug.localeCompare(b.dataset.slug);
   });
 }
 
-function clearMatrixFilter(key) {
-  const control = matrixControlsByKey.get(key);
-  if (!control) return;
-  control.value = matrixDefaultValue(key);
-  if (key === "workflow") applyMatrixWorkflow();
-  renderMatrixFilters();
-}
-
-function writeMatrixStateToUrl() {
-  const params = new URLSearchParams(matrixState());
-  const query = params.toString();
-  window.history.replaceState(null, "", query ? `${location.pathname}?${query}` : location.pathname);
-}
-
-function readMatrixStateFromUrl() {
-  const params = new URLSearchParams(window.location.search);
-  matrixStateControls.forEach(([key, control]) => {
-    if (key === "status") return;
-    control.value = params.has(key) ? params.get(key) : matrixDefaultValue(key);
-  });
-  applyMatrixWorkflow();
-  matrixStatus.value = params.has("status") ? params.get("status") : "";
-}
-
-function matrixViewUrl() {
-  const url = new URL(window.location.href);
-  url.search = new URLSearchParams(matrixState()).toString();
-  url.hash = "";
-  return url.toString();
-}
-
-async function copyMatrixLink() {
-  const text = matrixViewUrl();
-  try {
-    await navigator.clipboard.writeText(text);
-    matrixCopyLink.textContent = "已复制";
-    setTimeout(() => matrixCopyLink.textContent = "复制当前链接", 1400);
-  } catch {
-    window.prompt("复制当前链接", text);
-  }
-}
-
-function renderMatrixFilters() {
-  const q = matrixSearch.value.trim().toLowerCase();
-  const minImportance = Number(matrixImportance.value || 0);
+function renderPriorityRows() {
+  const q = prioritySearch.value.trim().toLowerCase();
   let visible = 0;
-  matrixRows.forEach(row => {
+  priorityRows.forEach(row => {
     const hit = (!q || row.dataset.search.includes(q))
-      && (!matrixTrack.value || matrixTokens(row.dataset.tracks).includes(matrixTrack.value))
-      && (!matrixStatus.value || matrixTokens(row.dataset.statuses).includes(matrixStatus.value))
-      && (!minImportance || Number(row.dataset.importance || 0) >= minImportance);
+      && (!priorityUrgency.value || row.dataset.urgency === priorityUrgency.value)
+      && (!priorityCategory.value || row.dataset.category === priorityCategory.value)
+      && (!priorityLine.value || row.dataset.line === priorityLine.value);
     row.hidden = !hit;
     if (hit) visible += 1;
   });
-  matrixCount.textContent = `显示 ${visible} / ${matrixRows.length} 条研究线`;
-  renderMatrixActiveFilters();
-  writeMatrixStateToUrl();
+  sortPriorityRows(priorityRows).forEach(row => priorityBody.appendChild(row));
+  priorityCount.textContent = `${visible} / ${priorityRows.length} 项`;
 }
 
-function renderMatrixDetail(line, year) {
-  matrixCells.forEach(cell => cell.classList.toggle("active", cell.dataset.line === line && cell.dataset.year === year));
-  const papers = matrixPapers.filter(paper => paper.line === line && paper.year === year);
-  matrixDetailTitle.textContent = `${line} / ${year}`;
-  matrixDetailMeta.textContent = `${papers.length} 篇论文`;
-  if (!papers.length) {
-    matrixDetailList.innerHTML = '<div class="empty">这个格子还没有论文。</div>';
-    return;
-  }
-  matrixDetailList.innerHTML = papers.map(paper => {
-    const labels = [paper.role, paper.status, paper.reading_stage, paper.importance ? `I ${paper.importance}` : "", paper.has_code ? "code" : ""].filter(Boolean);
-    const chips = [...(paper.topics || []), ...(paper.methods || [])].slice(0, 6);
-    return `<article class="matrix-paper">
-      <h3><a href="${esc(paper.href)}">${esc(paper.title_zh || paper.title)}</a></h3>
-      <div class="meta">${esc(paper.title_en || "")}</div>
-      <div class="card-flags">${labels.map(label => `<span class="flag">${esc(label)}</span>`).join("")}</div>
-      <div class="chips">${chips.map(chip => `<span class="chip">${esc(chip)}</span>`).join("")}</div>
-    </article>`;
-  }).join("");
+function currentPriorityItems() {
+  const visibleSlugs = new Set(visiblePriorityRows().map(row => row.dataset.slug));
+  return priorityItems.filter(item => visibleSlugs.has(item.slug));
 }
 
-[matrixSearch, matrixTrack, matrixWorkflow, matrixStatus, matrixImportance].forEach(control => control.addEventListener("input", () => {
-  if (control === matrixWorkflow) applyMatrixWorkflow();
-  renderMatrixFilters();
-}));
-matrixReset.addEventListener("click", () => {
-  [matrixSearch, matrixTrack, matrixStatus, matrixImportance].forEach(control => {
-    control.value = "";
+function downloadCurrentPriority() {
+  const header = ["slug", "priority_score", "urgency", "category", "recommended_action", "research_line", "status", "next_review", "reasons", "href"];
+  const rows = currentPriorityItems().map(item => [item.slug, item.priority_score, item.urgency, item.category, item.recommended_action, item.research_line, item.status, item.next_review, (item.reasons || []).join("; "), item.href]);
+  const csv = [header, ...rows].map(row => row.map(priorityCsvCell).join(",")).join("\n") + "\n";
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "priority_queue.csv";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+async function copyPriorityQueue() {
+  const lines = ["# AutoPaperReader Priority Queue", ""];
+  currentPriorityItems().forEach(item => {
+    lines.push(`- [ ] P${item.priority_score} / ${item.urgency} / ${item.category_label}: [${item.title_zh || item.title || item.slug}](${item.href})`);
+    lines.push(`  - Action: ${item.recommended_action}`);
+    if (item.reasons && item.reasons.length) lines.push(`  - Reasons: ${item.reasons.join("; ")}`);
   });
-  matrixWorkflow.value = activeMatrixWorkflow;
-  applyMatrixWorkflow();
-  renderMatrixFilters();
-});
-matrixCopyLink.addEventListener("click", copyMatrixLink);
-matrixActiveFilters.addEventListener("click", event => {
-  const target = event.target instanceof Element ? event.target.closest("[data-filter-key]") : null;
-  if (!target) return;
-  clearMatrixFilter(target.dataset.filterKey);
-});
-matrixCells.forEach(cell => cell.addEventListener("click", () => renderMatrixDetail(cell.dataset.line, cell.dataset.year)));
-populateMatrixWorkflowOptions();
-readMatrixStateFromUrl();
-renderMatrixFilters();
-const firstNonEmpty = matrixCells.find(cell => Number(cell.dataset.count || 0) > 0);
-if (firstNonEmpty) renderMatrixDetail(firstNonEmpty.dataset.line, firstNonEmpty.dataset.year);
+  const text = lines.join("\n") + "\n";
+  try {
+    await navigator.clipboard.writeText(text);
+    copyPriorityMarkdown.textContent = "已复制";
+    setTimeout(() => copyPriorityMarkdown.textContent = "复制队列", 1400);
+  } catch {
+    window.prompt("复制队列", text);
+  }
+}
+
+[prioritySearch, priorityUrgency, priorityCategory, priorityLine, prioritySort].forEach(control => control.addEventListener("input", renderPriorityRows));
+downloadPriorityCsv.addEventListener("click", downloadCurrentPriority);
+copyPriorityMarkdown.addEventListener("click", copyPriorityQueue);
+renderPriorityRows();
 </script>
 
 <script>

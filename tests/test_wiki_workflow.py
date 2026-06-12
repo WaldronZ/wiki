@@ -363,6 +363,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "command.html",
                 "snapshot.html",
                 "actions.html",
+                "priority.html",
                 "collections.html",
                 "balance.html",
                 "coverage.html",
@@ -382,6 +383,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "freshness.json",
                 "taxonomy_actions.json",
                 "actions.json",
+                "priority.json",
                 "command.json",
                 "queues.json",
                 "cohorts.json",
@@ -463,6 +465,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("View: Kernel 方向", index_html)
             self.assertIn("Playbook: Release readiness", index_html)
             self.assertIn('"href": "actions.html"', index_html)
+            self.assertIn('"href": "priority.html"', index_html)
             self.assertIn('"href": "queues.html"', index_html)
             self.assertIn('"href": "cohorts.html"', index_html)
             self.assertIn('"href": "workflow.html"', index_html)
@@ -805,6 +808,19 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn('id="queueSeverity"', queues_html)
             self.assertIn('id="queuePreset"', queues_html)
             self.assertIn("function renderQueueRows", queues_html)
+            priority = json.loads((report_dir / "priority.json").read_text(encoding="utf-8"))
+            self.assertEqual(priority["count"], 2)
+            self.assertIn("top_items", priority)
+            self.assertIn("line_summary", priority)
+            self.assertIn("priority_score", priority["csv_columns"])
+            self.assertTrue(any(item["recommended_action"] for item in priority["items"]))
+            self.assertTrue(any(item["queue_hits"] for item in priority["items"]))
+            priority_html = (report_dir / "priority.html").read_text(encoding="utf-8")
+            self.assertIn("优先级决策台", priority_html)
+            self.assertIn("Priority JSON", priority_html)
+            self.assertIn('id="priorityUrgency"', priority_html)
+            self.assertIn("priority_queue.csv", priority_html)
+            self.assertIn("copyPriorityQueue", priority_html)
             cohorts = json.loads((report_dir / "cohorts.json").read_text(encoding="utf-8"))
             self.assertEqual(cohorts["count"], 2)
             self.assertGreater(cohorts["cohort_count"], 0)
@@ -984,11 +1000,13 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("registry.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("facets.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("curation.json", {item["href"] for item in catalog["data_resources"]})
+            self.assertIn("priority.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("queues.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("cohorts.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("status.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("views.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("presets.html", {item["href"] for item in catalog["pages"]})
+            self.assertIn("priority.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("intake.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("dedupe.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("registry.html", {item["href"] for item in catalog["pages"]})
@@ -1200,10 +1218,16 @@ class WikiWorkflowTest(unittest.TestCase):
             command = json.loads((report_dir / "command.json").read_text(encoding="utf-8"))
             self.assertEqual(command["count"], 2)
             self.assertEqual(command["lane_count"], 6)
+            self.assertIn("high_priority_papers", command["summary"])
             self.assertIn("daily_reading", {item["id"] for item in command["lanes"]})
             self.assertIn("taxonomy_governance", {item["id"] for item in command["lanes"]})
+            daily_lane = next(item for item in command["lanes"] if item["id"] == "daily_reading")
+            self.assertEqual(daily_lane["primary_href"], "priority.html")
+            self.assertIn("priority.json", {item["href"] for item in daily_lane["data_files"]})
+            self.assertTrue(any(item["href"] == "priority.html?urgency=high" for item in command["recommended_next"]))
             release_lane = next(item for item in command["lanes"] if item["id"] == "release_open_source")
             self.assertIn("command.json", {item["href"] for item in release_lane["data_files"]})
+            self.assertIn("priority.json", {item["href"] for item in release_lane["data_files"]})
             self.assertTrue(command["recommended_next"])
 
             snapshot = json.loads((report_dir / "snapshot.json").read_text(encoding="utf-8"))
@@ -1955,12 +1979,14 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("queues.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("cohorts.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("actions.html", {item["href"] for item in manifest["pages"]})
+            self.assertIn("priority.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("freshness.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("balance.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("coverage.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("facets.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("taxonomy_actions.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("actions.json", {item["href"] for item in manifest["data_files"]})
+            self.assertIn("priority.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("command.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("workflow.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("status.json", {item["href"] for item in manifest["data_files"]})

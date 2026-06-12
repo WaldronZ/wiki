@@ -41,6 +41,7 @@ GENERATED_FIXED_PATHS = (
     "freshness.json",
     "taxonomy_actions.json",
     "actions.json",
+    "priority.json",
     "command.json",
     "queues.json",
     "cohorts.json",
@@ -93,6 +94,7 @@ GENERATED_FIXED_PATHS = (
     "dashboard.html",
     "release.html",
     "actions.html",
+    "priority.html",
     "command.html",
     "queues.html",
     "cohorts.html",
@@ -4508,6 +4510,7 @@ DATA_CONSUMER_HINTS = {
     "freshness.json": ["freshness", "maintenance"],
     "taxonomy_actions.json": ["taxonomy", "project-management", "writeback"],
     "actions.json": ["tasks", "project-management", "exports"],
+    "priority.json": ["priority", "decision-support", "desktop", "ops"],
     "command.json": ["command-center", "desktop", "navigation", "ops"],
     "workflow.json": ["workflow", "desktop", "filters"],
     "status.json": ["workflow", "runtime-selector", "desktop"],
@@ -4617,13 +4620,13 @@ def build_catalog_payload(report_dir: Path, papers: list[dict[str, Any]], inbox_
         {
             "name": "Desktop sync bootstrap",
             "command": "read docs/catalog.json, docs/papers.json, docs/search_index.json",
-            "uses": ["catalog.json", "papers.json", "search_index.json", "workflow.json", "status.json", "views.json", "presets.json", "curation.json", "queues.json", "cohorts.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
+            "uses": ["catalog.json", "papers.json", "search_index.json", "workflow.json", "status.json", "views.json", "presets.json", "curation.json", "priority.json", "queues.json", "cohorts.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
             "outputs": ["local searchable paper library"],
         },
         {
             "name": "Project task export",
             "command": "python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv",
-            "uses": ["actions.json", "taxonomy_actions.json", "review.json"],
+            "uses": ["actions.json", "priority.json", "taxonomy_actions.json", "review.json"],
             "outputs": ["docs/exports/actions-project.csv"],
         },
         {
@@ -4644,7 +4647,7 @@ def build_catalog_payload(report_dir: Path, papers: list[dict[str, Any]], inbox_
         "data_resources": data_resources,
         "contracts": contracts,
         "integration_recipes": integration_recipes,
-        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "status.json", "views.json", "presets.json", "curation.json", "queues.json", "cohorts.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
+        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "status.json", "views.json", "presets.json", "curation.json", "priority.json", "queues.json", "cohorts.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
     }
 
 
@@ -4668,7 +4671,7 @@ def write_catalog_placeholders(report_dir: Path) -> None:
         "data_resources": [],
         "contracts": [],
         "integration_recipes": [],
-        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "status.json", "views.json", "presets.json", "curation.json", "queues.json", "cohorts.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
+        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "status.json", "views.json", "presets.json", "curation.json", "priority.json", "queues.json", "cohorts.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
     }
     (report_dir / "catalog.json").write_text(
         json.dumps(payload, ensure_ascii=False, indent=2),
@@ -4828,7 +4831,7 @@ def build_onboarding_payload(report_dir: Path, papers: list[dict[str, Any]], inb
         "contribution_paths": contribution_paths,
         "command_groups": command_groups,
         "contracts": contract_files_manifest(),
-        "bootstrap_files": ["command.json", "onboarding.json", "catalog.json", "manifest.json", "papers.json", "workflow.json", "status.json", "views.json", "batch.json", "collections.json", "coverage.json", "gaps.json", "intake.json", "routing.json", "quality.json"],
+        "bootstrap_files": ["command.json", "onboarding.json", "catalog.json", "manifest.json", "papers.json", "workflow.json", "status.json", "views.json", "priority.json", "batch.json", "collections.json", "coverage.json", "gaps.json", "intake.json", "routing.json", "quality.json"],
         "core_pages": [
             item
             for item in wiki_pages_manifest()
@@ -4862,6 +4865,7 @@ def wiki_pages_manifest() -> list[dict[str, str]]:
         {"title": "发布摘要", "href": "release.html", "kind": "ops", "description": "页面入口、数据文件、质量状态"},
         {"title": "治理快照", "href": "snapshot.html", "kind": "ops", "description": "当前发布基线、队列和治理策略快照"},
         {"title": "行动中心", "href": "actions.html", "kind": "ops", "description": "统一运营队列和可分派任务"},
+        {"title": "优先级决策台", "href": "priority.html", "kind": "ops", "description": "按论文聚合复习、分类、代码和阅读优先级"},
         {"title": "运营队列", "href": "queues.html", "kind": "ops", "description": "缺分类、复习、代码检查和高优先级待读队列"},
         {"title": "分类组合", "href": "cohorts.html", "kind": "analysis", "description": "分类组合队列、过载组合和专题候选"},
         {"title": "集合视图", "href": "collections.html", "kind": "view", "description": "共享视图、智能集合、研究线入口"},
@@ -4912,6 +4916,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "freshness.json", "description": "报告新鲜度、过期分析和研究线维护队列"},
         {"href": "taxonomy_actions.json", "description": "分类长尾、过载和空候选治理任务"},
         {"href": "actions.json", "description": "统一行动队列，汇总质量、复习、分类和 inbox 任务"},
+        {"href": "priority.json", "description": "论文级优先级决策数据，聚合复习、分类、代码和阅读信号"},
         {"href": "command.json", "description": "场景化命令中心，组织页面入口、队列、数据和推荐命令"},
         {"href": "queues.json", "description": "运营队列、推荐 preset 和批量写回入口"},
         {"href": "cohorts.json", "description": "分类组合队列、过载组合和专题候选"},
@@ -6186,6 +6191,234 @@ def write_actions_json(report_dir: Path, papers: list[dict[str, Any]], inbox_ite
     )
 
 
+def priority_recommended_action(category: str, urgency: str) -> str:
+    prefix = "立即处理" if urgency == "high" else "本周处理" if urgency == "medium" else "排入维护"
+    actions = {
+        "review": "复习论文并更新 last_reviewed / next_review",
+        "curation": "补齐 frontmatter 与分类字段",
+        "taxonomy": "归一化标签或修复 taxonomy drift",
+        "implementation": "检查代码仓库并补代码实现观察",
+        "reading": "安排深读并补阅读阶段",
+        "freshness": "检索后续工作并刷新结论",
+        "healthy": "保持观察",
+    }
+    return f"{prefix}：{actions.get(category, '保持观察')}"
+
+
+def build_priority_payload(papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> dict[str, Any]:
+    actions = build_action_center(papers, inbox_items)
+    review = build_review_plan(papers)
+    freshness = build_freshness_report(papers)
+    queues = build_queues_payload(papers)
+    quality = build_quality_report(papers)
+    today = dt.date.today().isoformat()
+    paper_by_slug = {str(paper["slug"]): paper for paper in papers}
+    action_buckets: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    severity_weight = {"high": 28, "medium": 16, "low": 7, "none": 0}
+    category_order = ["review", "curation", "taxonomy", "implementation", "reading", "freshness", "healthy"]
+    category_labels = {
+        "review": "复习",
+        "curation": "补元数据",
+        "taxonomy": "分类治理",
+        "implementation": "代码观察",
+        "reading": "继续阅读",
+        "freshness": "时效维护",
+        "healthy": "观察",
+    }
+
+    for action in actions["actions"]:
+        for slug in action.get("slugs", []):
+            if slug in paper_by_slug:
+                action_buckets[str(slug)].append(action)
+
+    review_by_slug = {str(item["slug"]): item for item in review["items"]}
+    freshness_by_slug = {str(item["slug"]): item for item in freshness["items"]}
+    queue_hits: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for queue in queues["queues"]:
+        for slug in queue.get("slugs", []):
+            if slug in paper_by_slug:
+                queue_hits[str(slug)].append(
+                    {
+                        "id": queue["id"],
+                        "label": queue["label"],
+                        "severity": queue["severity"],
+                        "preset": queue.get("preset") or "",
+                        "href": queue["href"],
+                    }
+                )
+
+    issue_by_slug = {str(issue["slug"]): issue for issue in quality["issues"]}
+    code_queue = set(str(slug) for slug in quality["queues"].get("no_code_observation", []))
+    sparse_queue = set(str(slug) for slug in quality["queues"].get("taxonomy_sparse", []))
+    dense_queue = set(str(slug) for slug in quality["queues"].get("taxonomy_dense", []))
+    drift_queue = set(str(item.get("slug") or "") for item in quality.get("taxonomy_drift", []))
+
+    items: list[dict[str, Any]] = []
+    for paper in papers:
+        slug = str(paper["slug"])
+        item_actions = action_buckets.get(slug, [])
+        item_review = review_by_slug.get(slug, {})
+        item_freshness = freshness_by_slug.get(slug, {})
+        item_issue = issue_by_slug.get(slug, {})
+        reasons: list[str] = []
+        categories: set[str] = set()
+        commands: list[str] = []
+        score = int(paper.get("importance") or 0) * 12
+
+        if item_review.get("state") == "due":
+            score += 34
+            categories.add("review")
+            reasons.append(f"复习到期：{item_review.get('next_review') or item_review.get('suggested_next_review')}")
+        elif item_review.get("state") == "needs_plan":
+            score += 18
+            categories.add("review")
+            reasons.append(f"缺复习计划：建议 {item_review.get('suggested_next_review')}")
+
+        freshness_state = str(item_freshness.get("state") or "")
+        if freshness_state == "stale":
+            score += 24
+            categories.add("freshness")
+            reasons.append("报告时效已过期，需要检索后续工作")
+        elif freshness_state == "aging":
+            score += 10
+            categories.add("freshness")
+            reasons.append("报告开始变旧，适合安排复盘")
+
+        missing = item_issue.get("missing_fields") or []
+        weak = item_issue.get("weak_fields") or []
+        if missing:
+            score += 30
+            categories.add("curation")
+            reasons.append("缺必填字段：" + ", ".join(str(field) for field in missing[:4]))
+        if weak:
+            score += 10
+            categories.add("curation")
+            reasons.append("弱元数据：" + ", ".join(str(field) for field in weak[:4]))
+
+        if slug in drift_queue:
+            score += 30
+            categories.add("taxonomy")
+            reasons.append("存在 taxonomy drift，严格校验会失败")
+        if slug in sparse_queue:
+            score += 16
+            categories.add("taxonomy")
+            reasons.append("分类粒度偏稀，检索入口不足")
+        if slug in dense_queue:
+            score += 8
+            categories.add("taxonomy")
+            reasons.append("分类粒度偏密，适合做标签归一化")
+        if slug in code_queue:
+            score += 12
+            categories.add("implementation")
+            reasons.append("缺代码实现观察或代码线索")
+
+        status = str(paper.get("status") or "")
+        reading_stage = str(paper.get("reading_stage") or "")
+        if status in {"unread", "triaged", "queued"} or reading_stage in {"skimmed", "queued", "todo"}:
+            score += 14
+            categories.add("reading")
+            reasons.append("仍在待读或浅读阶段")
+
+        action_group_scores: dict[str, int] = {}
+        for action in item_actions:
+            group = str(action.get("group") or "other")
+            action_group_scores[group] = max(action_group_scores.get(group, 0), min(18, severity_weight.get(str(action.get("severity") or ""), 0)))
+            command = str(action.get("command") or "")
+            if command and command not in commands:
+                commands.append(command)
+        score += sum(action_group_scores.values()) + min(10, len(item_actions) * 2)
+
+        if not reasons and item_actions:
+            reasons.append(str(item_actions[0].get("detail") or item_actions[0].get("title") or "有待办任务"))
+
+        category = sorted(categories, key=lambda value: category_order.index(value) if value in category_order else 99)[0] if categories else "healthy"
+        urgency = "high" if score >= 85 else "medium" if score >= 55 else "low" if score >= 25 else "watch"
+        items.append(
+            {
+                "slug": slug,
+                "title": paper.get("title") or "",
+                "title_zh": paper.get("title_zh") or "",
+                "href": paper_href(paper),
+                "research_line": paper.get("research_line") or "Unassigned",
+                "line_role": paper.get("line_role") or "",
+                "year": paper.get("year"),
+                "importance": paper.get("importance"),
+                "status": status,
+                "reading_stage": reading_stage,
+                "review_stage": paper.get("review_stage") or "",
+                "next_review": paper.get("next_review") or item_review.get("suggested_next_review") or "",
+                "priority_score": score,
+                "urgency": urgency,
+                "category": category,
+                "category_label": category_labels.get(category, "观察"),
+                "reasons": reasons[:8],
+                "recommended_action": priority_recommended_action(category, urgency),
+                "commands": commands[:3],
+                "action_ids": [str(action.get("id") or "") for action in item_actions[:8]],
+                "queue_hits": queue_hits.get(slug, [])[:6],
+            }
+        )
+
+    urgency_rank = {"high": 0, "medium": 1, "low": 2, "watch": 3}
+    items.sort(key=lambda item: (urgency_rank.get(str(item["urgency"]), 9), -int(item["priority_score"]), str(item["research_line"]), str(item["title_zh"] or item["title"])))
+    top_items = [item for item in items if item["urgency"] in {"high", "medium"}][:20]
+    category_counts = Counter(str(item["category"]) for item in items)
+    urgency_counts = Counter(str(item["urgency"]) for item in items)
+    grouped_by_line: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for item in items:
+        grouped_by_line[str(item["research_line"])].append(item)
+    line_summary = []
+    for line, line_items in grouped_by_line.items():
+        line_summary.append(
+            {
+                "research_line": line,
+                "count": len(line_items),
+                "average_score": round(sum(int(item["priority_score"]) for item in line_items) / len(line_items), 1),
+                "high": sum(1 for item in line_items if item["urgency"] == "high"),
+                "medium": sum(1 for item in line_items if item["urgency"] == "medium"),
+                "top_slug": line_items[0]["slug"] if line_items else "",
+            }
+        )
+    line_summary.sort(key=lambda item: (-int(item["high"]), -int(item["medium"]), -float(item["average_score"]), item["research_line"]))
+
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "today": today,
+        "count": len(items),
+        "summary": {
+            "urgency": dict(sorted(urgency_counts.items())),
+            "categories": dict(sorted(category_counts.items())),
+            "top_count": len(top_items),
+        },
+        "top_items": top_items,
+        "items": items,
+        "line_summary": line_summary,
+        "csv_columns": ["slug", "priority_score", "urgency", "category", "recommended_action", "research_line", "status", "next_review", "reasons", "href"],
+        "commands": [
+            "python3 scripts/export_actions.py docs --output docs/exports/actions.md",
+            "python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv",
+            "python3 scripts/apply_library_metadata.py docs --input <metadata_patch.csv>",
+        ],
+        "links": {
+            "html": "priority.html",
+            "json": "priority.json",
+            "actions": "actions.html",
+            "queues": "queues.html",
+            "library": "library.html",
+            "review": "review.html",
+            "quality": "quality.html",
+        },
+    }
+
+
+def write_priority_json(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
+    payload = build_priority_payload(papers, inbox_items)
+    (report_dir / "priority.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
 def command_recipe_map() -> dict[str, dict[str, Any]]:
     return {str(recipe["id"]): recipe for recipe in command_recipes_manifest()}
 
@@ -6235,6 +6468,8 @@ def build_command_center_payload(report_dir: Path, papers: list[dict[str, Any]],
     )
     high_actions = int(actions["summary"]["severity"].get("high", 0))
     medium_actions = int(actions["summary"]["severity"].get("medium", 0))
+    priority = build_priority_payload(papers, inbox_items)
+    high_priority_papers = int(priority["summary"]["urgency"].get("high", 0))
     needs_plan = len(review["queues"].get("needs_plan", []))
     due_review = len(review["queues"].get("due", []))
     stale_reports = len(freshness["queues"].get("stale", []))
@@ -6248,19 +6483,19 @@ def build_command_center_payload(report_dir: Path, papers: list[dict[str, Any]],
             "daily_reading",
             "Daily Reading",
             "日常阅读、筛选、复习和状态推进。适合每天打开的主工作区。",
-            "library.html",
-            ["index.html", "library.html", "batch.html", "collections.html", "review.html", "board.html", "status.html"],
-            ["papers.json", "search_index.json", "batch.json", "review.json", "status.json"],
+            "priority.html",
+            ["index.html", "priority.html", "library.html", "batch.html", "collections.html", "review.html", "board.html", "status.html"],
+            ["papers.json", "search_index.json", "priority.json", "batch.json", "review.json", "status.json"],
             ["actions_markdown", "actions_project"],
             [
                 {"label": "论文", "value": len(papers), "hint": "library size"},
-                {"label": "待复习", "value": due_review, "hint": "due review"},
+                {"label": "高优先级", "value": high_priority_papers, "hint": "priority high"},
                 {"label": "缺计划", "value": needs_plan, "hint": "needs next_review"},
             ],
             [
-                "打开 library.html 继续密集筛选和批量编辑。",
+                "先打开 priority.html 选择今天最该处理的论文。",
+                "再进入 library.html 做密集筛选和批量编辑。",
                 "处理 review.json 中 due 或 needs_plan 的论文。",
-                "用 board.html 把正在读的论文拖到下一状态。",
             ],
             "reader",
         ),
@@ -6349,8 +6584,8 @@ def build_command_center_payload(report_dir: Path, papers: list[dict[str, Any]],
             "Release & Open Source",
             "发布前检查、贡献者上手、机器数据目录和可复现质量门。",
             "release.html",
-            ["command.html", "release.html", "snapshot.html", "onboarding.html", "catalog.html", "quality.html", "actions.html"],
-            ["command.json", "manifest.json", "snapshot.json", "catalog.json", "onboarding.json", "actions.json"],
+            ["command.html", "release.html", "snapshot.html", "onboarding.html", "catalog.html", "quality.html", "actions.html", "priority.html"],
+            ["command.json", "manifest.json", "snapshot.json", "catalog.json", "onboarding.json", "actions.json", "priority.json"],
             ["build_wiki", "strict_validate", "quality_gate"],
             [
                 {"label": "发布状态", "value": "ready" if release_ready else "needs work", "hint": "quality readiness"},
@@ -6372,10 +6607,11 @@ def build_command_center_payload(report_dir: Path, papers: list[dict[str, Any]],
         "lane_count": len(lanes),
         "active_status_workflow": workflow["active_status_workflow"],
         "quality_score": quality["quality_score"],
-            "publish_ready": release_ready,
+        "publish_ready": release_ready,
         "summary": {
             "papers": len(papers),
             "actions": actions["count"],
+            "high_priority_papers": high_priority_papers,
             "high_actions": high_actions,
             "medium_actions": medium_actions,
             "due_review": due_review,
@@ -6388,6 +6624,12 @@ def build_command_center_payload(report_dir: Path, papers: list[dict[str, Any]],
         },
         "lanes": lanes,
         "recommended_next": [
+            {
+                "label": "处理高优先级论文",
+                "href": "priority.html?urgency=high",
+                "count": high_priority_papers,
+                "reason": "论文级优先级聚合了复习、分类、代码和阅读阶段。",
+            },
             {
                 "label": "处理高优先级行动",
                 "href": "actions.html?severity=high",
@@ -6415,6 +6657,7 @@ def build_command_center_payload(report_dir: Path, papers: list[dict[str, Any]],
         ],
         "links": {
             "library": "library.html",
+            "priority": "priority.html",
             "actions": "actions.html",
             "registry": "registry.html",
             "workflow": "workflow.html",
@@ -6606,6 +6849,7 @@ def render_command(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
   <p class="lead">把论文阅读、批量导入、分类治理、状态工作流、研究综合和开源发布组织成可执行场景。适合功能变多以后作为第一层操作入口。</p>
   <div class="stats">
     <a class="stat" href="command.json">Command JSON</a>
+    <a class="stat" href="priority.html">优先级决策台</a>
     <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="actions.html">行动中心</a>
     <a class="stat" href="registry.html">标签注册表</a>
@@ -6617,7 +6861,7 @@ def render_command(report_dir: Path, papers: list[dict[str, Any]], inbox_items: 
 </header>
 <main class="shell">
   <section class="metric-grid">
-    <section class="metric-card"><span>行动队列</span><strong>{payload["summary"]["actions"]}</strong><span>actions.json</span></section>
+    <section class="metric-card"><span>高优先级论文</span><strong>{payload["summary"]["high_priority_papers"]}</strong><span>priority.json</span></section>
     <section class="metric-card"><span>High</span><strong>{payload["summary"]["high_actions"]}</strong><span>优先处理</span></section>
     <section class="metric-card"><span>待复习</span><strong>{payload["summary"]["due_review"]}</strong><span>review.json</span></section>
     <section class="metric-card"><span>Workflow</span><strong>{payload["summary"]["workflow_count"]}</strong><span>{html.escape(str(payload["active_status_workflow"]))}</span></section>
@@ -7511,6 +7755,7 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]], inbox_items: li
   <p class="lead">这里汇总每一篇独立阅读报告，并按阅读、导入、分类治理、状态流、研究综合和开源发布组织成可执行工作台。</p>
   <div class="home-primary-actions">
     <a class="button primary" href="command.html">打开命令中心</a>
+    <a class="button" href="priority.html">查看优先级</a>
     <a class="button" href="library.html">进入论文库</a>
     <a class="button" href="actions.html">查看行动队列</a>
     <a class="button" href="registry.html">治理标签</a>
@@ -7519,10 +7764,12 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]], inbox_items: li
     <span class="stat">论文 {len(papers)}</span>
     <span class="stat">研究线 {len(taxonomy["research_lines"])}</span>
     <span class="stat">分类 {len(data["tags"])}</span>
+    <span class="stat">高优先级论文 {command_payload["summary"]["high_priority_papers"]}</span>
     <span class="stat">行动 {command_payload["summary"]["actions"]}</span>
     <span class="stat">High {command_payload["summary"]["high_actions"]}</span>
     <span class="stat">最近更新 {html.escape(data["generated_at"])}</span>
     <a class="stat" href="command.html">命令中心</a>
+    <a class="stat" href="priority.html">优先级决策台</a>
     <a class="stat" href="library.html">论文库表格</a>
     <a class="stat" href="batch.html">批次规划</a>
     <a class="stat" href="board.html">状态看板</a>
@@ -16379,6 +16626,244 @@ renderActionRows();
     (report_dir / "actions.html").write_text(page_shell("行动中心", body, extra_css=actions_css), encoding="utf-8")
 
 
+def render_priority(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
+    payload = build_priority_payload(papers, inbox_items)
+    items = payload["items"]
+    urgency_labels = {"high": "高", "medium": "中", "low": "低", "watch": "观察"}
+    urgency_options = "".join(
+        f'<option value="{html.escape(urgency, quote=True)}">{html.escape(urgency_labels.get(urgency, urgency))} ({count})</option>'
+        for urgency, count in sorted(payload["summary"]["urgency"].items())
+    )
+    category_options = "".join(
+        f'<option value="{html.escape(category, quote=True)}">{html.escape(category)} ({count})</option>'
+        for category, count in sorted(payload["summary"]["categories"].items())
+    )
+    line_options = "".join(
+        f'<option value="{html.escape(str(item["research_line"]), quote=True)}">{html.escape(str(item["research_line"]))} ({item["count"]})</option>'
+        for item in payload["line_summary"]
+    )
+    line_rows = "".join(
+        "<tr>"
+        f'<td><a href="{html.escape(page_query_href("library.html", line=str(item["research_line"])))}">{html.escape(str(item["research_line"]))}</a></td>'
+        f"<td>{item['count']}</td>"
+        f"<td>{item['average_score']}</td>"
+        f"<td>{item['high']}</td>"
+        f"<td>{item['medium']}</td>"
+        f"<td>{html.escape(str(item['top_slug']))}</td>"
+        "</tr>"
+        for item in payload["line_summary"]
+    )
+
+    def row(item: dict[str, Any]) -> str:
+        title = str(item.get("title_zh") or item.get("title") or item.get("slug"))
+        reasons = "".join(f'<span class="chip">{html.escape(str(reason))}</span>' for reason in item.get("reasons", [])[:4])
+        queues = "".join(f'<span class="chip">{html.escape(str(queue.get("label") or queue.get("id") or ""))}</span>' for queue in item.get("queue_hits", [])[:3])
+        command = str((item.get("commands") or [""])[0] or "")
+        searchable = " ".join(
+            str(value)
+            for value in [
+                item.get("slug"),
+                item.get("title"),
+                item.get("title_zh"),
+                item.get("research_line"),
+                item.get("category"),
+                item.get("category_label"),
+                item.get("urgency"),
+                item.get("recommended_action"),
+                *item.get("reasons", []),
+            ]
+            if value
+        ).lower()
+        return f"""<tr
+  data-search="{html.escape(searchable, quote=True)}"
+  data-urgency="{html.escape(str(item.get("urgency") or ""), quote=True)}"
+  data-category="{html.escape(str(item.get("category") or ""), quote=True)}"
+  data-line="{html.escape(str(item.get("research_line") or ""), quote=True)}"
+  data-score="{int(item.get("priority_score") or 0)}"
+  data-slug="{html.escape(str(item.get("slug") or ""), quote=True)}">
+  <td><span class="flag">{html.escape(urgency_labels.get(str(item.get("urgency")), str(item.get("urgency"))))}</span><div class="meta">P{int(item.get("priority_score") or 0)}</div></td>
+  <td class="library-title"><strong><a href="{html.escape(str(item.get("href") or ""))}">{html.escape(title)}</a></strong><div class="meta">{html.escape(str(item.get("slug") or ""))}</div></td>
+  <td>{html.escape(str(item.get("research_line") or "Unassigned"))}<div class="meta">{html.escape(str(item.get("line_role") or ""))}</div></td>
+  <td><span class="flag">{html.escape(str(item.get("category_label") or item.get("category") or ""))}</span><div class="meta">{html.escape(str(item.get("recommended_action") or ""))}</div></td>
+  <td><div class="chips">{reasons or '<span class="chip">保持观察</span>'}</div></td>
+  <td><div class="chips">{queues or '<span class="chip">无队列</span>'}</div></td>
+  <td>{html.escape(str(item.get("next_review") or "-"))}<div class="meta">{html.escape(str(item.get("status") or "-"))} / {html.escape(str(item.get("reading_stage") or "-"))}</div></td>
+  <td>{"<code>" + html.escape(command) + "</code>" if command else "-"}</td>
+</tr>"""
+
+    rows = "".join(row(item) for item in items)
+    priority_json = json.dumps(items, ensure_ascii=False).replace("</", "<\\/")
+    priority_css = """
+    .priority-controls {
+      display: grid;
+      grid-template-columns: minmax(240px, 2fr) repeat(4, minmax(140px, 1fr)) auto auto;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .priority-controls input,
+    .priority-controls select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 10px 12px;
+      color: var(--ink);
+      font: inherit;
+    }
+    .priority-table {
+      min-width: 1180px;
+    }
+    .priority-table code {
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+    @media (max-width: 1000px) {
+      .priority-controls { grid-template-columns: 1fr; }
+    }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Priority Desk</div>
+  <h1>优先级决策台</h1>
+  <p class="lead">把复习、分类、元数据、代码观察和阅读阶段合并成论文级排序，帮你在论文变多后判断“现在最该处理哪篇”。</p>
+  <div class="stats">
+    <a class="stat" href="index.html">返回首页</a>
+    <a class="stat" href="library.html">论文库表格</a>
+    <a class="stat" href="actions.html">行动中心</a>
+    <a class="stat" href="queues.html">运营队列</a>
+    <a class="stat" href="review.html">复习计划</a>
+    <a class="stat" href="priority.json">Priority JSON</a>
+    <span class="stat">论文 {payload["count"]}</span>
+    <span class="stat">高优先级 {payload["summary"]["urgency"].get("high", 0)}</span>
+    <span class="stat">Top {payload["summary"]["top_count"]}</span>
+  </div>
+</header>
+<main class="shell">
+  <section class="metric-grid">
+    <section class="metric-card"><span>高优先级</span><strong>{payload["summary"]["urgency"].get("high", 0)}</strong><span>需要立即处理</span></section>
+    <section class="metric-card"><span>中优先级</span><strong>{payload["summary"]["urgency"].get("medium", 0)}</strong><span>本周维护队列</span></section>
+    <section class="metric-card"><span>分类治理</span><strong>{payload["summary"]["categories"].get("taxonomy", 0)}</strong><span>标签 / drift / 粒度</span></section>
+    <section class="metric-card"><span>复习相关</span><strong>{payload["summary"]["categories"].get("review", 0)}</strong><span>到期或缺计划</span></section>
+  </section>
+  <section>
+    <h2 class="section-title">研究线压力</h2>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>研究线</th><th>论文</th><th>平均分</th><th>高</th><th>中</th><th>Top slug</th></tr></thead><tbody>{line_rows}</tbody></table></div>
+  </section>
+  <section>
+    <h2 class="section-title">论文级优先队列</h2>
+    <div class="priority-controls">
+      <input id="prioritySearch" type="search" placeholder="搜索标题、slug、研究线、原因">
+      <select id="priorityUrgency"><option value="">全部优先级</option>{urgency_options}</select>
+      <select id="priorityCategory"><option value="">全部类型</option>{category_options}</select>
+      <select id="priorityLine"><option value="">全部研究线</option>{line_options}</select>
+      <select id="prioritySort"><option value="priority">优先级</option><option value="line">研究线</option><option value="category">类型</option><option value="title">标题</option></select>
+      <strong id="priorityCount">{len(items)} 项</strong>
+      <button id="downloadPriorityCsv" class="button" type="button">下载当前 CSV</button>
+      <button id="copyPriorityMarkdown" class="button" type="button">复制队列</button>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table priority-table"><thead><tr><th>优先级</th><th>论文</th><th>研究线</th><th>建议动作</th><th>原因</th><th>命中队列</th><th>状态</th><th>命令</th></tr></thead><tbody id="priorityRows">{rows}</tbody></table>
+    </div>
+  </section>
+</main>
+<script>
+const priorityItems = {priority_json};
+const prioritySearch = document.querySelector("#prioritySearch");
+const priorityUrgency = document.querySelector("#priorityUrgency");
+const priorityCategory = document.querySelector("#priorityCategory");
+const priorityLine = document.querySelector("#priorityLine");
+const prioritySort = document.querySelector("#prioritySort");
+const priorityCount = document.querySelector("#priorityCount");
+const priorityBody = document.querySelector("#priorityRows");
+const priorityRows = Array.from(document.querySelectorAll("#priorityRows tr"));
+const downloadPriorityCsv = document.querySelector("#downloadPriorityCsv");
+const copyPriorityMarkdown = document.querySelector("#copyPriorityMarkdown");
+const priorityUrgencyRank = {{ high: 0, medium: 1, low: 2, watch: 3 }};
+
+function priorityCsvCell(value) {{
+  const text = String(value ?? "");
+  return (text.includes(",") || text.includes('"') || text.includes("\\n"))
+    ? `"${{text.replaceAll('"', '""')}}"`
+    : text;
+}}
+
+function visiblePriorityRows() {{
+  return priorityRows.filter(row => !row.hidden);
+}}
+
+function sortPriorityRows(rows) {{
+  const mode = prioritySort.value;
+  return [...rows].sort((a, b) => {{
+    if (mode === "line") return a.dataset.line.localeCompare(b.dataset.line) || Number(b.dataset.score || 0) - Number(a.dataset.score || 0);
+    if (mode === "category") return a.dataset.category.localeCompare(b.dataset.category) || Number(b.dataset.score || 0) - Number(a.dataset.score || 0);
+    if (mode === "title") return a.dataset.search.localeCompare(b.dataset.search);
+    const urgency = (priorityUrgencyRank[a.dataset.urgency] ?? 9) - (priorityUrgencyRank[b.dataset.urgency] ?? 9);
+    return urgency || Number(b.dataset.score || 0) - Number(a.dataset.score || 0) || a.dataset.slug.localeCompare(b.dataset.slug);
+  }});
+}}
+
+function renderPriorityRows() {{
+  const q = prioritySearch.value.trim().toLowerCase();
+  let visible = 0;
+  priorityRows.forEach(row => {{
+    const hit = (!q || row.dataset.search.includes(q))
+      && (!priorityUrgency.value || row.dataset.urgency === priorityUrgency.value)
+      && (!priorityCategory.value || row.dataset.category === priorityCategory.value)
+      && (!priorityLine.value || row.dataset.line === priorityLine.value);
+    row.hidden = !hit;
+    if (hit) visible += 1;
+  }});
+  sortPriorityRows(priorityRows).forEach(row => priorityBody.appendChild(row));
+  priorityCount.textContent = `${{visible}} / ${{priorityRows.length}} 项`;
+}}
+
+function currentPriorityItems() {{
+  const visibleSlugs = new Set(visiblePriorityRows().map(row => row.dataset.slug));
+  return priorityItems.filter(item => visibleSlugs.has(item.slug));
+}}
+
+function downloadCurrentPriority() {{
+  const header = ["slug", "priority_score", "urgency", "category", "recommended_action", "research_line", "status", "next_review", "reasons", "href"];
+  const rows = currentPriorityItems().map(item => [item.slug, item.priority_score, item.urgency, item.category, item.recommended_action, item.research_line, item.status, item.next_review, (item.reasons || []).join("; "), item.href]);
+  const csv = [header, ...rows].map(row => row.map(priorityCsvCell).join(",")).join("\\n") + "\\n";
+  const blob = new Blob([csv], {{ type: "text/csv;charset=utf-8" }});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "priority_queue.csv";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}}
+
+async function copyPriorityQueue() {{
+  const lines = ["# AutoPaperReader Priority Queue", ""];
+  currentPriorityItems().forEach(item => {{
+    lines.push(`- [ ] P${{item.priority_score}} / ${{item.urgency}} / ${{item.category_label}}: [${{item.title_zh || item.title || item.slug}}](${{item.href}})`);
+    lines.push(`  - Action: ${{item.recommended_action}}`);
+    if (item.reasons && item.reasons.length) lines.push(`  - Reasons: ${{item.reasons.join("; ")}}`);
+  }});
+  const text = lines.join("\\n") + "\\n";
+  try {{
+    await navigator.clipboard.writeText(text);
+    copyPriorityMarkdown.textContent = "已复制";
+    setTimeout(() => copyPriorityMarkdown.textContent = "复制队列", 1400);
+  }} catch {{
+    window.prompt("复制队列", text);
+  }}
+}}
+
+[prioritySearch, priorityUrgency, priorityCategory, priorityLine, prioritySort].forEach(control => control.addEventListener("input", renderPriorityRows));
+downloadPriorityCsv.addEventListener("click", downloadCurrentPriority);
+copyPriorityMarkdown.addEventListener("click", copyPriorityQueue);
+renderPriorityRows();
+</script>
+"""
+    (report_dir / "priority.html").write_text(page_shell("优先级决策台", body, extra_css=priority_css), encoding="utf-8")
+
+
 def render_release(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
     manifest = build_manifest(report_dir, papers, inbox_items)
     status_label = "可发布" if manifest["publish_ready"] else "需治理"
@@ -21945,6 +22430,7 @@ def build_wiki(report_dir: Path) -> int:
     write_freshness_json(report_dir, papers)
     write_taxonomy_actions_json(report_dir, papers)
     write_actions_json(report_dir, papers, inbox_items)
+    write_priority_json(report_dir, papers, inbox_items)
     write_command_json(report_dir, papers, inbox_items)
     write_queues_json(report_dir, papers)
     write_cohorts_json(report_dir, papers)
@@ -21998,6 +22484,7 @@ def build_wiki(report_dir: Path) -> int:
     render_freshness(report_dir, papers)
     render_quality(report_dir, papers, inbox_items)
     render_actions(report_dir, papers, inbox_items)
+    render_priority(report_dir, papers, inbox_items)
     render_command(report_dir, papers, inbox_items)
     render_queues(report_dir, papers)
     render_cohorts(report_dir, papers)
