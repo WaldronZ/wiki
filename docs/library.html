@@ -400,7 +400,20 @@
       header { padding-top: 28px; }
       h1 { font-size: 30px; }
     }
-.bulk-panel {
+.library-secondary-nav {
+      width: 100%;
+      margin-top: 4px;
+    }
+    .library-secondary-nav summary {
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 750;
+      list-style: none;
+    }
+    .library-secondary-nav summary::-webkit-details-marker { display: none; }
+    .library-secondary-nav .stats { margin-top: 8px; }
+    .bulk-panel {
       margin: 0 0 16px;
       border: 1px solid var(--line);
       border-radius: 8px;
@@ -699,22 +712,27 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
   <div class="stats">
     <a class="stat" href="index.html">卡片首页</a>
     <a class="stat" href="batch.html">批次规划</a>
-    <a class="stat" href="dashboard.html">管理控制台</a>
-    <a class="stat" href="collections.html">集合视图</a>
-    <a class="stat" href="related.html">关联网络</a>
-    <a class="stat" href="gaps.html">研究缺口</a>
-    <a class="stat" href="board.html">状态看板</a>
-    <a class="stat" href="inbox.html">待处理池</a>
-    <a class="stat" href="review.html">复习计划</a>
     <a class="stat" href="quality.html">质量治理</a>
     <a class="stat" href="taxonomy.html">分类治理</a>
-    <a class="stat" href="timeline.html">时间轴</a>
-    <a class="stat" href="matrix.html">研究矩阵</a>
-    <a class="stat" href="lines/index.html">研究线</a>
-    <a class="stat" href="tags.html">分类总览</a>
-    <a class="stat" href="quality.json">质量 JSON</a>
-    <a class="stat" href="stats.json">统计 JSON</a>
     <span class="stat">论文 5</span>
+    <details class="library-secondary-nav">
+      <summary>更多入口与数据</summary>
+      <div class="stats">
+        <a class="stat" href="dashboard.html">管理控制台</a>
+        <a class="stat" href="collections.html">集合视图</a>
+        <a class="stat" href="related.html">关联网络</a>
+        <a class="stat" href="gaps.html">研究缺口</a>
+        <a class="stat" href="board.html">状态看板</a>
+        <a class="stat" href="inbox.html">待处理池</a>
+        <a class="stat" href="review.html">复习计划</a>
+        <a class="stat" href="timeline.html">时间轴</a>
+        <a class="stat" href="matrix.html">研究矩阵</a>
+        <a class="stat" href="lines/index.html">研究线</a>
+        <a class="stat" href="tags.html">分类总览</a>
+        <a class="stat" href="quality.json">质量 JSON</a>
+        <a class="stat" href="stats.json">统计 JSON</a>
+      </div>
+    </details>
   </div>
 </header>
 <div class="toolbar">

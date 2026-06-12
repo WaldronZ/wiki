@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T11:43:58",
+  "generated_at": "2026-06-12T11:48:02",
   "snapshot_id": "89f0dcec1638050c",
   "name": "AutoPaperReader Wiki",
   "count": 5,
@@ -139,7 +139,7 @@
       {
         "href": "library.html",
         "kind": "page",
-        "sha256": "12792f6e4590e92f6012535cbcd36673a514c67458bb3585eb5abd573000c5e5",
+        "sha256": "e56d6e24900cb210b089adf4f19d13d453ce7e62e5f4f4770701eba45d07459e",
         "status": "ok"
       },
       {
