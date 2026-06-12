@@ -133,6 +133,7 @@ paper_reader/
 │   ├── check_quality.py
 │   ├── check_wiki_js.js
 │   ├── export_actions.py
+│   ├── export_priority.py
 │   ├── export_queues.py
 │   ├── export_cohorts.py
 │   ├── export_gaps.py
@@ -164,6 +165,7 @@ paper_reader/
 - `scripts/export_library_csv.py` 用于把 `papers.json`、`review.json` 和 `quality.json` 合并导出成 CSV，便于用表格工具批量管理
 - `scripts/export_reading_list.py` 用于按研究线、状态、方向、主题、方法或重要性导出 Markdown 阅读清单、BibTeX 或链接列表
 - `scripts/export_actions.py` 用于把 `actions.json` 导出成统一 checklist、审计 CSV 或可自定义任务状态的项目任务 CSV
+- `scripts/export_priority.py` 用于把 `priority.json` 导出成论文级优先级 checklist、CSV、项目任务 CSV 或复习计划 patch CSV
 - `scripts/export_catalog_bundle.py` 用于按 `catalog.json` 把桌面端/DMG 启动所需核心 JSON 打成单个 bootstrap bundle，也可只导出 hash/shape manifest
 - `scripts/validate_catalog_bundle.py` 用于校验 bootstrap bundle 的结构、payload 模式以及与 `docs/` 本地文件匹配的 size/SHA-256
 - `scripts/export_queues.py` 用于把 `queues.json` 中的运营队列导出成 checklist、审计 CSV、项目任务 CSV 或可写回 metadata 的 patch CSV
@@ -441,6 +443,9 @@ python3 scripts/export_reading_list.py docs --format links --status read
 ```bash
 python3 scripts/export_actions.py docs --output docs/exports/actions.md
 python3 scripts/export_actions.py docs --format project --group review --severity high --assignee wiki-owner --task-status ready --output docs/exports/actions-project.csv
+python3 scripts/export_priority.py docs --output docs/exports/priority.md
+python3 scripts/export_priority.py docs --format project --urgency high --assignee wiki-owner --task-status ready --output docs/exports/priority-project.csv
+python3 scripts/export_priority.py docs --format review-patch --needs-review-plan --output docs/exports/priority-review-patch.csv
 python3 scripts/export_catalog_bundle.py docs --output docs/exports/bootstrap-bundle.json
 python3 scripts/export_catalog_bundle.py docs --no-payloads --output docs/exports/bootstrap-manifest.json
 python3 scripts/validate_catalog_bundle.py docs/exports/bootstrap-bundle.json --report-dir docs --require-payloads

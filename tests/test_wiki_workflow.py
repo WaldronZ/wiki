@@ -1164,6 +1164,9 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("python3 scripts/apply_shared_views.py docs --input &lt;shared_views.json&gt; --write", quality_html)
             self.assertIn("python3 scripts/apply_status_workflow.py docs --input &lt;taxonomy_status_workflow.json&gt; --write", quality_html)
             self.assertIn("python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv", quality_html)
+            self.assertIn("python3 scripts/export_priority.py docs --output docs/exports/priority.md", quality_html)
+            self.assertIn("python3 scripts/export_priority.py docs --format project --urgency high --output docs/exports/priority-project.csv", quality_html)
+            self.assertIn("python3 scripts/export_priority.py docs --format review-patch --needs-review-plan --output docs/exports/priority-review-patch.csv", quality_html)
             self.assertIn("python3 scripts/export_catalog_bundle.py docs --output docs/exports/bootstrap-bundle.json", quality_html)
             self.assertIn("python3 scripts/export_catalog_bundle.py docs --no-payloads --output docs/exports/bootstrap-manifest.json", quality_html)
             self.assertIn("python3 scripts/validate_catalog_bundle.py docs/exports/bootstrap-bundle.json --report-dir docs --require-payloads", quality_html)
@@ -1386,6 +1389,74 @@ class WikiWorkflowTest(unittest.TestCase):
             )
             self.assertNotEqual(unsafe_actions_export.returncode, 0)
             self.assertIn("Refusing to write a Markdown export", unsafe_actions_export.stderr)
+
+            priority_export_path = report_dir / "exports" / "priority.md"
+            self.run_cmd(
+                "scripts/export_priority.py",
+                str(report_dir),
+                "--top",
+                "2",
+                "--output",
+                str(priority_export_path),
+            )
+            priority_export = priority_export_path.read_text(encoding="utf-8")
+            self.assertIn("# AutoPaperReader Priority Queue", priority_export)
+            self.assertIn("Exported papers", priority_export)
+
+            priority_csv = self.run_cmd(
+                "scripts/export_priority.py",
+                str(report_dir),
+                "--format",
+                "csv",
+                "--urgency",
+                "high",
+            )
+            self.assertIn("priority_score", priority_csv.stdout)
+            self.assertIn("queue_hits", priority_csv.stdout)
+
+            priority_project_path = report_dir / "exports" / "priority-project.csv"
+            self.run_cmd(
+                "scripts/export_priority.py",
+                str(report_dir),
+                "--format",
+                "project",
+                "--urgency",
+                "high",
+                "--assignee",
+                "wiki-owner",
+                "--task-status",
+                "ready",
+                "--output",
+                str(priority_project_path),
+            )
+            priority_project_rows = list(csv.DictReader(priority_project_path.read_text(encoding="utf-8").splitlines()))
+            self.assertTrue(priority_project_rows)
+            self.assertEqual(priority_project_rows[0]["status"], "ready")
+            self.assertEqual(priority_project_rows[0]["assignee"], "wiki-owner")
+            self.assertIn("priority", priority_project_rows[0]["labels"])
+
+            priority_patch_path = report_dir / "exports" / "priority-review-patch.csv"
+            self.run_cmd(
+                "scripts/export_priority.py",
+                str(report_dir),
+                "--format",
+                "review-patch",
+                "--needs-review-plan",
+                "--output",
+                str(priority_patch_path),
+            )
+            priority_patch_rows = list(csv.DictReader(priority_patch_path.read_text(encoding="utf-8").splitlines()))
+            self.assertTrue(priority_patch_rows)
+            self.assertIn("display_title", priority_patch_rows[0])
+            self.assertNotIn("title", priority_patch_rows[0])
+            self.assertTrue(all(row["next_review"] for row in priority_patch_rows))
+            priority_patch_preview = self.run_cmd(
+                "scripts/apply_library_metadata.py",
+                str(report_dir),
+                "--input",
+                str(priority_patch_path),
+            )
+            self.assertIn("DRY", priority_patch_preview.stdout)
 
             queues_export_path = report_dir / "exports" / "queues.md"
             self.run_cmd(
@@ -2150,6 +2221,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("python3 scripts/apply_status_workflow.py docs --input <taxonomy_status_workflow.json> --write", manifest["commands"])
             self.assertIn("python3 scripts/apply_governance_policy.py docs --input <taxonomy_governance_policy.json> --write", manifest["commands"])
             self.assertIn("python3 scripts/export_actions.py docs --output docs/exports/actions.md", manifest["commands"])
+            self.assertIn("python3 scripts/export_priority.py docs --output docs/exports/priority.md", manifest["commands"])
+            self.assertIn("python3 scripts/export_priority.py docs --format review-patch --needs-review-plan --output docs/exports/priority-review-patch.csv", manifest["commands"])
             self.assertIn("python3 scripts/export_queues.py docs --output docs/exports/queues.md", manifest["commands"])
             self.assertIn("python3 scripts/export_cohorts.py docs --output docs/exports/cohorts.md", manifest["commands"])
             self.assertIn("python3 scripts/export_batches.py docs --output docs/exports/batches.md", manifest["commands"])
@@ -2181,6 +2254,9 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(recipe_by_id["apply_governance_policy"]["output"], "docs/guides/taxonomy.json")
             self.assertFalse(recipe_by_id["apply_governance_policy_dry_run"]["mutates"])
             self.assertEqual(recipe_by_id["actions_project"]["output"], "docs/exports/actions-project.csv")
+            self.assertEqual(recipe_by_id["priority_markdown"]["output"], "docs/exports/priority.md")
+            self.assertEqual(recipe_by_id["priority_project"]["output"], "docs/exports/priority-project.csv")
+            self.assertEqual(recipe_by_id["priority_review_patch"]["output"], "docs/exports/priority-review-patch.csv")
             self.assertEqual(recipe_by_id["taxonomy_registry_project"]["output"], "docs/exports/taxonomy-registry-project.csv")
             self.assertEqual(recipe_by_id["taxonomy_balance_project"]["output"], "docs/exports/taxonomy-balance-project.csv")
             self.assertEqual(recipe_by_id["taxonomy_actions_patch"]["output"], "docs/exports/taxonomy-action-patch.csv")

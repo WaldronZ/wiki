@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T10:40:43",
+  "generated_at": "2026-06-12T10:50:05",
   "today": "2026-06-12",
   "count": 5,
   "summary": {
@@ -613,6 +613,9 @@
     "href"
   ],
   "commands": [
+    "python3 scripts/export_priority.py docs --output docs/exports/priority.md",
+    "python3 scripts/export_priority.py docs --format project --urgency high --output docs/exports/priority-project.csv",
+    "python3 scripts/export_priority.py docs --format review-patch --needs-review-plan --output docs/exports/priority-review-patch.csv",
     "python3 scripts/export_actions.py docs --output docs/exports/actions.md",
     "python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv",
     "python3 scripts/apply_library_metadata.py docs --input <metadata_patch.csv>",

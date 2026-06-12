@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T10:40:43",
+  "generated_at": "2026-06-12T10:50:05",
   "count": 5,
   "inbox_count": 0,
   "lane_count": 6,
@@ -104,6 +104,22 @@
         }
       ],
       "commands": [
+        {
+          "id": "priority_markdown",
+          "kind": "export",
+          "label": "Export priority checklist",
+          "command": "python3 scripts/export_priority.py docs --output docs/exports/priority.md",
+          "output": "docs/exports/priority.md",
+          "mutates": false
+        },
+        {
+          "id": "priority_review_patch",
+          "kind": "export",
+          "label": "Export priority review patch",
+          "command": "python3 scripts/export_priority.py docs --format review-patch --needs-review-plan --output docs/exports/priority-review-patch.csv",
+          "output": "docs/exports/priority-review-patch.csv",
+          "mutates": false
+        },
         {
           "id": "actions_markdown",
           "kind": "export",
