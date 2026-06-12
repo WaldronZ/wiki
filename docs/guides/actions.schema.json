@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/autopaperreader/actions.schema.json",
+  "title": "AutoPaperReader unified action queue",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "generated_at": {"type": "string"},
+    "count": {"type": "integer", "minimum": 0},
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "groups": {
+          "type": "object",
+          "additionalProperties": {"type": "integer", "minimum": 0}
+        },
+        "severity": {
+          "type": "object",
+          "additionalProperties": {"type": "integer", "minimum": 0}
+        }
+      },
+      "required": ["groups", "severity"]
+    },
+    "actions": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/action"}
+    },
+    "csv_columns": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "commands": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "links": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "html": {"type": "string", "minLength": 1},
+        "library": {"type": "string", "minLength": 1},
+        "quality": {"type": "string", "minLength": 1},
+        "review": {"type": "string", "minLength": 1},
+        "taxonomy": {"type": "string", "minLength": 1},
+        "facets": {"type": "string", "minLength": 1},
+        "inbox": {"type": "string", "minLength": 1},
+        "dedupe": {"type": "string", "minLength": 1},
+        "command": {"type": "string", "minLength": 1}
+      },
+      "required": ["html", "library", "quality", "review", "taxonomy", "facets", "inbox", "dedupe", "command"]
+    }
+  },
+  "required": ["generated_at", "count", "summary", "actions", "csv_columns", "commands", "links"],
+  "$defs": {
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "group": {
+          "type": "string",
+          "enum": ["review", "freshness", "metadata", "quality", "taxonomy", "dedupe", "inbox"]
+        },
+        "severity": {
+          "type": "string",
+          "enum": ["high", "medium", "low", "none"]
+        },
+        "priority": {"type": "integer", "minimum": 0},
+        "title": {"type": "string", "minLength": 1},
+        "detail": {"type": "string"},
+        "href": {"type": "string", "minLength": 1},
+        "source": {"type": "string", "minLength": 1},
+        "slugs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "command": {"type": "string"}
+      },
+      "required": ["id", "group", "severity", "priority", "title", "detail", "href", "source", "slugs", "command"]
+    }
+  }
+}

@@ -581,6 +581,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     quality_path = report_dir / "quality.json"
     review_path = report_dir / "review.json"
     taxonomy_actions_path = report_dir / "taxonomy_actions.json"
+    actions_path = report_dir / "actions.json"
     command_path = report_dir / "command.json"
     workflow_path = report_dir / "workflow.json"
     status_path = report_dir / "status.json"
@@ -621,6 +622,9 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         return
     if not taxonomy_actions_path.exists():
         errors.append("missing taxonomy_actions.json")
+        return
+    if not actions_path.exists():
+        errors.append("missing actions.json")
         return
     if not command_path.exists():
         errors.append("missing command.json")
@@ -706,6 +710,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     quality_data = json.loads(quality_path.read_text(encoding="utf-8"))
     review_data = json.loads(review_path.read_text(encoding="utf-8"))
     taxonomy_actions_data = json.loads(taxonomy_actions_path.read_text(encoding="utf-8"))
+    actions_data = json.loads(actions_path.read_text(encoding="utf-8"))
     command_data = json.loads(command_path.read_text(encoding="utf-8"))
     workflow_data = json.loads(workflow_path.read_text(encoding="utf-8"))
     status_data = json.loads(status_path.read_text(encoding="utf-8"))
@@ -856,6 +861,58 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     missing_taxonomy_actions = sorted(required_taxonomy_actions - set(taxonomy_actions_data))
     if missing_taxonomy_actions:
         errors.append(f"taxonomy_actions.json missing keys: {', '.join(missing_taxonomy_actions)}")
+
+    action_items = actions_data.get("actions", [])
+    if not isinstance(action_items, list):
+        errors.append("actions.json actions must be a list")
+        action_items = []
+    if actions_data.get("count") != len(action_items):
+        errors.append("actions.json count must match actions length")
+    missing_actions = sorted({"summary", "actions", "csv_columns", "commands", "links"} - set(actions_data))
+    if missing_actions:
+        errors.append(f"actions.json missing keys: {', '.join(missing_actions)}")
+    action_summary = actions_data.get("summary")
+    if not isinstance(action_summary, dict):
+        errors.append("actions.json summary must be an object")
+    else:
+        if not isinstance(action_summary.get("groups"), dict):
+            errors.append("actions.json summary.groups must be an object")
+        if not isinstance(action_summary.get("severity"), dict):
+            errors.append("actions.json summary.severity must be an object")
+    valid_action_groups = {"review", "freshness", "metadata", "quality", "taxonomy", "dedupe", "inbox"}
+    valid_action_severities = {"high", "medium", "low", "none"}
+    action_ids: set[str] = set()
+    for index, item in enumerate(action_items):
+        if not isinstance(item, dict):
+            errors.append(f"actions.json actions[{index}] must be an object")
+            continue
+        for key in ("id", "group", "severity", "priority", "title", "detail", "href", "source", "slugs", "command"):
+            if key not in item:
+                errors.append(f"actions.json actions[{index}] missing {key}")
+        action_id = str(item.get("id") or "")
+        if action_id in action_ids:
+            errors.append(f"actions.json actions[{index}] has duplicate id {action_id!r}")
+        action_ids.add(action_id)
+        if item.get("group") not in valid_action_groups:
+            errors.append(f"actions.json actions[{index}] has invalid group")
+        if item.get("severity") not in valid_action_severities:
+            errors.append(f"actions.json actions[{index}] has invalid severity")
+        if not isinstance(item.get("priority"), int) or isinstance(item.get("priority"), bool):
+            errors.append(f"actions.json actions[{index}].priority must be an integer")
+        if not isinstance(item.get("slugs"), list):
+            errors.append(f"actions.json actions[{index}].slugs must be a list")
+        else:
+            unknown_slugs = sorted(str(slug) for slug in item.get("slugs", []) if str(slug) not in report_slugs)
+            if unknown_slugs:
+                errors.append(f"actions.json actions[{index}] references unknown slugs: {unknown_slugs}")
+    action_columns = actions_data.get("csv_columns")
+    if not isinstance(action_columns, list) or not {"id", "group", "severity", "priority", "title", "source", "slugs", "command"}.issubset(set(action_columns)):
+        errors.append("actions.json csv_columns must include id, group, severity, priority, title, source, slugs, and command")
+    if not isinstance(actions_data.get("commands"), list) or not any("export_actions.py" in str(command) for command in actions_data.get("commands", [])):
+        errors.append("actions.json commands must include export_actions.py")
+    action_links = actions_data.get("links")
+    if not isinstance(action_links, dict) or not {"html", "library", "quality", "review", "taxonomy", "facets", "inbox", "dedupe", "command"}.issubset(action_links):
+        errors.append("actions.json links must include html, library, quality, review, taxonomy, facets, inbox, dedupe, and command")
 
     if command_data.get("count") != len(report_slugs):
         errors.append(f"command.json count {command_data.get('count')} != markdown report count {len(report_slugs)}")
@@ -2026,6 +2083,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         "guides/taxonomy.json",
         "guides/facets.schema.json",
         "guides/batch.schema.json",
+        "guides/actions.schema.json",
         "guides/workflow.schema.json",
         "guides/status.schema.json",
         "guides/views.schema.json",
@@ -2534,6 +2592,56 @@ def validate_batch_schema_contract(report_dir: Path, errors: list[str], warnings
         errors.append("guides/batch.schema.json: severity enum must include high, medium, low")
 
 
+def validate_actions_schema_contract(report_dir: Path, errors: list[str], warnings: list[str]) -> None:
+    schema_path = report_dir / "guides" / "actions.schema.json"
+    if not schema_path.exists():
+        warnings.append("guides/actions.schema.json missing; external action-queue schema hints are unavailable")
+        return
+
+    try:
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        errors.append(f"guides/actions.schema.json: invalid JSON: {exc}")
+        return
+
+    if not isinstance(schema, dict):
+        errors.append("guides/actions.schema.json: root must be an object")
+        return
+    if not isinstance(schema.get("$schema"), str) or not schema.get("$schema", "").strip():
+        errors.append("guides/actions.schema.json: $schema must be a non-empty string")
+    if schema.get("type") != "object":
+        errors.append("guides/actions.schema.json: type must be object")
+    properties = schema.get("properties")
+    if not isinstance(properties, dict):
+        errors.append("guides/actions.schema.json: properties must be an object")
+        properties = {}
+    for key in ("summary", "actions", "csv_columns", "commands", "links"):
+        if key not in properties:
+            errors.append(f"guides/actions.schema.json: properties.{key} is required")
+    defs = schema.get("$defs")
+    if not isinstance(defs, dict):
+        errors.append("guides/actions.schema.json: $defs must be an object")
+        defs = {}
+    action_def = defs.get("action")
+    if not isinstance(action_def, dict):
+        errors.append("guides/actions.schema.json: $defs.action is required")
+        return
+    action_required = set(action_def.get("required") or [])
+    for key in ("id", "group", "severity", "priority", "title", "detail", "href", "source", "slugs", "command"):
+        if key not in action_required:
+            errors.append(f"guides/actions.schema.json: $defs.action.required missing {key}")
+    action_properties = action_def.get("properties")
+    if not isinstance(action_properties, dict):
+        errors.append("guides/actions.schema.json: $defs.action.properties must be an object")
+        return
+    group_enum = set((action_properties.get("group") or {}).get("enum") or [])
+    if not {"review", "freshness", "metadata", "quality", "taxonomy", "dedupe", "inbox"}.issubset(group_enum):
+        errors.append("guides/actions.schema.json: group enum must include review, freshness, metadata, quality, taxonomy, dedupe, inbox")
+    severity_enum = set((action_properties.get("severity") or {}).get("enum") or [])
+    if not {"high", "medium", "low", "none"}.issubset(severity_enum):
+        errors.append("guides/actions.schema.json: severity enum must include high, medium, low, none")
+
+
 def validate_status_schema_contract(report_dir: Path, errors: list[str], warnings: list[str]) -> None:
     schema_path = report_dir / "guides" / "status.schema.json"
     if not schema_path.exists():
@@ -2777,6 +2885,7 @@ def main() -> int:
         validate_taxonomy_schema_contract(report_dir, errors, warnings)
         validate_facets_schema_contract(report_dir, errors, warnings)
         validate_batch_schema_contract(report_dir, errors, warnings)
+        validate_actions_schema_contract(report_dir, errors, warnings)
         validate_workflow_schema_contract(report_dir, errors, warnings)
         validate_status_schema_contract(report_dir, errors, warnings)
         validate_views_schema_contract(report_dir, errors, warnings)

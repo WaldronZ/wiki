@@ -99,6 +99,7 @@ paper_reader/
 │   │   ├── taxonomy.schema.json
 │   │   ├── facets.schema.json
 │   │   ├── batch.schema.json
+│   │   ├── actions.schema.json
 │   │   ├── workflow.schema.json
 │   │   ├── status.schema.json
 │   │   └── views.schema.json
@@ -242,7 +243,7 @@ paper_reader/
 - `docs/review.json`：机器可读复习计划，给出 suggested_next_review 和优先级
 - `docs/freshness.json`：机器可读时效报告，给出 due / needs_plan / stale / aging 队列和研究线新鲜度
 - `docs/taxonomy_actions.json`：机器可读分类治理任务，列出长尾合并候选、过载拆分候选、空候选状态和关注项
-- `docs/actions.json`：机器可读统一行动队列，汇总 quality、review、taxonomy、dedupe 和 inbox 来源的任务
+- `docs/actions.json`：机器可读统一行动队列，汇总 quality、review、taxonomy、dedupe 和 inbox 来源的任务、优先级、导出列、命令和跳转入口
 - `docs/command.json`：机器可读命令中心，按使用场景暴露页面入口、数据文件、推荐命令和 next actions
 - `docs/workflow.json`：机器可读状态工作流审计，包含 active workflow、每套 workflow 的字段分布、状态定义、未配置值、共享视图绑定和推荐动作
 - `docs/status.json`：机器可读运行时状态选择契约，包含 workflow 选项、论文状态快照、默认选择、跳转链接和写回命令
@@ -273,6 +274,7 @@ paper_reader/
 - `docs/guides/taxonomy.schema.json`：`taxonomy.json` 配置契约，用于编辑器提示和开源协作中的配置审查
 - `docs/guides/facets.schema.json`：`facets.json` 字段目录契约，用于桌面端/DMG/外部脚本动态读取可筛选字段、候选值和治理动作
 - `docs/guides/batch.schema.json`：`batch.json` 批量规划契约，用于桌面端/DMG/外部脚本读取批次维度、批量任务、样例 slug 和导出命令
+- `docs/guides/actions.schema.json`：`actions.json` 统一行动队列契约，用于桌面端/DMG/外部脚本读取待办分组、优先级、来源、命令和相关论文
 - `docs/guides/workflow.schema.json`：`workflow.json` 状态工作流审计契约，用于桌面端/DMG/外部脚本读取 workflow 分布、drift、空字段和治理建议
 - `docs/guides/status.schema.json`：`status.json` 状态选择器契约，用于桌面端/DMG/外部脚本读取 workflow、状态候选、论文快照和写回命令
 - `docs/guides/views.schema.json`：`views.json` 视图目录契约，用于桌面端/DMG/外部脚本读取共享队列、命中 slug 和批量管理入口

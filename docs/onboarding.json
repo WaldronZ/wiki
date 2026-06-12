@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-06-12T07:54:54",
+  "generated_at": "2026-06-12T07:59:19",
   "count": 5,
   "inbox_count": 0,
   "readiness_score": "100%",
-  "readiness_passed": 18,
-  "readiness_total": 18,
+  "readiness_passed": 19,
+  "readiness_total": 19,
   "readiness_checks": [
     {
       "path": "README.md",
@@ -88,6 +88,12 @@
       "path": "docs/guides/batch.schema.json",
       "label": "Batch schema",
       "href": "guides/batch.schema.json",
+      "exists": true
+    },
+    {
+      "path": "docs/guides/actions.schema.json",
+      "label": "Actions schema",
+      "href": "guides/actions.schema.json",
       "exists": true
     },
     {
@@ -281,6 +287,10 @@
     {
       "href": "guides/batch.schema.json",
       "description": "batch.json 批量规划数据契约"
+    },
+    {
+      "href": "guides/actions.schema.json",
+      "description": "actions.json 统一行动队列契约"
     },
     {
       "href": "guides/workflow.schema.json",

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T07:54:54",
+  "generated_at": "2026-06-12T07:59:19",
   "count": 62,
   "summary": {
     "groups": {
@@ -872,5 +872,33 @@
       "slugs": [],
       "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
     }
-  ]
+  ],
+  "csv_columns": [
+    "id",
+    "group",
+    "severity",
+    "priority",
+    "title",
+    "detail",
+    "href",
+    "source",
+    "slugs",
+    "command"
+  ],
+  "commands": [
+    "python3 scripts/export_actions.py docs --output docs/exports/actions.md",
+    "python3 scripts/export_actions.py docs --format csv --output docs/exports/actions.csv",
+    "python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv"
+  ],
+  "links": {
+    "html": "actions.html",
+    "library": "library.html",
+    "quality": "quality.html",
+    "review": "review.html",
+    "taxonomy": "taxonomy.html",
+    "facets": "facets.html",
+    "inbox": "inbox.html",
+    "dedupe": "dedupe.html",
+    "command": "command.html"
+  }
 }

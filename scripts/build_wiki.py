@@ -3787,6 +3787,7 @@ def build_onboarding_payload(report_dir: Path, papers: list[dict[str, Any]], inb
         repo_file_status("docs/guides/taxonomy.schema.json", "Taxonomy schema", "guides/taxonomy.schema.json"),
         repo_file_status("docs/guides/facets.schema.json", "Facets schema", "guides/facets.schema.json"),
         repo_file_status("docs/guides/batch.schema.json", "Batch schema", "guides/batch.schema.json"),
+        repo_file_status("docs/guides/actions.schema.json", "Actions schema", "guides/actions.schema.json"),
         repo_file_status("docs/guides/workflow.schema.json", "Workflow schema", "guides/workflow.schema.json"),
         repo_file_status("docs/guides/status.schema.json", "Status schema", "guides/status.schema.json"),
         repo_file_status("docs/guides/views.schema.json", "Views schema", "guides/views.schema.json"),
@@ -4021,6 +4022,7 @@ def contract_files_manifest() -> list[dict[str, str]]:
         {"href": "guides/taxonomy.schema.json", "description": "taxonomy.json 配置字段契约"},
         {"href": "guides/facets.schema.json", "description": "facets.json 分类字段目录契约"},
         {"href": "guides/batch.schema.json", "description": "batch.json 批量规划数据契约"},
+        {"href": "guides/actions.schema.json", "description": "actions.json 统一行动队列契约"},
         {"href": "guides/workflow.schema.json", "description": "workflow.json 状态工作流审计契约"},
         {"href": "guides/status.schema.json", "description": "status.json 状态选择器和写回命令契约"},
         {"href": "guides/views.schema.json", "description": "views.json 视图目录和批量队列契约"},
@@ -5138,6 +5140,23 @@ def build_action_center(papers: list[dict[str, Any]], inbox_items: list[dict[str
             "severity": dict(Counter(str(item["severity"]) for item in actions)),
         },
         "actions": actions,
+        "csv_columns": ["id", "group", "severity", "priority", "title", "detail", "href", "source", "slugs", "command"],
+        "commands": [
+            "python3 scripts/export_actions.py docs --output docs/exports/actions.md",
+            "python3 scripts/export_actions.py docs --format csv --output docs/exports/actions.csv",
+            "python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv",
+        ],
+        "links": {
+            "html": "actions.html",
+            "library": "library.html",
+            "quality": "quality.html",
+            "review": "review.html",
+            "taxonomy": "taxonomy.html",
+            "facets": "facets.html",
+            "inbox": "inbox.html",
+            "dedupe": "dedupe.html",
+            "command": "command.html",
+        },
     }
 
 

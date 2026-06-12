@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T07:54:55",
+  "generated_at": "2026-06-12T07:59:20",
   "snapshot_id": "89f0dcec1638050c",
   "name": "AutoPaperReader Wiki",
   "count": 5,
@@ -121,7 +121,7 @@
     }
   ],
   "artifact_summary": {
-    "count": 79,
+    "count": 80,
     "missing": [],
     "hashes": [
       {
@@ -253,7 +253,7 @@
       {
         "href": "scale.html",
         "kind": "page",
-        "sha256": "0c86c130888e33ba6a2d464f5d7be986559ddd7f4c2873c70b2d2e8de3516912",
+        "sha256": "89e0fcfb9ce532c3045491fa476c77b1d639462b206ada7a1715f810e57f0114",
         "status": "ok"
       },
       {
@@ -271,13 +271,13 @@
       {
         "href": "onboarding.html",
         "kind": "page",
-        "sha256": "6daeda884495f7312f76753b34d721e97981b84666bf0725ca613419611651c5",
+        "sha256": "c02067f3d45f722a111f92e1d39ac8b7095c59d56259e2080ec743ce2a71f42e",
         "status": "ok"
       },
       {
         "href": "catalog.html",
         "kind": "page",
-        "sha256": "ac0438d2c14a9bf1873ba8b9ea4f36324c05971008a3964e900e5b282e686f87",
+        "sha256": "efd31fcbe4e8dcf86e60a5f07fd59e094356a002b791c3c6da9d5452933b1a6b",
         "status": "ok"
       },
       {
@@ -397,7 +397,7 @@
       {
         "href": "actions.json",
         "kind": "data",
-        "sha256": "95b99f4ef6b2b50da38a5d03afdc519d380cd484ac522be1b3fe0cfc355d50a4",
+        "sha256": "175ae8321e03446ec3991da98863db3c97c1000a825ca4e8be2813cef8cc3dd1",
         "status": "ok"
       },
       {
@@ -481,7 +481,7 @@
       {
         "href": "scale.json",
         "kind": "data",
-        "sha256": "6d1fa4913fffc9b789dd3d80e4013200527f2f81f78bd618fdc32df8ae6c2fd4",
+        "sha256": "1b9d3c58cfa2230bec806b618554bc451b20a518feec2b9edead8ed7d424edac",
         "status": "ok"
       },
       {
@@ -499,13 +499,13 @@
       {
         "href": "onboarding.json",
         "kind": "data",
-        "sha256": "2eadc99b41c74b460627807af35b568ede3dee3a3ee393afb09f56623066521e",
+        "sha256": "45633b4a75e6bd08259603125cee20ee3842a2e1b1ffb20db4bdab834d8ab30a",
         "status": "ok"
       },
       {
         "href": "catalog.json",
         "kind": "data",
-        "sha256": "669dd2f7e21810e6da2e1394c07cf538dca89db332d771718b282814ae82ea77",
+        "sha256": "24cd091317be6a44e6b399c262ee9336b6e4dfbbbe928ad79e258d7d7e002d1c",
         "status": "ok"
       },
       {
@@ -572,6 +572,12 @@
         "href": "guides/batch.schema.json",
         "kind": "contract",
         "sha256": "cf440ceba72985d305792239676a6d7e2f96b98333fef72a76b7e8367ef8353c",
+        "status": "ok"
+      },
+      {
+        "href": "guides/actions.schema.json",
+        "kind": "contract",
+        "sha256": "748a9ca75664585496db6f51b31ef95f1108890707a82041d22c8f69c3162eda",
         "status": "ok"
       },
       {

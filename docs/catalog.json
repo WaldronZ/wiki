@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-06-12T07:54:55",
+  "generated_at": "2026-06-12T07:59:20",
   "count": 5,
   "inbox_count": 0,
   "page_count": 40,
   "data_file_count": 33,
-  "contract_count": 10,
+  "contract_count": 11,
   "pages": [
     {
       "title": "首页",
@@ -284,7 +284,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:54:54",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [
         "frontend",
         "desktop",
@@ -311,7 +311,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:54:54",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [
         "search",
         "desktop"
@@ -374,7 +374,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:54:54",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [
         "dashboard",
         "ops",
@@ -443,7 +443,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:54:54",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [
         "quality-gate",
         "ops",
@@ -475,7 +475,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:54:54",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [
         "review",
         "scheduler",
@@ -520,7 +520,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:54:54",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [
         "freshness",
         "maintenance"
@@ -558,7 +558,7 @@
         }
       ],
       "declared_count": 55,
-      "generated_at": "2026-06-12T07:54:54",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [
         "taxonomy",
         "project-management",
@@ -570,11 +570,14 @@
       "href": "actions.json",
       "description": "统一行动队列，汇总质量、复习、分类和 inbox 任务",
       "exists": true,
-      "size_bytes": 34334,
+      "size_bytes": 35075,
       "top_level_keys": [
         "actions",
+        "commands",
         "count",
+        "csv_columns",
         "generated_at",
+        "links",
         "summary"
       ],
       "collections": [
@@ -587,10 +590,25 @@
           "key": "actions",
           "type": "list",
           "count": 62
+        },
+        {
+          "key": "csv_columns",
+          "type": "list",
+          "count": 10
+        },
+        {
+          "key": "commands",
+          "type": "list",
+          "count": 3
+        },
+        {
+          "key": "links",
+          "type": "object",
+          "count": 9
         }
       ],
       "declared_count": 62,
-      "generated_at": "2026-06-12T07:54:54",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [
         "tasks",
         "project-management",
@@ -639,7 +657,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:54:54",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [
         "command-center",
         "desktop",
@@ -692,7 +710,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:54:54",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [
         "workflow",
         "desktop",
@@ -744,7 +762,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:54:54",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [
         "workflow",
         "runtime-selector",
@@ -805,7 +823,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:54:54",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [
         "saved-views",
         "shared-views",
@@ -859,7 +877,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:54:54",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [
         "batch-planning",
         "classification",
@@ -907,7 +925,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:54:54",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [
         "collections",
         "shared-views",
@@ -957,7 +975,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:54:54",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [
         "coverage",
         "taxonomy",
@@ -1016,7 +1034,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:54:54",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [
         "research-gaps",
         "planning",
@@ -1055,7 +1073,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:54:54",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [
         "analytics",
         "classification",
@@ -1099,7 +1117,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:54:54",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [
         "comparison",
         "curation",
@@ -1167,7 +1185,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:54:54",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [
         "taxonomy",
         "graph",
@@ -1207,7 +1225,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:54:54",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [
         "taxonomy",
         "clusters",
@@ -1258,7 +1276,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:54:54",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [
         "research-lines",
         "planning",
@@ -1327,7 +1345,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:54:54",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [
         "ops",
         "capacity-planning",
@@ -1367,7 +1385,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:54:54",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [
         "ops",
         "owners",
@@ -1432,7 +1450,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:54:54",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [
         "taxonomy",
         "intake",
@@ -1444,7 +1462,7 @@
       "href": "onboarding.json",
       "description": "开源贡献路径、质量门和数据契约清单",
       "exists": true,
-      "size_bytes": 10722,
+      "size_bytes": 11000,
       "top_level_keys": [
         "bootstrap_files",
         "command_groups",
@@ -1465,7 +1483,7 @@
         {
           "key": "readiness_checks",
           "type": "list",
-          "count": 18
+          "count": 19
         },
         {
           "key": "quickstart_steps",
@@ -1485,7 +1503,7 @@
         {
           "key": "contracts",
           "type": "list",
-          "count": 10
+          "count": 11
         },
         {
           "key": "bootstrap_files",
@@ -1504,7 +1522,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:54:54",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [
         "open-source",
         "contributors",
@@ -1516,7 +1534,7 @@
       "href": "snapshot.json",
       "description": "当前知识库治理快照和发布基线",
       "exists": true,
-      "size_bytes": 17643,
+      "size_bytes": 17843,
       "top_level_keys": [
         "action_groups",
         "active_status_workflow",
@@ -1583,7 +1601,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:54:55",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [
         "release",
         "audit",
@@ -1658,7 +1676,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:54:54",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [
         "intake",
         "dedupe",
@@ -1702,7 +1720,7 @@
         }
       ],
       "declared_count": 0,
-      "generated_at": "2026-06-12T07:54:54",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [
         "intake",
         "dedupe"
@@ -1761,7 +1779,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:54:54",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [
         "dedupe",
         "quality",
@@ -1827,7 +1845,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:54:54",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [
         "taxonomy",
         "registry",
@@ -1886,7 +1904,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:54:54",
+      "generated_at": "2026-06-12T07:59:19",
       "consumers": [],
       "error": ""
     },
@@ -1959,12 +1977,12 @@
         {
           "key": "contract_files",
           "type": "list",
-          "count": 10
+          "count": 11
         },
         {
           "key": "artifact_inventory",
           "type": "list",
-          "count": 83
+          "count": 84
         },
         {
           "key": "command_recipes",
@@ -1983,7 +2001,7 @@
         }
       ],
       "declared_count": 5,
-      "generated_at": "2026-06-12T07:54:55",
+      "generated_at": "2026-06-12T07:59:20",
       "consumers": [
         "release",
         "audit",
@@ -2044,6 +2062,10 @@
     {
       "href": "guides/batch.schema.json",
       "description": "batch.json 批量规划数据契约"
+    },
+    {
+      "href": "guides/actions.schema.json",
+      "description": "actions.json 统一行动队列契约"
     },
     {
       "href": "guides/workflow.schema.json",
