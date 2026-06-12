@@ -30,6 +30,7 @@ PYTHON_SCRIPTS = [
     "scripts/export_reading_list.py",
     "scripts/export_actions.py",
     "scripts/export_priority.py",
+    "scripts/export_status.py",
     "scripts/export_catalog_bundle.py",
     "scripts/validate_catalog_bundle.py",
     "scripts/export_queues.py",

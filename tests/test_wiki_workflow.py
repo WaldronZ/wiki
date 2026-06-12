@@ -657,6 +657,9 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual({item["slug"] for item in status["papers"]}, {"2601.00001-alpha-paper", "2501.00002-beta-paper"})
             self.assertEqual(status["defaults"]["workflow"], "research")
             self.assertEqual(status["links"]["library"], "library.html")
+            self.assertIn("python3 scripts/export_status.py docs --output docs/exports/status.md", status["commands"])
+            self.assertIn("python3 scripts/export_status.py docs --format patch --field status --set-value <status> --output docs/exports/status-patch.csv", status["commands"])
+            self.assertIn("python3 scripts/export_status.py docs --format workflow-config --output docs/exports/status-workflow.json", status["commands"])
             self.assertTrue(any("apply_status_workflow.py" in command for command in status["commands"]))
             self.assertTrue(any("apply_shared_views.py" in command for command in status["commands"]))
             self.assertIn("python3 scripts/apply_library_metadata.py docs --input <status_patch.csv> --write", status["commands"])
@@ -1167,6 +1170,10 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("python3 scripts/export_priority.py docs --output docs/exports/priority.md", quality_html)
             self.assertIn("python3 scripts/export_priority.py docs --format project --urgency high --output docs/exports/priority-project.csv", quality_html)
             self.assertIn("python3 scripts/export_priority.py docs --format review-patch --needs-review-plan --output docs/exports/priority-review-patch.csv", quality_html)
+            self.assertIn("python3 scripts/export_status.py docs --output docs/exports/status.md", quality_html)
+            self.assertIn("python3 scripts/export_status.py docs --format project --output docs/exports/status-project.csv", quality_html)
+            self.assertIn("python3 scripts/export_status.py docs --format patch --field status --set-value &lt;status&gt; --output docs/exports/status-patch.csv", quality_html)
+            self.assertIn("python3 scripts/export_status.py docs --format workflow-config --output docs/exports/status-workflow.json", quality_html)
             self.assertIn("python3 scripts/export_catalog_bundle.py docs --output docs/exports/bootstrap-bundle.json", quality_html)
             self.assertIn("python3 scripts/export_catalog_bundle.py docs --no-payloads --output docs/exports/bootstrap-manifest.json", quality_html)
             self.assertIn("python3 scripts/validate_catalog_bundle.py docs/exports/bootstrap-bundle.json --report-dir docs --require-payloads", quality_html)
@@ -1233,6 +1240,10 @@ class WikiWorkflowTest(unittest.TestCase):
             daily_lane = next(item for item in command["lanes"] if item["id"] == "daily_reading")
             self.assertEqual(daily_lane["primary_href"], "priority.html")
             self.assertIn("priority.json", {item["href"] for item in daily_lane["data_files"]})
+            workflow_lane = next(item for item in command["lanes"] if item["id"] == "workflow_status")
+            workflow_command_ids = {item["id"] for item in workflow_lane["commands"]}
+            self.assertIn("status_workflow_config", workflow_command_ids)
+            self.assertIn("status_patch", workflow_command_ids)
             self.assertTrue(any(item["href"] == "priority.html?urgency=high" for item in command["recommended_next"]))
             release_lane = next(item for item in command["lanes"] if item["id"] == "release_open_source")
             self.assertIn("command.json", {item["href"] for item in release_lane["data_files"]})
@@ -1457,6 +1468,97 @@ class WikiWorkflowTest(unittest.TestCase):
                 str(priority_patch_path),
             )
             self.assertIn("DRY", priority_patch_preview.stdout)
+
+            status_export_path = report_dir / "exports" / "status.md"
+            self.run_cmd(
+                "scripts/export_status.py",
+                str(report_dir),
+                "--status",
+                "read",
+                "--output",
+                str(status_export_path),
+            )
+            status_export = status_export_path.read_text(encoding="utf-8")
+            self.assertIn("# AutoPaperReader Status Selection", status_export)
+            self.assertIn("Workflow: research", status_export)
+
+            status_project_path = report_dir / "exports" / "status-project.csv"
+            self.run_cmd(
+                "scripts/export_status.py",
+                str(report_dir),
+                "--format",
+                "project",
+                "--workflow",
+                "research",
+                "--assignee",
+                "workflow-owner",
+                "--task-status",
+                "ready",
+                "--output",
+                str(status_project_path),
+            )
+            status_project_rows = list(csv.DictReader(status_project_path.read_text(encoding="utf-8").splitlines()))
+            self.assertTrue(status_project_rows)
+            self.assertEqual(status_project_rows[0]["status"], "ready")
+            self.assertEqual(status_project_rows[0]["assignee"], "workflow-owner")
+            self.assertIn("research", status_project_rows[0]["labels"])
+
+            status_patch_path = report_dir / "exports" / "status-patch.csv"
+            self.run_cmd(
+                "scripts/export_status.py",
+                str(report_dir),
+                "--format",
+                "patch",
+                "--status",
+                "read",
+                "--field",
+                "status",
+                "--set-value",
+                "archived",
+                "--output",
+                str(status_patch_path),
+            )
+            status_patch_rows = list(csv.DictReader(status_patch_path.read_text(encoding="utf-8").splitlines()))
+            self.assertTrue(status_patch_rows)
+            self.assertIn("display_title", status_patch_rows[0])
+            self.assertNotIn("title", status_patch_rows[0])
+            self.assertTrue(all(row["status"] == "archived" for row in status_patch_rows))
+            status_patch_preview = self.run_cmd(
+                "scripts/apply_library_metadata.py",
+                str(report_dir),
+                "--input",
+                str(status_patch_path),
+            )
+            self.assertIn("DRY", status_patch_preview.stdout)
+
+            workflow_config_path = report_dir / "exports" / "status-workflow.json"
+            self.run_cmd(
+                "scripts/export_status.py",
+                str(report_dir),
+                "--format",
+                "workflow-config",
+                "--workflow",
+                "research",
+                "--output",
+                str(workflow_config_path),
+            )
+            status_workflow_config = json.loads(workflow_config_path.read_text(encoding="utf-8"))
+            self.assertEqual(status_workflow_config["active_status_workflow"], "research")
+            self.assertIn("research", status_workflow_config["status_workflows"])
+
+            invalid_status_patch = self.run_cmd(
+                "scripts/export_status.py",
+                str(report_dir),
+                "--format",
+                "patch",
+                "--field",
+                "status",
+                "--set-value",
+                "typo_status",
+                check=False,
+            )
+            self.assertNotEqual(invalid_status_patch.returncode, 0)
+            self.assertIn("is not configured in workflow", invalid_status_patch.stderr)
 
             queues_export_path = report_dir / "exports" / "queues.md"
             self.run_cmd(
@@ -2223,6 +2325,9 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("python3 scripts/export_actions.py docs --output docs/exports/actions.md", manifest["commands"])
             self.assertIn("python3 scripts/export_priority.py docs --output docs/exports/priority.md", manifest["commands"])
             self.assertIn("python3 scripts/export_priority.py docs --format review-patch --needs-review-plan --output docs/exports/priority-review-patch.csv", manifest["commands"])
+            self.assertIn("python3 scripts/export_status.py docs --output docs/exports/status.md", manifest["commands"])
+            self.assertIn("python3 scripts/export_status.py docs --format patch --field status --set-value <status> --output docs/exports/status-patch.csv", manifest["commands"])
+            self.assertIn("python3 scripts/export_status.py docs --format workflow-config --output docs/exports/status-workflow.json", manifest["commands"])
             self.assertIn("python3 scripts/export_queues.py docs --output docs/exports/queues.md", manifest["commands"])
             self.assertIn("python3 scripts/export_cohorts.py docs --output docs/exports/cohorts.md", manifest["commands"])
             self.assertIn("python3 scripts/export_batches.py docs --output docs/exports/batches.md", manifest["commands"])
@@ -2257,6 +2362,10 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(recipe_by_id["priority_markdown"]["output"], "docs/exports/priority.md")
             self.assertEqual(recipe_by_id["priority_project"]["output"], "docs/exports/priority-project.csv")
             self.assertEqual(recipe_by_id["priority_review_patch"]["output"], "docs/exports/priority-review-patch.csv")
+            self.assertEqual(recipe_by_id["status_markdown"]["output"], "docs/exports/status.md")
+            self.assertEqual(recipe_by_id["status_project"]["output"], "docs/exports/status-project.csv")
+            self.assertEqual(recipe_by_id["status_patch"]["output"], "docs/exports/status-patch.csv")
+            self.assertEqual(recipe_by_id["status_workflow_config"]["output"], "docs/exports/status-workflow.json")
             self.assertEqual(recipe_by_id["taxonomy_registry_project"]["output"], "docs/exports/taxonomy-registry-project.csv")
             self.assertEqual(recipe_by_id["taxonomy_balance_project"]["output"], "docs/exports/taxonomy-balance-project.csv")
             self.assertEqual(recipe_by_id["taxonomy_actions_patch"]["output"], "docs/exports/taxonomy-action-patch.csv")

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T10:50:05",
+  "generated_at": "2026-06-12T11:00:05",
   "count": 5,
   "inbox_count": 0,
   "lane_count": 6,
@@ -447,6 +447,22 @@
         }
       ],
       "commands": [
+        {
+          "id": "status_workflow_config",
+          "kind": "export",
+          "label": "Export status workflow config",
+          "command": "python3 scripts/export_status.py docs --format workflow-config --output docs/exports/status-workflow.json",
+          "output": "docs/exports/status-workflow.json",
+          "mutates": false
+        },
+        {
+          "id": "status_patch",
+          "kind": "export",
+          "label": "Export status metadata patch",
+          "command": "python3 scripts/export_status.py docs --format patch --field status --set-value <status> --output docs/exports/status-patch.csv",
+          "output": "docs/exports/status-patch.csv",
+          "mutates": false
+        },
         {
           "id": "apply_status_workflow_dry_run",
           "kind": "check",

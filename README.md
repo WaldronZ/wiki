@@ -134,6 +134,7 @@ paper_reader/
 │   ├── check_wiki_js.js
 │   ├── export_actions.py
 │   ├── export_priority.py
+│   ├── export_status.py
 │   ├── export_queues.py
 │   ├── export_cohorts.py
 │   ├── export_gaps.py
@@ -166,6 +167,7 @@ paper_reader/
 - `scripts/export_reading_list.py` 用于按研究线、状态、方向、主题、方法或重要性导出 Markdown 阅读清单、BibTeX 或链接列表
 - `scripts/export_actions.py` 用于把 `actions.json` 导出成统一 checklist、审计 CSV 或可自定义任务状态的项目任务 CSV
 - `scripts/export_priority.py` 用于把 `priority.json` 导出成论文级优先级 checklist、CSV、项目任务 CSV 或复习计划 patch CSV
+- `scripts/export_status.py` 用于把 `status.json` 的动态 workflow/status 选择导出成 checklist、项目任务 CSV、状态写回 patch 或 workflow 配置片段
 - `scripts/export_catalog_bundle.py` 用于按 `catalog.json` 把桌面端/DMG 启动所需核心 JSON 打成单个 bootstrap bundle，也可只导出 hash/shape manifest
 - `scripts/validate_catalog_bundle.py` 用于校验 bootstrap bundle 的结构、payload 模式以及与 `docs/` 本地文件匹配的 size/SHA-256
 - `scripts/export_queues.py` 用于把 `queues.json` 中的运营队列导出成 checklist、审计 CSV、项目任务 CSV 或可写回 metadata 的 patch CSV
@@ -446,6 +448,10 @@ python3 scripts/export_actions.py docs --format project --group review --severit
 python3 scripts/export_priority.py docs --output docs/exports/priority.md
 python3 scripts/export_priority.py docs --format project --urgency high --assignee wiki-owner --task-status ready --output docs/exports/priority-project.csv
 python3 scripts/export_priority.py docs --format review-patch --needs-review-plan --output docs/exports/priority-review-patch.csv
+python3 scripts/export_status.py docs --status read --reading-stage deep_read --output docs/exports/status.md
+python3 scripts/export_status.py docs --format project --workflow personal --assignee workflow-owner --task-status ready --output docs/exports/status-project.csv
+python3 scripts/export_status.py docs --format patch --status read --field status --set-value archived --output docs/exports/status-patch.csv
+python3 scripts/export_status.py docs --format workflow-config --workflow personal --output docs/exports/status-workflow.json
 python3 scripts/export_catalog_bundle.py docs --output docs/exports/bootstrap-bundle.json
 python3 scripts/export_catalog_bundle.py docs --no-payloads --output docs/exports/bootstrap-manifest.json
 python3 scripts/validate_catalog_bundle.py docs/exports/bootstrap-bundle.json --report-dir docs --require-payloads
@@ -497,6 +503,9 @@ python3 scripts/apply_library_metadata.py docs --input ~/Downloads/metadata_patc
 ```bash
 python3 scripts/apply_status_workflow.py docs --input ~/Downloads/taxonomy_status_workflow.json
 python3 scripts/apply_status_workflow.py docs --input ~/Downloads/taxonomy_status_workflow.json --write
+python3 scripts/export_status.py docs --format workflow-config --output docs/exports/status-workflow.json
+python3 scripts/export_status.py docs --format patch --status read --field status --set-value archived --output docs/exports/status-patch.csv
+python3 scripts/apply_library_metadata.py docs --input docs/exports/status-patch.csv
 python3 scripts/build_wiki.py docs
 ```
 
