@@ -7272,6 +7272,35 @@ def page_shell(
     }}
     .controls {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(138px, 1fr)); gap: 10px; }}
     .controls input[type="search"] {{ grid-column: span 2; min-width: 260px; }}
+    .filter-panel {{
+      display: grid;
+      gap: 10px;
+    }}
+    .primary-filter-row,
+    .advanced-filter-grid {{
+      display: grid;
+      grid-template-columns: minmax(240px, 2fr) repeat(auto-fit, minmax(138px, 1fr));
+      gap: 10px;
+      align-items: center;
+    }}
+    .primary-filter-row input[type="search"] {{ min-width: 0; }}
+    .advanced-filters {{
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--panel);
+    }}
+    .advanced-filters summary {{
+      cursor: pointer;
+      padding: 9px 11px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 650;
+    }}
+    .advanced-filter-grid {{
+      border-top: 1px solid var(--line);
+      padding: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(138px, 1fr));
+    }}
     input, select {{
       width: 100%;
       min-height: 38px;
@@ -7561,6 +7590,8 @@ def page_shell(
     }}
     @media (max-width: 760px) {{
       .controls {{ grid-template-columns: 1fr; }}
+      .primary-filter-row,
+      .advanced-filter-grid {{ grid-template-columns: 1fr; }}
       .controls input[type="search"] {{ grid-column: auto; min-width: 0; }}
       .results-bar {{ align-items: flex-start; flex-direction: column; }}
       .pager {{ justify-content: flex-start; flex-wrap: wrap; }}
@@ -7982,22 +8013,29 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]], inbox_items: li
   </details>
 </header>
 <div class="toolbar">
-  <div class="shell controls">
-    <input id="search" type="search" placeholder="全文搜索：标题、作者、主题、方法、正文关键词">
-    <select id="domain"><option value="">全部领域</option>{render_topic_options(taxonomy["domains"])}</select>
-    <select id="line"><option value="">全部研究线</option>{render_topic_options(taxonomy["research_lines"])}</select>
-    <select id="role"><option value="">全部角色</option>{render_topic_options(taxonomy["line_roles"])}</select>
-    <select id="statusWorkflow" aria-label="状态体系"></select>
-    <select id="topic"><option value="">全部主题</option>{render_topic_options(taxonomy["topics"])}</select>
-    <select id="method"><option value="">全部方法</option>{render_topic_options(taxonomy["methods"])}</select>
-    <select id="status"><option value="">全部状态</option>{render_topic_options(taxonomy["statuses"])}</select>
-    <select id="stage"><option value="">阅读阶段</option>{render_topic_options(taxonomy["reading_stages"])}</select>
-    <select id="code"><option value="">代码状态</option><option value="yes">有代码观察</option><option value="no">无代码观察</option></select>
-    <select id="importance"><option value="">重要性</option><option value="5">5 星</option><option value="4">4 星及以上</option><option value="3">3 星及以上</option></select>
-    <select id="reviewStage"><option value="">复习阶段</option>{render_topic_options(taxonomy["review_stages"])}</select>
-    <select id="review"><option value="">复习时间</option><option value="due">待复习</option><option value="none">未设置复习</option></select>
-    <select id="sort"><option value="default">默认排序</option><option value="importance">重要性优先</option><option value="updated">最近更新</option><option value="year">年份新到旧</option><option value="reading">阅读时间短到长</option><option value="title">标题 A-Z</option></select>
-    <select id="pageSize"><option value="12">每页 12 篇</option><option value="24">每页 24 篇</option><option value="48">每页 48 篇</option><option value="all">显示全部</option></select>
+  <div class="shell filter-panel">
+    <div class="primary-filter-row">
+      <input id="search" type="search" placeholder="全文搜索：标题、作者、主题、方法、正文关键词">
+      <select id="line"><option value="">全部研究线</option>{render_topic_options(taxonomy["research_lines"])}</select>
+      <select id="status"><option value="">全部状态</option>{render_topic_options(taxonomy["statuses"])}</select>
+      <select id="sort"><option value="default">默认排序</option><option value="importance">重要性优先</option><option value="updated">最近更新</option><option value="year">年份新到旧</option><option value="reading">阅读时间短到长</option><option value="title">标题 A-Z</option></select>
+      <select id="pageSize"><option value="12">每页 12 篇</option><option value="24">每页 24 篇</option><option value="48">每页 48 篇</option><option value="all">显示全部</option></select>
+    </div>
+    <details class="advanced-filters">
+      <summary>高级筛选</summary>
+      <div class="advanced-filter-grid">
+        <select id="domain"><option value="">全部领域</option>{render_topic_options(taxonomy["domains"])}</select>
+        <select id="role"><option value="">全部角色</option>{render_topic_options(taxonomy["line_roles"])}</select>
+        <select id="statusWorkflow" aria-label="状态体系"></select>
+        <select id="topic"><option value="">全部主题</option>{render_topic_options(taxonomy["topics"])}</select>
+        <select id="method"><option value="">全部方法</option>{render_topic_options(taxonomy["methods"])}</select>
+        <select id="stage"><option value="">阅读阶段</option>{render_topic_options(taxonomy["reading_stages"])}</select>
+        <select id="code"><option value="">代码状态</option><option value="yes">有代码观察</option><option value="no">无代码观察</option></select>
+        <select id="importance"><option value="">重要性</option><option value="5">5 星</option><option value="4">4 星及以上</option><option value="3">3 星及以上</option></select>
+        <select id="reviewStage"><option value="">复习阶段</option>{render_topic_options(taxonomy["review_stages"])}</select>
+        <select id="review"><option value="">复习时间</option><option value="due">待复习</option><option value="none">未设置复习</option></select>
+      </div>
+    </details>
   </div>
 </div>
 <main class="shell">
@@ -8937,24 +8975,31 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   </div>
 </header>
 <div class="toolbar">
-  <div class="shell controls">
-    <input id="search" type="search" placeholder="搜索标题、作者、研究线、分类、状态">
-    <select id="domain"><option value="">全部领域</option>{render_topic_options(taxonomy["domains"])}</select>
-    <select id="track"><option value="">全部方向</option>{render_topic_options(taxonomy["tracks"])}</select>
-    <select id="problem"><option value="">全部问题</option>{render_topic_options(taxonomy["problems"])}</select>
-    <select id="topic"><option value="">全部主题</option>{render_topic_options(taxonomy["topics"])}</select>
-    <select id="method"><option value="">全部方法</option>{render_topic_options(taxonomy["methods"])}</select>
-    <select id="line"><option value="">全部研究线</option>{render_topic_options(taxonomy["research_lines"])}</select>
-    <select id="role"><option value="">全部角色</option>{render_topic_options(taxonomy["line_roles"])}</select>
-    <select id="statusWorkflow" aria-label="状态体系"></select>
-    <select id="status"><option value="">全部状态</option>{render_topic_options(taxonomy["statuses"])}</select>
-    <select id="stage"><option value="">阅读阶段</option>{render_topic_options(taxonomy["reading_stages"])}</select>
-    <select id="reviewStage"><option value="">复习阶段</option>{render_topic_options(taxonomy["review_stages"])}</select>
-    <select id="review"><option value="">复习队列</option><option value="due">到期复习</option><option value="none">未设置复习</option><option value="planned">已设置复习</option></select>
-    <select id="code"><option value="">代码状态</option><option value="yes">有代码</option><option value="no">无代码</option></select>
-    <select id="importance"><option value="">重要性</option><option value="5">5 星</option><option value="4">4 星及以上</option><option value="3">3 星及以上</option></select>
-    <select id="sort"><option value="default">默认排序</option><option value="importance">重要性优先</option><option value="updated">最近更新</option><option value="year">年份新到旧</option><option value="title">标题 A-Z</option></select>
-    <select id="pageSize"><option value="50">每页 50 篇</option><option value="100">每页 100 篇</option><option value="200">每页 200 篇</option><option value="all">显示全部</option></select>
+  <div class="shell filter-panel">
+    <div class="primary-filter-row">
+      <input id="search" type="search" placeholder="搜索标题、作者、研究线、分类、状态">
+      <select id="line"><option value="">全部研究线</option>{render_topic_options(taxonomy["research_lines"])}</select>
+      <select id="status"><option value="">全部状态</option>{render_topic_options(taxonomy["statuses"])}</select>
+      <select id="review"><option value="">复习队列</option><option value="due">到期复习</option><option value="none">未设置复习</option><option value="planned">已设置复习</option></select>
+      <select id="sort"><option value="default">默认排序</option><option value="importance">重要性优先</option><option value="updated">最近更新</option><option value="year">年份新到旧</option><option value="title">标题 A-Z</option></select>
+      <select id="pageSize"><option value="50">每页 50 篇</option><option value="100">每页 100 篇</option><option value="200">每页 200 篇</option><option value="all">显示全部</option></select>
+    </div>
+    <details class="advanced-filters">
+      <summary>高级筛选</summary>
+      <div class="advanced-filter-grid">
+        <select id="domain"><option value="">全部领域</option>{render_topic_options(taxonomy["domains"])}</select>
+        <select id="track"><option value="">全部方向</option>{render_topic_options(taxonomy["tracks"])}</select>
+        <select id="problem"><option value="">全部问题</option>{render_topic_options(taxonomy["problems"])}</select>
+        <select id="topic"><option value="">全部主题</option>{render_topic_options(taxonomy["topics"])}</select>
+        <select id="method"><option value="">全部方法</option>{render_topic_options(taxonomy["methods"])}</select>
+        <select id="role"><option value="">全部角色</option>{render_topic_options(taxonomy["line_roles"])}</select>
+        <select id="statusWorkflow" aria-label="状态体系"></select>
+        <select id="stage"><option value="">阅读阶段</option>{render_topic_options(taxonomy["reading_stages"])}</select>
+        <select id="reviewStage"><option value="">复习阶段</option>{render_topic_options(taxonomy["review_stages"])}</select>
+        <select id="code"><option value="">代码状态</option><option value="yes">有代码</option><option value="no">无代码</option></select>
+        <select id="importance"><option value="">重要性</option><option value="5">5 星</option><option value="4">4 星及以上</option><option value="3">3 星及以上</option></select>
+      </div>
+    </details>
   </div>
 </div>
 <main class="shell">

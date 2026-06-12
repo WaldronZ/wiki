@@ -54,6 +54,35 @@
     }
     .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(138px, 1fr)); gap: 10px; }
     .controls input[type="search"] { grid-column: span 2; min-width: 260px; }
+    .filter-panel {
+      display: grid;
+      gap: 10px;
+    }
+    .primary-filter-row,
+    .advanced-filter-grid {
+      display: grid;
+      grid-template-columns: minmax(240px, 2fr) repeat(auto-fit, minmax(138px, 1fr));
+      gap: 10px;
+      align-items: center;
+    }
+    .primary-filter-row input[type="search"] { min-width: 0; }
+    .advanced-filters {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--panel);
+    }
+    .advanced-filters summary {
+      cursor: pointer;
+      padding: 9px 11px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 650;
+    }
+    .advanced-filter-grid {
+      border-top: 1px solid var(--line);
+      padding: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(138px, 1fr));
+    }
     input, select {
       width: 100%;
       min-height: 38px;
@@ -343,6 +372,8 @@
     }
     @media (max-width: 760px) {
       .controls { grid-template-columns: 1fr; }
+      .primary-filter-row,
+      .advanced-filter-grid { grid-template-columns: 1fr; }
       .controls input[type="search"] { grid-column: auto; min-width: 0; }
       .results-bar { align-items: flex-start; flex-direction: column; }
       .pager { justify-content: flex-start; flex-wrap: wrap; }
@@ -400,7 +431,7 @@ window.PAPER_WIKI = {"taxonomy_load": [{"slug": "2604.11035-introspective-dlm", 
     <a class="stat" href="inbox.html">待处理池</a>
     <a class="stat" href="quality.json">质量 JSON</a>
     <span class="stat">论文 5</span>
-    <span class="stat">生成时间 2026-06-12T11:10:14</span>
+    <span class="stat">生成时间 2026-06-12T11:14:32</span>
   </div>
 </header>
 <main class="shell">

@@ -54,6 +54,35 @@
     }
     .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(138px, 1fr)); gap: 10px; }
     .controls input[type="search"] { grid-column: span 2; min-width: 260px; }
+    .filter-panel {
+      display: grid;
+      gap: 10px;
+    }
+    .primary-filter-row,
+    .advanced-filter-grid {
+      display: grid;
+      grid-template-columns: minmax(240px, 2fr) repeat(auto-fit, minmax(138px, 1fr));
+      gap: 10px;
+      align-items: center;
+    }
+    .primary-filter-row input[type="search"] { min-width: 0; }
+    .advanced-filters {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--panel);
+    }
+    .advanced-filters summary {
+      cursor: pointer;
+      padding: 9px 11px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 650;
+    }
+    .advanced-filter-grid {
+      border-top: 1px solid var(--line);
+      padding: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(138px, 1fr));
+    }
     input, select {
       width: 100%;
       min-height: 38px;
@@ -343,6 +372,8 @@
     }
     @media (max-width: 760px) {
       .controls { grid-template-columns: 1fr; }
+      .primary-filter-row,
+      .advanced-filter-grid { grid-template-columns: 1fr; }
       .controls input[type="search"] { grid-column: auto; min-width: 0; }
       .results-bar { align-items: flex-start; flex-direction: column; }
       .pager { justify-content: flex-start; flex-wrap: wrap; }
@@ -632,24 +663,31 @@ window.PAPER_WIKI = {"shared_views": [{"name": "重点论文", "state": {"import
   </div>
 </header>
 <div class="toolbar">
-  <div class="shell controls">
-    <input id="search" type="search" placeholder="搜索标题、作者、研究线、分类、状态">
-    <select id="domain"><option value="">全部领域</option><option value="LLM Systems">LLM Systems (5)</option></select>
-    <select id="track"><option value="">全部方向</option><option value="Inference Acceleration">Inference Acceleration (3)</option><option value="Parallel Decoding">Parallel Decoding (3)</option><option value="Attention Kernels">Attention Kernels (2)</option><option value="Inference Serving Systems">Inference Serving Systems (1)</option></select>
-    <select id="problem"><option value="">全部问题</option><option value="Customizable Attention Serving">Customizable Attention Serving (1)</option><option value="Efficient Exact Attention">Efficient Exact Attention (1)</option><option value="Lossless Speculative Decoding">Lossless Speculative Decoding (1)</option><option value="Memory-Efficient Parallel Token Generation">Memory-Efficient Parallel Token Generation (1)</option><option value="Parallel Diffusion Decoding">Parallel Diffusion Decoding (1)</option></select>
-    <select id="topic"><option value="">全部主题</option><option value="Diffusion Language Models">Diffusion Language Models (3)</option><option value="LLM Serving">LLM Serving (3)</option><option value="Speculative Decoding">Speculative Decoding (3)</option><option value="KV Cache">KV Cache (2)</option><option value="LLM Inference">LLM Inference (2)</option><option value="Parallel Decoding">Parallel Decoding (2)</option><option value="Attention Kernels">Attention Kernels (1)</option><option value="Efficient Attention">Efficient Attention (1)</option><option value="GPU Kernel Optimization">GPU Kernel Optimization (1)</option><option value="GPU Systems">GPU Systems (1)</option><option value="Inference Optimization">Inference Optimization (1)</option><option value="LLM">LLM (1)</option><option value="Long Context">Long Context (1)</option><option value="Transformer">Transformer (1)</option></select>
-    <select id="method"><option value="">全部方法</option><option value="FlashAttention">FlashAttention (2)</option><option value="block diffusion">block diffusion (1)</option><option value="block-sparse attention">block-sparse attention (1)</option><option value="composable KV-cache format">composable KV-cache format (1)</option><option value="CUDA / GPU parallelism">CUDA / GPU parallelism (1)</option><option value="CUDA Graph">CUDA Graph (1)</option><option value="dual-view attention">dual-view attention (1)</option><option value="forward KL distillation">forward KL distillation (1)</option><option value="gated LoRA">gated LoRA (1)</option><option value="intra-model consensus">intra-model consensus (1)</option><option value="introspective consistency">introspective consistency (1)</option><option value="introspective strided decoding">introspective strided decoding (1)</option><option value="JIT compilation">JIT compilation (1)</option><option value="KV injection">KV injection (1)</option><option value="load-balanced scheduling">load-balanced scheduling (1)</option><option value="logit-shifted causal training">logit-shifted causal training (1)</option><option value="masked diffusion">masked diffusion (1)</option><option value="online softmax">online softmax (1)</option><option value="p/q acceptance">p/q acceptance (1)</option><option value="parallel drafting">parallel drafting (1)</option><option value="SGLang serving">SGLang serving (1)</option><option value="shared KV cache">shared KV cache (1)</option><option value="Speculative Decoding">Speculative Decoding (1)</option><option value="target hidden features">target hidden features (1)</option><option value="tiling">tiling (1)</option><option value="work partitioning">work partitioning (1)</option></select>
-    <select id="line"><option value="">全部研究线</option><option value="Parallel Decoding with Diffusion Models">Parallel Decoding with Diffusion Models (3)</option><option value="Efficient Attention Kernels">Efficient Attention Kernels (2)</option></select>
-    <select id="role"><option value="">全部角色</option><option value="foundation">foundation (2)</option><option value="followup">followup (1)</option><option value="system">system (1)</option><option value="variant">variant (1)</option></select>
-    <select id="statusWorkflow" aria-label="状态体系"></select>
-    <select id="status"><option value="">全部状态</option><option value="read">read (5)</option><option value="archived">archived (0)</option><option value="reading">reading (0)</option><option value="skimmed">skimmed (0)</option><option value="unread">unread (0)</option></select>
-    <select id="stage"><option value="">阅读阶段</option><option value="deep_read">deep_read (5)</option><option value="code_checked">code_checked (0)</option><option value="normal_read">normal_read (0)</option><option value="skim">skim (0)</option></select>
-    <select id="reviewStage"><option value="">复习阶段</option><option value="due">due (0)</option><option value="fresh">fresh (0)</option><option value="reviewed">reviewed (0)</option></select>
-    <select id="review"><option value="">复习队列</option><option value="due">到期复习</option><option value="none">未设置复习</option><option value="planned">已设置复习</option></select>
-    <select id="code"><option value="">代码状态</option><option value="yes">有代码</option><option value="no">无代码</option></select>
-    <select id="importance"><option value="">重要性</option><option value="5">5 星</option><option value="4">4 星及以上</option><option value="3">3 星及以上</option></select>
-    <select id="sort"><option value="default">默认排序</option><option value="importance">重要性优先</option><option value="updated">最近更新</option><option value="year">年份新到旧</option><option value="title">标题 A-Z</option></select>
-    <select id="pageSize"><option value="50">每页 50 篇</option><option value="100">每页 100 篇</option><option value="200">每页 200 篇</option><option value="all">显示全部</option></select>
+  <div class="shell filter-panel">
+    <div class="primary-filter-row">
+      <input id="search" type="search" placeholder="搜索标题、作者、研究线、分类、状态">
+      <select id="line"><option value="">全部研究线</option><option value="Parallel Decoding with Diffusion Models">Parallel Decoding with Diffusion Models (3)</option><option value="Efficient Attention Kernels">Efficient Attention Kernels (2)</option></select>
+      <select id="status"><option value="">全部状态</option><option value="read">read (5)</option><option value="archived">archived (0)</option><option value="reading">reading (0)</option><option value="skimmed">skimmed (0)</option><option value="unread">unread (0)</option></select>
+      <select id="review"><option value="">复习队列</option><option value="due">到期复习</option><option value="none">未设置复习</option><option value="planned">已设置复习</option></select>
+      <select id="sort"><option value="default">默认排序</option><option value="importance">重要性优先</option><option value="updated">最近更新</option><option value="year">年份新到旧</option><option value="title">标题 A-Z</option></select>
+      <select id="pageSize"><option value="50">每页 50 篇</option><option value="100">每页 100 篇</option><option value="200">每页 200 篇</option><option value="all">显示全部</option></select>
+    </div>
+    <details class="advanced-filters">
+      <summary>高级筛选</summary>
+      <div class="advanced-filter-grid">
+        <select id="domain"><option value="">全部领域</option><option value="LLM Systems">LLM Systems (5)</option></select>
+        <select id="track"><option value="">全部方向</option><option value="Inference Acceleration">Inference Acceleration (3)</option><option value="Parallel Decoding">Parallel Decoding (3)</option><option value="Attention Kernels">Attention Kernels (2)</option><option value="Inference Serving Systems">Inference Serving Systems (1)</option></select>
+        <select id="problem"><option value="">全部问题</option><option value="Customizable Attention Serving">Customizable Attention Serving (1)</option><option value="Efficient Exact Attention">Efficient Exact Attention (1)</option><option value="Lossless Speculative Decoding">Lossless Speculative Decoding (1)</option><option value="Memory-Efficient Parallel Token Generation">Memory-Efficient Parallel Token Generation (1)</option><option value="Parallel Diffusion Decoding">Parallel Diffusion Decoding (1)</option></select>
+        <select id="topic"><option value="">全部主题</option><option value="Diffusion Language Models">Diffusion Language Models (3)</option><option value="LLM Serving">LLM Serving (3)</option><option value="Speculative Decoding">Speculative Decoding (3)</option><option value="KV Cache">KV Cache (2)</option><option value="LLM Inference">LLM Inference (2)</option><option value="Parallel Decoding">Parallel Decoding (2)</option><option value="Attention Kernels">Attention Kernels (1)</option><option value="Efficient Attention">Efficient Attention (1)</option><option value="GPU Kernel Optimization">GPU Kernel Optimization (1)</option><option value="GPU Systems">GPU Systems (1)</option><option value="Inference Optimization">Inference Optimization (1)</option><option value="LLM">LLM (1)</option><option value="Long Context">Long Context (1)</option><option value="Transformer">Transformer (1)</option></select>
+        <select id="method"><option value="">全部方法</option><option value="FlashAttention">FlashAttention (2)</option><option value="block diffusion">block diffusion (1)</option><option value="block-sparse attention">block-sparse attention (1)</option><option value="composable KV-cache format">composable KV-cache format (1)</option><option value="CUDA / GPU parallelism">CUDA / GPU parallelism (1)</option><option value="CUDA Graph">CUDA Graph (1)</option><option value="dual-view attention">dual-view attention (1)</option><option value="forward KL distillation">forward KL distillation (1)</option><option value="gated LoRA">gated LoRA (1)</option><option value="intra-model consensus">intra-model consensus (1)</option><option value="introspective consistency">introspective consistency (1)</option><option value="introspective strided decoding">introspective strided decoding (1)</option><option value="JIT compilation">JIT compilation (1)</option><option value="KV injection">KV injection (1)</option><option value="load-balanced scheduling">load-balanced scheduling (1)</option><option value="logit-shifted causal training">logit-shifted causal training (1)</option><option value="masked diffusion">masked diffusion (1)</option><option value="online softmax">online softmax (1)</option><option value="p/q acceptance">p/q acceptance (1)</option><option value="parallel drafting">parallel drafting (1)</option><option value="SGLang serving">SGLang serving (1)</option><option value="shared KV cache">shared KV cache (1)</option><option value="Speculative Decoding">Speculative Decoding (1)</option><option value="target hidden features">target hidden features (1)</option><option value="tiling">tiling (1)</option><option value="work partitioning">work partitioning (1)</option></select>
+        <select id="role"><option value="">全部角色</option><option value="foundation">foundation (2)</option><option value="followup">followup (1)</option><option value="system">system (1)</option><option value="variant">variant (1)</option></select>
+        <select id="statusWorkflow" aria-label="状态体系"></select>
+        <select id="stage"><option value="">阅读阶段</option><option value="deep_read">deep_read (5)</option><option value="code_checked">code_checked (0)</option><option value="normal_read">normal_read (0)</option><option value="skim">skim (0)</option></select>
+        <select id="reviewStage"><option value="">复习阶段</option><option value="due">due (0)</option><option value="fresh">fresh (0)</option><option value="reviewed">reviewed (0)</option></select>
+        <select id="code"><option value="">代码状态</option><option value="yes">有代码</option><option value="no">无代码</option></select>
+        <select id="importance"><option value="">重要性</option><option value="5">5 星</option><option value="4">4 星及以上</option><option value="3">3 星及以上</option></select>
+      </div>
+    </details>
   </div>
 </div>
 <main class="shell">
