@@ -7862,13 +7862,16 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]], inbox_items: li
     }
     cards = "\n".join(render_card(paper) for paper in papers)
     line_overview = render_line_overview(papers)
-    core_lane_ids = {"daily_reading", "paper_intake", "taxonomy_governance", "release_open_source"}
+    core_lane_ids = {"daily_reading", "paper_intake", "taxonomy_governance"}
     lane_cards = "".join(
         render_index_lane(lane)
         for lane in command_payload["lanes"]
         if str(lane.get("id") or "") in core_lane_ids
     )
     advanced_links = [
+        ("命令中心", "command.html"),
+        ("发布摘要", "release.html"),
+        ("开源上手", "onboarding.html"),
         ("Command JSON", "command.json"),
         ("Manifest JSON", "manifest.json"),
         ("批次规划", "batch.html"),
@@ -7910,6 +7913,9 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]], inbox_items: li
       flex-wrap: wrap;
       gap: 10px;
       margin-top: 18px;
+    }
+    .home-primary-actions .button {
+      min-width: 110px;
     }
     .button.primary {
       background: var(--accent);
@@ -8007,23 +8013,17 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]], inbox_items: li
 <header class="shell">
   <div class="eyebrow">AutoPaperReader Wiki</div>
   <h1>我的论文知识库</h1>
-  <p class="lead">这里汇总每一篇独立阅读报告，并按阅读、导入、分类治理、状态流、研究综合和开源发布组织成可执行工作台。</p>
+  <p class="lead">这里汇总每一篇独立阅读报告。默认只保留阅读、导入和分类治理三条主路径，其它运营页面收进更多入口。</p>
   <div class="home-primary-actions">
-    <a class="button primary" href="command.html">打开命令中心</a>
-    <a class="button" href="priority.html">查看优先级</a>
-    <a class="button" href="library.html">进入论文库</a>
-    <a class="button" href="actions.html">查看行动队列</a>
-    <a class="button" href="registry.html">治理标签</a>
+    <a class="button primary" href="priority.html">读论文</a>
+    <a class="button" href="intake.html">导入论文</a>
+    <a class="button" href="registry.html">管分类</a>
   </div>
   <div class="stats">
     <span class="stat">论文 {len(papers)}</span>
     <span class="stat">研究线 {len(taxonomy["research_lines"])}</span>
     <span class="stat">高优先级论文 {command_payload["summary"]["high_priority_papers"]}</span>
     <span class="stat">行动 {command_payload["summary"]["actions"]}</span>
-    <a class="stat" href="command.html">命令中心</a>
-    <a class="stat" href="priority.html">优先级决策台</a>
-    <a class="stat" href="library.html">论文库表格</a>
-    <a class="stat" href="taxonomy.html">分类治理</a>
   </div>
   <details class="home-secondary-links">
     <summary>更多页面与数据</summary>
@@ -8066,9 +8066,9 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]], inbox_items: li
       <h2>推荐下一步</h2>
       <div class="table-wrap"><table class="data-table"><thead><tr><th>行动</th><th>数量</th><th>原因</th></tr></thead><tbody>{command_next}</tbody></table></div>
       <div class="links">
-        <a class="button" href="command.json">Command JSON</a>
-        <a class="button" href="manifest.json">Manifest JSON</a>
         <a class="button" href="command.html">全部场景</a>
+        <a class="button" href="actions.html">行动队列</a>
+        <a class="button" href="quality.html">质量治理</a>
       </div>
     </aside>
   </section>
