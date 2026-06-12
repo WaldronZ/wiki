@@ -6346,6 +6346,8 @@ def build_priority_payload(papers: list[dict[str, Any]], inbox_items: list[dict[
                 "status": status,
                 "reading_stage": reading_stage,
                 "review_stage": paper.get("review_stage") or "",
+                "review_state": item_review.get("state") or "",
+                "suggested_next_review": item_review.get("suggested_next_review") or "",
                 "next_review": paper.get("next_review") or item_review.get("suggested_next_review") or "",
                 "priority_score": score,
                 "urgency": urgency,
@@ -6394,10 +6396,12 @@ def build_priority_payload(papers: list[dict[str, Any]], inbox_items: list[dict[
         "items": items,
         "line_summary": line_summary,
         "csv_columns": ["slug", "priority_score", "urgency", "category", "recommended_action", "research_line", "status", "next_review", "reasons", "href"],
+        "review_patch_columns": ["slug", "next_review", "review_stage", "source_field", "source_value", "display_title", "href"],
         "commands": [
             "python3 scripts/export_actions.py docs --output docs/exports/actions.md",
             "python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv",
             "python3 scripts/apply_library_metadata.py docs --input <metadata_patch.csv>",
+            "python3 scripts/apply_library_metadata.py docs --input <priority_review_patch.csv>",
         ],
         "links": {
             "html": "priority.html",
@@ -16696,7 +16700,7 @@ def render_priority(report_dir: Path, papers: list[dict[str, Any]], inbox_items:
     priority_css = """
     .priority-controls {
       display: grid;
-      grid-template-columns: minmax(240px, 2fr) repeat(4, minmax(140px, 1fr)) auto auto;
+      grid-template-columns: minmax(240px, 2fr) repeat(4, minmax(140px, 1fr)) auto auto auto;
       gap: 10px;
       align-items: center;
       margin-bottom: 12px;
@@ -16760,6 +16764,7 @@ def render_priority(report_dir: Path, papers: list[dict[str, Any]], inbox_items:
       <select id="prioritySort"><option value="priority">优先级</option><option value="line">研究线</option><option value="category">类型</option><option value="title">标题</option></select>
       <strong id="priorityCount">{len(items)} 项</strong>
       <button id="downloadPriorityCsv" class="button" type="button">下载当前 CSV</button>
+      <button id="downloadPriorityReviewPatch" class="button" type="button">下载复习 patch</button>
       <button id="copyPriorityMarkdown" class="button" type="button">复制队列</button>
     </div>
     <div class="table-wrap">
@@ -16778,6 +16783,7 @@ const priorityCount = document.querySelector("#priorityCount");
 const priorityBody = document.querySelector("#priorityRows");
 const priorityRows = Array.from(document.querySelectorAll("#priorityRows tr"));
 const downloadPriorityCsv = document.querySelector("#downloadPriorityCsv");
+const downloadPriorityReviewPatch = document.querySelector("#downloadPriorityReviewPatch");
 const copyPriorityMarkdown = document.querySelector("#copyPriorityMarkdown");
 const priorityUrgencyRank = {{ high: 0, medium: 1, low: 2, watch: 3 }};
 
@@ -16838,6 +16844,27 @@ function downloadCurrentPriority() {{
   URL.revokeObjectURL(url);
 }}
 
+function downloadPriorityReviewPlanPatch() {{
+  const header = ["slug", "next_review", "review_stage", "source_field", "source_value", "display_title", "href"];
+  const rows = currentPriorityItems()
+    .filter(item => item.review_state === "needs_plan" && item.suggested_next_review)
+    .map(item => [item.slug, item.suggested_next_review, item.review_stage || "fresh", "review_state", item.review_state, item.title_zh || item.title || item.slug, item.href]);
+  if (!rows.length) {{
+    window.alert("当前筛选结果里没有缺复习计划的论文。");
+    return;
+  }}
+  const csv = [header, ...rows].map(row => row.map(priorityCsvCell).join(",")).join("\\n") + "\\n";
+  const blob = new Blob([csv], {{ type: "text/csv;charset=utf-8" }});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "priority_review_patch.csv";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}}
+
 async function copyPriorityQueue() {{
   const lines = ["# AutoPaperReader Priority Queue", ""];
   currentPriorityItems().forEach(item => {{
@@ -16857,6 +16884,7 @@ async function copyPriorityQueue() {{
 
 [prioritySearch, priorityUrgency, priorityCategory, priorityLine, prioritySort].forEach(control => control.addEventListener("input", renderPriorityRows));
 downloadPriorityCsv.addEventListener("click", downloadCurrentPriority);
+downloadPriorityReviewPatch.addEventListener("click", downloadPriorityReviewPlanPatch);
 copyPriorityMarkdown.addEventListener("click", copyPriorityQueue);
 renderPriorityRows();
 </script>

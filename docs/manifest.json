@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T10:29:23",
+  "generated_at": "2026-06-12T10:40:43",
   "name": "AutoPaperReader Wiki",
   "count": 5,
   "publish_ready": false,
@@ -1208,7 +1208,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 124687,
-      "sha256": "a24d2945a6982d21a4d3f999965124148dea4b4fd5bb7974700bc0a97d5269e6",
+      "sha256": "83819f356af0a3f13ec9febd5cba45f335fde336b31b6c2ab37f9e5c0fdcca05",
       "hash_mode": "raw"
     },
     {
@@ -1218,7 +1218,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 61481,
-      "sha256": "6362ab18de2343296009215f84153152a90ecfb5d9ca504047b69656e34c2640",
+      "sha256": "f85d65e70f6c3c86f17e90427efed2b247101081724aa823bff6878ca55f9ebb",
       "hash_mode": "raw"
     },
     {
@@ -1237,8 +1237,8 @@
       "description": "按论文聚合复习、分类、代码和阅读优先级",
       "exists": true,
       "status": "ok",
-      "size_bytes": 66336,
-      "sha256": "88fa13a3fafbb521235fd46301e5cdab1e108b1a01360c87d4e65dd40f2f3de4",
+      "size_bytes": 67961,
+      "sha256": "ff7622f1b847e575e1624c45057f24ac5aad68d532fc1d3d59440197320a28b8",
       "hash_mode": "raw"
     },
     {
@@ -1477,8 +1477,8 @@
       "description": "机器数据、页面和契约的接入目录",
       "exists": true,
       "status": "ok",
-      "size_bytes": 68961,
-      "sha256": "6901eb6fdf764f1e3d48a3aa3c8955a21ae2472613545e5d7c3c43fdfe70a79a",
+      "size_bytes": 68986,
+      "sha256": "28b5ad3b1493eaa2c6b7b278c68e75b07ecd18f2e094d8ec776a790fbe22406e",
       "hash_mode": "raw"
     },
     {
@@ -1697,8 +1697,8 @@
       "description": "论文级优先级决策数据，聚合复习、分类、代码和阅读信号",
       "exists": true,
       "status": "ok",
-      "size_bytes": 22843,
-      "sha256": "8e07d85171bcd3b9f603bd374b1af670f598fecd6536bcc9249abdfdccf46a41",
+      "size_bytes": 23899,
+      "sha256": "07e452ad18ac4b151bb6997a4716d1f2339bbf398eee91c183207c146d81be0a",
       "hash_mode": "normalized"
     },
     {
@@ -1907,8 +1907,8 @@
       "description": "机器数据、页面入口和契约字段目录",
       "exists": true,
       "status": "ok",
-      "size_bytes": 57645,
-      "sha256": "0316c0dd03fdb0bc3c4b47deaf97303ce9002b7a02f920871b68d51e25915fac",
+      "size_bytes": 57786,
+      "sha256": "0104deb878faf3d10e19b5f47bf9113f203c82be9d0d9ad631b6069227b5df4d",
       "hash_mode": "normalized"
     },
     {
@@ -1918,7 +1918,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 21276,
-      "sha256": "5d7cbd8158b4c40ddc627353125be6c2e3e88debdd2cd0a51ddf2c8d679a7c0f",
+      "sha256": "c1b58878f810e0dc38406996e820de5d9e0420113e6f603fb06cddb0174fc357",
       "hash_mode": "normalized"
     },
     {

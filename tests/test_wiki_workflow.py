@@ -813,6 +813,9 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("top_items", priority)
             self.assertIn("line_summary", priority)
             self.assertIn("priority_score", priority["csv_columns"])
+            self.assertEqual(priority["review_patch_columns"], ["slug", "next_review", "review_stage", "source_field", "source_value", "display_title", "href"])
+            self.assertTrue(any(item["review_state"] == "needs_plan" for item in priority["items"]))
+            self.assertTrue(any(item["suggested_next_review"] for item in priority["items"]))
             self.assertTrue(any(item["recommended_action"] for item in priority["items"]))
             self.assertTrue(any(item["queue_hits"] for item in priority["items"]))
             priority_html = (report_dir / "priority.html").read_text(encoding="utf-8")
@@ -820,6 +823,9 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("Priority JSON", priority_html)
             self.assertIn('id="priorityUrgency"', priority_html)
             self.assertIn("priority_queue.csv", priority_html)
+            self.assertIn('id="downloadPriorityReviewPatch"', priority_html)
+            self.assertIn("priority_review_patch.csv", priority_html)
+            self.assertIn("downloadPriorityReviewPlanPatch", priority_html)
             self.assertIn("copyPriorityQueue", priority_html)
             cohorts = json.loads((report_dir / "cohorts.json").read_text(encoding="utf-8"))
             self.assertEqual(cohorts["count"], 2)
@@ -2615,6 +2621,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(taxonomy_change_rows[0]["_list_mode"], "replace")
             self.assertEqual(taxonomy_change_rows[0]["source_field"], "topics")
             self.assertEqual(taxonomy_change_rows[0]["source_value"], "Attention Kernels")
+            self.assertIn("display_title", taxonomy_change_rows[0])
+            self.assertNotIn("title", taxonomy_change_rows[0])
             self.assertIn("Attention Mechanisms", taxonomy_change_rows[0]["topics"])
             taxonomy_change_apply = self.run_cmd(
                 "scripts/apply_library_metadata.py",

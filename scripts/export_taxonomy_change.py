@@ -17,7 +17,7 @@ DEFAULT_REPORT_DIR = ROOT / "docs"
 LIST_FIELDS = {"authors", "domains", "tracks", "problems", "topics", "methods"}
 SCALAR_FIELDS = {"research_line", "line_role", "status", "reading_stage", "review_stage"}
 SUPPORTED_FIELDS = sorted(LIST_FIELDS | SCALAR_FIELDS)
-AUDIT_FIELDS = ["source_field", "source_value", "previous_value", "next_value", "title", "href"]
+AUDIT_FIELDS = ["source_field", "source_value", "previous_value", "next_value", "display_title", "href"]
 
 
 def parse_args() -> argparse.Namespace:
@@ -156,7 +156,7 @@ def patch_rows(papers: list[dict[str, Any]], args: argparse.Namespace) -> tuple[
             {
                 "source_field": field,
                 "source_value": from_value,
-                "title": str(paper.get("title_zh") or paper.get("title") or slug),
+                "display_title": str(paper.get("title_zh") or paper.get("title") or slug),
                 "href": paper_href(paper),
             }
         )
