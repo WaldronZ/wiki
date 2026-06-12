@@ -8916,11 +8916,30 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       color: var(--muted);
       font-weight: 850;
     }
+    .library-assist-panel {
+      margin: 0 0 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+    .library-assist-panel > summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 11px 12px;
+      cursor: pointer;
+      list-style: none;
+      font-weight: 800;
+    }
+    .library-assist-panel > summary::-webkit-details-marker { display: none; }
+    .library-assist-panel[open] > summary { border-bottom: 1px solid var(--line); }
+    .library-assist-body { padding: 12px; }
     .library-insights {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
       gap: 12px;
-      margin: 0 0 16px;
+      margin: 0 0 12px;
     }
     .insight-card {
       min-height: 116px;
@@ -8967,9 +8986,9 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     .queue-advisor {
       border: 1px solid var(--line);
       border-radius: 8px;
-      background: var(--panel);
+      background: var(--bg);
       padding: 14px;
-      margin: 0 0 16px;
+      margin: 0;
     }
     .advisor-grid {
       display: grid;
@@ -9137,41 +9156,46 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       <div id="bulkPreview" class="bulk-preview" aria-live="polite">选择论文和字段后显示 patch 摘要。</div>
     </div>
   </details>
-  <section class="library-insights" id="libraryInsights" aria-live="polite">
-    <div class="insight-card">
-      <span>当前队列</span>
-      <strong id="insightTotal">0</strong>
-      <div class="meta" id="insightCoverage">-</div>
+  <details class="library-assist-panel">
+    <summary><span>分析与队列建议</span><span class="meta">当前筛选统计、热点标签和智能队列</span></summary>
+    <div class="library-assist-body">
+      <section class="library-insights" id="libraryInsights" aria-live="polite">
+        <div class="insight-card">
+          <span>当前队列</span>
+          <strong id="insightTotal">0</strong>
+          <div class="meta" id="insightCoverage">-</div>
+        </div>
+        <div class="insight-card">
+          <span>Status 分布</span>
+          <ul class="insight-list" id="insightStatuses"></ul>
+        </div>
+        <div class="insight-card">
+          <span>研究线分布</span>
+          <ul class="insight-list" id="insightLines"></ul>
+        </div>
+        <div class="insight-card">
+          <span>Topic 热点</span>
+          <ul class="insight-list" id="insightTopics"></ul>
+        </div>
+        <div class="insight-card">
+          <span>Method 热点</span>
+          <ul class="insight-list" id="insightMethods"></ul>
+        </div>
+        <div class="insight-card">
+          <span>覆盖与优先级</span>
+          <strong id="insightReviewGap">0</strong>
+          <div class="meta" id="insightPriority">-</div>
+        </div>
+      </section>
+      <section class="queue-advisor" id="queueAdvisorPanel">
+        <div class="results-bar">
+          <strong>智能队列建议</strong>
+          <span id="advisorCount" class="meta">基于当前筛选结果</span>
+        </div>
+        <div id="queueAdvisor" class="advisor-grid" aria-live="polite"></div>
+      </section>
     </div>
-    <div class="insight-card">
-      <span>Status 分布</span>
-      <ul class="insight-list" id="insightStatuses"></ul>
-    </div>
-    <div class="insight-card">
-      <span>研究线分布</span>
-      <ul class="insight-list" id="insightLines"></ul>
-    </div>
-    <div class="insight-card">
-      <span>Topic 热点</span>
-      <ul class="insight-list" id="insightTopics"></ul>
-    </div>
-    <div class="insight-card">
-      <span>Method 热点</span>
-      <ul class="insight-list" id="insightMethods"></ul>
-    </div>
-    <div class="insight-card">
-      <span>覆盖与优先级</span>
-      <strong id="insightReviewGap">0</strong>
-      <div class="meta" id="insightPriority">-</div>
-    </div>
-  </section>
-  <section class="queue-advisor" id="queueAdvisorPanel">
-    <div class="results-bar">
-      <strong>智能队列建议</strong>
-      <span id="advisorCount" class="meta">基于当前筛选结果</span>
-    </div>
-    <div id="queueAdvisor" class="advisor-grid" aria-live="polite"></div>
-  </section>
+  </details>
   <datalist id="researchLineOptions">{render_datalist_options(taxonomy["research_lines"])}</datalist>
   <datalist id="domainOptions">{render_datalist_options(taxonomy["domains"])}</datalist>
   <datalist id="trackOptions">{render_datalist_options(taxonomy["tracks"])}</datalist>
