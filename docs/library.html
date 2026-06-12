@@ -1511,17 +1511,26 @@ function controlDisplayValue(key, el) {
   return cleanOptionLabel(option ? option.textContent : el.value);
 }
 
+function selectedViewName() {
+  if (!savedView.value) return "";
+  const [source, indexText] = savedView.value.split(":");
+  const index = Number(indexText);
+  const view = source === "shared" ? sharedViews[index] : readSavedViews()[index];
+  return view ? String(view.name || "") : "";
+}
+
 function renderActiveFilters() {
   const state = currentState();
   const entries = Object.entries(state)
     .filter(([key]) => controlsByKey.has(key) && !hiddenActiveFilterKeys.has(key));
+  const viewName = selectedViewName();
   activeFilters.replaceChildren();
   if (!entries.length) {
-    activeFilters.textContent = "未设置筛选条件";
+    activeFilters.textContent = viewName ? `当前视图：${viewName}` : "未设置筛选条件";
     return;
   }
   const label = document.createElement("span");
-  label.textContent = "当前筛选";
+  label.textContent = viewName ? `当前视图：${viewName}` : `当前筛选 ${entries.length} 项`;
   activeFilters.appendChild(label);
   entries.forEach(([key]) => {
     const el = controlsByKey.get(key);
@@ -1542,6 +1551,7 @@ function renderActiveFilters() {
 function clearActiveFilter(key) {
   const el = controlsByKey.get(key);
   if (!el) return;
+  savedView.value = "";
   el.value = defaultValueFor(key);
   if (key === "workflow") applyStatusWorkflow();
   currentPage = 1;
@@ -2354,6 +2364,7 @@ function render() {
 }
 
 controls.forEach(([, el]) => el.addEventListener("input", () => {
+  savedView.value = "";
   if (el === statusWorkflow) applyStatusWorkflow();
   currentPage = 1;
   render();
@@ -2368,6 +2379,7 @@ queueAdvisor.addEventListener("click", (event) => {
   selectAdvisorQueue(button.dataset.queueId || "", button.dataset.queueAction === "apply");
 });
 resetFilters.addEventListener("click", () => {
+  savedView.value = "";
   controls.forEach(([key, el]) => {
     el.value = defaultValueFor(key);
   });
