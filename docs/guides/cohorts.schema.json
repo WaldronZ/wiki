@@ -1,0 +1,180 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/autopaperreader/cohorts.schema.json",
+  "title": "AutoPaperReader Taxonomy Cohorts",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "generated_at",
+    "count",
+    "pair_count",
+    "cohort_count",
+    "action_counts",
+    "severity_counts",
+    "pair_specs",
+    "cohorts",
+    "top_cohorts",
+    "queues",
+    "recommendations",
+    "commands",
+    "links"
+  ],
+  "properties": {
+    "generated_at": { "type": "string" },
+    "count": { "type": "integer", "minimum": 0 },
+    "pair_count": { "type": "integer", "minimum": 0 },
+    "cohort_count": { "type": "integer", "minimum": 0 },
+    "action_counts": {
+      "type": "object",
+      "additionalProperties": { "type": "integer", "minimum": 0 }
+    },
+    "severity_counts": {
+      "type": "object",
+      "additionalProperties": { "type": "integer", "minimum": 0 }
+    },
+    "pair_specs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/pair_spec" }
+    },
+    "cohorts": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/cohort" }
+    },
+    "top_cohorts": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/cohort" }
+    },
+    "queues": {
+      "type": "object",
+      "required": [
+        "split_candidates",
+        "singletons",
+        "topic_candidates"
+      ],
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "string" }
+      }
+    },
+    "recommendations": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "commands": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "links": {
+      "type": "object",
+      "required": [
+        "html",
+        "library",
+        "pivot",
+        "taxonomy_map",
+        "facets",
+        "collections",
+        "schema"
+      ],
+      "properties": {
+        "html": { "type": "string" },
+        "library": { "type": "string" },
+        "pivot": { "type": "string" },
+        "taxonomy_map": { "type": "string" },
+        "facets": { "type": "string" },
+        "collections": { "type": "string" },
+        "schema": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "pair_spec": {
+      "type": "object",
+      "required": [
+        "primary",
+        "secondary",
+        "label"
+      ],
+      "properties": {
+        "primary": { "type": "string", "minLength": 1 },
+        "secondary": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": true
+    },
+    "sample_paper": {
+      "type": "object",
+      "required": [
+        "slug",
+        "title",
+        "href"
+      ],
+      "properties": {
+        "slug": { "type": "string", "minLength": 1 },
+        "title": { "type": "string" },
+        "title_zh": { "type": "string" },
+        "href": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "cohort": {
+      "type": "object",
+      "required": [
+        "id",
+        "label",
+        "pair",
+        "primary_field",
+        "primary_value",
+        "secondary_field",
+        "secondary_value",
+        "count",
+        "share",
+        "action",
+        "severity",
+        "slugs",
+        "sample_papers",
+        "href",
+        "recommendation"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "pair": { "type": "string", "minLength": 1 },
+        "primary_field": { "type": "string", "minLength": 1 },
+        "primary_value": { "type": "string" },
+        "secondary_field": { "type": "string", "minLength": 1 },
+        "secondary_value": { "type": "string" },
+        "count": { "type": "integer", "minimum": 0 },
+        "share": { "type": "number", "minimum": 0, "maximum": 1 },
+        "action": {
+          "type": "string",
+          "enum": [
+            "singleton",
+            "split_candidate",
+            "topic_candidate",
+            "watch"
+          ]
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ]
+        },
+        "slugs": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "sample_papers": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/sample_paper" }
+        },
+        "href": { "type": "string" },
+        "recommendation": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  }
+}

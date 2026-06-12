@@ -127,6 +127,7 @@ REQUIRED_PAGES = {
     "freshness.html",
     "dashboard.html",
     "release.html",
+    "cohorts.html",
     "snapshot.html",
     "collections.html",
     "facets.html",
@@ -150,6 +151,7 @@ REQUIRED_PAGES = {
     "taxonomy_actions.json",
     "actions.json",
     "command.json",
+    "cohorts.json",
     "workflow.json",
     "status.json",
     "views.json",
@@ -588,6 +590,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     taxonomy_actions_path = report_dir / "taxonomy_actions.json"
     actions_path = report_dir / "actions.json"
     command_path = report_dir / "command.json"
+    cohorts_path = report_dir / "cohorts.json"
     workflow_path = report_dir / "workflow.json"
     status_path = report_dir / "status.json"
     views_path = report_dir / "views.json"
@@ -637,6 +640,9 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         return
     if not command_path.exists():
         errors.append("missing command.json")
+        return
+    if not cohorts_path.exists():
+        errors.append("missing cohorts.json")
         return
     if not workflow_path.exists():
         errors.append("missing workflow.json")
@@ -725,6 +731,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     taxonomy_actions_data = json.loads(taxonomy_actions_path.read_text(encoding="utf-8"))
     actions_data = json.loads(actions_path.read_text(encoding="utf-8"))
     command_data = json.loads(command_path.read_text(encoding="utf-8"))
+    cohorts_data = json.loads(cohorts_path.read_text(encoding="utf-8"))
     workflow_data = json.loads(workflow_path.read_text(encoding="utf-8"))
     status_data = json.loads(status_path.read_text(encoding="utf-8"))
     views_data = json.loads(views_path.read_text(encoding="utf-8"))
@@ -1029,6 +1036,91 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
             errors.append(f"command.json lanes[{index}].commands must be a list")
     if not isinstance(command_data.get("recommended_next"), list):
         errors.append("command.json recommended_next must be a list")
+
+    if cohorts_data.get("count") != len(report_slugs):
+        errors.append(f"cohorts.json count {cohorts_data.get('count')} != markdown report count {len(report_slugs)}")
+    required_cohorts = {
+        "pair_count",
+        "cohort_count",
+        "action_counts",
+        "severity_counts",
+        "pair_specs",
+        "cohorts",
+        "top_cohorts",
+        "queues",
+        "recommendations",
+        "commands",
+        "links",
+    }
+    missing_cohorts = sorted(required_cohorts - set(cohorts_data))
+    if missing_cohorts:
+        errors.append(f"cohorts.json missing keys: {', '.join(missing_cohorts)}")
+    pair_specs = cohorts_data.get("pair_specs")
+    if not isinstance(pair_specs, list):
+        errors.append("cohorts.json pair_specs must be a list")
+        pair_specs = []
+    elif cohorts_data.get("pair_count") != len(pair_specs):
+        errors.append("cohorts.json pair_count must match pair_specs length")
+    cohort_items = cohorts_data.get("cohorts")
+    if not isinstance(cohort_items, list):
+        errors.append("cohorts.json cohorts must be a list")
+        cohort_items = []
+    elif cohorts_data.get("cohort_count") != len(cohort_items):
+        errors.append("cohorts.json cohort_count must match cohorts length")
+    valid_cohort_actions = {"singleton", "split_candidate", "topic_candidate", "watch"}
+    valid_cohort_severities = {"high", "medium", "low"}
+    cohort_ids: set[str] = set()
+    for index, cohort in enumerate(cohort_items):
+        if not isinstance(cohort, dict):
+            errors.append(f"cohorts.json cohorts[{index}] must be an object")
+            continue
+        for key in ("id", "label", "pair", "primary_field", "secondary_field", "count", "share", "action", "severity", "slugs", "sample_papers", "href", "recommendation"):
+            if key not in cohort:
+                errors.append(f"cohorts.json cohorts[{index}] missing {key}")
+        cohort_id = str(cohort.get("id") or "")
+        if cohort_id in cohort_ids:
+            errors.append(f"cohorts.json duplicate cohort id: {cohort_id}")
+        if cohort_id:
+            cohort_ids.add(cohort_id)
+        if cohort.get("action") not in valid_cohort_actions:
+            errors.append(f"cohorts.json cohorts[{index}].action is invalid")
+        if cohort.get("severity") not in valid_cohort_severities:
+            errors.append(f"cohorts.json cohorts[{index}].severity is invalid")
+        if not isinstance(cohort.get("count"), int) or isinstance(cohort.get("count"), bool) or cohort.get("count") < 0:
+            errors.append(f"cohorts.json cohorts[{index}].count must be a non-negative integer")
+        slugs = cohort.get("slugs")
+        if not isinstance(slugs, list):
+            errors.append(f"cohorts.json cohorts[{index}].slugs must be a list")
+        else:
+            unknown_slugs = sorted(str(slug) for slug in slugs if str(slug) not in report_slugs)
+            if unknown_slugs:
+                errors.append(f"cohorts.json cohorts[{index}] references unknown slugs: {unknown_slugs}")
+        sample_papers = cohort.get("sample_papers")
+        if not isinstance(sample_papers, list):
+            errors.append(f"cohorts.json cohorts[{index}].sample_papers must be a list")
+        else:
+            sample_slugs = sorted(str(paper.get("slug") or "") for paper in sample_papers if isinstance(paper, dict))
+            unknown_sample_slugs = [slug for slug in sample_slugs if slug and slug not in report_slugs]
+            if unknown_sample_slugs:
+                errors.append(f"cohorts.json cohorts[{index}] references unknown sample paper slugs: {unknown_sample_slugs}")
+    cohort_queues = cohorts_data.get("queues")
+    if not isinstance(cohort_queues, dict):
+        errors.append("cohorts.json queues must be an object")
+        cohort_queues = {}
+    queued_ids = {
+        str(cohort_id)
+        for value in cohort_queues.values()
+        if isinstance(value, list)
+        for cohort_id in value
+    }
+    unknown_cohort_ids = sorted(cohort_id for cohort_id in queued_ids if cohort_id not in cohort_ids)
+    if unknown_cohort_ids:
+        errors.append(f"cohorts.json queues reference unknown cohort ids: {unknown_cohort_ids}")
+    if not isinstance(cohorts_data.get("commands"), list):
+        errors.append("cohorts.json commands must be a list")
+    cohort_links = cohorts_data.get("links")
+    if not isinstance(cohort_links, dict) or not {"html", "library", "pivot", "taxonomy_map", "facets", "collections", "schema"}.issubset(cohort_links):
+        errors.append("cohorts.json links missing required entries")
 
     if workflow_data.get("count") != len(report_slugs):
         errors.append(f"workflow.json count {workflow_data.get('count')} != markdown report count {len(report_slugs)}")
@@ -2295,6 +2387,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         "guides/views.schema.json",
         "guides/presets.schema.json",
         "guides/curation.schema.json",
+        "guides/cohorts.schema.json",
     }
     missing_contract_files = sorted(expected_contract_files - manifest_contract_files)
     if missing_contract_files:
@@ -2842,6 +2935,49 @@ def validate_curation_schema_contract(report_dir: Path, errors: list[str], warni
     for def_name in ("curation_field", "field_status"):
         if def_name not in defs:
             errors.append(f"guides/curation.schema.json: $defs.{def_name} is required")
+
+
+def validate_cohorts_schema_contract(report_dir: Path, errors: list[str], warnings: list[str]) -> None:
+    schema_path = report_dir / "guides" / "cohorts.schema.json"
+    if not schema_path.exists():
+        warnings.append("guides/cohorts.schema.json missing; external cohort schema hints are unavailable")
+        return
+
+    try:
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        errors.append(f"guides/cohorts.schema.json: invalid JSON: {exc}")
+        return
+
+    if not isinstance(schema, dict):
+        errors.append("guides/cohorts.schema.json: root must be an object")
+        return
+    if not isinstance(schema.get("$schema"), str) or not schema.get("$schema", "").strip():
+        errors.append("guides/cohorts.schema.json: $schema must be a non-empty string")
+    if schema.get("type") != "object":
+        errors.append("guides/cohorts.schema.json: type must be object")
+    properties = schema.get("properties")
+    if not isinstance(properties, dict):
+        errors.append("guides/cohorts.schema.json: properties must be an object")
+        properties = {}
+    for key in ("pair_specs", "cohorts", "top_cohorts", "queues", "recommendations", "commands", "links"):
+        if key not in properties:
+            errors.append(f"guides/cohorts.schema.json: properties.{key} is required")
+    defs = schema.get("$defs")
+    if not isinstance(defs, dict):
+        errors.append("guides/cohorts.schema.json: $defs must be an object")
+        defs = {}
+    cohort_def = defs.get("cohort")
+    if not isinstance(cohort_def, dict):
+        errors.append("guides/cohorts.schema.json: $defs.cohort is required")
+        return
+    cohort_required = set(cohort_def.get("required") or [])
+    for key in ("id", "label", "pair", "count", "action", "severity", "slugs", "sample_papers", "href"):
+        if key not in cohort_required:
+            errors.append(f"guides/cohorts.schema.json: $defs.cohort.required missing {key}")
+    for def_name in ("pair_spec", "sample_paper"):
+        if def_name not in defs:
+            errors.append(f"guides/cohorts.schema.json: $defs.{def_name} is required")
 
 
 def validate_facets_schema_contract(report_dir: Path, errors: list[str], warnings: list[str]) -> None:
@@ -3431,6 +3567,7 @@ def main() -> int:
         validate_views_schema_contract(report_dir, errors, warnings)
         validate_presets_schema_contract(report_dir, errors, warnings)
         validate_curation_schema_contract(report_dir, errors, warnings)
+        validate_cohorts_schema_contract(report_dir, errors, warnings)
         config = validate_taxonomy_config(report_dir, errors, warnings)
         validate_controlled_taxonomy(reports, config, errors, warnings, args.strict_taxonomy)
         validate_inbox_csv(report_dir, inbox_schema, errors, warnings)

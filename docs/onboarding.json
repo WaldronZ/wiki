@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T09:00:16",
+  "generated_at": "2026-06-12T09:14:51",
   "count": 5,
   "inbox_count": 0,
   "readiness_score": "100%",
@@ -341,6 +341,10 @@
     {
       "href": "guides/curation.schema.json",
       "description": "curation.json 逐篇分类成熟度契约"
+    },
+    {
+      "href": "guides/cohorts.schema.json",
+      "description": "cohorts.json 分类组合队列契约"
     },
     {
       "href": "guides/taxonomy.json",

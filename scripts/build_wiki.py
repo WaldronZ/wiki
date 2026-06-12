@@ -42,6 +42,7 @@ GENERATED_FIXED_PATHS = (
     "taxonomy_actions.json",
     "actions.json",
     "command.json",
+    "cohorts.json",
     "workflow.json",
     "status.json",
     "views.json",
@@ -92,6 +93,7 @@ GENERATED_FIXED_PATHS = (
     "release.html",
     "actions.html",
     "command.html",
+    "cohorts.html",
     "snapshot.html",
     "collections.html",
     "balance.html",
@@ -2008,6 +2010,173 @@ def build_curation_payload(papers: list[dict[str, Any]]) -> dict[str, Any]:
 def write_curation_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     payload = build_curation_payload(papers)
     (report_dir / "curation.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
+COHORT_PAIR_SPECS: list[dict[str, str]] = [
+    {"primary": "research_line", "secondary": "topics", "label": "研究线 x Topic"},
+    {"primary": "research_line", "secondary": "methods", "label": "研究线 x Method"},
+    {"primary": "research_line", "secondary": "status", "label": "研究线 x Status"},
+    {"primary": "domains", "secondary": "methods", "label": "Domain x Method"},
+    {"primary": "tracks", "secondary": "problems", "label": "Track x Problem"},
+    {"primary": "topics", "secondary": "methods", "label": "Topic x Method"},
+]
+COHORT_LIST_FIELDS = {"domains", "tracks", "problems", "topics", "methods", "authors"}
+COHORT_QUERY_KEYS = {
+    "research_line": "line",
+    "line_role": "role",
+    "domains": "domain",
+    "tracks": "track",
+    "problems": "problem",
+    "topics": "topic",
+    "methods": "method",
+    "status": "status",
+    "reading_stage": "stage",
+    "review_stage": "reviewStage",
+}
+
+
+def cohort_values(paper: dict[str, Any], field: str) -> list[str]:
+    value = paper.get(field)
+    if field in COHORT_LIST_FIELDS:
+        values = value if isinstance(value, list) else [value]
+        return sorted({str(item).strip() for item in values if str(item).strip()})
+    text = str(value or "").strip()
+    if field == "research_line" and not text:
+        text = "Unassigned"
+    return [text] if text else []
+
+
+def cohort_href(primary: str, primary_value: str, secondary: str, secondary_value: str) -> str:
+    params: dict[str, str] = {}
+    primary_key = COHORT_QUERY_KEYS.get(primary)
+    secondary_key = COHORT_QUERY_KEYS.get(secondary)
+    if primary_key:
+        params[primary_key] = primary_value
+    if secondary_key:
+        params[secondary_key] = secondary_value
+    return page_query_href("library.html", **params)
+
+
+def cohort_action(count: int, share: float) -> tuple[str, str, str]:
+    if count == 1:
+        return (
+            "singleton",
+            "medium",
+            "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。",
+        )
+    if count >= 5 and share >= 0.4:
+        return (
+            "split_candidate",
+            "high",
+            "组合覆盖过大，建议拆分 topic/method 或补更细的 problem 标签。",
+        )
+    if count >= 3:
+        return (
+            "topic_candidate",
+            "low",
+            "组合已有稳定论文簇，适合沉淀成集合视图或专题阅读清单。",
+        )
+    return (
+        "watch",
+        "low",
+        "继续观察该组合，等论文数增加后再决定是否拆分或提升为专题。",
+    )
+
+
+def build_cohorts_payload(papers: list[dict[str, Any]]) -> dict[str, Any]:
+    total = len(papers)
+    cohort_items: list[dict[str, Any]] = []
+    id_counts: Counter[str] = Counter()
+    for spec in COHORT_PAIR_SPECS:
+        primary = spec["primary"]
+        secondary = spec["secondary"]
+        grouped: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+        for paper in papers:
+            for primary_value in cohort_values(paper, primary):
+                for secondary_value in cohort_values(paper, secondary):
+                    grouped[(primary_value, secondary_value)].append(paper)
+        for (primary_value, secondary_value), items in grouped.items():
+            count = len(items)
+            share = count / total if total else 0
+            action, severity, recommendation = cohort_action(count, share)
+            cohort_id_base = slugify_label(f"{primary}-{primary_value}-{secondary}-{secondary_value}")
+            id_counts[cohort_id_base] += 1
+            cohort_id = cohort_id_base if id_counts[cohort_id_base] == 1 else f"{cohort_id_base}-{id_counts[cohort_id_base]}"
+            cohort_items.append(
+                {
+                    "id": cohort_id,
+                    "label": f"{primary_value} / {secondary_value}",
+                    "pair": str(spec["label"]),
+                    "primary_field": primary,
+                    "primary_value": primary_value,
+                    "secondary_field": secondary,
+                    "secondary_value": secondary_value,
+                    "count": count,
+                    "share": round(share, 4),
+                    "action": action,
+                    "severity": severity,
+                    "slugs": [str(paper["slug"]) for paper in sorted(items, key=lambda item: item["title"])],
+                    "sample_papers": [
+                        {
+                            "slug": paper["slug"],
+                            "title": paper.get("title") or "",
+                            "title_zh": paper.get("title_zh") or "",
+                            "href": paper_href(paper),
+                        }
+                        for paper in sorted(items, key=lambda item: item["title"])[:5]
+                    ],
+                    "href": cohort_href(primary, primary_value, secondary, secondary_value),
+                    "recommendation": recommendation,
+                }
+            )
+    cohort_items.sort(key=lambda item: (-int(item["count"]), str(item["severity"]), str(item["pair"]), str(item["label"]).lower()))
+    action_counts = Counter(str(item["action"]) for item in cohort_items)
+    severity_counts = Counter(str(item["severity"]) for item in cohort_items)
+    return {
+        "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "count": total,
+        "pair_count": len(COHORT_PAIR_SPECS),
+        "cohort_count": len(cohort_items),
+        "action_counts": dict(sorted(action_counts.items())),
+        "severity_counts": dict(sorted(severity_counts.items())),
+        "pair_specs": COHORT_PAIR_SPECS,
+        "cohorts": cohort_items,
+        "top_cohorts": cohort_items[:24],
+        "queues": {
+            "split_candidates": [item["id"] for item in cohort_items if item["action"] == "split_candidate"],
+            "singletons": [item["id"] for item in cohort_items if item["action"] == "singleton"],
+            "topic_candidates": [item["id"] for item in cohort_items if item["action"] == "topic_candidate"],
+        },
+        "recommendations": [
+            "优先检查 split_candidate：它们通常意味着某个组合过宽，需要更细标签或拆成子专题。",
+            "singleton 不是坏事，但论文变多后应定期合并同义标签，避免检索入口碎片化。",
+            "topic_candidate 可以提升为 shared view 或 collections，用作稳定专题入口。",
+        ],
+        "commands": [
+            "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
+            "python3 scripts/apply_shared_views.py docs --input <cohort_shared_views.json>",
+            "python3 scripts/apply_shared_views.py docs --input <cohort_shared_views.json> --write",
+            "python3 scripts/build_wiki.py docs",
+            "python3 scripts/validate_wiki.py docs --strict-taxonomy",
+        ],
+        "links": {
+            "html": "cohorts.html",
+            "library": "library.html",
+            "pivot": "pivot.html",
+            "taxonomy_map": "taxonomy_map.html",
+            "facets": "facets.html",
+            "collections": "collections.html",
+            "schema": "guides/cohorts.schema.json",
+        },
+    }
+
+
+def write_cohorts_json(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_cohorts_payload(papers)
+    (report_dir / "cohorts.json").write_text(
         json.dumps(payload, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
@@ -4282,7 +4451,7 @@ def build_catalog_payload(report_dir: Path, papers: list[dict[str, Any]], inbox_
         {
             "name": "Desktop sync bootstrap",
             "command": "read docs/catalog.json, docs/papers.json, docs/search_index.json",
-            "uses": ["catalog.json", "papers.json", "search_index.json", "workflow.json", "status.json", "views.json", "presets.json", "curation.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
+            "uses": ["catalog.json", "papers.json", "search_index.json", "workflow.json", "status.json", "views.json", "presets.json", "curation.json", "cohorts.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
             "outputs": ["local searchable paper library"],
         },
         {
@@ -4309,7 +4478,7 @@ def build_catalog_payload(report_dir: Path, papers: list[dict[str, Any]], inbox_
         "data_resources": data_resources,
         "contracts": contracts,
         "integration_recipes": integration_recipes,
-        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "status.json", "views.json", "presets.json", "curation.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
+        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "status.json", "views.json", "presets.json", "curation.json", "cohorts.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
     }
 
 
@@ -4333,7 +4502,7 @@ def write_catalog_placeholders(report_dir: Path) -> None:
         "data_resources": [],
         "contracts": [],
         "integration_recipes": [],
-        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "status.json", "views.json", "presets.json", "curation.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
+        "recommended_bootstrap_files": ["command.json", "catalog.json", "manifest.json", "papers.json", "search_index.json", "workflow.json", "status.json", "views.json", "presets.json", "curation.json", "cohorts.json", "batch.json", "collections.json", "coverage.json", "gaps.json"],
     }
     (report_dir / "catalog.json").write_text(
         json.dumps(payload, ensure_ascii=False, indent=2),
@@ -4527,6 +4696,7 @@ def wiki_pages_manifest() -> list[dict[str, str]]:
         {"title": "发布摘要", "href": "release.html", "kind": "ops", "description": "页面入口、数据文件、质量状态"},
         {"title": "治理快照", "href": "snapshot.html", "kind": "ops", "description": "当前发布基线、队列和治理策略快照"},
         {"title": "行动中心", "href": "actions.html", "kind": "ops", "description": "统一运营队列和可分派任务"},
+        {"title": "分类组合", "href": "cohorts.html", "kind": "analysis", "description": "分类组合队列、过载组合和专题候选"},
         {"title": "集合视图", "href": "collections.html", "kind": "view", "description": "共享视图、智能集合、研究线入口"},
         {"title": "分类均衡", "href": "balance.html", "kind": "ops", "description": "分类维度健康度、长尾和过载复盘"},
         {"title": "覆盖地图", "href": "coverage.html", "kind": "ops", "description": "研究线 x 分类字段覆盖缺口"},
@@ -4576,6 +4746,7 @@ def data_files_manifest() -> list[dict[str, str]]:
         {"href": "taxonomy_actions.json", "description": "分类长尾、过载和空候选治理任务"},
         {"href": "actions.json", "description": "统一行动队列，汇总质量、复习、分类和 inbox 任务"},
         {"href": "command.json", "description": "场景化命令中心，组织页面入口、队列、数据和推荐命令"},
+        {"href": "cohorts.json", "description": "分类组合队列、过载组合和专题候选"},
         {"href": "workflow.json", "description": "状态工作流配置、分布和漂移审计"},
         {"href": "status.json", "description": "运行时状态选择器、状态字段选项和论文状态快照"},
         {"href": "views.json", "description": "共享视图、系统队列、研究线和状态工作流视图目录"},
@@ -4622,6 +4793,7 @@ def contract_files_manifest() -> list[dict[str, str]]:
         {"href": "guides/views.schema.json", "description": "views.json 视图目录和批量队列契约"},
         {"href": "guides/presets.schema.json", "description": "presets.json 批量治理 preset 契约"},
         {"href": "guides/curation.schema.json", "description": "curation.json 逐篇分类成熟度契约"},
+        {"href": "guides/cohorts.schema.json", "description": "cohorts.json 分类组合队列契约"},
         {"href": "guides/taxonomy.json", "description": "分类别名、状态工作流和共享视图配置"},
     ]
 
@@ -14939,6 +15111,178 @@ renderCurationRows();
     (report_dir / "curation.html").write_text(page_shell("分类成熟度", body, extra_css=curation_css), encoding="utf-8")
 
 
+def render_cohorts(report_dir: Path, papers: list[dict[str, Any]]) -> None:
+    payload = build_cohorts_payload(papers)
+
+    def sample_links(items: list[dict[str, Any]]) -> str:
+        if not items:
+            return '<span class="meta">无样例</span>'
+        links = []
+        for paper in items[:3]:
+            title = str(paper.get("title_zh") or paper.get("title") or paper.get("slug") or "")
+            links.append(f'<a href="{html.escape(str(paper.get("href") or ""))}">{html.escape(title)}</a>')
+        more = f' <span class="meta">+{len(items) - 3}</span>' if len(items) > 3 else ""
+        return " · ".join(links) + more
+
+    rows = []
+    for item in payload["cohorts"]:
+        search_text = " ".join(
+            str(value or "")
+            for value in (
+                item.get("pair"),
+                item.get("label"),
+                item.get("primary_field"),
+                item.get("primary_value"),
+                item.get("secondary_field"),
+                item.get("secondary_value"),
+                item.get("action"),
+                item.get("severity"),
+                item.get("recommendation"),
+            )
+        ).lower()
+        rows.append(
+            f"""<tr data-pair="{html.escape(str(item['pair']), quote=True)}" data-action="{html.escape(str(item['action']), quote=True)}" data-severity="{html.escape(str(item['severity']), quote=True)}" data-search="{html.escape(search_text, quote=True)}">
+  <td><a href="{html.escape(str(item['href']))}">{html.escape(str(item['label']))}</a><div class="meta">{html.escape(str(item['pair']))}</div></td>
+  <td>{int(item['count'])}<div class="meta">{round(float(item['share']) * 100, 1)}%</div></td>
+  <td><span class="flag">{html.escape(str(item['action']))}</span><div class="meta">{html.escape(str(item['severity']))}</div></td>
+  <td>{sample_links(item.get('sample_papers') or [])}</td>
+  <td>{html.escape(str(item.get('recommendation') or ''))}</td>
+</tr>"""
+        )
+    if not rows:
+        rows.append('<tr><td colspan="5" class="empty">暂无分类组合。</td></tr>')
+
+    pair_options = "".join(
+        f'<option value="{html.escape(str(spec["label"]))}">{html.escape(str(spec["label"]))}</option>'
+        for spec in payload["pair_specs"]
+    )
+    action_options = "".join(
+        f'<option value="{html.escape(action)}">{html.escape(action)} ({count})</option>'
+        for action, count in sorted(payload["action_counts"].items())
+    )
+    queue_cards = "".join(
+        f'<section class="cohort-card"><span>{html.escape(label)}</span><strong>{len(values)}</strong><span>{html.escape(note)}</span></section>'
+        for label, values, note in (
+            ("拆分候选", payload["queues"]["split_candidates"], "split candidates"),
+            ("单篇组合", payload["queues"]["singletons"], "singletons"),
+            ("专题候选", payload["queues"]["topic_candidates"], "topic candidates"),
+        )
+    )
+    command_buttons = "".join(
+        f'<button class="button copy-cohort-command" type="button" data-command="{html.escape(command, quote=True)}">{html.escape(command)}</button>'
+        for command in payload["commands"]
+    )
+    recommendation_html = "".join(f"<li>{html.escape(item)}</li>" for item in payload["recommendations"])
+    cohorts_json = json.dumps(payload, ensure_ascii=False).replace("</", "<\\/")
+    cohorts_css = """
+    .cohort-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .cohort-card {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .cohort-card strong { display: block; font-size: 30px; line-height: 1.1; }
+    .cohort-tools {
+      display: grid;
+      grid-template-columns: minmax(220px, 2fr) minmax(150px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .command-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .data-table td { vertical-align: top; }
+    @media (max-width: 860px) { .cohort-tools { grid-template-columns: 1fr; } }
+    """
+    body = f"""
+<header class="shell">
+  <div class="eyebrow">Taxonomy cohorts</div>
+  <h1>分类组合</h1>
+  <p class="lead">把研究线、topic、method、domain、status 等常见组合预计算成治理队列，帮助在大量论文中发现过载组合、单篇碎片和可沉淀的专题入口。</p>
+  <div class="stats">
+    <a class="stat" href="cohorts.json">Cohorts JSON</a>
+    <a class="stat" href="guides/cohorts.schema.json">Schema</a>
+    <a class="stat" href="pivot.html">分类透视表</a>
+    <a class="stat" href="taxonomy_map.html">分类图谱</a>
+    <span class="stat">组合 {payload["cohort_count"]}</span>
+  </div>
+</header>
+<main class="shell">
+  <section class="cohort-summary">
+    <section class="cohort-card"><span>论文</span><strong>{payload["count"]}</strong><span>papers</span></section>
+    <section class="cohort-card"><span>组合规格</span><strong>{payload["pair_count"]}</strong><span>pair specs</span></section>
+    {queue_cards}
+    <section class="cohort-card"><span>建议</span><ol>{recommendation_html}</ol></section>
+  </section>
+  <section class="overview">
+    <div class="results-bar"><h2>组合清单</h2><span id="cohortCount" class="meta"></span></div>
+    <div class="cohort-tools">
+      <input id="cohortSearch" type="search" placeholder="搜索组合、字段、建议">
+      <select id="cohortPair"><option value="">全部组合</option>{pair_options}</select>
+      <select id="cohortAction"><option value="">全部动作</option>{action_options}</select>
+      <select id="cohortSeverity"><option value="">全部优先级</option><option value="high">high</option><option value="medium">medium</option><option value="low">low</option></select>
+    </div>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>组合</th><th>论文数</th><th>动作</th><th>样例</th><th>建议</th></tr></thead><tbody id="cohortRows">{"".join(rows)}</tbody></table></div>
+  </section>
+  <section class="overview">
+    <h2>命令</h2>
+    <div class="command-list">{command_buttons}</div>
+  </section>
+</main>
+<script>
+const cohortsPayload = {cohorts_json};
+const cohortRows = Array.from(document.querySelectorAll("#cohortRows tr"));
+const cohortSearch = document.querySelector("#cohortSearch");
+const cohortPair = document.querySelector("#cohortPair");
+const cohortAction = document.querySelector("#cohortAction");
+const cohortSeverity = document.querySelector("#cohortSeverity");
+const cohortCount = document.querySelector("#cohortCount");
+
+function renderCohortRows() {{
+  const query = (cohortSearch.value || "").trim().toLowerCase();
+  const pair = cohortPair.value || "";
+  const action = cohortAction.value || "";
+  const severity = cohortSeverity.value || "";
+  let visible = 0;
+  cohortRows.forEach(row => {{
+    const matches = (!query || (row.dataset.search || "").includes(query))
+      && (!pair || row.dataset.pair === pair)
+      && (!action || row.dataset.action === action)
+      && (!severity || row.dataset.severity === severity);
+    row.hidden = !matches;
+    if (matches) visible += 1;
+  }});
+  cohortCount.textContent = `${{visible}} / ${{cohortRows.length}}`;
+}}
+
+async function copyCohortCommand(value, fallbackTitle) {{
+  try {{
+    await navigator.clipboard.writeText(value);
+  }} catch (error) {{
+    window.prompt(fallbackTitle, value);
+  }}
+}}
+
+document.querySelectorAll(".copy-cohort-command").forEach(button => {{
+  button.dataset.label = button.textContent;
+  button.addEventListener("click", async () => {{
+    await copyCohortCommand(button.dataset.command || "", "复制命令");
+    button.textContent = "已复制";
+    setTimeout(() => button.textContent = button.dataset.label, 1200);
+  }});
+}});
+
+[cohortSearch, cohortPair, cohortAction, cohortSeverity].forEach(control => control.addEventListener("input", renderCohortRows));
+renderCohortRows();
+</script>
+"""
+    (report_dir / "cohorts.html").write_text(page_shell("分类组合", body, extra_css=cohorts_css), encoding="utf-8")
+
+
 def render_quality(report_dir: Path, papers: list[dict[str, Any]], inbox_items: list[dict[str, Any]]) -> None:
     quality = build_quality_report(papers)
     issue_rows = "".join(render_quality_issue_row(issue) for issue in quality["issues"])
@@ -20972,6 +21316,7 @@ def build_wiki(report_dir: Path) -> int:
     write_taxonomy_actions_json(report_dir, papers)
     write_actions_json(report_dir, papers, inbox_items)
     write_command_json(report_dir, papers, inbox_items)
+    write_cohorts_json(report_dir, papers)
     write_stats_json(report_dir, papers)
     write_workflow_json(report_dir, papers)
     write_status_json(report_dir, papers)
@@ -21023,6 +21368,7 @@ def build_wiki(report_dir: Path) -> int:
     render_quality(report_dir, papers, inbox_items)
     render_actions(report_dir, papers, inbox_items)
     render_command(report_dir, papers, inbox_items)
+    render_cohorts(report_dir, papers)
     render_dashboard(report_dir, papers)
     render_collections(report_dir, papers)
     render_balance(report_dir, papers)

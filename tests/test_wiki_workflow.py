@@ -292,6 +292,10 @@ class WikiWorkflowTest(unittest.TestCase):
             (ROOT / "docs" / "guides" / "curation.schema.json").read_text(encoding="utf-8"),
             encoding="utf-8",
         )
+        (guides_dir / "cohorts.schema.json").write_text(
+            (ROOT / "docs" / "guides" / "cohorts.schema.json").read_text(encoding="utf-8"),
+            encoding="utf-8",
+        )
         for slug, text in {
             "2601.00001-alpha-paper": REPORT_A,
             "2501.00002-beta-paper": REPORT_B,
@@ -346,6 +350,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "freshness.html",
                 "dashboard.html",
                 "release.html",
+                "cohorts.html",
                 "command.html",
                 "snapshot.html",
                 "actions.html",
@@ -369,6 +374,7 @@ class WikiWorkflowTest(unittest.TestCase):
                 "taxonomy_actions.json",
                 "actions.json",
                 "command.json",
+                "cohorts.json",
                 "workflow.json",
                 "status.json",
                 "views.json",
@@ -447,6 +453,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("View: Kernel 方向", index_html)
             self.assertIn("Playbook: Release readiness", index_html)
             self.assertIn('"href": "actions.html"', index_html)
+            self.assertIn('"href": "cohorts.html"', index_html)
             self.assertIn('"href": "workflow.html"', index_html)
             self.assertIn('"href": "status.html"', index_html)
             self.assertIn('"href": "presets.html"', index_html)
@@ -468,6 +475,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn('"href": "balance.html"', index_html)
             self.assertIn('"href": "coverage.html"', index_html)
             self.assertIn("Data: manifest.json", index_html)
+            self.assertIn("Data: cohorts.json", index_html)
             self.assertIn("Data: workflow.json", index_html)
             self.assertIn("Data: status.json", index_html)
             self.assertIn("Data: presets.json", index_html)
@@ -754,6 +762,25 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn('id="pivotRowDim"', pivot_html)
             self.assertIn('id="pivotColDim"', pivot_html)
             self.assertIn("Classification Pivot", pivot_html)
+            cohorts = json.loads((report_dir / "cohorts.json").read_text(encoding="utf-8"))
+            self.assertEqual(cohorts["count"], 2)
+            self.assertGreater(cohorts["cohort_count"], 0)
+            self.assertIn("cohorts", cohorts)
+            self.assertIn("split_candidates", cohorts["queues"])
+            self.assertIn("singletons", cohorts["queues"])
+            self.assertTrue(any(item["pair"] == "研究线 x Method" for item in cohorts["cohorts"]))
+            first_cohort = cohorts["cohorts"][0]
+            self.assertIn("slug", first_cohort["sample_papers"][0])
+            self.assertTrue(set(first_cohort["slugs"]).issubset({"2601.00001-alpha-paper", "2501.00002-beta-paper"}))
+            self.assertTrue(any("apply_shared_views.py" in command for command in cohorts["commands"]))
+            cohorts_html = (report_dir / "cohorts.html").read_text(encoding="utf-8")
+            self.assertIn("分类组合", cohorts_html)
+            self.assertIn("Cohorts JSON", cohorts_html)
+            self.assertIn('id="cohortSearch"', cohorts_html)
+            self.assertIn('id="cohortPair"', cohorts_html)
+            self.assertIn('id="cohortAction"', cohorts_html)
+            self.assertIn('id="cohortSeverity"', cohorts_html)
+            self.assertIn("function renderCohortRows", cohorts_html)
             compare = json.loads((report_dir / "compare.json").read_text(encoding="utf-8"))
             self.assertEqual(compare["count"], 2)
             self.assertIn("research_line", {item["key"] for item in compare["fields"]})
@@ -913,6 +940,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("registry.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("facets.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("curation.json", {item["href"] for item in catalog["data_resources"]})
+            self.assertIn("cohorts.json", {item["href"] for item in catalog["data_resources"]})
             self.assertIn("status.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("views.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("presets.html", {item["href"] for item in catalog["pages"]})
@@ -920,6 +948,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("dedupe.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("registry.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("curation.html", {item["href"] for item in catalog["pages"]})
+            self.assertIn("cohorts.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("command.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("roadmap.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("index.html", {item["href"] for item in catalog["pages"]})
@@ -934,6 +963,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("top_level_keys", catalog_resources["catalog.json"])
             self.assertIn("catalog.json", catalog["recommended_bootstrap_files"])
             self.assertIn("views.json", catalog["recommended_bootstrap_files"])
+            self.assertIn("cohorts.json", catalog["recommended_bootstrap_files"])
             catalog_html = (report_dir / "catalog.html").read_text(encoding="utf-8")
             self.assertIn("数据目录", catalog_html)
             self.assertIn("Catalog JSON", catalog_html)
@@ -1629,6 +1659,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("dedupe.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("registry.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("curation.html", {item["href"] for item in manifest["pages"]})
+            self.assertIn("cohorts.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("actions.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("freshness.html", {item["href"] for item in manifest["pages"]})
             self.assertIn("balance.html", {item["href"] for item in manifest["pages"]})
@@ -1661,6 +1692,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("registry.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("facets.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("curation.json", {item["href"] for item in manifest["data_files"]})
+            self.assertIn("cohorts.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("freshness.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("manifest.json", {item["href"] for item in manifest["data_files"]})
             self.assertIn("guides/report.template.md", {item["href"] for item in manifest["contract_files"]})
@@ -1678,6 +1710,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("guides/views.schema.json", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/presets.schema.json", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/curation.schema.json", {item["href"] for item in manifest["contract_files"]})
+            self.assertIn("guides/cohorts.schema.json", {item["href"] for item in manifest["contract_files"]})
             artifact_by_href = {item["href"]: item for item in manifest["artifact_inventory"]}
             self.assertEqual(artifact_by_href["index.html"]["status"], "ok")
             self.assertEqual(artifact_by_href["command.html"]["status"], "ok")
@@ -1699,6 +1732,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(artifact_by_href["guides/views.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/presets.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/curation.schema.json"]["kind"], "contract")
+            self.assertEqual(artifact_by_href["guides/cohorts.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["workflow.html"]["status"], "ok")
             self.assertRegex(artifact_by_href["workflow.html"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["workflow.json"]["status"], "ok")
@@ -1719,6 +1753,10 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertRegex(artifact_by_href["curation.html"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["curation.json"]["status"], "ok")
             self.assertRegex(artifact_by_href["curation.json"]["sha256"], r"^[0-9a-f]{64}$")
+            self.assertEqual(artifact_by_href["cohorts.html"]["status"], "ok")
+            self.assertRegex(artifact_by_href["cohorts.html"]["sha256"], r"^[0-9a-f]{64}$")
+            self.assertEqual(artifact_by_href["cohorts.json"]["status"], "ok")
+            self.assertRegex(artifact_by_href["cohorts.json"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["batch.html"]["status"], "ok")
             self.assertRegex(artifact_by_href["batch.html"]["sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(artifact_by_href["batch.json"]["status"], "ok")
@@ -2920,6 +2958,21 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("guides/curation.schema.json: properties.papers is required", result.stderr)
             self.assertIn("guides/curation.schema.json: $defs must be an object", result.stderr)
+
+    def test_invalid_cohorts_schema_fails_validation(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_name:
+            report_dir = self.make_report_dir(Path(tmp_name))
+            self.run_cmd("scripts/build_wiki.py", str(report_dir))
+
+            (report_dir / "guides" / "cohorts.schema.json").write_text(
+                json.dumps({"$schema": "https://json-schema.org/draft/2020-12/schema", "type": "object", "properties": {}}),
+                encoding="utf-8",
+            )
+            result = self.run_cmd("scripts/validate_wiki.py", str(report_dir), check=False)
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("guides/cohorts.schema.json: properties.cohorts is required", result.stderr)
+            self.assertIn("guides/cohorts.schema.json: $defs must be an object", result.stderr)
 
     def test_invalid_facets_schema_fails_validation(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_name:
