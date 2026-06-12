@@ -8742,15 +8742,29 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     data = {"shared_views": shared_views_for("library"), "controls": controls}
     bulk_css = """
     .bulk-panel {
+      margin: 0 0 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+    .bulk-panel summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 11px 12px;
+      cursor: pointer;
+      list-style: none;
+      font-weight: 800;
+    }
+    .bulk-panel summary::-webkit-details-marker { display: none; }
+    .bulk-panel[open] summary { border-bottom: 1px solid var(--line); }
+    .bulk-panel-body {
       display: grid;
       grid-template-columns: minmax(120px, auto) repeat(auto-fit, minmax(150px, 1fr));
       gap: 10px;
       align-items: center;
-      margin: 0 0 16px;
       padding: 12px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
     }
     .bulk-panel .bulk-count { color: var(--muted); font-weight: 700; white-space: nowrap; }
     .bulk-actions { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -9084,43 +9098,45 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     </div>
   </div>
   <div class="active-filters" id="activeFilters" aria-live="polite"></div>
-  <div class="bulk-panel">
-    <span id="bulkCount" class="bulk-count">已选 0 篇</span>
-    <select id="bulkPreset"><option value="">治理 preset</option></select>
-    <button id="applyBulkPreset" class="button" type="button">套用 preset</button>
-    <select id="bulkStatus"><option value="">状态</option>{render_value_options(controls["status"])}</select>
-    <select id="bulkStage"><option value="">阅读阶段</option>{render_value_options(controls["reading_stage"])}</select>
-    <select id="bulkReviewStage"><option value="">复习阶段</option>{render_value_options(controls["review_stage"])}</select>
-    <input id="bulkNextReview" type="date" aria-label="下次复习日期">
-    <select id="bulkImportance"><option value="">重要性</option><option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select>
-    <div id="bulkWorkflowMeta" class="bulk-workflow-meta" aria-live="polite">状态体系加载中。</div>
-    <div class="bulk-actions">
-      <button id="selectVisible" class="button" type="button">选中当前页</button>
-      <button id="selectFiltered" class="button" type="button">选中筛选结果</button>
-      <button id="clearSelected" class="button" type="button">清除选择</button>
-      <button id="copySelectedMarkdown" class="button" type="button">复制选中清单</button>
-      <button id="copySelectedSlugs" class="button" type="button">复制 Slugs</button>
-      <button id="previewPatch" class="button" type="button">预览 Patch</button>
-      <button id="downloadPatch" class="button" type="button">下载 CSV</button>
-      <button id="copyPatchDryRun" class="button" type="button">复制预览命令</button>
-      <button id="copyPatchWrite" class="button" type="button">复制写入命令</button>
-    </div>
-    <details class="bulk-taxonomy">
-      <summary>批量分类字段</summary>
-      <div class="bulk-taxonomy-grid">
-        <label><span>分类写入方式</span><select id="bulkListMode"><option value="replace">替换原分类</option><option value="append">追加到原分类</option><option value="remove">从原分类移除</option></select></label>
-        <label><span>研究线</span><input id="bulkResearchLine" list="researchLineOptions" type="text" placeholder="Research line"></label>
-        <label><span>研究线角色</span><select id="bulkLineRole"><option value="">角色</option>{render_value_options(controls["line_role"])}</select></label>
-        <label><span>Domain</span><input id="bulkDomains" list="domainOptions" type="text" placeholder="多个值用 ; 分隔"></label>
-        <label><span>Track</span><input id="bulkTracks" list="trackOptions" type="text" placeholder="多个值用 ; 分隔"></label>
-        <label><span>Problem</span><input id="bulkProblems" list="problemOptions" type="text" placeholder="多个值用 ; 分隔"></label>
-        <label><span>Topics</span><input id="bulkTopics" list="topicOptions" type="text" placeholder="多个值用 ; 分隔"></label>
-        <label><span>Methods</span><input id="bulkMethods" list="methodOptions" type="text" placeholder="多个值用 ; 分隔"></label>
-        <div class="bulk-hint">分类写入方式只影响 domains / tracks / problems / topics / methods；状态、日期、重要性和研究线字段仍按输入值写入。下载后先 dry-run，再用 --write 写回。</div>
+  <details class="bulk-panel">
+    <summary><span>批量编辑与写回</span><span id="bulkCount" class="bulk-count">已选 0 篇</span></summary>
+    <div class="bulk-panel-body">
+      <select id="bulkPreset"><option value="">治理 preset</option></select>
+      <button id="applyBulkPreset" class="button" type="button">套用 preset</button>
+      <select id="bulkStatus"><option value="">状态</option>{render_value_options(controls["status"])}</select>
+      <select id="bulkStage"><option value="">阅读阶段</option>{render_value_options(controls["reading_stage"])}</select>
+      <select id="bulkReviewStage"><option value="">复习阶段</option>{render_value_options(controls["review_stage"])}</select>
+      <input id="bulkNextReview" type="date" aria-label="下次复习日期">
+      <select id="bulkImportance"><option value="">重要性</option><option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select>
+      <div id="bulkWorkflowMeta" class="bulk-workflow-meta" aria-live="polite">状态体系加载中。</div>
+      <div class="bulk-actions">
+        <button id="selectVisible" class="button" type="button">选中当前页</button>
+        <button id="selectFiltered" class="button" type="button">选中筛选结果</button>
+        <button id="clearSelected" class="button" type="button">清除选择</button>
+        <button id="copySelectedMarkdown" class="button" type="button">复制选中清单</button>
+        <button id="copySelectedSlugs" class="button" type="button">复制 Slugs</button>
+        <button id="previewPatch" class="button" type="button">预览 Patch</button>
+        <button id="downloadPatch" class="button" type="button">下载 CSV</button>
+        <button id="copyPatchDryRun" class="button" type="button">复制预览命令</button>
+        <button id="copyPatchWrite" class="button" type="button">复制写入命令</button>
       </div>
-    </details>
-    <div id="bulkPreview" class="bulk-preview" aria-live="polite">选择论文和字段后显示 patch 摘要。</div>
-  </div>
+      <details class="bulk-taxonomy">
+        <summary>批量分类字段</summary>
+        <div class="bulk-taxonomy-grid">
+          <label><span>分类写入方式</span><select id="bulkListMode"><option value="replace">替换原分类</option><option value="append">追加到原分类</option><option value="remove">从原分类移除</option></select></label>
+          <label><span>研究线</span><input id="bulkResearchLine" list="researchLineOptions" type="text" placeholder="Research line"></label>
+          <label><span>研究线角色</span><select id="bulkLineRole"><option value="">角色</option>{render_value_options(controls["line_role"])}</select></label>
+          <label><span>Domain</span><input id="bulkDomains" list="domainOptions" type="text" placeholder="多个值用 ; 分隔"></label>
+          <label><span>Track</span><input id="bulkTracks" list="trackOptions" type="text" placeholder="多个值用 ; 分隔"></label>
+          <label><span>Problem</span><input id="bulkProblems" list="problemOptions" type="text" placeholder="多个值用 ; 分隔"></label>
+          <label><span>Topics</span><input id="bulkTopics" list="topicOptions" type="text" placeholder="多个值用 ; 分隔"></label>
+          <label><span>Methods</span><input id="bulkMethods" list="methodOptions" type="text" placeholder="多个值用 ; 分隔"></label>
+          <div class="bulk-hint">分类写入方式只影响 domains / tracks / problems / topics / methods；状态、日期、重要性和研究线字段仍按输入值写入。下载后先 dry-run，再用 --write 写回。</div>
+        </div>
+      </details>
+      <div id="bulkPreview" class="bulk-preview" aria-live="polite">选择论文和字段后显示 patch 摘要。</div>
+    </div>
+  </details>
   <section class="library-insights" id="libraryInsights" aria-live="polite">
     <div class="insight-card">
       <span>当前队列</span>
