@@ -7997,6 +7997,34 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]], inbox_items: li
       border-top: 1px solid color-mix(in srgb, var(--line) 72%, transparent);
       padding-top: 10px;
     }
+    .home-view-panel {
+      position: relative;
+    }
+    .home-view-panel summary {
+      cursor: pointer;
+      list-style: none;
+    }
+    .home-view-panel summary::-webkit-details-marker {
+      display: none;
+    }
+    .home-view-menu {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 8px);
+      z-index: 25;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      width: min(340px, calc(100vw - 32px));
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .home-view-menu .button {
+      flex: 1 1 130px;
+    }
     @media (max-width: 860px) {
       .home-hero { grid-template-columns: 1fr; }
       .home-lane { grid-template-columns: 1fr; }
@@ -8078,13 +8106,18 @@ def render_index(report_dir: Path, papers: list[dict[str, Any]], inbox_items: li
     <strong id="resultCount">显示 {len(papers)} / {len(papers)} 篇</strong>
     <div class="results-actions">
       <select id="savedView" class="saved-view" aria-label="选择保存视图"><option value="">选择视图</option></select>
-      <button id="saveView" class="button" type="button">保存视图</button>
-      <button id="copyCurrentLink" class="button" type="button">复制当前链接</button>
-      <button id="copySharedView" class="button" type="button">复制共享视图</button>
-      <button id="deleteView" class="button" type="button">删除视图</button>
-      <button id="exportSavedViews" class="button" type="button">导出视图</button>
-      <button id="importSavedViews" class="button" type="button">导入视图</button>
       <button id="resetFilters" class="button" type="button">重置筛选</button>
+      <details class="home-view-panel">
+        <summary class="button">视图操作</summary>
+        <div class="home-view-menu">
+          <button id="saveView" class="button" type="button">保存视图</button>
+          <button id="copyCurrentLink" class="button" type="button">复制当前链接</button>
+          <button id="copySharedView" class="button" type="button">复制共享视图</button>
+          <button id="deleteView" class="button" type="button">删除视图</button>
+          <button id="exportSavedViews" class="button" type="button">导出视图</button>
+          <button id="importSavedViews" class="button" type="button">导入视图</button>
+        </div>
+      </details>
     </div>
   </div>
   <div id="cards" class="grid">{cards if papers else empty}</div>
