@@ -8177,6 +8177,38 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+    .queue-advisor {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 14px;
+      margin: 0 0 16px;
+    }
+    .advisor-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 10px;
+    }
+    .advisor-card {
+      display: grid;
+      gap: 8px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--bg);
+      padding: 12px;
+    }
+    .advisor-card strong {
+      font-size: 18px;
+      line-height: 1.2;
+    }
+    .advisor-card .meta {
+      min-height: 38px;
+    }
+    .advisor-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
     """
     body = f"""
 <header class="shell">
@@ -8324,6 +8356,13 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       <div class="meta" id="insightPriority">-</div>
     </div>
   </section>
+  <section class="queue-advisor" id="queueAdvisorPanel">
+    <div class="results-bar">
+      <strong>智能队列建议</strong>
+      <span id="advisorCount" class="meta">基于当前筛选结果</span>
+    </div>
+    <div id="queueAdvisor" class="advisor-grid" aria-live="polite"></div>
+  </section>
   <datalist id="researchLineOptions">{render_datalist_options(taxonomy["research_lines"])}</datalist>
   <datalist id="domainOptions">{render_datalist_options(taxonomy["domains"])}</datalist>
   <datalist id="trackOptions">{render_datalist_options(taxonomy["tracks"])}</datalist>
@@ -8418,6 +8457,8 @@ const insightTopics = document.querySelector("#insightTopics");
 const insightMethods = document.querySelector("#insightMethods");
 const insightReviewGap = document.querySelector("#insightReviewGap");
 const insightPriority = document.querySelector("#insightPriority");
+const queueAdvisor = document.querySelector("#queueAdvisor");
+const advisorCount = document.querySelector("#advisorCount");
 const columnToggles = Array.from(document.querySelectorAll("[data-column-toggle]"));
 const densityMode = document.querySelector("#densityMode");
 const sharedViews = window.PAPER_WIKI.shared_views || [];
@@ -8960,6 +9001,106 @@ function updateLibraryInsights(rows) {{
   renderInsightList(insightMethods, countTokens(rows, "methods"), total, "未设置 method");
 }}
 
+function advisorQueueDefinitions(today = localDateString()) {{
+  return [
+    {{
+      id: "missing-taxonomy",
+      label: "缺分类",
+      preset: "",
+      severity: "high",
+      note: "缺 domain、topic 或 method 的论文，适合先补 frontmatter 分类。",
+      matcher: row => !row.dataset.domains || !row.dataset.topics || !row.dataset.methods,
+    }},
+    {{
+      id: "missing-review-plan",
+      label: "缺复习计划",
+      preset: "schedule_review",
+      severity: "medium",
+      note: "没有 next_review 的论文，适合批量安排复习日期。",
+      matcher: row => !row.dataset.nextReview,
+    }},
+    {{
+      id: "due-review",
+      label: "到期复习",
+      preset: "schedule_review",
+      severity: "high",
+      note: "next_review 已到期的论文，适合立即进入复习队列。",
+      matcher: row => Boolean(row.dataset.nextReview && row.dataset.nextReview <= today),
+    }},
+    {{
+      id: "code-unchecked",
+      label: "有代码未检查",
+      preset: "code_check",
+      severity: "medium",
+      note: "已标记有代码但阅读阶段还不是 code_checked 的论文。",
+      matcher: row => row.dataset.code === "yes" && row.dataset.stage !== "code_checked",
+    }},
+    {{
+      id: "high-priority-unread",
+      label: "高优先级待读",
+      preset: "deep_read",
+      severity: "high",
+      note: "重要性不低于 4 且仍处在未读/分流状态的核心论文。",
+      matcher: row => Number(row.dataset.importance || 0) >= 4 && ["", "unread", "triaged"].includes(row.dataset.status || ""),
+    }},
+  ];
+}}
+
+function presetAvailable(id) {{
+  return Boolean(id && bulkPresets.some(preset => preset && preset.id === id));
+}}
+
+function updateQueueAdvisor(rows) {{
+  const total = rows.length;
+  const queues = advisorQueueDefinitions()
+    .map(def => ({{ ...def, rows: rows.filter(def.matcher) }}))
+    .filter(def => def.rows.length > 0);
+  advisorCount.textContent = queues.length
+    ? `${{queues.length}} 个队列 · ${{total}} 篇筛选结果`
+    : `${{total}} 篇筛选结果`;
+  if (!total) {{
+    queueAdvisor.innerHTML = '<div class="advisor-card"><strong>没有匹配论文</strong><span class="meta">放宽筛选条件后再查看队列建议。</span></div>';
+    return;
+  }}
+  if (!queues.length) {{
+    queueAdvisor.innerHTML = '<div class="advisor-card"><strong>当前队列健康</strong><span class="meta">没有明显缺分类、缺复习或高优先级待读项。</span></div>';
+    return;
+  }}
+  queueAdvisor.innerHTML = queues.map(def => {{
+    const sample = def.rows.slice(0, 3).map(row => row.dataset.slug).join(" · ");
+    const preset = presetAvailable(def.preset) ? def.preset : "";
+    const presetButton = preset
+      ? `<button class="button" type="button" data-queue-id="${{def.id}}" data-queue-action="apply">套用 ${{preset}}</button>`
+      : "";
+    return `<article class="advisor-card" data-queue-card="${{def.id}}">
+      <span class="flag">${{def.severity}}</span>
+      <strong>${{def.label}} · ${{def.rows.length}}</strong>
+      <span class="meta">${{def.note}}${{sample ? `<br>样例：${{sample}}` : ""}}</span>
+      <div class="advisor-actions">
+        <button class="button" type="button" data-queue-id="${{def.id}}" data-queue-action="select">选中队列</button>
+        ${{presetButton}}
+      </div>
+    </article>`;
+  }}).join("");
+}}
+
+function selectAdvisorQueue(queueId, applyPreset = false) {{
+  const definition = advisorQueueDefinitions().find(def => def.id === queueId);
+  if (!definition) return;
+  const rows = currentRankedRows.filter(definition.matcher);
+  rowChecks.forEach(check => {{
+    check.checked = false;
+  }});
+  rows.forEach(row => {{
+    row.querySelector(".row-check").checked = true;
+  }});
+  if (applyPreset && presetAvailable(definition.preset)) {{
+    bulkPreset.value = definition.preset;
+    applyBulkGovernancePreset(definition.preset);
+  }}
+  updateBulkState();
+}}
+
 function updateBulkState() {{
   const selected = selectedRows().length;
   const visible = visibleRows();
@@ -9267,6 +9408,7 @@ function render() {{
   currentRankedRows = ranked;
   renderActiveFilters();
   updateLibraryInsights(ranked);
+  updateQueueAdvisor(ranked);
   const limit = pageLimit();
   const totalPages = limit === Infinity ? 1 : Math.max(1, Math.ceil(ranked.length / limit));
   currentPage = Math.min(Math.max(currentPage, 1), totalPages);
@@ -9298,6 +9440,11 @@ controls.forEach(([, el]) => el.addEventListener("input", () => {{
 activeFilters.addEventListener("click", (event) => {{
   const button = event.target instanceof Element ? event.target.closest("[data-filter-key]") : null;
   if (button) clearActiveFilter(button.dataset.filterKey);
+}});
+queueAdvisor.addEventListener("click", (event) => {{
+  const button = event.target instanceof Element ? event.target.closest("[data-queue-action]") : null;
+  if (!button) return;
+  selectAdvisorQueue(button.dataset.queueId || "", button.dataset.queueAction === "apply");
 }});
 resetFilters.addEventListener("click", () => {{
   controls.forEach(([key, el]) => {{
