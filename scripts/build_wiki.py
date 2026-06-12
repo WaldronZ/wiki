@@ -8825,10 +8825,10 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       font-weight: 700;
     }
     .row-check, .header-check { width: 18px; min-height: 18px; padding: 0; }
-    .column-panel { position: relative; }
-    .column-panel summary { list-style: none; cursor: pointer; }
-    .column-panel summary::-webkit-details-marker { display: none; }
-    .column-menu {
+    .action-panel { position: relative; }
+    .action-panel summary { list-style: none; cursor: pointer; }
+    .action-panel summary::-webkit-details-marker { display: none; }
+    .action-menu {
       position: absolute;
       right: 0;
       top: calc(100% + 8px);
@@ -8840,6 +8840,9 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
       background: var(--panel);
       box-shadow: var(--shadow);
     }
+    .action-menu.wide { width: min(420px, calc(100vw - 32px)); }
+    .action-menu .bulk-actions { margin-top: 8px; }
+    .action-menu .meta { margin: 0 0 8px; }
     .column-menu h3 { margin: 0 0 8px; font-size: 14px; }
     .column-presets { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
     .column-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
@@ -9039,15 +9042,9 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
     <strong id="resultCount">显示 {len(papers)} / {len(papers)} 篇</strong>
     <div class="results-actions">
       <select id="savedView" class="saved-view" aria-label="选择保存视图"><option value="">选择视图</option></select>
-      <button id="saveView" class="button" type="button">保存视图</button>
-      <button id="copyCurrentLink" class="button" type="button">复制当前链接</button>
-      <button id="copySharedView" class="button" type="button">复制共享视图</button>
-      <button id="deleteView" class="button" type="button">删除视图</button>
-      <button id="exportSavedViews" class="button" type="button">导出视图</button>
-      <button id="importSavedViews" class="button" type="button">导入视图</button>
-      <details class="column-panel">
+      <details class="action-panel">
         <summary class="button">列设置</summary>
-        <div class="column-menu" id="columnMenu">
+        <div class="action-menu column-menu" id="columnMenu">
           <h3>显示列</h3>
           <div class="column-presets">
             <button id="scanColumns" class="button" type="button">扫描视图</button>
@@ -9066,10 +9063,24 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
           <label class="density-control"><span>表格密度</span><select id="densityMode"><option value="compact">紧凑</option><option value="normal">标准</option><option value="comfortable">舒适</option></select></label>
         </div>
       </details>
-      <button id="exportMarkdown" class="button" type="button">导出清单</button>
-      <button id="exportCsv" class="button" type="button">导出 CSV</button>
-      <button id="exportBibtex" class="button" type="button">导出 BibTeX</button>
       <button id="resetFilters" class="button" type="button">重置筛选</button>
+      <details class="action-panel">
+        <summary class="button">更多操作</summary>
+        <div class="action-menu wide" id="libraryMoreActions">
+          <p class="meta">保存视图、分享筛选和导出当前结果。</p>
+          <div class="bulk-actions">
+            <button id="saveView" class="button" type="button">保存视图</button>
+            <button id="copyCurrentLink" class="button" type="button">复制当前链接</button>
+            <button id="copySharedView" class="button" type="button">复制共享视图</button>
+            <button id="deleteView" class="button" type="button">删除视图</button>
+            <button id="exportSavedViews" class="button" type="button">导出视图</button>
+            <button id="importSavedViews" class="button" type="button">导入视图</button>
+            <button id="exportMarkdown" class="button" type="button">导出清单</button>
+            <button id="exportCsv" class="button" type="button">导出 CSV</button>
+            <button id="exportBibtex" class="button" type="button">导出 BibTeX</button>
+          </div>
+        </div>
+      </details>
     </div>
   </div>
   <div class="active-filters" id="activeFilters" aria-live="polite"></div>
