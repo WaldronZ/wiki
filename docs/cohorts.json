@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T09:34:03",
+  "generated_at": "2026-06-12T09:39:26",
   "count": 5,
   "pair_count": 6,
   "cohort_count": 204,
@@ -6355,6 +6355,9 @@
     "topic_candidate 可以提升为 shared view 或 collections，用作稳定专题入口。"
   ],
   "commands": [
+    "python3 scripts/export_cohorts.py docs --output docs/exports/cohorts.md",
+    "python3 scripts/export_cohorts.py docs --format project --action singleton --output docs/exports/cohorts-project.csv",
+    "python3 scripts/export_cohorts.py docs --format patch --action topic_candidate --field topics --set-value <topic> --list-mode append --output docs/exports/cohorts-topic-patch.csv",
     "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
     "python3 scripts/apply_shared_views.py docs --input <cohort_shared_views.json>",
     "python3 scripts/apply_shared_views.py docs --input <cohort_shared_views.json> --write",

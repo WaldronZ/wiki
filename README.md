@@ -131,6 +131,7 @@ paper_reader/
 │   ├── check_wiki_js.js
 │   ├── export_actions.py
 │   ├── export_queues.py
+│   ├── export_cohorts.py
 │   ├── export_gaps.py
 │   ├── export_library_csv.py
 │   ├── export_reading_list.py
@@ -161,6 +162,7 @@ paper_reader/
 - `scripts/export_reading_list.py` 用于按研究线、状态、方向、主题、方法或重要性导出 Markdown 阅读清单、BibTeX 或链接列表
 - `scripts/export_actions.py` 用于把 `actions.json` 导出成统一 checklist、审计 CSV 或可自定义任务状态的项目任务 CSV
 - `scripts/export_queues.py` 用于把 `queues.json` 中的运营队列导出成 checklist、审计 CSV、项目任务 CSV 或可写回 metadata 的 patch CSV
+- `scripts/export_cohorts.py` 用于把 `cohorts.json` 中的分类组合队列导出成 checklist、审计 CSV、项目任务 CSV 或可写回 metadata 的 patch CSV
 - `scripts/export_batches.py` 用于把 `batch.json` 中的可执行论文批次导出成 checklist、审计 CSV、项目任务 CSV 或可写回的 metadata patch CSV
 - `scripts/export_collections.py` 用于把 `collections.json` 中的共享视图、智能队列和研究线集合导出成 checklist、审计 CSV 或项目任务 CSV
 - `scripts/export_coverage.py` 用于把 `coverage.json` 中的研究线分类覆盖缺口导出成 checklist、审计 CSV、项目任务 CSV 或可写回的 metadata patch CSV
@@ -433,6 +435,9 @@ python3 scripts/export_actions.py docs --format project --group review --severit
 python3 scripts/export_queues.py docs --output docs/exports/queues.md
 python3 scripts/export_queues.py docs --format project --severity high --assignee queue-owner --output docs/exports/queues-project.csv
 python3 scripts/export_queues.py docs --format patch --queue missing-review-plan --field review_stage --set-value due --output docs/exports/queues-review-patch.csv
+python3 scripts/export_cohorts.py docs --output docs/exports/cohorts.md
+python3 scripts/export_cohorts.py docs --format project --action singleton --assignee taxonomy-owner --output docs/exports/cohorts-project.csv
+python3 scripts/export_cohorts.py docs --format patch --action topic_candidate --field topics --set-value "New Topic" --list-mode append --output docs/exports/cohorts-topic-patch.csv
 python3 scripts/export_batches.py docs --output docs/exports/batches.md
 python3 scripts/export_batches.py docs --format project --severity high --assignee batch-owner --output docs/exports/batches-project.csv
 python3 scripts/export_batches.py docs --format patch --gap review --field review_stage --set-value due --output docs/exports/batches-review-patch.csv

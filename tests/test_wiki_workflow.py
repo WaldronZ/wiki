@@ -805,6 +805,7 @@ class WikiWorkflowTest(unittest.TestCase):
             first_cohort = cohorts["cohorts"][0]
             self.assertIn("slug", first_cohort["sample_papers"][0])
             self.assertTrue(set(first_cohort["slugs"]).issubset({"2601.00001-alpha-paper", "2501.00002-beta-paper"}))
+            self.assertTrue(any("export_cohorts.py" in command for command in cohorts["commands"]))
             self.assertTrue(any("apply_shared_views.py" in command for command in cohorts["commands"]))
             cohorts_html = (report_dir / "cohorts.html").read_text(encoding="utf-8")
             self.assertIn("分类组合", cohorts_html)
@@ -1130,6 +1131,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv", quality_html)
             self.assertIn("python3 scripts/export_queues.py docs --format project --severity high --output docs/exports/queues-project.csv", quality_html)
             self.assertIn("python3 scripts/export_queues.py docs --format patch --queue missing-review-plan --field review_stage --set-value due --output docs/exports/queues-review-patch.csv", quality_html)
+            self.assertIn("python3 scripts/export_cohorts.py docs --format project --action singleton --output docs/exports/cohorts-project.csv", quality_html)
+            self.assertIn("python3 scripts/export_cohorts.py docs --format patch --action topic_candidate --field topics --set-value &lt;topic&gt; --list-mode append --output docs/exports/cohorts-topic-patch.csv", quality_html)
             self.assertIn("python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv", quality_html)
             self.assertIn("python3 scripts/export_taxonomy_balance.py docs --format project --max-score 50 --output docs/exports/taxonomy-balance-project.csv", quality_html)
             self.assertIn("python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv", quality_html)
@@ -1336,6 +1339,87 @@ class WikiWorkflowTest(unittest.TestCase):
             )
             self.assertNotEqual(invalid_queue_patch.returncode, 0)
             self.assertIn("--format patch requires --field and --set-value", invalid_queue_patch.stderr)
+
+            cohorts_export_path = report_dir / "exports" / "cohorts.md"
+            self.run_cmd(
+                "scripts/export_cohorts.py",
+                str(report_dir),
+                "--action",
+                "singleton",
+                "--output",
+                str(cohorts_export_path),
+            )
+            cohorts_export = cohorts_export_path.read_text(encoding="utf-8")
+            self.assertIn("# AutoPaperReader Taxonomy Cohorts", cohorts_export)
+            self.assertIn("singleton", cohorts_export)
+
+            cohorts_project_path = report_dir / "exports" / "cohorts-project.csv"
+            self.run_cmd(
+                "scripts/export_cohorts.py",
+                str(report_dir),
+                "--format",
+                "project",
+                "--action",
+                "singleton",
+                "--assignee",
+                "taxonomy-owner",
+                "--task-status",
+                "ready",
+                "--output",
+                str(cohorts_project_path),
+            )
+            cohort_project_rows = list(csv.DictReader(cohorts_project_path.read_text(encoding="utf-8").splitlines()))
+            self.assertTrue(cohort_project_rows)
+            self.assertEqual(cohort_project_rows[0]["status"], "ready")
+            self.assertEqual(cohort_project_rows[0]["assignee"], "taxonomy-owner")
+            self.assertIn("cohort", cohort_project_rows[0]["labels"])
+            self.assertIn("singleton", cohort_project_rows[0]["labels"])
+
+            cohort_patch_path = report_dir / "exports" / "cohorts-topic-patch.csv"
+            self.run_cmd(
+                "scripts/export_cohorts.py",
+                str(report_dir),
+                "--format",
+                "patch",
+                "--action",
+                "singleton",
+                "--field",
+                "topics",
+                "--set-value",
+                "Cohort Review",
+                "--list-mode",
+                "append",
+                "--output",
+                str(cohort_patch_path),
+            )
+            cohort_patch_rows = list(csv.DictReader(cohort_patch_path.read_text(encoding="utf-8").splitlines()))
+            self.assertTrue(cohort_patch_rows)
+            self.assertIn("topics", cohort_patch_rows[0])
+            self.assertIn("_list_mode", cohort_patch_rows[0])
+            self.assertTrue(all(row["topics"] == "Cohort Review" for row in cohort_patch_rows))
+            self.assertTrue(all(row["_list_mode"] == "append" for row in cohort_patch_rows))
+
+            unsafe_cohorts_export = self.run_cmd(
+                "scripts/export_cohorts.py",
+                str(report_dir),
+                "--output",
+                str(report_dir / "cohorts.md"),
+                check=False,
+            )
+            self.assertNotEqual(unsafe_cohorts_export.returncode, 0)
+            self.assertIn("Refusing to write a Markdown export", unsafe_cohorts_export.stderr)
+
+            invalid_cohort_patch = self.run_cmd(
+                "scripts/export_cohorts.py",
+                str(report_dir),
+                "--format",
+                "patch",
+                "--action",
+                "singleton",
+                check=False,
+            )
+            self.assertNotEqual(invalid_cohort_patch.returncode, 0)
+            self.assertIn("--format patch requires --field and --set-value", invalid_cohort_patch.stderr)
 
             batches_export_path = report_dir / "exports" / "batches.md"
             self.run_cmd(
@@ -1939,6 +2023,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("python3 scripts/apply_governance_policy.py docs --input <taxonomy_governance_policy.json> --write", manifest["commands"])
             self.assertIn("python3 scripts/export_actions.py docs --output docs/exports/actions.md", manifest["commands"])
             self.assertIn("python3 scripts/export_queues.py docs --output docs/exports/queues.md", manifest["commands"])
+            self.assertIn("python3 scripts/export_cohorts.py docs --output docs/exports/cohorts.md", manifest["commands"])
             self.assertIn("python3 scripts/export_batches.py docs --output docs/exports/batches.md", manifest["commands"])
             self.assertIn("python3 scripts/export_coverage.py docs --output docs/exports/coverage.md", manifest["commands"])
             self.assertIn("python3 scripts/export_gaps.py docs --output docs/exports/gaps.md", manifest["commands"])
@@ -1954,6 +2039,9 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(recipe_by_id["queues_markdown"]["output"], "docs/exports/queues.md")
             self.assertEqual(recipe_by_id["queues_project"]["kind"], "export")
             self.assertEqual(recipe_by_id["queues_review_patch"]["output"], "docs/exports/queues-review-patch.csv")
+            self.assertEqual(recipe_by_id["cohorts_markdown"]["output"], "docs/exports/cohorts.md")
+            self.assertEqual(recipe_by_id["cohorts_project"]["kind"], "export")
+            self.assertEqual(recipe_by_id["cohorts_topic_patch"]["output"], "docs/exports/cohorts-topic-patch.csv")
             self.assertFalse(recipe_by_id["quality_gate"]["mutates"])
             self.assertFalse(recipe_by_id["apply_metadata_dry_run"]["mutates"])
             self.assertEqual(recipe_by_id["apply_metadata_dry_run"]["command"], "python3 scripts/apply_library_metadata.py docs --input <csv>")
