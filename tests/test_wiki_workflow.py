@@ -1128,6 +1128,8 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("python3 scripts/apply_shared_views.py docs --input &lt;shared_views.json&gt; --write", quality_html)
             self.assertIn("python3 scripts/apply_status_workflow.py docs --input &lt;taxonomy_status_workflow.json&gt; --write", quality_html)
             self.assertIn("python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv", quality_html)
+            self.assertIn("python3 scripts/export_queues.py docs --format project --severity high --output docs/exports/queues-project.csv", quality_html)
+            self.assertIn("python3 scripts/export_queues.py docs --format patch --queue missing-review-plan --field review_stage --set-value due --output docs/exports/queues-review-patch.csv", quality_html)
             self.assertIn("python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv", quality_html)
             self.assertIn("python3 scripts/export_taxonomy_balance.py docs --format project --max-score 50 --output docs/exports/taxonomy-balance-project.csv", quality_html)
             self.assertIn("python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv", quality_html)
@@ -1257,6 +1259,83 @@ class WikiWorkflowTest(unittest.TestCase):
             )
             self.assertNotEqual(unsafe_actions_export.returncode, 0)
             self.assertIn("Refusing to write a Markdown export", unsafe_actions_export.stderr)
+
+            queues_export_path = report_dir / "exports" / "queues.md"
+            self.run_cmd(
+                "scripts/export_queues.py",
+                str(report_dir),
+                "--severity",
+                "high",
+                "--output",
+                str(queues_export_path),
+            )
+            queues_export = queues_export_path.read_text(encoding="utf-8")
+            self.assertIn("# AutoPaperReader Operational Queues", queues_export)
+            self.assertIn("缺分类", queues_export)
+
+            queues_project_path = report_dir / "exports" / "queues-project.csv"
+            self.run_cmd(
+                "scripts/export_queues.py",
+                str(report_dir),
+                "--format",
+                "project",
+                "--preset",
+                "schedule_review",
+                "--assignee",
+                "queue-owner",
+                "--task-status",
+                "ready",
+                "--output",
+                str(queues_project_path),
+            )
+            queue_project_rows = list(csv.DictReader(queues_project_path.read_text(encoding="utf-8").splitlines()))
+            self.assertTrue(queue_project_rows)
+            self.assertEqual(queue_project_rows[0]["status"], "ready")
+            self.assertEqual(queue_project_rows[0]["assignee"], "queue-owner")
+            self.assertIn("queue", queue_project_rows[0]["labels"])
+            self.assertIn("schedule_review", queue_project_rows[0]["labels"])
+
+            queue_patch_path = report_dir / "exports" / "queues-review-patch.csv"
+            self.run_cmd(
+                "scripts/export_queues.py",
+                str(report_dir),
+                "--format",
+                "patch",
+                "--queue",
+                "missing-review-plan",
+                "--field",
+                "review_stage",
+                "--set-value",
+                "due",
+                "--output",
+                str(queue_patch_path),
+            )
+            queue_patch_rows = list(csv.DictReader(queue_patch_path.read_text(encoding="utf-8").splitlines()))
+            self.assertTrue(queue_patch_rows)
+            self.assertIn("review_stage", queue_patch_rows[0])
+            self.assertTrue(all(row["review_stage"] == "due" for row in queue_patch_rows))
+
+            unsafe_queues_export = self.run_cmd(
+                "scripts/export_queues.py",
+                str(report_dir),
+                "--output",
+                str(report_dir / "queues.md"),
+                check=False,
+            )
+            self.assertNotEqual(unsafe_queues_export.returncode, 0)
+            self.assertIn("Refusing to write a Markdown export", unsafe_queues_export.stderr)
+
+            invalid_queue_patch = self.run_cmd(
+                "scripts/export_queues.py",
+                str(report_dir),
+                "--format",
+                "patch",
+                "--queue",
+                "missing-review-plan",
+                check=False,
+            )
+            self.assertNotEqual(invalid_queue_patch.returncode, 0)
+            self.assertIn("--format patch requires --field and --set-value", invalid_queue_patch.stderr)
 
             batches_export_path = report_dir / "exports" / "batches.md"
             self.run_cmd(
@@ -1859,6 +1938,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("python3 scripts/apply_status_workflow.py docs --input <taxonomy_status_workflow.json> --write", manifest["commands"])
             self.assertIn("python3 scripts/apply_governance_policy.py docs --input <taxonomy_governance_policy.json> --write", manifest["commands"])
             self.assertIn("python3 scripts/export_actions.py docs --output docs/exports/actions.md", manifest["commands"])
+            self.assertIn("python3 scripts/export_queues.py docs --output docs/exports/queues.md", manifest["commands"])
             self.assertIn("python3 scripts/export_batches.py docs --output docs/exports/batches.md", manifest["commands"])
             self.assertIn("python3 scripts/export_coverage.py docs --output docs/exports/coverage.md", manifest["commands"])
             self.assertIn("python3 scripts/export_gaps.py docs --output docs/exports/gaps.md", manifest["commands"])
@@ -1871,6 +1951,9 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("python3 scripts/export_roadmap.py docs --output docs/exports/roadmap.md", manifest["commands"])
             recipe_by_id = {item["id"]: item for item in manifest["command_recipes"]}
             self.assertEqual(recipe_by_id["quality_gate"]["kind"], "check")
+            self.assertEqual(recipe_by_id["queues_markdown"]["output"], "docs/exports/queues.md")
+            self.assertEqual(recipe_by_id["queues_project"]["kind"], "export")
+            self.assertEqual(recipe_by_id["queues_review_patch"]["output"], "docs/exports/queues-review-patch.csv")
             self.assertFalse(recipe_by_id["quality_gate"]["mutates"])
             self.assertFalse(recipe_by_id["apply_metadata_dry_run"]["mutates"])
             self.assertEqual(recipe_by_id["apply_metadata_dry_run"]["command"], "python3 scripts/apply_library_metadata.py docs --input <csv>")
