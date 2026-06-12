@@ -7,15 +7,15 @@
   <style>
     :root {
       color-scheme: light;
-      --bg: #f6f3ee;
-      --panel: #fffdf8;
-      --ink: #222426;
-      --muted: #6b6f76;
-      --line: #ded8cd;
-      --accent: #2f6f73;
-      --accent-2: #8a5d3b;
-      --chip: #edf3f1;
-      --shadow: 0 14px 36px rgba(48, 44, 36, .08);
+      --bg: #f8f9fb;
+      --panel: #ffffff;
+      --ink: #1f2328;
+      --muted: #656d76;
+      --line: #d8dee4;
+      --accent: #0969da;
+      --accent-2: #57606a;
+      --chip: #f6f8fa;
+      --shadow: none;
     }
     * { box-sizing: border-box; }
     body {
@@ -23,56 +23,55 @@
       background: var(--bg);
       color: var(--ink);
       font-family: "PingFang SC", "Noto Sans SC", system-ui, -apple-system, sans-serif;
-      line-height: 1.65;
+      line-height: 1.55;
     }
     a { color: var(--accent); text-decoration: none; }
     a:hover { text-decoration: underline; }
-    .shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
-    header { padding: 44px 0 22px; }
-    .eyebrow { color: var(--accent-2); font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
-    h1 { margin: 8px 0 10px; font-size: clamp(30px, 5vw, 56px); line-height: 1.08; letter-spacing: 0; }
-    .lead { max-width: 760px; margin: 0; color: var(--muted); font-size: 17px; }
-    .stats { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+    .shell { width: min(1160px, calc(100% - 32px)); margin: 0 auto; }
+    header { padding: 30px 0 16px; }
+    .eyebrow { color: var(--accent-2); font-size: 12px; font-weight: 650; letter-spacing: 0; text-transform: none; }
+    h1 { margin: 6px 0 8px; font-size: 38px; line-height: 1.12; letter-spacing: 0; }
+    .lead { max-width: 820px; margin: 0; color: var(--muted); font-size: 15px; }
+    .stats { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
     .stat, .chip {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
+      gap: 6px;
       border: 1px solid var(--line);
-      background: var(--panel);
-      border-radius: 999px;
-      padding: 7px 12px;
+      background: transparent;
+      border-radius: 6px;
+      padding: 5px 9px;
       color: var(--muted);
-      font-size: 14px;
+      font-size: 13px;
     }
     .toolbar {
       position: sticky;
       top: 0;
       z-index: 2;
-      padding: 12px 0;
-      background: color-mix(in srgb, var(--bg) 88%, transparent);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+      padding: 10px 0;
+      background: rgba(248, 249, 251, .96);
+      border-bottom: 1px solid var(--line);
     }
     .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(138px, 1fr)); gap: 10px; }
     .controls input[type="search"] { grid-column: span 2; min-width: 260px; }
     input, select {
       width: 100%;
-      min-height: 42px;
+      min-height: 38px;
       border: 1px solid var(--line);
-      border-radius: 8px;
+      border-radius: 6px;
       background: var(--panel);
       color: var(--ink);
       padding: 0 12px;
       font: inherit;
     }
-    main { padding: 28px 0 56px; }
-    .overview { margin-bottom: 30px; }
-    .line-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+    main { padding: 20px 0 48px; }
+    .overview { margin-bottom: 24px; }
+    .line-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
     .line-card {
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 15px;
+      border-radius: 6px;
+      padding: 14px;
     }
     .line-card h2 { margin: 0 0 8px; font-size: 18px; line-height: 1.25; }
     .line-card ul { margin: 10px 0 0; padding-left: 18px; }
@@ -81,8 +80,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
-      margin: 0 0 16px;
+      gap: 10px;
+      margin: 0 0 14px;
       color: var(--muted);
     }
     .results-actions { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -92,18 +91,18 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      margin-top: 22px;
+      margin-top: 18px;
       color: var(--muted);
     }
     .pager[hidden] { display: none; }
-    .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin: 24px 0; }
+    .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 18px 0; }
     .metric-card {
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 16px;
+      border-radius: 6px;
+      padding: 14px;
     }
-    .metric-card strong { display: block; font-size: 28px; line-height: 1.1; }
+    .metric-card strong { display: block; font-size: 24px; line-height: 1.1; }
     .metric-card span { color: var(--muted); font-size: 13px; }
     .data-table {
       width: 100%;
@@ -111,20 +110,20 @@
       overflow: hidden;
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 8px;
+      border-radius: 6px;
     }
     .data-table th, .data-table td {
       border-bottom: 1px solid var(--line);
-      padding: 10px 12px;
+      padding: 9px 11px;
       text-align: left;
       vertical-align: top;
     }
-    .data-table th { color: var(--muted); font-size: 13px; font-weight: 700; }
+    .data-table th { color: var(--muted); font-size: 12px; font-weight: 650; }
     .data-table tr:last-child td { border-bottom: 0; }
     .table-wrap {
       overflow-x: auto;
       border: 1px solid var(--line);
-      border-radius: 8px;
+      border-radius: 6px;
       background: var(--panel);
     }
     .library-table {
@@ -134,7 +133,7 @@
     }
     .library-table th, .library-table td {
       border-bottom: 1px solid var(--line);
-      padding: 10px 12px;
+      padding: 9px 11px;
       text-align: left;
       vertical-align: top;
       font-size: 14px;
@@ -143,11 +142,11 @@
       position: sticky;
       top: 0;
       z-index: 1;
-      background: #f0ebe1;
+      background: #f6f8fa;
       color: var(--muted);
       font-size: 12px;
-      font-weight: 750;
-      text-transform: uppercase;
+      font-weight: 650;
+      text-transform: none;
     }
     .library-table tr:last-child td { border-bottom: 0; }
     .library-table tr[hidden] { display: none; }
@@ -159,34 +158,34 @@
     .score-grid { display: grid; grid-template-columns: repeat(3, minmax(42px, 1fr)); gap: 6px; }
     .score-grid span {
       border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #faf7f0;
+      border-radius: 6px;
+      background: var(--chip);
       padding: 4px 6px;
       color: var(--muted);
       font-size: 12px;
       text-align: center;
     }
-    .queue-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .queue-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
     .queue-list { margin: 0; padding-left: 18px; }
     .queue-list li { margin: 8px 0; }
-    .taxonomy-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+    .taxonomy-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px; }
     .taxonomy-panel {
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 16px;
+      border-radius: 6px;
+      padding: 14px;
     }
     .taxonomy-panel h2 { margin: 0 0 10px; font-size: 20px; }
     .taxonomy-panel .data-table { border: 0; }
     .matrix-link { display: inline-flex; min-width: 32px; justify-content: center; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 12px; }
     .card {
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 8px;
+      border-radius: 6px;
       box-shadow: var(--shadow);
-      padding: 18px;
-      min-height: 260px;
+      padding: 16px;
+      min-height: 230px;
       display: flex;
       flex-direction: column;
     }
@@ -195,8 +194,8 @@
     .role-section {
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 18px;
+      border-radius: 6px;
+      padding: 16px;
     }
     .role-section h2 { margin: 0 0 12px; font-size: 20px; }
     .paper-row {
@@ -214,29 +213,30 @@
       margin: 12px 0 0;
       padding: 10px 12px;
       border-left: 3px solid var(--accent);
-      border-radius: 7px;
+      border-radius: 4px;
       background: var(--chip);
-      color: #2f5054;
+      color: var(--ink);
       font-size: 14px;
     }
-    .excerpt { color: #3f4448; margin: 12px 0; }
+    .excerpt { color: var(--ink); margin: 12px 0; }
     .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 12px; }
-    .chip { background: var(--chip); padding: 4px 9px; font-size: 12px; }
+    .chip { background: var(--chip); padding: 3px 8px; font-size: 12px; }
     .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
     .button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 36px;
+      min-height: 34px;
       border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #ffffff;
-      padding: 0 11px;
-      font-size: 14px;
-      font-weight: 650;
+      border-radius: 6px;
+      background: var(--panel);
+      padding: 0 10px;
+      font-size: 13px;
+      font-weight: 600;
       color: var(--accent);
       cursor: pointer;
     }
+    .button:hover { border-color: #8c959f; text-decoration: none; }
     .button:disabled { cursor: not-allowed; opacity: .45; }
     .quick-open {
       position: fixed;
@@ -244,7 +244,7 @@
       bottom: 18px;
       z-index: 80;
       min-width: 92px;
-      box-shadow: var(--shadow);
+      box-shadow: 0 8px 24px rgba(31, 35, 40, .12);
     }
     .quick-panel[hidden] { display: none; }
     .quick-panel {
@@ -254,7 +254,7 @@
       display: grid;
       place-items: start center;
       padding: 74px 16px 16px;
-      background: rgba(34, 36, 38, .28);
+      background: rgba(31, 35, 40, .18);
     }
     .quick-dialog {
       width: min(680px, 100%);
@@ -262,9 +262,9 @@
       display: grid;
       grid-template-rows: auto 1fr;
       border: 1px solid var(--line);
-      border-radius: 8px;
+      border-radius: 6px;
       background: var(--panel);
-      box-shadow: 0 24px 80px rgba(28, 31, 32, .24);
+      box-shadow: 0 16px 48px rgba(31, 35, 40, .16);
       overflow: hidden;
     }
     .quick-head {
@@ -283,7 +283,7 @@
       display: grid;
       gap: 2px;
       width: 100%;
-      border-radius: 8px;
+      border-radius: 6px;
       padding: 10px 12px;
       color: var(--ink);
     }
@@ -296,13 +296,13 @@
     .quick-kind {
       flex: 0 0 auto;
       border: 1px solid var(--line);
-      border-radius: 999px;
-      background: #faf7f0;
+      border-radius: 6px;
+      background: var(--chip);
       color: var(--muted);
       padding: 1px 7px;
       font-size: 11px;
-      font-weight: 750;
-      text-transform: uppercase;
+      font-weight: 650;
+      text-transform: none;
     }
     .quick-item:hover, .quick-item.is-active {
       background: var(--chip);
@@ -310,35 +310,35 @@
     }
     .quick-item strong { line-height: 1.25; }
     .quick-empty { padding: 24px; color: var(--muted); }
-    .section-title { margin: 28px 0 12px; font-size: 22px; }
-    .tag-list { display: flex; flex-wrap: wrap; gap: 10px; }
+    .section-title { margin: 24px 0 10px; font-size: 20px; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 8px; }
     .tag-pill {
       display: inline-flex;
       justify-content: space-between;
       gap: 20px;
       min-width: 150px;
       border: 1px solid var(--line);
-      border-radius: 8px;
+      border-radius: 6px;
       background: var(--panel);
-      padding: 10px 12px;
+      padding: 9px 11px;
     }
     .empty {
       border: 1px dashed var(--line);
       background: var(--panel);
-      border-radius: 8px;
-      padding: 28px;
+      border-radius: 6px;
+      padding: 22px;
       color: var(--muted);
     }
-    .card-flags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .card-flags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
     .flag {
       display: inline-flex;
       align-items: center;
-      min-height: 24px;
-      border-radius: 999px;
-      background: #f7f3eb;
+      min-height: 22px;
+      border-radius: 6px;
+      background: var(--chip);
       border: 1px solid var(--line);
       color: var(--muted);
-      padding: 0 8px;
+      padding: 0 7px;
       font-size: 12px;
     }
     @media (max-width: 760px) {
@@ -349,6 +349,7 @@
       .paper-row { grid-template-columns: 1fr; }
       .data-table { display: block; overflow-x: auto; }
       header { padding-top: 28px; }
+      h1 { font-size: 30px; }
     }
   </style>
 </head>
@@ -413,7 +414,7 @@
   </section>
   <section>
     <h2 class="section-title">Artifact Hashes</h2>
-    <div class="table-wrap"><table class="data-table"><thead><tr><th>产物</th><th>类型</th><th>状态</th><th>SHA-256</th></tr></thead><tbody><tr><td><a href="index.html">index.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>512c81550619dee77462737ac570b4b59db22f3873aa5cd51966c7db481837e4</code></td></tr><tr><td><a href="command.html">command.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>727e5cd36616eb05afc23b73bfee07dbcadbc8c18547f03db0eace49eed9d946</code></td></tr><tr><td><a href="library.html">library.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>ce0ffa4edb86317e145d360d16e5e793daa4d945e13413fd8f6cfe03e3c1026c</code></td></tr><tr><td><a href="dashboard.html">dashboard.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>c113c64368608b74e7d6b3368a8b4964b62de76e97940fbd4d20fb0bcaa5819f</code></td></tr><tr><td><a href="actions.html">actions.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>1b614f942a1887ce02a6d221f0be73fae9ea90de047acb8f9fde54a462e21fab</code></td></tr><tr><td><a href="priority.html">priority.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>37286e4b1ba445f130a092cdc1d524c688b27ac6f5c2eb2dcc678d91396fc6ae</code></td></tr><tr><td><a href="queues.html">queues.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>e2b6f33075469ecd19f3b765ed154fb1a79c0324f025ec8cef92e895d8d564ce</code></td></tr><tr><td><a href="cohorts.html">cohorts.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>3252714e35d3da0fe3fb47ac13925fcc6eb4a520e39fba5e5b95933094fc2a9a</code></td></tr><tr><td><a href="collections.html">collections.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>5b4284bce5b4fe9e001d5cb34e4a779d16ea34c6cddc92abc8d5af36b2b46e66</code></td></tr><tr><td><a href="balance.html">balance.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>fd476ee01717342dbdafc03dfb74119904d0a42b5d97005338cb9b1812dc4c41</code></td></tr><tr><td><a href="coverage.html">coverage.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>96f31b358798f1c42d839002eafa8034eda28b156d97b12c95557103cb60734f</code></td></tr><tr><td><a href="facets.html">facets.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>63aa446fabc7b639e64b52a48787ec35bfc178350d5d01aeab89f361d9e5761f</code></td></tr><tr><td><a href="related.html">related.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>372935b6e4c31fe067b6a26fd576d5fd4b8693f6ba35e2ea6165970344b3ea5e</code></td></tr><tr><td><a href="gaps.html">gaps.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>f6e75d443bbf98d663a7d0ec46d9087c95dacf80f00272bc55a354d2b8bd6de2</code></td></tr><tr><td><a href="board.html">board.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>c882481286a46874e0632bba4771e2d0ee47501f6585842f04eff3d90aa386b6</code></td></tr><tr><td><a href="workflow.html">workflow.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>58eb7b6ffb0f27fdac53b1a337f7e85b8b961474405a09cba4c4495cea7a00f5</code></td></tr><tr><td><a href="status.html">status.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>64a2f49910277e5699bc4c3fe1edbc596aca208217aef96cc15541177d962049</code></td></tr><tr><td><a href="views.html">views.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>fc36c82fd37bbb1a3253738f6bd4f49e1f159cde020e51038645172782c679f4</code></td></tr><tr><td><a href="presets.html">presets.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>0f82d0b3abd44140cceeb0981a9161e98ee3b9b3d7f4e0c22c8a3e696b351f8d</code></td></tr><tr><td><a href="batch.html">batch.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>ff76dc0cfb37a2ff12100331823c3d5a194f3c8a7501df1d3a0b15d394abde48</code></td></tr><tr><td><a href="pivot.html">pivot.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>4715074435aea6073f0f4c559f821afe1e1b295df59a1c4a6c7ff940d3c9e4cf</code></td></tr><tr><td><a href="compare.html">compare.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>c6ee7f27450b7199628238cf9b1e94c7e85625f9859effa99a355d1800a0d331</code></td></tr><tr><td><a href="taxonomy_map.html">taxonomy_map.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>2ec3312627e194f1eee13b1311cdc150f85ce81f7c39e840e9be5750d2425d62</code></td></tr><tr><td><a href="clusters.html">clusters.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>6551053c82365860784ef12f0fc8a8edd2eb12426c27b481c3ba60e495d951c0</code></td></tr><tr><td><a href="roadmap.html">roadmap.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>3bcf4113bfb46aa98b0428c6bd45016296f80c7813fd019ebf41676b57e7e8b0</code></td></tr><tr><td><a href="scale.html">scale.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>d1bfa25e4009e25ed18d9b0d18421d4aa045828139bbcd1f055107e611688810</code></td></tr><tr><td><a href="ownership.html">ownership.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>a7ebd98d57b4c09b14ecde186e1d878450a8407ea55dc2e0362a4a0b8dd3887d</code></td></tr><tr><td><a href="routing.html">routing.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>fc052182509515a749caa472e34cb68ab344ff4f31e0efbf57bdf5e06b4c9227</code></td></tr><tr><td><a href="onboarding.html">onboarding.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>63ebac3d47d30263a61a2944c719d2c95ca915d697715da3638b0b1efbdf3494</code></td></tr><tr><td><a href="catalog.html">catalog.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>e252e4d961b66b8bd92f3a40680c1c904ddfb36e16452a13711266bd978b2a93</code></td></tr><tr><td><a href="intake.html">intake.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>2304c95de1cf8c8f544495a4d5cbe285da0daf52a0181409869cbaea5d2ae4c1</code></td></tr><tr><td><a href="inbox.html">inbox.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>e0f3006b9d41ba92b5f9f7716fee397800b0792baf98b0a4a0bc584cc2072721</code></td></tr><tr><td><a href="dedupe.html">dedupe.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>033741ecc182f02c0fbf31a33565d23221dedbe220f8c5e51bfb31f666f61a3c</code></td></tr><tr><td><a href="registry.html">registry.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>ffeb088b6d6d9df3a82e236423b94541877ca95ae2d5e6eb0f52adceaf689056</code></td></tr><tr><td><a href="curation.html">curation.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>12bc60029b3b42323583382666a3957afc5aa2bc0f13db593fdc9543415f13d0</code></td></tr><tr><td><a href="review.html">review.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>a50883d5a4372063a9635b09c4b42b804590264a9e65ce47a297d216d8f09997</code></td></tr><tr><td><a href="freshness.html">freshness.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>5d3977a90813c93c9c91961f6259a0f52b305efc6af303fde35d34329fd70d37</code></td></tr><tr><td><a href="quality.html">quality.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>01e4d6e06d7204715a76d6e305837cc7b16b8bb7dd938050ca9fbaab9a789afb</code></td></tr><tr><td><a href="taxonomy.html">taxonomy.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>e86455940928c22a0b58fff3b8bcb367520e045ce7ca54a2398802e2a80edc22</code></td></tr><tr><td><a href="timeline.html">timeline.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>b43fd57edbb3914c61d0625809ba42e9a0ef50c2e90e4ae2d5d08b212ed67301</code></td></tr><tr><td><a href="matrix.html">matrix.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>9294ca9407817a2ad70e7f4da538b9e2360bb69f93cf73308722cecdd75dea49</code></td></tr><tr><td><a href="lines/index.html">lines/index.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>d0850cc5a46f7e9e6f41b51e497d4e66dd7020d01e11d837d8a5d5c31962b504</code></td></tr><tr><td><a href="tags.html">tags.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>d6fb14b4a176ce2e6b5ccaeeefe4b75efe245dfb11cec1e3360e044913d61b98</code></td></tr><tr><td><a href="papers.json">papers.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>6216a5bcb9e6673af9ae109cd06886fbc833b349c7b605659b7866044084b457</code></td></tr><tr><td><a href="search_index.json">search_index.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>579be3e758459426baee7f1b525eba92ace91310fe5b69cce13cd0064b9f532e</code></td></tr><tr><td><a href="stats.json">stats.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>10001a0e3f09ad61299360c9740705251d497f3ee57d98f01d06b97d53863fe0</code></td></tr><tr><td><a href="quality.json">quality.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>1b9ef209a98861649d825759648da40a4bb39f6281665910d42017e76d58d872</code></td></tr><tr><td><a href="review.json">review.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>628556f7388d1db6d9fd3119773ef05848b27744dcd1545e58cd7e1e1a335bb4</code></td></tr><tr><td><a href="freshness.json">freshness.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>c74e41eb53a9234cc2289c59abe5ee4f716dd1c7ea1ff6715cedebdb78913969</code></td></tr><tr><td><a href="taxonomy_actions.json">taxonomy_actions.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>c5f49a851a57224d02190e09a5379d31c58c7b90f6e2d71d063daea87bba05a7</code></td></tr><tr><td><a href="actions.json">actions.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>175ae8321e03446ec3991da98863db3c97c1000a825ca4e8be2813cef8cc3dd1</code></td></tr><tr><td><a href="priority.json">priority.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>4c9592774b768df71e273b467c0c462c1329a5808b279ae5301574f0cf7f02c7</code></td></tr><tr><td><a href="command.json">command.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>b6667af056ec7cc3605edb67735efb9daf63d09f63dc743016572cce2659cc00</code></td></tr><tr><td><a href="queues.json">queues.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>92d0a9e5d81094fc267016acfeb066dd43a137ef994a81f6d2518ead0ffaf0aa</code></td></tr><tr><td><a href="cohorts.json">cohorts.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>bf007c69d2b57b9c93f3b9da204fb9e20d95d6aad0d2ff79e0502149363b0e0b</code></td></tr><tr><td><a href="workflow.json">workflow.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>9c76e09541800de451b9a2fe635126c75d016b150ec9f725ff7239d0985fd047</code></td></tr><tr><td><a href="status.json">status.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>224774cc8dca78eea27be79a9b97af1e46c4ad85ad315ecb96b079521ef8cb92</code></td></tr><tr><td><a href="views.json">views.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>ba98b785d54aa5675211d2ad5a4bd5ca909e242e520c7bb654ac77a9317053fb</code></td></tr><tr><td><a href="presets.json">presets.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>f33db18c89b50291c95ebbcfd0cba7008877cbc12798dafb0147562373b48bd9</code></td></tr><tr><td><a href="batch.json">batch.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>68755540d0e3e5908207425af786bfc5ddb143ef7c8f6d3a5845e8d941b3b8cd</code></td></tr><tr><td><a href="collections.json">collections.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>8defbe85f4699ece08db425a83402ffde266d8be6a0947b0c91c8917cb40967f</code></td></tr><tr><td><a href="coverage.json">coverage.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>37f6a9709cbfbbe966f406aec574bc572590c09338ceecb2bf34bc887bddd47d</code></td></tr><tr><td><a href="gaps.json">gaps.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>7a55368a81831037cf3e41eb907e041ac8823c7f7176b0002f467262d282cc83</code></td></tr><tr><td><a href="pivot.json">pivot.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>0e2de211e6e68b71e3ce9b34e6ae3127145dcefd5946cb276b644e5f6d7033e1</code></td></tr><tr><td><a href="compare.json">compare.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>2e596b3291c076bd28e6a99641323b1a507883ea093231827b8da47279fcc43c</code></td></tr><tr><td><a href="taxonomy_map.json">taxonomy_map.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>c51ca346eafda5741e66a05940c8518c9f4d40f209299e5269902e5c1711cd26</code></td></tr><tr><td><a href="clusters.json">clusters.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>6ad52437472f793242e97d92d66a5f05ff93f821dc14da45af801c137194624e</code></td></tr><tr><td><a href="roadmap.json">roadmap.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>1ea5f3bd8c5dad5197daf4b87cf72fa54223709d07bf53292ed472461ce49552</code></td></tr><tr><td><a href="scale.json">scale.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>79daffc622a3c3b2b39c92e837f243ebeda0cb5ba61e6534d6d48b5d71204790</code></td></tr><tr><td><a href="ownership.json">ownership.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>085030bcc6f0b24f9f3536453284fd6d76d050fca09ad5edcd7ed2643bbffc37</code></td></tr><tr><td><a href="routing.json">routing.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>dc894eb3d95bde1a1fc64757ab57c6b1ee3c159630864d479969288f876de20d</code></td></tr><tr><td><a href="onboarding.json">onboarding.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>ac06f9f06b90e40c026d2297aeec93d5296b35f763e5cf2266bffd821c49dac8</code></td></tr><tr><td><a href="catalog.json">catalog.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>fdf9a4ecadeacc2e8085298add1c8f699ef775d5c1b131c7a704366958918bd6</code></td></tr><tr><td><a href="intake.json">intake.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>303c4eef2fd9053b05a4bdda40a78795c144ea118b705a72f3dcf1451ac6cb23</code></td></tr><tr><td><a href="inbox.json">inbox.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>16088a733262361546376c706fdad3a3676e45a635dcee5fc3d953ee66e1bf50</code></td></tr><tr><td><a href="dedupe.json">dedupe.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>f7e368e47b497e9debea5ca4346d7927af0953329eb47743443180259a2c39b9</code></td></tr><tr><td><a href="registry.json">registry.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>9a396a66bad24229d7aaeaea62b02c9ff4e24ed91ab99d985e6d7ebf30011a5d</code></td></tr><tr><td><a href="facets.json">facets.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>ab6dccdff2756a4a26c17a43f0d7e677f9711799f16aad665bd9a5f8d94343c3</code></td></tr><tr><td><a href="curation.json">curation.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>575b81bb63b3cdef7898f843c8ef9e0c30d448003822d782b07f9616c146b3fe</code></td></tr><tr><td><a href="guides/report.template.md">guides/report.template.md</a></td><td>contract</td><td><span class="flag">ok</span></td><td><code>698233eb11b0d1f212ef9f1dad719735f337031c5a8ba4c4e142370c5deb3254</code></td></tr></tbody></table></div>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>产物</th><th>类型</th><th>状态</th><th>SHA-256</th></tr></thead><tbody><tr><td><a href="index.html">index.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>8c263341eededdd76724cd96ccc8a3a000e11da32d81b00a69ea0c086a885451</code></td></tr><tr><td><a href="command.html">command.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>4e773adb9b0238b847a35ba93406ecac8460f2c975e6a24d2e5ddde5b5b80032</code></td></tr><tr><td><a href="library.html">library.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>c805da82f50adf86dc3343805392e4bc8cc19189d60e6c7437eaadae9fe610b4</code></td></tr><tr><td><a href="dashboard.html">dashboard.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>e8ea339236217d2e0009f77321d23d56f71b26572ebda88692bdeec54dc28bc4</code></td></tr><tr><td><a href="actions.html">actions.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>deac7fdb24ea70c2daa27a15a8af1385b3e594eabe47dc5b131a34c122be4e2d</code></td></tr><tr><td><a href="priority.html">priority.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>5d22bba0698d17c6786ec9ad932977932983f9bcc4336815e61693f4a24bf85a</code></td></tr><tr><td><a href="queues.html">queues.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>ec6631762374058453d1f0e841f94dbd1f962d9c0e186a5e3448d7cbe0d3e310</code></td></tr><tr><td><a href="cohorts.html">cohorts.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>e1de2c5e758ea7af0520b2f77ee4315e9689873fa5e4bbc16f291e85c3dbcf89</code></td></tr><tr><td><a href="collections.html">collections.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>0acc53e53070edcd7096d24e3d710ddc2eb37f4545dc2319a806145842d56022</code></td></tr><tr><td><a href="balance.html">balance.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>979bd06e58c2306f3c03c504e993fe5467dab46edf87f227452ed00b342a0dc0</code></td></tr><tr><td><a href="coverage.html">coverage.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>49208ce7138b9903734c2796f9603967e3c9e3fe37ae8a718c7b3860d63c10da</code></td></tr><tr><td><a href="facets.html">facets.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>0d45c2e7520b4ef23d08b08a309f4618e2ce84c92dcffce969d2fed3d5bd66e1</code></td></tr><tr><td><a href="related.html">related.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>86468b5857b6e21a0ae72008f72bf4a0c8aa6cd88c6de48f3569ec7d85851093</code></td></tr><tr><td><a href="gaps.html">gaps.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>c5f04e365e68a2135afecb75d36c903215e2c3f8bb584bdf6abad02afdecf787</code></td></tr><tr><td><a href="board.html">board.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>82e0aad44e1a59293573a2059b97c3a475b463c4abbb3c98131ecd86b5332007</code></td></tr><tr><td><a href="workflow.html">workflow.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>6bb1c1baad8c8c394bf8bb62e1b0a7c7fa80820cf83ad9e03a7f50c8902e0f5b</code></td></tr><tr><td><a href="status.html">status.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>98c79486ace1730ebd4d50d5764f0797fb1728b800b92e4441e295d23dcb17fc</code></td></tr><tr><td><a href="views.html">views.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>d4b53c1e05f47618f4deb5d5b4ed921b4f7d9a387759556f397897b3a882ccc3</code></td></tr><tr><td><a href="presets.html">presets.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>33651365c5ab28b5365c4c9e040601c5c7f9a5b27b97bcb8980a5d206eb3d9da</code></td></tr><tr><td><a href="batch.html">batch.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>c2fcfd3ee25e3b5bb1e2f58199155252279034b685b718396bf06c585aedb997</code></td></tr><tr><td><a href="pivot.html">pivot.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>dd4aff213626ec1979bcd206378ba4e5b001656204dd434c0b18d4722452cdd2</code></td></tr><tr><td><a href="compare.html">compare.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>9be3228b974cac83372c5b06362b9eccd11238b2c799dc21474f0b45fbde4c2a</code></td></tr><tr><td><a href="taxonomy_map.html">taxonomy_map.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>4b304f0a1adf5df16d81807ab87c327a983f7eb47c7d8fd98282d99adefb71bc</code></td></tr><tr><td><a href="clusters.html">clusters.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>25a9a711164b52a5104bc91f77d8a0f71a1c20a49f3088ba96c78c214f4c8747</code></td></tr><tr><td><a href="roadmap.html">roadmap.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>c7baab6cdeee942888ff9c9c2c9fa521a1bddf67cc2cc701433b535acfdfc16d</code></td></tr><tr><td><a href="scale.html">scale.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>b21bebc6fbf904bbd826ca590af5cea211b95555867f485ddc85e5e5407947ca</code></td></tr><tr><td><a href="ownership.html">ownership.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>35a732836c99b94e84411cc80708e6e3b8a73d4304b5ed466f984d85fde0525c</code></td></tr><tr><td><a href="routing.html">routing.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>ebb7aa34e738136266fcbe696486a69afe7eb7229e3d09f0806a607aacab155d</code></td></tr><tr><td><a href="onboarding.html">onboarding.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>9239074d365437f4123b2a3f90c10e7ede62a383871ea244e705f9f999c49b07</code></td></tr><tr><td><a href="catalog.html">catalog.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>c5acf7e1c996431324dae7411ea811428c5686251627cc02b86a4a4919227b40</code></td></tr><tr><td><a href="intake.html">intake.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>323eebca6d7f4caa2ad117f64a22760303244904128f782e495f3cf9e448dabc</code></td></tr><tr><td><a href="inbox.html">inbox.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>7de4361cf42c806705f85774569923f9e9500f97a08bfcd999d90eeef1785b64</code></td></tr><tr><td><a href="dedupe.html">dedupe.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>314bda2e74f2950257b894b73afb32e43ada714d78ee661b208110cef74127be</code></td></tr><tr><td><a href="registry.html">registry.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>be812980db1d5284623232e2af74be86f74007228c20c9662b02f97d42c9be96</code></td></tr><tr><td><a href="curation.html">curation.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>bd2963cef2896bde0c7866c4ae3c3dbcdd71d89a74e557f29a157efa7d797b30</code></td></tr><tr><td><a href="review.html">review.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>d832b642a9d67eb9bdf9df1192c3e50fe0fed6fa91e843c0790d03b396871719</code></td></tr><tr><td><a href="freshness.html">freshness.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>060761aa99549fe23581093ee6aa9afa7d439213693d5abeaf5b39d4525095db</code></td></tr><tr><td><a href="quality.html">quality.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>adfab7342342fb712819af6fe7994d98201776ba644b0bfb122c3d97fb3a4fcd</code></td></tr><tr><td><a href="taxonomy.html">taxonomy.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>a116319003d82fd133ec759d9e056384a0f1813c5c186837f1a34e19f00d1592</code></td></tr><tr><td><a href="timeline.html">timeline.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>728a52c69c9dce14af36fd61a4749d7d73e959334d2a886d3f88d44b3ee9dbd2</code></td></tr><tr><td><a href="matrix.html">matrix.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>4f41388a98a92e193f503e0c39a47c33d6908cd3fe29f4383c3aa2f23bb9a04b</code></td></tr><tr><td><a href="lines/index.html">lines/index.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>2eff1c6bae6f0116081e068ef66bddfb2aff79f8daec6bac48e19888baf9f153</code></td></tr><tr><td><a href="tags.html">tags.html</a></td><td>page</td><td><span class="flag">ok</span></td><td><code>6a8051f527c9583b236040786dcaa846142e3af9ae4b71c061d18d2211999e4d</code></td></tr><tr><td><a href="papers.json">papers.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>6216a5bcb9e6673af9ae109cd06886fbc833b349c7b605659b7866044084b457</code></td></tr><tr><td><a href="search_index.json">search_index.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>579be3e758459426baee7f1b525eba92ace91310fe5b69cce13cd0064b9f532e</code></td></tr><tr><td><a href="stats.json">stats.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>10001a0e3f09ad61299360c9740705251d497f3ee57d98f01d06b97d53863fe0</code></td></tr><tr><td><a href="quality.json">quality.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>1b9ef209a98861649d825759648da40a4bb39f6281665910d42017e76d58d872</code></td></tr><tr><td><a href="review.json">review.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>628556f7388d1db6d9fd3119773ef05848b27744dcd1545e58cd7e1e1a335bb4</code></td></tr><tr><td><a href="freshness.json">freshness.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>c74e41eb53a9234cc2289c59abe5ee4f716dd1c7ea1ff6715cedebdb78913969</code></td></tr><tr><td><a href="taxonomy_actions.json">taxonomy_actions.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>c5f49a851a57224d02190e09a5379d31c58c7b90f6e2d71d063daea87bba05a7</code></td></tr><tr><td><a href="actions.json">actions.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>175ae8321e03446ec3991da98863db3c97c1000a825ca4e8be2813cef8cc3dd1</code></td></tr><tr><td><a href="priority.json">priority.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>4c9592774b768df71e273b467c0c462c1329a5808b279ae5301574f0cf7f02c7</code></td></tr><tr><td><a href="command.json">command.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>b6667af056ec7cc3605edb67735efb9daf63d09f63dc743016572cce2659cc00</code></td></tr><tr><td><a href="queues.json">queues.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>92d0a9e5d81094fc267016acfeb066dd43a137ef994a81f6d2518ead0ffaf0aa</code></td></tr><tr><td><a href="cohorts.json">cohorts.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>bf007c69d2b57b9c93f3b9da204fb9e20d95d6aad0d2ff79e0502149363b0e0b</code></td></tr><tr><td><a href="workflow.json">workflow.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>9c76e09541800de451b9a2fe635126c75d016b150ec9f725ff7239d0985fd047</code></td></tr><tr><td><a href="status.json">status.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>224774cc8dca78eea27be79a9b97af1e46c4ad85ad315ecb96b079521ef8cb92</code></td></tr><tr><td><a href="views.json">views.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>ba98b785d54aa5675211d2ad5a4bd5ca909e242e520c7bb654ac77a9317053fb</code></td></tr><tr><td><a href="presets.json">presets.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>f33db18c89b50291c95ebbcfd0cba7008877cbc12798dafb0147562373b48bd9</code></td></tr><tr><td><a href="batch.json">batch.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>68755540d0e3e5908207425af786bfc5ddb143ef7c8f6d3a5845e8d941b3b8cd</code></td></tr><tr><td><a href="collections.json">collections.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>8defbe85f4699ece08db425a83402ffde266d8be6a0947b0c91c8917cb40967f</code></td></tr><tr><td><a href="coverage.json">coverage.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>37f6a9709cbfbbe966f406aec574bc572590c09338ceecb2bf34bc887bddd47d</code></td></tr><tr><td><a href="gaps.json">gaps.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>7a55368a81831037cf3e41eb907e041ac8823c7f7176b0002f467262d282cc83</code></td></tr><tr><td><a href="pivot.json">pivot.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>0e2de211e6e68b71e3ce9b34e6ae3127145dcefd5946cb276b644e5f6d7033e1</code></td></tr><tr><td><a href="compare.json">compare.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>2e596b3291c076bd28e6a99641323b1a507883ea093231827b8da47279fcc43c</code></td></tr><tr><td><a href="taxonomy_map.json">taxonomy_map.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>c51ca346eafda5741e66a05940c8518c9f4d40f209299e5269902e5c1711cd26</code></td></tr><tr><td><a href="clusters.json">clusters.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>6ad52437472f793242e97d92d66a5f05ff93f821dc14da45af801c137194624e</code></td></tr><tr><td><a href="roadmap.json">roadmap.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>1ea5f3bd8c5dad5197daf4b87cf72fa54223709d07bf53292ed472461ce49552</code></td></tr><tr><td><a href="scale.json">scale.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>79daffc622a3c3b2b39c92e837f243ebeda0cb5ba61e6534d6d48b5d71204790</code></td></tr><tr><td><a href="ownership.json">ownership.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>085030bcc6f0b24f9f3536453284fd6d76d050fca09ad5edcd7ed2643bbffc37</code></td></tr><tr><td><a href="routing.json">routing.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>dc894eb3d95bde1a1fc64757ab57c6b1ee3c159630864d479969288f876de20d</code></td></tr><tr><td><a href="onboarding.json">onboarding.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>ac06f9f06b90e40c026d2297aeec93d5296b35f763e5cf2266bffd821c49dac8</code></td></tr><tr><td><a href="catalog.json">catalog.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>fdf9a4ecadeacc2e8085298add1c8f699ef775d5c1b131c7a704366958918bd6</code></td></tr><tr><td><a href="intake.json">intake.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>303c4eef2fd9053b05a4bdda40a78795c144ea118b705a72f3dcf1451ac6cb23</code></td></tr><tr><td><a href="inbox.json">inbox.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>16088a733262361546376c706fdad3a3676e45a635dcee5fc3d953ee66e1bf50</code></td></tr><tr><td><a href="dedupe.json">dedupe.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>f7e368e47b497e9debea5ca4346d7927af0953329eb47743443180259a2c39b9</code></td></tr><tr><td><a href="registry.json">registry.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>9a396a66bad24229d7aaeaea62b02c9ff4e24ed91ab99d985e6d7ebf30011a5d</code></td></tr><tr><td><a href="facets.json">facets.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>ab6dccdff2756a4a26c17a43f0d7e677f9711799f16aad665bd9a5f8d94343c3</code></td></tr><tr><td><a href="curation.json">curation.json</a></td><td>data</td><td><span class="flag">ok</span></td><td><code>575b81bb63b3cdef7898f843c8ef9e0c30d448003822d782b07f9616c146b3fe</code></td></tr><tr><td><a href="guides/report.template.md">guides/report.template.md</a></td><td>contract</td><td><span class="flag">ok</span></td><td><code>698233eb11b0d1f212ef9f1dad719735f337031c5a8ba4c4e142370c5deb3254</code></td></tr></tbody></table></div>
   </section>
 </main>
 

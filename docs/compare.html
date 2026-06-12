@@ -7,15 +7,15 @@
   <style>
     :root {
       color-scheme: light;
-      --bg: #f6f3ee;
-      --panel: #fffdf8;
-      --ink: #222426;
-      --muted: #6b6f76;
-      --line: #ded8cd;
-      --accent: #2f6f73;
-      --accent-2: #8a5d3b;
-      --chip: #edf3f1;
-      --shadow: 0 14px 36px rgba(48, 44, 36, .08);
+      --bg: #f8f9fb;
+      --panel: #ffffff;
+      --ink: #1f2328;
+      --muted: #656d76;
+      --line: #d8dee4;
+      --accent: #0969da;
+      --accent-2: #57606a;
+      --chip: #f6f8fa;
+      --shadow: none;
     }
     * { box-sizing: border-box; }
     body {
@@ -23,56 +23,55 @@
       background: var(--bg);
       color: var(--ink);
       font-family: "PingFang SC", "Noto Sans SC", system-ui, -apple-system, sans-serif;
-      line-height: 1.65;
+      line-height: 1.55;
     }
     a { color: var(--accent); text-decoration: none; }
     a:hover { text-decoration: underline; }
-    .shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
-    header { padding: 44px 0 22px; }
-    .eyebrow { color: var(--accent-2); font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
-    h1 { margin: 8px 0 10px; font-size: clamp(30px, 5vw, 56px); line-height: 1.08; letter-spacing: 0; }
-    .lead { max-width: 760px; margin: 0; color: var(--muted); font-size: 17px; }
-    .stats { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+    .shell { width: min(1160px, calc(100% - 32px)); margin: 0 auto; }
+    header { padding: 30px 0 16px; }
+    .eyebrow { color: var(--accent-2); font-size: 12px; font-weight: 650; letter-spacing: 0; text-transform: none; }
+    h1 { margin: 6px 0 8px; font-size: 38px; line-height: 1.12; letter-spacing: 0; }
+    .lead { max-width: 820px; margin: 0; color: var(--muted); font-size: 15px; }
+    .stats { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
     .stat, .chip {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
+      gap: 6px;
       border: 1px solid var(--line);
-      background: var(--panel);
-      border-radius: 999px;
-      padding: 7px 12px;
+      background: transparent;
+      border-radius: 6px;
+      padding: 5px 9px;
       color: var(--muted);
-      font-size: 14px;
+      font-size: 13px;
     }
     .toolbar {
       position: sticky;
       top: 0;
       z-index: 2;
-      padding: 12px 0;
-      background: color-mix(in srgb, var(--bg) 88%, transparent);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+      padding: 10px 0;
+      background: rgba(248, 249, 251, .96);
+      border-bottom: 1px solid var(--line);
     }
     .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(138px, 1fr)); gap: 10px; }
     .controls input[type="search"] { grid-column: span 2; min-width: 260px; }
     input, select {
       width: 100%;
-      min-height: 42px;
+      min-height: 38px;
       border: 1px solid var(--line);
-      border-radius: 8px;
+      border-radius: 6px;
       background: var(--panel);
       color: var(--ink);
       padding: 0 12px;
       font: inherit;
     }
-    main { padding: 28px 0 56px; }
-    .overview { margin-bottom: 30px; }
-    .line-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+    main { padding: 20px 0 48px; }
+    .overview { margin-bottom: 24px; }
+    .line-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
     .line-card {
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 15px;
+      border-radius: 6px;
+      padding: 14px;
     }
     .line-card h2 { margin: 0 0 8px; font-size: 18px; line-height: 1.25; }
     .line-card ul { margin: 10px 0 0; padding-left: 18px; }
@@ -81,8 +80,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
-      margin: 0 0 16px;
+      gap: 10px;
+      margin: 0 0 14px;
       color: var(--muted);
     }
     .results-actions { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -92,18 +91,18 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      margin-top: 22px;
+      margin-top: 18px;
       color: var(--muted);
     }
     .pager[hidden] { display: none; }
-    .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin: 24px 0; }
+    .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 18px 0; }
     .metric-card {
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 16px;
+      border-radius: 6px;
+      padding: 14px;
     }
-    .metric-card strong { display: block; font-size: 28px; line-height: 1.1; }
+    .metric-card strong { display: block; font-size: 24px; line-height: 1.1; }
     .metric-card span { color: var(--muted); font-size: 13px; }
     .data-table {
       width: 100%;
@@ -111,20 +110,20 @@
       overflow: hidden;
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 8px;
+      border-radius: 6px;
     }
     .data-table th, .data-table td {
       border-bottom: 1px solid var(--line);
-      padding: 10px 12px;
+      padding: 9px 11px;
       text-align: left;
       vertical-align: top;
     }
-    .data-table th { color: var(--muted); font-size: 13px; font-weight: 700; }
+    .data-table th { color: var(--muted); font-size: 12px; font-weight: 650; }
     .data-table tr:last-child td { border-bottom: 0; }
     .table-wrap {
       overflow-x: auto;
       border: 1px solid var(--line);
-      border-radius: 8px;
+      border-radius: 6px;
       background: var(--panel);
     }
     .library-table {
@@ -134,7 +133,7 @@
     }
     .library-table th, .library-table td {
       border-bottom: 1px solid var(--line);
-      padding: 10px 12px;
+      padding: 9px 11px;
       text-align: left;
       vertical-align: top;
       font-size: 14px;
@@ -143,11 +142,11 @@
       position: sticky;
       top: 0;
       z-index: 1;
-      background: #f0ebe1;
+      background: #f6f8fa;
       color: var(--muted);
       font-size: 12px;
-      font-weight: 750;
-      text-transform: uppercase;
+      font-weight: 650;
+      text-transform: none;
     }
     .library-table tr:last-child td { border-bottom: 0; }
     .library-table tr[hidden] { display: none; }
@@ -159,34 +158,34 @@
     .score-grid { display: grid; grid-template-columns: repeat(3, minmax(42px, 1fr)); gap: 6px; }
     .score-grid span {
       border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #faf7f0;
+      border-radius: 6px;
+      background: var(--chip);
       padding: 4px 6px;
       color: var(--muted);
       font-size: 12px;
       text-align: center;
     }
-    .queue-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .queue-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
     .queue-list { margin: 0; padding-left: 18px; }
     .queue-list li { margin: 8px 0; }
-    .taxonomy-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+    .taxonomy-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px; }
     .taxonomy-panel {
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 16px;
+      border-radius: 6px;
+      padding: 14px;
     }
     .taxonomy-panel h2 { margin: 0 0 10px; font-size: 20px; }
     .taxonomy-panel .data-table { border: 0; }
     .matrix-link { display: inline-flex; min-width: 32px; justify-content: center; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 12px; }
     .card {
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 8px;
+      border-radius: 6px;
       box-shadow: var(--shadow);
-      padding: 18px;
-      min-height: 260px;
+      padding: 16px;
+      min-height: 230px;
       display: flex;
       flex-direction: column;
     }
@@ -195,8 +194,8 @@
     .role-section {
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 18px;
+      border-radius: 6px;
+      padding: 16px;
     }
     .role-section h2 { margin: 0 0 12px; font-size: 20px; }
     .paper-row {
@@ -214,29 +213,30 @@
       margin: 12px 0 0;
       padding: 10px 12px;
       border-left: 3px solid var(--accent);
-      border-radius: 7px;
+      border-radius: 4px;
       background: var(--chip);
-      color: #2f5054;
+      color: var(--ink);
       font-size: 14px;
     }
-    .excerpt { color: #3f4448; margin: 12px 0; }
+    .excerpt { color: var(--ink); margin: 12px 0; }
     .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 12px; }
-    .chip { background: var(--chip); padding: 4px 9px; font-size: 12px; }
+    .chip { background: var(--chip); padding: 3px 8px; font-size: 12px; }
     .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
     .button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 36px;
+      min-height: 34px;
       border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #ffffff;
-      padding: 0 11px;
-      font-size: 14px;
-      font-weight: 650;
+      border-radius: 6px;
+      background: var(--panel);
+      padding: 0 10px;
+      font-size: 13px;
+      font-weight: 600;
       color: var(--accent);
       cursor: pointer;
     }
+    .button:hover { border-color: #8c959f; text-decoration: none; }
     .button:disabled { cursor: not-allowed; opacity: .45; }
     .quick-open {
       position: fixed;
@@ -244,7 +244,7 @@
       bottom: 18px;
       z-index: 80;
       min-width: 92px;
-      box-shadow: var(--shadow);
+      box-shadow: 0 8px 24px rgba(31, 35, 40, .12);
     }
     .quick-panel[hidden] { display: none; }
     .quick-panel {
@@ -254,7 +254,7 @@
       display: grid;
       place-items: start center;
       padding: 74px 16px 16px;
-      background: rgba(34, 36, 38, .28);
+      background: rgba(31, 35, 40, .18);
     }
     .quick-dialog {
       width: min(680px, 100%);
@@ -262,9 +262,9 @@
       display: grid;
       grid-template-rows: auto 1fr;
       border: 1px solid var(--line);
-      border-radius: 8px;
+      border-radius: 6px;
       background: var(--panel);
-      box-shadow: 0 24px 80px rgba(28, 31, 32, .24);
+      box-shadow: 0 16px 48px rgba(31, 35, 40, .16);
       overflow: hidden;
     }
     .quick-head {
@@ -283,7 +283,7 @@
       display: grid;
       gap: 2px;
       width: 100%;
-      border-radius: 8px;
+      border-radius: 6px;
       padding: 10px 12px;
       color: var(--ink);
     }
@@ -296,13 +296,13 @@
     .quick-kind {
       flex: 0 0 auto;
       border: 1px solid var(--line);
-      border-radius: 999px;
-      background: #faf7f0;
+      border-radius: 6px;
+      background: var(--chip);
       color: var(--muted);
       padding: 1px 7px;
       font-size: 11px;
-      font-weight: 750;
-      text-transform: uppercase;
+      font-weight: 650;
+      text-transform: none;
     }
     .quick-item:hover, .quick-item.is-active {
       background: var(--chip);
@@ -310,35 +310,35 @@
     }
     .quick-item strong { line-height: 1.25; }
     .quick-empty { padding: 24px; color: var(--muted); }
-    .section-title { margin: 28px 0 12px; font-size: 22px; }
-    .tag-list { display: flex; flex-wrap: wrap; gap: 10px; }
+    .section-title { margin: 24px 0 10px; font-size: 20px; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 8px; }
     .tag-pill {
       display: inline-flex;
       justify-content: space-between;
       gap: 20px;
       min-width: 150px;
       border: 1px solid var(--line);
-      border-radius: 8px;
+      border-radius: 6px;
       background: var(--panel);
-      padding: 10px 12px;
+      padding: 9px 11px;
     }
     .empty {
       border: 1px dashed var(--line);
       background: var(--panel);
-      border-radius: 8px;
-      padding: 28px;
+      border-radius: 6px;
+      padding: 22px;
       color: var(--muted);
     }
-    .card-flags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .card-flags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
     .flag {
       display: inline-flex;
       align-items: center;
-      min-height: 24px;
-      border-radius: 999px;
-      background: #f7f3eb;
+      min-height: 22px;
+      border-radius: 6px;
+      background: var(--chip);
       border: 1px solid var(--line);
       color: var(--muted);
-      padding: 0 8px;
+      padding: 0 7px;
       font-size: 12px;
     }
     @media (max-width: 760px) {
@@ -349,6 +349,7 @@
       .paper-row { grid-template-columns: 1fr; }
       .data-table { display: block; overflow-x: auto; }
       header { padding-top: 28px; }
+      h1 { font-size: 30px; }
     }
 .compare-layout {
       display: grid;
@@ -400,7 +401,7 @@
       gap: 8px;
       padding: 6px 10px;
       border: 1px solid var(--line);
-      border-radius: 999px;
+      border-radius: 6px;
       background: var(--panel);
       color: var(--muted);
       font-size: 13px;
@@ -409,7 +410,7 @@
       width: 22px;
       height: 22px;
       border: 1px solid var(--line);
-      border-radius: 999px;
+      border-radius: 6px;
       background: var(--bg);
       color: var(--muted);
       cursor: pointer;
@@ -517,7 +518,7 @@
   </section>
 </main>
 <script>
-const compareData = {"generated_at": "2026-06-12T11:00:05", "count": 5, "fields": [{"key": "title_zh", "label": "中文标题", "group": "identity"}, {"key": "title_en", "label": "英文标题", "group": "identity"}, {"key": "year", "label": "年份", "group": "identity"}, {"key": "arxiv_id", "label": "arXiv", "group": "identity"}, {"key": "research_line", "label": "研究线", "group": "taxonomy"}, {"key": "line_role", "label": "研究线角色", "group": "taxonomy"}, {"key": "domains", "label": "Domains", "group": "taxonomy"}, {"key": "tracks", "label": "Tracks", "group": "taxonomy"}, {"key": "problems", "label": "Problems", "group": "taxonomy"}, {"key": "topics", "label": "Topics", "group": "taxonomy"}, {"key": "methods", "label": "Methods", "group": "taxonomy"}, {"key": "status", "label": "状态", "group": "workflow"}, {"key": "reading_stage", "label": "阅读阶段", "group": "workflow"}, {"key": "review_stage", "label": "复习阶段", "group": "workflow"}, {"key": "next_review", "label": "下次复习", "group": "workflow"}, {"key": "importance", "label": "重要性", "group": "score"}, {"key": "confidence", "label": "置信度", "group": "score"}, {"key": "reproducibility", "label": "可复现性", "group": "score"}, {"key": "has_code", "label": "代码", "group": "evidence"}, {"key": "code_url", "label": "代码链接", "group": "evidence"}, {"key": "excerpt", "label": "摘要", "group": "notes"}, {"key": "essence", "label": "一句话精髓", "group": "notes"}], "papers": [{"slug": "2602.06036-dflash", "href": "2602.06036-dflash.html", "title": "DFlash: Block Diffusion for Flash Speculative Decoding", "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法", "title_en": "DFlash: Block Diffusion for Flash Speculative Decoding", "year": 2026, "arxiv_id": "2602.06036v1", "arxiv_url": "https://arxiv.org/abs/2602.06036v1", "code_url": "https://github.com/z-lab/dflash", "authors": ["Jian Chen", "Yesheng Liang", "Zhijian Liu"], "research_line": "Parallel Decoding with Diffusion Models", "line_role": "followup", "domains": ["LLM Systems"], "tracks": ["Inference Acceleration", "Parallel Decoding"], "problems": ["Lossless Speculative Decoding"], "topics": ["Diffusion Language Models", "LLM Inference", "LLM Serving", "Speculative Decoding"], "methods": ["block diffusion", "KV injection", "parallel drafting", "Speculative Decoding", "target hidden features"], "status": "read", "reading_stage": "deep_read", "review_stage": "", "next_review": "", "importance": 4, "confidence": 4, "reproducibility": 3, "has_code": true, "excerpt": "中文版：DFlash 把 diffusion language model 的角色从“独立生成器”改为 speculative decoding 中的轻量 parallel drafter：draft model 一次前向生成一个 token block，再由 target LLM 并行验证，从而保持 lossless 输出。它的关键设计是从 frozen target model 抽取多层 hidden features，经融合后注入...", "essence": "DFlash 像让一个动作很快的速记员先把下一小段草稿同时写出来，再让严谨的主笔一眼核对，既不改掉主笔的文风，又省下逐字落笔的等待。"}, {"slug": "2604.11035-introspective-dlm", "href": "2604.11035-introspective-dlm.html", "title": "Introspective Diffusion Language Models", "title_zh": "内省式扩散语言模型", "title_en": "Introspective Diffusion Language Models", "year": 2026, "arxiv_id": "2604.11035v1", "arxiv_url": "https://arxiv.org/abs/2604.11035v1", "code_url": "https://github.com/Introspective-Diffusion/I-DLM", "authors": ["Yifan Yu", "Yuqing Jian", "Junxiong Wang", "Zhongzhu Zhou", "Donglin Zhuang", "Xinyu Fang", "Sri Yanamandra", "Xiaoxia Wu", "Qingyang Wu", "Shuaiwen Leon Song", "Tri Dao", "Ben Athiwaratkun", "James Zou", "Fan Lai", "Chenfeng Xu"], "research_line": "Parallel Decoding with Diffusion Models", "line_role": "foundation", "domains": ["LLM Systems"], "tracks": ["Inference Acceleration", "Parallel Decoding"], "problems": ["Parallel Diffusion Decoding"], "topics": ["Diffusion Language Models", "LLM", "LLM Serving", "Parallel Decoding", "Speculative Decoding"], "methods": ["gated LoRA", "introspective consistency", "introspective strided decoding", "logit-shifted causal training", "p/q acceptance", "SGLang serving"], "status": "read", "reading_stage": "deep_read", "review_stage": "", "next_review": "", "importance": 5, "confidence": 4, "reproducibility": 3, "has_code": true, "excerpt": "中文版：本文把 DLM 与 AR 模型的质量差距归因于缺少 introspective consistency，即模型不能稳定认可自己已经生成的 token；在此基础上提出 I-DLM，用 logit-shifted causal training 把预训练 AR 模型转成可并行解码的 DLM，再用 Introspective Strided Decoding (ISD) 在同一次 forward 中生成新 token 并验证旧 tok...", "essence": "它让扩散语言模型一边往前写，一边回头问自己“刚才写的这几个字我还认不认”，认得就大步前进，认不准就当场修正。"}, {"slug": "2605.12825-orthrus", "href": "2605.12825-orthrus.html", "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion", "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成", "title_en": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion", "year": 2026, "arxiv_id": "2605.12825v2", "arxiv_url": "https://arxiv.org/abs/2605.12825v2", "code_url": "https://github.com/chiennv2000/orthrus", "authors": ["Chien Van Nguyen", "Chaitra Hegde", "Van Cuong Pham", "Ryan A. Rossi", "Franck Dernoncourt", "Thien Huu Nguyen"], "research_line": "Parallel Decoding with Diffusion Models", "line_role": "variant", "domains": ["LLM Systems"], "tracks": ["Inference Acceleration", "Parallel Decoding"], "problems": ["Memory-Efficient Parallel Token Generation"], "topics": ["Diffusion Language Models", "KV Cache", "LLM Inference", "Parallel Decoding", "Speculative Decoding"], "methods": ["dual-view attention", "forward KL distillation", "intra-model consensus", "masked diffusion", "shared KV cache"], "status": "read", "reading_stage": "deep_read", "review_stage": "", "next_review": "", "importance": 4, "confidence": 4, "reproducibility": 3, "has_code": true, "excerpt": "中文版：Orthrus 在冻结的 autoregressive LLM 内部插入轻量 trainable diffusion attention module，让 AR view 负责高质量 context / KV cache 构建，让 diffusion view 一次并行预测多个 future tokens，再由同一个 frozen AR head 做 consensus verification，从而在不改变 base mode...", "essence": "Orthrus 像是在老练作家的脑子里装了一个会同时写好几句草稿的小助手，但每一句交稿前都由作家本人逐字点头，所以快了，却没有换掉原来的声音。"}, {"slug": "2501.01005-flashinfer", "href": "2501.01005-flashinfer.html", "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving", "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎", "title_en": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving", "year": 2025, "arxiv_id": "2501.01005v2", "arxiv_url": "https://arxiv.org/abs/2501.01005v2", "code_url": "https://github.com/flashinfer-ai/flashinfer", "authors": ["Zihao Ye", "Lequn Chen", "Ruihang Lai", "Wuwei Lin", "Yineng Zhang", "Stephanie Wang", "Tianqi Chen", "Baris Kasikci", "Vinod Grover", "Arvind Krishnamurthy", "Luis Ceze"], "research_line": "Efficient Attention Kernels", "line_role": "system", "domains": ["LLM Systems"], "tracks": ["Attention Kernels", "Inference Serving Systems"], "problems": ["Customizable Attention Serving"], "topics": ["Attention Kernels", "GPU Systems", "Inference Optimization", "KV Cache", "LLM Serving"], "methods": ["block-sparse attention", "composable KV-cache format", "CUDA Graph", "FlashAttention", "JIT compilation", "load-balanced scheduling"], "status": "read", "reading_stage": "deep_read", "review_stage": "", "next_review": "", "importance": 4, "confidence": 4, "reproducibility": 4, "has_code": true, "excerpt": "中文版：FlashInfer 是一个面向 LLM online serving 的 attention kernel engine。它把 PagedAttention、RadixAttention、prefix sharing、tree attention、KV pruning 等多种 KV-cache 访问形态统一成 block-sparse / composable sparse formats，并用 CUDA/CUTLASS 模板...", "essence": "FlashInfer 像给大模型服务端装了一套会认路、会排队、还会按菜谱现炒的厨房流水线：不同客人的历史上下文再杂乱，也尽量少搬、少等、少重复算。"}, {"slug": "2307.08691-flashattention-2", "href": "2307.08691-flashattention-2.html", "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning", "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention", "title_en": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning", "year": 2023, "arxiv_id": "2307.08691v1", "arxiv_url": "https://arxiv.org/abs/2307.08691v1", "code_url": "https://github.com/Dao-AILab/flash-attention", "authors": ["Tri Dao"], "research_line": "Efficient Attention Kernels", "line_role": "foundation", "domains": ["LLM Systems"], "tracks": ["Attention Kernels"], "problems": ["Efficient Exact Attention"], "topics": ["Efficient Attention", "GPU Kernel Optimization", "Long Context", "Transformer"], "methods": ["CUDA / GPU parallelism", "FlashAttention", "online softmax", "tiling", "work partitioning"], "status": "read", "reading_stage": "deep_read", "review_stage": "", "next_review": "", "importance": 5, "confidence": 4, "reproducibility": 4, "has_code": true, "excerpt": "中文版：FlashAttention-2 不是改变 attention 数学定义的近似方法，而是在 FlashAttention exact attention 的基础上重新设计 GPU 上的计算顺序、thread block 并行维度和 warp 内工作划分，减少 non-matmul FLOPs 与 shared memory 通信，从而把 attention kernel 的利用率推近 GEMM。", "essence": "FlashAttention-2 像是把一群搬砖工从“排队传砖”改成“分区同时铺墙”：砖没有少一块，墙也完全一样，但大家终于不再互相等。"}], "suggested_sets": [{"name": "高优先级论文", "kind": "priority", "slugs": ["2604.11035-introspective-dlm", "2307.08691-flashattention-2"]}, {"name": "缺复习计划", "kind": "workflow", "slugs": ["2602.06036-dflash", "2604.11035-introspective-dlm", "2605.12825-orthrus", "2501.01005-flashinfer", "2307.08691-flashattention-2"]}, {"name": "研究线：Parallel Decoding with Diffusion Models", "kind": "research_line", "slugs": ["2604.11035-introspective-dlm", "2605.12825-orthrus", "2602.06036-dflash"]}, {"name": "研究线：Efficient Attention Kernels", "kind": "research_line", "slugs": ["2307.08691-flashattention-2", "2501.01005-flashinfer"]}, {"name": "方向：Inference Acceleration", "kind": "track", "slugs": ["2604.11035-introspective-dlm", "2602.06036-dflash", "2605.12825-orthrus"]}, {"name": "方向：Parallel Decoding", "kind": "track", "slugs": ["2604.11035-introspective-dlm", "2602.06036-dflash", "2605.12825-orthrus"]}, {"name": "方向：Attention Kernels", "kind": "track", "slugs": ["2307.08691-flashattention-2", "2501.01005-flashinfer"]}], "controls": {"active_status_workflow": "personal", "status": ["unread", "skimmed", "reading", "read", "archived"], "reading_stage": ["skim", "normal_read", "deep_read", "code_checked"], "review_stage": ["fresh", "due", "reviewed"], "status_workflows": {"personal": {"status_values": ["unread", "skimmed", "reading", "read", "archived"], "reading_stage_values": ["skim", "normal_read", "deep_read", "code_checked"], "review_stage_values": ["fresh", "due", "reviewed"]}, "research": {"status_values": ["inbox", "triaged", "reading", "implemented", "cited", "archived"], "reading_stage_values": ["skim", "normal_read", "deep_read", "code_checked", "reproduced"], "review_stage_values": ["fresh", "due", "reviewed", "evergreen"]}}, "line_role": ["foundation", "baseline", "main", "system", "variant", "followup", "survey"], "shared_views": [{"name": "重点论文", "page": "all", "state": {"importance": "5", "sort": "importance"}}, {"name": "未设置复习", "page": "index", "state": {"review": "none", "sort": "importance"}}, {"name": "Attention Kernels", "page": "library", "state": {"track": "Attention Kernels", "sort": "year"}}], "bulk_presets": [{"id": "triage", "label": "标记待分流", "description": "把一批论文推进到初筛/分流队列，并安排一周内复看。", "fields": {"status": ["triaged", "unread"], "reading_stage": ["skimmed", "skim"], "review_stage": ["fresh"], "next_review_days": 7}}, {"id": "deep_read", "label": "进入深读", "description": "把筛选出的核心论文推进到深读队列。", "fields": {"status": ["reading", "triaged"], "reading_stage": ["deep_read"], "review_stage": ["fresh"], "next_review_days": 14}}, {"id": "code_check", "label": "补代码检查", "description": "把论文推进到代码检查/实现核对队列。", "fields": {"status": ["reading", "read"], "reading_stage": ["code_checked", "deep_read"], "review_stage": ["reviewed", "fresh"], "next_review_days": 30}}, {"id": "schedule_review", "label": "安排复习", "description": "为当前筛选队列补一个近期复习日期。", "fields": {"review_stage": ["due", "fresh"], "next_review_days": 14}}, {"id": "archive", "label": "归档队列", "description": "把一批不再活跃的论文移到归档状态。", "fields": {"status": ["archived", "read"], "review_stage": ["reviewed"]}}], "governance_policy": {"taxonomy_load": {"min_structure_labels": 3, "min_tags": 3, "max_tags": 10, "max_methods": 8}, "taxonomy_actions": {"singleton_max_count": 1, "watch_share": 0.4, "watch_min_count": 4, "split_share": 0.6, "split_min_count": 5}, "taxonomy_balance": {"high_score_below": 45, "medium_score_below": 70, "singleton_medium_count": 3, "unused_medium_count": 3}, "coverage": {"high_score_below": 70, "medium_score_below": 90, "missing_high_min": 2}}, "research_line_owners": {"Efficient Attention Kernels": {"owner": "kernel-owner", "team": "systems", "cadence": "monthly", "note": "Review new GPU kernel and serving papers."}, "Parallel Decoding with Diffusion Models": {"owner": "decoding-owner", "team": "generation", "cadence": "biweekly", "note": "Track diffusion language model and speculative decoding updates."}}, "label_definitions": {"domains": {"LLM Systems": {"description": "Systems-oriented papers about serving, inference, kernels, memory, and scalability for language models.", "owner": "systems", "status": "active"}}, "research_line": {"Efficient Attention Kernels": {"description": "Papers about exact or approximate attention kernels, GPU execution, and serving-time attention engines.", "owner": "kernel-owner", "status": "active"}, "Parallel Decoding with Diffusion Models": {"description": "Papers that use diffusion-style or speculative mechanisms for parallel token generation.", "owner": "decoding-owner", "status": "active"}}, "topics": {"Attention Kernels": {"description": "Attention implementation, scheduling, and memory-layout techniques used by LLM inference systems.", "owner": "kernel-owner", "status": "active"}, "Parallel Decoding": {"description": "Methods that generate or verify multiple tokens per step rather than strictly left-to-right one-token decoding.", "owner": "decoding-owner", "status": "active"}, "Speculative Decoding": {"description": "Draft-and-verify decoding methods that preserve target-model output distribution while improving latency.", "owner": "decoding-owner", "status": "active"}}, "methods": {"FlashAttention": {"description": "IO-aware exact attention kernel family that reduces HBM traffic with tiling and online softmax.", "owner": "kernel-owner", "status": "active"}, "Speculative Decoding": {"description": "Use a draft process and acceptance rule to accelerate autoregressive generation.", "owner": "decoding-owner", "status": "active"}}, "status": {"unread": {"description": "Known paper that has not been opened or routed into a reading pass yet.", "owner": "workflow", "status": "active"}, "skimmed": {"description": "Paper has received a quick pass; keep it visible for deeper reading or triage.", "owner": "workflow", "status": "active"}, "reading": {"description": "Currently being read, annotated, reproduced, or used for an active synthesis task.", "owner": "workflow", "status": "active"}, "read": {"description": "Main report is stable enough to use as reference material.", "owner": "workflow", "status": "active"}, "archived": {"description": "Kept for provenance but no longer active in current queues or weekly review.", "owner": "workflow", "status": "active"}, "inbox": {"description": "Research workflow entry state for candidate papers that need triage.", "owner": "workflow", "status": "active"}, "triaged": {"description": "Research candidate has been classified and assigned a likely next action.", "owner": "workflow", "status": "active"}, "implemented": {"description": "Core idea or code path has been implemented, reproduced, or mapped to local code.", "owner": "workflow", "status": "active"}, "cited": {"description": "Paper has been used in a writeup, roadmap, experiment note, or related synthesis.", "owner": "workflow", "status": "active"}}, "reading_stage": {"skim": {"description": "Fast pass for scope, claims, and whether the paper belongs in this library.", "owner": "workflow", "status": "active"}, "normal_read": {"description": "Standard reading pass focused on method, experiments, and limitations.", "owner": "workflow", "status": "active"}, "deep_read": {"description": "Detailed pass including equations, assumptions, ablations, and cross-paper comparison.", "owner": "workflow", "status": "active"}, "code_checked": {"description": "Implementation, repository structure, or reproducibility notes have been checked.", "owner": "workflow", "status": "active"}, "reproduced": {"description": "Key result, benchmark, or implementation behavior has been reproduced locally or in a controlled experiment.", "owner": "workflow", "status": "active"}}, "review_stage": {"fresh": {"description": "Recently reviewed; no immediate spaced-review action is needed.", "owner": "workflow", "status": "active"}, "due": {"description": "Ready for scheduled review, synthesis, or update against newer related work.", "owner": "workflow", "status": "active"}, "reviewed": {"description": "Completed the planned review checkpoint.", "owner": "workflow", "status": "active"}, "evergreen": {"description": "Stable foundational paper worth keeping in recurring review or teaching sets.", "owner": "workflow", "status": "active"}}}}};
+const compareData = {"generated_at": "2026-06-12T11:06:08", "count": 5, "fields": [{"key": "title_zh", "label": "中文标题", "group": "identity"}, {"key": "title_en", "label": "英文标题", "group": "identity"}, {"key": "year", "label": "年份", "group": "identity"}, {"key": "arxiv_id", "label": "arXiv", "group": "identity"}, {"key": "research_line", "label": "研究线", "group": "taxonomy"}, {"key": "line_role", "label": "研究线角色", "group": "taxonomy"}, {"key": "domains", "label": "Domains", "group": "taxonomy"}, {"key": "tracks", "label": "Tracks", "group": "taxonomy"}, {"key": "problems", "label": "Problems", "group": "taxonomy"}, {"key": "topics", "label": "Topics", "group": "taxonomy"}, {"key": "methods", "label": "Methods", "group": "taxonomy"}, {"key": "status", "label": "状态", "group": "workflow"}, {"key": "reading_stage", "label": "阅读阶段", "group": "workflow"}, {"key": "review_stage", "label": "复习阶段", "group": "workflow"}, {"key": "next_review", "label": "下次复习", "group": "workflow"}, {"key": "importance", "label": "重要性", "group": "score"}, {"key": "confidence", "label": "置信度", "group": "score"}, {"key": "reproducibility", "label": "可复现性", "group": "score"}, {"key": "has_code", "label": "代码", "group": "evidence"}, {"key": "code_url", "label": "代码链接", "group": "evidence"}, {"key": "excerpt", "label": "摘要", "group": "notes"}, {"key": "essence", "label": "一句话精髓", "group": "notes"}], "papers": [{"slug": "2602.06036-dflash", "href": "2602.06036-dflash.html", "title": "DFlash: Block Diffusion for Flash Speculative Decoding", "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法", "title_en": "DFlash: Block Diffusion for Flash Speculative Decoding", "year": 2026, "arxiv_id": "2602.06036v1", "arxiv_url": "https://arxiv.org/abs/2602.06036v1", "code_url": "https://github.com/z-lab/dflash", "authors": ["Jian Chen", "Yesheng Liang", "Zhijian Liu"], "research_line": "Parallel Decoding with Diffusion Models", "line_role": "followup", "domains": ["LLM Systems"], "tracks": ["Inference Acceleration", "Parallel Decoding"], "problems": ["Lossless Speculative Decoding"], "topics": ["Diffusion Language Models", "LLM Inference", "LLM Serving", "Speculative Decoding"], "methods": ["block diffusion", "KV injection", "parallel drafting", "Speculative Decoding", "target hidden features"], "status": "read", "reading_stage": "deep_read", "review_stage": "", "next_review": "", "importance": 4, "confidence": 4, "reproducibility": 3, "has_code": true, "excerpt": "中文版：DFlash 把 diffusion language model 的角色从“独立生成器”改为 speculative decoding 中的轻量 parallel drafter：draft model 一次前向生成一个 token block，再由 target LLM 并行验证，从而保持 lossless 输出。它的关键设计是从 frozen target model 抽取多层 hidden features，经融合后注入...", "essence": "DFlash 像让一个动作很快的速记员先把下一小段草稿同时写出来，再让严谨的主笔一眼核对，既不改掉主笔的文风，又省下逐字落笔的等待。"}, {"slug": "2604.11035-introspective-dlm", "href": "2604.11035-introspective-dlm.html", "title": "Introspective Diffusion Language Models", "title_zh": "内省式扩散语言模型", "title_en": "Introspective Diffusion Language Models", "year": 2026, "arxiv_id": "2604.11035v1", "arxiv_url": "https://arxiv.org/abs/2604.11035v1", "code_url": "https://github.com/Introspective-Diffusion/I-DLM", "authors": ["Yifan Yu", "Yuqing Jian", "Junxiong Wang", "Zhongzhu Zhou", "Donglin Zhuang", "Xinyu Fang", "Sri Yanamandra", "Xiaoxia Wu", "Qingyang Wu", "Shuaiwen Leon Song", "Tri Dao", "Ben Athiwaratkun", "James Zou", "Fan Lai", "Chenfeng Xu"], "research_line": "Parallel Decoding with Diffusion Models", "line_role": "foundation", "domains": ["LLM Systems"], "tracks": ["Inference Acceleration", "Parallel Decoding"], "problems": ["Parallel Diffusion Decoding"], "topics": ["Diffusion Language Models", "LLM", "LLM Serving", "Parallel Decoding", "Speculative Decoding"], "methods": ["gated LoRA", "introspective consistency", "introspective strided decoding", "logit-shifted causal training", "p/q acceptance", "SGLang serving"], "status": "read", "reading_stage": "deep_read", "review_stage": "", "next_review": "", "importance": 5, "confidence": 4, "reproducibility": 3, "has_code": true, "excerpt": "中文版：本文把 DLM 与 AR 模型的质量差距归因于缺少 introspective consistency，即模型不能稳定认可自己已经生成的 token；在此基础上提出 I-DLM，用 logit-shifted causal training 把预训练 AR 模型转成可并行解码的 DLM，再用 Introspective Strided Decoding (ISD) 在同一次 forward 中生成新 token 并验证旧 tok...", "essence": "它让扩散语言模型一边往前写，一边回头问自己“刚才写的这几个字我还认不认”，认得就大步前进，认不准就当场修正。"}, {"slug": "2605.12825-orthrus", "href": "2605.12825-orthrus.html", "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion", "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成", "title_en": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion", "year": 2026, "arxiv_id": "2605.12825v2", "arxiv_url": "https://arxiv.org/abs/2605.12825v2", "code_url": "https://github.com/chiennv2000/orthrus", "authors": ["Chien Van Nguyen", "Chaitra Hegde", "Van Cuong Pham", "Ryan A. Rossi", "Franck Dernoncourt", "Thien Huu Nguyen"], "research_line": "Parallel Decoding with Diffusion Models", "line_role": "variant", "domains": ["LLM Systems"], "tracks": ["Inference Acceleration", "Parallel Decoding"], "problems": ["Memory-Efficient Parallel Token Generation"], "topics": ["Diffusion Language Models", "KV Cache", "LLM Inference", "Parallel Decoding", "Speculative Decoding"], "methods": ["dual-view attention", "forward KL distillation", "intra-model consensus", "masked diffusion", "shared KV cache"], "status": "read", "reading_stage": "deep_read", "review_stage": "", "next_review": "", "importance": 4, "confidence": 4, "reproducibility": 3, "has_code": true, "excerpt": "中文版：Orthrus 在冻结的 autoregressive LLM 内部插入轻量 trainable diffusion attention module，让 AR view 负责高质量 context / KV cache 构建，让 diffusion view 一次并行预测多个 future tokens，再由同一个 frozen AR head 做 consensus verification，从而在不改变 base mode...", "essence": "Orthrus 像是在老练作家的脑子里装了一个会同时写好几句草稿的小助手，但每一句交稿前都由作家本人逐字点头，所以快了，却没有换掉原来的声音。"}, {"slug": "2501.01005-flashinfer", "href": "2501.01005-flashinfer.html", "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving", "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎", "title_en": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving", "year": 2025, "arxiv_id": "2501.01005v2", "arxiv_url": "https://arxiv.org/abs/2501.01005v2", "code_url": "https://github.com/flashinfer-ai/flashinfer", "authors": ["Zihao Ye", "Lequn Chen", "Ruihang Lai", "Wuwei Lin", "Yineng Zhang", "Stephanie Wang", "Tianqi Chen", "Baris Kasikci", "Vinod Grover", "Arvind Krishnamurthy", "Luis Ceze"], "research_line": "Efficient Attention Kernels", "line_role": "system", "domains": ["LLM Systems"], "tracks": ["Attention Kernels", "Inference Serving Systems"], "problems": ["Customizable Attention Serving"], "topics": ["Attention Kernels", "GPU Systems", "Inference Optimization", "KV Cache", "LLM Serving"], "methods": ["block-sparse attention", "composable KV-cache format", "CUDA Graph", "FlashAttention", "JIT compilation", "load-balanced scheduling"], "status": "read", "reading_stage": "deep_read", "review_stage": "", "next_review": "", "importance": 4, "confidence": 4, "reproducibility": 4, "has_code": true, "excerpt": "中文版：FlashInfer 是一个面向 LLM online serving 的 attention kernel engine。它把 PagedAttention、RadixAttention、prefix sharing、tree attention、KV pruning 等多种 KV-cache 访问形态统一成 block-sparse / composable sparse formats，并用 CUDA/CUTLASS 模板...", "essence": "FlashInfer 像给大模型服务端装了一套会认路、会排队、还会按菜谱现炒的厨房流水线：不同客人的历史上下文再杂乱，也尽量少搬、少等、少重复算。"}, {"slug": "2307.08691-flashattention-2", "href": "2307.08691-flashattention-2.html", "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning", "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention", "title_en": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning", "year": 2023, "arxiv_id": "2307.08691v1", "arxiv_url": "https://arxiv.org/abs/2307.08691v1", "code_url": "https://github.com/Dao-AILab/flash-attention", "authors": ["Tri Dao"], "research_line": "Efficient Attention Kernels", "line_role": "foundation", "domains": ["LLM Systems"], "tracks": ["Attention Kernels"], "problems": ["Efficient Exact Attention"], "topics": ["Efficient Attention", "GPU Kernel Optimization", "Long Context", "Transformer"], "methods": ["CUDA / GPU parallelism", "FlashAttention", "online softmax", "tiling", "work partitioning"], "status": "read", "reading_stage": "deep_read", "review_stage": "", "next_review": "", "importance": 5, "confidence": 4, "reproducibility": 4, "has_code": true, "excerpt": "中文版：FlashAttention-2 不是改变 attention 数学定义的近似方法，而是在 FlashAttention exact attention 的基础上重新设计 GPU 上的计算顺序、thread block 并行维度和 warp 内工作划分，减少 non-matmul FLOPs 与 shared memory 通信，从而把 attention kernel 的利用率推近 GEMM。", "essence": "FlashAttention-2 像是把一群搬砖工从“排队传砖”改成“分区同时铺墙”：砖没有少一块，墙也完全一样，但大家终于不再互相等。"}], "suggested_sets": [{"name": "高优先级论文", "kind": "priority", "slugs": ["2604.11035-introspective-dlm", "2307.08691-flashattention-2"]}, {"name": "缺复习计划", "kind": "workflow", "slugs": ["2602.06036-dflash", "2604.11035-introspective-dlm", "2605.12825-orthrus", "2501.01005-flashinfer", "2307.08691-flashattention-2"]}, {"name": "研究线：Parallel Decoding with Diffusion Models", "kind": "research_line", "slugs": ["2604.11035-introspective-dlm", "2605.12825-orthrus", "2602.06036-dflash"]}, {"name": "研究线：Efficient Attention Kernels", "kind": "research_line", "slugs": ["2307.08691-flashattention-2", "2501.01005-flashinfer"]}, {"name": "方向：Inference Acceleration", "kind": "track", "slugs": ["2604.11035-introspective-dlm", "2602.06036-dflash", "2605.12825-orthrus"]}, {"name": "方向：Parallel Decoding", "kind": "track", "slugs": ["2604.11035-introspective-dlm", "2602.06036-dflash", "2605.12825-orthrus"]}, {"name": "方向：Attention Kernels", "kind": "track", "slugs": ["2307.08691-flashattention-2", "2501.01005-flashinfer"]}], "controls": {"active_status_workflow": "personal", "status": ["unread", "skimmed", "reading", "read", "archived"], "reading_stage": ["skim", "normal_read", "deep_read", "code_checked"], "review_stage": ["fresh", "due", "reviewed"], "status_workflows": {"personal": {"status_values": ["unread", "skimmed", "reading", "read", "archived"], "reading_stage_values": ["skim", "normal_read", "deep_read", "code_checked"], "review_stage_values": ["fresh", "due", "reviewed"]}, "research": {"status_values": ["inbox", "triaged", "reading", "implemented", "cited", "archived"], "reading_stage_values": ["skim", "normal_read", "deep_read", "code_checked", "reproduced"], "review_stage_values": ["fresh", "due", "reviewed", "evergreen"]}}, "line_role": ["foundation", "baseline", "main", "system", "variant", "followup", "survey"], "shared_views": [{"name": "重点论文", "page": "all", "state": {"importance": "5", "sort": "importance"}}, {"name": "未设置复习", "page": "index", "state": {"review": "none", "sort": "importance"}}, {"name": "Attention Kernels", "page": "library", "state": {"track": "Attention Kernels", "sort": "year"}}], "bulk_presets": [{"id": "triage", "label": "标记待分流", "description": "把一批论文推进到初筛/分流队列，并安排一周内复看。", "fields": {"status": ["triaged", "unread"], "reading_stage": ["skimmed", "skim"], "review_stage": ["fresh"], "next_review_days": 7}}, {"id": "deep_read", "label": "进入深读", "description": "把筛选出的核心论文推进到深读队列。", "fields": {"status": ["reading", "triaged"], "reading_stage": ["deep_read"], "review_stage": ["fresh"], "next_review_days": 14}}, {"id": "code_check", "label": "补代码检查", "description": "把论文推进到代码检查/实现核对队列。", "fields": {"status": ["reading", "read"], "reading_stage": ["code_checked", "deep_read"], "review_stage": ["reviewed", "fresh"], "next_review_days": 30}}, {"id": "schedule_review", "label": "安排复习", "description": "为当前筛选队列补一个近期复习日期。", "fields": {"review_stage": ["due", "fresh"], "next_review_days": 14}}, {"id": "archive", "label": "归档队列", "description": "把一批不再活跃的论文移到归档状态。", "fields": {"status": ["archived", "read"], "review_stage": ["reviewed"]}}], "governance_policy": {"taxonomy_load": {"min_structure_labels": 3, "min_tags": 3, "max_tags": 10, "max_methods": 8}, "taxonomy_actions": {"singleton_max_count": 1, "watch_share": 0.4, "watch_min_count": 4, "split_share": 0.6, "split_min_count": 5}, "taxonomy_balance": {"high_score_below": 45, "medium_score_below": 70, "singleton_medium_count": 3, "unused_medium_count": 3}, "coverage": {"high_score_below": 70, "medium_score_below": 90, "missing_high_min": 2}}, "research_line_owners": {"Efficient Attention Kernels": {"owner": "kernel-owner", "team": "systems", "cadence": "monthly", "note": "Review new GPU kernel and serving papers."}, "Parallel Decoding with Diffusion Models": {"owner": "decoding-owner", "team": "generation", "cadence": "biweekly", "note": "Track diffusion language model and speculative decoding updates."}}, "label_definitions": {"domains": {"LLM Systems": {"description": "Systems-oriented papers about serving, inference, kernels, memory, and scalability for language models.", "owner": "systems", "status": "active"}}, "research_line": {"Efficient Attention Kernels": {"description": "Papers about exact or approximate attention kernels, GPU execution, and serving-time attention engines.", "owner": "kernel-owner", "status": "active"}, "Parallel Decoding with Diffusion Models": {"description": "Papers that use diffusion-style or speculative mechanisms for parallel token generation.", "owner": "decoding-owner", "status": "active"}}, "topics": {"Attention Kernels": {"description": "Attention implementation, scheduling, and memory-layout techniques used by LLM inference systems.", "owner": "kernel-owner", "status": "active"}, "Parallel Decoding": {"description": "Methods that generate or verify multiple tokens per step rather than strictly left-to-right one-token decoding.", "owner": "decoding-owner", "status": "active"}, "Speculative Decoding": {"description": "Draft-and-verify decoding methods that preserve target-model output distribution while improving latency.", "owner": "decoding-owner", "status": "active"}}, "methods": {"FlashAttention": {"description": "IO-aware exact attention kernel family that reduces HBM traffic with tiling and online softmax.", "owner": "kernel-owner", "status": "active"}, "Speculative Decoding": {"description": "Use a draft process and acceptance rule to accelerate autoregressive generation.", "owner": "decoding-owner", "status": "active"}}, "status": {"unread": {"description": "Known paper that has not been opened or routed into a reading pass yet.", "owner": "workflow", "status": "active"}, "skimmed": {"description": "Paper has received a quick pass; keep it visible for deeper reading or triage.", "owner": "workflow", "status": "active"}, "reading": {"description": "Currently being read, annotated, reproduced, or used for an active synthesis task.", "owner": "workflow", "status": "active"}, "read": {"description": "Main report is stable enough to use as reference material.", "owner": "workflow", "status": "active"}, "archived": {"description": "Kept for provenance but no longer active in current queues or weekly review.", "owner": "workflow", "status": "active"}, "inbox": {"description": "Research workflow entry state for candidate papers that need triage.", "owner": "workflow", "status": "active"}, "triaged": {"description": "Research candidate has been classified and assigned a likely next action.", "owner": "workflow", "status": "active"}, "implemented": {"description": "Core idea or code path has been implemented, reproduced, or mapped to local code.", "owner": "workflow", "status": "active"}, "cited": {"description": "Paper has been used in a writeup, roadmap, experiment note, or related synthesis.", "owner": "workflow", "status": "active"}}, "reading_stage": {"skim": {"description": "Fast pass for scope, claims, and whether the paper belongs in this library.", "owner": "workflow", "status": "active"}, "normal_read": {"description": "Standard reading pass focused on method, experiments, and limitations.", "owner": "workflow", "status": "active"}, "deep_read": {"description": "Detailed pass including equations, assumptions, ablations, and cross-paper comparison.", "owner": "workflow", "status": "active"}, "code_checked": {"description": "Implementation, repository structure, or reproducibility notes have been checked.", "owner": "workflow", "status": "active"}, "reproduced": {"description": "Key result, benchmark, or implementation behavior has been reproduced locally or in a controlled experiment.", "owner": "workflow", "status": "active"}}, "review_stage": {"fresh": {"description": "Recently reviewed; no immediate spaced-review action is needed.", "owner": "workflow", "status": "active"}, "due": {"description": "Ready for scheduled review, synthesis, or update against newer related work.", "owner": "workflow", "status": "active"}, "reviewed": {"description": "Completed the planned review checkpoint.", "owner": "workflow", "status": "active"}, "evergreen": {"description": "Stable foundational paper worth keeping in recurring review or teaching sets.", "owner": "workflow", "status": "active"}}}}};
 const comparePapers = compareData.papers || [];
 const compareFields = compareData.fields || [];
 const compareBySlug = new Map(comparePapers.map(paper => [paper.slug, paper]));
