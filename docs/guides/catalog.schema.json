@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/autopaperreader/catalog.schema.json",
+  "title": "AutoPaperReader integration catalog",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "generated_at": {"type": "string"},
+    "count": {"type": "integer", "minimum": 0},
+    "inbox_count": {"type": "integer", "minimum": 0},
+    "page_count": {"type": "integer", "minimum": 0},
+    "data_file_count": {"type": "integer", "minimum": 0},
+    "contract_count": {"type": "integer", "minimum": 0},
+    "pages": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/page"}
+    },
+    "data_resources": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/data_resource"}
+    },
+    "contracts": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/contract"}
+    },
+    "integration_recipes": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/integration_recipe"}
+    },
+    "recommended_bootstrap_files": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    }
+  },
+  "required": [
+    "generated_at",
+    "count",
+    "inbox_count",
+    "page_count",
+    "data_file_count",
+    "contract_count",
+    "pages",
+    "data_resources",
+    "contracts",
+    "integration_recipes",
+    "recommended_bootstrap_files"
+  ],
+  "$defs": {
+    "page": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": {"type": "string", "minLength": 1},
+        "href": {"type": "string", "minLength": 1},
+        "kind": {
+          "type": "string",
+          "enum": ["view", "ops", "workflow", "analysis", "planning"]
+        },
+        "description": {"type": "string", "minLength": 1}
+      },
+      "required": ["title", "href", "kind", "description"]
+    },
+    "data_resource": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "href": {"type": "string", "minLength": 1},
+        "description": {"type": "string", "minLength": 1},
+        "exists": {"type": "boolean"},
+        "size_bytes": {"type": "integer", "minimum": 0},
+        "top_level_keys": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "collections": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/collection_summary"}
+        },
+        "declared_count": {
+          "oneOf": [
+            {"type": "integer", "minimum": 0},
+            {"type": "null"}
+          ]
+        },
+        "generated_at": {"type": "string"},
+        "consumers": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "error": {"type": "string"}
+      },
+      "required": [
+        "href",
+        "description",
+        "exists",
+        "size_bytes",
+        "top_level_keys",
+        "collections",
+        "declared_count",
+        "generated_at",
+        "consumers",
+        "error"
+      ]
+    },
+    "collection_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "key": {"type": "string", "minLength": 1},
+        "count": {"type": "integer", "minimum": 0},
+        "item_keys": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        }
+      },
+      "required": ["key", "count", "item_keys"]
+    },
+    "contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "href": {"type": "string", "minLength": 1},
+        "description": {"type": "string", "minLength": 1}
+      },
+      "required": ["href", "description"]
+    },
+    "integration_recipe": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "command": {"type": "string", "minLength": 1},
+        "uses": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "outputs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        }
+      },
+      "required": ["name", "command", "uses", "outputs"]
+    }
+  }
+}

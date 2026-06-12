@@ -1849,6 +1849,16 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     missing_catalog_pages = sorted(expected_catalog_pages - catalog_page_hrefs)
     if missing_catalog_pages:
         errors.append(f"catalog.json pages missing entries: {', '.join(missing_catalog_pages)}")
+    valid_catalog_page_kinds = {"view", "ops", "workflow", "analysis", "planning"}
+    for index, item in enumerate(catalog_pages):
+        if not isinstance(item, dict):
+            errors.append(f"catalog.json pages[{index}] must be an object")
+            continue
+        for key in ("title", "href", "kind", "description"):
+            if key not in item:
+                errors.append(f"catalog.json pages[{index}] missing {key}")
+        if item.get("kind") not in valid_catalog_page_kinds:
+            errors.append(f"catalog.json pages[{index}] has invalid kind")
     catalog_resources = catalog_data.get("data_resources")
     if not isinstance(catalog_resources, list):
         errors.append("catalog.json data_resources must be a list")
@@ -1862,11 +1872,17 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         if not isinstance(item, dict):
             errors.append(f"catalog.json data_resources[{index}] must be an object")
             continue
-        for key in ("href", "description", "exists", "top_level_keys", "collections", "consumers"):
+        for key in ("href", "description", "exists", "size_bytes", "top_level_keys", "collections", "declared_count", "generated_at", "consumers", "error"):
             if key not in item:
                 errors.append(f"catalog.json data_resources[{index}] missing {key}")
+        if not isinstance(item.get("exists"), bool):
+            errors.append(f"catalog.json data_resources[{index}].exists must be boolean")
+        if not isinstance(item.get("top_level_keys"), list):
+            errors.append(f"catalog.json data_resources[{index}].top_level_keys must be a list")
         if not isinstance(item.get("collections"), list):
             errors.append(f"catalog.json data_resources[{index}].collections must be a list")
+        if not isinstance(item.get("consumers"), list):
+            errors.append(f"catalog.json data_resources[{index}].consumers must be a list")
     catalog_contracts = catalog_data.get("contracts")
     if not isinstance(catalog_contracts, list):
         errors.append("catalog.json contracts must be a list")
@@ -1874,8 +1890,28 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
     catalog_contract_hrefs = {str(item.get("href") or "") for item in catalog_contracts if isinstance(item, dict)}
     if "guides/taxonomy.json" not in catalog_contract_hrefs:
         errors.append("catalog.json contracts missing guides/taxonomy.json")
-    if not isinstance(catalog_data.get("integration_recipes"), list) or not catalog_data.get("integration_recipes"):
+    for index, item in enumerate(catalog_contracts):
+        if not isinstance(item, dict):
+            errors.append(f"catalog.json contracts[{index}] must be an object")
+            continue
+        for key in ("href", "description"):
+            if key not in item:
+                errors.append(f"catalog.json contracts[{index}] missing {key}")
+    integration_recipes = catalog_data.get("integration_recipes")
+    if not isinstance(integration_recipes, list) or not integration_recipes:
         errors.append("catalog.json integration_recipes must be a non-empty list")
+        integration_recipes = []
+    for index, item in enumerate(integration_recipes):
+        if not isinstance(item, dict):
+            errors.append(f"catalog.json integration_recipes[{index}] must be an object")
+            continue
+        for key in ("name", "command", "uses", "outputs"):
+            if key not in item:
+                errors.append(f"catalog.json integration_recipes[{index}] missing {key}")
+        if not isinstance(item.get("uses"), list):
+            errors.append(f"catalog.json integration_recipes[{index}].uses must be a list")
+        if not isinstance(item.get("outputs"), list):
+            errors.append(f"catalog.json integration_recipes[{index}].outputs must be a list")
     bootstrap_files = catalog_data.get("recommended_bootstrap_files")
     if not isinstance(bootstrap_files, list) or "catalog.json" not in bootstrap_files:
         errors.append("catalog.json recommended_bootstrap_files must include catalog.json")
@@ -2084,6 +2120,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         "guides/facets.schema.json",
         "guides/batch.schema.json",
         "guides/actions.schema.json",
+        "guides/catalog.schema.json",
         "guides/workflow.schema.json",
         "guides/status.schema.json",
         "guides/views.schema.json",
@@ -2642,6 +2679,61 @@ def validate_actions_schema_contract(report_dir: Path, errors: list[str], warnin
         errors.append("guides/actions.schema.json: severity enum must include high, medium, low, none")
 
 
+def validate_catalog_schema_contract(report_dir: Path, errors: list[str], warnings: list[str]) -> None:
+    schema_path = report_dir / "guides" / "catalog.schema.json"
+    if not schema_path.exists():
+        warnings.append("guides/catalog.schema.json missing; external integration-catalog schema hints are unavailable")
+        return
+
+    try:
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        errors.append(f"guides/catalog.schema.json: invalid JSON: {exc}")
+        return
+
+    if not isinstance(schema, dict):
+        errors.append("guides/catalog.schema.json: root must be an object")
+        return
+    if not isinstance(schema.get("$schema"), str) or not schema.get("$schema", "").strip():
+        errors.append("guides/catalog.schema.json: $schema must be a non-empty string")
+    if schema.get("type") != "object":
+        errors.append("guides/catalog.schema.json: type must be object")
+    properties = schema.get("properties")
+    if not isinstance(properties, dict):
+        errors.append("guides/catalog.schema.json: properties must be an object")
+        properties = {}
+    for key in ("pages", "data_resources", "contracts", "integration_recipes", "recommended_bootstrap_files"):
+        if key not in properties:
+            errors.append(f"guides/catalog.schema.json: properties.{key} is required")
+    defs = schema.get("$defs")
+    if not isinstance(defs, dict):
+        errors.append("guides/catalog.schema.json: $defs must be an object")
+        defs = {}
+    for def_name, required_keys in {
+        "page": ("title", "href", "kind", "description"),
+        "data_resource": ("href", "description", "exists", "top_level_keys", "collections", "consumers"),
+        "contract": ("href", "description"),
+        "integration_recipe": ("name", "command", "uses", "outputs"),
+    }.items():
+        item_def = defs.get(def_name)
+        if not isinstance(item_def, dict):
+            errors.append(f"guides/catalog.schema.json: $defs.{def_name} is required")
+            continue
+        required = set(item_def.get("required") or [])
+        for key in required_keys:
+            if key not in required:
+                errors.append(f"guides/catalog.schema.json: $defs.{def_name}.required missing {key}")
+    page_def = defs.get("page")
+    if isinstance(page_def, dict):
+        page_properties = page_def.get("properties")
+        if not isinstance(page_properties, dict):
+            errors.append("guides/catalog.schema.json: $defs.page.properties must be an object")
+        else:
+            kind_enum = set((page_properties.get("kind") or {}).get("enum") or [])
+            if not {"view", "ops", "workflow", "analysis", "planning"}.issubset(kind_enum):
+                errors.append("guides/catalog.schema.json: page kind enum must include view, ops, workflow, analysis, planning")
+
+
 def validate_status_schema_contract(report_dir: Path, errors: list[str], warnings: list[str]) -> None:
     schema_path = report_dir / "guides" / "status.schema.json"
     if not schema_path.exists():
@@ -2886,6 +2978,7 @@ def main() -> int:
         validate_facets_schema_contract(report_dir, errors, warnings)
         validate_batch_schema_contract(report_dir, errors, warnings)
         validate_actions_schema_contract(report_dir, errors, warnings)
+        validate_catalog_schema_contract(report_dir, errors, warnings)
         validate_workflow_schema_contract(report_dir, errors, warnings)
         validate_status_schema_contract(report_dir, errors, warnings)
         validate_views_schema_contract(report_dir, errors, warnings)

@@ -100,6 +100,7 @@ paper_reader/
 │   │   ├── facets.schema.json
 │   │   ├── batch.schema.json
 │   │   ├── actions.schema.json
+│   │   ├── catalog.schema.json
 │   │   ├── workflow.schema.json
 │   │   ├── status.schema.json
 │   │   └── views.schema.json
@@ -275,6 +276,7 @@ paper_reader/
 - `docs/guides/facets.schema.json`：`facets.json` 字段目录契约，用于桌面端/DMG/外部脚本动态读取可筛选字段、候选值和治理动作
 - `docs/guides/batch.schema.json`：`batch.json` 批量规划契约，用于桌面端/DMG/外部脚本读取批次维度、批量任务、样例 slug 和导出命令
 - `docs/guides/actions.schema.json`：`actions.json` 统一行动队列契约，用于桌面端/DMG/外部脚本读取待办分组、优先级、来源、命令和相关论文
+- `docs/guides/catalog.schema.json`：`catalog.json` 集成目录契约，用于桌面端/DMG/外部脚本发现页面、机器数据、契约文件和 bootstrap recipe
 - `docs/guides/workflow.schema.json`：`workflow.json` 状态工作流审计契约，用于桌面端/DMG/外部脚本读取 workflow 分布、drift、空字段和治理建议
 - `docs/guides/status.schema.json`：`status.json` 状态选择器契约，用于桌面端/DMG/外部脚本读取 workflow、状态候选、论文快照和写回命令
 - `docs/guides/views.schema.json`：`views.json` 视图目录契约，用于桌面端/DMG/外部脚本读取共享队列、命中 slug 和批量管理入口

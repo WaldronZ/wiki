@@ -246,6 +246,10 @@ class WikiWorkflowTest(unittest.TestCase):
             (ROOT / "docs" / "guides" / "actions.schema.json").read_text(encoding="utf-8"),
             encoding="utf-8",
         )
+        (guides_dir / "catalog.schema.json").write_text(
+            (ROOT / "docs" / "guides" / "catalog.schema.json").read_text(encoding="utf-8"),
+            encoding="utf-8",
+        )
         (guides_dir / "workflow.schema.json").write_text(
             (ROOT / "docs" / "guides" / "workflow.schema.json").read_text(encoding="utf-8"),
             encoding="utf-8",
@@ -850,7 +854,14 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("roadmap.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("index.html", {item["href"] for item in catalog["pages"]})
             self.assertIn("guides/taxonomy.json", {item["href"] for item in catalog["contracts"]})
+            self.assertIn("guides/catalog.schema.json", {item["href"] for item in catalog["contracts"]})
             self.assertTrue(catalog["integration_recipes"])
+            self.assertTrue(all({"name", "command", "uses", "outputs"}.issubset(item) for item in catalog["integration_recipes"]))
+            catalog_pages = {item["href"]: item for item in catalog["pages"]}
+            self.assertEqual(catalog_pages["catalog.html"]["kind"], "ops")
+            catalog_resources = {item["href"]: item for item in catalog["data_resources"]}
+            self.assertIn("consumers", catalog_resources["catalog.json"])
+            self.assertIn("top_level_keys", catalog_resources["catalog.json"])
             self.assertIn("catalog.json", catalog["recommended_bootstrap_files"])
             self.assertIn("views.json", catalog["recommended_bootstrap_files"])
             catalog_html = (report_dir / "catalog.html").read_text(encoding="utf-8")
@@ -1560,6 +1571,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertIn("guides/facets.schema.json", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/batch.schema.json", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/actions.schema.json", {item["href"] for item in manifest["contract_files"]})
+            self.assertIn("guides/catalog.schema.json", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/workflow.schema.json", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/status.schema.json", {item["href"] for item in manifest["contract_files"]})
             self.assertIn("guides/views.schema.json", {item["href"] for item in manifest["contract_files"]})
@@ -1576,6 +1588,7 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertEqual(artifact_by_href["guides/facets.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/batch.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/actions.schema.json"]["kind"], "contract")
+            self.assertEqual(artifact_by_href["guides/catalog.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/workflow.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/status.schema.json"]["kind"], "contract")
             self.assertEqual(artifact_by_href["guides/views.schema.json"]["kind"], "contract")
@@ -2786,6 +2799,21 @@ class WikiWorkflowTest(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("guides/actions.schema.json: properties.actions is required", result.stderr)
             self.assertIn("guides/actions.schema.json: $defs must be an object", result.stderr)
+
+    def test_invalid_catalog_schema_fails_validation(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_name:
+            report_dir = self.make_report_dir(Path(tmp_name))
+            self.run_cmd("scripts/build_wiki.py", str(report_dir))
+
+            (report_dir / "guides" / "catalog.schema.json").write_text(
+                json.dumps({"$schema": "https://json-schema.org/draft/2020-12/schema", "type": "object", "properties": {}}),
+                encoding="utf-8",
+            )
+            result = self.run_cmd("scripts/validate_wiki.py", str(report_dir), check=False)
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("guides/catalog.schema.json: properties.pages is required", result.stderr)
+            self.assertIn("guides/catalog.schema.json: $defs must be an object", result.stderr)
 
     def test_invalid_status_schema_fails_validation(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_name:
