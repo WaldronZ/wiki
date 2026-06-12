@@ -2121,6 +2121,7 @@ def validate_json(report_dir: Path, reports: dict[str, dict[str, Any]], errors: 
         "guides/batch.schema.json",
         "guides/actions.schema.json",
         "guides/catalog.schema.json",
+        "guides/manifest.schema.json",
         "guides/workflow.schema.json",
         "guides/status.schema.json",
         "guides/views.schema.json",
@@ -2734,6 +2735,65 @@ def validate_catalog_schema_contract(report_dir: Path, errors: list[str], warnin
                 errors.append("guides/catalog.schema.json: page kind enum must include view, ops, workflow, analysis, planning")
 
 
+def validate_manifest_schema_contract(report_dir: Path, errors: list[str], warnings: list[str]) -> None:
+    schema_path = report_dir / "guides" / "manifest.schema.json"
+    if not schema_path.exists():
+        warnings.append("guides/manifest.schema.json missing; external release-manifest schema hints are unavailable")
+        return
+
+    try:
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        errors.append(f"guides/manifest.schema.json: invalid JSON: {exc}")
+        return
+
+    if not isinstance(schema, dict):
+        errors.append("guides/manifest.schema.json: root must be an object")
+        return
+    if not isinstance(schema.get("$schema"), str) or not schema.get("$schema", "").strip():
+        errors.append("guides/manifest.schema.json: $schema must be a non-empty string")
+    if schema.get("type") != "object":
+        errors.append("guides/manifest.schema.json: type must be object")
+    properties = schema.get("properties")
+    if not isinstance(properties, dict):
+        errors.append("guides/manifest.schema.json: properties must be an object")
+        properties = {}
+    for key in ("publish_ready", "publish_checks", "artifact_inventory", "command_recipes", "governance_playbooks", "commands"):
+        if key not in properties:
+            errors.append(f"guides/manifest.schema.json: properties.{key} is required")
+    defs = schema.get("$defs")
+    if not isinstance(defs, dict):
+        errors.append("guides/manifest.schema.json: $defs must be an object")
+        defs = {}
+    for def_name, required_keys in {
+        "page": ("title", "href", "kind", "description"),
+        "file_ref": ("href", "description"),
+        "artifact": ("href", "kind", "description", "exists", "status"),
+        "command_recipe": ("id", "kind", "label", "command", "mutates"),
+        "governance_playbook": ("id", "label", "description", "steps"),
+    }.items():
+        item_def = defs.get(def_name)
+        if not isinstance(item_def, dict):
+            errors.append(f"guides/manifest.schema.json: $defs.{def_name} is required")
+            continue
+        required = set(item_def.get("required") or [])
+        for key in required_keys:
+            if key not in required:
+                errors.append(f"guides/manifest.schema.json: $defs.{def_name}.required missing {key}")
+    artifact_def = defs.get("artifact")
+    if isinstance(artifact_def, dict):
+        artifact_properties = artifact_def.get("properties")
+        if not isinstance(artifact_properties, dict):
+            errors.append("guides/manifest.schema.json: $defs.artifact.properties must be an object")
+        else:
+            status_enum = set((artifact_properties.get("status") or {}).get("enum") or [])
+            if not {"ok", "missing", "generated_after_inventory"}.issubset(status_enum):
+                errors.append("guides/manifest.schema.json: artifact status enum must include ok, missing, generated_after_inventory")
+            kind_enum = set((artifact_properties.get("kind") or {}).get("enum") or [])
+            if not {"page", "data", "contract"}.issubset(kind_enum):
+                errors.append("guides/manifest.schema.json: artifact kind enum must include page, data, contract")
+
+
 def validate_status_schema_contract(report_dir: Path, errors: list[str], warnings: list[str]) -> None:
     schema_path = report_dir / "guides" / "status.schema.json"
     if not schema_path.exists():
@@ -2979,6 +3039,7 @@ def main() -> int:
         validate_batch_schema_contract(report_dir, errors, warnings)
         validate_actions_schema_contract(report_dir, errors, warnings)
         validate_catalog_schema_contract(report_dir, errors, warnings)
+        validate_manifest_schema_contract(report_dir, errors, warnings)
         validate_workflow_schema_contract(report_dir, errors, warnings)
         validate_status_schema_contract(report_dir, errors, warnings)
         validate_views_schema_contract(report_dir, errors, warnings)

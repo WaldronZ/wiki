@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/autopaperreader/manifest.schema.json",
+  "title": "AutoPaperReader release manifest",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "generated_at": {"type": "string"},
+    "name": {"type": "string", "minLength": 1},
+    "count": {"type": "integer", "minimum": 0},
+    "publish_ready": {"type": "boolean"},
+    "publish_checks": {
+      "type": "object",
+      "additionalProperties": {"type": "boolean"}
+    },
+    "quality_score": {"type": "number", "minimum": 0},
+    "coverage": {"type": "object"},
+    "queue_sizes": {"type": "object"},
+    "taxonomy": {"type": "object"},
+    "research_lines": {
+      "type": "array",
+      "items": {"type": "object"}
+    },
+    "controls": {"type": "object"},
+    "pages": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/page"}
+    },
+    "data_files": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/file_ref"}
+    },
+    "contract_files": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/file_ref"}
+    },
+    "artifact_inventory": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/artifact"}
+    },
+    "command_recipes": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/command_recipe"}
+    },
+    "governance_playbooks": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/governance_playbook"}
+    },
+    "commands": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    }
+  },
+  "required": [
+    "generated_at",
+    "name",
+    "count",
+    "publish_ready",
+    "publish_checks",
+    "quality_score",
+    "coverage",
+    "queue_sizes",
+    "pages",
+    "data_files",
+    "contract_files",
+    "artifact_inventory",
+    "command_recipes",
+    "governance_playbooks",
+    "commands"
+  ],
+  "$defs": {
+    "page": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": {"type": "string", "minLength": 1},
+        "href": {"type": "string", "minLength": 1},
+        "kind": {
+          "type": "string",
+          "enum": ["view", "ops", "workflow", "analysis", "planning"]
+        },
+        "description": {"type": "string", "minLength": 1}
+      },
+      "required": ["title", "href", "kind", "description"]
+    },
+    "file_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "href": {"type": "string", "minLength": 1},
+        "description": {"type": "string", "minLength": 1}
+      },
+      "required": ["href", "description"]
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "href": {"type": "string", "minLength": 1},
+        "kind": {"type": "string", "enum": ["page", "data", "contract"]},
+        "description": {"type": "string", "minLength": 1},
+        "exists": {"type": "boolean"},
+        "status": {"type": "string", "enum": ["ok", "missing", "generated_after_inventory"]},
+        "size_bytes": {"type": "integer", "minimum": 0},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "hash_mode": {"type": "string", "enum": ["raw", "normalized"]}
+      },
+      "required": ["href", "kind", "description", "exists", "status"]
+    },
+    "command_recipe": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "kind": {"type": "string", "minLength": 1},
+        "label": {"type": "string", "minLength": 1},
+        "command": {"type": "string", "minLength": 1},
+        "output": {"type": "string"},
+        "mutates": {"type": "boolean"}
+      },
+      "required": ["id", "kind", "label", "command", "mutates"]
+    },
+    "governance_playbook": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "label": {"type": "string", "minLength": 1},
+        "description": {"type": "string", "minLength": 1},
+        "steps": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        }
+      },
+      "required": ["id", "label", "description", "steps"]
+    }
+  }
+}
