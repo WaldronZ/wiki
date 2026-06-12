@@ -9242,7 +9242,7 @@ def render_library(report_dir: Path, papers: list[dict[str, Any]]) -> None:
   </div>
   <div class="active-filters" id="activeFilters" aria-live="polite"></div>
   <details class="library-workspace-panel">
-    <summary><span>整理工作区</span><span class="meta">批量编辑、统计洞察和队列建议</span></summary>
+    <summary><span>整理工作区</span><span id="libraryWorkspaceMeta" class="meta">批量编辑、统计洞察和队列建议</span></summary>
     <div class="library-workspace-body">
       <details class="bulk-panel">
         <summary><span>批量编辑与写回</span><span id="bulkCount" class="bulk-count">已选 0 篇</span></summary>
@@ -9379,6 +9379,7 @@ const deleteView = document.querySelector("#deleteView");
 const exportSavedViews = document.querySelector("#exportSavedViews");
 const importSavedViews = document.querySelector("#importSavedViews");
 const activeFilters = document.querySelector("#activeFilters");
+const libraryWorkspaceMeta = document.querySelector("#libraryWorkspaceMeta");
 const exportMarkdown = document.querySelector("#exportMarkdown");
 const exportCsv = document.querySelector("#exportCsv");
 const exportBibtex = document.querySelector("#exportBibtex");
@@ -9889,6 +9890,14 @@ function selectedRows() {{
   return allRows.filter(row => row.querySelector(".row-check").checked);
 }}
 
+function updateWorkspaceMeta() {{
+  const selected = selectedRows().length;
+  const visible = visibleRows().length;
+  const filtered = currentRankedRows.length;
+  const selectedPart = selected ? ` · 已选 ${{selected}} 篇` : "";
+  libraryWorkspaceMeta.textContent = `筛选 ${{filtered}} 篇 · 当前页 ${{visible}} 篇${{selectedPart}}`;
+}}
+
 function matchesReviewQueue(row, value, today = localDateString()) {{
   if (!value) return true;
   const nextReview = row.dataset.nextReview || "";
@@ -10148,6 +10157,7 @@ function updateBulkState() {{
   toggleVisible.indeterminate = visibleSelected > 0 && visibleSelected < visible.length;
   copySelectedMarkdown.disabled = selected === 0;
   copySelectedSlugs.disabled = selected === 0;
+  updateWorkspaceMeta();
   updateBulkPreview();
 }}
 
