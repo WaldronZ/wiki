@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-06-12T12:16:30",
-  "today": "2026-06-12",
+  "generated_at": "2026-06-15T14:49:54",
+  "today": "2026-06-15",
   "count": 5,
   "summary": {
     "states": {
@@ -29,7 +29,7 @@
         "needs_plan": 2
       },
       "risk": "medium",
-      "oldest_age_days": 1,
+      "oldest_age_days": 4,
       "actions": [
         "补 last_reviewed",
         "补 next_review",
@@ -44,7 +44,7 @@
         "needs_plan": 3
       },
       "risk": "medium",
-      "oldest_age_days": 1,
+      "oldest_age_days": 4,
       "actions": [
         "补 last_reviewed",
         "补 next_review"
@@ -63,7 +63,7 @@
       "last_reviewed": "",
       "next_review": "",
       "updated_at": "2026-06-11T15:42:03",
-      "age_days": 1,
+      "age_days": 4,
       "year_age": 3,
       "state": "needs_plan",
       "score": 45,
@@ -90,7 +90,7 @@
       "last_reviewed": "",
       "next_review": "",
       "updated_at": "2026-06-11T15:42:03",
-      "age_days": 1,
+      "age_days": 4,
       "year_age": 0,
       "state": "needs_plan",
       "score": 60,
@@ -115,7 +115,7 @@
       "last_reviewed": "",
       "next_review": "",
       "updated_at": "2026-06-11T15:42:03",
-      "age_days": 1,
+      "age_days": 4,
       "year_age": 0,
       "state": "needs_plan",
       "score": 60,
@@ -140,7 +140,7 @@
       "last_reviewed": "",
       "next_review": "",
       "updated_at": "2026-06-11T15:42:03",
-      "age_days": 1,
+      "age_days": 4,
       "year_age": 1,
       "state": "needs_plan",
       "score": 60,
@@ -165,7 +165,7 @@
       "last_reviewed": "",
       "next_review": "",
       "updated_at": "2026-06-11T15:42:03",
-      "age_days": 1,
+      "age_days": 4,
       "year_age": 0,
       "state": "needs_plan",
       "score": 60,

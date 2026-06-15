@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T12:16:30",
+  "generated_at": "2026-06-15T14:49:54",
   "count": 5,
   "shared_view_count": 3,
   "smart_collection_count": 8,
@@ -229,7 +229,7 @@
       "id": "due_review",
       "title": "待复习",
       "href": "review.html",
-      "note": "next_review <= 2026-06-12 的复习队列。",
+      "note": "next_review <= 2026-06-15 的复习队列。",
       "count": 0,
       "slugs": [],
       "sample_papers": []

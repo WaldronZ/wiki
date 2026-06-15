@@ -10567,6 +10567,13 @@ def render_workflow(report_dir: Path, papers: list[dict[str, Any]]) -> None:
         headline = " / ".join(part for part in (status, owner) if part) or "-"
         return f"{html.escape(headline)}<div class=\"meta\">{html.escape(description or 'No definition')}</div>"
 
+    def workflow_name_cell(workflow: dict[str, Any]) -> str:
+        active_flag = ' <span class="flag">active</span>' if workflow["active"] else ""
+        return (
+            f'<a href="{html.escape(str(workflow["library_href"]))}">'
+            f'{html.escape(str(workflow["name"]))}</a>{active_flag}'
+        )
+
     status_rows = "".join(
         "<tr>"
         f'<td><a href="{html.escape(str(item["href"]))}">{html.escape(str(item["value"]))}</a></td>'
@@ -10581,7 +10588,7 @@ def render_workflow(report_dir: Path, papers: list[dict[str, Any]]) -> None:
 
     workflow_rows = "".join(
         "<tr>"
-        f'<td><a href="{html.escape(str(workflow["library_href"]))}">{html.escape(str(workflow["name"]))}</a>{" <span class=\"flag\">active</span>" if workflow["active"] else ""}</td>'
+        f"<td>{workflow_name_cell(workflow)}</td>"
         f"<td>{len(workflow['status_values'])}</td>"
         f"<td>{len(workflow['reading_stage_values'])}</td>"
         f"<td>{len(workflow['review_stage_values'])}</td>"
@@ -13329,10 +13336,15 @@ def render_scale(report_dir: Path, papers: list[dict[str, Any]], inbox_items: li
         "</tr>"
         for item in payload["capacity_projection"]
     )
+
+    def resource_status_cell(item: dict[str, Any]) -> str:
+        label = "ok" if item.get("exists") else "missing"
+        return f'<span class="flag">{label}</span>'
+
     resource_rows = "".join(
         "<tr>"
         f'<td><a href="{html.escape(str(item["href"]))}">{html.escape(str(item["href"]))}</a></td>'
-        f"<td>{'<span class=\"flag\">ok</span>' if item.get('exists') else '<span class=\"flag\">missing</span>'}</td>"
+        f"<td>{resource_status_cell(item)}</td>"
         f"<td>{format_bytes(int(item.get('size_bytes') or 0))}</td>"
         "</tr>"
         for item in payload["resource_sizes"]
@@ -14077,11 +14089,23 @@ def render_onboarding(report_dir: Path, papers: list[dict[str, Any]], inbox_item
 </article>"""
         for path in payload["contribution_paths"]
     )
+
+    def command_button_cell(command: Any) -> str:
+        if not command:
+            return "-"
+        command_text = str(command)
+        escaped_command = html.escape(command_text)
+        escaped_attr = html.escape(command_text, quote=True)
+        return (
+            f'<button class="button copy-command" type="button" '
+            f'data-command="{escaped_attr}">{escaped_command}</button>'
+        )
+
     step_rows = "".join(
         "<tr>"
         f"<td>{step['order']}</td>"
         f"<td><a href=\"{html.escape(str(step['href']))}\">{html.escape(str(step['title']))}</a><div class=\"meta\">{html.escape(str(step['why']))}</div></td>"
-        f"<td>{'<button class=\"button copy-command\" type=\"button\" data-command=\"' + html.escape(str(step.get('command')), quote=True) + '\">' + html.escape(str(step.get('command'))) + '</button>' if step.get('command') else '-'}</td>"
+        f"<td>{command_button_cell(step.get('command'))}</td>"
         "</tr>"
         for step in payload["quickstart_steps"]
     )
@@ -18371,6 +18395,8 @@ def render_registry_label_row(item: dict[str, Any]) -> str:
         ]
     ).lower()
     checklist = f"- [ ] {item.get('label')} ({item.get('severity')}): {item.get('recommended_action')}"
+    signals_html = signals or '<span class="meta">stable</span>'
+    paper_links_html = ", ".join(paper_links) if paper_links else '<span class="meta">No papers</span>'
     return (
         f'<tr data-severity="{html.escape(str(item.get("severity") or ""), quote=True)}"'
         f' data-fields="{html.escape(" ".join(str(field) for field in item.get("field_names", [])), quote=True)}"'
@@ -18383,8 +18409,8 @@ def render_registry_label_row(item: dict[str, Any]) -> str:
         f"<td>{html.escape(definition_status or '-')}"
         f"<div class=\"meta\">{html.escape(description or 'No definition')}</div></td>"
         f"<td>{html.escape(aliases or '-')}</td>"
-        f"<td>{signals or '<span class=\"meta\">stable</span>'}</td>"
-        f"<td>{', '.join(paper_links) if paper_links else '<span class=\"meta\">No papers</span>'}</td>"
+        f"<td>{signals_html}</td>"
+        f"<td>{paper_links_html}</td>"
         f"<td>{html.escape(str(item.get('recommended_action') or ''))}</td>"
         f'<td><button class="button copy-registry-row" type="button" data-checklist="{html.escape(checklist, quote=True)}">复制</button></td>'
         "</tr>"
@@ -22218,10 +22244,11 @@ def render_line_pages(report_dir: Path, papers: list[dict[str, Any]]) -> None:
             f'<span class="chip">{html.escape(topic)} {count}</span>'
             for topic, count in topics.most_common(6)
         )
+        role_flags = "".join(f'<span class="flag">{html.escape(role)}</span>' for role in roles)
         line_cards.append(
             f'<section class="line-card"><h2><a href="{html.escape(filename)}">{html.escape(line)}</a> '
             f'<span class="meta">{len(items)}</span></h2>'
-            f'<div class="card-flags">{"".join(f"<span class=\"flag\">{html.escape(role)}</span>" for role in roles)}</div>'
+            f'<div class="card-flags">{role_flags}</div>'
             f'<div class="chips">{topic_html}</div></section>'
         )
 

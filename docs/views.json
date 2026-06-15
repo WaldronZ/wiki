@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T12:16:30",
+  "generated_at": "2026-06-15T14:49:54",
   "count": 5,
   "view_count": 26,
   "configured_count": 3,
@@ -310,7 +310,7 @@
       "count": 0,
       "slugs": [],
       "sample_papers": [],
-      "note": "next_review <= 2026-06-12 的复习视图。",
+      "note": "next_review <= 2026-06-15 的复习视图。",
       "shared_view": {
         "name": "待复习",
         "page": "library",
