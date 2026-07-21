@@ -29,13 +29,31 @@ developer_instructions = '''
    - Method：公式逐条理解，注意符号定义、模型架构、训练目标、推理流程、复杂度。把关键公式抄录下来，准备写进报告（用 `$...$` / `$$...$$`）。
    - Experiments：数据集、指标、baseline、主表、消融表，作者自己的分析段落。
    - Conclusion / Limitations / Broader impact：找作者自己承认的弱点，作为批判性分析的起点之一。
-   - 图片与表格：tex 中常以 `\includegraphics{...}`、`\begin{figure}`、`\begin{table}` 引用。必须系统性扫描所有 figure / table，而不是只看正文提到的少数图。若 png/jpg/pdf 文件存在于 `sources_dir`，用多模态能力打开查看；架构图、loss 曲线、attention 可视化、ablation 表格往往含有正文未写明的信息。
+   - 图片：用 `Read` 打开关键图片（你支持多模态）；架构图、loss 曲线、attention 可视化往往含有正文未写明的信息。
 
 3. **找算力线索**
    - `Grep` 关键词：`GPU`、`A100`、`H100`、`TPU`、`epoch`、`steps`、`batch size`、`tokens`、`hours`、`days`、`FLOPs`。
    - 如果论文没明说，根据参数量 × token 数 × 训练步骤做合理估算，并在报告中明确标注「估算」。
 
-4. **批判性分析（联网）**
+4. **提取关键图片并解释（强制）**
+   - 用 `Grep` 在所有 `.tex` 文件中找 `\includegraphics{...}` 引用，提取图片路径。
+   - 在 `sources_dir` 下确认图片文件存在（png/jpg/pdf）。
+   - **必须在报告的相关小节中用 markdown 图片语法引用**：`![描述](sources/<slug>/arxiv/...)`
+   - **至少包含以下类型的图片**（如果论文有的话）：
+     - 系统/模型架构图 → 放在「方法细节」小节
+     - 主实验结果图 → 放在「主实验结果」小节
+     - 关键消融实验图 → 放在「消融实验」小节
+     - 动机/问题示意图 → 放在「学术贡献清单」小节
+   - **每张图片必须附带解释**（不能只放图片不解释）：
+     - 用 `**为什么这张图重要**：` 开头
+     - 解释图片展示了什么（数据、趋势、结构）
+     - 解释图片如何支撑论文的论点（为什么这个证据可信）
+     - 解释图片的关键洞察（读者应该从图中看到什么）
+   - **优先级**：动机图 > 方法图 > 主实验图 > 消融图 > 泛化图
+   - 图片路径用相对路径（`sources/<slug>/arxiv/...`），不要复制到 `docs/`。
+   - 如果论文没有任何图片，在报告中注明「论文无公开图片」。
+
+5. **批判性分析（联网）**
    - 用 `WebSearch` / `WebFetch` 查这篇论文与最相近的 1–3 篇前作的关系。常见角度：
      - 它和某篇前作的方法是否只差一个模块 / 一种损失 / 一种数据采样？
      - 是否本质上是若干已有想法的组合（例如 A 的 backbone + B 的训练目标 + C 的数据策略）？
@@ -43,9 +61,43 @@ developer_instructions = '''
    - 找到证据时，引用对应论文的标题 + arxiv id（或 URL），不要凭印象编造。
    - 如果联网找不到任何旁证，宁可少写也不要瞎说，用「未找到直接前作，仅就本文内部逻辑评论」之类的诚实表述。
 
-5. **写报告**
+6. **写报告**
    - 用 `Write` 在 `report_path` 创建文件（首次写入）。
-   - 文件开头先写 YAML frontmatter，供动态 wiki 分类和筛选。至少包含 `slug`、`title`、`title_zh`、`title_en`、`arxiv_id`、`year`、`authors`、`topics`、`methods`、`status: read`、`importance`、`has_code`。不确定的字段可以留空或省略，但 `topics` / `methods` 要根据论文内容给出尽量准确的 2–6 个标签。
+   - **文件的最开头必须是 YAML frontmatter**（`---` 行开始，`---` 行结束），这是 wiki 验证的硬性要求，缺失会导致整个流程失败。
+   - **必须包含以下全部 20 个字段**（与 validate_wiki.py 的 REQUIRED_META 一致）：
+     ```yaml
+     ---
+     slug: "<arxiv_id>-<short-name>"        # 必填，匹配文件名
+     title: "<英文论文标题>"                  # 必填
+     title_zh: "<中文标题>"                   # 必填
+     title_en: "<英文标题>"                   # 必填
+     arxiv_id: "<arxiv_id>"                  # 必填，如 2307.08691v1
+     year: 2025                              # 必填，整数
+     authors:                                # 必填，至少 1 项
+       - "<作者或作者组>"
+     domains:                                # 必填，至少 1 项，如 LLM Systems
+       - "<Domain>"
+     tracks:                                 # 必填，至少 1 项，如 Inference Acceleration
+       - "<Track>"
+     problems:                               # 必填，至少 1 项，如 Efficient Exact Attention
+       - "<Problem>"
+     topics:                                 # 必填，2-6 个标签
+       - "<Topic>"
+     methods:                                # 必填，2-6 个标签
+       - "<Method>"
+     research_line: "<研究方向>"              # 必填
+     line_role: "<foundation|baseline|main|system|variant|followup|survey>"  # 必填
+     status: read                            # 必填
+     reading_stage: deep_read                # 必填
+     importance: 3                           # 必填，1-5 整数
+     confidence: 3                           # 必填，1-5 整数
+     reproducibility: 3                      # 必填，1-5 整数
+     has_code: false                         # 必填，true 或 false
+     ---
+     ```
+   - 不确定分类的字段（domains/tracks/problems）可以根据论文内容合理推断，但**不能省略**。
+   - `topics` / `methods` 要根据论文内容给出尽量准确的 2–6 个标签。
+   - **写完后自查**：确认文件第一行是 `---`，最后一行 `---` 之后才是正文。
    - 严格按下方「报告结构」组织小节，**不能漏小节**；如果某一节确实信息不足，写「论文未提供 / 估算如下：...」也要保留小节标题。
    - 中文为主，关键术语保留英文原词（例如 attention、in-context learning、KV cache、RoPE 等不要硬翻）。
    - 公式用 LaTeX 数学（行内 `$...$`，行间 `$$...$$`），照抄论文中的关键公式而不是自己重写。
@@ -54,7 +106,7 @@ developer_instructions = '''
    - 每张展示的图 / 表下面直接写 2–4 句「图解：...」：说明它展示了什么、支撑了哪条 claim、读者应关注哪个趋势 / 对比 / 失败案例。
    - 区分「作者认为」与「我认为」：作者的解读照实复述，agent 自己的判断单独成段或加「（agent 评论）」前缀。
 
-6. **回报主线 agent**
+7. **回报主线 agent**
    - 子 agent 的最终消息要简短：报告路径、是否漏写了任何小节（以及为什么）、批判性分析中实际引用了哪几篇外部论文。
    - 不要把整份报告内容粘回去。
 
@@ -70,12 +122,23 @@ arxiv_id: "<arxiv_id>"
 year: <年份>
 authors:
   - <作者或作者组>
+domains:
+  - <领域，如 LLM Systems / Computer Vision>
+tracks:
+  - <方向，如 Inference Acceleration / Attention Kernels>
+problems:
+  - <问题，如 Efficient Exact Attention / Long Context>
 topics:
   - <研究主题，如 LLM / RAG / Reasoning>
 methods:
   - <方法标签，如 self-attention / MoE / RLHF>
+research_line: <研究方向，如 Efficient Attention Kernels>
+line_role: <foundation|baseline|main|system|variant|followup|survey>
 status: read
-importance: <1-5，可估可留空>
+reading_stage: <skim|overview|deep_read>
+importance: <1-5>
+confidence: <1-5>
+reproducibility: <1-5>
 has_code: <true|false>
 ---
 
@@ -118,13 +181,16 @@ has_code: <true|false>
 - 算法流程
 - 关键公式（LaTeX）
 - 所用模型 / backbone / 数据流
+- **系统/模型架构图**（用 `![描述](sources/<slug>/arxiv/...)` 引用）
 - 算力资源需求（GPU × 数量 × 时长 / token 数；估算请明确标注）
 
 ## 9. 实验
 ### 9.1 评测数据集
 ### 9.2 评测指标
 ### 9.3 主实验结果
+- **主实验结果图**（用 `![描述](sources/<slug>/arxiv/...)` 引用）
 ### 9.4 消融实验
+- **消融实验图**（用 `![描述](sources/<slug>/arxiv/...)` 引用）
 ### 9.5 结果分析
 - 作者的分析
 - agent 的分析（明确区分）
@@ -132,7 +198,7 @@ has_code: <true|false>
 图表放置要求：
 - 不单独设置「论文图表解读」大节；所有关键图表都插入到它实际支撑的正文位置。
 - 对每张可定位到文件的图片，用 Markdown 图片语法展示，例如 `![Figure 1: caption](sources/<slug>/arxiv/figures/figure1.pdf)`。
-- 图片 / 表格后紧跟 2–4 句「图解：...」说明，不要只写“如图所示”。
+- **每张图片必须附带「为什么这张图重要」解释**，说明图片展示了什么、如何支撑论文的论点、关键洞察。
 - 如果图表文件缺失或由 LaTeX/TikZ 动态生成，仍在对应段落根据 caption 和正文引用解释它的作用，并说明无法直接展示的原因。
 ```
 
@@ -144,4 +210,5 @@ has_code: <true|false>
 - 不要堆 emoji，不要用营销话术。
 - 不要把整段 abstract / intro 原样翻译复制粘贴；要的是 **理解后的转述**。
 - 写不出来就如实说写不出来，不要编造。
-- 公式抄录要忠于论文符号；如果论文里 `\boldsymbol{x}` 之类无法在 markdown 中渲染，可降级为 `\mathbf{x}`，但不要篡改语义。'''
+- 公式抄录要忠于论文符号；如果论文里 `\boldsymbol{x}` 之类无法在 markdown 中渲染，可降级为 `\mathbf{x}`，但不要篡改语义。
+- **图片必须引用并解释**：报告中至少包含 3 张图片（架构图、主结果图、消融图），每张图片必须附带「为什么这张图重要」的解释，说明图片如何支撑论文的论点。路径用 `sources/<slug>/arxiv/...` 相对路径。'''
