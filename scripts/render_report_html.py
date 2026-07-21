@@ -171,6 +171,33 @@ def protect_display_math(markdown: str) -> str:
     return re.sub(r"(?s)\$\$\s*(.*?)\s*\$\$", repl, markdown)
 
 
+def protect_figure_refs(markdown: str) -> tuple[str, dict[str, str]]:
+    """Protect figure references before math processing.
+
+    Returns (protected_markdown, restore_map) where restore_map maps
+    placeholder keys back to original figure syntax.
+    """
+    figure_re = re.compile(r"!\[([^\]]*)\]\(([^)]+)\)")
+    placeholders: dict[str, str] = {}
+    counter = [0]
+
+    def repl(match: re.Match[str]) -> str:
+        key = f"__FIGURE_PLACEHOLDER_{counter[0]}__"
+        counter[0] += 1
+        placeholders[key] = match.group(0)
+        return key
+
+    protected = figure_re.sub(repl, markdown)
+    return protected, placeholders
+
+
+def restore_figure_refs(markdown: str, placeholders: dict[str, str]) -> str:
+    """Restore figure references after math processing."""
+    for key, original in placeholders.items():
+        markdown = markdown.replace(key, original)
+    return markdown
+
+
 def protect_inline_math(markdown: str) -> str:
     """Protect single-dollar inline math before Markdown emphasis parsing.
 
@@ -178,6 +205,9 @@ def protect_inline_math(markdown: str) -> str:
     expressions such as `$\\mathbf{K}_{\\text{AR}}$` can be split by `_..._`
     emphasis and become impossible for KaTeX to recover.
     """
+
+    # First, protect figure references from math processing
+    markdown, figure_placeholders = protect_figure_refs(markdown)
 
     fence_re = re.compile(r"(```[\s\S]*?```|~~~[\s\S]*?~~~)")
     code_re = re.compile(r"(`+)([\s\S]*?)(\1)")
@@ -206,7 +236,11 @@ def protect_inline_math(markdown: str) -> str:
     segments = fence_re.split(markdown)
     for idx in range(0, len(segments), 2):
         segments[idx] = protect_text(segments[idx])
-    return "".join(segments)
+    result = "".join(segments)
+
+    # Restore figure references
+    result = restore_figure_refs(result, figure_placeholders)
+    return result
 
 
 def infer_title(body: str, meta: dict[str, Any]) -> str:
@@ -359,6 +393,19 @@ def render_html(meta: dict[str, Any], markdown: str, slug: str, *, mindmap_overr
     )
     submitted = submitted_match.group(1).strip() if submitted_match else ""
     mindmap = mindmap_override.strip() or build_mindmap(slug, meta)
+
+    # Convert figure references to HTML before storing in payload
+    # This prevents marked.js from having issues with LaTeX in alt text
+    def convert_figures_to_html(md: str) -> str:
+        def figure_repl(match: re.Match[str]) -> str:
+            alt = match.group(1)
+            src = match.group(2)
+            # Escape alt text for HTML attribute
+            alt_escaped = html.escape(alt, quote=True)
+            return f'<img src="{src}" alt="{alt_escaped}">'
+        return re.sub(r'!\[([^\]]*)\]\(([^)]+)\)', figure_repl, md)
+
+    markdown = convert_figures_to_html(markdown)
 
     payload = {
         "markdown": markdown,
