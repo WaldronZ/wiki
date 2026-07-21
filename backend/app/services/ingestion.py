@@ -472,7 +472,7 @@ def _run_report_stage(
     provider = build_effective_provider(llm_settings, mock_markdown=build_mock_report(context))
     # Set report_path for Claude Code provider to check if CLI wrote report directly
     if hasattr(provider, 'report_path'):
-        provider.report_path = str(context.report_md_path)
+        object.__setattr__(provider, 'report_path', str(context.report_md_path))
     output_payload = {
         **output_payload,
         "llm_provider": llm_settings["provider"],
