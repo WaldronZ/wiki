@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-07-21T15:43:55",
-  "count": 12,
-  "line_count": 5,
+  "generated_at": "2026-07-21T18:25:15",
+  "count": 13,
+  "line_count": 6,
   "risk_counts": {
     "high": 3,
-    "medium": 2
+    "medium": 3
   },
   "recommended_roles": [
     "foundation",
@@ -958,6 +958,131 @@
       ]
     },
     {
+      "id": "speculative-decoding",
+      "line": "Speculative Decoding",
+      "href": "lines/speculative-decoding.html",
+      "library_href": "library.html?line=Speculative+Decoding",
+      "count": 1,
+      "owner": "unassigned",
+      "team": "",
+      "cadence": "",
+      "risk": "medium",
+      "score": 69,
+      "first_year": 2025,
+      "latest_year": 2025,
+      "year_span": 1,
+      "role_counts": {
+        "main": 1
+      },
+      "missing_roles": [
+        "foundation",
+        "baseline",
+        "system"
+      ],
+      "top_topics": [
+        {
+          "name": "Draft Model Training",
+          "count": 1
+        },
+        {
+          "name": "LLM Inference",
+          "count": 1
+        },
+        {
+          "name": "Scaling Law",
+          "count": 1
+        },
+        {
+          "name": "Speculative Decoding",
+          "count": 1
+        }
+      ],
+      "top_methods": [
+        {
+          "name": "Multi-Layer Feature Fusion",
+          "count": 1
+        },
+        {
+          "name": "Speculative Sampling",
+          "count": 1
+        },
+        {
+          "name": "Training-Time Test",
+          "count": 1
+        },
+        {
+          "name": "Tree-Based Draft",
+          "count": 1
+        }
+      ],
+      "milestones": [
+        {
+          "year": 2025,
+          "count": 1,
+          "roles": {
+            "main": 1
+          },
+          "representative_slugs": [
+            "2503.01840-eagle-3-scaling-up"
+          ]
+        }
+      ],
+      "representative_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "year": 2025,
+          "role": "main",
+          "status": "read",
+          "importance": 4,
+          "has_code": true,
+          "topics": [
+            "Draft Model Training",
+            "LLM Inference",
+            "Scaling Law",
+            "Speculative Decoding"
+          ],
+          "methods": [
+            "Multi-Layer Feature Fusion",
+            "Speculative Sampling",
+            "Training-Time Test",
+            "Tree-Based Draft"
+          ],
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "queues": {
+        "missing_taxonomy": [],
+        "taxonomy_load": [],
+        "needs_review_plan": [
+          "2503.01840-eagle-3-scaling-up"
+        ],
+        "no_review": [
+          "2503.01840-eagle-3-scaling-up"
+        ],
+        "no_code_observation": []
+      },
+      "actions": [
+        {
+          "type": "role_gap",
+          "priority": 34,
+          "label": "补齐角色：foundation, baseline, system",
+          "href": "library.html?line=Speculative+Decoding",
+          "slugs": []
+        },
+        {
+          "type": "review_plan",
+          "priority": 59,
+          "label": "补复习计划 1 篇",
+          "href": "review.html?line=Speculative+Decoding",
+          "slugs": [
+            "2503.01840-eagle-3-scaling-up"
+          ]
+        }
+      ]
+    },
+    {
       "id": "vlm-acceleration",
       "line": "VLM Acceleration",
       "href": "lines/vlm-acceleration.html",
@@ -1201,6 +1326,18 @@
       ]
     },
     {
+      "line": "Speculative Decoding",
+      "risk": "medium",
+      "score": 69,
+      "type": "review_plan",
+      "priority": 59,
+      "label": "补复习计划 1 篇",
+      "href": "review.html?line=Speculative+Decoding",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ]
+    },
+    {
       "line": "VLM Acceleration",
       "risk": "medium",
       "score": 65,
@@ -1338,6 +1475,16 @@
       "priority": 38,
       "label": "补齐角色：foundation, baseline, system",
       "href": "library.html?line=VLM+Acceleration",
+      "slugs": []
+    },
+    {
+      "line": "Speculative Decoding",
+      "risk": "medium",
+      "score": 69,
+      "type": "role_gap",
+      "priority": 34,
+      "label": "补齐角色：foundation, baseline, system",
+      "href": "library.html?line=Speculative+Decoding",
       "slugs": []
     },
     {

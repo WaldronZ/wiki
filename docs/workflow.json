@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-21T15:43:55",
-  "count": 12,
+  "generated_at": "2026-07-21T18:25:15",
+  "count": 13,
   "active_status_workflow": "personal",
   "workflow_count": 2,
   "workflows": [
@@ -80,7 +80,7 @@
             },
             {
               "value": "read",
-              "count": 12,
+              "count": 13,
               "configured": true,
               "definition": {
                 "description": "Main report is stable enough to use as reference material.",
@@ -153,7 +153,7 @@
             },
             {
               "value": "deep_read",
-              "count": 7,
+              "count": 8,
               "configured": true,
               "definition": {
                 "description": "Detailed pass including equations, assumptions, ablations, and cross-paper comparison.",
@@ -189,10 +189,11 @@
           "used_configured_count": 0,
           "defined_count": 3,
           "deprecated_count": 0,
-          "empty_count": 12,
+          "empty_count": 13,
           "empty_slugs": [
             "2307.08691-flashattention-2",
             "2501.01005-flashinfer",
+            "2503.01840-eagle-3-scaling-up",
             "2503.14075-twigvlm-plus-plus",
             "2507.11851-llm-future-mtp",
             "2512.23424-akg-kernel-agent-multi",
@@ -252,7 +253,7 @@
         }
       },
       "unconfigured_total": 0,
-      "empty_total": 15,
+      "empty_total": 16,
       "definition_total": 12,
       "deprecated_total": 0,
       "board_href": "board.html?workflow=personal",
@@ -381,7 +382,7 @@
           "unconfigured": [
             {
               "value": "read",
-              "count": 12,
+              "count": 13,
               "configured": false,
               "definition": {
                 "description": "Main report is stable enough to use as reference material.",
@@ -395,6 +396,7 @@
               "slugs": [
                 "2307.08691-flashattention-2",
                 "2501.01005-flashinfer",
+                "2503.01840-eagle-3-scaling-up",
                 "2503.14075-twigvlm-plus-plus",
                 "2507.11851-llm-future-mtp",
                 "2512.23424-akg-kernel-agent-multi",
@@ -453,7 +455,7 @@
             },
             {
               "value": "deep_read",
-              "count": 7,
+              "count": 8,
               "configured": true,
               "definition": {
                 "description": "Detailed pass including equations, assumptions, ablations, and cross-paper comparison.",
@@ -503,10 +505,11 @@
           "used_configured_count": 0,
           "defined_count": 4,
           "deprecated_count": 0,
-          "empty_count": 12,
+          "empty_count": 13,
           "empty_slugs": [
             "2307.08691-flashattention-2",
             "2501.01005-flashinfer",
+            "2503.01840-eagle-3-scaling-up",
             "2503.14075-twigvlm-plus-plus",
             "2507.11851-llm-future-mtp",
             "2512.23424-akg-kernel-agent-multi",
@@ -580,7 +583,7 @@
         }
       },
       "unconfigured_total": 1,
-      "empty_total": 15,
+      "empty_total": 16,
       "definition_total": 16,
       "deprecated_total": 0,
       "board_href": "board.html?workflow=research",
@@ -590,7 +593,7 @@
   "active_unconfigured": [],
   "shared_workflow_views": [],
   "recommendations": [
-    "有 12 篇论文缺 review_stage，可在 library.html 批量补齐复习阶段。",
+    "有 13 篇论文缺 review_stage，可在 library.html 批量补齐复习阶段。",
     "当前 workflow 有 4 个空 status，可保留为候选列，或在 workflow 中移除。"
   ],
   "commands": [

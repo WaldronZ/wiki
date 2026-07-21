@@ -1,17 +1,17 @@
 {
-  "generated_at": "2026-07-21T15:43:55",
-  "count": 136,
+  "generated_at": "2026-07-21T18:25:15",
+  "count": 143,
   "summary": {
     "groups": {
       "metadata": 3,
-      "taxonomy": 117,
-      "review": 12,
+      "taxonomy": 123,
+      "review": 13,
       "quality": 4
     },
     "severity": {
-      "high": 6,
-      "medium": 121,
-      "low": 9
+      "high": 9,
+      "medium": 130,
+      "low": 4
     }
   },
   "actions": [
@@ -58,6 +58,42 @@
       "command": "python3 scripts/validate_wiki.py docs --strict-taxonomy"
     },
     {
+      "id": "taxonomy_action:split_candidate:topics:Speculative Decoding",
+      "group": "taxonomy",
+      "severity": "high",
+      "priority": 100,
+      "title": "主题：Speculative Decoding",
+      "detail": "主题 过大，考虑拆成更细子类。",
+      "href": "library.html?topic=Speculative+Decoding",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding",
+        "2503.14075-twigvlm-plus-plus",
+        "noarxiv-2026-dspark",
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:split_candidate:tracks:Inference Acceleration",
+      "group": "taxonomy",
+      "severity": "high",
+      "priority": 100,
+      "title": "方向：Inference Acceleration",
+      "detail": "方向 过大，考虑拆成更细子类。",
+      "href": "library.html?track=Inference+Acceleration",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2607.00466-eldr",
+        "2503.14075-twigvlm-plus-plus",
+        "noarxiv-2026-dspark",
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
       "id": "taxonomy_action:split_candidate:domains:LLM Systems",
       "group": "taxonomy",
       "severity": "high",
@@ -72,6 +108,24 @@
         "noarxiv-2026-dspark",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:split_candidate:reading_stage:deep_read",
+      "group": "taxonomy",
+      "severity": "high",
+      "priority": 100,
+      "title": "阅读阶段：deep_read",
+      "detail": "阅读阶段 过大，考虑拆成更细子类。",
+      "href": "library.html?stage=deep_read",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2607.00466-eldr",
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus",
+        "2503.01840-eagle-3-scaling-up"
       ],
       "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
     },
@@ -174,6 +228,20 @@
       "source": "review.json",
       "slugs": [
         "noarxiv-2026-dspark"
+      ],
+      "command": "python3 scripts/apply_review_plan.py docs --write"
+    },
+    {
+      "id": "review_plan:2503.01840-eagle-3-scaling-up",
+      "group": "review",
+      "severity": "medium",
+      "priority": 72,
+      "title": "补复习计划：EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+      "detail": "建议 next_review = 2026-08-13",
+      "href": "2503.01840-eagle-3-scaling-up.html",
+      "source": "review.json",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
       ],
       "command": "python3 scripts/apply_review_plan.py docs --write"
     },
@@ -584,6 +652,20 @@
       "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
     },
     {
+      "id": "taxonomy_action:merge_candidate:topics:Draft Model Training",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "主题：Draft Model Training",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?topic=Draft+Model+Training",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
       "id": "taxonomy_action:merge_candidate:topics:Efficient Inference",
       "group": "taxonomy",
       "severity": "medium",
@@ -748,6 +830,20 @@
       "source": "taxonomy_actions.json",
       "slugs": [
         "2507.11851-llm-future-mtp"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:topics:Scaling Law",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "主题：Scaling Law",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?topic=Scaling+Law",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
       ],
       "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
     },
@@ -1046,6 +1142,20 @@
       "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
     },
     {
+      "id": "taxonomy_action:merge_candidate:methods:Multi-Layer Feature Fusion",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "方法：Multi-Layer Feature Fusion",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=Multi-Layer+Feature+Fusion",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
       "id": "taxonomy_action:merge_candidate:methods:Signature Cache",
       "group": "taxonomy",
       "severity": "medium",
@@ -1056,6 +1166,48 @@
       "source": "taxonomy_actions.json",
       "slugs": [
         "2607.00466-eldr"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:Speculative Sampling",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "方法：Speculative Sampling",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=Speculative+Sampling",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:Training-Time Test",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "方法：Training-Time Test",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=Training-Time+Test",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:Tree-Based Draft",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "方法：Tree-Based Draft",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=Tree-Based+Draft",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
       ],
       "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
     },
@@ -1508,6 +1660,20 @@
       "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
     },
     {
+      "id": "taxonomy_action:merge_candidate:research_line:Speculative Decoding",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "研究线：Speculative Decoding",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?line=Speculative+Decoding",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
       "id": "taxonomy_action:merge_candidate:research_line:VLM Acceleration",
       "group": "taxonomy",
       "severity": "medium",
@@ -1616,6 +1782,20 @@
       "source": "taxonomy_actions.json",
       "slugs": [
         "2607.00466-eldr"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:problems:Speculative Decoding",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "问题：Speculative Decoding",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?problem=Speculative+Decoding",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
       ],
       "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
     },
@@ -1781,96 +1961,6 @@
       "href": "library.html?stage=skim",
       "source": "taxonomy_actions.json",
       "slugs": [],
-      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
-    },
-    {
-      "id": "taxonomy_action:watch:topics:LLM Serving",
-      "group": "taxonomy",
-      "severity": "low",
-      "priority": 40,
-      "title": "主题：LLM Serving",
-      "detail": "关注是否正在变成默认桶。",
-      "href": "library.html?topic=LLM+Serving",
-      "source": "taxonomy_actions.json",
-      "slugs": [
-        "2607.00466-eldr",
-        "noarxiv-2026-dspark",
-        "2602.06036-dflash",
-        "2604.11035-introspective-dlm",
-        "2501.01005-flashinfer"
-      ],
-      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
-    },
-    {
-      "id": "taxonomy_action:watch:topics:Speculative Decoding",
-      "group": "taxonomy",
-      "severity": "low",
-      "priority": 40,
-      "title": "主题：Speculative Decoding",
-      "detail": "关注是否正在变成默认桶。",
-      "href": "library.html?topic=Speculative+Decoding",
-      "source": "taxonomy_actions.json",
-      "slugs": [
-        "2603.03251-speculative-speculative-decoding",
-        "2503.14075-twigvlm-plus-plus",
-        "noarxiv-2026-dspark",
-        "2602.06036-dflash",
-        "2604.11035-introspective-dlm"
-      ],
-      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
-    },
-    {
-      "id": "taxonomy_action:watch:tracks:Inference Acceleration",
-      "group": "taxonomy",
-      "severity": "low",
-      "priority": 40,
-      "title": "方向：Inference Acceleration",
-      "detail": "关注是否正在变成默认桶。",
-      "href": "library.html?track=Inference+Acceleration",
-      "source": "taxonomy_actions.json",
-      "slugs": [
-        "2607.00466-eldr",
-        "2503.14075-twigvlm-plus-plus",
-        "noarxiv-2026-dspark",
-        "2602.06036-dflash",
-        "2604.11035-introspective-dlm"
-      ],
-      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
-    },
-    {
-      "id": "taxonomy_action:watch:tracks:Parallel Decoding",
-      "group": "taxonomy",
-      "severity": "low",
-      "priority": 40,
-      "title": "方向：Parallel Decoding",
-      "detail": "关注是否正在变成默认桶。",
-      "href": "library.html?track=Parallel+Decoding",
-      "source": "taxonomy_actions.json",
-      "slugs": [
-        "noarxiv-2026-dspark",
-        "2602.06036-dflash",
-        "2604.11035-introspective-dlm",
-        "2605.12825-orthrus",
-        "2507.11851-llm-future-mtp"
-      ],
-      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
-    },
-    {
-      "id": "taxonomy_action:watch:reading_stage:deep_read",
-      "group": "taxonomy",
-      "severity": "low",
-      "priority": 40,
-      "title": "阅读阶段：deep_read",
-      "detail": "关注是否正在变成默认桶。",
-      "href": "library.html?stage=deep_read",
-      "source": "taxonomy_actions.json",
-      "slugs": [
-        "2607.00466-eldr",
-        "2602.06036-dflash",
-        "2604.11035-introspective-dlm",
-        "2605.12825-orthrus",
-        "2507.11851-llm-future-mtp"
-      ],
       "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
     },
     {

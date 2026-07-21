@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-21T15:43:55",
-  "count": 12,
-  "owner_count": 5,
-  "unassigned_line_count": 3,
+  "generated_at": "2026-07-21T18:25:15",
+  "count": 13,
+  "owner_count": 6,
+  "unassigned_line_count": 4,
   "owners": [
     {
       "owner": "Unassigned",
@@ -195,6 +195,48 @@
       },
       "lines": [
         {
+          "line": "Speculative Decoding",
+          "href": "lines/speculative-decoding.html",
+          "owner": "Unassigned",
+          "team": "",
+          "cadence": "",
+          "note": "",
+          "count": 1,
+          "avg_importance": 4.0,
+          "code_coverage": "100%",
+          "risk": "medium",
+          "risk_points": 2,
+          "queues": {
+            "missing_taxonomy": 0,
+            "needs_review_plan": 1,
+            "due_review": 0,
+            "freshness_due": 0,
+            "stale": 0,
+            "no_code_observation": 0
+          },
+          "sample_slugs": [
+            "2503.01840-eagle-3-scaling-up"
+          ]
+        }
+      ],
+      "risk": "medium"
+    },
+    {
+      "owner": "Unassigned",
+      "team": "",
+      "line_count": 1,
+      "paper_count": 1,
+      "risk_points": 2,
+      "queues": {
+        "missing_taxonomy": 0,
+        "needs_review_plan": 1,
+        "due_review": 0,
+        "freshness_due": 0,
+        "stale": 0,
+        "no_code_observation": 0
+      },
+      "lines": [
+        {
           "line": "VLM Acceleration",
           "href": "lines/vlm-acceleration.html",
           "owner": "Unassigned",
@@ -324,6 +366,30 @@
       "sample_slugs": [
         "2501.01005-flashinfer",
         "2307.08691-flashattention-2"
+      ]
+    },
+    {
+      "line": "Speculative Decoding",
+      "href": "lines/speculative-decoding.html",
+      "owner": "Unassigned",
+      "team": "",
+      "cadence": "",
+      "note": "",
+      "count": 1,
+      "avg_importance": 4.0,
+      "code_coverage": "100%",
+      "risk": "medium",
+      "risk_points": 2,
+      "queues": {
+        "missing_taxonomy": 0,
+        "needs_review_plan": 1,
+        "due_review": 0,
+        "freshness_due": 0,
+        "stale": 0,
+        "no_code_observation": 0
+      },
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up"
       ]
     },
     {

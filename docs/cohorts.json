@@ -1,16 +1,16 @@
 {
-  "generated_at": "2026-07-21T15:43:55",
-  "count": 12,
+  "generated_at": "2026-07-21T18:25:15",
+  "count": 13,
   "pair_count": 6,
-  "cohort_count": 428,
+  "cohort_count": 458,
   "action_counts": {
-    "singleton": 405,
+    "singleton": 435,
     "topic_candidate": 8,
     "watch": 15
   },
   "severity_counts": {
     "low": 23,
-    "medium": 405
+    "medium": 435
   },
   "pair_specs": [
     {
@@ -54,7 +54,7 @@
       "secondary_field": "status",
       "secondary_value": "read",
       "count": 4,
-      "share": 0.3333,
+      "share": 0.3077,
       "action": "topic_candidate",
       "severity": "low",
       "slugs": [
@@ -101,7 +101,7 @@
       "secondary_field": "topics",
       "secondary_value": "Speculative Decoding",
       "count": 4,
-      "share": 0.3333,
+      "share": 0.3077,
       "action": "topic_candidate",
       "severity": "low",
       "slugs": [
@@ -148,7 +148,7 @@
       "secondary_field": "methods",
       "secondary_value": "Speculative Decoding",
       "count": 3,
-      "share": 0.25,
+      "share": 0.2308,
       "action": "topic_candidate",
       "severity": "low",
       "slugs": [
@@ -188,7 +188,7 @@
       "secondary_field": "methods",
       "secondary_value": "Speculative Decoding",
       "count": 3,
-      "share": 0.25,
+      "share": 0.2308,
       "action": "topic_candidate",
       "severity": "low",
       "slugs": [
@@ -228,7 +228,7 @@
       "secondary_field": "problems",
       "secondary_value": "Lossless Speculative Decoding",
       "count": 3,
-      "share": 0.25,
+      "share": 0.2308,
       "action": "topic_candidate",
       "severity": "low",
       "slugs": [
@@ -268,7 +268,7 @@
       "secondary_field": "problems",
       "secondary_value": "Lossless Speculative Decoding",
       "count": 3,
-      "share": 0.25,
+      "share": 0.2308,
       "action": "topic_candidate",
       "severity": "low",
       "slugs": [
@@ -308,7 +308,7 @@
       "secondary_field": "status",
       "secondary_value": "read",
       "count": 3,
-      "share": 0.25,
+      "share": 0.2308,
       "action": "topic_candidate",
       "severity": "low",
       "slugs": [
@@ -348,7 +348,7 @@
       "secondary_field": "topics",
       "secondary_value": "Diffusion Language Models",
       "count": 3,
-      "share": 0.25,
+      "share": 0.2308,
       "action": "topic_candidate",
       "severity": "low",
       "slugs": [
@@ -388,7 +388,7 @@
       "secondary_field": "methods",
       "secondary_value": "FlashAttention",
       "count": 2,
-      "share": 0.1667,
+      "share": 0.1538,
       "action": "watch",
       "severity": "low",
       "slugs": [
@@ -421,7 +421,7 @@
       "secondary_field": "methods",
       "secondary_value": "gated LoRA",
       "count": 2,
-      "share": 0.1667,
+      "share": 0.1538,
       "action": "watch",
       "severity": "low",
       "slugs": [
@@ -454,7 +454,7 @@
       "secondary_field": "methods",
       "secondary_value": "Speculative Decoding",
       "count": 2,
-      "share": 0.1667,
+      "share": 0.1538,
       "action": "watch",
       "severity": "low",
       "slugs": [
@@ -487,7 +487,7 @@
       "secondary_field": "methods",
       "secondary_value": "gated LoRA",
       "count": 2,
-      "share": 0.1667,
+      "share": 0.1538,
       "action": "watch",
       "severity": "low",
       "slugs": [
@@ -520,7 +520,7 @@
       "secondary_field": "methods",
       "secondary_value": "Speculative Decoding",
       "count": 2,
-      "share": 0.1667,
+      "share": 0.1538,
       "action": "watch",
       "severity": "low",
       "slugs": [
@@ -553,7 +553,7 @@
       "secondary_field": "methods",
       "secondary_value": "gated LoRA",
       "count": 2,
-      "share": 0.1667,
+      "share": 0.1538,
       "action": "watch",
       "severity": "low",
       "slugs": [
@@ -586,7 +586,7 @@
       "secondary_field": "methods",
       "secondary_value": "FlashAttention",
       "count": 2,
-      "share": 0.1667,
+      "share": 0.1538,
       "action": "watch",
       "severity": "low",
       "slugs": [
@@ -619,7 +619,7 @@
       "secondary_field": "methods",
       "secondary_value": "gated LoRA",
       "count": 2,
-      "share": 0.1667,
+      "share": 0.1538,
       "action": "watch",
       "severity": "low",
       "slugs": [
@@ -652,7 +652,7 @@
       "secondary_field": "status",
       "secondary_value": "read",
       "count": 2,
-      "share": 0.1667,
+      "share": 0.1538,
       "action": "watch",
       "severity": "low",
       "slugs": [
@@ -685,7 +685,7 @@
       "secondary_field": "status",
       "secondary_value": "read",
       "count": 2,
-      "share": 0.1667,
+      "share": 0.1538,
       "action": "watch",
       "severity": "low",
       "slugs": [
@@ -718,7 +718,7 @@
       "secondary_field": "topics",
       "secondary_value": "LLM Serving",
       "count": 2,
-      "share": 0.1667,
+      "share": 0.1538,
       "action": "watch",
       "severity": "low",
       "slugs": [
@@ -751,7 +751,7 @@
       "secondary_field": "topics",
       "secondary_value": "LLM",
       "count": 2,
-      "share": 0.1667,
+      "share": 0.1538,
       "action": "watch",
       "severity": "low",
       "slugs": [
@@ -784,7 +784,7 @@
       "secondary_field": "topics",
       "secondary_value": "LLM Inference",
       "count": 2,
-      "share": 0.1667,
+      "share": 0.1538,
       "action": "watch",
       "severity": "low",
       "slugs": [
@@ -817,7 +817,7 @@
       "secondary_field": "topics",
       "secondary_value": "LLM Serving",
       "count": 2,
-      "share": 0.1667,
+      "share": 0.1538,
       "action": "watch",
       "severity": "low",
       "slugs": [
@@ -850,7 +850,7 @@
       "secondary_field": "topics",
       "secondary_value": "Parallel Decoding",
       "count": 2,
-      "share": 0.1667,
+      "share": 0.1538,
       "action": "watch",
       "severity": "low",
       "slugs": [
@@ -883,7 +883,7 @@
       "secondary_field": "methods",
       "secondary_value": "Balanced K-means",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -909,7 +909,7 @@
       "secondary_field": "methods",
       "secondary_value": "block diffusion",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -935,7 +935,7 @@
       "secondary_field": "methods",
       "secondary_value": "block-sparse attention",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -961,7 +961,7 @@
       "secondary_field": "methods",
       "secondary_value": "composable KV-cache format",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -987,7 +987,7 @@
       "secondary_field": "methods",
       "secondary_value": "confidence-scheduled verification",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1013,7 +1013,7 @@
       "secondary_field": "methods",
       "secondary_value": "CUDA / GPU parallelism",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1039,7 +1039,7 @@
       "secondary_field": "methods",
       "secondary_value": "CUDA Graph",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1065,7 +1065,7 @@
       "secondary_field": "methods",
       "secondary_value": "distillation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1091,7 +1091,7 @@
       "secondary_field": "methods",
       "secondary_value": "dual-view attention",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1117,7 +1117,7 @@
       "secondary_field": "methods",
       "secondary_value": "Expert Locality Routing",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1143,7 +1143,7 @@
       "secondary_field": "methods",
       "secondary_value": "FinalWipe",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1169,7 +1169,7 @@
       "secondary_field": "methods",
       "secondary_value": "forward KL distillation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1195,7 +1195,7 @@
       "secondary_field": "methods",
       "secondary_value": "hardware-aware scheduling",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1221,7 +1221,7 @@
       "secondary_field": "methods",
       "secondary_value": "intra-model consensus",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1247,7 +1247,7 @@
       "secondary_field": "methods",
       "secondary_value": "introspective consistency",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1273,7 +1273,7 @@
       "secondary_field": "methods",
       "secondary_value": "introspective strided decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1299,7 +1299,7 @@
       "secondary_field": "methods",
       "secondary_value": "JIT compilation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1325,7 +1325,7 @@
       "secondary_field": "methods",
       "secondary_value": "KV injection",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1351,7 +1351,7 @@
       "secondary_field": "methods",
       "secondary_value": "latent consistency matching",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1377,7 +1377,7 @@
       "secondary_field": "methods",
       "secondary_value": "load-balanced scheduling",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1403,7 +1403,7 @@
       "secondary_field": "methods",
       "secondary_value": "logit-shifted causal training",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1429,7 +1429,7 @@
       "secondary_field": "methods",
       "secondary_value": "Markov head",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1455,7 +1455,7 @@
       "secondary_field": "methods",
       "secondary_value": "masked diffusion",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1481,7 +1481,7 @@
       "secondary_field": "methods",
       "secondary_value": "masked-input formulation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1507,7 +1507,7 @@
       "secondary_field": "methods",
       "secondary_value": "multi-head twig",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1525,6 +1525,32 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "domains-llm-systems-methods-multi-layer-feature-fusion",
+      "label": "LLM Systems / Multi-Layer Feature Fusion",
+      "pair": "Domain x Method",
+      "primary_field": "domains",
+      "primary_value": "LLM Systems",
+      "secondary_field": "methods",
+      "secondary_value": "Multi-Layer Feature Fusion",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?domain=LLM+Systems&method=Multi-Layer+Feature+Fusion",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "domains-llm-systems-methods-online-softmax",
       "label": "LLM Systems / online softmax",
       "pair": "Domain x Method",
@@ -1533,7 +1559,7 @@
       "secondary_field": "methods",
       "secondary_value": "online softmax",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1559,7 +1585,7 @@
       "secondary_field": "methods",
       "secondary_value": "p/q acceptance",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1585,7 +1611,7 @@
       "secondary_field": "methods",
       "secondary_value": "parallel drafting",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1611,7 +1637,7 @@
       "secondary_field": "methods",
       "secondary_value": "pruning-oriented reinforcement learning",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1637,7 +1663,7 @@
       "secondary_field": "methods",
       "secondary_value": "quadratic speculative decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1663,7 +1689,7 @@
       "secondary_field": "methods",
       "secondary_value": "sampler head",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1689,7 +1715,7 @@
       "secondary_field": "methods",
       "secondary_value": "semi-autoregressive generation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1715,7 +1741,7 @@
       "secondary_field": "methods",
       "secondary_value": "SGLang serving",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1741,7 +1767,7 @@
       "secondary_field": "methods",
       "secondary_value": "shared KV cache",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1767,7 +1793,7 @@
       "secondary_field": "methods",
       "secondary_value": "Signature Cache",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1785,6 +1811,32 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "domains-llm-systems-methods-speculative-sampling",
+      "label": "LLM Systems / Speculative Sampling",
+      "pair": "Domain x Method",
+      "primary_field": "domains",
+      "primary_value": "LLM Systems",
+      "secondary_field": "methods",
+      "secondary_value": "Speculative Sampling",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?domain=LLM+Systems&method=Speculative+Sampling",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "domains-llm-systems-methods-target-hidden-features",
       "label": "LLM Systems / target hidden features",
       "pair": "Domain x Method",
@@ -1793,7 +1845,7 @@
       "secondary_field": "methods",
       "secondary_value": "target hidden features",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1819,7 +1871,7 @@
       "secondary_field": "methods",
       "secondary_value": "tiling",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1837,6 +1889,58 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "domains-llm-systems-methods-training-time-test",
+      "label": "LLM Systems / Training-Time Test",
+      "pair": "Domain x Method",
+      "primary_field": "domains",
+      "primary_value": "LLM Systems",
+      "secondary_field": "methods",
+      "secondary_value": "Training-Time Test",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?domain=LLM+Systems&method=Training-Time+Test",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "domains-llm-systems-methods-tree-based-draft",
+      "label": "LLM Systems / Tree-Based Draft",
+      "pair": "Domain x Method",
+      "primary_field": "domains",
+      "primary_value": "LLM Systems",
+      "secondary_field": "methods",
+      "secondary_value": "Tree-Based Draft",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?domain=LLM+Systems&method=Tree-Based+Draft",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "domains-llm-systems-methods-tree-based-self-speculative-decoding",
       "label": "LLM Systems / tree-based self-speculative decoding",
       "pair": "Domain x Method",
@@ -1845,7 +1949,7 @@
       "secondary_field": "methods",
       "secondary_value": "tree-based self-speculative decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1871,7 +1975,7 @@
       "secondary_field": "methods",
       "secondary_value": "twig-guided token pruning",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1897,7 +2001,7 @@
       "secondary_field": "methods",
       "secondary_value": "work partitioning",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1923,7 +2027,7 @@
       "secondary_field": "methods",
       "secondary_value": "distillation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1949,7 +2053,7 @@
       "secondary_field": "methods",
       "secondary_value": "FinalWipe",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -1975,7 +2079,7 @@
       "secondary_field": "methods",
       "secondary_value": "multi-head twig",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2001,7 +2105,7 @@
       "secondary_field": "methods",
       "secondary_value": "pruning-oriented reinforcement learning",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2027,7 +2131,7 @@
       "secondary_field": "methods",
       "secondary_value": "tree-based self-speculative decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2053,7 +2157,7 @@
       "secondary_field": "methods",
       "secondary_value": "twig-guided token pruning",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2079,7 +2183,7 @@
       "secondary_field": "methods",
       "secondary_value": "block-sparse attention",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2105,7 +2209,7 @@
       "secondary_field": "methods",
       "secondary_value": "composable KV-cache format",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2131,7 +2235,7 @@
       "secondary_field": "methods",
       "secondary_value": "CUDA Graph",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2157,7 +2261,7 @@
       "secondary_field": "methods",
       "secondary_value": "FlashAttention",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2183,7 +2287,7 @@
       "secondary_field": "methods",
       "secondary_value": "JIT compilation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2209,7 +2313,7 @@
       "secondary_field": "methods",
       "secondary_value": "load-balanced scheduling",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2235,7 +2339,7 @@
       "secondary_field": "methods",
       "secondary_value": "Document-Driven Integration",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2261,7 +2365,7 @@
       "secondary_field": "methods",
       "secondary_value": "Hierarchical Code Retrieval",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2287,7 +2391,7 @@
       "secondary_field": "methods",
       "secondary_value": "Iterative Search-Based Optimization",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2313,7 +2417,7 @@
       "secondary_field": "methods",
       "secondary_value": "Multi-Agent Workflow",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2339,7 +2443,7 @@
       "secondary_field": "methods",
       "secondary_value": "Unified Sketch",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2365,7 +2469,7 @@
       "secondary_field": "methods",
       "secondary_value": "Verification and Profiling Loop",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2391,7 +2495,7 @@
       "secondary_field": "methods",
       "secondary_value": "block diffusion",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2417,7 +2521,7 @@
       "secondary_field": "methods",
       "secondary_value": "dual-view attention",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2443,7 +2547,7 @@
       "secondary_field": "methods",
       "secondary_value": "forward KL distillation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2469,7 +2573,7 @@
       "secondary_field": "methods",
       "secondary_value": "gated LoRA",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2495,7 +2599,7 @@
       "secondary_field": "methods",
       "secondary_value": "intra-model consensus",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2521,7 +2625,7 @@
       "secondary_field": "methods",
       "secondary_value": "introspective consistency",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2547,7 +2651,7 @@
       "secondary_field": "methods",
       "secondary_value": "introspective strided decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2573,7 +2677,7 @@
       "secondary_field": "methods",
       "secondary_value": "KV injection",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2599,7 +2703,7 @@
       "secondary_field": "methods",
       "secondary_value": "logit-shifted causal training",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2625,7 +2729,7 @@
       "secondary_field": "methods",
       "secondary_value": "masked diffusion",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2651,7 +2755,7 @@
       "secondary_field": "methods",
       "secondary_value": "p/q acceptance",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2677,7 +2781,7 @@
       "secondary_field": "methods",
       "secondary_value": "parallel drafting",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2703,7 +2807,7 @@
       "secondary_field": "methods",
       "secondary_value": "SGLang serving",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2729,7 +2833,7 @@
       "secondary_field": "methods",
       "secondary_value": "shared KV cache",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2755,7 +2859,7 @@
       "secondary_field": "methods",
       "secondary_value": "Speculative Decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2781,7 +2885,7 @@
       "secondary_field": "methods",
       "secondary_value": "target hidden features",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2807,7 +2911,7 @@
       "secondary_field": "methods",
       "secondary_value": "Balanced K-means",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2833,7 +2937,7 @@
       "secondary_field": "methods",
       "secondary_value": "Expert Locality Routing",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2859,7 +2963,7 @@
       "secondary_field": "methods",
       "secondary_value": "Signature Cache",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2885,7 +2989,7 @@
       "secondary_field": "methods",
       "secondary_value": "asynchronous decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2911,7 +3015,7 @@
       "secondary_field": "methods",
       "secondary_value": "cache-aware sampling",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2937,7 +3041,7 @@
       "secondary_field": "methods",
       "secondary_value": "fallback speculation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2963,7 +3067,7 @@
       "secondary_field": "methods",
       "secondary_value": "geometric fan-out",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -2989,7 +3093,7 @@
       "secondary_field": "methods",
       "secondary_value": "Speculative Decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3015,7 +3119,7 @@
       "secondary_field": "methods",
       "secondary_value": "verification outcome cache",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3033,6 +3137,110 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "topics-draft-model-training-methods-multi-layer-feature-fusion",
+      "label": "Draft Model Training / Multi-Layer Feature Fusion",
+      "pair": "Topic x Method",
+      "primary_field": "topics",
+      "primary_value": "Draft Model Training",
+      "secondary_field": "methods",
+      "secondary_value": "Multi-Layer Feature Fusion",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?topic=Draft+Model+Training&method=Multi-Layer+Feature+Fusion",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "topics-draft-model-training-methods-speculative-sampling",
+      "label": "Draft Model Training / Speculative Sampling",
+      "pair": "Topic x Method",
+      "primary_field": "topics",
+      "primary_value": "Draft Model Training",
+      "secondary_field": "methods",
+      "secondary_value": "Speculative Sampling",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?topic=Draft+Model+Training&method=Speculative+Sampling",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "topics-draft-model-training-methods-training-time-test",
+      "label": "Draft Model Training / Training-Time Test",
+      "pair": "Topic x Method",
+      "primary_field": "topics",
+      "primary_value": "Draft Model Training",
+      "secondary_field": "methods",
+      "secondary_value": "Training-Time Test",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?topic=Draft+Model+Training&method=Training-Time+Test",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "topics-draft-model-training-methods-tree-based-draft",
+      "label": "Draft Model Training / Tree-Based Draft",
+      "pair": "Topic x Method",
+      "primary_field": "topics",
+      "primary_value": "Draft Model Training",
+      "secondary_field": "methods",
+      "secondary_value": "Tree-Based Draft",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?topic=Draft+Model+Training&method=Tree-Based+Draft",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "topics-efficient-attention-methods-cuda-gpu-parallelism",
       "label": "Efficient Attention / CUDA / GPU parallelism",
       "pair": "Topic x Method",
@@ -3041,7 +3249,7 @@
       "secondary_field": "methods",
       "secondary_value": "CUDA / GPU parallelism",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3067,7 +3275,7 @@
       "secondary_field": "methods",
       "secondary_value": "FlashAttention",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3093,7 +3301,7 @@
       "secondary_field": "methods",
       "secondary_value": "online softmax",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3119,7 +3327,7 @@
       "secondary_field": "methods",
       "secondary_value": "tiling",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3145,7 +3353,7 @@
       "secondary_field": "methods",
       "secondary_value": "work partitioning",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3171,7 +3379,7 @@
       "secondary_field": "methods",
       "secondary_value": "gated LoRA",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3197,7 +3405,7 @@
       "secondary_field": "methods",
       "secondary_value": "latent consistency matching",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3223,7 +3431,7 @@
       "secondary_field": "methods",
       "secondary_value": "masked-input formulation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3249,7 +3457,7 @@
       "secondary_field": "methods",
       "secondary_value": "quadratic speculative decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3275,7 +3483,7 @@
       "secondary_field": "methods",
       "secondary_value": "sampler head",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3301,7 +3509,7 @@
       "secondary_field": "methods",
       "secondary_value": "CUDA / GPU parallelism",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3327,7 +3535,7 @@
       "secondary_field": "methods",
       "secondary_value": "FlashAttention",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3353,7 +3561,7 @@
       "secondary_field": "methods",
       "secondary_value": "online softmax",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3379,7 +3587,7 @@
       "secondary_field": "methods",
       "secondary_value": "tiling",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3405,7 +3613,7 @@
       "secondary_field": "methods",
       "secondary_value": "work partitioning",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3431,7 +3639,7 @@
       "secondary_field": "methods",
       "secondary_value": "block-sparse attention",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3457,7 +3665,7 @@
       "secondary_field": "methods",
       "secondary_value": "composable KV-cache format",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3483,7 +3691,7 @@
       "secondary_field": "methods",
       "secondary_value": "CUDA Graph",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3509,7 +3717,7 @@
       "secondary_field": "methods",
       "secondary_value": "FlashAttention",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3535,7 +3743,7 @@
       "secondary_field": "methods",
       "secondary_value": "JIT compilation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3561,7 +3769,7 @@
       "secondary_field": "methods",
       "secondary_value": "load-balanced scheduling",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3587,7 +3795,7 @@
       "secondary_field": "methods",
       "secondary_value": "Document-Driven Integration",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3613,7 +3821,7 @@
       "secondary_field": "methods",
       "secondary_value": "Hierarchical Code Retrieval",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3639,7 +3847,7 @@
       "secondary_field": "methods",
       "secondary_value": "Iterative Search-Based Optimization",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3665,7 +3873,7 @@
       "secondary_field": "methods",
       "secondary_value": "Multi-Agent Workflow",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3691,7 +3899,7 @@
       "secondary_field": "methods",
       "secondary_value": "Unified Sketch",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3717,7 +3925,7 @@
       "secondary_field": "methods",
       "secondary_value": "Verification and Profiling Loop",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3743,7 +3951,7 @@
       "secondary_field": "methods",
       "secondary_value": "block-sparse attention",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3769,7 +3977,7 @@
       "secondary_field": "methods",
       "secondary_value": "composable KV-cache format",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3795,7 +4003,7 @@
       "secondary_field": "methods",
       "secondary_value": "CUDA Graph",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3821,7 +4029,7 @@
       "secondary_field": "methods",
       "secondary_value": "FlashAttention",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3847,7 +4055,7 @@
       "secondary_field": "methods",
       "secondary_value": "JIT compilation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3873,7 +4081,7 @@
       "secondary_field": "methods",
       "secondary_value": "load-balanced scheduling",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3899,7 +4107,7 @@
       "secondary_field": "methods",
       "secondary_value": "Document-Driven Integration",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3925,7 +4133,7 @@
       "secondary_field": "methods",
       "secondary_value": "Hierarchical Code Retrieval",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3951,7 +4159,7 @@
       "secondary_field": "methods",
       "secondary_value": "Iterative Search-Based Optimization",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -3977,7 +4185,7 @@
       "secondary_field": "methods",
       "secondary_value": "Multi-Agent Workflow",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4003,7 +4211,7 @@
       "secondary_field": "methods",
       "secondary_value": "Unified Sketch",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4029,7 +4237,7 @@
       "secondary_field": "methods",
       "secondary_value": "Verification and Profiling Loop",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4055,7 +4263,7 @@
       "secondary_field": "methods",
       "secondary_value": "block-sparse attention",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4081,7 +4289,7 @@
       "secondary_field": "methods",
       "secondary_value": "composable KV-cache format",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4107,7 +4315,7 @@
       "secondary_field": "methods",
       "secondary_value": "CUDA Graph",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4133,7 +4341,7 @@
       "secondary_field": "methods",
       "secondary_value": "dual-view attention",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4159,7 +4367,7 @@
       "secondary_field": "methods",
       "secondary_value": "FlashAttention",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4185,7 +4393,7 @@
       "secondary_field": "methods",
       "secondary_value": "forward KL distillation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4211,7 +4419,7 @@
       "secondary_field": "methods",
       "secondary_value": "intra-model consensus",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4237,7 +4445,7 @@
       "secondary_field": "methods",
       "secondary_value": "JIT compilation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4263,7 +4471,7 @@
       "secondary_field": "methods",
       "secondary_value": "load-balanced scheduling",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4289,7 +4497,7 @@
       "secondary_field": "methods",
       "secondary_value": "masked diffusion",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4315,7 +4523,7 @@
       "secondary_field": "methods",
       "secondary_value": "shared KV cache",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4341,7 +4549,7 @@
       "secondary_field": "methods",
       "secondary_value": "introspective consistency",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4367,7 +4575,7 @@
       "secondary_field": "methods",
       "secondary_value": "introspective strided decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4393,7 +4601,7 @@
       "secondary_field": "methods",
       "secondary_value": "latent consistency matching",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4419,7 +4627,7 @@
       "secondary_field": "methods",
       "secondary_value": "logit-shifted causal training",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4445,7 +4653,7 @@
       "secondary_field": "methods",
       "secondary_value": "masked-input formulation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4471,7 +4679,7 @@
       "secondary_field": "methods",
       "secondary_value": "p/q acceptance",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4497,7 +4705,7 @@
       "secondary_field": "methods",
       "secondary_value": "quadratic speculative decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4523,7 +4731,7 @@
       "secondary_field": "methods",
       "secondary_value": "sampler head",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4549,7 +4757,7 @@
       "secondary_field": "methods",
       "secondary_value": "SGLang serving",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4575,7 +4783,7 @@
       "secondary_field": "methods",
       "secondary_value": "Document-Driven Integration",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4601,7 +4809,7 @@
       "secondary_field": "methods",
       "secondary_value": "Hierarchical Code Retrieval",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4627,7 +4835,7 @@
       "secondary_field": "methods",
       "secondary_value": "Iterative Search-Based Optimization",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4653,7 +4861,7 @@
       "secondary_field": "methods",
       "secondary_value": "Multi-Agent Workflow",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4679,7 +4887,7 @@
       "secondary_field": "methods",
       "secondary_value": "Unified Sketch",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4705,7 +4913,7 @@
       "secondary_field": "methods",
       "secondary_value": "Verification and Profiling Loop",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4731,7 +4939,7 @@
       "secondary_field": "methods",
       "secondary_value": "asynchronous decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4757,7 +4965,7 @@
       "secondary_field": "methods",
       "secondary_value": "block diffusion",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4783,7 +4991,7 @@
       "secondary_field": "methods",
       "secondary_value": "cache-aware sampling",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4809,7 +5017,7 @@
       "secondary_field": "methods",
       "secondary_value": "confidence-scheduled verification",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4835,7 +5043,7 @@
       "secondary_field": "methods",
       "secondary_value": "dual-view attention",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4861,7 +5069,7 @@
       "secondary_field": "methods",
       "secondary_value": "fallback speculation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4887,7 +5095,7 @@
       "secondary_field": "methods",
       "secondary_value": "forward KL distillation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4913,7 +5121,7 @@
       "secondary_field": "methods",
       "secondary_value": "geometric fan-out",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4939,7 +5147,7 @@
       "secondary_field": "methods",
       "secondary_value": "hardware-aware scheduling",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4965,7 +5173,7 @@
       "secondary_field": "methods",
       "secondary_value": "intra-model consensus",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -4991,7 +5199,7 @@
       "secondary_field": "methods",
       "secondary_value": "KV injection",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5017,7 +5225,7 @@
       "secondary_field": "methods",
       "secondary_value": "Markov head",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5043,7 +5251,7 @@
       "secondary_field": "methods",
       "secondary_value": "masked diffusion",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5061,6 +5269,32 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "topics-llm-inference-methods-multi-layer-feature-fusion",
+      "label": "LLM Inference / Multi-Layer Feature Fusion",
+      "pair": "Topic x Method",
+      "primary_field": "topics",
+      "primary_value": "LLM Inference",
+      "secondary_field": "methods",
+      "secondary_value": "Multi-Layer Feature Fusion",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?topic=LLM+Inference&method=Multi-Layer+Feature+Fusion",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "topics-llm-inference-methods-parallel-drafting",
       "label": "LLM Inference / parallel drafting",
       "pair": "Topic x Method",
@@ -5069,7 +5303,7 @@
       "secondary_field": "methods",
       "secondary_value": "parallel drafting",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5095,7 +5329,7 @@
       "secondary_field": "methods",
       "secondary_value": "semi-autoregressive generation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5121,7 +5355,7 @@
       "secondary_field": "methods",
       "secondary_value": "shared KV cache",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5139,6 +5373,32 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "topics-llm-inference-methods-speculative-sampling",
+      "label": "LLM Inference / Speculative Sampling",
+      "pair": "Topic x Method",
+      "primary_field": "topics",
+      "primary_value": "LLM Inference",
+      "secondary_field": "methods",
+      "secondary_value": "Speculative Sampling",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?topic=LLM+Inference&method=Speculative+Sampling",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "topics-llm-inference-methods-target-hidden-features",
       "label": "LLM Inference / target hidden features",
       "pair": "Topic x Method",
@@ -5147,7 +5407,7 @@
       "secondary_field": "methods",
       "secondary_value": "target hidden features",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5165,6 +5425,58 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "topics-llm-inference-methods-training-time-test",
+      "label": "LLM Inference / Training-Time Test",
+      "pair": "Topic x Method",
+      "primary_field": "topics",
+      "primary_value": "LLM Inference",
+      "secondary_field": "methods",
+      "secondary_value": "Training-Time Test",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?topic=LLM+Inference&method=Training-Time+Test",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "topics-llm-inference-methods-tree-based-draft",
+      "label": "LLM Inference / Tree-Based Draft",
+      "pair": "Topic x Method",
+      "primary_field": "topics",
+      "primary_value": "LLM Inference",
+      "secondary_field": "methods",
+      "secondary_value": "Tree-Based Draft",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?topic=LLM+Inference&method=Tree-Based+Draft",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "topics-llm-inference-methods-verification-outcome-cache",
       "label": "LLM Inference / verification outcome cache",
       "pair": "Topic x Method",
@@ -5173,7 +5485,7 @@
       "secondary_field": "methods",
       "secondary_value": "verification outcome cache",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5199,7 +5511,7 @@
       "secondary_field": "methods",
       "secondary_value": "Balanced K-means",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5225,7 +5537,7 @@
       "secondary_field": "methods",
       "secondary_value": "block diffusion",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5251,7 +5563,7 @@
       "secondary_field": "methods",
       "secondary_value": "block-sparse attention",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5277,7 +5589,7 @@
       "secondary_field": "methods",
       "secondary_value": "composable KV-cache format",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5303,7 +5615,7 @@
       "secondary_field": "methods",
       "secondary_value": "confidence-scheduled verification",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5329,7 +5641,7 @@
       "secondary_field": "methods",
       "secondary_value": "CUDA Graph",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5355,7 +5667,7 @@
       "secondary_field": "methods",
       "secondary_value": "Expert Locality Routing",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5381,7 +5693,7 @@
       "secondary_field": "methods",
       "secondary_value": "FlashAttention",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5407,7 +5719,7 @@
       "secondary_field": "methods",
       "secondary_value": "gated LoRA",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5433,7 +5745,7 @@
       "secondary_field": "methods",
       "secondary_value": "hardware-aware scheduling",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5459,7 +5771,7 @@
       "secondary_field": "methods",
       "secondary_value": "introspective consistency",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5485,7 +5797,7 @@
       "secondary_field": "methods",
       "secondary_value": "introspective strided decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5511,7 +5823,7 @@
       "secondary_field": "methods",
       "secondary_value": "JIT compilation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5537,7 +5849,7 @@
       "secondary_field": "methods",
       "secondary_value": "KV injection",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5563,7 +5875,7 @@
       "secondary_field": "methods",
       "secondary_value": "load-balanced scheduling",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5589,7 +5901,7 @@
       "secondary_field": "methods",
       "secondary_value": "logit-shifted causal training",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5615,7 +5927,7 @@
       "secondary_field": "methods",
       "secondary_value": "Markov head",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5641,7 +5953,7 @@
       "secondary_field": "methods",
       "secondary_value": "p/q acceptance",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5667,7 +5979,7 @@
       "secondary_field": "methods",
       "secondary_value": "parallel drafting",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5693,7 +6005,7 @@
       "secondary_field": "methods",
       "secondary_value": "semi-autoregressive generation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5719,7 +6031,7 @@
       "secondary_field": "methods",
       "secondary_value": "SGLang serving",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5745,7 +6057,7 @@
       "secondary_field": "methods",
       "secondary_value": "Signature Cache",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5771,7 +6083,7 @@
       "secondary_field": "methods",
       "secondary_value": "target hidden features",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5797,7 +6109,7 @@
       "secondary_field": "methods",
       "secondary_value": "Balanced K-means",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5823,7 +6135,7 @@
       "secondary_field": "methods",
       "secondary_value": "Expert Locality Routing",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5849,7 +6161,7 @@
       "secondary_field": "methods",
       "secondary_value": "Signature Cache",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5875,7 +6187,7 @@
       "secondary_field": "methods",
       "secondary_value": "CUDA / GPU parallelism",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5901,7 +6213,7 @@
       "secondary_field": "methods",
       "secondary_value": "FlashAttention",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5927,7 +6239,7 @@
       "secondary_field": "methods",
       "secondary_value": "online softmax",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5953,7 +6265,7 @@
       "secondary_field": "methods",
       "secondary_value": "tiling",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -5979,7 +6291,7 @@
       "secondary_field": "methods",
       "secondary_value": "work partitioning",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6005,7 +6317,7 @@
       "secondary_field": "methods",
       "secondary_value": "Balanced K-means",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6031,7 +6343,7 @@
       "secondary_field": "methods",
       "secondary_value": "Expert Locality Routing",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6057,7 +6369,7 @@
       "secondary_field": "methods",
       "secondary_value": "Signature Cache",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6083,7 +6395,7 @@
       "secondary_field": "methods",
       "secondary_value": "Document-Driven Integration",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6109,7 +6421,7 @@
       "secondary_field": "methods",
       "secondary_value": "Hierarchical Code Retrieval",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6135,7 +6447,7 @@
       "secondary_field": "methods",
       "secondary_value": "Iterative Search-Based Optimization",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6161,7 +6473,7 @@
       "secondary_field": "methods",
       "secondary_value": "Multi-Agent Workflow",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6187,7 +6499,7 @@
       "secondary_field": "methods",
       "secondary_value": "Unified Sketch",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6213,7 +6525,7 @@
       "secondary_field": "methods",
       "secondary_value": "Verification and Profiling Loop",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6239,7 +6551,7 @@
       "secondary_field": "methods",
       "secondary_value": "gated LoRA",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6265,7 +6577,7 @@
       "secondary_field": "methods",
       "secondary_value": "latent consistency matching",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6291,7 +6603,7 @@
       "secondary_field": "methods",
       "secondary_value": "masked-input formulation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6317,7 +6629,7 @@
       "secondary_field": "methods",
       "secondary_value": "quadratic speculative decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6343,7 +6655,7 @@
       "secondary_field": "methods",
       "secondary_value": "sampler head",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6369,7 +6681,7 @@
       "secondary_field": "methods",
       "secondary_value": "distillation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6395,7 +6707,7 @@
       "secondary_field": "methods",
       "secondary_value": "FinalWipe",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6421,7 +6733,7 @@
       "secondary_field": "methods",
       "secondary_value": "multi-head twig",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6447,7 +6759,7 @@
       "secondary_field": "methods",
       "secondary_value": "pruning-oriented reinforcement learning",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6473,7 +6785,7 @@
       "secondary_field": "methods",
       "secondary_value": "tree-based self-speculative decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6499,7 +6811,7 @@
       "secondary_field": "methods",
       "secondary_value": "twig-guided token pruning",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6525,7 +6837,7 @@
       "secondary_field": "methods",
       "secondary_value": "gated LoRA",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6551,7 +6863,7 @@
       "secondary_field": "methods",
       "secondary_value": "latent consistency matching",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6577,7 +6889,7 @@
       "secondary_field": "methods",
       "secondary_value": "masked-input formulation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6603,7 +6915,7 @@
       "secondary_field": "methods",
       "secondary_value": "quadratic speculative decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6629,7 +6941,7 @@
       "secondary_field": "methods",
       "secondary_value": "sampler head",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6655,7 +6967,7 @@
       "secondary_field": "methods",
       "secondary_value": "dual-view attention",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6681,7 +6993,7 @@
       "secondary_field": "methods",
       "secondary_value": "forward KL distillation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6707,7 +7019,7 @@
       "secondary_field": "methods",
       "secondary_value": "gated LoRA",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6733,7 +7045,7 @@
       "secondary_field": "methods",
       "secondary_value": "intra-model consensus",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6759,7 +7071,7 @@
       "secondary_field": "methods",
       "secondary_value": "introspective consistency",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6785,7 +7097,7 @@
       "secondary_field": "methods",
       "secondary_value": "introspective strided decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6811,7 +7123,7 @@
       "secondary_field": "methods",
       "secondary_value": "logit-shifted causal training",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6837,7 +7149,7 @@
       "secondary_field": "methods",
       "secondary_value": "masked diffusion",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6863,7 +7175,7 @@
       "secondary_field": "methods",
       "secondary_value": "p/q acceptance",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6889,7 +7201,7 @@
       "secondary_field": "methods",
       "secondary_value": "SGLang serving",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6915,7 +7227,7 @@
       "secondary_field": "methods",
       "secondary_value": "shared KV cache",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6933,6 +7245,110 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "topics-scaling-law-methods-multi-layer-feature-fusion",
+      "label": "Scaling Law / Multi-Layer Feature Fusion",
+      "pair": "Topic x Method",
+      "primary_field": "topics",
+      "primary_value": "Scaling Law",
+      "secondary_field": "methods",
+      "secondary_value": "Multi-Layer Feature Fusion",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?topic=Scaling+Law&method=Multi-Layer+Feature+Fusion",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "topics-scaling-law-methods-speculative-sampling",
+      "label": "Scaling Law / Speculative Sampling",
+      "pair": "Topic x Method",
+      "primary_field": "topics",
+      "primary_value": "Scaling Law",
+      "secondary_field": "methods",
+      "secondary_value": "Speculative Sampling",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?topic=Scaling+Law&method=Speculative+Sampling",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "topics-scaling-law-methods-training-time-test",
+      "label": "Scaling Law / Training-Time Test",
+      "pair": "Topic x Method",
+      "primary_field": "topics",
+      "primary_value": "Scaling Law",
+      "secondary_field": "methods",
+      "secondary_value": "Training-Time Test",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?topic=Scaling+Law&method=Training-Time+Test",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "topics-scaling-law-methods-tree-based-draft",
+      "label": "Scaling Law / Tree-Based Draft",
+      "pair": "Topic x Method",
+      "primary_field": "topics",
+      "primary_value": "Scaling Law",
+      "secondary_field": "methods",
+      "secondary_value": "Tree-Based Draft",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?topic=Scaling+Law&method=Tree-Based+Draft",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "topics-semi-autoregressive-generation-methods-confidence-scheduled-verification",
       "label": "Semi-Autoregressive Generation / confidence-scheduled verification",
       "pair": "Topic x Method",
@@ -6941,7 +7357,7 @@
       "secondary_field": "methods",
       "secondary_value": "confidence-scheduled verification",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6967,7 +7383,7 @@
       "secondary_field": "methods",
       "secondary_value": "hardware-aware scheduling",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -6993,7 +7409,7 @@
       "secondary_field": "methods",
       "secondary_value": "Markov head",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7019,7 +7435,7 @@
       "secondary_field": "methods",
       "secondary_value": "semi-autoregressive generation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7045,7 +7461,7 @@
       "secondary_field": "methods",
       "secondary_value": "Speculative Decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7071,7 +7487,7 @@
       "secondary_field": "methods",
       "secondary_value": "asynchronous decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7097,7 +7513,7 @@
       "secondary_field": "methods",
       "secondary_value": "block diffusion",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7123,7 +7539,7 @@
       "secondary_field": "methods",
       "secondary_value": "cache-aware sampling",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7149,7 +7565,7 @@
       "secondary_field": "methods",
       "secondary_value": "confidence-scheduled verification",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7175,7 +7591,7 @@
       "secondary_field": "methods",
       "secondary_value": "distillation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7201,7 +7617,7 @@
       "secondary_field": "methods",
       "secondary_value": "dual-view attention",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7227,7 +7643,7 @@
       "secondary_field": "methods",
       "secondary_value": "fallback speculation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7253,7 +7669,7 @@
       "secondary_field": "methods",
       "secondary_value": "FinalWipe",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7279,7 +7695,7 @@
       "secondary_field": "methods",
       "secondary_value": "forward KL distillation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7305,7 +7721,7 @@
       "secondary_field": "methods",
       "secondary_value": "geometric fan-out",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7331,7 +7747,7 @@
       "secondary_field": "methods",
       "secondary_value": "hardware-aware scheduling",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7357,7 +7773,7 @@
       "secondary_field": "methods",
       "secondary_value": "intra-model consensus",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7383,7 +7799,7 @@
       "secondary_field": "methods",
       "secondary_value": "introspective consistency",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7409,7 +7825,7 @@
       "secondary_field": "methods",
       "secondary_value": "introspective strided decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7435,7 +7851,7 @@
       "secondary_field": "methods",
       "secondary_value": "KV injection",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7461,7 +7877,7 @@
       "secondary_field": "methods",
       "secondary_value": "latent consistency matching",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7487,7 +7903,7 @@
       "secondary_field": "methods",
       "secondary_value": "logit-shifted causal training",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7513,7 +7929,7 @@
       "secondary_field": "methods",
       "secondary_value": "Markov head",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7539,7 +7955,7 @@
       "secondary_field": "methods",
       "secondary_value": "masked diffusion",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7565,7 +7981,7 @@
       "secondary_field": "methods",
       "secondary_value": "masked-input formulation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7591,7 +8007,7 @@
       "secondary_field": "methods",
       "secondary_value": "multi-head twig",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7609,6 +8025,32 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "topics-speculative-decoding-methods-multi-layer-feature-fusion",
+      "label": "Speculative Decoding / Multi-Layer Feature Fusion",
+      "pair": "Topic x Method",
+      "primary_field": "topics",
+      "primary_value": "Speculative Decoding",
+      "secondary_field": "methods",
+      "secondary_value": "Multi-Layer Feature Fusion",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?topic=Speculative+Decoding&method=Multi-Layer+Feature+Fusion",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "topics-speculative-decoding-methods-p-q-acceptance",
       "label": "Speculative Decoding / p/q acceptance",
       "pair": "Topic x Method",
@@ -7617,7 +8059,7 @@
       "secondary_field": "methods",
       "secondary_value": "p/q acceptance",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7643,7 +8085,7 @@
       "secondary_field": "methods",
       "secondary_value": "parallel drafting",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7669,7 +8111,7 @@
       "secondary_field": "methods",
       "secondary_value": "pruning-oriented reinforcement learning",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7695,7 +8137,7 @@
       "secondary_field": "methods",
       "secondary_value": "quadratic speculative decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7721,7 +8163,7 @@
       "secondary_field": "methods",
       "secondary_value": "sampler head",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7747,7 +8189,7 @@
       "secondary_field": "methods",
       "secondary_value": "semi-autoregressive generation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7773,7 +8215,7 @@
       "secondary_field": "methods",
       "secondary_value": "SGLang serving",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7799,7 +8241,7 @@
       "secondary_field": "methods",
       "secondary_value": "shared KV cache",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7817,6 +8259,32 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "topics-speculative-decoding-methods-speculative-sampling",
+      "label": "Speculative Decoding / Speculative Sampling",
+      "pair": "Topic x Method",
+      "primary_field": "topics",
+      "primary_value": "Speculative Decoding",
+      "secondary_field": "methods",
+      "secondary_value": "Speculative Sampling",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?topic=Speculative+Decoding&method=Speculative+Sampling",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "topics-speculative-decoding-methods-target-hidden-features",
       "label": "Speculative Decoding / target hidden features",
       "pair": "Topic x Method",
@@ -7825,7 +8293,7 @@
       "secondary_field": "methods",
       "secondary_value": "target hidden features",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7843,6 +8311,58 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "topics-speculative-decoding-methods-training-time-test",
+      "label": "Speculative Decoding / Training-Time Test",
+      "pair": "Topic x Method",
+      "primary_field": "topics",
+      "primary_value": "Speculative Decoding",
+      "secondary_field": "methods",
+      "secondary_value": "Training-Time Test",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?topic=Speculative+Decoding&method=Training-Time+Test",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "topics-speculative-decoding-methods-tree-based-draft",
+      "label": "Speculative Decoding / Tree-Based Draft",
+      "pair": "Topic x Method",
+      "primary_field": "topics",
+      "primary_value": "Speculative Decoding",
+      "secondary_field": "methods",
+      "secondary_value": "Tree-Based Draft",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?topic=Speculative+Decoding&method=Tree-Based+Draft",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "topics-speculative-decoding-methods-tree-based-self-speculative-decoding",
       "label": "Speculative Decoding / tree-based self-speculative decoding",
       "pair": "Topic x Method",
@@ -7851,7 +8371,7 @@
       "secondary_field": "methods",
       "secondary_value": "tree-based self-speculative decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7877,7 +8397,7 @@
       "secondary_field": "methods",
       "secondary_value": "twig-guided token pruning",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7903,7 +8423,7 @@
       "secondary_field": "methods",
       "secondary_value": "verification outcome cache",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7929,7 +8449,7 @@
       "secondary_field": "methods",
       "secondary_value": "asynchronous decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7955,7 +8475,7 @@
       "secondary_field": "methods",
       "secondary_value": "cache-aware sampling",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -7981,7 +8501,7 @@
       "secondary_field": "methods",
       "secondary_value": "fallback speculation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8007,7 +8527,7 @@
       "secondary_field": "methods",
       "secondary_value": "geometric fan-out",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8033,7 +8553,7 @@
       "secondary_field": "methods",
       "secondary_value": "Speculative Decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8059,7 +8579,7 @@
       "secondary_field": "methods",
       "secondary_value": "verification outcome cache",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8085,7 +8605,7 @@
       "secondary_field": "methods",
       "secondary_value": "CUDA / GPU parallelism",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8111,7 +8631,7 @@
       "secondary_field": "methods",
       "secondary_value": "FlashAttention",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8137,7 +8657,7 @@
       "secondary_field": "methods",
       "secondary_value": "online softmax",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8163,7 +8683,7 @@
       "secondary_field": "methods",
       "secondary_value": "tiling",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8189,7 +8709,7 @@
       "secondary_field": "methods",
       "secondary_value": "work partitioning",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8215,7 +8735,7 @@
       "secondary_field": "methods",
       "secondary_value": "distillation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8241,7 +8761,7 @@
       "secondary_field": "methods",
       "secondary_value": "FinalWipe",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8267,7 +8787,7 @@
       "secondary_field": "methods",
       "secondary_value": "multi-head twig",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8293,7 +8813,7 @@
       "secondary_field": "methods",
       "secondary_value": "pruning-oriented reinforcement learning",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8319,7 +8839,7 @@
       "secondary_field": "methods",
       "secondary_value": "tree-based self-speculative decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8345,7 +8865,7 @@
       "secondary_field": "methods",
       "secondary_value": "twig-guided token pruning",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8371,7 +8891,7 @@
       "secondary_field": "methods",
       "secondary_value": "distillation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8397,7 +8917,7 @@
       "secondary_field": "methods",
       "secondary_value": "FinalWipe",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8423,7 +8943,7 @@
       "secondary_field": "methods",
       "secondary_value": "multi-head twig",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8449,7 +8969,7 @@
       "secondary_field": "methods",
       "secondary_value": "pruning-oriented reinforcement learning",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8475,7 +8995,7 @@
       "secondary_field": "methods",
       "secondary_value": "tree-based self-speculative decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8501,7 +9021,7 @@
       "secondary_field": "methods",
       "secondary_value": "twig-guided token pruning",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8527,7 +9047,7 @@
       "secondary_field": "methods",
       "secondary_value": "distillation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8553,7 +9073,7 @@
       "secondary_field": "methods",
       "secondary_value": "FinalWipe",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8579,7 +9099,7 @@
       "secondary_field": "methods",
       "secondary_value": "multi-head twig",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8605,7 +9125,7 @@
       "secondary_field": "methods",
       "secondary_value": "pruning-oriented reinforcement learning",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8631,7 +9151,7 @@
       "secondary_field": "methods",
       "secondary_value": "tree-based self-speculative decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8657,7 +9177,7 @@
       "secondary_field": "methods",
       "secondary_value": "twig-guided token pruning",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8683,7 +9203,7 @@
       "secondary_field": "problems",
       "secondary_value": "Customizable Attention Serving",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8709,7 +9229,7 @@
       "secondary_field": "problems",
       "secondary_value": "Efficient Exact Attention",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8735,7 +9255,7 @@
       "secondary_field": "problems",
       "secondary_value": "Efficient VLM Inference",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8761,7 +9281,7 @@
       "secondary_field": "problems",
       "secondary_value": "Load-Aware Serving",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8787,7 +9307,7 @@
       "secondary_field": "problems",
       "secondary_value": "Long-Response Decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8813,7 +9333,7 @@
       "secondary_field": "problems",
       "secondary_value": "Memory-Efficient Parallel Token Generation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8839,7 +9359,7 @@
       "secondary_field": "problems",
       "secondary_value": "MoE Serving",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8865,7 +9385,7 @@
       "secondary_field": "problems",
       "secondary_value": "Parallel Diffusion Decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8883,6 +9403,32 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "tracks-inference-acceleration-problems-speculative-decoding",
+      "label": "Inference Acceleration / Speculative Decoding",
+      "pair": "Track x Problem",
+      "primary_field": "tracks",
+      "primary_value": "Inference Acceleration",
+      "secondary_field": "problems",
+      "secondary_value": "Speculative Decoding",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?track=Inference+Acceleration&problem=Speculative+Decoding",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "tracks-inference-acceleration-problems-visual-token-redundancy",
       "label": "Inference Acceleration / Visual Token Redundancy",
       "pair": "Track x Problem",
@@ -8891,7 +9437,7 @@
       "secondary_field": "problems",
       "secondary_value": "Visual Token Redundancy",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8917,7 +9463,7 @@
       "secondary_field": "problems",
       "secondary_value": "Customizable Attention Serving",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8943,7 +9489,7 @@
       "secondary_field": "problems",
       "secondary_value": "Load-Aware Serving",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8969,7 +9515,7 @@
       "secondary_field": "problems",
       "secondary_value": "Memory-Efficient Parallel Token Generation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -8995,7 +9541,7 @@
       "secondary_field": "problems",
       "secondary_value": "Parallel Diffusion Decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9021,7 +9567,7 @@
       "secondary_field": "problems",
       "secondary_value": "Efficient VLM Inference",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9047,7 +9593,7 @@
       "secondary_field": "problems",
       "secondary_value": "Long-Response Decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9073,7 +9619,7 @@
       "secondary_field": "problems",
       "secondary_value": "Visual Token Redundancy",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9099,7 +9645,7 @@
       "secondary_field": "methods",
       "secondary_value": "block-sparse attention",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9125,7 +9671,7 @@
       "secondary_field": "methods",
       "secondary_value": "composable KV-cache format",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9151,7 +9697,7 @@
       "secondary_field": "methods",
       "secondary_value": "CUDA / GPU parallelism",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9177,7 +9723,7 @@
       "secondary_field": "methods",
       "secondary_value": "CUDA Graph",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9203,7 +9749,7 @@
       "secondary_field": "methods",
       "secondary_value": "JIT compilation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9229,7 +9775,7 @@
       "secondary_field": "methods",
       "secondary_value": "load-balanced scheduling",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9255,7 +9801,7 @@
       "secondary_field": "methods",
       "secondary_value": "online softmax",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9281,7 +9827,7 @@
       "secondary_field": "methods",
       "secondary_value": "tiling",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9307,7 +9853,7 @@
       "secondary_field": "methods",
       "secondary_value": "work partitioning",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9333,7 +9879,7 @@
       "secondary_field": "methods",
       "secondary_value": "Balanced K-means",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9359,7 +9905,7 @@
       "secondary_field": "methods",
       "secondary_value": "confidence-scheduled verification",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9385,7 +9931,7 @@
       "secondary_field": "methods",
       "secondary_value": "Document-Driven Integration",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9411,7 +9957,7 @@
       "secondary_field": "methods",
       "secondary_value": "Expert Locality Routing",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9437,7 +9983,7 @@
       "secondary_field": "methods",
       "secondary_value": "hardware-aware scheduling",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9463,7 +10009,7 @@
       "secondary_field": "methods",
       "secondary_value": "Hierarchical Code Retrieval",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9489,7 +10035,7 @@
       "secondary_field": "methods",
       "secondary_value": "Iterative Search-Based Optimization",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9515,7 +10061,7 @@
       "secondary_field": "methods",
       "secondary_value": "Markov head",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9541,7 +10087,7 @@
       "secondary_field": "methods",
       "secondary_value": "Multi-Agent Workflow",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9567,7 +10113,7 @@
       "secondary_field": "methods",
       "secondary_value": "semi-autoregressive generation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9593,7 +10139,7 @@
       "secondary_field": "methods",
       "secondary_value": "Signature Cache",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9619,7 +10165,7 @@
       "secondary_field": "methods",
       "secondary_value": "Speculative Decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9645,7 +10191,7 @@
       "secondary_field": "methods",
       "secondary_value": "Unified Sketch",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9671,7 +10217,7 @@
       "secondary_field": "methods",
       "secondary_value": "Verification and Profiling Loop",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9697,7 +10243,7 @@
       "secondary_field": "methods",
       "secondary_value": "block diffusion",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9723,7 +10269,7 @@
       "secondary_field": "methods",
       "secondary_value": "dual-view attention",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9749,7 +10295,7 @@
       "secondary_field": "methods",
       "secondary_value": "forward KL distillation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9775,7 +10321,7 @@
       "secondary_field": "methods",
       "secondary_value": "intra-model consensus",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9801,7 +10347,7 @@
       "secondary_field": "methods",
       "secondary_value": "introspective consistency",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9827,7 +10373,7 @@
       "secondary_field": "methods",
       "secondary_value": "introspective strided decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9853,7 +10399,7 @@
       "secondary_field": "methods",
       "secondary_value": "KV injection",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9879,7 +10425,7 @@
       "secondary_field": "methods",
       "secondary_value": "latent consistency matching",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9905,7 +10451,7 @@
       "secondary_field": "methods",
       "secondary_value": "logit-shifted causal training",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9931,7 +10477,7 @@
       "secondary_field": "methods",
       "secondary_value": "masked diffusion",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9957,7 +10503,7 @@
       "secondary_field": "methods",
       "secondary_value": "masked-input formulation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -9983,7 +10529,7 @@
       "secondary_field": "methods",
       "secondary_value": "p/q acceptance",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10009,7 +10555,7 @@
       "secondary_field": "methods",
       "secondary_value": "parallel drafting",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10035,7 +10581,7 @@
       "secondary_field": "methods",
       "secondary_value": "quadratic speculative decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10061,7 +10607,7 @@
       "secondary_field": "methods",
       "secondary_value": "sampler head",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10087,7 +10633,7 @@
       "secondary_field": "methods",
       "secondary_value": "SGLang serving",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10113,7 +10659,7 @@
       "secondary_field": "methods",
       "secondary_value": "shared KV cache",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10139,7 +10685,7 @@
       "secondary_field": "methods",
       "secondary_value": "Speculative Decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10165,7 +10711,7 @@
       "secondary_field": "methods",
       "secondary_value": "target hidden features",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10183,6 +10729,110 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "research-line-speculative-decoding-methods-multi-layer-feature-fusion",
+      "label": "Speculative Decoding / Multi-Layer Feature Fusion",
+      "pair": "研究线 x Method",
+      "primary_field": "research_line",
+      "primary_value": "Speculative Decoding",
+      "secondary_field": "methods",
+      "secondary_value": "Multi-Layer Feature Fusion",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?line=Speculative+Decoding&method=Multi-Layer+Feature+Fusion",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "research-line-speculative-decoding-methods-speculative-sampling",
+      "label": "Speculative Decoding / Speculative Sampling",
+      "pair": "研究线 x Method",
+      "primary_field": "research_line",
+      "primary_value": "Speculative Decoding",
+      "secondary_field": "methods",
+      "secondary_value": "Speculative Sampling",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?line=Speculative+Decoding&method=Speculative+Sampling",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "research-line-speculative-decoding-methods-training-time-test",
+      "label": "Speculative Decoding / Training-Time Test",
+      "pair": "研究线 x Method",
+      "primary_field": "research_line",
+      "primary_value": "Speculative Decoding",
+      "secondary_field": "methods",
+      "secondary_value": "Training-Time Test",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?line=Speculative+Decoding&method=Training-Time+Test",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "research-line-speculative-decoding-methods-tree-based-draft",
+      "label": "Speculative Decoding / Tree-Based Draft",
+      "pair": "研究线 x Method",
+      "primary_field": "research_line",
+      "primary_value": "Speculative Decoding",
+      "secondary_field": "methods",
+      "secondary_value": "Tree-Based Draft",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?line=Speculative+Decoding&method=Tree-Based+Draft",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "research-line-unassigned-methods-asynchronous-decoding",
       "label": "Unassigned / asynchronous decoding",
       "pair": "研究线 x Method",
@@ -10191,7 +10841,7 @@
       "secondary_field": "methods",
       "secondary_value": "asynchronous decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10217,7 +10867,7 @@
       "secondary_field": "methods",
       "secondary_value": "cache-aware sampling",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10243,7 +10893,7 @@
       "secondary_field": "methods",
       "secondary_value": "fallback speculation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10269,7 +10919,7 @@
       "secondary_field": "methods",
       "secondary_value": "geometric fan-out",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10295,7 +10945,7 @@
       "secondary_field": "methods",
       "secondary_value": "Speculative Decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10321,7 +10971,7 @@
       "secondary_field": "methods",
       "secondary_value": "verification outcome cache",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10347,7 +10997,7 @@
       "secondary_field": "methods",
       "secondary_value": "distillation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10373,7 +11023,7 @@
       "secondary_field": "methods",
       "secondary_value": "FinalWipe",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10399,7 +11049,7 @@
       "secondary_field": "methods",
       "secondary_value": "multi-head twig",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10425,7 +11075,7 @@
       "secondary_field": "methods",
       "secondary_value": "pruning-oriented reinforcement learning",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10451,7 +11101,7 @@
       "secondary_field": "methods",
       "secondary_value": "tree-based self-speculative decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10477,7 +11127,7 @@
       "secondary_field": "methods",
       "secondary_value": "twig-guided token pruning",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10495,6 +11145,32 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "research-line-speculative-decoding-status-read",
+      "label": "Speculative Decoding / read",
+      "pair": "研究线 x Status",
+      "primary_field": "research_line",
+      "primary_value": "Speculative Decoding",
+      "secondary_field": "status",
+      "secondary_value": "read",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?line=Speculative+Decoding&status=read",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "research-line-vlm-acceleration-status-read",
       "label": "VLM Acceleration / read",
       "pair": "研究线 x Status",
@@ -10503,7 +11179,7 @@
       "secondary_field": "status",
       "secondary_value": "read",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10529,7 +11205,7 @@
       "secondary_field": "topics",
       "secondary_value": "Attention Kernels",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10555,7 +11231,7 @@
       "secondary_field": "topics",
       "secondary_value": "Efficient Attention",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10581,7 +11257,7 @@
       "secondary_field": "topics",
       "secondary_value": "GPU Kernel Optimization",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10607,7 +11283,7 @@
       "secondary_field": "topics",
       "secondary_value": "GPU Systems",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10633,7 +11309,7 @@
       "secondary_field": "topics",
       "secondary_value": "Inference Optimization",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10659,7 +11335,7 @@
       "secondary_field": "topics",
       "secondary_value": "KV Cache",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10685,7 +11361,7 @@
       "secondary_field": "topics",
       "secondary_value": "LLM Serving",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10711,7 +11387,7 @@
       "secondary_field": "topics",
       "secondary_value": "Long Context",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10737,7 +11413,7 @@
       "secondary_field": "topics",
       "secondary_value": "Transformer",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10763,7 +11439,7 @@
       "secondary_field": "topics",
       "secondary_value": "Compiler/DSL",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10789,7 +11465,7 @@
       "secondary_field": "topics",
       "secondary_value": "Disaggregated Serving",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10815,7 +11491,7 @@
       "secondary_field": "topics",
       "secondary_value": "Hardware Acceleration",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10841,7 +11517,7 @@
       "secondary_field": "topics",
       "secondary_value": "Kernel Generation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10867,7 +11543,7 @@
       "secondary_field": "topics",
       "secondary_value": "LLM Code Generation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10893,7 +11569,7 @@
       "secondary_field": "topics",
       "secondary_value": "LLM Inference",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10919,7 +11595,7 @@
       "secondary_field": "topics",
       "secondary_value": "Load Balancing",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10945,7 +11621,7 @@
       "secondary_field": "topics",
       "secondary_value": "MoE",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10971,7 +11647,7 @@
       "secondary_field": "topics",
       "secondary_value": "Multi-Agent Systems",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -10997,7 +11673,7 @@
       "secondary_field": "topics",
       "secondary_value": "Semi-Autoregressive Generation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -11023,7 +11699,7 @@
       "secondary_field": "topics",
       "secondary_value": "Speculative Decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -11049,7 +11725,7 @@
       "secondary_field": "topics",
       "secondary_value": "Efficient Inference",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -11075,7 +11751,7 @@
       "secondary_field": "topics",
       "secondary_value": "KV Cache",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -11101,7 +11777,7 @@
       "secondary_field": "topics",
       "secondary_value": "Multi-Token Prediction",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -11127,7 +11803,7 @@
       "secondary_field": "topics",
       "secondary_value": "Non-Autoregressive Generation",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -11145,6 +11821,110 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "research-line-speculative-decoding-topics-draft-model-training",
+      "label": "Speculative Decoding / Draft Model Training",
+      "pair": "研究线 x Topic",
+      "primary_field": "research_line",
+      "primary_value": "Speculative Decoding",
+      "secondary_field": "topics",
+      "secondary_value": "Draft Model Training",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?line=Speculative+Decoding&topic=Draft+Model+Training",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "research-line-speculative-decoding-topics-llm-inference",
+      "label": "Speculative Decoding / LLM Inference",
+      "pair": "研究线 x Topic",
+      "primary_field": "research_line",
+      "primary_value": "Speculative Decoding",
+      "secondary_field": "topics",
+      "secondary_value": "LLM Inference",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?line=Speculative+Decoding&topic=LLM+Inference",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "research-line-speculative-decoding-topics-scaling-law",
+      "label": "Speculative Decoding / Scaling Law",
+      "pair": "研究线 x Topic",
+      "primary_field": "research_line",
+      "primary_value": "Speculative Decoding",
+      "secondary_field": "topics",
+      "secondary_value": "Scaling Law",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?line=Speculative+Decoding&topic=Scaling+Law",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "research-line-speculative-decoding-topics-speculative-decoding",
+      "label": "Speculative Decoding / Speculative Decoding",
+      "pair": "研究线 x Topic",
+      "primary_field": "research_line",
+      "primary_value": "Speculative Decoding",
+      "secondary_field": "topics",
+      "secondary_value": "Speculative Decoding",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?line=Speculative+Decoding&topic=Speculative+Decoding",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "research-line-unassigned-topics-distributed-inference",
       "label": "Unassigned / Distributed Inference",
       "pair": "研究线 x Topic",
@@ -11153,7 +11933,7 @@
       "secondary_field": "topics",
       "secondary_value": "Distributed Inference",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -11179,7 +11959,7 @@
       "secondary_field": "topics",
       "secondary_value": "LLM Inference",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -11205,7 +11985,7 @@
       "secondary_field": "topics",
       "secondary_value": "RAG",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -11231,7 +12011,7 @@
       "secondary_field": "topics",
       "secondary_value": "Speculative Decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -11257,7 +12037,7 @@
       "secondary_field": "topics",
       "secondary_value": "Systems Optimization",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -11283,7 +12063,7 @@
       "secondary_field": "topics",
       "secondary_value": "Multimodal Inference",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -11309,7 +12089,7 @@
       "secondary_field": "topics",
       "secondary_value": "Speculative Decoding",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -11335,7 +12115,7 @@
       "secondary_field": "topics",
       "secondary_value": "Vision-Language Models",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -11361,7 +12141,7 @@
       "secondary_field": "topics",
       "secondary_value": "Visual Token Pruning",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -11387,7 +12167,7 @@
       "secondary_field": "topics",
       "secondary_value": "VLM Acceleration",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -11415,7 +12195,7 @@
       "secondary_field": "status",
       "secondary_value": "read",
       "count": 4,
-      "share": 0.3333,
+      "share": 0.3077,
       "action": "topic_candidate",
       "severity": "low",
       "slugs": [
@@ -11462,7 +12242,7 @@
       "secondary_field": "topics",
       "secondary_value": "Speculative Decoding",
       "count": 4,
-      "share": 0.3333,
+      "share": 0.3077,
       "action": "topic_candidate",
       "severity": "low",
       "slugs": [
@@ -11509,7 +12289,7 @@
       "secondary_field": "methods",
       "secondary_value": "Speculative Decoding",
       "count": 3,
-      "share": 0.25,
+      "share": 0.2308,
       "action": "topic_candidate",
       "severity": "low",
       "slugs": [
@@ -11549,7 +12329,7 @@
       "secondary_field": "methods",
       "secondary_value": "Speculative Decoding",
       "count": 3,
-      "share": 0.25,
+      "share": 0.2308,
       "action": "topic_candidate",
       "severity": "low",
       "slugs": [
@@ -11589,7 +12369,7 @@
       "secondary_field": "problems",
       "secondary_value": "Lossless Speculative Decoding",
       "count": 3,
-      "share": 0.25,
+      "share": 0.2308,
       "action": "topic_candidate",
       "severity": "low",
       "slugs": [
@@ -11629,7 +12409,7 @@
       "secondary_field": "problems",
       "secondary_value": "Lossless Speculative Decoding",
       "count": 3,
-      "share": 0.25,
+      "share": 0.2308,
       "action": "topic_candidate",
       "severity": "low",
       "slugs": [
@@ -11669,7 +12449,7 @@
       "secondary_field": "status",
       "secondary_value": "read",
       "count": 3,
-      "share": 0.25,
+      "share": 0.2308,
       "action": "topic_candidate",
       "severity": "low",
       "slugs": [
@@ -11709,7 +12489,7 @@
       "secondary_field": "topics",
       "secondary_value": "Diffusion Language Models",
       "count": 3,
-      "share": 0.25,
+      "share": 0.2308,
       "action": "topic_candidate",
       "severity": "low",
       "slugs": [
@@ -11749,7 +12529,7 @@
       "secondary_field": "methods",
       "secondary_value": "FlashAttention",
       "count": 2,
-      "share": 0.1667,
+      "share": 0.1538,
       "action": "watch",
       "severity": "low",
       "slugs": [
@@ -11782,7 +12562,7 @@
       "secondary_field": "methods",
       "secondary_value": "gated LoRA",
       "count": 2,
-      "share": 0.1667,
+      "share": 0.1538,
       "action": "watch",
       "severity": "low",
       "slugs": [
@@ -11815,7 +12595,7 @@
       "secondary_field": "methods",
       "secondary_value": "Speculative Decoding",
       "count": 2,
-      "share": 0.1667,
+      "share": 0.1538,
       "action": "watch",
       "severity": "low",
       "slugs": [
@@ -11848,7 +12628,7 @@
       "secondary_field": "methods",
       "secondary_value": "gated LoRA",
       "count": 2,
-      "share": 0.1667,
+      "share": 0.1538,
       "action": "watch",
       "severity": "low",
       "slugs": [
@@ -11881,7 +12661,7 @@
       "secondary_field": "methods",
       "secondary_value": "Speculative Decoding",
       "count": 2,
-      "share": 0.1667,
+      "share": 0.1538,
       "action": "watch",
       "severity": "low",
       "slugs": [
@@ -11914,7 +12694,7 @@
       "secondary_field": "methods",
       "secondary_value": "gated LoRA",
       "count": 2,
-      "share": 0.1667,
+      "share": 0.1538,
       "action": "watch",
       "severity": "low",
       "slugs": [
@@ -11947,7 +12727,7 @@
       "secondary_field": "methods",
       "secondary_value": "FlashAttention",
       "count": 2,
-      "share": 0.1667,
+      "share": 0.1538,
       "action": "watch",
       "severity": "low",
       "slugs": [
@@ -11980,7 +12760,7 @@
       "secondary_field": "methods",
       "secondary_value": "gated LoRA",
       "count": 2,
-      "share": 0.1667,
+      "share": 0.1538,
       "action": "watch",
       "severity": "low",
       "slugs": [
@@ -12013,7 +12793,7 @@
       "secondary_field": "status",
       "secondary_value": "read",
       "count": 2,
-      "share": 0.1667,
+      "share": 0.1538,
       "action": "watch",
       "severity": "low",
       "slugs": [
@@ -12046,7 +12826,7 @@
       "secondary_field": "status",
       "secondary_value": "read",
       "count": 2,
-      "share": 0.1667,
+      "share": 0.1538,
       "action": "watch",
       "severity": "low",
       "slugs": [
@@ -12079,7 +12859,7 @@
       "secondary_field": "topics",
       "secondary_value": "LLM Serving",
       "count": 2,
-      "share": 0.1667,
+      "share": 0.1538,
       "action": "watch",
       "severity": "low",
       "slugs": [
@@ -12112,7 +12892,7 @@
       "secondary_field": "topics",
       "secondary_value": "LLM",
       "count": 2,
-      "share": 0.1667,
+      "share": 0.1538,
       "action": "watch",
       "severity": "low",
       "slugs": [
@@ -12145,7 +12925,7 @@
       "secondary_field": "topics",
       "secondary_value": "LLM Inference",
       "count": 2,
-      "share": 0.1667,
+      "share": 0.1538,
       "action": "watch",
       "severity": "low",
       "slugs": [
@@ -12178,7 +12958,7 @@
       "secondary_field": "topics",
       "secondary_value": "LLM Serving",
       "count": 2,
-      "share": 0.1667,
+      "share": 0.1538,
       "action": "watch",
       "severity": "low",
       "slugs": [
@@ -12211,7 +12991,7 @@
       "secondary_field": "topics",
       "secondary_value": "Parallel Decoding",
       "count": 2,
-      "share": 0.1667,
+      "share": 0.1538,
       "action": "watch",
       "severity": "low",
       "slugs": [
@@ -12244,7 +13024,7 @@
       "secondary_field": "methods",
       "secondary_value": "Balanced K-means",
       "count": 1,
-      "share": 0.0833,
+      "share": 0.0769,
       "action": "singleton",
       "severity": "medium",
       "slugs": [
@@ -12290,6 +13070,7 @@
       "domains-llm-systems-methods-masked-diffusion",
       "domains-llm-systems-methods-masked-input-formulation",
       "domains-llm-systems-methods-multi-head-twig",
+      "domains-llm-systems-methods-multi-layer-feature-fusion",
       "domains-llm-systems-methods-online-softmax",
       "domains-llm-systems-methods-p-q-acceptance",
       "domains-llm-systems-methods-parallel-drafting",
@@ -12300,8 +13081,11 @@
       "domains-llm-systems-methods-sglang-serving",
       "domains-llm-systems-methods-shared-kv-cache",
       "domains-llm-systems-methods-signature-cache",
+      "domains-llm-systems-methods-speculative-sampling",
       "domains-llm-systems-methods-target-hidden-features",
       "domains-llm-systems-methods-tiling",
+      "domains-llm-systems-methods-training-time-test",
+      "domains-llm-systems-methods-tree-based-draft",
       "domains-llm-systems-methods-tree-based-self-speculative-decoding",
       "domains-llm-systems-methods-twig-guided-token-pruning",
       "domains-llm-systems-methods-work-partitioning",
@@ -12348,6 +13132,10 @@
       "topics-distributed-inference-methods-geometric-fan-out",
       "topics-distributed-inference-methods-speculative-decoding",
       "topics-distributed-inference-methods-verification-outcome-cache",
+      "topics-draft-model-training-methods-multi-layer-feature-fusion",
+      "topics-draft-model-training-methods-speculative-sampling",
+      "topics-draft-model-training-methods-training-time-test",
+      "topics-draft-model-training-methods-tree-based-draft",
       "topics-efficient-attention-methods-cuda-gpu-parallelism",
       "topics-efficient-attention-methods-flashattention",
       "topics-efficient-attention-methods-online-softmax",
@@ -12426,10 +13214,14 @@
       "topics-llm-inference-methods-kv-injection",
       "topics-llm-inference-methods-markov-head",
       "topics-llm-inference-methods-masked-diffusion",
+      "topics-llm-inference-methods-multi-layer-feature-fusion",
       "topics-llm-inference-methods-parallel-drafting",
       "topics-llm-inference-methods-semi-autoregressive-generation",
       "topics-llm-inference-methods-shared-kv-cache",
+      "topics-llm-inference-methods-speculative-sampling",
       "topics-llm-inference-methods-target-hidden-features",
+      "topics-llm-inference-methods-training-time-test",
+      "topics-llm-inference-methods-tree-based-draft",
       "topics-llm-inference-methods-verification-outcome-cache",
       "topics-llm-serving-methods-balanced-k-means",
       "topics-llm-serving-methods-block-diffusion",
@@ -12498,6 +13290,10 @@
       "topics-parallel-decoding-methods-p-q-acceptance",
       "topics-parallel-decoding-methods-sglang-serving",
       "topics-parallel-decoding-methods-shared-kv-cache",
+      "topics-scaling-law-methods-multi-layer-feature-fusion",
+      "topics-scaling-law-methods-speculative-sampling",
+      "topics-scaling-law-methods-training-time-test",
+      "topics-scaling-law-methods-tree-based-draft",
       "topics-semi-autoregressive-generation-methods-confidence-scheduled-verification",
       "topics-semi-autoregressive-generation-methods-hardware-aware-scheduling",
       "topics-semi-autoregressive-generation-methods-markov-head",
@@ -12524,6 +13320,7 @@
       "topics-speculative-decoding-methods-masked-diffusion",
       "topics-speculative-decoding-methods-masked-input-formulation",
       "topics-speculative-decoding-methods-multi-head-twig",
+      "topics-speculative-decoding-methods-multi-layer-feature-fusion",
       "topics-speculative-decoding-methods-p-q-acceptance",
       "topics-speculative-decoding-methods-parallel-drafting",
       "topics-speculative-decoding-methods-pruning-oriented-reinforcement-learning",
@@ -12532,7 +13329,10 @@
       "topics-speculative-decoding-methods-semi-autoregressive-generation",
       "topics-speculative-decoding-methods-sglang-serving",
       "topics-speculative-decoding-methods-shared-kv-cache",
+      "topics-speculative-decoding-methods-speculative-sampling",
       "topics-speculative-decoding-methods-target-hidden-features",
+      "topics-speculative-decoding-methods-training-time-test",
+      "topics-speculative-decoding-methods-tree-based-draft",
       "topics-speculative-decoding-methods-tree-based-self-speculative-decoding",
       "topics-speculative-decoding-methods-twig-guided-token-pruning",
       "topics-speculative-decoding-methods-verification-outcome-cache",
@@ -12573,6 +13373,7 @@
       "tracks-inference-acceleration-problems-memory-efficient-parallel-token-generation",
       "tracks-inference-acceleration-problems-moe-serving",
       "tracks-inference-acceleration-problems-parallel-diffusion-decoding",
+      "tracks-inference-acceleration-problems-speculative-decoding",
       "tracks-inference-acceleration-problems-visual-token-redundancy",
       "tracks-inference-serving-systems-problems-customizable-attention-serving",
       "tracks-parallel-decoding-problems-load-aware-serving",
@@ -12623,6 +13424,10 @@
       "research-line-parallel-decoding-with-diffusion-models-methods-shared-kv-cache",
       "research-line-parallel-decoding-with-diffusion-models-methods-speculative-decoding",
       "research-line-parallel-decoding-with-diffusion-models-methods-target-hidden-features",
+      "research-line-speculative-decoding-methods-multi-layer-feature-fusion",
+      "research-line-speculative-decoding-methods-speculative-sampling",
+      "research-line-speculative-decoding-methods-training-time-test",
+      "research-line-speculative-decoding-methods-tree-based-draft",
       "research-line-unassigned-methods-asynchronous-decoding",
       "research-line-unassigned-methods-cache-aware-sampling",
       "research-line-unassigned-methods-fallback-speculation",
@@ -12635,6 +13440,7 @@
       "research-line-vlm-acceleration-methods-pruning-oriented-reinforcement-learning",
       "research-line-vlm-acceleration-methods-tree-based-self-speculative-decoding",
       "research-line-vlm-acceleration-methods-twig-guided-token-pruning",
+      "research-line-speculative-decoding-status-read",
       "research-line-vlm-acceleration-status-read",
       "research-line-efficient-attention-kernels-topics-attention-kernels",
       "research-line-efficient-attention-kernels-topics-efficient-attention",
@@ -12660,6 +13466,10 @@
       "research-line-parallel-decoding-with-diffusion-models-topics-kv-cache",
       "research-line-parallel-decoding-with-diffusion-models-topics-multi-token-prediction",
       "research-line-parallel-decoding-with-diffusion-models-topics-non-autoregressive-generation",
+      "research-line-speculative-decoding-topics-draft-model-training",
+      "research-line-speculative-decoding-topics-llm-inference",
+      "research-line-speculative-decoding-topics-scaling-law",
+      "research-line-speculative-decoding-topics-speculative-decoding",
       "research-line-unassigned-topics-distributed-inference",
       "research-line-unassigned-topics-llm-inference",
       "research-line-unassigned-topics-rag",

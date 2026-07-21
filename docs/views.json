@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-07-21T15:43:55",
-  "count": 12,
-  "view_count": 29,
+  "generated_at": "2026-07-21T18:25:15",
+  "count": 13,
+  "view_count": 30,
   "configured_count": 3,
   "system_count": 10,
-  "generated_count": 16,
+  "generated_count": 17,
   "source_counts": {
     "configured": 3,
-    "generated": 16,
+    "generated": 17,
     "system": 10
   },
   "kind_counts": {
     "queue": 10,
-    "research_line": 5,
+    "research_line": 6,
     "shared": 3,
     "workflow_status": 11
   },
@@ -88,7 +88,7 @@
         "review": "none",
         "sort": "importance"
       },
-      "count": 12,
+      "count": 13,
       "slugs": [
         "2607.00466-eldr",
         "2603.03251-speculative-speculative-decoding",
@@ -97,6 +97,7 @@
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus",
+        "2503.01840-eagle-3-scaling-up",
         "2507.11851-llm-future-mtp",
         "2512.23424-akg-kernel-agent-multi",
         "2501.01005-flashinfer",
@@ -203,12 +204,12 @@
           "next_review": ""
         },
         {
-          "slug": "2507.11851-llm-future-mtp",
-          "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
-          "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
-          "href": "2507.11851-llm-future-mtp.html",
-          "research_line": "Parallel Decoding with Diffusion Models",
-          "line_role": "followup",
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html",
+          "research_line": "Speculative Decoding",
+          "line_role": "main",
           "year": 2025,
           "importance": 4,
           "status": "read",
@@ -382,7 +383,7 @@
         "review": "none",
         "sort": "importance"
       },
-      "count": 12,
+      "count": 13,
       "slugs": [
         "2607.00466-eldr",
         "2603.03251-speculative-speculative-decoding",
@@ -391,6 +392,7 @@
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus",
+        "2503.01840-eagle-3-scaling-up",
         "2507.11851-llm-future-mtp",
         "2512.23424-akg-kernel-agent-multi",
         "2501.01005-flashinfer",
@@ -497,12 +499,12 @@
           "next_review": ""
         },
         {
-          "slug": "2507.11851-llm-future-mtp",
-          "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
-          "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
-          "href": "2507.11851-llm-future-mtp.html",
-          "research_line": "Parallel Decoding with Diffusion Models",
-          "line_role": "followup",
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html",
+          "research_line": "Speculative Decoding",
+          "line_role": "main",
           "year": 2025,
           "importance": 4,
           "status": "read",
@@ -534,7 +536,7 @@
         "code": "yes",
         "sort": "year"
       },
-      "count": 8,
+      "count": 9,
       "slugs": [
         "2603.03251-speculative-speculative-decoding",
         "2503.14075-twigvlm-plus-plus",
@@ -542,6 +544,7 @@
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus",
+        "2503.01840-eagle-3-scaling-up",
         "2501.01005-flashinfer",
         "2307.08691-flashattention-2"
       ],
@@ -631,12 +634,12 @@
           "next_review": ""
         },
         {
-          "slug": "2501.01005-flashinfer",
-          "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
-          "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
-          "href": "2501.01005-flashinfer.html",
-          "research_line": "Efficient Attention Kernels",
-          "line_role": "system",
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html",
+          "research_line": "Speculative Decoding",
+          "line_role": "main",
           "year": 2025,
           "importance": 4,
           "status": "read",
@@ -645,14 +648,14 @@
           "next_review": ""
         },
         {
-          "slug": "2307.08691-flashattention-2",
-          "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning",
-          "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
-          "href": "2307.08691-flashattention-2.html",
+          "slug": "2501.01005-flashinfer",
+          "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
+          "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
+          "href": "2501.01005-flashinfer.html",
           "research_line": "Efficient Attention Kernels",
-          "line_role": "foundation",
-          "year": 2023,
-          "importance": 5,
+          "line_role": "system",
+          "year": 2025,
+          "importance": 4,
           "status": "read",
           "reading_stage": "deep_read",
           "review_stage": "",
@@ -912,7 +915,7 @@
         "review": "none",
         "sort": "importance"
       },
-      "count": 12,
+      "count": 13,
       "slugs": [
         "2604.11035-introspective-dlm",
         "2307.08691-flashattention-2",
@@ -924,6 +927,7 @@
         "2603.03251-speculative-speculative-decoding",
         "2503.14075-twigvlm-plus-plus",
         "2507.11851-llm-future-mtp",
+        "2503.01840-eagle-3-scaling-up",
         "2607.00466-eldr",
         "semantic-search-evaluation"
       ],
@@ -1444,6 +1448,49 @@
       "empty": false
     },
     {
+      "id": "generated-library-speculative-decoding-35e78f31",
+      "name": "研究线：Speculative Decoding",
+      "source": "generated",
+      "kind": "research_line",
+      "page": "library",
+      "target_page": "library.html",
+      "href": "library.html?line=Speculative+Decoding&sort=importance",
+      "state": {
+        "line": "Speculative Decoding",
+        "sort": "importance"
+      },
+      "count": 1,
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html",
+          "research_line": "Speculative Decoding",
+          "line_role": "main",
+          "year": 2025,
+          "importance": 4,
+          "status": "read",
+          "reading_stage": "deep_read",
+          "review_stage": "",
+          "next_review": ""
+        }
+      ],
+      "note": "按研究线固定入口生成的视图。",
+      "shared_view": {
+        "name": "研究线：Speculative Decoding",
+        "page": "library",
+        "state": {
+          "line": "Speculative Decoding",
+          "sort": "importance"
+        }
+      },
+      "empty": false
+    },
+    {
       "id": "generated-library-vlm-acceleration-6e4fbfc2",
       "name": "研究线：VLM Acceleration",
       "source": "generated",
@@ -1583,7 +1630,7 @@
         "status": "read",
         "sort": "year"
       },
-      "count": 12,
+      "count": 13,
       "slugs": [
         "2607.00466-eldr",
         "2603.03251-speculative-speculative-decoding",
@@ -1592,6 +1639,7 @@
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus",
+        "2503.01840-eagle-3-scaling-up",
         "2507.11851-llm-future-mtp",
         "2512.23424-akg-kernel-agent-multi",
         "2501.01005-flashinfer",
@@ -1698,12 +1746,12 @@
           "next_review": ""
         },
         {
-          "slug": "2507.11851-llm-future-mtp",
-          "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
-          "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
-          "href": "2507.11851-llm-future-mtp.html",
-          "research_line": "Parallel Decoding with Diffusion Models",
-          "line_role": "followup",
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html",
+          "research_line": "Speculative Decoding",
+          "line_role": "main",
           "year": 2025,
           "importance": 4,
           "status": "read",

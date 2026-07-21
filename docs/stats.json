@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-07-21T15:43:55",
-  "count": 12,
-  "quality_score": 73.8,
+  "generated_at": "2026-07-21T18:25:15",
+  "count": 13,
+  "quality_score": 75.2,
   "controls": {
     "active_status_workflow": "personal",
     "status": [
@@ -375,16 +375,16 @@
     }
   },
   "coverage": {
-    "taxonomy": "75%",
+    "taxonomy": "77%",
     "review_plan": "0%",
-    "code_observation": "67%",
-    "research_lines": 4,
-    "code": "67%"
+    "code_observation": "69%",
+    "research_lines": 5,
+    "code": "69%"
   },
   "queue_sizes": {
     "quality": {
       "missing_required_metadata": 3,
-      "needs_review_plan": 12,
+      "needs_review_plan": 13,
       "due_review": 0,
       "no_code_observation": 4,
       "taxonomy_drift": 1,
@@ -395,7 +395,7 @@
     },
     "review": {
       "due": 0,
-      "needs_plan": 12,
+      "needs_plan": 13,
       "scheduled": 0,
       "high_priority": 2
     }
@@ -404,7 +404,7 @@
     "domains": [
       {
         "name": "LLM Systems",
-        "count": 9
+        "count": 10
       },
       {
         "name": "Multimodal Systems",
@@ -414,7 +414,7 @@
     "tracks": [
       {
         "name": "Inference Acceleration",
-        "count": 7
+        "count": 8
       },
       {
         "name": "Parallel Decoding",
@@ -471,6 +471,10 @@
         "count": 1
       },
       {
+        "name": "Speculative Decoding",
+        "count": 1
+      },
+      {
         "name": "Visual Token Redundancy",
         "count": 1
       }
@@ -478,15 +482,15 @@
     "topics": [
       {
         "name": "Speculative Decoding",
-        "count": 7
+        "count": 8
+      },
+      {
+        "name": "LLM Inference",
+        "count": 5
       },
       {
         "name": "LLM Serving",
         "count": 5
-      },
-      {
-        "name": "LLM Inference",
-        "count": 4
       },
       {
         "name": "Diffusion Language Models",
@@ -521,7 +525,7 @@
         "count": 1
       },
       {
-        "name": "Efficient Attention",
+        "name": "Draft Model Training",
         "count": 1
       }
     ],
@@ -589,6 +593,10 @@
         "count": 2
       },
       {
+        "name": "Speculative Decoding",
+        "count": 1
+      },
+      {
         "name": "VLM Acceleration",
         "count": 1
       }
@@ -596,7 +604,7 @@
     "statuses": [
       {
         "name": "read",
-        "count": 12
+        "count": 13
       },
       {
         "name": "archived",
@@ -618,7 +626,7 @@
     "reading_stages": [
       {
         "name": "deep_read",
-        "count": 7
+        "count": 8
       },
       {
         "name": "code_checked",
@@ -652,13 +660,13 @@
     "years": {
       "unknown": 1,
       "2026": 7,
-      "2025": 3,
+      "2025": 4,
       "2023": 1
     },
     "importance": {
       "unknown": 1,
       "5": 2,
-      "4": 9
+      "4": 10
     }
   },
   "taxonomy_balance": [
@@ -673,10 +681,10 @@
       "singleton_count": 1,
       "overloaded_count": 1,
       "max_value": "LLM Systems",
-      "max_count": 9,
-      "max_share": 0.75,
-      "effective_count": 1.38,
-      "balance_score": 19
+      "max_count": 10,
+      "max_share": 0.7692,
+      "effective_count": 1.36,
+      "balance_score": 17
     },
     {
       "field": "tracks",
@@ -687,59 +695,59 @@
       "used_count": 5,
       "unused_count": 0,
       "singleton_count": 2,
-      "overloaded_count": 0,
+      "overloaded_count": 1,
       "max_value": "Inference Acceleration",
-      "max_count": 7,
-      "max_share": 0.5833,
-      "effective_count": 3.79,
-      "balance_score": 33
+      "max_count": 8,
+      "max_share": 0.6154,
+      "effective_count": 3.67,
+      "balance_score": 31
     },
     {
       "field": "problems",
       "label": "问题",
       "english": "Problem",
       "query_key": "problem",
-      "configured_count": 10,
-      "used_count": 10,
+      "configured_count": 11,
+      "used_count": 11,
       "unused_count": 0,
-      "singleton_count": 9,
+      "singleton_count": 10,
       "overloaded_count": 0,
       "max_value": "Lossless Speculative Decoding",
       "max_count": 3,
-      "max_share": 0.25,
-      "effective_count": 9.12,
-      "balance_score": 41
+      "max_share": 0.2308,
+      "effective_count": 10.09,
+      "balance_score": 42
     },
     {
       "field": "topics",
       "label": "主题",
       "english": "Topic",
       "query_key": "topic",
-      "configured_count": 33,
-      "used_count": 33,
+      "configured_count": 35,
+      "used_count": 35,
       "unused_count": 0,
-      "singleton_count": 26,
-      "overloaded_count": 0,
+      "singleton_count": 28,
+      "overloaded_count": 1,
       "max_value": "Speculative Decoding",
-      "max_count": 7,
-      "max_share": 0.5833,
-      "effective_count": 25.84,
-      "balance_score": 25
+      "max_count": 8,
+      "max_share": 0.6154,
+      "effective_count": 26.49,
+      "balance_score": 23
     },
     {
       "field": "methods",
       "label": "方法",
       "english": "Method",
       "query_key": "method",
-      "configured_count": 54,
-      "used_count": 54,
+      "configured_count": 58,
+      "used_count": 58,
       "unused_count": 0,
-      "singleton_count": 51,
+      "singleton_count": 55,
       "overloaded_count": 0,
       "max_value": "Speculative Decoding",
       "max_count": 3,
-      "max_share": 0.25,
-      "effective_count": 52.24,
+      "max_share": 0.2308,
+      "effective_count": 56.22,
       "balance_score": 40
     },
     {
@@ -747,16 +755,16 @@
       "label": "研究线",
       "english": "Research line",
       "query_key": "line",
-      "configured_count": 4,
-      "used_count": 4,
+      "configured_count": 5,
+      "used_count": 5,
       "unused_count": 0,
-      "singleton_count": 1,
+      "singleton_count": 2,
       "overloaded_count": 0,
       "max_value": "Parallel Decoding with Diffusion Models",
       "max_count": 4,
-      "max_share": 0.3333,
-      "effective_count": 3.6,
-      "balance_score": 58
+      "max_share": 0.3077,
+      "effective_count": 4.34,
+      "balance_score": 55
     },
     {
       "field": "line_role",
@@ -768,11 +776,11 @@
       "unused_count": 0,
       "singleton_count": 2,
       "overloaded_count": 0,
-      "max_value": "system",
-      "max_count": 2,
-      "max_share": 0.1667,
-      "effective_count": 5.74,
-      "balance_score": 69
+      "max_value": "main",
+      "max_count": 3,
+      "max_share": 0.2308,
+      "effective_count": 5.59,
+      "balance_score": 64
     },
     {
       "field": "status",
@@ -785,7 +793,7 @@
       "singleton_count": 0,
       "overloaded_count": 1,
       "max_value": "read",
-      "max_count": 12,
+      "max_count": 13,
       "max_share": 1.0,
       "effective_count": 1.0,
       "balance_score": 0
@@ -799,12 +807,12 @@
       "used_count": 2,
       "unused_count": 2,
       "singleton_count": 0,
-      "overloaded_count": 0,
+      "overloaded_count": 1,
       "max_value": "deep_read",
-      "max_count": 7,
-      "max_share": 0.5833,
-      "effective_count": 1.7,
-      "balance_score": 42
+      "max_count": 8,
+      "max_share": 0.6154,
+      "effective_count": 1.65,
+      "balance_score": 38
     },
     {
       "field": "review_stage",
@@ -878,6 +886,19 @@
       "roles": {},
       "code_coverage": "50%",
       "avg_importance": 2.0
+    },
+    {
+      "name": "Speculative Decoding",
+      "count": 1,
+      "owner": "",
+      "team": "",
+      "cadence": "",
+      "owner_note": "",
+      "roles": {
+        "main": 1
+      },
+      "code_coverage": "100%",
+      "avg_importance": 4.0
     },
     {
       "name": "VLM Acceleration",

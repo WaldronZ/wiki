@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-07-21T15:43:55",
-  "count": 12,
+  "generated_at": "2026-07-21T18:25:15",
+  "count": 13,
   "report_dir": "docs",
   "dimension_count": 11,
-  "batch_count": 127,
+  "batch_count": 135,
   "dimensions": [
     {
       "key": "research_line",
@@ -84,10 +84,10 @@
     }
   ],
   "summary": {
-    "high": 127,
+    "high": 135,
     "medium": 0,
     "low": 0,
-    "missing_review": 229,
+    "missing_review": 246,
     "missing_taxonomy": 50
   },
   "batches": [
@@ -96,21 +96,22 @@
       "dimension": "review_stage",
       "dimension_label": "Review stage",
       "value": "未设置",
-      "count": 12,
+      "count": 13,
       "severity": "high",
-      "priority": 171,
+      "priority": 176,
       "latest_year": 2026,
       "high_importance": 2,
-      "missing_review": 12,
+      "missing_review": 13,
       "due_review": 0,
       "missing_taxonomy": 3,
       "no_code": 4,
-      "recommended_action": "补 next_review 12 篇",
+      "recommended_action": "补 next_review 13 篇",
       "href": "library.html",
       "export_command": "",
       "slugs": [
         "2307.08691-flashattention-2",
         "2501.01005-flashinfer",
+        "2503.01840-eagle-3-scaling-up",
         "2503.14075-twigvlm-plus-plus",
         "2507.11851-llm-future-mtp",
         "2512.23424-akg-kernel-agent-multi",
@@ -144,21 +145,22 @@
       "dimension": "status",
       "dimension_label": "Status",
       "value": "read",
-      "count": 12,
+      "count": 13,
       "severity": "high",
-      "priority": 171,
+      "priority": 176,
       "latest_year": 2026,
       "high_importance": 2,
-      "missing_review": 12,
+      "missing_review": 13,
       "due_review": 0,
       "missing_taxonomy": 3,
       "no_code": 4,
-      "recommended_action": "补 next_review 12 篇",
+      "recommended_action": "补 next_review 13 篇",
       "href": "library.html?status=read",
       "export_command": "python3 scripts/export_reading_list.py docs --status read --output docs/exports/status-read-reading-list.md",
       "slugs": [
         "2307.08691-flashattention-2",
         "2501.01005-flashinfer",
+        "2503.01840-eagle-3-scaling-up",
         "2503.14075-twigvlm-plus-plus",
         "2507.11851-llm-future-mtp",
         "2512.23424-akg-kernel-agent-multi",
@@ -192,21 +194,22 @@
       "dimension": "code",
       "dimension_label": "Code",
       "value": "yes",
-      "count": 8,
+      "count": 9,
       "severity": "high",
-      "priority": 141,
+      "priority": 146,
       "latest_year": 2026,
       "high_importance": 2,
-      "missing_review": 8,
+      "missing_review": 9,
       "due_review": 0,
       "missing_taxonomy": 1,
       "no_code": 0,
-      "recommended_action": "补 next_review 8 篇",
+      "recommended_action": "补 next_review 9 篇",
       "href": "library.html?code=yes",
       "export_command": "",
       "slugs": [
         "2307.08691-flashattention-2",
         "2501.01005-flashinfer",
+        "2503.01840-eagle-3-scaling-up",
         "2503.14075-twigvlm-plus-plus",
         "2602.06036-dflash",
         "2603.03251-speculative-speculative-decoding",
@@ -236,21 +239,22 @@
       "dimension": "domain",
       "dimension_label": "Domain",
       "value": "LLM Systems",
-      "count": 9,
+      "count": 10,
       "severity": "high",
-      "priority": 141,
+      "priority": 146,
       "latest_year": 2026,
       "high_importance": 2,
-      "missing_review": 9,
+      "missing_review": 10,
       "due_review": 0,
       "missing_taxonomy": 0,
       "no_code": 2,
-      "recommended_action": "补 next_review 9 篇",
+      "recommended_action": "补 next_review 10 篇",
       "href": "library.html?domain=LLM+Systems",
       "export_command": "",
       "slugs": [
         "2307.08691-flashattention-2",
         "2501.01005-flashinfer",
+        "2503.01840-eagle-3-scaling-up",
         "2503.14075-twigvlm-plus-plus",
         "2507.11851-llm-future-mtp",
         "2602.06036-dflash",
@@ -281,19 +285,20 @@
       "dimension": "topic",
       "dimension_label": "Topic",
       "value": "Speculative Decoding",
-      "count": 7,
+      "count": 8,
       "severity": "high",
-      "priority": 133,
+      "priority": 138,
       "latest_year": 2026,
       "high_importance": 1,
-      "missing_review": 7,
+      "missing_review": 8,
       "due_review": 0,
       "missing_taxonomy": 1,
       "no_code": 1,
-      "recommended_action": "补 next_review 7 篇",
+      "recommended_action": "补 next_review 8 篇",
       "href": "library.html?topic=Speculative+Decoding",
       "export_command": "python3 scripts/export_reading_list.py docs --topic 'Speculative Decoding' --output docs/exports/topic-speculative-decoding-reading-list.md",
       "slugs": [
+        "2503.01840-eagle-3-scaling-up",
         "2503.14075-twigvlm-plus-plus",
         "2507.11851-llm-future-mtp",
         "2602.06036-dflash",
@@ -324,21 +329,22 @@
       "dimension": "reading_stage",
       "dimension_label": "Reading stage",
       "value": "deep_read",
-      "count": 7,
+      "count": 8,
       "severity": "high",
-      "priority": 131,
+      "priority": 136,
       "latest_year": 2026,
       "high_importance": 2,
-      "missing_review": 7,
+      "missing_review": 8,
       "due_review": 0,
       "missing_taxonomy": 0,
       "no_code": 2,
-      "recommended_action": "补 next_review 7 篇",
+      "recommended_action": "补 next_review 8 篇",
       "href": "library.html?stage=deep_read",
       "export_command": "",
       "slugs": [
         "2307.08691-flashattention-2",
         "2501.01005-flashinfer",
+        "2503.01840-eagle-3-scaling-up",
         "2507.11851-llm-future-mtp",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
@@ -351,7 +357,7 @@
         "2602.06036-dflash",
         "2607.00466-eldr",
         "2605.12825-orthrus",
-        "2501.01005-flashinfer"
+        "2503.01840-eagle-3-scaling-up"
       ],
       "sample_titles": [
         "内省式扩散语言模型",
@@ -359,7 +365,7 @@
         "DFlash：用于快速 speculative decoding 的块扩散方法",
         "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
         "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
-        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+        "EAGLE-3：通过训练时测试扩展大语言模型推理加速"
       ]
     },
     {
@@ -367,19 +373,20 @@
       "dimension": "track",
       "dimension_label": "Track",
       "value": "Inference Acceleration",
-      "count": 7,
+      "count": 8,
       "severity": "high",
-      "priority": 128,
+      "priority": 133,
       "latest_year": 2026,
       "high_importance": 1,
-      "missing_review": 7,
+      "missing_review": 8,
       "due_review": 0,
       "missing_taxonomy": 0,
       "no_code": 2,
-      "recommended_action": "补 next_review 7 篇",
+      "recommended_action": "补 next_review 8 篇",
       "href": "library.html?track=Inference+Acceleration",
       "export_command": "python3 scripts/export_reading_list.py docs --track 'Inference Acceleration' --output docs/exports/track-inference-acceleration-reading-list.md",
       "slugs": [
+        "2503.01840-eagle-3-scaling-up",
         "2503.14075-twigvlm-plus-plus",
         "2507.11851-llm-future-mtp",
         "2602.06036-dflash",
@@ -541,6 +548,45 @@
       ]
     },
     {
+      "id": "topic::LLM Inference",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "LLM Inference",
+      "count": 5,
+      "severity": "high",
+      "priority": 120,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 5,
+      "due_review": 0,
+      "missing_taxonomy": 1,
+      "no_code": 0,
+      "recommended_action": "补 next_review 5 篇",
+      "href": "library.html?topic=LLM+Inference",
+      "export_command": "python3 scripts/export_reading_list.py docs --topic 'LLM Inference' --output docs/exports/topic-llm-inference-reading-list.md",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up",
+        "2602.06036-dflash",
+        "2603.03251-speculative-speculative-decoding",
+        "2605.12825-orthrus",
+        "noarxiv-2026-dspark"
+      ],
+      "sample_slugs": [
+        "2602.06036-dflash",
+        "noarxiv-2026-dspark",
+        "2605.12825-orthrus",
+        "2603.03251-speculative-speculative-decoding",
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_titles": [
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "DSpark：基于置信度调度的半自回归 speculative decoding",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+        "推测性推测解码",
+        "EAGLE-3：通过训练时测试扩展大语言模型推理加速"
+      ]
+    },
+    {
       "id": "track::未设置",
       "dimension": "track",
       "dimension_label": "Track",
@@ -649,42 +695,6 @@
         "DSpark：基于置信度调度的半自回归 speculative decoding",
         "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
         "你的 LLM 知道未来：揭示它的多 token 预测潜力"
-      ]
-    },
-    {
-      "id": "topic::LLM Inference",
-      "dimension": "topic",
-      "dimension_label": "Topic",
-      "value": "LLM Inference",
-      "count": 4,
-      "severity": "high",
-      "priority": 115,
-      "latest_year": 2026,
-      "high_importance": 0,
-      "missing_review": 4,
-      "due_review": 0,
-      "missing_taxonomy": 1,
-      "no_code": 0,
-      "recommended_action": "补 next_review 4 篇",
-      "href": "library.html?topic=LLM+Inference",
-      "export_command": "python3 scripts/export_reading_list.py docs --topic 'LLM Inference' --output docs/exports/topic-llm-inference-reading-list.md",
-      "slugs": [
-        "2602.06036-dflash",
-        "2603.03251-speculative-speculative-decoding",
-        "2605.12825-orthrus",
-        "noarxiv-2026-dspark"
-      ],
-      "sample_slugs": [
-        "2602.06036-dflash",
-        "noarxiv-2026-dspark",
-        "2605.12825-orthrus",
-        "2603.03251-speculative-speculative-decoding"
-      ],
-      "sample_titles": [
-        "DFlash：用于快速 speculative decoding 的块扩散方法",
-        "DSpark：基于置信度调度的半自回归 speculative decoding",
-        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
-        "推测性推测解码"
       ]
     },
     {
@@ -910,6 +920,39 @@
       "sample_titles": [
         "内省式扩散语言模型",
         "FlashAttention-2：用更好的并行性与工作划分加速 Attention"
+      ]
+    },
+    {
+      "id": "line_role::main",
+      "dimension": "line_role",
+      "dimension_label": "研究角色",
+      "value": "main",
+      "count": 3,
+      "severity": "high",
+      "priority": 105,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 3,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 1,
+      "recommended_action": "补 next_review 3 篇",
+      "href": "library.html?role=main",
+      "export_command": "",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up",
+        "2503.14075-twigvlm-plus-plus",
+        "2607.00466-eldr"
+      ],
+      "sample_slugs": [
+        "2607.00466-eldr",
+        "2503.14075-twigvlm-plus-plus",
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_titles": [
+        "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+        "EAGLE-3：通过训练时测试扩展大语言模型推理加速"
       ]
     },
     {
@@ -1153,36 +1196,6 @@
       "sample_titles": [
         "DFlash：用于快速 speculative decoding 的块扩散方法",
         "你的 LLM 知道未来：揭示它的多 token 预测潜力"
-      ]
-    },
-    {
-      "id": "line_role::main",
-      "dimension": "line_role",
-      "dimension_label": "研究角色",
-      "value": "main",
-      "count": 2,
-      "severity": "high",
-      "priority": 100,
-      "latest_year": 2026,
-      "high_importance": 0,
-      "missing_review": 2,
-      "due_review": 0,
-      "missing_taxonomy": 0,
-      "no_code": 1,
-      "recommended_action": "补 next_review 2 篇",
-      "href": "library.html?role=main",
-      "export_command": "",
-      "slugs": [
-        "2503.14075-twigvlm-plus-plus",
-        "2607.00466-eldr"
-      ],
-      "sample_slugs": [
-        "2607.00466-eldr",
-        "2503.14075-twigvlm-plus-plus"
-      ],
-      "sample_titles": [
-        "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
-        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型"
       ]
     },
     {
@@ -2869,6 +2882,33 @@
       ]
     },
     {
+      "id": "method::Multi-Layer Feature Fusion",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "Multi-Layer Feature Fusion",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=Multi-Layer+Feature+Fusion",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'Multi-Layer Feature Fusion' --output docs/exports/method-multi-layer-feature-fusion-reading-list.md",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_titles": [
+        "EAGLE-3：通过训练时测试扩展大语言模型推理加速"
+      ]
+    },
+    {
       "id": "method::parallel drafting",
       "dimension": "method",
       "dimension_label": "Method",
@@ -3058,6 +3098,33 @@
       ]
     },
     {
+      "id": "method::Speculative Sampling",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "Speculative Sampling",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=Speculative+Sampling",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'Speculative Sampling' --output docs/exports/method-speculative-sampling-reading-list.md",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_titles": [
+        "EAGLE-3：通过训练时测试扩展大语言模型推理加速"
+      ]
+    },
+    {
       "id": "method::target hidden features",
       "dimension": "method",
       "dimension_label": "Method",
@@ -3082,6 +3149,60 @@
       ],
       "sample_titles": [
         "DFlash：用于快速 speculative decoding 的块扩散方法"
+      ]
+    },
+    {
+      "id": "method::Training-Time Test",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "Training-Time Test",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=Training-Time+Test",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'Training-Time Test' --output docs/exports/method-training-time-test-reading-list.md",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_titles": [
+        "EAGLE-3：通过训练时测试扩展大语言模型推理加速"
+      ]
+    },
+    {
+      "id": "method::Tree-Based Draft",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "Tree-Based Draft",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=Tree-Based+Draft",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'Tree-Based Draft' --output docs/exports/method-tree-based-draft-reading-list.md",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_titles": [
+        "EAGLE-3：通过训练时测试扩展大语言模型推理加速"
       ]
     },
     {
@@ -3301,6 +3422,33 @@
       ]
     },
     {
+      "id": "problem::Speculative Decoding",
+      "dimension": "problem",
+      "dimension_label": "Problem",
+      "value": "Speculative Decoding",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?problem=Speculative+Decoding",
+      "export_command": "",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_titles": [
+        "EAGLE-3：通过训练时测试扩展大语言模型推理加速"
+      ]
+    },
+    {
       "id": "problem::Visual Token Redundancy",
       "dimension": "problem",
       "dimension_label": "Problem",
@@ -3325,6 +3473,33 @@
       ],
       "sample_titles": [
         "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型"
+      ]
+    },
+    {
+      "id": "research_line::Speculative Decoding",
+      "dimension": "research_line",
+      "dimension_label": "研究线",
+      "value": "Speculative Decoding",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?line=Speculative+Decoding",
+      "export_command": "python3 scripts/export_reading_list.py docs --line 'Speculative Decoding' --output docs/exports/research-line-speculative-decoding-reading-list.md",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_titles": [
+        "EAGLE-3：通过训练时测试扩展大语言模型推理加速"
       ]
     },
     {
@@ -3406,6 +3581,33 @@
       ],
       "sample_titles": [
         "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由"
+      ]
+    },
+    {
+      "id": "topic::Draft Model Training",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "Draft Model Training",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?topic=Draft+Model+Training",
+      "export_command": "python3 scripts/export_reading_list.py docs --topic 'Draft Model Training' --output docs/exports/topic-draft-model-training-reading-list.md",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_titles": [
+        "EAGLE-3：通过训练时测试扩展大语言模型推理加速"
       ]
     },
     {
@@ -3625,6 +3827,33 @@
       ]
     },
     {
+      "id": "topic::Scaling Law",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "Scaling Law",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?topic=Scaling+Law",
+      "export_command": "python3 scripts/export_reading_list.py docs --topic 'Scaling Law' --output docs/exports/topic-scaling-law-reading-list.md",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_titles": [
+        "EAGLE-3：通过训练时测试扩展大语言模型推理加速"
+      ]
+    },
+    {
       "id": "topic::Semi-Autoregressive Generation",
       "dimension": "topic",
       "dimension_label": "Topic",
@@ -3793,21 +4022,22 @@
       "dimension": "review_stage",
       "dimension_label": "Review stage",
       "value": "未设置",
-      "count": 12,
+      "count": 13,
       "severity": "high",
-      "priority": 171,
+      "priority": 176,
       "latest_year": 2026,
       "high_importance": 2,
-      "missing_review": 12,
+      "missing_review": 13,
       "due_review": 0,
       "missing_taxonomy": 3,
       "no_code": 4,
-      "recommended_action": "补 next_review 12 篇",
+      "recommended_action": "补 next_review 13 篇",
       "href": "library.html",
       "export_command": "",
       "slugs": [
         "2307.08691-flashattention-2",
         "2501.01005-flashinfer",
+        "2503.01840-eagle-3-scaling-up",
         "2503.14075-twigvlm-plus-plus",
         "2507.11851-llm-future-mtp",
         "2512.23424-akg-kernel-agent-multi",
@@ -3841,21 +4071,22 @@
       "dimension": "status",
       "dimension_label": "Status",
       "value": "read",
-      "count": 12,
+      "count": 13,
       "severity": "high",
-      "priority": 171,
+      "priority": 176,
       "latest_year": 2026,
       "high_importance": 2,
-      "missing_review": 12,
+      "missing_review": 13,
       "due_review": 0,
       "missing_taxonomy": 3,
       "no_code": 4,
-      "recommended_action": "补 next_review 12 篇",
+      "recommended_action": "补 next_review 13 篇",
       "href": "library.html?status=read",
       "export_command": "python3 scripts/export_reading_list.py docs --status read --output docs/exports/status-read-reading-list.md",
       "slugs": [
         "2307.08691-flashattention-2",
         "2501.01005-flashinfer",
+        "2503.01840-eagle-3-scaling-up",
         "2503.14075-twigvlm-plus-plus",
         "2507.11851-llm-future-mtp",
         "2512.23424-akg-kernel-agent-multi",
@@ -3889,21 +4120,22 @@
       "dimension": "code",
       "dimension_label": "Code",
       "value": "yes",
-      "count": 8,
+      "count": 9,
       "severity": "high",
-      "priority": 141,
+      "priority": 146,
       "latest_year": 2026,
       "high_importance": 2,
-      "missing_review": 8,
+      "missing_review": 9,
       "due_review": 0,
       "missing_taxonomy": 1,
       "no_code": 0,
-      "recommended_action": "补 next_review 8 篇",
+      "recommended_action": "补 next_review 9 篇",
       "href": "library.html?code=yes",
       "export_command": "",
       "slugs": [
         "2307.08691-flashattention-2",
         "2501.01005-flashinfer",
+        "2503.01840-eagle-3-scaling-up",
         "2503.14075-twigvlm-plus-plus",
         "2602.06036-dflash",
         "2603.03251-speculative-speculative-decoding",
@@ -3933,21 +4165,22 @@
       "dimension": "domain",
       "dimension_label": "Domain",
       "value": "LLM Systems",
-      "count": 9,
+      "count": 10,
       "severity": "high",
-      "priority": 141,
+      "priority": 146,
       "latest_year": 2026,
       "high_importance": 2,
-      "missing_review": 9,
+      "missing_review": 10,
       "due_review": 0,
       "missing_taxonomy": 0,
       "no_code": 2,
-      "recommended_action": "补 next_review 9 篇",
+      "recommended_action": "补 next_review 10 篇",
       "href": "library.html?domain=LLM+Systems",
       "export_command": "",
       "slugs": [
         "2307.08691-flashattention-2",
         "2501.01005-flashinfer",
+        "2503.01840-eagle-3-scaling-up",
         "2503.14075-twigvlm-plus-plus",
         "2507.11851-llm-future-mtp",
         "2602.06036-dflash",
@@ -3978,19 +4211,20 @@
       "dimension": "topic",
       "dimension_label": "Topic",
       "value": "Speculative Decoding",
-      "count": 7,
+      "count": 8,
       "severity": "high",
-      "priority": 133,
+      "priority": 138,
       "latest_year": 2026,
       "high_importance": 1,
-      "missing_review": 7,
+      "missing_review": 8,
       "due_review": 0,
       "missing_taxonomy": 1,
       "no_code": 1,
-      "recommended_action": "补 next_review 7 篇",
+      "recommended_action": "补 next_review 8 篇",
       "href": "library.html?topic=Speculative+Decoding",
       "export_command": "python3 scripts/export_reading_list.py docs --topic 'Speculative Decoding' --output docs/exports/topic-speculative-decoding-reading-list.md",
       "slugs": [
+        "2503.01840-eagle-3-scaling-up",
         "2503.14075-twigvlm-plus-plus",
         "2507.11851-llm-future-mtp",
         "2602.06036-dflash",
@@ -4021,21 +4255,22 @@
       "dimension": "reading_stage",
       "dimension_label": "Reading stage",
       "value": "deep_read",
-      "count": 7,
+      "count": 8,
       "severity": "high",
-      "priority": 131,
+      "priority": 136,
       "latest_year": 2026,
       "high_importance": 2,
-      "missing_review": 7,
+      "missing_review": 8,
       "due_review": 0,
       "missing_taxonomy": 0,
       "no_code": 2,
-      "recommended_action": "补 next_review 7 篇",
+      "recommended_action": "补 next_review 8 篇",
       "href": "library.html?stage=deep_read",
       "export_command": "",
       "slugs": [
         "2307.08691-flashattention-2",
         "2501.01005-flashinfer",
+        "2503.01840-eagle-3-scaling-up",
         "2507.11851-llm-future-mtp",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
@@ -4048,7 +4283,7 @@
         "2602.06036-dflash",
         "2607.00466-eldr",
         "2605.12825-orthrus",
-        "2501.01005-flashinfer"
+        "2503.01840-eagle-3-scaling-up"
       ],
       "sample_titles": [
         "内省式扩散语言模型",
@@ -4056,7 +4291,7 @@
         "DFlash：用于快速 speculative decoding 的块扩散方法",
         "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
         "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
-        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+        "EAGLE-3：通过训练时测试扩展大语言模型推理加速"
       ]
     },
     {
@@ -4064,19 +4299,20 @@
       "dimension": "track",
       "dimension_label": "Track",
       "value": "Inference Acceleration",
-      "count": 7,
+      "count": 8,
       "severity": "high",
-      "priority": 128,
+      "priority": 133,
       "latest_year": 2026,
       "high_importance": 1,
-      "missing_review": 7,
+      "missing_review": 8,
       "due_review": 0,
       "missing_taxonomy": 0,
       "no_code": 2,
-      "recommended_action": "补 next_review 7 篇",
+      "recommended_action": "补 next_review 8 篇",
       "href": "library.html?track=Inference+Acceleration",
       "export_command": "python3 scripts/export_reading_list.py docs --track 'Inference Acceleration' --output docs/exports/track-inference-acceleration-reading-list.md",
       "slugs": [
+        "2503.01840-eagle-3-scaling-up",
         "2503.14075-twigvlm-plus-plus",
         "2507.11851-llm-future-mtp",
         "2602.06036-dflash",
@@ -4238,36 +4474,42 @@
       ]
     },
     {
-      "id": "track::未设置",
-      "dimension": "track",
-      "dimension_label": "Track",
-      "value": "未设置",
-      "count": 3,
+      "id": "topic::LLM Inference",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "LLM Inference",
+      "count": 5,
       "severity": "high",
       "priority": 120,
       "latest_year": 2026,
       "high_importance": 0,
-      "missing_review": 3,
+      "missing_review": 5,
       "due_review": 0,
-      "missing_taxonomy": 3,
-      "no_code": 2,
-      "recommended_action": "补 next_review 3 篇",
-      "href": "library.html",
-      "export_command": "",
+      "missing_taxonomy": 1,
+      "no_code": 0,
+      "recommended_action": "补 next_review 5 篇",
+      "href": "library.html?topic=LLM+Inference",
+      "export_command": "python3 scripts/export_reading_list.py docs --topic 'LLM Inference' --output docs/exports/topic-llm-inference-reading-list.md",
       "slugs": [
-        "2512.23424-akg-kernel-agent-multi",
+        "2503.01840-eagle-3-scaling-up",
+        "2602.06036-dflash",
         "2603.03251-speculative-speculative-decoding",
-        "semantic-search-evaluation"
+        "2605.12825-orthrus",
+        "noarxiv-2026-dspark"
       ],
       "sample_slugs": [
+        "2602.06036-dflash",
+        "noarxiv-2026-dspark",
+        "2605.12825-orthrus",
         "2603.03251-speculative-speculative-decoding",
-        "2512.23424-akg-kernel-agent-multi",
-        "semantic-search-evaluation"
+        "2503.01840-eagle-3-scaling-up"
       ],
       "sample_titles": [
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "DSpark：基于置信度调度的半自回归 speculative decoding",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
         "推测性推测解码",
-        "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
-        "Semantic Search Evaluation"
+        "EAGLE-3：通过训练时测试扩展大语言模型推理加速"
       ]
     }
   ],

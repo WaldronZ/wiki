@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-21T15:43:55",
-  "count": 12,
+  "generated_at": "2026-07-21T18:25:15",
+  "count": 13,
   "fields": [
     {
       "key": "title_zh",
@@ -499,6 +499,56 @@
       "essence": "Orthrus 像是在老练作家的脑子里装了一个会同时写好几句草稿的小助手，但每一句交稿前都由作家本人逐字点头，所以快了，却没有换掉原来的声音。"
     },
     {
+      "slug": "2503.01840-eagle-3-scaling-up",
+      "href": "2503.01840-eagle-3-scaling-up.html",
+      "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+      "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+      "title_en": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+      "year": 2025,
+      "arxiv_id": "2503.01840",
+      "arxiv_url": "https://arxiv.org/abs/2503.01840",
+      "code_url": "https://github.com/SafeAILab/EAGLE",
+      "authors": [
+        "Yuhui Li",
+        "Fangyun Wei",
+        "Chao Zhang",
+        "Hongyang Zhang"
+      ],
+      "research_line": "Speculative Decoding",
+      "line_role": "main",
+      "domains": [
+        "LLM Systems"
+      ],
+      "tracks": [
+        "Inference Acceleration"
+      ],
+      "problems": [
+        "Speculative Decoding"
+      ],
+      "topics": [
+        "Draft Model Training",
+        "LLM Inference",
+        "Scaling Law",
+        "Speculative Decoding"
+      ],
+      "methods": [
+        "Multi-Layer Feature Fusion",
+        "Speculative Sampling",
+        "Training-Time Test",
+        "Tree-Based Draft"
+      ],
+      "status": "read",
+      "reading_stage": "deep_read",
+      "review_stage": "",
+      "next_review": "",
+      "importance": 4,
+      "confidence": 4,
+      "reproducibility": 3,
+      "has_code": true,
+      "excerpt": "*中文版**：EAGLE-3 发现了 EAGLE 系列 draft model 在扩大训练数据时收益有限的根因——feature prediction loss 构成了不必要的表达力约束，并提出两项关键改进：(1) 去掉 feature prediction constraint，改用 direct token prediction，配合训练时模拟多步生成的 training-time test 技术；(2) 将 target mode...",
+      "essence": "给大模型装一个更聪明的\"打草稿\"助手：过去的助手被要求照抄上级的笔记（feature prediction），反而学不好；现在让它自由发挥、同时在训练时就模拟真实的打草稿过程，它就能随着练习量的增长越来越快——就像一个实习生，不再被条条框框束缚后，终于能从大量实践中真正成长起来。"
+    },
+    {
       "slug": "2507.11851-llm-future-mtp",
       "href": "2507.11851-llm-future-mtp.html",
       "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
@@ -777,11 +827,11 @@
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus",
+        "2503.01840-eagle-3-scaling-up",
         "2507.11851-llm-future-mtp",
         "2512.23424-akg-kernel-agent-multi",
         "2501.01005-flashinfer",
-        "2307.08691-flashattention-2",
-        "semantic-search-evaluation"
+        "2307.08691-flashattention-2"
       ]
     },
     {
@@ -818,6 +868,7 @@
         "2604.11035-introspective-dlm",
         "2602.06036-dflash",
         "noarxiv-2026-dspark",
+        "2503.01840-eagle-3-scaling-up",
         "2607.00466-eldr",
         "2503.14075-twigvlm-plus-plus",
         "2605.12825-orthrus",

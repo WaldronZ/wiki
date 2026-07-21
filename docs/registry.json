@@ -1,10 +1,190 @@
 {
-  "generated_at": "2026-07-21T15:43:55",
-  "count": 12,
-  "label_count": 127,
+  "generated_at": "2026-07-21T18:25:15",
+  "count": 13,
+  "label_count": 133,
   "configured_label_count": 32,
   "alias_count": 3,
   "labels": [
+    {
+      "id": "speculative-decoding",
+      "label": "Speculative Decoding",
+      "key": "speculative decoding",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 3,
+          "configured": true,
+          "href": "library.html?method=Speculative+Decoding",
+          "definition": {
+            "description": "Use a draft process and acceptance rule to accelerate autoregressive generation.",
+            "owner": "decoding-owner",
+            "status": "active"
+          }
+        },
+        {
+          "field": "problems",
+          "label": "问题",
+          "english": "Problem",
+          "query_key": "problem",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?problem=Speculative+Decoding"
+        },
+        {
+          "field": "research_line",
+          "label": "研究线",
+          "english": "Research line",
+          "query_key": "line",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?line=Speculative+Decoding"
+        },
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 8,
+          "configured": true,
+          "href": "library.html?topic=Speculative+Decoding",
+          "definition": {
+            "description": "Draft-and-verify decoding methods that preserve target-model output distribution while improving latency.",
+            "owner": "decoding-owner",
+            "status": "active"
+          }
+        }
+      ],
+      "field_names": [
+        "methods",
+        "problems",
+        "research_line",
+        "topics"
+      ],
+      "total_count": 13,
+      "paper_count": 8,
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up",
+        "2503.14075-twigvlm-plus-plus",
+        "2507.11851-llm-future-mtp",
+        "2602.06036-dflash",
+        "2603.03251-speculative-speculative-decoding",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus",
+        "noarxiv-2026-dspark"
+      ],
+      "papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html",
+          "year": 2025,
+          "research_line": "Speculative Decoding",
+          "importance": 4
+        },
+        {
+          "slug": "2503.14075-twigvlm-plus-plus",
+          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+          "href": "2503.14075-twigvlm-plus-plus.html",
+          "year": 2026,
+          "research_line": "VLM Acceleration",
+          "importance": 4
+        },
+        {
+          "slug": "2507.11851-llm-future-mtp",
+          "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
+          "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
+          "href": "2507.11851-llm-future-mtp.html",
+          "year": 2025,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        },
+        {
+          "slug": "2602.06036-dflash",
+          "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
+          "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
+          "href": "2602.06036-dflash.html",
+          "year": 2026,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        },
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html",
+          "year": 2026,
+          "research_line": "Unassigned",
+          "importance": 4
+        },
+        {
+          "slug": "2604.11035-introspective-dlm",
+          "title": "Introspective Diffusion Language Models",
+          "title_zh": "内省式扩散语言模型",
+          "href": "2604.11035-introspective-dlm.html",
+          "year": 2026,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 5
+        },
+        {
+          "slug": "2605.12825-orthrus",
+          "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion",
+          "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+          "href": "2605.12825-orthrus.html",
+          "year": 2026,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        },
+        {
+          "slug": "noarxiv-2026-dspark",
+          "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+          "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+          "href": "noarxiv-2026-dspark.html",
+          "year": 2026,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": true,
+      "configured_fields": [
+        "methods",
+        "topics"
+      ],
+      "definitions": [
+        {
+          "field": "topics",
+          "description": "Draft-and-verify decoding methods that preserve target-model output distribution while improving latency.",
+          "owner": "decoding-owner",
+          "status": "active"
+        },
+        {
+          "field": "methods",
+          "description": "Use a draft process and acceptance rule to accelerate autoregressive generation.",
+          "owner": "decoding-owner",
+          "status": "active"
+        }
+      ],
+      "definition_count": 2,
+      "definition_status": "active",
+      "description": "Draft-and-verify decoding methods that preserve target-model output distribution while improving latency. / Use a draft process and acceptance rule to accelerate autoregressive generation.",
+      "owner": {
+        "owner": "decoding-owner"
+      },
+      "owner_name": "decoding-owner",
+      "signals": [
+        "cross_field",
+        "overloaded"
+      ],
+      "severity": "high",
+      "recommended_action": "检查该标签是否过宽，必要时拆成更具体的 topic/method/problem。",
+      "query_href": "library.html?topic=Speculative+Decoding"
+    },
     {
       "id": "llm-systems",
       "label": "LLM Systems",
@@ -15,7 +195,7 @@
           "label": "结构域",
           "english": "Domain",
           "query_key": "domain",
-          "count": 9,
+          "count": 10,
           "configured": true,
           "href": "library.html?domain=LLM+Systems",
           "definition": {
@@ -28,11 +208,12 @@
       "field_names": [
         "domains"
       ],
-      "total_count": 9,
-      "paper_count": 9,
+      "total_count": 10,
+      "paper_count": 10,
       "slugs": [
         "2307.08691-flashattention-2",
         "2501.01005-flashinfer",
+        "2503.01840-eagle-3-scaling-up",
         "2503.14075-twigvlm-plus-plus",
         "2507.11851-llm-future-mtp",
         "2602.06036-dflash",
@@ -58,6 +239,129 @@
           "href": "2501.01005-flashinfer.html",
           "year": 2025,
           "research_line": "Efficient Attention Kernels",
+          "importance": 4
+        },
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html",
+          "year": 2025,
+          "research_line": "Speculative Decoding",
+          "importance": 4
+        },
+        {
+          "slug": "2503.14075-twigvlm-plus-plus",
+          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+          "href": "2503.14075-twigvlm-plus-plus.html",
+          "year": 2026,
+          "research_line": "VLM Acceleration",
+          "importance": 4
+        },
+        {
+          "slug": "2507.11851-llm-future-mtp",
+          "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
+          "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
+          "href": "2507.11851-llm-future-mtp.html",
+          "year": 2025,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        },
+        {
+          "slug": "2602.06036-dflash",
+          "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
+          "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
+          "href": "2602.06036-dflash.html",
+          "year": 2026,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        },
+        {
+          "slug": "2604.11035-introspective-dlm",
+          "title": "Introspective Diffusion Language Models",
+          "title_zh": "内省式扩散语言模型",
+          "href": "2604.11035-introspective-dlm.html",
+          "year": 2026,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 5
+        },
+        {
+          "slug": "2605.12825-orthrus",
+          "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion",
+          "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+          "href": "2605.12825-orthrus.html",
+          "year": 2026,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": true,
+      "configured_fields": [
+        "domains"
+      ],
+      "definitions": [
+        {
+          "field": "domains",
+          "description": "Systems-oriented papers about serving, inference, kernels, memory, and scalability for language models.",
+          "owner": "systems",
+          "status": "active"
+        }
+      ],
+      "definition_count": 1,
+      "definition_status": "active",
+      "description": "Systems-oriented papers about serving, inference, kernels, memory, and scalability for language models.",
+      "owner": {
+        "owner": "systems"
+      },
+      "owner_name": "systems",
+      "signals": [
+        "overloaded"
+      ],
+      "severity": "high",
+      "recommended_action": "检查该标签是否过宽，必要时拆成更具体的 topic/method/problem。",
+      "query_href": "library.html?domain=LLM+Systems"
+    },
+    {
+      "id": "inference-acceleration",
+      "label": "Inference Acceleration",
+      "key": "inference acceleration",
+      "fields": [
+        {
+          "field": "tracks",
+          "label": "方向",
+          "english": "Track",
+          "query_key": "track",
+          "count": 8,
+          "configured": false,
+          "href": "library.html?track=Inference+Acceleration"
+        }
+      ],
+      "field_names": [
+        "tracks"
+      ],
+      "total_count": 8,
+      "paper_count": 8,
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up",
+        "2503.14075-twigvlm-plus-plus",
+        "2507.11851-llm-future-mtp",
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus",
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark"
+      ],
+      "papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html",
+          "year": 2025,
+          "research_line": "Speculative Decoding",
           "importance": 4
         },
         {
@@ -113,35 +417,34 @@
           "year": 2026,
           "research_line": "LLM Serving",
           "importance": 4
+        },
+        {
+          "slug": "noarxiv-2026-dspark",
+          "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+          "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+          "href": "noarxiv-2026-dspark.html",
+          "year": 2026,
+          "research_line": "LLM Serving",
+          "importance": 4
         }
       ],
       "aliases": [],
       "alias_count": 0,
-      "configured": true,
-      "configured_fields": [
-        "domains"
-      ],
-      "definitions": [
-        {
-          "field": "domains",
-          "description": "Systems-oriented papers about serving, inference, kernels, memory, and scalability for language models.",
-          "owner": "systems",
-          "status": "active"
-        }
-      ],
-      "definition_count": 1,
-      "definition_status": "active",
-      "description": "Systems-oriented papers about serving, inference, kernels, memory, and scalability for language models.",
-      "owner": {
-        "owner": "systems"
-      },
-      "owner_name": "systems",
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
       "signals": [
-        "overloaded"
+        "overloaded",
+        "undefined_label"
       ],
       "severity": "high",
       "recommended_action": "检查该标签是否过宽，必要时拆成更具体的 topic/method/problem。",
-      "query_href": "library.html?domain=LLM+Systems"
+      "query_href": "library.html?track=Inference+Acceleration"
     },
     {
       "id": "llm-serving",
@@ -386,266 +689,6 @@
       "query_href": "library.html?role=tooling"
     },
     {
-      "id": "speculative-decoding",
-      "label": "Speculative Decoding",
-      "key": "speculative decoding",
-      "fields": [
-        {
-          "field": "methods",
-          "label": "方法",
-          "english": "Method",
-          "query_key": "method",
-          "count": 3,
-          "configured": true,
-          "href": "library.html?method=Speculative+Decoding",
-          "definition": {
-            "description": "Use a draft process and acceptance rule to accelerate autoregressive generation.",
-            "owner": "decoding-owner",
-            "status": "active"
-          }
-        },
-        {
-          "field": "topics",
-          "label": "主题",
-          "english": "Topic",
-          "query_key": "topic",
-          "count": 7,
-          "configured": true,
-          "href": "library.html?topic=Speculative+Decoding",
-          "definition": {
-            "description": "Draft-and-verify decoding methods that preserve target-model output distribution while improving latency.",
-            "owner": "decoding-owner",
-            "status": "active"
-          }
-        }
-      ],
-      "field_names": [
-        "methods",
-        "topics"
-      ],
-      "total_count": 10,
-      "paper_count": 7,
-      "slugs": [
-        "2503.14075-twigvlm-plus-plus",
-        "2507.11851-llm-future-mtp",
-        "2602.06036-dflash",
-        "2603.03251-speculative-speculative-decoding",
-        "2604.11035-introspective-dlm",
-        "2605.12825-orthrus",
-        "noarxiv-2026-dspark"
-      ],
-      "papers": [
-        {
-          "slug": "2503.14075-twigvlm-plus-plus",
-          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
-          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
-          "href": "2503.14075-twigvlm-plus-plus.html",
-          "year": 2026,
-          "research_line": "VLM Acceleration",
-          "importance": 4
-        },
-        {
-          "slug": "2507.11851-llm-future-mtp",
-          "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
-          "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
-          "href": "2507.11851-llm-future-mtp.html",
-          "year": 2025,
-          "research_line": "Parallel Decoding with Diffusion Models",
-          "importance": 4
-        },
-        {
-          "slug": "2602.06036-dflash",
-          "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
-          "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
-          "href": "2602.06036-dflash.html",
-          "year": 2026,
-          "research_line": "Parallel Decoding with Diffusion Models",
-          "importance": 4
-        },
-        {
-          "slug": "2603.03251-speculative-speculative-decoding",
-          "title": "Speculative Speculative Decoding",
-          "title_zh": "推测性推测解码",
-          "href": "2603.03251-speculative-speculative-decoding.html",
-          "year": 2026,
-          "research_line": "Unassigned",
-          "importance": 4
-        },
-        {
-          "slug": "2604.11035-introspective-dlm",
-          "title": "Introspective Diffusion Language Models",
-          "title_zh": "内省式扩散语言模型",
-          "href": "2604.11035-introspective-dlm.html",
-          "year": 2026,
-          "research_line": "Parallel Decoding with Diffusion Models",
-          "importance": 5
-        },
-        {
-          "slug": "2605.12825-orthrus",
-          "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion",
-          "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
-          "href": "2605.12825-orthrus.html",
-          "year": 2026,
-          "research_line": "Parallel Decoding with Diffusion Models",
-          "importance": 4
-        },
-        {
-          "slug": "noarxiv-2026-dspark",
-          "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
-          "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
-          "href": "noarxiv-2026-dspark.html",
-          "year": 2026,
-          "research_line": "LLM Serving",
-          "importance": 4
-        }
-      ],
-      "aliases": [],
-      "alias_count": 0,
-      "configured": true,
-      "configured_fields": [
-        "methods",
-        "topics"
-      ],
-      "definitions": [
-        {
-          "field": "topics",
-          "description": "Draft-and-verify decoding methods that preserve target-model output distribution while improving latency.",
-          "owner": "decoding-owner",
-          "status": "active"
-        },
-        {
-          "field": "methods",
-          "description": "Use a draft process and acceptance rule to accelerate autoregressive generation.",
-          "owner": "decoding-owner",
-          "status": "active"
-        }
-      ],
-      "definition_count": 2,
-      "definition_status": "active",
-      "description": "Draft-and-verify decoding methods that preserve target-model output distribution while improving latency. / Use a draft process and acceptance rule to accelerate autoregressive generation.",
-      "owner": {
-        "owner": "decoding-owner"
-      },
-      "owner_name": "decoding-owner",
-      "signals": [
-        "cross_field"
-      ],
-      "severity": "medium",
-      "recommended_action": "确认同名标签跨字段语义是否一致；若语义不同，改名让字段职责更清楚。",
-      "query_href": "library.html?topic=Speculative+Decoding"
-    },
-    {
-      "id": "inference-acceleration",
-      "label": "Inference Acceleration",
-      "key": "inference acceleration",
-      "fields": [
-        {
-          "field": "tracks",
-          "label": "方向",
-          "english": "Track",
-          "query_key": "track",
-          "count": 7,
-          "configured": false,
-          "href": "library.html?track=Inference+Acceleration"
-        }
-      ],
-      "field_names": [
-        "tracks"
-      ],
-      "total_count": 7,
-      "paper_count": 7,
-      "slugs": [
-        "2503.14075-twigvlm-plus-plus",
-        "2507.11851-llm-future-mtp",
-        "2602.06036-dflash",
-        "2604.11035-introspective-dlm",
-        "2605.12825-orthrus",
-        "2607.00466-eldr",
-        "noarxiv-2026-dspark"
-      ],
-      "papers": [
-        {
-          "slug": "2503.14075-twigvlm-plus-plus",
-          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
-          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
-          "href": "2503.14075-twigvlm-plus-plus.html",
-          "year": 2026,
-          "research_line": "VLM Acceleration",
-          "importance": 4
-        },
-        {
-          "slug": "2507.11851-llm-future-mtp",
-          "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
-          "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
-          "href": "2507.11851-llm-future-mtp.html",
-          "year": 2025,
-          "research_line": "Parallel Decoding with Diffusion Models",
-          "importance": 4
-        },
-        {
-          "slug": "2602.06036-dflash",
-          "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
-          "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
-          "href": "2602.06036-dflash.html",
-          "year": 2026,
-          "research_line": "Parallel Decoding with Diffusion Models",
-          "importance": 4
-        },
-        {
-          "slug": "2604.11035-introspective-dlm",
-          "title": "Introspective Diffusion Language Models",
-          "title_zh": "内省式扩散语言模型",
-          "href": "2604.11035-introspective-dlm.html",
-          "year": 2026,
-          "research_line": "Parallel Decoding with Diffusion Models",
-          "importance": 5
-        },
-        {
-          "slug": "2605.12825-orthrus",
-          "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion",
-          "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
-          "href": "2605.12825-orthrus.html",
-          "year": 2026,
-          "research_line": "Parallel Decoding with Diffusion Models",
-          "importance": 4
-        },
-        {
-          "slug": "2607.00466-eldr",
-          "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
-          "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
-          "href": "2607.00466-eldr.html",
-          "year": 2026,
-          "research_line": "LLM Serving",
-          "importance": 4
-        },
-        {
-          "slug": "noarxiv-2026-dspark",
-          "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
-          "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
-          "href": "noarxiv-2026-dspark.html",
-          "year": 2026,
-          "research_line": "LLM Serving",
-          "importance": 4
-        }
-      ],
-      "aliases": [],
-      "alias_count": 0,
-      "configured": false,
-      "configured_fields": [],
-      "definitions": [],
-      "definition_count": 0,
-      "definition_status": "",
-      "description": "",
-      "owner": {},
-      "owner_name": "",
-      "signals": [
-        "undefined_label"
-      ],
-      "severity": "medium",
-      "recommended_action": "给该标签补 label_definitions 说明，或确认它应合并到已有规范标签。",
-      "query_href": "library.html?track=Inference+Acceleration"
-    },
-    {
       "id": "parallel-decoding",
       "label": "Parallel Decoding",
       "key": "parallel decoding",
@@ -772,7 +815,7 @@
           "label": "主题",
           "english": "Topic",
           "query_key": "topic",
-          "count": 4,
+          "count": 5,
           "configured": false,
           "href": "library.html?topic=LLM+Inference"
         }
@@ -780,15 +823,25 @@
       "field_names": [
         "topics"
       ],
-      "total_count": 4,
-      "paper_count": 4,
+      "total_count": 5,
+      "paper_count": 5,
       "slugs": [
+        "2503.01840-eagle-3-scaling-up",
         "2602.06036-dflash",
         "2603.03251-speculative-speculative-decoding",
         "2605.12825-orthrus",
         "noarxiv-2026-dspark"
       ],
       "papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html",
+          "year": 2025,
+          "research_line": "Speculative Decoding",
+          "importance": 4
+        },
         {
           "slug": "2602.06036-dflash",
           "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
@@ -2103,6 +2156,58 @@
       "severity": "medium",
       "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
       "query_href": "library.html?method=Document-Driven+Integration"
+    },
+    {
+      "id": "draft-model-training",
+      "label": "Draft Model Training",
+      "key": "draft model training",
+      "fields": [
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?topic=Draft+Model+Training"
+        }
+      ],
+      "field_names": [
+        "topics"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html",
+          "year": 2025,
+          "research_line": "Speculative Decoding",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?topic=Draft+Model+Training"
     },
     {
       "id": "dual-view-attention",
@@ -4237,6 +4342,58 @@
       "query_href": "library.html?method=multi-head+twig"
     },
     {
+      "id": "multi-layer-feature-fusion",
+      "label": "Multi-Layer Feature Fusion",
+      "key": "multi layer feature fusion",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=Multi-Layer+Feature+Fusion"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html",
+          "year": 2025,
+          "research_line": "Speculative Decoding",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=Multi-Layer+Feature+Fusion"
+    },
+    {
       "id": "multi-token-prediction",
       "label": "Multi-Token Prediction",
       "key": "multi token prediction",
@@ -4861,6 +5018,58 @@
       "query_href": "library.html?method=sampler+head"
     },
     {
+      "id": "scaling-law",
+      "label": "Scaling Law",
+      "key": "scaling law",
+      "fields": [
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?topic=Scaling+Law"
+        }
+      ],
+      "field_names": [
+        "topics"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html",
+          "year": 2025,
+          "research_line": "Speculative Decoding",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?topic=Scaling+Law"
+    },
+    {
       "id": "sglang-serving",
       "label": "SGLang serving",
       "key": "sglang serving",
@@ -5015,6 +5224,58 @@
       "severity": "medium",
       "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
       "query_href": "library.html?method=Signature+Cache"
+    },
+    {
+      "id": "speculative-sampling",
+      "label": "Speculative Sampling",
+      "key": "speculative sampling",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=Speculative+Sampling"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html",
+          "year": 2025,
+          "research_line": "Speculative Decoding",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=Speculative+Sampling"
     },
     {
       "id": "systems-optimization",
@@ -5173,6 +5434,58 @@
       "query_href": "library.html?method=tiling"
     },
     {
+      "id": "training-time-test",
+      "label": "Training-Time Test",
+      "key": "training time test",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=Training-Time+Test"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html",
+          "year": 2025,
+          "research_line": "Speculative Decoding",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=Training-Time+Test"
+    },
+    {
       "id": "transformer",
       "label": "Transformer",
       "key": "transformer",
@@ -5223,6 +5536,58 @@
       "severity": "medium",
       "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
       "query_href": "library.html?topic=Transformer"
+    },
+    {
+      "id": "tree-based-draft",
+      "label": "Tree-Based Draft",
+      "key": "tree based draft",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=Tree-Based+Draft"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html",
+          "year": 2025,
+          "research_line": "Speculative Decoding",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=Tree-Based+Draft"
     },
     {
       "id": "tree-based-self-speculative-decoding",
@@ -6609,7 +6974,7 @@
           "label": "阅读状态",
           "english": "Status",
           "query_key": "status",
-          "count": 12,
+          "count": 13,
           "configured": true,
           "href": "library.html?status=read",
           "definition": {
@@ -6622,11 +6987,12 @@
       "field_names": [
         "status"
       ],
-      "total_count": 12,
-      "paper_count": 12,
+      "total_count": 13,
+      "paper_count": 13,
       "slugs": [
         "2307.08691-flashattention-2",
         "2501.01005-flashinfer",
+        "2503.01840-eagle-3-scaling-up",
         "2503.14075-twigvlm-plus-plus",
         "2507.11851-llm-future-mtp",
         "2512.23424-akg-kernel-agent-multi",
@@ -6655,6 +7021,15 @@
           "href": "2501.01005-flashinfer.html",
           "year": 2025,
           "research_line": "Efficient Attention Kernels",
+          "importance": 4
+        },
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html",
+          "year": 2025,
+          "research_line": "Speculative Decoding",
           "importance": 4
         },
         {
@@ -6701,15 +7076,6 @@
           "year": 2026,
           "research_line": "Unassigned",
           "importance": 4
-        },
-        {
-          "slug": "2604.11035-introspective-dlm",
-          "title": "Introspective Diffusion Language Models",
-          "title_zh": "内省式扩散语言模型",
-          "href": "2604.11035-introspective-dlm.html",
-          "year": 2026,
-          "research_line": "Parallel Decoding with Diffusion Models",
-          "importance": 5
         }
       ],
       "aliases": [],
@@ -6748,7 +7114,7 @@
           "label": "阅读阶段",
           "english": "Reading stage",
           "query_key": "stage",
-          "count": 7,
+          "count": 8,
           "configured": true,
           "href": "library.html?stage=deep_read",
           "definition": {
@@ -6761,11 +7127,12 @@
       "field_names": [
         "reading_stage"
       ],
-      "total_count": 7,
-      "paper_count": 7,
+      "total_count": 8,
+      "paper_count": 8,
       "slugs": [
         "2307.08691-flashattention-2",
         "2501.01005-flashinfer",
+        "2503.01840-eagle-3-scaling-up",
         "2507.11851-llm-future-mtp",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
@@ -6789,6 +7156,15 @@
           "href": "2501.01005-flashinfer.html",
           "year": 2025,
           "research_line": "Efficient Attention Kernels",
+          "importance": 4
+        },
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html",
+          "year": 2025,
+          "research_line": "Speculative Decoding",
           "importance": 4
         },
         {
@@ -6960,6 +7336,77 @@
       "severity": "ok",
       "recommended_action": "当前标签状态稳定。",
       "query_href": "library.html?line=Parallel+Decoding+with+Diffusion+Models"
+    },
+    {
+      "id": "main",
+      "label": "main",
+      "key": "main",
+      "fields": [
+        {
+          "field": "line_role",
+          "label": "研究线角色",
+          "english": "Line role",
+          "query_key": "role",
+          "count": 3,
+          "configured": true,
+          "href": "library.html?role=main"
+        }
+      ],
+      "field_names": [
+        "line_role"
+      ],
+      "total_count": 3,
+      "paper_count": 3,
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up",
+        "2503.14075-twigvlm-plus-plus",
+        "2607.00466-eldr"
+      ],
+      "papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html",
+          "year": 2025,
+          "research_line": "Speculative Decoding",
+          "importance": 4
+        },
+        {
+          "slug": "2503.14075-twigvlm-plus-plus",
+          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+          "href": "2503.14075-twigvlm-plus-plus.html",
+          "year": 2026,
+          "research_line": "VLM Acceleration",
+          "importance": 4
+        },
+        {
+          "slug": "2607.00466-eldr",
+          "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+          "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+          "href": "2607.00466-eldr.html",
+          "year": 2026,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": true,
+      "configured_fields": [
+        "line_role"
+      ],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [],
+      "severity": "ok",
+      "recommended_action": "当前标签状态稳定。",
+      "query_href": "library.html?role=main"
     },
     {
       "id": "code-checked",
@@ -7312,67 +7759,6 @@
       "query_href": "library.html?role=foundation"
     },
     {
-      "id": "main",
-      "label": "main",
-      "key": "main",
-      "fields": [
-        {
-          "field": "line_role",
-          "label": "研究线角色",
-          "english": "Line role",
-          "query_key": "role",
-          "count": 2,
-          "configured": true,
-          "href": "library.html?role=main"
-        }
-      ],
-      "field_names": [
-        "line_role"
-      ],
-      "total_count": 2,
-      "paper_count": 2,
-      "slugs": [
-        "2503.14075-twigvlm-plus-plus",
-        "2607.00466-eldr"
-      ],
-      "papers": [
-        {
-          "slug": "2503.14075-twigvlm-plus-plus",
-          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
-          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
-          "href": "2503.14075-twigvlm-plus-plus.html",
-          "year": 2026,
-          "research_line": "VLM Acceleration",
-          "importance": 4
-        },
-        {
-          "slug": "2607.00466-eldr",
-          "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
-          "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
-          "href": "2607.00466-eldr.html",
-          "year": 2026,
-          "research_line": "LLM Serving",
-          "importance": 4
-        }
-      ],
-      "aliases": [],
-      "alias_count": 0,
-      "configured": true,
-      "configured_fields": [
-        "line_role"
-      ],
-      "definitions": [],
-      "definition_count": 0,
-      "definition_status": "",
-      "description": "",
-      "owner": {},
-      "owner_name": "",
-      "signals": [],
-      "severity": "ok",
-      "recommended_action": "当前标签状态稳定。",
-      "query_href": "library.html?role=main"
-    },
-    {
       "id": "system",
       "label": "system",
       "key": "system",
@@ -7486,37 +7872,37 @@
     }
   ],
   "summary": {
-    "high": 4,
-    "medium": 112,
+    "high": 6,
+    "medium": 116,
     "low": 0,
     "ok": 11,
     "cross_field": 6,
-    "singleton": 87,
+    "singleton": 93,
     "unused_configured": 17,
     "unowned_research_line": 2,
     "defined": 25,
     "deprecated_in_use": 0,
-    "undefined_label": 94
+    "undefined_label": 100
   },
   "field_counts": {
     "domains": 2,
     "line_role": 8,
-    "methods": 54,
-    "problems": 10,
+    "methods": 58,
+    "problems": 11,
     "reading_stage": 5,
-    "research_line": 4,
+    "research_line": 5,
     "review_stage": 4,
     "status": 9,
-    "topics": 33,
+    "topics": 35,
     "tracks": 5
   },
   "signals": {
     "cross_field": 6,
     "has_aliases": 3,
-    "overloaded": 1,
-    "singleton": 87,
+    "overloaded": 3,
+    "singleton": 93,
     "unconfigured_value": 1,
-    "undefined_label": 94,
+    "undefined_label": 100,
     "unowned_research_line": 2,
     "unused_configured": 17
   },

@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-07-21T15:43:55",
-  "count": 12,
-  "average_score": 73.7,
+  "generated_at": "2026-07-21T18:25:15",
+  "count": 13,
+  "average_score": 74.8,
   "ready_count": 0,
-  "needs_curation_count": 12,
+  "needs_curation_count": 13,
   "level_counts": {
     "triage": 3,
-    "usable": 9
+    "usable": 10
   },
   "field_gap_counts": {
     "domains": 3,
@@ -14,18 +14,18 @@
     "importance": 1,
     "line_role": 2,
     "methods": 1,
-    "next_review": 12,
+    "next_review": 13,
     "problems": 3,
     "reading_stage": 3,
     "research_line": 2,
-    "review_stage": 12,
+    "review_stage": 13,
     "tracks": 3
   },
   "weak_field_counts": {
-    "domains": 8,
-    "problems": 7,
+    "domains": 9,
+    "problems": 8,
     "topics": 1,
-    "tracks": 2
+    "tracks": 3
   },
   "field_contract": [
     {
@@ -1291,6 +1291,111 @@
       "recommendation": "补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。"
     },
     {
+      "slug": "2503.01840-eagle-3-scaling-up",
+      "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+      "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+      "href": "2503.01840-eagle-3-scaling-up.html",
+      "year": 2025,
+      "research_line": "Speculative Decoding",
+      "line_role": "main",
+      "status": "read",
+      "reading_stage": "deep_read",
+      "review_stage": "",
+      "importance": 4,
+      "score": 88,
+      "level": "usable",
+      "missing_fields": [
+        "review_stage",
+        "next_review"
+      ],
+      "weak_fields": [
+        "domains",
+        "tracks",
+        "problems"
+      ],
+      "field_status": {
+        "research_line": {
+          "present": true,
+          "count": 1,
+          "weight": 15
+        },
+        "line_role": {
+          "present": true,
+          "count": 1,
+          "weight": 8
+        },
+        "domains": {
+          "present": true,
+          "count": 1,
+          "weight": 8
+        },
+        "tracks": {
+          "present": true,
+          "count": 1,
+          "weight": 8
+        },
+        "problems": {
+          "present": true,
+          "count": 1,
+          "weight": 8
+        },
+        "topics": {
+          "present": true,
+          "count": 4,
+          "weight": 8
+        },
+        "methods": {
+          "present": true,
+          "count": 4,
+          "weight": 8
+        },
+        "status": {
+          "present": true,
+          "count": 1,
+          "weight": 8
+        },
+        "reading_stage": {
+          "present": true,
+          "count": 1,
+          "weight": 7
+        },
+        "review_stage": {
+          "present": false,
+          "count": 0,
+          "weight": 6
+        },
+        "importance": {
+          "present": true,
+          "count": 1,
+          "weight": 5
+        },
+        "next_review": {
+          "present": false,
+          "count": 0,
+          "weight": 6
+        },
+        "has_code": {
+          "present": true,
+          "count": 1,
+          "weight": 5
+        }
+      },
+      "patch_columns": [
+        "slug",
+        "review_stage",
+        "next_review",
+        "domains",
+        "tracks",
+        "problems"
+      ],
+      "actions": [
+        "补齐缺失 frontmatter 字段",
+        "扩充稀疏 taxonomy 标签",
+        "安排复习日期"
+      ],
+      "recommendation": "补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。"
+    },
+    {
       "slug": "2503.14075-twigvlm-plus-plus",
       "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
       "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
@@ -1420,6 +1525,7 @@
       "2602.06036-dflash",
       "2604.11035-introspective-dlm",
       "2605.12825-orthrus",
+      "2503.01840-eagle-3-scaling-up",
       "2503.14075-twigvlm-plus-plus"
     ],
     "ready": []

@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-21T15:43:55",
-  "count": 12,
+  "generated_at": "2026-07-21T18:25:15",
+  "count": 13,
   "queues": {
     "due": [],
     "needs_plan": [
@@ -14,6 +14,7 @@
       "2603.03251-speculative-speculative-decoding",
       "2503.14075-twigvlm-plus-plus",
       "2507.11851-llm-future-mtp",
+      "2503.01840-eagle-3-scaling-up",
       "2607.00466-eldr",
       "semantic-search-evaluation"
     ],
@@ -203,6 +204,24 @@
       "state": "needs_plan",
       "priority": 48,
       "html_path": "2507.11851-llm-future-mtp.html"
+    },
+    {
+      "slug": "2503.01840-eagle-3-scaling-up",
+      "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+      "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+      "research_line": "Speculative Decoding",
+      "line_role": "main",
+      "importance": 4,
+      "confidence": 4,
+      "reproducibility": 3,
+      "review_stage": "",
+      "last_reviewed": "",
+      "next_review": "",
+      "suggested_next_review": "2026-08-13",
+      "interval_days": 23,
+      "state": "needs_plan",
+      "priority": 48,
+      "html_path": "2503.01840-eagle-3-scaling-up.html"
     },
     {
       "slug": "2607.00466-eldr",

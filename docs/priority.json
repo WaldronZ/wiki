@@ -1,15 +1,15 @@
 {
-  "generated_at": "2026-07-21T15:43:55",
+  "generated_at": "2026-07-21T18:25:15",
   "today": "2026-07-21",
-  "count": 12,
+  "count": 13,
   "summary": {
     "urgency": {
-      "high": 12
+      "high": 13
     },
     "categories": {
-      "review": 12
+      "review": 13
     },
-    "top_count": 12
+    "top_count": 13
   },
   "top_items": [
     {
@@ -106,13 +106,13 @@
       ],
       "action_ids": [
         "metadata_missing:2603.03251-speculative-speculative-decoding",
+        "taxonomy_action:split_candidate:topics:Speculative Decoding",
         "taxonomy_action:split_candidate:status:read",
         "review_plan:2603.03251-speculative-speculative-decoding",
         "taxonomy_sparse:2603.03251-speculative-speculative-decoding",
         "taxonomy_action:merge_candidate:topics:Distributed Inference",
         "taxonomy_action:merge_candidate:topics:Systems Optimization",
-        "taxonomy_action:merge_candidate:methods:asynchronous decoding",
-        "taxonomy_action:merge_candidate:methods:cache-aware sampling"
+        "taxonomy_action:merge_candidate:methods:asynchronous decoding"
       ],
       "queue_hits": [
         {
@@ -225,14 +225,14 @@
         "python3 scripts/export_taxonomy_load.py docs --format csv --signal dense_tags --output docs/exports/taxonomy-load.csv"
       ],
       "action_ids": [
+        "taxonomy_action:split_candidate:topics:Speculative Decoding",
+        "taxonomy_action:split_candidate:tracks:Inference Acceleration",
         "taxonomy_action:split_candidate:domains:LLM Systems",
+        "taxonomy_action:split_candidate:reading_stage:deep_read",
         "review_plan:2604.11035-introspective-dlm",
         "taxonomy_dense:2604.11035-introspective-dlm",
         "taxonomy_action:merge_candidate:methods:SGLang serving",
-        "taxonomy_action:merge_candidate:methods:introspective consistency",
-        "taxonomy_action:merge_candidate:methods:introspective strided decoding",
-        "taxonomy_action:merge_candidate:methods:logit-shifted causal training",
-        "taxonomy_action:merge_candidate:methods:p/q acceptance"
+        "taxonomy_action:merge_candidate:methods:introspective consistency"
       ],
       "queue_hits": [
         {
@@ -281,14 +281,14 @@
         "python3 scripts/apply_review_plan.py docs --write"
       ],
       "action_ids": [
+        "taxonomy_action:split_candidate:tracks:Inference Acceleration",
         "taxonomy_action:split_candidate:domains:LLM Systems",
+        "taxonomy_action:split_candidate:reading_stage:deep_read",
         "taxonomy_action:split_candidate:status:read",
         "review_plan:2607.00466-eldr",
         "taxonomy_action:merge_candidate:topics:Disaggregated Serving",
         "taxonomy_action:merge_candidate:topics:Load Balancing",
-        "taxonomy_action:merge_candidate:topics:MoE",
-        "taxonomy_action:merge_candidate:methods:Balanced K-means",
-        "taxonomy_action:merge_candidate:methods:Expert Locality Routing"
+        "taxonomy_action:merge_candidate:topics:MoE"
       ],
       "queue_hits": [
         {
@@ -435,14 +435,14 @@
         "python3 scripts/export_taxonomy_load.py docs --format csv --signal dense_tags --output docs/exports/taxonomy-load.csv"
       ],
       "action_ids": [
+        "taxonomy_action:split_candidate:topics:Speculative Decoding",
+        "taxonomy_action:split_candidate:tracks:Inference Acceleration",
         "taxonomy_action:split_candidate:domains:LLM Systems",
         "taxonomy_action:split_candidate:status:read",
         "review_plan:2503.14075-twigvlm-plus-plus",
         "taxonomy_action:merge_candidate:topics:Multimodal Inference",
         "taxonomy_action:merge_candidate:topics:VLM Acceleration",
-        "taxonomy_action:merge_candidate:topics:Vision-Language Models",
-        "taxonomy_action:merge_candidate:topics:Visual Token Pruning",
-        "taxonomy_dense:2503.14075-twigvlm-plus-plus"
+        "taxonomy_action:merge_candidate:topics:Vision-Language Models"
       ],
       "queue_hits": [
         {
@@ -541,14 +541,14 @@
         "python3 scripts/apply_taxonomy_aliases.py docs --write"
       ],
       "action_ids": [
+        "taxonomy_action:split_candidate:topics:Speculative Decoding",
+        "taxonomy_action:split_candidate:tracks:Inference Acceleration",
         "taxonomy_action:split_candidate:domains:LLM Systems",
         "taxonomy_action:split_candidate:status:read",
         "review_plan:noarxiv-2026-dspark",
         "alias:semi autoregressive generation",
         "taxonomy_action:merge_candidate:topics:Semi-Autoregressive Generation",
-        "taxonomy_action:merge_candidate:methods:Markov head",
-        "taxonomy_action:merge_candidate:methods:confidence-scheduled verification",
-        "taxonomy_action:merge_candidate:methods:hardware-aware scheduling"
+        "taxonomy_action:merge_candidate:methods:Markov head"
       ],
       "queue_hits": [
         {
@@ -589,14 +589,14 @@
         "python3 scripts/apply_review_plan.py docs --write"
       ],
       "action_ids": [
+        "taxonomy_action:split_candidate:topics:Speculative Decoding",
+        "taxonomy_action:split_candidate:tracks:Inference Acceleration",
         "taxonomy_action:split_candidate:domains:LLM Systems",
+        "taxonomy_action:split_candidate:reading_stage:deep_read",
         "taxonomy_action:split_candidate:status:read",
         "review_plan:2602.06036-dflash",
         "taxonomy_action:merge_candidate:methods:KV injection",
-        "taxonomy_action:merge_candidate:methods:block diffusion",
-        "taxonomy_action:merge_candidate:methods:parallel drafting",
-        "taxonomy_action:merge_candidate:methods:target hidden features",
-        "taxonomy_action:watch:topics:LLM Serving"
+        "taxonomy_action:merge_candidate:methods:block diffusion"
       ],
       "queue_hits": [
         {
@@ -630,7 +630,7 @@
       "review_state": "needs_plan",
       "suggested_next_review": "2026-07-04",
       "next_review": "2026-07-04",
-      "priority_score": 118,
+      "priority_score": 120,
       "urgency": "high",
       "category": "review",
       "category_label": "复习",
@@ -640,18 +640,73 @@
       ],
       "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review",
       "commands": [
-        "python3 scripts/apply_review_plan.py docs --write",
-        "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+        "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
+        "python3 scripts/apply_review_plan.py docs --write"
       ],
       "action_ids": [
+        "taxonomy_action:split_candidate:reading_stage:deep_read",
         "review_plan:2605.12825-orthrus",
         "taxonomy_action:merge_candidate:methods:dual-view attention",
         "taxonomy_action:merge_candidate:methods:forward KL distillation",
         "taxonomy_action:merge_candidate:methods:intra-model consensus",
         "taxonomy_action:merge_candidate:methods:masked diffusion",
         "taxonomy_action:merge_candidate:methods:shared KV cache",
-        "taxonomy_action:merge_candidate:line_role:variant",
-        "taxonomy_action:merge_candidate:problems:Memory-Efficient Parallel Token Generation"
+        "taxonomy_action:merge_candidate:line_role:variant"
+      ],
+      "queue_hits": [
+        {
+          "id": "missing-review-plan",
+          "label": "缺复习计划",
+          "severity": "medium",
+          "preset": "schedule_review",
+          "href": "library.html?review=none&sort=importance"
+        },
+        {
+          "id": "code-unchecked",
+          "label": "有代码未检查",
+          "severity": "medium",
+          "preset": "code_check",
+          "href": "library.html?code=yes&sort=importance"
+        }
+      ]
+    },
+    {
+      "slug": "2503.01840-eagle-3-scaling-up",
+      "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+      "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+      "href": "2503.01840-eagle-3-scaling-up.html",
+      "research_line": "Speculative Decoding",
+      "line_role": "main",
+      "year": 2025,
+      "importance": 4,
+      "status": "read",
+      "reading_stage": "deep_read",
+      "review_stage": "",
+      "review_state": "needs_plan",
+      "suggested_next_review": "2026-08-13",
+      "next_review": "2026-08-13",
+      "priority_score": 120,
+      "urgency": "high",
+      "category": "review",
+      "category_label": "复习",
+      "reasons": [
+        "缺复习计划：建议 2026-08-13",
+        "弱元数据：next_review, review_stage"
+      ],
+      "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review",
+      "commands": [
+        "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
+        "python3 scripts/apply_review_plan.py docs --write"
+      ],
+      "action_ids": [
+        "taxonomy_action:split_candidate:reading_stage:deep_read",
+        "review_plan:2503.01840-eagle-3-scaling-up",
+        "taxonomy_action:merge_candidate:topics:Draft Model Training",
+        "taxonomy_action:merge_candidate:topics:Scaling Law",
+        "taxonomy_action:merge_candidate:methods:Multi-Layer Feature Fusion",
+        "taxonomy_action:merge_candidate:methods:Speculative Sampling",
+        "taxonomy_action:merge_candidate:methods:Training-Time Test",
+        "taxonomy_action:merge_candidate:methods:Tree-Based Draft"
       ],
       "queue_hits": [
         {
@@ -766,13 +821,13 @@
       ],
       "action_ids": [
         "metadata_missing:2603.03251-speculative-speculative-decoding",
+        "taxonomy_action:split_candidate:topics:Speculative Decoding",
         "taxonomy_action:split_candidate:status:read",
         "review_plan:2603.03251-speculative-speculative-decoding",
         "taxonomy_sparse:2603.03251-speculative-speculative-decoding",
         "taxonomy_action:merge_candidate:topics:Distributed Inference",
         "taxonomy_action:merge_candidate:topics:Systems Optimization",
-        "taxonomy_action:merge_candidate:methods:asynchronous decoding",
-        "taxonomy_action:merge_candidate:methods:cache-aware sampling"
+        "taxonomy_action:merge_candidate:methods:asynchronous decoding"
       ],
       "queue_hits": [
         {
@@ -885,14 +940,14 @@
         "python3 scripts/export_taxonomy_load.py docs --format csv --signal dense_tags --output docs/exports/taxonomy-load.csv"
       ],
       "action_ids": [
+        "taxonomy_action:split_candidate:topics:Speculative Decoding",
+        "taxonomy_action:split_candidate:tracks:Inference Acceleration",
         "taxonomy_action:split_candidate:domains:LLM Systems",
+        "taxonomy_action:split_candidate:reading_stage:deep_read",
         "review_plan:2604.11035-introspective-dlm",
         "taxonomy_dense:2604.11035-introspective-dlm",
         "taxonomy_action:merge_candidate:methods:SGLang serving",
-        "taxonomy_action:merge_candidate:methods:introspective consistency",
-        "taxonomy_action:merge_candidate:methods:introspective strided decoding",
-        "taxonomy_action:merge_candidate:methods:logit-shifted causal training",
-        "taxonomy_action:merge_candidate:methods:p/q acceptance"
+        "taxonomy_action:merge_candidate:methods:introspective consistency"
       ],
       "queue_hits": [
         {
@@ -941,14 +996,14 @@
         "python3 scripts/apply_review_plan.py docs --write"
       ],
       "action_ids": [
+        "taxonomy_action:split_candidate:tracks:Inference Acceleration",
         "taxonomy_action:split_candidate:domains:LLM Systems",
+        "taxonomy_action:split_candidate:reading_stage:deep_read",
         "taxonomy_action:split_candidate:status:read",
         "review_plan:2607.00466-eldr",
         "taxonomy_action:merge_candidate:topics:Disaggregated Serving",
         "taxonomy_action:merge_candidate:topics:Load Balancing",
-        "taxonomy_action:merge_candidate:topics:MoE",
-        "taxonomy_action:merge_candidate:methods:Balanced K-means",
-        "taxonomy_action:merge_candidate:methods:Expert Locality Routing"
+        "taxonomy_action:merge_candidate:topics:MoE"
       ],
       "queue_hits": [
         {
@@ -1095,14 +1150,14 @@
         "python3 scripts/export_taxonomy_load.py docs --format csv --signal dense_tags --output docs/exports/taxonomy-load.csv"
       ],
       "action_ids": [
+        "taxonomy_action:split_candidate:topics:Speculative Decoding",
+        "taxonomy_action:split_candidate:tracks:Inference Acceleration",
         "taxonomy_action:split_candidate:domains:LLM Systems",
         "taxonomy_action:split_candidate:status:read",
         "review_plan:2503.14075-twigvlm-plus-plus",
         "taxonomy_action:merge_candidate:topics:Multimodal Inference",
         "taxonomy_action:merge_candidate:topics:VLM Acceleration",
-        "taxonomy_action:merge_candidate:topics:Vision-Language Models",
-        "taxonomy_action:merge_candidate:topics:Visual Token Pruning",
-        "taxonomy_dense:2503.14075-twigvlm-plus-plus"
+        "taxonomy_action:merge_candidate:topics:Vision-Language Models"
       ],
       "queue_hits": [
         {
@@ -1201,14 +1256,14 @@
         "python3 scripts/apply_taxonomy_aliases.py docs --write"
       ],
       "action_ids": [
+        "taxonomy_action:split_candidate:topics:Speculative Decoding",
+        "taxonomy_action:split_candidate:tracks:Inference Acceleration",
         "taxonomy_action:split_candidate:domains:LLM Systems",
         "taxonomy_action:split_candidate:status:read",
         "review_plan:noarxiv-2026-dspark",
         "alias:semi autoregressive generation",
         "taxonomy_action:merge_candidate:topics:Semi-Autoregressive Generation",
-        "taxonomy_action:merge_candidate:methods:Markov head",
-        "taxonomy_action:merge_candidate:methods:confidence-scheduled verification",
-        "taxonomy_action:merge_candidate:methods:hardware-aware scheduling"
+        "taxonomy_action:merge_candidate:methods:Markov head"
       ],
       "queue_hits": [
         {
@@ -1249,14 +1304,14 @@
         "python3 scripts/apply_review_plan.py docs --write"
       ],
       "action_ids": [
+        "taxonomy_action:split_candidate:topics:Speculative Decoding",
+        "taxonomy_action:split_candidate:tracks:Inference Acceleration",
         "taxonomy_action:split_candidate:domains:LLM Systems",
+        "taxonomy_action:split_candidate:reading_stage:deep_read",
         "taxonomy_action:split_candidate:status:read",
         "review_plan:2602.06036-dflash",
         "taxonomy_action:merge_candidate:methods:KV injection",
-        "taxonomy_action:merge_candidate:methods:block diffusion",
-        "taxonomy_action:merge_candidate:methods:parallel drafting",
-        "taxonomy_action:merge_candidate:methods:target hidden features",
-        "taxonomy_action:watch:topics:LLM Serving"
+        "taxonomy_action:merge_candidate:methods:block diffusion"
       ],
       "queue_hits": [
         {
@@ -1290,7 +1345,7 @@
       "review_state": "needs_plan",
       "suggested_next_review": "2026-07-04",
       "next_review": "2026-07-04",
-      "priority_score": 118,
+      "priority_score": 120,
       "urgency": "high",
       "category": "review",
       "category_label": "复习",
@@ -1300,18 +1355,73 @@
       ],
       "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review",
       "commands": [
-        "python3 scripts/apply_review_plan.py docs --write",
-        "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+        "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
+        "python3 scripts/apply_review_plan.py docs --write"
       ],
       "action_ids": [
+        "taxonomy_action:split_candidate:reading_stage:deep_read",
         "review_plan:2605.12825-orthrus",
         "taxonomy_action:merge_candidate:methods:dual-view attention",
         "taxonomy_action:merge_candidate:methods:forward KL distillation",
         "taxonomy_action:merge_candidate:methods:intra-model consensus",
         "taxonomy_action:merge_candidate:methods:masked diffusion",
         "taxonomy_action:merge_candidate:methods:shared KV cache",
-        "taxonomy_action:merge_candidate:line_role:variant",
-        "taxonomy_action:merge_candidate:problems:Memory-Efficient Parallel Token Generation"
+        "taxonomy_action:merge_candidate:line_role:variant"
+      ],
+      "queue_hits": [
+        {
+          "id": "missing-review-plan",
+          "label": "缺复习计划",
+          "severity": "medium",
+          "preset": "schedule_review",
+          "href": "library.html?review=none&sort=importance"
+        },
+        {
+          "id": "code-unchecked",
+          "label": "有代码未检查",
+          "severity": "medium",
+          "preset": "code_check",
+          "href": "library.html?code=yes&sort=importance"
+        }
+      ]
+    },
+    {
+      "slug": "2503.01840-eagle-3-scaling-up",
+      "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+      "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+      "href": "2503.01840-eagle-3-scaling-up.html",
+      "research_line": "Speculative Decoding",
+      "line_role": "main",
+      "year": 2025,
+      "importance": 4,
+      "status": "read",
+      "reading_stage": "deep_read",
+      "review_stage": "",
+      "review_state": "needs_plan",
+      "suggested_next_review": "2026-08-13",
+      "next_review": "2026-08-13",
+      "priority_score": 120,
+      "urgency": "high",
+      "category": "review",
+      "category_label": "复习",
+      "reasons": [
+        "缺复习计划：建议 2026-08-13",
+        "弱元数据：next_review, review_stage"
+      ],
+      "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review",
+      "commands": [
+        "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
+        "python3 scripts/apply_review_plan.py docs --write"
+      ],
+      "action_ids": [
+        "taxonomy_action:split_candidate:reading_stage:deep_read",
+        "review_plan:2503.01840-eagle-3-scaling-up",
+        "taxonomy_action:merge_candidate:topics:Draft Model Training",
+        "taxonomy_action:merge_candidate:topics:Scaling Law",
+        "taxonomy_action:merge_candidate:methods:Multi-Layer Feature Fusion",
+        "taxonomy_action:merge_candidate:methods:Speculative Sampling",
+        "taxonomy_action:merge_candidate:methods:Training-Time Test",
+        "taxonomy_action:merge_candidate:methods:Tree-Based Draft"
       ],
       "queue_hits": [
         {
@@ -1335,7 +1445,7 @@
     {
       "research_line": "Parallel Decoding with Diffusion Models",
       "count": 4,
-      "average_score": 128.8,
+      "average_score": 129.2,
       "high": 4,
       "medium": 0,
       "top_slug": "2604.11035-introspective-dlm"
@@ -1371,6 +1481,14 @@
       "high": 1,
       "medium": 0,
       "top_slug": "2503.14075-twigvlm-plus-plus"
+    },
+    {
+      "research_line": "Speculative Decoding",
+      "count": 1,
+      "average_score": 120.0,
+      "high": 1,
+      "medium": 0,
+      "top_slug": "2503.01840-eagle-3-scaling-up"
     }
   ],
   "csv_columns": [

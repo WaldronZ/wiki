@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-07-21T15:43:55",
-  "count": 12,
-  "quality_score": 73.8,
+  "generated_at": "2026-07-21T18:25:15",
+  "count": 13,
+  "quality_score": 75.2,
   "coverage": {
-    "taxonomy": "75%",
+    "taxonomy": "77%",
     "review_plan": "0%",
-    "code_observation": "67%",
-    "research_lines": 4
+    "code_observation": "69%",
+    "research_lines": 5
   },
   "queues": {
     "missing_required_metadata": [
@@ -22,6 +22,7 @@
       "2602.06036-dflash",
       "2604.11035-introspective-dlm",
       "2605.12825-orthrus",
+      "2503.01840-eagle-3-scaling-up",
       "2507.11851-llm-future-mtp",
       "2512.23424-akg-kernel-agent-multi",
       "2501.01005-flashinfer",
@@ -162,6 +163,21 @@
       "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion",
       "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
       "research_line": "Parallel Decoding with Diffusion Models",
+      "importance": 4,
+      "score": 92,
+      "missing_fields": [],
+      "weak_fields": [
+        "next_review",
+        "review_stage"
+      ],
+      "due_review": false,
+      "has_code": true
+    },
+    {
+      "slug": "2503.01840-eagle-3-scaling-up",
+      "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+      "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+      "research_line": "Speculative Decoding",
       "importance": 4,
       "score": 92,
       "missing_fields": [],

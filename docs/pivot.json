@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-21T15:43:55",
-  "count": 12,
+  "generated_at": "2026-07-21T18:25:15",
+  "count": 13,
   "dimensions": [
     {
       "key": "research_line",
@@ -447,6 +447,56 @@
       }
     },
     {
+      "slug": "2503.01840-eagle-3-scaling-up",
+      "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+      "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+      "href": "2503.01840-eagle-3-scaling-up.html",
+      "dimensions": {
+        "research_line": [
+          "Speculative Decoding"
+        ],
+        "domain": [
+          "LLM Systems"
+        ],
+        "track": [
+          "Inference Acceleration"
+        ],
+        "problem": [
+          "Speculative Decoding"
+        ],
+        "topic": [
+          "Draft Model Training",
+          "LLM Inference",
+          "Scaling Law",
+          "Speculative Decoding"
+        ],
+        "method": [
+          "Multi-Layer Feature Fusion",
+          "Speculative Sampling",
+          "Training-Time Test",
+          "Tree-Based Draft"
+        ],
+        "status": [
+          "read"
+        ],
+        "reading_stage": [
+          "deep_read"
+        ],
+        "review_stage": [
+          "Unassigned"
+        ],
+        "year": [
+          "2025"
+        ],
+        "importance": [
+          "4"
+        ],
+        "has_code": [
+          "yes"
+        ]
+      }
+    },
+    {
       "slug": "2507.11851-llm-future-mtp",
       "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
       "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
@@ -726,6 +776,10 @@
         {
           "value": "VLM Acceleration",
           "count": 1
+        },
+        {
+          "value": "Speculative Decoding",
+          "count": 1
         }
       ],
       "columns": [
@@ -902,7 +956,7 @@
       "rows": [
         {
           "value": "Inference Acceleration",
-          "count": 7
+          "count": 8
         },
         {
           "value": "Parallel Decoding",
@@ -928,15 +982,16 @@
       "columns": [
         {
           "value": "read",
-          "count": 12
+          "count": 13
         }
       ],
       "cells": [
         {
           "row": "Inference Acceleration",
           "column": "read",
-          "count": 7,
+          "count": 8,
           "slugs": [
+            "2503.01840-eagle-3-scaling-up",
             "2503.14075-twigvlm-plus-plus",
             "2507.11851-llm-future-mtp",
             "2602.06036-dflash",
@@ -1006,7 +1061,7 @@
         },
         {
           "value": "2025",
-          "count": 3
+          "count": 4
         },
         {
           "value": "2023",
@@ -1020,7 +1075,7 @@
       "columns": [
         {
           "value": "Speculative Decoding",
-          "count": 7
+          "count": 8
         },
         {
           "value": "LLM Serving",
@@ -1028,7 +1083,7 @@
         },
         {
           "value": "LLM Inference",
-          "count": 4
+          "count": 5
         },
         {
           "value": "Diffusion Language Models",
@@ -1114,6 +1169,15 @@
           ]
         },
         {
+          "row": "2025",
+          "column": "Speculative Decoding",
+          "count": 2,
+          "slugs": [
+            "2503.01840-eagle-3-scaling-up",
+            "2507.11851-llm-future-mtp"
+          ]
+        },
+        {
           "row": "2026",
           "column": "Parallel Decoding",
           "count": 2,
@@ -1140,18 +1204,18 @@
         },
         {
           "row": "2025",
-          "column": "LLM Serving",
+          "column": "LLM Inference",
           "count": 1,
           "slugs": [
-            "2501.01005-flashinfer"
+            "2503.01840-eagle-3-scaling-up"
           ]
         },
         {
           "row": "2025",
-          "column": "Speculative Decoding",
+          "column": "LLM Serving",
           "count": 1,
           "slugs": [
-            "2507.11851-llm-future-mtp"
+            "2501.01005-flashinfer"
           ]
         },
         {
@@ -1211,7 +1275,7 @@
           ]
         }
       ],
-      "non_empty_cells": 16
+      "non_empty_cells": 17
     },
     {
       "row_dimension": "domain",
@@ -1219,7 +1283,7 @@
       "rows": [
         {
           "value": "LLM Systems",
-          "count": 9
+          "count": 10
         },
         {
           "value": "Unassigned",
@@ -1265,6 +1329,10 @@
         },
         {
           "value": "Memory-Efficient Parallel Token Generation",
+          "count": 1
+        },
+        {
+          "value": "Speculative Decoding",
           "count": 1
         },
         {
@@ -1363,6 +1431,14 @@
         },
         {
           "row": "LLM Systems",
+          "column": "Speculative Decoding",
+          "count": 1,
+          "slugs": [
+            "2503.01840-eagle-3-scaling-up"
+          ]
+        },
+        {
+          "row": "LLM Systems",
           "column": "Visual Token Redundancy",
           "count": 1,
           "slugs": [
@@ -1394,7 +1470,7 @@
           ]
         }
       ],
-      "non_empty_cells": 14
+      "non_empty_cells": 15
     }
   ]
 }

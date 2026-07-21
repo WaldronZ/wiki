@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-21T15:43:55",
-  "count": 12,
+  "generated_at": "2026-07-21T18:25:15",
+  "count": 13,
   "preset_count": 5,
   "active_status_workflow": "personal",
   "workflow_count": 2,
@@ -154,7 +154,8 @@
       "Parallel Decoding with Diffusion Models",
       "LLM Serving",
       "Efficient Attention Kernels",
-      "VLM Acceleration"
+      "VLM Acceleration",
+      "Speculative Decoding"
     ],
     "domains": [
       "LLM Systems",
@@ -176,6 +177,7 @@
       "Load-Aware Serving",
       "Parallel Diffusion Decoding",
       "Memory-Efficient Parallel Token Generation",
+      "Speculative Decoding",
       "Customizable Attention Serving",
       "Efficient Exact Attention"
     ],
@@ -197,6 +199,8 @@
       "Visual Token Pruning",
       "VLM Acceleration",
       "Semi-Autoregressive Generation",
+      "Draft Model Training",
+      "Scaling Law",
       "Efficient Inference",
       "Multi-Token Prediction",
       "Non-Autoregressive Generation",
@@ -207,9 +211,7 @@
       "Multi-Agent Systems",
       "Attention Kernels",
       "GPU Systems",
-      "Inference Optimization",
-      "Efficient Attention",
-      "GPU Kernel Optimization"
+      "Inference Optimization"
     ],
     "methods": [
       "Speculative Decoding",

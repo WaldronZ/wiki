@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-21T15:43:55",
-  "count": 12,
-  "cluster_count": 5,
-  "largest_cluster_share": 0.333,
+  "generated_at": "2026-07-21T18:25:15",
+  "count": 13,
+  "cluster_count": 6,
+  "largest_cluster_share": 0.308,
   "clusters": [
     {
       "id": "parallel-decoding-with-diffusion-models",
@@ -10,7 +10,7 @@
       "research_line": "Parallel Decoding with Diffusion Models",
       "href": "lines/parallel-decoding-with-diffusion-models.html",
       "count": 4,
-      "share": 0.333,
+      "share": 0.308,
       "risk": "medium",
       "risk_reasons": [
         "split candidates available"
@@ -229,7 +229,7 @@
       "research_line": "LLM Serving",
       "href": "lines/llm-serving.html",
       "count": 3,
-      "share": 0.25,
+      "share": 0.231,
       "risk": "low",
       "risk_reasons": [
         "healthy cluster"
@@ -412,7 +412,7 @@
       "research_line": "Efficient Attention Kernels",
       "href": "lines/efficient-attention-kernels.html",
       "count": 2,
-      "share": 0.167,
+      "share": 0.154,
       "risk": "low",
       "risk_reasons": [
         "healthy cluster"
@@ -564,7 +564,7 @@
       "research_line": "Unassigned",
       "href": "library.html?line=Unassigned",
       "count": 2,
-      "share": 0.167,
+      "share": 0.154,
       "risk": "low",
       "risk_reasons": [
         "healthy cluster"
@@ -664,12 +664,112 @@
       ]
     },
     {
+      "id": "speculative-decoding",
+      "name": "Speculative Decoding",
+      "research_line": "Speculative Decoding",
+      "href": "lines/speculative-decoding.html",
+      "count": 1,
+      "share": 0.077,
+      "risk": "medium",
+      "risk_reasons": [
+        "single-paper cluster"
+      ],
+      "owner": "",
+      "team": "",
+      "cadence": "",
+      "year_span": [
+        2025,
+        2025
+      ],
+      "status_counts": [
+        {
+          "value": "read",
+          "count": 1
+        }
+      ],
+      "role_counts": [
+        {
+          "value": "main",
+          "count": 1
+        }
+      ],
+      "top_labels": {
+        "domains": [
+          {
+            "value": "LLM Systems",
+            "count": 1
+          }
+        ],
+        "tracks": [
+          {
+            "value": "Inference Acceleration",
+            "count": 1
+          }
+        ],
+        "problems": [
+          {
+            "value": "Speculative Decoding",
+            "count": 1
+          }
+        ],
+        "topics": [
+          {
+            "value": "Draft Model Training",
+            "count": 1
+          },
+          {
+            "value": "LLM Inference",
+            "count": 1
+          },
+          {
+            "value": "Scaling Law",
+            "count": 1
+          },
+          {
+            "value": "Speculative Decoding",
+            "count": 1
+          }
+        ],
+        "methods": [
+          {
+            "value": "Multi-Layer Feature Fusion",
+            "count": 1
+          },
+          {
+            "value": "Speculative Sampling",
+            "count": 1
+          },
+          {
+            "value": "Training-Time Test",
+            "count": 1
+          },
+          {
+            "value": "Tree-Based Draft",
+            "count": 1
+          }
+        ]
+      },
+      "split_candidates": [],
+      "representative_slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "representative_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html",
+          "importance": 4,
+          "year": 2025
+        }
+      ]
+    },
+    {
       "id": "vlm-acceleration",
       "name": "VLM Acceleration",
       "research_line": "VLM Acceleration",
       "href": "lines/vlm-acceleration.html",
       "count": 1,
-      "share": 0.083,
+      "share": 0.077,
       "risk": "medium",
       "risk_reasons": [
         "single-paper cluster"

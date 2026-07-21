@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-21T15:43:55",
-  "count": 12,
+  "generated_at": "2026-07-21T18:25:15",
+  "count": 13,
   "controls": {
     "active_status_workflow": "personal",
     "status": [
@@ -374,9 +374,9 @@
     }
   },
   "tags": {
-    "Speculative Decoding": 10,
+    "Speculative Decoding": 11,
+    "LLM Inference": 5,
     "LLM Serving": 5,
-    "LLM Inference": 4,
     "Diffusion Language Models": 3,
     "FlashAttention": 2,
     "gated LoRA": 2,
@@ -398,6 +398,7 @@
     "distillation": 1,
     "Distributed Inference": 1,
     "Document-Driven Integration": 1,
+    "Draft Model Training": 1,
     "dual-view attention": 1,
     "Efficient Attention": 1,
     "Efficient Inference": 1,
@@ -432,6 +433,7 @@
     "Multi-Agent Systems": 1,
     "Multi-Agent Workflow": 1,
     "multi-head twig": 1,
+    "Multi-Layer Feature Fusion": 1,
     "Multi-Token Prediction": 1,
     "Multimodal Inference": 1,
     "Non-Autoregressive Generation": 1,
@@ -442,15 +444,19 @@
     "quadratic speculative decoding": 1,
     "RAG": 1,
     "sampler head": 1,
+    "Scaling Law": 1,
     "Semi-Autoregressive Generation": 1,
     "semi-autoregressive generation": 1,
     "SGLang serving": 1,
     "shared KV cache": 1,
     "Signature Cache": 1,
+    "Speculative Sampling": 1,
     "Systems Optimization": 1,
     "target hidden features": 1,
     "tiling": 1,
+    "Training-Time Test": 1,
     "Transformer": 1,
+    "Tree-Based Draft": 1,
     "tree-based self-speculative decoding": 1,
     "twig-guided token pruning": 1,
     "Unified Sketch": 1,
@@ -463,11 +469,11 @@
   },
   "taxonomy": {
     "domains": {
-      "LLM Systems": 9,
+      "LLM Systems": 10,
       "Multimodal Systems": 1
     },
     "tracks": {
-      "Inference Acceleration": 7,
+      "Inference Acceleration": 8,
       "Parallel Decoding": 5,
       "Attention Kernels": 2,
       "Inference Serving Systems": 1,
@@ -483,12 +489,13 @@
       "Memory-Efficient Parallel Token Generation": 1,
       "MoE Serving": 1,
       "Parallel Diffusion Decoding": 1,
+      "Speculative Decoding": 1,
       "Visual Token Redundancy": 1
     },
     "topics": {
-      "Speculative Decoding": 7,
+      "Speculative Decoding": 8,
+      "LLM Inference": 5,
       "LLM Serving": 5,
-      "LLM Inference": 4,
       "Diffusion Language Models": 3,
       "KV Cache": 2,
       "LLM": 2,
@@ -497,6 +504,7 @@
       "Compiler/DSL": 1,
       "Disaggregated Serving": 1,
       "Distributed Inference": 1,
+      "Draft Model Training": 1,
       "Efficient Attention": 1,
       "Efficient Inference": 1,
       "GPU Kernel Optimization": 1,
@@ -513,6 +521,7 @@
       "Multimodal Inference": 1,
       "Non-Autoregressive Generation": 1,
       "RAG": 1,
+      "Scaling Law": 1,
       "Semi-Autoregressive Generation": 1,
       "Systems Optimization": 1,
       "Transformer": 1,
@@ -557,6 +566,7 @@
       "masked-input formulation": 1,
       "Multi-Agent Workflow": 1,
       "multi-head twig": 1,
+      "Multi-Layer Feature Fusion": 1,
       "online softmax": 1,
       "p/q acceptance": 1,
       "parallel drafting": 1,
@@ -567,8 +577,11 @@
       "SGLang serving": 1,
       "shared KV cache": 1,
       "Signature Cache": 1,
+      "Speculative Sampling": 1,
       "target hidden features": 1,
       "tiling": 1,
+      "Training-Time Test": 1,
+      "Tree-Based Draft": 1,
       "tree-based self-speculative decoding": 1,
       "twig-guided token pruning": 1,
       "Unified Sketch": 1,
@@ -580,25 +593,26 @@
       "Parallel Decoding with Diffusion Models": 4,
       "LLM Serving": 3,
       "Efficient Attention Kernels": 2,
+      "Speculative Decoding": 1,
       "VLM Acceleration": 1
     },
     "line_roles": {
+      "main": 3,
       "followup": 2,
       "foundation": 2,
-      "main": 2,
       "system": 2,
       "tooling": 1,
       "variant": 1
     },
     "statuses": {
-      "read": 12,
+      "read": 13,
       "archived": 0,
       "reading": 0,
       "skimmed": 0,
       "unread": 0
     },
     "reading_stages": {
-      "deep_read": 7,
+      "deep_read": 8,
       "code_checked": 2,
       "normal_read": 0,
       "skim": 0
@@ -1028,6 +1042,61 @@
       "reading_time_min": 9,
       "created_at": "2026-06-11T15:42:03",
       "updated_at": "2026-06-11T15:42:03"
+    },
+    {
+      "slug": "2503.01840-eagle-3-scaling-up",
+      "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+      "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+      "title_en": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+      "authors": [
+        "Yuhui Li",
+        "Fangyun Wei",
+        "Chao Zhang",
+        "Hongyang Zhang"
+      ],
+      "year": 2025,
+      "arxiv_id": "2503.01840",
+      "arxiv_url": "https://arxiv.org/abs/2503.01840",
+      "code_url": "https://github.com/SafeAILab/EAGLE",
+      "domains": [
+        "LLM Systems"
+      ],
+      "tracks": [
+        "Inference Acceleration"
+      ],
+      "problems": [
+        "Speculative Decoding"
+      ],
+      "topics": [
+        "Draft Model Training",
+        "LLM Inference",
+        "Scaling Law",
+        "Speculative Decoding"
+      ],
+      "methods": [
+        "Multi-Layer Feature Fusion",
+        "Speculative Sampling",
+        "Training-Time Test",
+        "Tree-Based Draft"
+      ],
+      "research_line": "Speculative Decoding",
+      "line_role": "main",
+      "status": "read",
+      "reading_stage": "deep_read",
+      "review_stage": "",
+      "last_reviewed": "",
+      "next_review": "",
+      "importance": 4,
+      "confidence": 4,
+      "reproducibility": 3,
+      "has_code": true,
+      "md_path": "2503.01840-eagle-3-scaling-up.md",
+      "html_path": "2503.01840-eagle-3-scaling-up.html",
+      "excerpt": "*中文版**：EAGLE-3 发现了 EAGLE 系列 draft model 在扩大训练数据时收益有限的根因——feature prediction loss 构成了不必要的表达力约束，并提出两项关键改进：(1) 去掉 feature prediction constraint，改用 direct token prediction，配合训练时模拟多步生成的 training-time test 技术；(2) 将 target mode...",
+      "essence": "给大模型装一个更聪明的\"打草稿\"助手：过去的助手被要求照抄上级的笔记（feature prediction），反而学不好；现在让它自由发挥、同时在训练时就模拟真实的打草稿过程，它就能随着练习量的增长越来越快——就像一个实习生，不再被条条框框束缚后，终于能从大量实践中真正成长起来。",
+      "reading_time_min": 10,
+      "created_at": "2026-07-21T17:29:20",
+      "updated_at": "2026-07-21T17:29:20"
     },
     {
       "slug": "2507.11851-llm-future-mtp",

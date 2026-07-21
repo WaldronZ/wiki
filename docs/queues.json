@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-07-21T15:43:55",
+  "generated_at": "2026-07-21T18:25:15",
   "today": "2026-07-21",
-  "count": 12,
+  "count": 13,
   "queue_count": 5,
   "non_empty_queue_count": 3,
-  "queued_paper_total": 21,
+  "queued_paper_total": 23,
   "severity_counts": {
     "high": 1,
     "medium": 2
@@ -27,7 +27,7 @@
         "methods"
       ],
       "count": 3,
-      "share": 0.25,
+      "share": 0.2308,
       "view_state": {
         "sort": "updated"
       },
@@ -68,7 +68,7 @@
         "review_stage",
         "next_review"
       ],
-      "count": 12,
+      "count": 13,
       "share": 1.0,
       "view_state": {
         "review": "none",
@@ -81,6 +81,7 @@
         "2512.23424-akg-kernel-agent-multi",
         "2602.06036-dflash",
         "noarxiv-2026-dspark",
+        "2503.01840-eagle-3-scaling-up",
         "2607.00466-eldr",
         "2501.01005-flashinfer",
         "2503.14075-twigvlm-plus-plus",
@@ -121,6 +122,12 @@
           "href": "noarxiv-2026-dspark.html"
         },
         {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        },
+        {
           "slug": "2607.00466-eldr",
           "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
           "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
@@ -131,12 +138,6 @@
           "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
           "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
           "href": "2501.01005-flashinfer.html"
-        },
-        {
-          "slug": "2503.14075-twigvlm-plus-plus",
-          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
-          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
-          "href": "2503.14075-twigvlm-plus-plus.html"
         }
       ]
     },
@@ -171,8 +172,8 @@
         "review_stage",
         "next_review"
       ],
-      "count": 6,
-      "share": 0.5,
+      "count": 7,
+      "share": 0.5385,
       "view_state": {
         "code": "yes",
         "sort": "importance"
@@ -182,6 +183,7 @@
         "2307.08691-flashattention-2",
         "2604.11035-introspective-dlm",
         "2602.06036-dflash",
+        "2503.01840-eagle-3-scaling-up",
         "2501.01005-flashinfer",
         "2605.12825-orthrus",
         "2603.03251-speculative-speculative-decoding"
@@ -204,6 +206,12 @@
           "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
           "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
           "href": "2602.06036-dflash.html"
+        },
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
         },
         {
           "slug": "2501.01005-flashinfer",
@@ -258,7 +266,7 @@
         "review_stage",
         "next_review"
       ],
-      "count": 12,
+      "count": 13,
       "share": 1.0,
       "view_state": {
         "review": "none",
@@ -271,6 +279,7 @@
         "2512.23424-akg-kernel-agent-multi",
         "2602.06036-dflash",
         "noarxiv-2026-dspark",
+        "2503.01840-eagle-3-scaling-up",
         "2607.00466-eldr",
         "2501.01005-flashinfer",
         "2503.14075-twigvlm-plus-plus",
@@ -311,6 +320,12 @@
           "href": "noarxiv-2026-dspark.html"
         },
         {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        },
+        {
           "slug": "2607.00466-eldr",
           "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
           "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
@@ -321,12 +336,6 @@
           "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
           "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
           "href": "2501.01005-flashinfer.html"
-        },
-        {
-          "slug": "2503.14075-twigvlm-plus-plus",
-          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
-          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
-          "href": "2503.14075-twigvlm-plus-plus.html"
         }
       ]
     },
@@ -341,8 +350,8 @@
         "review_stage",
         "next_review"
       ],
-      "count": 6,
-      "share": 0.5,
+      "count": 7,
+      "share": 0.5385,
       "view_state": {
         "code": "yes",
         "sort": "importance"
@@ -352,6 +361,7 @@
         "2307.08691-flashattention-2",
         "2604.11035-introspective-dlm",
         "2602.06036-dflash",
+        "2503.01840-eagle-3-scaling-up",
         "2501.01005-flashinfer",
         "2605.12825-orthrus",
         "2603.03251-speculative-speculative-decoding"
@@ -374,6 +384,12 @@
           "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
           "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
           "href": "2602.06036-dflash.html"
+        },
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
         },
         {
           "slug": "2501.01005-flashinfer",
@@ -407,7 +423,7 @@
         "methods"
       ],
       "count": 3,
-      "share": 0.25,
+      "share": 0.2308,
       "view_state": {
         "sort": "updated"
       },

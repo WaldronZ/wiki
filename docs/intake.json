@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-21T15:43:55",
-  "count": 12,
+  "generated_at": "2026-07-21T18:25:15",
+  "count": 13,
   "inbox_count": 0,
   "existing_papers": [
     {
@@ -155,6 +155,28 @@
       "research_line": "Parallel Decoding with Diffusion Models",
       "status": "read",
       "year": 2026
+    },
+    {
+      "slug": "2503.01840-eagle-3-scaling-up",
+      "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+      "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+      "title_en": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+      "arxiv_id": "2503.01840",
+      "arxiv_key": "2503.01840",
+      "title_keys": [
+        "eagle 3 scaling up inference acceleration of large language models via training time test",
+        "eagle 3 通过训练时测试扩展大语言模型推理加速"
+      ],
+      "link_keys": [
+        "2503.01840-eagle-3-scaling-up.html",
+        "2503.01840-eagle-3-scaling-up.md",
+        "https://arxiv.org/abs/2503.01840",
+        "https://github.com/safeailab/eagle"
+      ],
+      "href": "2503.01840-eagle-3-scaling-up.html",
+      "research_line": "Speculative Decoding",
+      "status": "read",
+      "year": 2025
     },
     {
       "slug": "2507.11851-llm-future-mtp",

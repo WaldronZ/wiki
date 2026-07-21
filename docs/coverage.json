@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-07-21T15:43:55",
-  "count": 12,
-  "line_count": 5,
+  "generated_at": "2026-07-21T18:25:15",
+  "count": 13,
+  "line_count": 6,
   "field_count": 6,
-  "avg_score": 81.6,
+  "avg_score": 84.7,
   "risk_counts": {
     "high": 2,
-    "low": 3
+    "low": 4
   },
   "weak_line_count": 2,
   "total_missing": 12,
@@ -606,6 +606,133 @@
           ],
           "unique": 0,
           "top_values": []
+        }
+      ]
+    },
+    {
+      "line": "Speculative Decoding",
+      "href": "lines/speculative-decoding.html",
+      "count": 1,
+      "owner": "",
+      "team": "",
+      "cadence": "",
+      "score": 100,
+      "risk": "low",
+      "missing_total": 0,
+      "fields": [
+        {
+          "field": "domains",
+          "label": "Domain",
+          "query_key": "domain",
+          "coverage": 100,
+          "missing": 0,
+          "missing_slugs": [],
+          "unique": 1,
+          "top_values": [
+            {
+              "value": "LLM Systems",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "field": "tracks",
+          "label": "Track",
+          "query_key": "track",
+          "coverage": 100,
+          "missing": 0,
+          "missing_slugs": [],
+          "unique": 1,
+          "top_values": [
+            {
+              "value": "Inference Acceleration",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "field": "problems",
+          "label": "Problem",
+          "query_key": "problem",
+          "coverage": 100,
+          "missing": 0,
+          "missing_slugs": [],
+          "unique": 1,
+          "top_values": [
+            {
+              "value": "Speculative Decoding",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "field": "topics",
+          "label": "Topic",
+          "query_key": "topic",
+          "coverage": 100,
+          "missing": 0,
+          "missing_slugs": [],
+          "unique": 4,
+          "top_values": [
+            {
+              "value": "Draft Model Training",
+              "count": 1
+            },
+            {
+              "value": "LLM Inference",
+              "count": 1
+            },
+            {
+              "value": "Scaling Law",
+              "count": 1
+            },
+            {
+              "value": "Speculative Decoding",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "field": "methods",
+          "label": "Method",
+          "query_key": "method",
+          "coverage": 100,
+          "missing": 0,
+          "missing_slugs": [],
+          "unique": 4,
+          "top_values": [
+            {
+              "value": "Multi-Layer Feature Fusion",
+              "count": 1
+            },
+            {
+              "value": "Speculative Sampling",
+              "count": 1
+            },
+            {
+              "value": "Training-Time Test",
+              "count": 1
+            },
+            {
+              "value": "Tree-Based Draft",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "field": "line_role",
+          "label": "Role",
+          "query_key": "role",
+          "coverage": 100,
+          "missing": 0,
+          "missing_slugs": [],
+          "unique": 1,
+          "top_values": [
+            {
+              "value": "main",
+              "count": 1
+            }
+          ]
         }
       ]
     },
