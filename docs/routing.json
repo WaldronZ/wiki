@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T14:35:05",
+  "generated_at": "2026-07-21T15:43:55",
   "count": 12,
   "line_count": 5,
   "label_count": 104,
@@ -400,24 +400,28 @@
           "weight": 32
         },
         {
-          "term": "moe",
-          "weight": 30
+          "term": "eldr",
+          "weight": 31
         },
         {
-          "term": "eldr",
-          "weight": 28
+          "term": "moe",
+          "weight": 30
         },
         {
           "term": "system",
           "weight": 26
         },
         {
-          "term": "expert",
+          "term": "decode",
           "weight": 24
         },
         {
           "term": "k mean",
           "weight": 24
+        },
+        {
+          "term": "expert",
+          "weight": 22
         },
         {
           "term": "worker",
@@ -436,16 +440,16 @@
           "weight": 21
         },
         {
-          "term": "decode",
-          "weight": 21
-        },
-        {
           "term": "token",
           "weight": 20
         },
         {
           "term": "autoregressive",
           "weight": 20
+        },
+        {
+          "term": "prefill",
+          "weight": 19
         },
         {
           "term": "inference",
@@ -486,10 +490,6 @@
         {
           "term": "verification",
           "weight": 15
-        },
-        {
-          "term": "prefill",
-          "weight": 14
         },
         {
           "term": "code",
@@ -1797,6 +1797,10 @@
           "weight": 44
         },
         {
+          "term": "eldr",
+          "weight": 31
+        },
+        {
           "term": "moe",
           "weight": 30
         },
@@ -1805,12 +1809,8 @@
           "weight": 29
         },
         {
-          "term": "eldr",
-          "weight": 28
-        },
-        {
-          "term": "expert",
-          "weight": 23
+          "term": "decode",
+          "weight": 24
         },
         {
           "term": "mean",
@@ -1825,7 +1825,7 @@
           "weight": 21
         },
         {
-          "term": "decode",
+          "term": "expert",
           "weight": 21
         },
         {
@@ -1834,7 +1834,7 @@
         },
         {
           "term": "prefill",
-          "weight": 14
+          "weight": 19
         },
         {
           "term": "locality",
@@ -1853,15 +1853,11 @@
           "weight": 11
         },
         {
-          "term": "tpot",
-          "weight": 11
-        },
-        {
           "term": "expert locality aware",
           "weight": 10
         },
         {
-          "term": "0 1",
+          "term": "tpot",
           "weight": 10
         },
         {
@@ -1902,6 +1898,10 @@
         },
         {
           "term": "hungarian balanced",
+          "weight": 6
+        },
+        {
+          "term": "0 1",
           "weight": 6
         },
         {
@@ -3499,7 +3499,11 @@
       "terms": [
         {
           "term": "expert",
-          "weight": 33
+          "weight": 31
+        },
+        {
+          "term": "eldr",
+          "weight": 31
         },
         {
           "term": "moe",
@@ -3510,8 +3514,8 @@
           "weight": 29
         },
         {
-          "term": "eldr",
-          "weight": 28
+          "term": "decode",
+          "weight": 24
         },
         {
           "term": "k mean",
@@ -3530,16 +3534,12 @@
           "weight": 21
         },
         {
-          "term": "decode",
-          "weight": 21
-        },
-        {
           "term": "llm",
           "weight": 21
         },
         {
           "term": "prefill",
-          "weight": 14
+          "weight": 19
         },
         {
           "term": "disaggregated",
@@ -3558,15 +3558,11 @@
           "weight": 11
         },
         {
-          "term": "tpot",
-          "weight": 11
-        },
-        {
           "term": "expert locality aware",
           "weight": 10
         },
         {
-          "term": "0 1",
+          "term": "tpot",
           "weight": 10
         },
         {
@@ -3607,6 +3603,10 @@
         },
         {
           "term": "hungarian balanced",
+          "weight": 6
+        },
+        {
+          "term": "0 1",
           "weight": 6
         },
         {
@@ -8460,6 +8460,10 @@
       "href": "library.html?method=Signature+Cache",
       "terms": [
         {
+          "term": "eldr",
+          "weight": 31
+        },
+        {
           "term": "moe",
           "weight": 30
         },
@@ -8468,16 +8472,12 @@
           "weight": 29
         },
         {
-          "term": "eldr",
-          "weight": 28
+          "term": "decode",
+          "weight": 24
         },
         {
           "term": "k mean",
           "weight": 24
-        },
-        {
-          "term": "expert",
-          "weight": 23
         },
         {
           "term": "signature",
@@ -8488,7 +8488,7 @@
           "weight": 22
         },
         {
-          "term": "decode",
+          "term": "expert",
           "weight": 21
         },
         {
@@ -8496,12 +8496,12 @@
           "weight": 21
         },
         {
-          "term": "cache",
-          "weight": 18
+          "term": "prefill",
+          "weight": 19
         },
         {
-          "term": "prefill",
-          "weight": 14
+          "term": "cache",
+          "weight": 18
         },
         {
           "term": "locality",
@@ -8524,15 +8524,11 @@
           "weight": 11
         },
         {
-          "term": "tpot",
-          "weight": 11
-        },
-        {
           "term": "expert locality aware",
           "weight": 10
         },
         {
-          "term": "0 1",
+          "term": "tpot",
           "weight": 10
         },
         {
@@ -8569,6 +8565,10 @@
         },
         {
           "term": "hungarian balanced",
+          "weight": 6
+        },
+        {
+          "term": "0 1",
           "weight": 6
         },
         {
@@ -11108,22 +11108,22 @@
         },
         {
           "term": "eldr",
-          "weight": 28
+          "weight": 31
+        },
+        {
+          "term": "decode",
+          "weight": 24
         },
         {
           "term": "k mean",
           "weight": 24
         },
         {
-          "term": "expert",
-          "weight": 23
-        },
-        {
           "term": "worker",
           "weight": 22
         },
         {
-          "term": "decode",
+          "term": "expert",
           "weight": 21
         },
         {
@@ -11132,7 +11132,7 @@
         },
         {
           "term": "prefill",
-          "weight": 14
+          "weight": 19
         },
         {
           "term": "locality",
@@ -11159,15 +11159,11 @@
           "weight": 11
         },
         {
-          "term": "tpot",
-          "weight": 11
-        },
-        {
           "term": "expert locality aware",
           "weight": 10
         },
         {
-          "term": "0 1",
+          "term": "tpot",
           "weight": 10
         },
         {
@@ -11208,6 +11204,10 @@
         },
         {
           "term": "hungarian balanced",
+          "weight": 6
+        },
+        {
+          "term": "0 1",
           "weight": 6
         },
         {
@@ -12035,20 +12035,20 @@
           "weight": 39
         },
         {
+          "term": "eldr",
+          "weight": 31
+        },
+        {
           "term": "moe",
           "weight": 30
         },
         {
-          "term": "eldr",
-          "weight": 28
+          "term": "decode",
+          "weight": 24
         },
         {
           "term": "k mean",
           "weight": 24
-        },
-        {
-          "term": "expert",
-          "weight": 23
         },
         {
           "term": "disaggregated",
@@ -12059,7 +12059,7 @@
           "weight": 22
         },
         {
-          "term": "decode",
+          "term": "expert",
           "weight": 21
         },
         {
@@ -12068,7 +12068,7 @@
         },
         {
           "term": "prefill",
-          "weight": 14
+          "weight": 19
         },
         {
           "term": "locality",
@@ -12091,15 +12091,11 @@
           "weight": 11
         },
         {
-          "term": "tpot",
-          "weight": 11
-        },
-        {
           "term": "expert locality aware",
           "weight": 10
         },
         {
-          "term": "0 1",
+          "term": "tpot",
           "weight": 10
         },
         {
@@ -12140,6 +12136,10 @@
         },
         {
           "term": "hungarian balanced",
+          "weight": 6
+        },
+        {
+          "term": "0 1",
           "weight": 6
         },
         {
@@ -14131,6 +14131,10 @@
           "weight": 32
         },
         {
+          "term": "eldr",
+          "weight": 31
+        },
+        {
           "term": "acceleration",
           "weight": 31
         },
@@ -14147,12 +14151,12 @@
           "weight": 30
         },
         {
-          "term": "eldr",
+          "term": "kv cache",
           "weight": 28
         },
         {
-          "term": "kv cache",
-          "weight": 28
+          "term": "decode",
+          "weight": 27
         },
         {
           "term": "autoregressive",
@@ -14167,16 +14171,8 @@
           "weight": 25
         },
         {
-          "term": "decode",
-          "weight": 24
-        },
-        {
           "term": "k mean",
           "weight": 24
-        },
-        {
-          "term": "expert",
-          "weight": 23
         },
         {
           "term": "aware",
@@ -14192,6 +14188,10 @@
         },
         {
           "term": "worker",
+          "weight": 22
+        },
+        {
+          "term": "confidence scheduled",
           "weight": 22
         }
       ],
@@ -14210,6 +14210,10 @@
       "href": "library.html?topic=Load+Balancing",
       "terms": [
         {
+          "term": "eldr",
+          "weight": 31
+        },
+        {
           "term": "moe",
           "weight": 30
         },
@@ -14218,28 +14222,28 @@
           "weight": 29
         },
         {
-          "term": "eldr",
-          "weight": 28
+          "term": "decode",
+          "weight": 24
         },
         {
           "term": "k mean",
           "weight": 24
         },
         {
-          "term": "expert",
-          "weight": 23
-        },
-        {
           "term": "worker",
           "weight": 22
         },
         {
-          "term": "decode",
+          "term": "expert",
           "weight": 21
         },
         {
           "term": "llm",
           "weight": 21
+        },
+        {
+          "term": "prefill",
+          "weight": 19
         },
         {
           "term": "load",
@@ -14248,10 +14252,6 @@
         {
           "term": "balancing",
           "weight": 16
-        },
-        {
-          "term": "prefill",
-          "weight": 14
         },
         {
           "term": "locality",
@@ -14278,15 +14278,11 @@
           "weight": 11
         },
         {
-          "term": "tpot",
-          "weight": 11
-        },
-        {
           "term": "expert locality aware",
           "weight": 10
         },
         {
-          "term": "0 1",
+          "term": "tpot",
           "weight": 10
         },
         {
@@ -14319,6 +14315,10 @@
         },
         {
           "term": "hungarian balanced",
+          "weight": 6
+        },
+        {
+          "term": "0 1",
           "weight": 6
         },
         {
@@ -14524,27 +14524,27 @@
           "weight": 40
         },
         {
+          "term": "eldr",
+          "weight": 31
+        },
+        {
           "term": "serving",
           "weight": 29
         },
         {
-          "term": "eldr",
-          "weight": 28
+          "term": "decode",
+          "weight": 24
         },
         {
           "term": "k mean",
           "weight": 24
         },
         {
-          "term": "expert",
-          "weight": 23
-        },
-        {
           "term": "worker",
           "weight": 22
         },
         {
-          "term": "decode",
+          "term": "expert",
           "weight": 21
         },
         {
@@ -14553,7 +14553,7 @@
         },
         {
           "term": "prefill",
-          "weight": 14
+          "weight": 19
         },
         {
           "term": "locality",
@@ -14580,15 +14580,11 @@
           "weight": 11
         },
         {
-          "term": "tpot",
-          "weight": 11
-        },
-        {
           "term": "expert locality aware",
           "weight": 10
         },
         {
-          "term": "0 1",
+          "term": "tpot",
           "weight": 10
         },
         {
@@ -14629,6 +14625,10 @@
         },
         {
           "term": "hungarian balanced",
+          "weight": 6
+        },
+        {
+          "term": "0 1",
           "weight": 6
         },
         {
@@ -16960,6 +16960,10 @@
           "weight": 32
         },
         {
+          "term": "eldr",
+          "weight": 31
+        },
+        {
           "term": "moe",
           "weight": 30
         },
@@ -16968,12 +16972,12 @@
           "weight": 30
         },
         {
-          "term": "lora",
+          "term": "decode",
           "weight": 29
         },
         {
-          "term": "eldr",
-          "weight": 28
+          "term": "lora",
+          "weight": 29
         },
         {
           "term": "twigvlm",
@@ -16986,10 +16990,6 @@
         {
           "term": "lossles",
           "weight": 28
-        },
-        {
-          "term": "decode",
-          "weight": 26
         },
         {
           "term": "multi",
@@ -17505,6 +17505,10 @@
       ],
       "terms": [
         {
+          "term": "eldr",
+          "weight": 31
+        },
+        {
           "term": "moe",
           "weight": 30
         },
@@ -17513,23 +17517,19 @@
           "weight": 29
         },
         {
-          "term": "eldr",
-          "weight": 28
+          "term": "decode",
+          "weight": 24
         },
         {
           "term": "k mean",
           "weight": 24
         },
         {
-          "term": "expert",
-          "weight": 23
-        },
-        {
           "term": "worker",
           "weight": 22
         },
         {
-          "term": "decode",
+          "term": "expert",
           "weight": 21
         },
         {
@@ -17538,7 +17538,7 @@
         },
         {
           "term": "prefill",
-          "weight": 14
+          "weight": 19
         },
         {
           "term": "locality",
@@ -17565,15 +17565,11 @@
           "weight": 11
         },
         {
-          "term": "tpot",
-          "weight": 11
-        },
-        {
           "term": "expert locality aware",
           "weight": 10
         },
         {
-          "term": "0 1",
+          "term": "tpot",
           "weight": 10
         },
         {
@@ -17614,6 +17610,10 @@
         },
         {
           "term": "hungarian balanced",
+          "weight": 6
+        },
+        {
+          "term": "0 1",
           "weight": 6
         },
         {
@@ -17665,23 +17665,7 @@
           "weight": 4
         },
         {
-          "term": "count",
-          "weight": 4
-        },
-        {
           "term": "17 21",
-          "weight": 4
-        },
-        {
-          "term": "7 0 13 9",
-          "weight": 4
-        },
-        {
-          "term": "5 9 10 0",
-          "weight": 4
-        },
-        {
-          "term": "4 15",
           "weight": 4
         },
         {
@@ -17703,6 +17687,22 @@
         {
           "term": "all",
           "weight": 4
+        },
+        {
+          "term": "all to all",
+          "weight": 4
+        },
+        {
+          "term": "分离",
+          "weight": 3
+        },
+        {
+          "term": "模型",
+          "weight": 3
+        },
+        {
+          "term": "而非",
+          "weight": 3
         }
       ]
     },

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T14:35:05",
+  "generated_at": "2026-07-21T15:43:55",
   "count": 12,
   "readiness_score": 43,
   "readiness_label": "needs_governance",
@@ -25,7 +25,7 @@
     {
       "href": "search_index.json",
       "exists": true,
-      "size_bytes": 347455
+      "size_bytes": 351899
     },
     {
       "href": "stats.json",
@@ -151,7 +151,7 @@
   "capacity_projection": [
     {
       "paper_count": 100,
-      "search_index_bytes": 2895458,
+      "search_index_bytes": 2932492,
       "papers_json_bytes": 373167,
       "taxonomy_map_bytes": 1956808,
       "estimated_actions": 1133,
@@ -159,7 +159,7 @@
     },
     {
       "paper_count": 500,
-      "search_index_bytes": 14477292,
+      "search_index_bytes": 14662458,
       "papers_json_bytes": 1865833,
       "taxonomy_map_bytes": 9784042,
       "estimated_actions": 5667,
@@ -167,7 +167,7 @@
     },
     {
       "paper_count": 1000,
-      "search_index_bytes": 28954583,
+      "search_index_bytes": 29324917,
       "papers_json_bytes": 3731667,
       "taxonomy_map_bytes": 19568083,
       "estimated_actions": 11333,
@@ -175,7 +175,7 @@
     },
     {
       "paper_count": 5000,
-      "search_index_bytes": 144772917,
+      "search_index_bytes": 146624583,
       "papers_json_bytes": 18658333,
       "taxonomy_map_bytes": 97840417,
       "estimated_actions": 56667,

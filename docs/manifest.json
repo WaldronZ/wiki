@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T14:35:06",
+  "generated_at": "2026-07-21T15:43:55",
   "name": "AutoPaperReader Wiki",
   "count": 12,
   "publish_ready": false,
@@ -1242,8 +1242,8 @@
       "description": "卡片检索、筛选、研究线概览",
       "exists": true,
       "status": "ok",
-      "size_bytes": 497328,
-      "sha256": "0f48be69e5a2539fbcaba6663b3b603e2eadb846d37d7eccaca64eaa542bc7b5",
+      "size_bytes": 501772,
+      "sha256": "46a2bbc04fda7c9566e5cd0df31fd6989bb1dba63b7def53051b801e5b5b41e6",
       "hash_mode": "normalized"
     },
     {
@@ -1263,7 +1263,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 178168,
-      "sha256": "33134d30371a74d704114e5753446a77a757d51abf51bdbcbde9842ce91a93f2",
+      "sha256": "ac72da25dcba39958ada00710417dac101633dd2647592dcb8ba534076931f8f",
       "hash_mode": "raw"
     },
     {
@@ -1283,7 +1283,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 132075,
-      "sha256": "8cdc34c48430a9c6bc7118cd47421981734d000b585328087276e7ca1bd60d30",
+      "sha256": "99cc4891e726b45121bcb1c4bc960c468f6006d4dedfa9d87feefcbf8a87983e",
       "hash_mode": "raw"
     },
     {
@@ -1293,7 +1293,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 64629,
-      "sha256": "bfcb983ffefa7a06980d518115564fa54c042e4fe394d3cfb503ec4854bd4b18",
+      "sha256": "f8a2fdd1975787dc81052861a14f93e761bedc8d79b7dbc037c4f2bbf837b713",
       "hash_mode": "raw"
     },
     {
@@ -1513,7 +1513,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 56026,
-      "sha256": "8ca1b819c8ad75f6d43b66800c40442e0654c1c9db536ae51ed8930ff7344ff5",
+      "sha256": "8057d00d6b2707cff085b82c6d71768bdd6e67cc14771be28c953f9ceec2ba73",
       "hash_mode": "raw"
     },
     {
@@ -1532,8 +1532,8 @@
       "description": "新论文研究线和标签推荐",
       "exists": true,
       "status": "ok",
-      "size_bytes": 249259,
-      "sha256": "d0f0c75dd1b39ec346daf101fc69ed978341e30cff2640d6dcd9d0191595779b",
+      "size_bytes": 249268,
+      "sha256": "4a2a5527db6d4d96f6bd0e01c86b23ee9186eff0084639660bdd02fe7b52dde0",
       "hash_mode": "normalized"
     },
     {
@@ -1553,7 +1553,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 71795,
-      "sha256": "e1052d6b8a1bd33941bf8647194805c9a919933ae34155f38693a070881b713d",
+      "sha256": "792e50151f75c69986f1e9b256b75e8a8379547602b19f4a48ed093a5e97ced4",
       "hash_mode": "raw"
     },
     {
@@ -1693,7 +1693,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 44780,
-      "sha256": "a47fb1b7b5768f32086d71e4ac438a3a3ee934524068f0a77469dc378444a560",
+      "sha256": "a0bdcead7d7b9eb4d68e6b36284d87e2fd50076035aae5e6cd94bc8c711e10a4",
       "hash_mode": "normalized"
     },
     {
@@ -1702,8 +1702,8 @@
       "description": "正文全文检索索引",
       "exists": true,
       "status": "ok",
-      "size_bytes": 347455,
-      "sha256": "864c564a484e9adc5ba34645df4101534d5add58aecfc14748646f503d43cf81",
+      "size_bytes": 351899,
+      "sha256": "d4815e8b84e1c89e22fc0aa8622691c13179d892e4467108f5aa6b91529a0c7c",
       "hash_mode": "normalized"
     },
     {
@@ -1943,7 +1943,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 5648,
-      "sha256": "ceabc5adcc602d303d1f7c7ffde380f3824b0655bdca5f6f27b1e89b1a6b2e4b",
+      "sha256": "594139dc78cda23f480a636bd436b5bd4605a858546741060781111c39449d57",
       "hash_mode": "normalized"
     },
     {
@@ -1962,8 +1962,8 @@
       "description": "新论文分类路由画像和推荐权重",
       "exists": true,
       "status": "ok",
-      "size_bytes": 379815,
-      "sha256": "9702374d6819afd130a2564568698126d9974c1c73e2ea782dfc9ee25524d46f",
+      "size_bytes": 379824,
+      "sha256": "0032991866d65b83952ef2219c237f152aa0eb3094e90badd531b5a882bf1348",
       "hash_mode": "normalized"
     },
     {
@@ -1983,7 +1983,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 57856,
-      "sha256": "bd4c5e3b11c99b291d3ecf11261c5b6c51495b5313aa2ba254cfb1e3010bd221",
+      "sha256": "3d24cd76045224f884fe03b009b245a2b6c83c6dcf9fa691b7bfbaab6ec27817",
       "hash_mode": "normalized"
     },
     {
@@ -1993,7 +1993,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 22149,
-      "sha256": "39081cd39d2fd9cd9389ac5348533b7415ee9732e0cac47eec1567cdb44f6019",
+      "sha256": "300e0e599cd749e40b8645aafbba36a75f87c4f5597b0b66864acf5d7deb65a3",
       "hash_mode": "normalized"
     },
     {

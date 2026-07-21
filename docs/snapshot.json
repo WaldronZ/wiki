@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T14:35:05",
+  "generated_at": "2026-07-21T15:43:55",
   "snapshot_id": "fc1cc76859e8c126",
   "name": "AutoPaperReader Wiki",
   "count": 12,
@@ -174,7 +174,7 @@
       {
         "href": "index.html",
         "kind": "page",
-        "sha256": "0f48be69e5a2539fbcaba6663b3b603e2eadb846d37d7eccaca64eaa542bc7b5",
+        "sha256": "46a2bbc04fda7c9566e5cd0df31fd6989bb1dba63b7def53051b801e5b5b41e6",
         "status": "ok"
       },
       {
@@ -186,7 +186,7 @@
       {
         "href": "library.html",
         "kind": "page",
-        "sha256": "33134d30371a74d704114e5753446a77a757d51abf51bdbcbde9842ce91a93f2",
+        "sha256": "ac72da25dcba39958ada00710417dac101633dd2647592dcb8ba534076931f8f",
         "status": "ok"
       },
       {
@@ -324,7 +324,7 @@
       {
         "href": "scale.html",
         "kind": "page",
-        "sha256": "8ca1b819c8ad75f6d43b66800c40442e0654c1c9db536ae51ed8930ff7344ff5",
+        "sha256": "8057d00d6b2707cff085b82c6d71768bdd6e67cc14771be28c953f9ceec2ba73",
         "status": "ok"
       },
       {
@@ -336,7 +336,7 @@
       {
         "href": "routing.html",
         "kind": "page",
-        "sha256": "d0f0c75dd1b39ec346daf101fc69ed978341e30cff2640d6dcd9d0191595779b",
+        "sha256": "4a2a5527db6d4d96f6bd0e01c86b23ee9186eff0084639660bdd02fe7b52dde0",
         "status": "ok"
       },
       {
@@ -348,7 +348,7 @@
       {
         "href": "catalog.html",
         "kind": "page",
-        "sha256": "e1052d6b8a1bd33941bf8647194805c9a919933ae34155f38693a070881b713d",
+        "sha256": "792e50151f75c69986f1e9b256b75e8a8379547602b19f4a48ed093a5e97ced4",
         "status": "ok"
       },
       {
@@ -432,13 +432,13 @@
       {
         "href": "papers.json",
         "kind": "data",
-        "sha256": "a47fb1b7b5768f32086d71e4ac438a3a3ee934524068f0a77469dc378444a560",
+        "sha256": "a0bdcead7d7b9eb4d68e6b36284d87e2fd50076035aae5e6cd94bc8c711e10a4",
         "status": "ok"
       },
       {
         "href": "search_index.json",
         "kind": "data",
-        "sha256": "864c564a484e9adc5ba34645df4101534d5add58aecfc14748646f503d43cf81",
+        "sha256": "d4815e8b84e1c89e22fc0aa8622691c13179d892e4467108f5aa6b91529a0c7c",
         "status": "ok"
       },
       {
@@ -582,7 +582,7 @@
       {
         "href": "scale.json",
         "kind": "data",
-        "sha256": "ceabc5adcc602d303d1f7c7ffde380f3824b0655bdca5f6f27b1e89b1a6b2e4b",
+        "sha256": "594139dc78cda23f480a636bd436b5bd4605a858546741060781111c39449d57",
         "status": "ok"
       },
       {
@@ -594,7 +594,7 @@
       {
         "href": "routing.json",
         "kind": "data",
-        "sha256": "9702374d6819afd130a2564568698126d9974c1c73e2ea782dfc9ee25524d46f",
+        "sha256": "0032991866d65b83952ef2219c237f152aa0eb3094e90badd531b5a882bf1348",
         "status": "ok"
       },
       {
@@ -606,7 +606,7 @@
       {
         "href": "catalog.json",
         "kind": "data",
-        "sha256": "bd4c5e3b11c99b291d3ecf11261c5b6c51495b5313aa2ba254cfb1e3010bd221",
+        "sha256": "3d24cd76045224f884fe03b009b245a2b6c83c6dcf9fa691b7bfbaab6ec27817",
         "status": "ok"
       },
       {
