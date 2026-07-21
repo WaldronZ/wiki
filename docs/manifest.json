@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T14:06:35",
+  "generated_at": "2026-07-21T14:35:06",
   "name": "AutoPaperReader Wiki",
   "count": 12,
   "publish_ready": false,
@@ -1242,8 +1242,8 @@
       "description": "卡片检索、筛选、研究线概览",
       "exists": true,
       "status": "ok",
-      "size_bytes": 497176,
-      "sha256": "2b1db67b2014ef82f37854724a6da17bd4890bac3075cdc16db14e6942e890bf",
+      "size_bytes": 497328,
+      "sha256": "0f48be69e5a2539fbcaba6663b3b603e2eadb846d37d7eccaca64eaa542bc7b5",
       "hash_mode": "normalized"
     },
     {
@@ -1263,7 +1263,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 178168,
-      "sha256": "7be9e1998bff1b60e7a65ed0ce14cf1365d042d11804075b258a987ee3666f40",
+      "sha256": "33134d30371a74d704114e5753446a77a757d51abf51bdbcbde9842ce91a93f2",
       "hash_mode": "raw"
     },
     {
@@ -1283,7 +1283,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 132075,
-      "sha256": "badcca5fb51b75165a1e794627892bc0de8f86f5df284b9a7d87a29efc36f0d2",
+      "sha256": "8cdc34c48430a9c6bc7118cd47421981734d000b585328087276e7ca1bd60d30",
       "hash_mode": "raw"
     },
     {
@@ -1293,7 +1293,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 64629,
-      "sha256": "3736d9ac8d4c28fb76dfc05fad4962be75f1dea43af5bfe876f5c2c6b43e85e3",
+      "sha256": "bfcb983ffefa7a06980d518115564fa54c042e4fe394d3cfb503ec4854bd4b18",
       "hash_mode": "raw"
     },
     {
@@ -1513,7 +1513,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 56026,
-      "sha256": "18ab17d25fadfd61c53d4ecabdcdb38de81a4e5df461cabd93561ec2fcd83419",
+      "sha256": "8ca1b819c8ad75f6d43b66800c40442e0654c1c9db536ae51ed8930ff7344ff5",
       "hash_mode": "raw"
     },
     {
@@ -1553,7 +1553,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 71795,
-      "sha256": "83db22ed0090b20d25d511b0465a7c90046ce4e6c0a16f25ce084c1ec43de773",
+      "sha256": "e1052d6b8a1bd33941bf8647194805c9a919933ae34155f38693a070881b713d",
       "hash_mode": "raw"
     },
     {
@@ -1702,8 +1702,8 @@
       "description": "正文全文检索索引",
       "exists": true,
       "status": "ok",
-      "size_bytes": 347303,
-      "sha256": "be0e8aa0a6cfb7f8845cf10643bdf243007c157a0147a48d5395bd2af1c969f0",
+      "size_bytes": 347455,
+      "sha256": "864c564a484e9adc5ba34645df4101534d5add58aecfc14748646f503d43cf81",
       "hash_mode": "normalized"
     },
     {
@@ -1943,7 +1943,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 5648,
-      "sha256": "ccbcc57ef303e181275ad3f4d9186a813c3ca37d00f977380579efb26b62d784",
+      "sha256": "ceabc5adcc602d303d1f7c7ffde380f3824b0655bdca5f6f27b1e89b1a6b2e4b",
       "hash_mode": "normalized"
     },
     {
@@ -1983,7 +1983,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 57856,
-      "sha256": "99a688ae9dde214f29960e58673963212ca120e0a198c73de8cbba09d3f50a10",
+      "sha256": "bd4c5e3b11c99b291d3ecf11261c5b6c51495b5313aa2ba254cfb1e3010bd221",
       "hash_mode": "normalized"
     },
     {
@@ -1993,7 +1993,7 @@
       "exists": true,
       "status": "ok",
       "size_bytes": 22149,
-      "sha256": "d525a014e838660ecfb2e9a944f2d6b166bfd5f190aee665867dd57c5b6a0961",
+      "sha256": "39081cd39d2fd9cd9389ac5348533b7415ee9732e0cac47eec1567cdb44f6019",
       "hash_mode": "normalized"
     },
     {

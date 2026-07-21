@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T14:06:35",
+  "generated_at": "2026-07-21T14:35:05",
   "snapshot_id": "fc1cc76859e8c126",
   "name": "AutoPaperReader Wiki",
   "count": 12,
@@ -174,7 +174,7 @@
       {
         "href": "index.html",
         "kind": "page",
-        "sha256": "2b1db67b2014ef82f37854724a6da17bd4890bac3075cdc16db14e6942e890bf",
+        "sha256": "0f48be69e5a2539fbcaba6663b3b603e2eadb846d37d7eccaca64eaa542bc7b5",
         "status": "ok"
       },
       {
@@ -186,7 +186,7 @@
       {
         "href": "library.html",
         "kind": "page",
-        "sha256": "7be9e1998bff1b60e7a65ed0ce14cf1365d042d11804075b258a987ee3666f40",
+        "sha256": "33134d30371a74d704114e5753446a77a757d51abf51bdbcbde9842ce91a93f2",
         "status": "ok"
       },
       {
@@ -324,7 +324,7 @@
       {
         "href": "scale.html",
         "kind": "page",
-        "sha256": "18ab17d25fadfd61c53d4ecabdcdb38de81a4e5df461cabd93561ec2fcd83419",
+        "sha256": "8ca1b819c8ad75f6d43b66800c40442e0654c1c9db536ae51ed8930ff7344ff5",
         "status": "ok"
       },
       {
@@ -348,7 +348,7 @@
       {
         "href": "catalog.html",
         "kind": "page",
-        "sha256": "83db22ed0090b20d25d511b0465a7c90046ce4e6c0a16f25ce084c1ec43de773",
+        "sha256": "e1052d6b8a1bd33941bf8647194805c9a919933ae34155f38693a070881b713d",
         "status": "ok"
       },
       {
@@ -438,7 +438,7 @@
       {
         "href": "search_index.json",
         "kind": "data",
-        "sha256": "be0e8aa0a6cfb7f8845cf10643bdf243007c157a0147a48d5395bd2af1c969f0",
+        "sha256": "864c564a484e9adc5ba34645df4101534d5add58aecfc14748646f503d43cf81",
         "status": "ok"
       },
       {
@@ -582,7 +582,7 @@
       {
         "href": "scale.json",
         "kind": "data",
-        "sha256": "ccbcc57ef303e181275ad3f4d9186a813c3ca37d00f977380579efb26b62d784",
+        "sha256": "ceabc5adcc602d303d1f7c7ffde380f3824b0655bdca5f6f27b1e89b1a6b2e4b",
         "status": "ok"
       },
       {
@@ -606,7 +606,7 @@
       {
         "href": "catalog.json",
         "kind": "data",
-        "sha256": "99a688ae9dde214f29960e58673963212ca120e0a198c73de8cbba09d3f50a10",
+        "sha256": "bd4c5e3b11c99b291d3ecf11261c5b6c51495b5313aa2ba254cfb1e3010bd221",
         "status": "ok"
       },
       {
