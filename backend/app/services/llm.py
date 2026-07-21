@@ -171,6 +171,7 @@ class ClaudeCodeProvider:
     """Call local Claude Code CLI with a selected profile."""
     profile_name: str = ""
     allowed_tools: str = "Bash,Read,Write,WebSearch,WebFetch"
+    report_path: str = ""  # Optional: path to check if CLI wrote report directly
 
     def generate(self, prompt: str) -> str:
         profiles = list_claude_profiles()
@@ -216,6 +217,23 @@ class ClaudeCodeProvider:
             ) from exc
 
         if result.returncode != 0:
+            # Claude Code CLI sometimes returns error code 1 even when the report
+            # was successfully generated (e.g., timeout after writing file).
+            # Check if stdout contains a valid report before raising an error.
+            stdout = result.stdout.strip()
+            if stdout and ("---" in stdout and "slug:" in stdout):
+                # CLI output contains frontmatter, likely a valid report
+                return stdout
+
+            # Check if CLI wrote report directly to file system
+            if self.report_path:
+                from pathlib import Path
+                report_file = Path(self.report_path)
+                if report_file.exists():
+                    content = report_file.read_text(encoding="utf-8").strip()
+                    if content and content.startswith("---") and "slug:" in content:
+                        return content
+
             stderr = result.stderr.strip()[:500] if result.stderr else ""
             raise LLMGenerationError(f"Claude Code 执行失败（返回码 {result.returncode}）：{stderr}")
 
