@@ -1,0 +1,20 @@
+{
+  "slug": "2503.01840-eagle-3-scaling-up",
+  "arxiv_id": "2503.01840",
+  "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+  "authors": [
+    "Yuhui Li",
+    "Fangyun Wei",
+    "Chao Zhang",
+    "Hongyang Zhang"
+  ],
+  "year": 2025,
+  "published": "2025-03-03T18:59:04Z",
+  "abs_url": "https://arxiv.org/abs/2503.01840v3",
+  "pdf_url": "https://arxiv.org/pdf/2503.01840v3",
+  "source_dir": "/Users/waldron/projects/AutoPaperReader/sources/2503.01840-eagle-3-scaling-up/arxiv",
+  "main_tex_path": "/Users/waldron/projects/AutoPaperReader/sources/2503.01840-eagle-3-scaling-up/arxiv/paper.tex",
+  "report_md_path": "/Users/waldron/projects/AutoPaperReader/docs/2503.01840-eagle-3-scaling-up.md",
+  "report_html_path": "/Users/waldron/projects/AutoPaperReader/docs/2503.01840-eagle-3-scaling-up.html",
+  "pdf_fallback_path": "sources/2503.01840-eagle-3-scaling-up/arxiv/paper.pdf"
+}

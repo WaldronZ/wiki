@@ -1,0 +1,3157 @@
+# ===== FILE: LICENSE =====
+Copyright 2025 SafeAI Lab (SAIL)
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+
+# ===== FILE: README.md =====
+<img src="figs/logo.png" alt="EAGLE" width="220" align="left"><div align="center"><h1>&nbsp;EAGLE</h1></div>
+
+<p align="center">
+| <a href="https://arxiv.org/pdf/2401.15077.pdf"><b>Paper (EAGLE)</b></a> | 
+<a href="https://arxiv.org/pdf/2406.16858"><b>Paper (EAGLE-2)</b></a> |
+<a href="https://arxiv.org/pdf/2503.01840"><b>Paper (EAGLE-3)</b></a> |
+<a href="https://sites.google.com/view/
+eagle-llm"><b>Blog</b></a> |
+</p>
+
+
+<p align="center">
+  <a href="">
+    <img src="https://img.shields.io/badge/Version-v3.0.0-orange.svg" alt="Version">
+  </a>
+  <a href="https://opensource.org/licenses/Apache-2.0">
+    <img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License">
+  </a>
+  <a href="https://github.com/SafeAILab/EAGLE/issues">
+    <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" alt="Maintenance">
+  </a>
+  <a href="https://github.com/SafeAILab/EAGLE/pulls">
+    <img src="https://img.shields.io/badge/Contributions-welcome-brightgreen.svg?style=flat" alt="Contributions welcome">
+  </a>
+</p>
+
+
+##
+
+<p align="center">
+  <img src="./figs/eagle3r.jpg" alt="benchmark" width="790">
+</p>
+
+EAGLE (Extrapolation Algorithm for Greater Language-model Efficiency) is a new baseline for fast decoding of Large Language Models (LLMs) with provable performance maintenance. This approach involves extrapolating the second-top-layer contextual feature vectors of LLMs, enabling a significant boost in generation efficiency. 
+
+- EAGLE is:
+	- certified by the <a href="https://github.com/hemingkx/Spec-Bench/blob/main/Leaderboard.md"><b>third-party</b></a> evaluation as the **fastest** speculative method so far. 
+	- achieving **2x** speedup on <a href="https://github.com/pytorch-labs/gpt-fast"><b>gpt-fast</b></a>.
+	- **3x** faster than vanilla decoding (13B).
+ 	- **2x** faster than <a href="https://lmsys.org/blog/2023-11-21-lookahead-decoding/"><b>Lookahead</b></a> (13B).
+ 	- **1.6x** faster than <a href="https://sites.google.com/view/medusa-llm"><b>Medusa</b></a> (13B).
+  	- provably maintaining the consistency with vanilla decoding in the distribution of generated texts.
+  	- trainable (within 1-2 days) and testable on 8x RTX 3090 GPUs. So even the GPU poor can afford it.
+	- combinable with other parallelled techniques such as vLLM, DeepSpeed, Mamba, FlashAttention, quantization, and hardware optimization.
+
+EAGLE-2 uses the confidence scores from the draft model to approximate acceptance rates, dynamically adjusting the draft tree structure, which further enhances performance.
+
+- EAGLE-2 is:
+  - **4x** faster than vanilla decoding (13B).
+  - **1.4x** faster than EAGLE-1 (13B).
+
+EAGLE-3 removes the feature prediction constraint in EAGLE and simulates this process during training using training-time testing. Considering that top-layer features are limited to next-token prediction, EAGLE-3 replaces them with a fusion of low-, mid-, and high-level semantic features. 
+EAGLE-3 further improves generation speed while ensuring lossless performance.
+
+- EAGLE-3 is:
+  - **5.6** faster than vanilla decoding (13B).
+  - **1.8x** faster than EAGLE-1 (13B).
+
+<p align="center">
+  <img src="./figs/e3.gif" alt="demogif" width="600">
+</p>
+
+_Inference is conducted on 2x RTX 3090 GPUs at fp16 precision using the Vicuna 13B model._
+
+
+[//]: # ()
+[//]: # ()
+[//]: # (Using EAGLE-2, the inference speed on 2 RTX 3060 GPUs can be faster than vanilla autoregressive decoding on an A100 GPU.)
+
+## Support
+EAGLE has been merged in the following mainstream LLM serving frameworks (listed in alphabetical order).
+
+- <a href="https://rocm.blogs.amd.com/software-tools-optimization/mtp/README.html">AMD ROCm</a>
+- <a href="https://angelslim.readthedocs.io/zh-cn/latest/features/speculative_decoding/eagle.html">AngelSlim</a>
+- <a href="https://awsdocs-neuron.readthedocs-hosted.com/en/latest/libraries/nxd-inference/developer_guides/feature-guide.html#eagle-speculative-decoding">AWS NeuronX Distributed Core</a>
+- <a href="https://github.com/OpenBMB/CPM.cu">CPM.cu</a>
+- <a href="https://github.com/intel/intel-extension-for-transformers/pull/1504">Intel® Extension for Transformers</a>
+- <a href="https://github.com/intel-analytics/ipex-llm/pull/11104">Intel® LLM Library for PyTorch</a>
+- <a href="https://llm.mlc.ai/docs/deploy/rest.html">MLC-LLM</a>
+- <a href="https://docs.nvidia.com/nemo-framework/user-guide/latest/model-optimization/speculative/speculative.html">NVIDIA NeMo Framework</a>
+- <a href="https://github.com/NVIDIA/TensorRT-LLM/tree/main/examples/eagle">NVIDIA TensorRT-LLM</a>
+- <a href="https://nvidia.github.io/TensorRT-Model-Optimizer/guides/7_speculative_decoding.html">NVIDIA TensorRT Model Optimizer</a>
+- <a href="https://paddlenlp.readthedocs.io/en/latest/llm/docs/predict/speculative_decoding.html">PaddleNLP</a>
+- <a href="https://docs.sglang.ai/advanced_features/speculative_decoding.html">SGLang</a>
+- <a href="https://github.com/sgl-project/SpecForge">SpecForge</a>
+- <a href="https://github.com/vllm-project/speculators">speculators</a>
+- <a href="https://github.com/vllm-project/vllm/pull/16937">vLLM</a>
+
+
+## Update
+**2025.9.18**: EAGLE-3 is accepted to NeurIPS'25.
+
+**2025.7.23**: We strongly recommend using [SpecForge](https://github.com/sgl-project/SpecForge) for out-of-the-box training of EAGLE-3 with SGLang.
+
+**2025.3.19**: EAGLE-3 is released.
+
+**2024.8.8**: We now support Qwen-2.
+
+**2024.6.27**: EAGLE-2 is released.
+
+**2024.2.25**: EAGLE is certified by the <a href="https://github.com/hemingkx/Spec-Bench/blob/main/Leaderboard.md">third-party</a> evaluation as the fastest speculative method.
+
+**2024.1.17**: We now support [Mixtral-8x7B-Instruct](https://huggingface.co/mistralai/Mixtral-8x7B-Instruct-v0.1).
+
+**2023.12.8**: EAGLE v1.0 is released.
+
+
+
+## Todo
+- [x] Support non-greedy inference (provably maintaining text distribution).
+- [x] Support more LLMs such as Mixtral 8x7B.
+- [x] Support LLaMA-3.
+- [x] Support Qwen-2.
+- [x] Support vLLM (please check <a href="https://github.com/vllm-project/vllm/pull/6830">vLLM</a>'s implementation).
+- [x] EAGLE-3.
+- [x] Training code of EAGLE-3.
+- [x] Support LLaMA-4.
+- [ ] Support official EAGLE-3 for Qwen-3.
+- [ ] EAGLE-4.
+
+## The default main branch is the implementation of EAGLE-3 and EAGLE-2. For using EAGLE-1, please switch to the v1 branch.
+
+## Contents
+
+- [Setup & Installation](#setup--installation)
+- [EAGLE-3 Weights](#eagle-3-weights)
+- [EAGLE Weights](#eagle-weights)
+- [Inference](#inference)
+  - [With UI](#with-ui)
+  - [With Code](#with-code)
+- [Train](#train)
+  - [Generate Train Data](#generate-train-data)
+  - [Train the Auto-regression Head](#train-the-auto-regression-head)
+  - [Inference on custom models](#inference-on-custom-models)
+- [Evaluation](#evaluation)
+
+
+## Setup & Installation
+
+
+```bash
+git clone https://github.com/SafeAILab/EAGLE.git
+cd EAGLE
+python -m venv ~/venvs/ea_env
+source ~/venvs/ea_env/bin/activate
+pip install -r requirements.txt
+```
+## EAGLE-3 Weights
+
+*Note:* This repository recognizes only official EAGLE-3 checkpoints. Performance of unofficial checkpoints may vary. If you want to compare with EAGLE-3, please compare with official checkpoints and official draft tree setups.
+
+## EAGLE-3 Models on Hugging Face
+
+| Base Model | EAGLE-3 Model(s) | Official |
+|-----------|-----------------|----------|
+| **Vicuna-13B v1.3**<br>[lmsys/vicuna-13b-v1.3](https://huggingface.co/lmsys/vicuna-13b-v1.3) | [yuhuili/EAGLE3-Vicuna1.3-13B](https://huggingface.co/yuhuili/EAGLE3-Vicuna1.3-13B) | Yes |
+| **LLaMA-3.1-8B-Instruct**<br>[meta-llama/Llama-3.1-8B-Instruct](https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct) | [yuhuili/EAGLE3-LLaMA3.1-Instruct-8B](https://huggingface.co/yuhuili/EAGLE3-LLaMA3.1-Instruct-8B) | Yes |
+| **LLaMA-3.3-70B-Instruct**<br>[meta-llama/Llama-3.3-70B-Instruct](https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct) | [yuhuili/EAGLE3-LLaMA3.3-Instruct-70B](https://huggingface.co/yuhuili/EAGLE3-LLaMA3.3-Instruct-70B) | Yes |
+| **DeepSeek-R1-Distill-LLaMA-8B**<br>[deepseek-ai/DeepSeek-R1-Distill-Llama-8B](https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Llama-8B) | [yuhuili/EAGLE3-DeepSeek-R1-Distill-LLaMA-8B](https://huggingface.co/yuhuili/EAGLE3-DeepSeek-R1-Distill-LLaMA-8B) | Yes |
+| **LLaMA-4-Scout-17B-16E-Instruct**<br>[meta-llama/Llama-4-Scout-17B-16E-Instruct](https://huggingface.co/meta-llama/Llama-4-Scout-17B-16E-Instruct) | [lmsys/sglang-EAGLE3-Llama-4-Scout-17B-16E-Instruct-v1](https://huggingface.co/lmsys/sglang-EAGLE3-Llama-4-Scout-17B-16E-Instruct-v1) | No |
+| **LLaMA-4-Maverick-17B-128E-Instruct**<br>[meta-llama/Llama-4-Maverick-17B-128E-Instruct](https://huggingface.co/meta-llama/Llama-4-Maverick-17B-128E-Instruct) | [lmsys/sglang-EAGLE3-Llama-4-Maverick-17B-128E-Instruct-v1](https://huggingface.co/lmsys/sglang-EAGLE3-Llama-4-Maverick-17B-128E-Instruct-v1)<br>[nvidia/Llama-4-Maverick-17B-128E-Eagle3](https://huggingface.co/nvidia/Llama-4-Maverick-17B-128E-Eagle3) | No |
+| **Qwen3-1.7B**<br>[Qwen/Qwen3-1.7B](https://huggingface.co/Qwen/Qwen3-1.7B) | [AngelSlim/Qwen3-1.7B_eagle3](https://huggingface.co/AngelSlim/Qwen3-1.7B_eagle3) | No |
+| **Qwen3-4B**<br>[Qwen/Qwen3-4B](https://huggingface.co/Qwen/Qwen3-4B) | [AngelSlim/Qwen3-4B_eagle3](https://huggingface.co/AngelSlim/Qwen3-4B_eagle3) | No |
+| **Qwen3-8B**<br>[Qwen/Qwen3-8B](https://huggingface.co/Qwen/Qwen3-8B) | [Tengyunw/qwen3_8b_eagle3](https://huggingface.co/Tengyunw/qwen3_8b_eagle3)<br>[AngelSlim/Qwen3-8B_eagle3](https://huggingface.co/AngelSlim/Qwen3-8B_eagle3)<br>[Zjcxy-SmartAI/Eagle3-Qwen3-8B-zh](https://huggingface.co/Zjcxy-SmartAI/Eagle3-Qwen3-8B-zh) | No |
+| **Qwen3-14B**<br>[Qwen/Qwen3-14B](https://huggingface.co/Qwen/Qwen3-14B) | [AngelSlim/Qwen3-14B_eagle3](https://huggingface.co/AngelSlim/Qwen3-14B_eagle3) | No |
+| **Qwen3-30B-A3B**<br>[Qwen/Qwen3-30B-A3B](https://huggingface.co/Qwen/Qwen3-30B-A3B) | [Tengyunw/qwen3_30b_moe_eagle3](https://huggingface.co/Tengyunw/qwen3_30b_moe_eagle3)<br>[AngelSlim/Qwen3-a3B_eagle3](https://huggingface.co/AngelSlim/Qwen3-a3B_eagle3) | No |
+| **Qwen3-32B**<br>[Qwen/Qwen3-32B](https://huggingface.co/Qwen/Qwen3-32B) | [AngelSlim/Qwen3-32B_eagle3](https://huggingface.co/AngelSlim/Qwen3-32B_eagle3)<br>[Zjcxy-SmartAI/Eagle3-Qwen3-32B-zh](https://huggingface.co/Zjcxy-SmartAI/Eagle3-Qwen3-32B-zh) | No |
+| **Qwen3-235B-A22B**<br>[Qwen/Qwen3-235B-A22B](https://huggingface.co/Qwen/Qwen3-235B-A22B) | [nvidia/Qwen3-235B-A22B-Eagle3](https://huggingface.co/nvidia/Qwen3-235B-A22B-Eagle3)<br>[lmsys/Qwen3-235B-A22B-EAGLE3](https://huggingface.co/lmsys/Qwen3-235B-A22B-EAGLE3) | No |
+| **MiniCPM4-8B**<br>[openbmb/MiniCPM4-8B](https://huggingface.co/openbmb/MiniCPM4-8B) | [linglingdan/Eagle3_for_MiniCPM4](https://modelscope.cn/models/linglingdan/Eagle3_for_MiniCPM4) | No |
+| **OLMoE-1B-7B-Instruct**<br>[allenai/OLMoE-1B-7B-0125-Instruct](https://huggingface.co/allenai/OLMoE-1B-7B-0125-Instruct) | [wantsleep/OLMoE_1B_7B_Eagle3](https://huggingface.co/wantsleep/OLMoE_1B_7B_Eagle3) | No |
+| **granite-3.1-1b-a400m-instruct**<br>[ibm-granite/granite-3.1-1b-a400m-instruct](https://huggingface.co/ibm-granite/granite-3.1-1b-a400m-instruct) | [wantsleep/granite-3.1-1b-a400m-EAGLE3](https://huggingface.co/wantsleep/granite-3.1-1b-a400m-EAGLE3) | No |
+| **GPT-OSS-120B**<br>[openai/gpt-oss-120b](https://huggingface.co/openai/gpt-oss-120b) | [lmsys/EAGLE3-gpt-oss-120b-bf16](https://huggingface.co/lmsys/EAGLE3-gpt-oss-120b-bf16)<br>[nvidia/gpt-oss-120b-Eagle3](https://huggingface.co/nvidia/gpt-oss-120b-Eagle3) | No |
+| **GLM-4.7-Flash**<br>[zai-org/GLM-4.7-Flash](https://huggingface.co/zai-org/GLM-4.7-Flash) | [thoughtworks/GLM-4.7-Flash-Eagle3](https://huggingface.co/thoughtworks/GLM-4.7-Flash-Eagle3) | No |
+
+ 
+
+
+
+## EAGLE Weights
+
+*Note:* The current code defaults to using EAGLE-3. If you want to use EAGLE weights, please specify `use_eagle3=False` in `EaModel.from_pretrained`.
+
+*Note:* When Qwen2 is the target model, please use bf16 precision instead of fp16 to avoid numerical overflow. The training dataset for the draft model of Qwen2 is ShareGPT, which has removed non-English data. Therefore, if you want to use it on non-English data such as Chinese, please train with the corresponding data.
+
+
+[//]: # (Compared to EAGLE, EAGLE-2 does not require additional training and uses the same weights.)
+
+## EAGLE Models on Hugging Face
+
+| Base Model | EAGLE Model | # EAGLE Parameters | Official |
+|-----------|------------|-------------------|----------|
+| **Vicuna-7B v1.3** | [yuhuili/EAGLE-Vicuna-7B-v1.3](https://huggingface.co/yuhuili/EAGLE-Vicuna-7B-v1.3) | 0.24B | Yes |
+| **Vicuna-13B v1.3** | [yuhuili/EAGLE-Vicuna-13B-v1.3](https://huggingface.co/yuhuili/EAGLE-Vicuna-13B-v1.3) | 0.37B | Yes |
+| **Vicuna-33B v1.3** | [yuhuili/EAGLE-Vicuna-33B-v1.3](https://huggingface.co/yuhuili/EAGLE-Vicuna-33B-v1.3) | 0.56B | Yes |
+| **LLaMA2-Chat 7B** | [yuhuili/EAGLE-llama2-chat-7B](https://huggingface.co/yuhuili/EAGLE-llama2-chat-7B) | 0.24B | Yes |
+| **LLaMA2-Chat 13B** | [yuhuili/EAGLE-llama2-chat-13B](https://huggingface.co/yuhuili/EAGLE-llama2-chat-13B) | 0.37B | Yes |
+| **LLaMA2-Chat 70B** | [yuhuili/EAGLE-llama2-chat-70B](https://huggingface.co/yuhuili/EAGLE-llama2-chat-70B) | 0.99B | Yes |
+| **Mixtral-8x7B-Instruct v0.1** | [yuhuili/EAGLE-mixtral-instruct-8x7B](https://huggingface.co/yuhuili/EAGLE-mixtral-instruct-8x7B) | 0.28B | Yes |
+| **LLaMA3-Instruct 8B** | [yuhuili/EAGLE-LLaMA3-Instruct-8B](https://huggingface.co/yuhuili/EAGLE-LLaMA3-Instruct-8B) | 0.25B | Yes |
+| **LLaMA3-Instruct 70B** | [yuhuili/EAGLE-LLaMA3-Instruct-70B](https://huggingface.co/yuhuili/EAGLE-LLaMA3-Instruct-70B) | 0.99B | Yes |
+| **Qwen2-7B-Instruct** | [yuhuili/EAGLE-Qwen2-7B-Instruct](https://huggingface.co/yuhuili/EAGLE-Qwen2-7B-Instruct) | 0.26B | Yes |
+| **Qwen2-72B-Instruct** | [yuhuili/EAGLE-Qwen2-72B-Instruct](https://huggingface.co/yuhuili/EAGLE-Qwen2-72B-Instruct) | 1.05B | Yes |
+| **LLaMA3.1-Instruct 8B** | [yuhuili/EAGLE-LLaMA3.1-Instruct-8B](https://huggingface.co/yuhuili/EAGLE-LLaMA3.1-Instru
+
+# ===== FILE: requirements.txt =====
+torch==2.6.0
+transformers>=4.53.1
+accelerate==0.26.0
+fschat==0.2.31
+gradio==3.50.2
+openai==0.28.0
+anthropic==0.5.0
+sentencepiece==0.1.99
+protobuf==3.19.0
+wandb
+
+
+# ===== FILE: setup.py =====
+from setuptools import setup, find_packages
+
+setup(
+    name='eagle-llm',
+    version='3.0.0',
+    description='Accelerating LLMs by 3x with No Quality Loss',
+    long_description=open('README.md').read(),
+    long_description_content_type='text/markdown',
+    author_email='yuhui.li@stu.pku.edu.cn',
+    url='https://github.com/SafeAILab/EAGLE',
+    packages=find_packages(),
+    install_requires=[
+        'torch==2.0.1',
+        'transformers==4.46.2',
+        'accelerate==0.21.0',
+        'fschat==0.2.31',
+        'gradio==3.50.2',
+        'openai==0.28.0',
+        'anthropic==0.5.0',
+        'sentencepiece==0.1.99',
+        'protobuf==3.19.0',
+        'wandb'
+    ],
+    classifiers=[
+        'Development Status :: 3 - Alpha',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: Apache Software License',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11'
+    ],
+)
+
+
+# ===== FILE: eagle/train/main.py =====
+import argparse
+
+parser = argparse.ArgumentParser(description='sp')
+parser.add_argument('--basepath', type=str, default='/home/lyh/weights/hf/vicuna_v13/7B/')
+parser.add_argument('--configpath', type=str, default="config.json")
+parser.add_argument('--lr', type=float, default=3e-5)
+parser.add_argument('--bs', type=int, default=4)
+parser.add_argument('--gradient-accumulation-steps', type=int, default=1)
+parser.add_argument('--tmpdir', type=str, default='0')
+parser.add_argument('--cpdir', type=str, default='0')
+args = parser.parse_args()
+
+train_config = {
+    "lr": args.lr,
+    "bs": args.bs,
+    "gradient_accumulation_steps": args.gradient_accumulation_steps,
+    "datapath": f"{args.tmpdir}",
+    "is_warmup": True,
+    "num_epochs": 20,
+    # Depending on your data and model size, the larger the model, the higher the sample efficiency. We recommend setting it between 20-40.
+    "num_warmup_steps": 2000,
+    "total_steps": 800000,
+    "p_w": 0.1,
+    "v_w": 1.0,
+    "head_w": 0.1,
+    "num_workers": 2,
+    "embeding": True,
+    "act": "No",
+    "data_noise": True,
+    "noise": "uniform",
+    "mean": 0.0,
+    "std": 0.2,
+    "residual": "true,norm",
+    "max_len": 2048,
+    # During training, truncating the training sequences means that the larger the setting, the more training data is used, and the better the effect, but it also consumes more VRAM.
+    "config_path": args.configpath,
+    "b1": 0.9,
+    "b2": 0.95,
+    "grad_clip": 0.5,
+    "save_freq": 5
+}
+import json
+from safetensors import safe_open
+# from transformers import AutoModelForCausalLM, AutoTokenizer,AutoModelForSequenceClassification
+import os
+# os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
+import torch
+
+torch.backends.cuda.matmul.allow_tf32 = True
+from accelerate import Accelerator
+from accelerate.utils import set_seed
+
+set_seed(0)
+accelerator = Accelerator(mixed_precision='bf16',
+                          gradient_accumulation_steps=train_config["gradient_accumulation_steps"])
+from ..model.cnets1 import Model
+from ..model.configs import EConfig
+from typing import Any, Dict, List
+
+from torch import nn, optim
+from torch.utils.data import Dataset, DataLoader
+from tqdm import tqdm
+# import accelerate
+import numpy as np
+from transformers import get_linear_schedule_with_warmup, AutoConfig
+
+if accelerator.is_main_process:
+    import wandb
+
+    wandb.init(project="ess", entity="yuhui-li", config=train_config)
+
+baseconfig = AutoConfig.from_pretrained(args.basepath)
+
+head = torch.nn.Linear(baseconfig.hidden_size, baseconfig.vocab_size, bias=False)
+
+try:
+    with open(os.path.join(args.basepath, "model.safetensors.index.json"), "r") as f:
+        index_json = json.loads(f.read())
+        head_path = index_json["weight_map"]["lm_head.weight"]
+    with safe_open(os.path.join(args.basepath, head_path),
+                   framework="pt",
+                   device="cpu") as f:
+        tensor_slice = f.get_slice("lm_head.weight")
+        vocab_size, hidden_dim = tensor_slice.get_shape()
+        tensor = tensor_slice[:, :hidden_dim].float()
+except:
+    with open(os.path.join(args.basepath, "pytorch_model.bin.index.json"), "r") as f:
+        index_json = json.loads(f.read())
+        head_path = index_json["weight_map"]["lm_head.weight"]
+    weights = torch.load(os.path.join(args.basepath, head_path))
+    tensor = weights["lm_head.weight"].float()
+
+head.weight.data = tensor
+head.eval()
+
+for param in head.parameters():
+    param.requires_grad = False
+
+
+def list_files(path):
+    datapath = []
+    for root, directories, files in os.walk(path):
+        for file in files:
+            file_path = os.path.join(root, file)
+            datapath.append(file_path)
+    return datapath
+
+
+class AddGaussianNoise:
+    def __init__(self, mean=0.0, std=0.0):
+        self.mean = mean
+        self.std = std
+
+    def __call__(self, data):
+        tensor = data["hidden_state_big"]
+        noise = torch.randn(tensor.size()) * self.std + self.mean
+        noisy_tensor = tensor + noise
+        data["hidden_state_big"] = noisy_tensor
+        return data
+
+
+class AddUniformNoise:
+    def __init__(self, std=0.0):
+        self.std = std
+
+    def __call__(self, data):
+        tensor = data["hidden_state_big"]
+        noise = (torch.rand_like(tensor) - 0.5) * self.std * 512 / tensor.shape[1]
+        noisy_tensor = tensor + noise
+        data["hidden_state_big"] = noisy_tensor
+        return data
+
+
+class CustomDataset(Dataset):
+    def __init__(self, datapath, transform=None):
+        self.data = datapath
+        self.transform = transform
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, index):
+        # try:
+        data = torch.load(self.data[index])
+        new_data = {}
+        hidden_state = data['hidden_state'][:train_config["max_len"]][None, :]
+        input_ids = data['input_ids'][:train_config["max_len"]][None, :]
+        loss_mask = data["loss_mask"][:train_config["max_len"]][None, :]
+
+
+        length = hidden_state.shape[1]
+        # length_q = data['query_ids'].shape[1]
+        attention_mask = [1] * length
+        loss_mask = loss_mask[0].tolist()
+        loss_mask[-1] = 0
+
+        input_ids_target = input_ids[:, 1:]
+        zeropadding = torch.tensor([[0]])
+        input_ids_target = torch.cat((input_ids_target, zeropadding), dim=1)
+
+        target = hidden_state[:, 1:, :]
+        zeropadding = torch.zeros(1, 1, target.shape[2])
+        target = torch.cat((target, zeropadding), dim=1)
+        loss_mask[-1] = 0
+        new_data["attention_mask"] = attention_mask
+        new_data["loss_mask"] = loss_mask
+        new_data["target"] = target
+        new_data["hidden_state_big"] = hidden_state
+        new_data["input_ids"] = input_ids_target
+
+
+        if self.transform:
+            new_data = self.transform(new_data)
+
+        return new_data
+
+
+class DataCollatorWithPadding:
+
+    def paddingtensor(self, intensors, N):
+        B, n, S = intensors.shape
+        # padding_tensor = torch.zeros(B, N - n, S,dtype=intensors.dtype)
+        padding_tensor = torch.zeros(B, N - n, S)
+        outtensors = torch.cat((intensors, padding_tensor), dim=1)
+        return outtensors
+
+    def paddingtensor2D(self, intensors, N):
+        B, n = intensors.shape
+        padding_tensor = torch.zeros(B, N - n, dtype=intensors.dtype)
+        outtensors = torch.cat((intensors, padding_tensor), dim=1)
+        return outtensors
+
+    def __call__(self, features: List[Dict[str, Any]]) -> Dict[str, Any]:
+        max_length = max(item['hidden_state_big'].shape[1] for item in features)
+        batch_input_ids = torch.cat([self.paddingtensor2D(item['input_ids'], max_length) for item in features])
+        batch_hidden_states = torch.cat([self.paddingtensor(item['hidden_state_big'], max_length) for item in features])
+        batch_target = torch.cat([self.paddingtensor(item['target'], max_length) for item in features])
+        batch_loss_mask = torch.tensor(
+            [item['loss_mask'] + [0] * (max_length - len(item['loss_mask'])) for item in features])
+        batch_attention_mask = torch.tensor(
+            [item['attention_mask'] + [0] * (max_length - len(item['attention_mask'])) for item in features])
+        # batch_loss_mask = torch.ones_like(batch_loss_mask)
+        # batch_attention_mask=torch.ones_like(batch_attention_mask)
+        batch = {
+            "input_ids": batch_input_ids,
+            "hidden_states": batch_hidden_states,
+            "target": batch_target,
+            "attention_mask": batch_attention_mask,
+            "loss_mask": batch_loss_mask,
+        }
+        return batch
+
+
+def top_accuracy(output, target, topk=(1,)):
+    # output.shape (bs, num_classes), target.shape (bs, )
+    """Computes the accuracy over the k top predictions for the specified values of k"""
+    with torch.no_grad():
+        maxk = max(topk)
+        batch_size = target.size(0)
+
+        _, pred = output.topk(maxk, 1, True, True)
+        pred = pred.t()
+        correct = pred.eq(target.view(1, -1).expand_as(pred))
+
+        res = []
+        for k in topk:
+            correct_k = correct[:k].reshape(-1).float().sum(0, keepdim=True)
+            res.append(correct_k)
+        return res
+
+def compute_loss(target, target_p, predict, loss_mask):
+    out_head = head(predict)
+    out_logp = nn.LogSoftmax(dim=2)(out_head)
+    plogp = target_p * out_logp
+    ploss = -torch.sum(torch.sum(loss_mask * plogp, 2)) / (loss_mask.sum() + 1e-5)
+    vloss = criterion(predict, target)
+    vloss = torch.sum(torch.mean(loss_mask * vloss, 2)) / (loss_mask.sum() + 1e-5)
+    return vloss, ploss, out_head
+
+@torch.no_grad()
+def getkacc(model, data, head, max_length=5):
+    def generate(hidden_states, input_ids, head, max_length=4, use_cache=True):
+        if use_cache:
+            past_key_values = None
+            for i in range(max_length):
+                if past_key_values != None:
+                    out_hidden, past_key_values = model(last_hidden, input_ids=token, past_key_values=past_key_values,
+                                                        use_cache=True)
+                else:
+                    out_hidden, past_key_values = model(hidden_states, input_ids=input_ids, use_cache=True)
+                last_hidden = out_hidden[:, -1:]
+                last_headout = head(last_hidden)
+                token = torch.argmax(last_headout, dim=-1)
+                input_ids = torch.cat((input_ids, token), dim=1)
+
+        else:
+            raise NotImplementedError
+
+        return input_ids
+
+    hidden_states = data["hidden_states"]
+    input_ids = data["input_ids"]
+    loss_mask = data["loss_mask"]
+    target = data["target"]
+    total = [0 for _ in range(max_length)]
+    correct = [0 for _ in range(max_length)]
+    bs, seq_len = hidden_states.shape[0], hidden_states.shape[1]
+    target_headout = head(target)
+    target_ids = target_headout.argmax(dim=2)
+
+    for pre_len in range(1, seq_len):
+        if loss_mask[:, pre_len].sum() == 0:
+            continue
+        pre_hidden_states = hidden_states[:, :pre_len]
+        pre_input_ids = input_ids[:, :pre_len]
+        outs = generate(pre_hidden_states, pre_input_ids, head, max_length=max_length)
+        generate_ids = outs[:, pre_len:]
+        for bid in range(bs):
+            for k in range(max_length):
+                if loss_mask[bid, pre_len + k] == 0:
+                    break
+                if pre_len + k >= seq_len:
+                    break
+                total[k] += 1
+                if generate_ids[bid, k] == target_ids[bid, pre_len + k - 1]:
+                    correct[k] += 1
+                else:
+                    for kk in range(k + 1, max_length):
+                        total[kk] += 1
+                    break
+
+    acc = [correct[i] / total[i] for i in range(len(correct))]
+    return acc
+
+
+if train_config["data_noise"]:
+    if train_config["noise"] == "uniform":
+        aug = AddUniformNoise(std=train_config["std"])
+    else:
+        aug = AddGaussianNoise(mean=train_config["mean"], std=train_config["std"])
+else:
+    aug = None
+
+datapath = list_files(train_config["datapath"])
+
+traindatapath = datapath[:int(len(datapath) * 0.95)]
+testdatapath = datapath[int(len(datapath) * 0.95):]
+
+traindataset = CustomDataset(traindatapath, transform=aug)
+testdataset = CustomDataset(testdatapath)
+train_loader = DataLoader(traindataset, batch_size=train_config["bs"], shuffle=True,
+                          collate_fn=DataCollatorWithPadding(), num_workers=train_config["num_workers"],
+                          pin_memory=True)
+test_loader = DataLoader(testdataset, batch_size=train_config["bs"], shuffle=False,
+                         collate_fn=DataCollatorWithPadding(), num_workers=train_config["num_workers"], pin_memory=True)
+
+if accelerator.is_main_process:
+    if not os.path.exists(args.cpdir):
+        os.makedirs(args.cpdir)
+
+config = EConfig.from_pretrained(train_config["config_path"])
+model = Model(config, load_emb=True, path=args.basepath)
+
+criterion = nn.SmoothL1Loss(reduction="none")
+optimizer = optim.AdamW(model.parameters(), lr=train_config["lr"], betas=(train_config["b1"], train_config["b2"]))
+
+num_epochs = train_config["num_epochs"]
+num_warmup_steps = train_config["num_warmup_steps"]
+total_steps = train_config["total_steps"]
+is_warmup = train_config["is_warmup"]
+
+if is_warmup:
+    scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_warmup_steps,
+                                                num_training_steps=total_steps)
+
+    model, head, optimizer, train_loader, test_loader, scheduler = accelerator.prepare(
+        model, head, optimizer, train_loader, test_loader, scheduler
+    )
+else:
+    model, head, optimizer, train_loader, test_loader = accelerator.prepare(
+        model, head, optimizer, train_loader, test_loader
+    )
+# accelerator.load_state("checkpoints/state_5")
+for epoch in range(num_epochs + 1):
+    top_3acc = [0 for _ in range(3)]
+    correct = 0
+    total = 0
+    epoch_loss = 0
+    num_batches = 0
+    model.train()
+    for batch_idx, data in enumerate(tqdm(train_loader)):
+
+        with accelerator.accumulate(model):
+            optimizer.zero_grad()
+            predict = model(data["hidden_states"], input_ids=data["input_ids"], attention_mask=data["attention_mask"])
+            with torch.no_grad():
+                target_head = head(data["target"])
+                target_p = nn.Softmax(dim=2)(target_head)
+                target_p = target_p.detach()
+            loss_mask = data["loss_mask"][:, :, None]
+            vloss, ploss, out_head = compute_loss(data["target"], target_p, predict, loss_mask)
+            loss = train_config["v_w"] * vloss + train_config["p_w"] * ploss
+            # loss.backward()
+            accelerator.backward(loss)
+            accelerator.clip_grad_value_(model.parameters(), train_config["grad_clip"])
+            optimizer.step()
+            if is_warmup:
+                scheduler.step()
+
+        with torch.no_grad():
+            _, predicted = torch.max(out_head, 2)
+            _, target = torch.max(target_head, 2)
+
+# ===== FILE: eagle/traineagle3/main.py =====
+import argparse
+import deepspeed
+
+parser = argparse.ArgumentParser(description='sp')
+parser.add_argument('--basepath', type=str, default='/home/lyh/weights/hf/llama31chat/8B/')
+parser.add_argument('--trainpath', type=str,
+                    default="/home/lyh/code/nlp/developing/vllmbase/vllm/gedata/l318b.jsonl")
+parser.add_argument('--testpath', type=str,
+                    default="/home/lyh/code/nlp/developing/vllmbase/vllm/gedata/0318.json")
+parser.add_argument('--savedir', type=str, default='0')
+parser.add_argument("--local_rank", type=int, default=-1, help="local_rank for distributed training on gpus")
+parser = deepspeed.add_config_arguments(parser)
+args = parser.parse_args()
+import json
+import re
+
+deepspeed_config = args.deepspeed_config
+with open(deepspeed_config) as f:
+    ds_config = json.load(f)
+train_config = {
+    "bs": ds_config["train_micro_batch_size_per_gpu"],
+    "num_epochs": 40,
+    "num_workers": 2,
+    "max_len": 2048,
+    "config_path": "config.json",
+    "gradient_checkpoint": True
+}
+
+from safetensors import safe_open
+from transformers import AutoModelForCausalLM, AutoTokenizer
+import os
+# os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
+import torch
+from cnets import padding
+
+torch.backends.cuda.matmul.allow_tf32 = True
+from accelerate.utils import set_seed
+
+set_seed(0)
+from cnets import Model
+from configs import EConfig
+from datasets import load_dataset
+from dataclasses import dataclass, field
+from typing import Any, Dict, List, Optional, Union
+
+from torch import nn, optim
+from torch.utils.data import Dataset, DataLoader, DistributedSampler
+from tqdm import tqdm
+# import accelerate
+import numpy as np
+from transformers import PreTrainedTokenizerBase, get_linear_schedule_with_warmup
+
+
+
+def build_dataset_rank(
+        tokenizer, datapath
+):
+
+    ds = load_dataset('json', data_files=datapath)
+    ds = ds['train']
+    ds = ds.shuffle(seed=42)
+    ds1 = ds
+    original_columns1 = ds1.column_names
+    num_proc = 8
+
+    def preprocess_function(examples):
+        new_examples = {
+            "attention_mask": [],
+            "input_ids": [],
+            "loss_mask": []
+        }
+        for i in range(len(examples['id'])):
+            messages = [
+                {"role": "system",
+                 "content": "You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe.  Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.\n\nIf a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information."},
+            ]
+            convroles = ["user", "assistant"]
+            roles = {"human": "user", "gpt": "assistant"}
+            source = examples['conversations'][i]
+            if not source:
+                continue
+            if roles[source[0]["from"]] != "user":
+                # Skip the first one if it is not from human
+                source = source[1:]
+            for j, sentence in enumerate(source):
+                role = roles[sentence["from"]]
+                assert role == convroles[j % 2], f"{i}"
+                # if sentence["from"]=="gpt":
+                #     sentence["value"]=" "+sentence["value"]
+                messages.append(
+                    {"role": role, "content": sentence["value"]}
+                )
+            conversation = tokenizer.apply_chat_template(
+                messages,
+                tokenize=False,
+                add_generation_prompt=False,
+            )
+
+            if not tokenizer.pad_token_id:
+                tokenizer.pad_token_id = tokenizer.unk_token_id
+
+            input_ids = tokenizer(
+                conversation,
+                return_tensors="pt",
+                add_special_tokens=False,
+            ).input_ids[0]
+            # filtering out the samples which is longer than max_len
+            if len(input_ids) > train_config["max_len"]:
+                continue
+            loss_mask = torch.ones_like(input_ids)
+            # print(i)
+
+            sep = "<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
+
+            total_len = len(input_ids)
+
+            sep2 = "<|eot_id|><|start_header_id|>user<|end_header_id|>"
+            turns = conversation.split(sep2)
+
+            turns[1] = turns[0] + sep2 + turns[1]
+            turns = turns[1:]
+
+            cur_len = 1
+            loss_mask[:cur_len] = 0
+            for i, turn in enumerate(turns):
+                if turn == "":
+                    break
+                turn_len = len(tokenizer(turn).input_ids)
+
+                parts = turn.split(sep)
+                if len(parts) != 2:
+                    break
+                parts[0] += sep
+                # "-2" is hardcoded for the Llama tokenizer to make the offset correct.
+                instruction_len = len(tokenizer(parts[0]).input_ids) - 1
+
+                # Ignore the user instructions
+                if i == 0:
+                    loss_mask[cur_len: cur_len + instruction_len - 2] = 0
+                else:
+                    loss_mask[cur_len - 3: cur_len + instruction_len + 1] = 0
+                cur_len += turn_len
+                if i != 0:
+                    cur_len += 3
+                # cur_len+=2
+
+                # if i != 0 and not tokenizer.legacy:
+                #     # The legacy and non-legacy modes handle special tokens differently
+                #     cur_len -= 1
+
+            loss_mask[cur_len:] = 0
+            attention_mask = torch.ones_like(loss_mask)
+
+            # new_examples["conversation"].append(conversation)
+            new_examples["input_ids"].append(input_ids[None, :])
+            new_examples["loss_mask"].append(loss_mask[None, :])
+            new_examples["attention_mask"].append(attention_mask[None, :])
+
+        return new_examples
+
+    ds1 = ds1.map(
+        preprocess_function,
+        batched=True,
+        num_proc=num_proc,
+        remove_columns=original_columns1,
+        load_from_cache_file=False
+    )
+
+
+    ds1.set_format(type="torch")
+    return ds1
+
+
+class DataCollatorWithPadding:
+
+    def paddingtensor(self, intensors, N):
+        B, n, S = intensors.shape
+        # padding_tensor = torch.zeros(B, N - n, S,dtype=intensors.dtype)
+        padding_tensor = torch.zeros(B, N - n, S, dtype=intensors.dtype)
+        outtensors = torch.cat((intensors, padding_tensor), dim=1)
+        return outtensors
+
+    def paddingtensor2D(self, intensors, N):
+        B, n = intensors.shape
+        padding_tensor = torch.zeros(B, N - n, dtype=intensors.dtype)
+        outtensors = torch.cat((intensors, padding_tensor), dim=1)
+        return outtensors
+
+    def __call__(self, features: List[Dict[str, Any]]) -> Dict[str, Any]:
+        max_length = max(item['input_ids'].shape[1] for item in features)
+        batch_input_ids = torch.cat([self.paddingtensor2D(item['input_ids'], max_length) for item in features])
+        batch_attention_mask = torch.cat(
+            [self.paddingtensor2D(item['attention_mask'], max_length) for item in features])
+        batch_loss_mask = torch.cat(
+            [self.paddingtensor2D(item['loss_mask'], max_length) for item in features])
+
+        batch = {
+            "input_ids": batch_input_ids,
+            "attention_mask": batch_attention_mask,
+            "loss_mask": batch_loss_mask,
+        }
+        return batch
+
+
+tokenizer = AutoTokenizer.from_pretrained(args.basepath)
+traindataset = build_dataset_rank(tokenizer, args.trainpath)
+testdataset = build_dataset_rank(tokenizer, args.testpath)
+
+config = EConfig.from_pretrained(train_config["config_path"])
+model = Model(config, ds_config, train_config, path=args.basepath, load_emb=True, load_head=True)
+model.scandata(args.trainpath, args.basepath)
+
+
+criterion = nn.SmoothL1Loss(reduction="none")
+
+num_epochs = train_config["num_epochs"]
+
+model_engine, optimizer, _, _ = deepspeed.initialize(args=args,
+                                                     model=model,
+                                                     model_parameters=model.parameters(),
+                                                     )
+
+global_rank = deepspeed.comm.get_rank()
+rank = deepspeed.comm.get_local_rank()
+world_size = deepspeed.comm.get_world_size()
+if global_rank == 0:
+    import wandb
+
+    wandb.login(key="")
+    wandb.init(project="l382", entity="yuhui-li", config=ds_config)
+
+os.makedirs(args.savedir, exist_ok=True)
+
+sampler = DistributedSampler(testdataset, num_replicas=world_size, rank=global_rank, shuffle=False)
+test_loader = DataLoader(testdataset, batch_size=train_config["bs"], sampler=sampler, num_workers=4, pin_memory=True,
+                         collate_fn=DataCollatorWithPadding())
+
+train_sampler = DistributedSampler(traindataset, num_replicas=world_size, rank=global_rank, shuffle=True)
+train_loader = DataLoader(traindataset, batch_size=train_config["bs"], sampler=train_sampler, num_workers=4,
+                          pin_memory=True,
+                          collate_fn=DataCollatorWithPadding())
+
+
+def find_max_state_with_file(directory, filename="zero_to_fp32.py"):
+    max_a = -1
+    for subdir in os.listdir(directory):
+        match = re.match(r"state_(\d+)", subdir)
+        if match:
+            a_value = int(match.group(1))
+            subdir_path = os.path.join(directory, subdir)
+            file_path = os.path.join(subdir_path, filename)
+            if os.path.isdir(subdir_path) and os.path.exists(file_path):
+                max_a = max(max_a, a_value)
+    if max_a == -1:
+        return None, 0
+    return f"{directory}/state_{max_a}", max_a + 1
+
+
+checkpoint_path, start_epoch = find_max_state_with_file(args.savedir)
+if checkpoint_path:
+    print(f"load from {checkpoint_path}")
+    model_engine.load_checkpoint(checkpoint_path)
+
+
+
+for epoch in range(start_epoch, num_epochs):
+    train_sampler.set_epoch(epoch+1)
+    print(f"Now training epoch {epoch}")
+
+    model.train()
+    epoch_acces = [[] for _ in range(model.length)]
+    epoch_plosses = [[] for _ in range(model.length)]
+
+
+    for batch_idx, data in enumerate(tqdm(train_loader)):
+
+        model.zero_grad()
+
+        plosses, vlosses, acces = model_engine(input_ids=data["input_ids"].to(rank),
+                                               attention_mask=data["attention_mask"].to(rank),
+                                               loss_mask=data["loss_mask"],
+                                               )
+
+        ploss_weight = [0.8 ** i for i in range(len(plosses))]
+        ploss = sum([ploss_weight[i] * plosses[i] for i in range(len(plosses))])
+        loss = ploss
+        model_engine.backward(loss)
+
+
+        model_engine.step()
+
+        if global_rank == 0:
+            logdict = {"train/lr": optimizer.optimizer.param_groups[0]["lr"]}
+            for i in range(len(plosses)):
+                logdict[f"train/ploss_{i}"] = plosses[i].item()
+            for i in range(len(acces)):
+                logdict[f"train/acc_{i}"] = acces[i]
+            wandb.log(logdict)
+        epoch_acces = [epoch_acces[i] + [acces[i]] for i in range(len(acces))]
+        epoch_plosses = [epoch_plosses[i] + [plosses[i].item()] for i in range(len(plosses))]
+
+
+    for i in range(len(epoch_acces)):
+        acc_i = torch.tensor(epoch_acces[i]).cuda().mean()
+        deepspeed.comm.all_reduce(acc_i, op=deepspeed.comm.ReduceOp.AVG)
+        acc_i = acc_i.item()
+        if global_rank == 0:
+            wandb.log({f"train/epochacc_{i}": acc_i})
+            print(f"Train Epoch [{epoch + 1}/{num_epochs}], position {i},  Acc: {acc_i:.2f}")
+
+    for i in range(len(epoch_plosses)):
+        loss_i = torch.tensor(epoch_plosses[i]).cuda().mean()
+        deepspeed.comm.all_reduce(loss_i, op=deepspeed.comm.ReduceOp.AVG)
+        loss_i = loss_i.item()
+        if global_rank == 0:
+            wandb.log({f"train/epochploss_{i}": loss_i})
+            print(f"Train Epoch [{epoch + 1}/{num_epochs}], position {i}, pLoss: {loss_i:.2f}")
+
+    epoch_acces = [[] for _ in range(model.length)]
+    epoch_plosses = [[] for _ in range(model.length)]
+
+    for batch_idx, data in enumerate(tqdm(test_loader)):
+        with torch.no_grad():
+            plosses, vlosses, acces = model_engine(input_ids=data["input_ids"].to(rank),
+                                                   attention_mask=data["attention_mask"].to(rank),
+                                                   loss_mask=data["loss_mask"],
+                                                   )
+            epoch_acces = [epoch_acces[i] + [acces[i]] for i in range(len(acces))]
+            epoch_plosses = [epoch_plosses[i] + [plosses[i].item()] for i in range(len(plosses))]
+
+    for i in range(len(epoch_acces)):
+        acc_i = torch.tensor(epoch_acces[i]).cuda().mean()
+        deepspeed.comm.all_reduce(acc_i, op=deepspeed.comm.ReduceOp.AVG)
+        acc_i = acc_i.item()
+        if global_rank == 0:
+            wandb.log({f"test/epochacc_{i}": acc_i})
+            print(f"Test Epoch [{epoch + 1}/{num_epochs}], position {i},  Acc: {acc_i:.2f}")
+
+    for i in range(len(epoch_plosses)):
+        loss_i = torch.tensor(epoch_plosses[i]).cuda().mean()
+        deepspeed.comm.all_reduce(loss_i, op=deepspeed.comm.ReduceOp.AVG)
+        loss_i = loss_i.item()
+        if global_rank == 0:
+            wandb.log({f"test/epochploss_{i}": loss_i})
+            print(f"Test Epoch [{epoch + 1}/{num_epochs}], position {i}, pLoss: {loss_i:.2f}")
+    # clear out the redundance cahce after each step
+    torch.cuda.empty_cache()
+
+    model_engine.save_16bit_model(f"{args.savedir}/state_{epoch}", exclude_frozen_parameters=True)
+    if epoch % 10 == 0:
+        deepspeed.DeepSpeedEngine.save_checkpoint(model_engine, save_dir=f"{args.savedir}/state_{epoch}")
+
+
+# ===== FILE: eagle/application/webui.py =====
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "2,3"
+import time
+
+import gradio as gr
+import argparse
+try:
+    from ..model.ea_model import EaModel
+except:
+    from eagle.model.ea_model import EaModel
+import torch
+from fastchat.model import get_conversation_template
+import re
+
+
+def truncate_list(lst, num):
+    if num not in lst:
+        return lst
+
+
+    first_index = lst.index(num)
+
+
+    return lst[:first_index + 1]
+
+
+
+
+
+def find_list_markers(text):
+
+    pattern = re.compile(r'(?m)(^\d+\.\s|\n)')
+    matches = pattern.finditer(text)
+
+
+    return [(match.start(), match.end()) for match in matches]
+
+
+def checkin(pointer,start,marker):
+    for b,e in marker:
+        if b<=pointer<e:
+            return True
+        if b<=start<e:
+            return True
+    return False
+
+def highlight_text(text, text_list,color="black"):
+
+    pointer = 0
+    result = ""
+    markers=find_list_markers(text)
+
+
+    for sub_text in text_list:
+
+        start = text.find(sub_text, pointer)
+        if start==-1:
+            continue
+        end = start + len(sub_text)
+
+
+        if checkin(pointer,start,markers):
+            result += text[pointer:start]
+        else:
+            result += f"<span style='color: {color};'>{text[pointer:start]}</span>"
+
+        result += sub_text
+
+        pointer = end
+
+    if pointer < len(text):
+        result += f"<span style='color: {color};'>{text[pointer:]}</span>"
+
+    return result
+
+
+def warmup(model):
+    conv = get_conversation_template(args.model_type)
+
+    if args.model_type == "llama-2-chat":
+        sys_p = "You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe.  Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.\n\nIf a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information."
+        conv.system_message = sys_p
+    elif args.model_type == "mixtral":
+        conv = get_conversation_template("llama-2-chat")
+        conv.system_message = ''
+        conv.sep2 = "</s>"
+    conv.append_message(conv.roles[0], "Hello")
+    conv.append_message(conv.roles[1], None)
+    prompt = conv.get_prompt()
+    if args.model_type == "llama-2-chat":
+        prompt += " "
+    input_ids = model.tokenizer([prompt]).input_ids
+    input_ids = torch.as_tensor(input_ids).cuda()
+    for output_ids in model.ea_generate(input_ids):
+        ol=output_ids.shape[1]
+
+def bot(history, temperature, top_p, use_EaInfer, highlight_EaInfer,session_state,):
+    if not history:
+        return history, "0.00 tokens/s", "0.00", session_state
+    pure_history = session_state.get("pure_history", [])
+    assert args.model_type == "llama-2-chat" or "vicuna"
+    conv = get_conversation_template(args.model_type)
+
+    if args.model_type == "llama-2-chat":
+        sys_p = "You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe.  Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.\n\nIf a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information."
+        conv.system_message = sys_p
+    elif args.model_type == "mixtral":
+        conv = get_conversation_template("llama-2-chat")
+        conv.system_message = ''
+        conv.sep2 = "</s>"
+    elif args.model_type == "llama-3-instruct":
+        messages = [
+            {"role": "system",
+             "content": "You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe.  Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.\n\nIf a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information."},
+        ]
+
+    for query, response in pure_history:
+        if args.model_type == "llama-3-instruct":
+            messages.append({
+                "role": "user",
+                "content": query
+            })
+            if response!=None:
+                messages.append({
+                    "role": "assistant",
+                    "content": response
+                })
+        else:
+            conv.append_message(conv.roles[0], query)
+            if args.model_type == "llama-2-chat" and response:
+                response = " " + response
+            conv.append_message(conv.roles[1], response)
+
+    if args.model_type == "llama-3-instruct":
+        prompt = model.tokenizer.apply_chat_template(
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
+        )
+    else:
+        prompt = conv.get_prompt()
+
+    if args.model_type == "llama-2-chat":
+        prompt += " "
+
+    input_ids = model.tokenizer([prompt]).input_ids
+    input_ids = torch.as_tensor(input_ids).cuda()
+    input_len = input_ids.shape[1]
+    naive_text = []
+    cu_len = input_len
+    totaltime=0
+    start_time=time.time()
+    total_ids=0
+    if use_EaInfer:
+
+        for output_ids in model.ea_generate(input_ids, temperature=temperature, top_p=top_p,
+                                            max_new_tokens=args.max_new_token,is_llama3=args.model_type=="llama-3-instruct"):
+            totaltime+=(time.time()-start_time)
+            total_ids+=1
+            decode_ids = output_ids[0, input_len:].tolist()
+            decode_ids = truncate_list(decode_ids, model.tokenizer.eos_token_id)
+            if args.model_type == "llama-3-instruct":
+                decode_ids = truncate_list(decode_ids, model.tokenizer.convert_tokens_to_ids("<|eot_id|>"))
+            text = model.tokenizer.decode(decode_ids, skip_special_tokens=True, spaces_between_special_tokens=False,
+                                          clean_up_tokenization_spaces=True, )
+
+            naive_text.append(model.tokenizer.decode(output_ids[0, cu_len], skip_special_tokens=True,
+                                                     spaces_between_special_tokens=False,
+                                                     clean_up_tokenization_spaces=True, ))
+
+            cu_len = output_ids.shape[1]
+            colored_text = highlight_text(text, naive_text, "orange")
+            if highlight_EaInfer:
+                history[-1][1] = colored_text
+            else:
+                history[-1][1] = text
+            pure_history[-1][1] = text
+            session_state["pure_history"] = pure_history
+            new_tokens = cu_len-input_len
+            yield history,f"{new_tokens/totaltime:.2f} tokens/s",f"{new_tokens/total_ids:.2f}",session_state
+            start_time = time.time()
+
+
+    else:
+        for output_ids in model.naive_generate(input_ids, temperature=temperature, top_p=top_p,
+                                            max_new_tokens=args.max_new_token,is_llama3=args.model_type=="llama-3-instruct"):
+            totaltime += (time.time() - start_time)
+            total_ids+=1
+            decode_ids = output_ids[0, input_len:].tolist()
+            decode_ids = truncate_list(decode_ids, model.tokenizer.eos_token_id)
+            text = model.tokenizer.decode(decode_ids, skip_special_tokens=True, spaces_between_special_tokens=False,
+                                          clean_up_tokenization_spaces=True, )
+            naive_text.append(model.tokenizer.decode(output_ids[0, cu_len], skip_special_tokens=True,
+                                                     spaces_between_special_tokens=False,
+                                                     clean_up_tokenization_spaces=True, ))
+            cu_len = output_ids.shape[1]
+            colored_text = highlight_text(text, naive_text, "orange")
+            if highlight_EaInfer and use_EaInfer:
+                history[-1][1] = colored_text
+            else:
+                history[-1][1] = text
+            history[-1][1] = text
+            pure_history[-1][1] = text
+            new_tokens = cu_len - input_len
+            yield history,f"{new_tokens/totaltime:.2f} tokens/s",f"{new_tokens/total_ids:.2f}",session_state
+            start_time = time.time()
+
+
+def user(user_message, history,session_state):
+    if history==None:
+        history=[]
+    pure_history = session_state.get("pure_history", [])
+    pure_history += [[user_message, None]]
+    session_state["pure_history"] = pure_history
+    return "", history + [[user_message, None]],session_state
+
+
+def regenerate(history,session_state):
+    if not history:
+        return history, None,"0.00 tokens/s","0.00",session_state
+    pure_history = session_state.get("pure_history", [])
+    pure_history[-1][-1] = None
+    session_state["pure_history"]=pure_history
+    if len(history) > 1:  # Check if there's more than one entry in history (i.e., at least one bot response)
+        new_history = history[:-1]  # Remove the last bot response
+        last_user_message = history[-1][0]  # Get the last user message
+        return new_history + [[last_user_message, None]], None,"0.00 tokens/s","0.00",session_state
+    history[-1][1] = None
+    return history, None,"0.00 tokens/s","0.00",session_state
+
+
+def clear(history,session_state):
+    pure_history = session_state.get("pure_history", [])
+    pure_history = []
+    session_state["pure_history"] = pure_history
+    return [],"0.00 tokens/s","0.00",session_state
+
+
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "--ea-model-path",
+    type=str,
+    default="/home/lyh/weights/hf/eagle/vicuna/13B",
+    help="The path to the weights. This can be a local folder or a Hugging Face repo ID.",
+)
+parser.add_argument("--base-model-path", type=str, default="/home/lyh/weights/hf/vicuna_v13/13B",
+                    help="path of basemodel, huggingface project or local path")
+parser.add_argument(
+    "--load-in-8bit", action="store_true", help="Use 8-bit quantization"
+)
+parser.add_argument(
+    "--load-in-4bit", action="store_true", help="Use 4-bit quantization"
+)
+parser.add_argument(
+    "--no-eagle3", action="store_true", help=" Not use EAGLE-3"
+)
+parser.add_argument("--model-type", type=str, default="vicuna",choices=["llama-2-chat","vicuna","mixtral","llama-3-instruct"])
+parser.add_argument(
+    "--total-token",
+    type=int,
+    default=60,
+    help="The maximum number of new generated tokens.",
+)
+parser.add_argument(
+    "--max-new-token",
+    type=int,
+    default=512,
+    help="The maximum number of new generated tokens.",
+)
+args = parser.parse_args()
+
+model = EaModel.from_pretrained(
+    base_model_path=args.base_model_path,
+    ea_model_path=args.ea_model_path,
+    total_token=args.total_token,
+    torch_dtype=torch.float16,
+    low_cpu_mem_usage=True,
+    load_in_4bit=args.load_in_4bit,
+    load_in_8bit=args.load_in_8bit,
+    device_map="auto",
+    use_eagle3=args.no_eagle3,
+)
+model.eval()
+warmup(model)
+
+custom_css = """
+#speed textarea {
+    color: red;   
+    font-size: 30px; 
+}"""
+
+with gr.Blocks(css=custom_css) as demo:
+    gs = gr.State({"pure_history": []})
+    gr.Markdown('''## EAGLE-2 Chatbot''')
+    with gr.Row():
+        speed_box = gr.Textbox(label="Speed", elem_id="speed", interactive=False, value="0.00 tokens/s")
+        compression_box = gr.Textbox(label="Compression Ratio", elem_id="speed", interactive=False, value="0.00")
+    with gr.Row():
+        with gr.Column():
+            use_EaInfer = gr.Checkbox(label="Use EAGLE-3", value=True)
+            highlight_EaInfer = gr.Checkbox(label="Highlight the tokens generated by EAGLE-3", value=True)
+        temperature = gr.Slider(minimum=0.0, maximum=1.0, step=0.01, label="temperature", value=0.5)
+        top_p = gr.Slider(minimum=0.0, maximum=1.0, step=0.01, label="top_p", value=0.9)
+    note=gr.Markdown(show_label=False,interactive=False,value='''The Compression Ratio is defined as the number of generated tokens divided by the number of forward passes in the original LLM. If "Highlight the tokens generated by EAGLE-2" is checked, the tokens correctly guessed by EAGLE-2 
+    will be displayed in orange. Note: Checking this option may cause special formatting rendering issues in a few cases, especially when generating code''')
+
+
+    chatbot = gr.Chatbot(height=600,show_label=False)
+
+
+    msg = gr.Textbox(label="Your input")
+    with gr.Row():
+        send_button = gr.Button("Send")
+        stop_button = gr.Button("Stop")
+        regenerate_button = gr.Button("Regenerate")
+        clear_button = gr.Button("Clear")
+    enter_event=msg.submit(user, [msg, chatbot,gs], [msg, chatbot,gs], queue=True).then(
+        bot, [chatbot, temperature, top_p, use_EaInfer, highlight_EaInfer,gs], [chatbot,speed_box,compression_box,gs]
+    )
+    clear_button.click(clear, [chatbot,gs], [chatbot,speed_box,compression_box,gs], queue=True)
+
+    send_event=send_button.click(user, [msg, chatbot,gs], [msg, chatbot,gs],queue=True).then(
+        bot, [chatbot, temperature, top_p, use_EaInfer, highlight_EaInfer,gs], [chatbot,speed_box,compression_box,gs]
+    )
+    regenerate_event=regenerate_button.click(regenerate, [chatbot,gs], [chatbot, msg,speed_box,compression_box,gs],queue=True).then(
+        bot, [chatbot, temperature, top_p, use_EaInfer, highlight_EaInfer,gs], [chatbot,speed_box,compression_box,gs]
+    )
+    stop_button.click(fn=None, inputs=None, outputs=None, cancels=[send_event,regenerate_event,enter_event])
+demo.queue()
+demo.launch(share=True)
+
+
+# ===== FILE: eagle/evaluation/alpha.py =====
+import json
+import numpy as np
+
+json_files=[
+    "/home/lyh/code/nlp/EAGLE/data/mt_bench/model_answer/vicuna-7b-alpha-temperature-0.0.jsonl",
+]
+
+
+for jsonl_file in json_files:
+    data=[]
+    with open(jsonl_file, 'r', encoding='utf-8') as file:
+        for line in file:
+            json_obj = json.loads(line)
+            data.append(json_obj)
+
+    alphas=[0 for _ in range(5)]
+    alphas_num=[0 for _ in range(5)]
+    for datapoint in data:
+        qid=datapoint["question_id"]
+        answer=datapoint["choices"][0]['turns']
+        tokens=sum(datapoint["choices"][0]['new_tokens'])
+        ids = sum(datapoint["choices"][0]['idxs'])
+        alpha=datapoint["choices"][0]['alpha']
+        alpha_num = datapoint["choices"][0]['alpha_num']
+        for i in range(len(alpha)):
+            alphas[i]+=alpha[i]
+            alphas_num[i] += alpha_num[i]
+
+
+    ar=np.array(alphas)/np.array(alphas_num)
+    print(np.round(ar, 2))
+
+# ===== FILE: eagle/evaluation/gen_baseline_answer_llama2chat.py =====
+"""Generate answers with local models.
+
+Usage:
+python3 gen_model_answer.py --model-path lmsys/fastchat-t5-3b-v1.0 --model-id fastchat-t5-3b-v1.0
+"""
+import argparse
+import json
+import os
+script_dir = os.path.dirname(__file__)
+parent_dir = os.path.dirname(script_dir)
+#os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2,3,4,5,6,7"
+import time
+import shortuuid
+from tqdm import tqdm
+
+from fastchat.llm_judge.common import load_questions
+from fastchat.model import get_conversation_template
+
+#try:
+from model.utils import *
+from model.ea_model import EaModel
+from model.kv_cache import initialize_past_key_values
+from model.choices import *
+
+
+
+def ea_forward(input_ids, model, tokenizer, tree_choices, logits_processor=None, max_steps=512):
+    assert input_ids.shape[0] == 1, "Only support batch size 1 for now!!"
+    # Avoid modifying the input_ids in-place
+    input_ids = input_ids.clone()
+    model.ea_layer.reset_kv()
+
+    if hasattr(model, "tree_choices") and model.tree_choices == tree_choices:
+        tree_buffers = model.tree_buffers
+    else:
+        tree_buffers = generate_tree_buffers(
+            tree_choices, device=model.base_model.model.layers[-1].self_attn.q_proj.weight.device
+        )
+        tree_buffers["retrieve_indices_head"] = tree_buffers["retrieve_indices"].to(
+            model.base_model.lm_head.weight.device)
+    model.tree_buffers = tree_buffers
+    model.tree_choices = tree_choices
+
+    # Initialize the past key and value states
+    if hasattr(model, "past_key_values"):
+        past_key_values = model.past_key_values
+        past_key_values_data = model.past_key_values_data
+        current_length_data = model.current_length_data
+        # Reset the past key and value states
+        current_length_data.zero_()
+    else:
+        (
+            past_key_values,
+            past_key_values_data,
+            current_length_data,
+        ) = initialize_past_key_values(model.base_model)
+        model.past_key_values = past_key_values
+        model.past_key_values_data = past_key_values_data
+        model.current_length_data = current_length_data
+
+    input_len = input_ids.shape[1]
+    reset_tree_mode(model)
+
+    outputs = model.base_model(input_ids, past_key_values=past_key_values, use_cache=True)
+    new_token = 0
+
+    for idx in range(max_steps):
+        if logits_processor is not None:
+            logits = outputs.logits[:, -1]
+            logits = logits_processor(None, logits)
+            probabilities = torch.nn.functional.softmax(logits, dim=-1)
+            input_id = torch.multinomial(probabilities, 1)
+        else:
+            input_id = outputs.logits[:, -1:].argmax(dim=-1)
+        outputs = model.base_model(input_id, use_cache=True, past_key_values=past_key_values)
+        input_ids = torch.cat([input_ids, input_id], dim=-1)
+
+        if tokenizer.eos_token_id in input_ids[0, input_len:].tolist():
+            break
+        if new_token > 1024:
+            break
+        if input_ids.shape[1] > 1960:
+            break
+    return input_ids, new_token, idx
+
+
+def run_eval(
+        base_model_path,
+        ea_model_path,
+        model_id,
+        question_file,
+        question_begin,
+        question_end,
+        answer_file,
+        max_new_token,
+        num_choices,
+        num_gpus_per_model,
+        num_gpus_total,
+        max_gpu_memory,
+        temperature,
+        tree_choices,
+):
+    questions = load_questions(question_file, question_begin, question_end)
+    # random shuffle the questions to balance the loading
+    # random.shuffle(questions)
+    shuffled_ids = [q["question_id"] for q in questions]
+    # with open(f"data/{args.bench_name}/model_ids/{args.model_id}.shuffled_ids", "w") as fout:
+    #     json.dump(shuffled_ids, fout)
+
+    # Split the question file into `num_gpus` files
+    assert num_gpus_total % num_gpus_per_model == 0
+    use_ray = num_gpus_total // num_gpus_per_model > 1
+
+    if use_ray:
+        get_answers_func = ray.remote(num_gpus=num_gpus_per_model)(
+            get_model_answers
+        ).remote
+    else:
+        get_answers_func = get_model_answers
+
+    chunk_size = len(questions) // (num_gpus_total // num_gpus_per_model)  # // 2
+    ans_handles = []
+    for i in range(0, len(questions), chunk_size):
+        ans_handles.append(
+            get_answers_func(
+                base_model_path,
+                ea_model_path,
+                model_id,
+                questions[i: i + chunk_size],
+                answer_file,
+                max_new_token,
+                num_choices,
+                num_gpus_per_model,
+                max_gpu_memory,
+                temperature,
+                tree_choices,
+            )
+        )
+
+    if use_ray:
+        ray.get(ans_handles)
+
+
+@torch.inference_mode()
+def get_model_answers(
+        base_model_path,
+        ea_model_path,
+        model_id,
+        questions,
+        answer_file,
+        max_new_token,
+        num_choices,
+        num_gpus_per_model,
+        max_gpu_memory,
+        temperature,
+        tree_choices,
+):
+    #temperature = 0.0
+
+    model = EaModel.from_pretrained(
+        base_model_path=base_model_path,
+        ea_model_path=ea_model_path,
+        torch_dtype=torch.float16,
+        low_cpu_mem_usage=True,
+        # load_in_8bit=True,
+        device_map="auto"
+    )
+
+    tokenizer = model.get_tokenizer()
+
+    if temperature > 1e-5:
+        logits_processor = prepare_logits_processor(temperature=temperature)
+    else:
+        logits_processor = None
+
+    model.eval()
+    print('Check model training state:', model.training)
+
+    cuda_visible_devices = os.environ.get('CUDA_VISIBLE_DEVICES')
+    print('CUDA VISIBLE DEVICES:', cuda_visible_devices)
+
+    question = questions[0]
+
+    # warmup
+    for _ in range(3):
+        torch.manual_seed(0)
+        conv = get_conversation_template("llama-2-chat")
+        sys_p = "You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe.  Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.\n\nIf a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information."
+        conv.system_message = sys_p
+        turns = []
+        idxs = []
+        new_tokens = []
+        wall_time = []
+        for j in range(len(question["turns"])):
+            qs = question["turns"][j]
+            conv.append_message(conv.roles[0], qs)
+            conv.append_message(conv.roles[1], None)
+            prompt = conv.get_prompt() + " "
+            input_ids = tokenizer([prompt]).input_ids
+
+            # try:
+            torch.cuda.synchronize()
+            start_time = time.time()
+
+            output_ids, new_token, idx = ea_forward(
+                torch.as_tensor(input_ids).cuda(),
+                model,
+                tokenizer,
+                tree_choices,
+                logits_processor,
+            )
+            torch.cuda.synchronize()
+            total_time = time.time() - start_time
+            output_ids = output_ids[0][len(input_ids[0]):]
+            # be consistent with the template's stop_token_ids
+            if conv.stop_token_ids:
+                stop_token_ids_index = [
+                    i
+                    for i, id in enumerate(output_ids)
+                    if id in conv.stop_token_ids
+                ]
+                if len(stop_token_ids_index) > 0:
+                    output_ids = output_ids[: stop_token_ids_index[0]]
+
+            output = tokenizer.decode(
+                output_ids,
+                spaces_between_special_tokens=False,
+            )
+            conv.stop_str = "</s>"
+            if conv.stop_str and output.find(conv.stop_str) > 0:
+                output = output[: output.find(conv.stop_str)]
+            for special_token in tokenizer.special_tokens_map.values():
+                if isinstance(special_token, list):
+                    for special_tok in special_token:
+                        output = output.replace(special_tok, "")
+                else:
+                    output = output.replace(special_token, "")
+            output = output.strip()
+
+            if conv.name == "xgen" and output.startswith("Assistant:"):
+                output = output.replace("Assistant:", "", 1).strip()
+
+
+            turns.append(output)
+            idxs.append(int(idx))
+            new_tokens.append(int(new_token))
+            wall_time.append(total_time)
+            conv.messages[-1][-1] = output
+    print('Warmup done')
+
+    # questions=questions[6:]
+    for question in tqdm(questions):
+
+        choices = []
+        for i in range(num_choices):
+            torch.manual_seed(i)
+            conv = get_conversation_template("llama-2-chat")
+            sys_p = "You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe.  Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.\n\nIf a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information."
+            conv.system_message = sys_p
+            turns = []
+            idxs = []
+            new_tokens = []
+            wall_time = []
+            for j in range(len(question["turns"])):
+                qs = question["turns"][j]
+                conv.append_message(conv.roles[0], qs)
+                conv.append_message(conv.roles[1], None)
+                prompt = conv.get_prompt() + " "
+                input_ids = tokenizer([prompt]).input_ids
+
+                try:
+                    torch.cuda.synchronize()
+                    start_time = time.time()
+                    output_ids, new_token, idx = ea_forward(
+                        torch.as_tensor(input_ids).cuda(),
+                        model,
+                        tokenizer,
+                        tree_choices,
+                        logits_processor,
+                    )
+                    torch.cuda.synchronize()
+                    total_time = time.time() - start_time
+                    output_ids = output_ids[0][len(input_ids[0]):]
+
+                    if conv.stop_token_ids:
+                        stop_token_ids_index = [
+                            i
+                            for i, id in enumerate(output_ids)
+                            if id in conv.stop_token_ids
+                        ]
+                        if len(stop_token_ids_index) > 0:
+                            output_ids = output_ids[: stop_token_ids_index[0]]
+
+                    output = tokenizer.decode(
+                        output_ids,
+                        spaces_between_special_tokens=False,
+                    )
+                    if conv.stop_str and output.find(conv.stop_str) > 0:
+                        output = output[: output.find(conv.stop_str)]
+                    for special_token in tokenizer.special_tokens_map.values():
+                        if isinstance(special_token, list):
+                            for special_tok in special_token:
+                                output = output.replace(special_tok, "")
+                        else:
+                            output = output.replace(special_token, "")
+                    output = output.strip()
+
+                    if conv.name == "xgen" and output.startswith("Assistant:"):
+                        output = output.replace("Assistant:", "", 1).strip()
+                except RuntimeError as e:
+                    print("ERROR question ID: ", question["question_id"])
+                    output = "ERROR"
+
+                turns.append(output)
+                idxs.append(int(idx))
+                new_tokens.append(int(new_token))
+                wall_time.append(total_time)
+                conv.messages[-1][-1] = output
+            # torch.cuda.empty_cache()
+            choices.append({"index": i, "turns": turns, "idxs": idxs, "new_tokens": new_tokens, "wall_time": wall_time})
+
+        # Dump answers
+        os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+        with open(os.path.expanduser(answer_file), "a") as fout:
+            ans_json = {
+                "question_id": question["question_id"],
+                "answer_id": shortuuid.uuid(),
+                "model_id": model_id,
+                "choices": choices,
+                "tstamp": time.time(),
+            }
+            fout.write(json.dumps(ans_json) + "\n")
+
+
+def reorg_answer_file(answer_file):
+    """Sort by question id and de-duplication"""
+    answers = {}
+    with open(answer_file, "r") as fin:
+        for l in fin:
+            qid = json.loads(l)["question_id"]
+            answers[qid] = l
+
+    qids = sorted(list(answers.keys()))
+    with open(answer_file, "w") as fout:
+        for qid in qids:
+            fout.write(answers[qid])
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--ea-model-path",
+        type=str,
+        default="down_checkpoints/LC70B",
+        help="The path to the weights. This can be a local folder or a Hugging Face repo ID.",
+    )
+    parser.add_argument("--base-model-path", type=str, default="/home/lyh/weights/hf/llama2chat/70B/",
+                        help="1")
+    parser.add_argument(
+        "--load-in-8bit", action="store_false", help="Use 8-bit quantization"
+    )
+    parser.add_argument("--model-id", type=str, default="ess-llama-2-chat-70b-fp16-baseline")
+    parser.add_argument(
+        "--bench-name",
+        type=str,
+        default="mt_bench",
+        help="The name of the benchmark question set.",
+    )
+    parser.add_argument(
+        "--question-begin",
+        type=int,
+        help="A debug option. The begin index of questions.",
+
+
+# ===== FILE: eagle/evaluation/gen_baseline_answer_llama3chat.py =====
+"""Generate answers with local models.
+
+Usage:
+python3 gen_model_answer.py --model-path lmsys/fastchat-t5-3b-v1.0 --model-id fastchat-t5-3b-v1.0
+"""
+import argparse
+import json
+import os
+script_dir = os.path.dirname(__file__)
+parent_dir = os.path.dirname(script_dir)
+#os.environ["CUDA_VISIBLE_DEVICES"] = "7"
+from accelerate.utils import set_seed
+set_seed(0)
+
+import time
+
+import shortuuid
+from fastchat.llm_judge.common import load_questions
+from tqdm import tqdm
+
+try:
+    from ..model.ea_model import EaModel
+    from ..model.kv_cache import initialize_past_key_values
+    from ..model.utils import *
+except:
+    from eagle.model.ea_model import EaModel
+    from eagle.model.kv_cache import initialize_past_key_values
+    from eagle.model.utils import *
+
+
+
+def run_eval(
+        base_model_path,
+        ea_model_path,
+        model_id,
+        question_file,
+        question_begin,
+        question_end,
+        answer_file,
+        max_new_token,
+        num_choices,
+        num_gpus_per_model,
+        num_gpus_total,
+        max_gpu_memory,
+        temperature,
+        args
+):
+    questions = load_questions(question_file, question_begin, question_end)
+    # random shuffle the questions to balance the loading
+    # random.shuffle(questions)
+    shuffled_ids = [q["question_id"] for q in questions]
+    # with open(f"data/{args.bench_name}/model_ids/{args.model_id}.shuffled_ids", "w") as fout:
+    #     json.dump(shuffled_ids, fout)
+
+    # Split the question file into `num_gpus` files
+    assert num_gpus_total % num_gpus_per_model == 0
+    use_ray = num_gpus_total // num_gpus_per_model > 1
+
+    if use_ray:
+        get_answers_func = ray.remote(num_gpus=num_gpus_per_model)(
+            get_model_answers
+        ).remote
+    else:
+        get_answers_func = get_model_answers
+
+    chunk_size = len(questions) // (num_gpus_total // num_gpus_per_model)  # // 2
+    ans_handles = []
+    for i in range(0, len(questions), chunk_size):
+        ans_handles.append(
+            get_answers_func(
+                base_model_path,
+                ea_model_path,
+                model_id,
+                questions[i: i + chunk_size],
+                answer_file,
+                max_new_token,
+                num_choices,
+                num_gpus_per_model,
+                max_gpu_memory,
+                temperature,
+                args
+            )
+        )
+
+    if use_ray:
+        ray.get(ans_handles)
+
+
+@torch.inference_mode()
+def get_model_answers(
+        base_model_path,
+        ea_model_path,
+        model_id,
+        questions,
+        answer_file,
+        max_new_token,
+        num_choices,
+        num_gpus_per_model,
+        max_gpu_memory,
+        temperature,
+        args
+):
+    # temperature = 0.0
+
+    model = EaModel.from_pretrained(
+        base_model_path=base_model_path,
+        ea_model_path=ea_model_path,
+        total_token=args.total_token,
+        depth=args.depth,
+        top_k=args.top_k,
+        torch_dtype=torch.float16,
+        low_cpu_mem_usage=True,
+        # load_in_8bit=True,
+        device_map="auto"
+    )
+
+    tokenizer = model.get_tokenizer()
+
+    if temperature > 1e-5:
+        logits_processor = prepare_logits_processor(temperature=temperature)
+    else:
+        logits_processor = None
+
+    model.eval()
+    print('Check model training state:', model.training)
+
+    cuda_visible_devices = os.environ.get('CUDA_VISIBLE_DEVICES')
+    print('CUDA VISIBLE DEVICES:', cuda_visible_devices)
+
+    question = questions[0]
+
+    # warmup
+    for _ in range(3):
+        torch.manual_seed(0)
+
+        messages = [
+            {"role": "system",
+             "content": "You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe.  Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.\n\nIf a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information."},
+        ]
+        turns = []
+        idxs = []
+        new_tokens = []
+        wall_time = []
+        for j in range(len(question["turns"])):
+            qs = question["turns"][j]
+            messages.append({
+                "role": "user",
+                "content": qs
+            })
+            prompt = tokenizer.apply_chat_template(
+                messages,
+                tokenize=False,
+                add_generation_prompt=True,
+            )
+            input_ids = tokenizer([prompt],add_special_tokens=False,).input_ids
+
+            # try:
+            torch.cuda.synchronize()
+            start_time = time.time()
+
+            output_ids, new_token, idx = model.naivegenerate(
+                torch.as_tensor(input_ids).cuda(),
+                temperature=temperature,
+                log=True,
+                is_llama3=True,
+            )
+            torch.cuda.synchronize()
+            total_time = time.time() - start_time
+            output_ids = output_ids[0][len(input_ids[0]):]
+            # be consistent with the template's stop_token_ids
+            stop_token_ids = [
+                tokenizer.eos_token_id,
+                tokenizer.convert_tokens_to_ids("<|eot_id|>")
+            ]
+
+            if stop_token_ids:
+                stop_token_ids_index = [
+                    i
+                    for i, id in enumerate(output_ids)
+                    if id in stop_token_ids
+                ]
+                if len(stop_token_ids_index) > 0:
+                    output_ids = output_ids[: stop_token_ids_index[0]]
+
+            output = tokenizer.decode(
+                output_ids,
+                spaces_between_special_tokens=False,
+            )
+            # stop_str = "</s>"
+            # if stop_str and output.find(stop_str) > 0:
+            #     output = output[: output.find(stop_str)]
+            for special_token in tokenizer.special_tokens_map.values():
+                if isinstance(special_token, list):
+                    for special_tok in special_token:
+                        output = output.replace(special_tok, "")
+                else:
+                    output = output.replace(special_token, "")
+            output = output.strip()
+
+
+
+            turns.append(output)
+            idxs.append(int(idx))
+            new_tokens.append(int(new_token))
+            wall_time.append(total_time)
+            messages.append({
+                "role": "assistant",
+                "content": output
+            })
+    print('Warmup done')
+
+    # questions=questions[6:]
+    for question in tqdm(questions):
+
+        choices = []
+        for i in range(num_choices):
+            torch.manual_seed(i)
+            messages = [
+                {"role": "system",
+                 "content": "You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe.  Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.\n\nIf a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information."},
+            ]
+            turns = []
+            idxs = []
+            new_tokens = []
+            wall_time = []
+            for j in range(len(question["turns"])):
+                qs = question["turns"][j]
+                messages.append({
+                    "role": "user",
+                    "content": qs
+                })
+                prompt = tokenizer.apply_chat_template(
+                    messages,
+                    tokenize=False,
+                    add_generation_prompt=True,
+                )
+                input_ids = tokenizer([prompt], add_special_tokens=False, ).input_ids
+
+                # try:
+                torch.cuda.synchronize()
+                start_time = time.time()
+
+                output_ids, new_token, idx = model.naivegenerate(
+                    torch.as_tensor(input_ids).cuda(),
+                    temperature=temperature,
+                    log=True,
+                    is_llama3=True,
+                )
+                torch.cuda.synchronize()
+                total_time = time.time() - start_time
+                output_ids = output_ids[0][len(input_ids[0]):]
+                # be consistent with the template's stop_token_ids
+                stop_token_ids = [
+                    tokenizer.eos_token_id,
+                    tokenizer.convert_tokens_to_ids("<|eot_id|>")
+                ]
+
+                if stop_token_ids:
+                    stop_token_ids_index = [
+                        i
+                        for i, id in enumerate(output_ids)
+                        if id in stop_token_ids
+                    ]
+                    if len(stop_token_ids_index) > 0:
+                        output_ids = output_ids[: stop_token_ids_index[0]]
+
+                output = tokenizer.decode(
+                    output_ids,
+                    spaces_between_special_tokens=False,
+                )
+                # stop_str = "</s>"
+                # if stop_str and output.find(stop_str) > 0:
+                #     output = output[: output.find(stop_str)]
+                for special_token in tokenizer.special_tokens_map.values():
+                    if isinstance(special_token, list):
+                        for special_tok in special_token:
+                            output = output.replace(special_tok, "")
+                    else:
+                        output = output.replace(special_token, "")
+                output = output.strip()
+
+                turns.append(output)
+                idxs.append(int(idx))
+                new_tokens.append(int(new_token))
+                wall_time.append(total_time)
+                messages.append({
+                    "role": "assistant",
+                    "content": output
+                })
+            # torch.cuda.empty_cache()
+            choices.append({"index": i, "turns": turns, "idxs": idxs, "new_tokens": new_tokens, "wall_time": wall_time})
+
+        # Dump answers
+        os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+        with open(os.path.expanduser(answer_file), "a") as fout:
+            ans_json = {
+                "question_id": question["question_id"],
+                "answer_id": shortuuid.uuid(),
+                "model_id": model_id,
+                "choices": choices,
+                "tstamp": time.time(),
+            }
+            fout.write(json.dumps(ans_json) + "\n")
+
+
+def reorg_answer_file(answer_file):
+    """Sort by question id and de-duplication"""
+    answers = {}
+    with open(answer_file, "r") as fin:
+        for l in fin:
+            qid = json.loads(l)["question_id"]
+            answers[qid] = l
+
+    qids = sorted(list(answers.keys()))
+    with open(answer_file, "w") as fout:
+        for qid in qids:
+            fout.write(answers[qid])
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--ea-model-path",
+        type=str,
+        default="/home/lyh/weights/hf/eagle3/llama33chat/70B/",
+        help="The path to the weights. This can be a local folder or a Hugging Face repo ID.",
+    )
+    parser.add_argument("--base-model-path", type=str, default="/home/lyh/weights/llama33chat/70B/",
+                        help="1")
+    parser.add_argument(
+        "--load-in-8bit", action="store_false", help="Use 8-bit quantization"
+    )
+    parser.add_argument("--model-id", type=str, default="llama38b2_40")
+    parser.add_argument(
+        "--bench-name",
+        type=str,
+        default="mt_bench",
+        help="The name of the benchmark question set.",
+    )
+    parser.add_argument(
+        "--question-begin",
+        type=int,
+        help="A debug option. The begin index of questions.",
+    )
+    parser.add_argument(
+        "--question-end", type=int, help="A debug option. The end index of questions."
+    )
+    parser.add_argument("--answer-file", type=str, help="The output answer file.")
+    parser.add_argument(
+        "--max-new-token",
+        type=int,
+        default=1024,
+        help="The maximum number of new generated tokens.",
+    )
+    parser.add_argument(
+        "--total-token",
+        type=int,
+        default=60,
+        help="The maximum number of new generated tokens.",
+    )
+    parser.add_argument(
+        "--depth",
+        type=int,
+        default=5,
+        help="The maximum number of new generated tokens.",
+    )
+    parser.add_argument(
+        "--top-k",
+        type=int,
+        default=10,
+        help="The maximum number of new generated tokens.",
+    )
+
+    parser.add_argument(
+        "--num-choices",
+        type=int,
+        default=1,
+        help="How many completion choices to generate.",
+    )
+    parser.add_argument(
+        "--num-gpus-per-model",
+        type=int,
+        default=1,
+        help="The number of GPUs per model.",
+    )
+    parser.add_argument(
+        "--num-gpus-total", type=int, default=1, help="The total number of GPUs."
+    )
+    parser.add_argument(
+        "--max-gpu-memory",
+        type=str,
+        help="Maxmum GPU memory used for model weights per GPU.",
+    )
+
+    parser.add_argument(
+        "--temperature",
+        type=float,
+        default=0.0,
+    )
+
+    parser.add_argument(
+        "--tree-choices",
+        type=str,
+        default="mc_sim_7b_63",
+    )
+
+    args = parser.parse_args()
+
+    args.model_id = args.model_id + "-temperature-" + str(args.temperature)
+    if args.num_gpus_total // args.num_gpus_per_model > 1:
+        import ray
+
+        ray.init()
+
+    question_file = f"{parent_dir}/data/{args.bench_name}/question.jsonl"
+    if args.answer_file:
+        answer_file = args.answer_file
+    else:
+        answer_file = f"{args.bench_name}/{a
+
+# ===== FILE: eagle/evaluation/gen_baseline_answer_mix.py =====
+"""Generate answers with local models.
+
+Usage:
+python3 gen_model_answer.py --model-path lmsys/fastchat-t5-3b-v1.0 --model-id fastchat-t5-3b-v1.0
+"""
+import argparse
+import json
+import os
+script_dir = os.path.dirname(__file__)
+parent_dir = os.path.dirname(script_dir)
+#os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2,3,4,5,6,7"
+import time
+import shortuuid
+from tqdm import tqdm
+
+from fastchat.llm_judge.common import load_questions
+from fastchat.model import get_conversation_template
+
+#try:
+from model.utils import *
+from model.ea_model import EaModel
+from model.kv_cache import initialize_past_key_values
+from model.choices import *
+
+
+
+def ea_forward(input_ids, model, tokenizer, tree_choices, logits_processor=None, max_steps=512):
+    assert input_ids.shape[0] == 1, "Only support batch size 1 for now!!"
+    # Avoid modifying the input_ids in-place
+    input_ids = input_ids.clone()
+    model.ea_layer.reset_kv()
+
+    if hasattr(model, "tree_choices") and model.tree_choices == tree_choices:
+        tree_buffers = model.tree_buffers
+    else:
+        tree_buffers = generate_tree_buffers(
+            tree_choices, device=model.base_model.model.layers[-1].self_attn.q_proj.weight.device
+        )
+        tree_buffers["retrieve_indices_head"] = tree_buffers["retrieve_indices"].to(
+            model.base_model.lm_head.weight.device)
+    model.tree_buffers = tree_buffers
+    model.tree_choices = tree_choices
+
+    # Initialize the past key and value states
+    if hasattr(model, "past_key_values"):
+        past_key_values = model.past_key_values
+        past_key_values_data = model.past_key_values_data
+        current_length_data = model.current_length_data
+        # Reset the past key and value states
+        current_length_data.zero_()
+    else:
+        (
+            past_key_values,
+            past_key_values_data,
+            current_length_data,
+        ) = initialize_past_key_values(model.base_model)
+        model.past_key_values = past_key_values
+        model.past_key_values_data = past_key_values_data
+        model.current_length_data = current_length_data
+
+    input_len = input_ids.shape[1]
+    reset_tree_mode(model)
+
+    outputs = model.base_model(input_ids, past_key_values=past_key_values, use_cache=True)
+    new_token = 0
+
+    for idx in range(max_steps):
+        if logits_processor is not None:
+            logits = outputs.logits[:, -1]
+            logits = logits_processor(None, logits)
+            probabilities = torch.nn.functional.softmax(logits, dim=-1)
+            input_id = torch.multinomial(probabilities, 1)
+        else:
+            input_id = outputs.logits[:, -1:].argmax(dim=-1)
+        outputs = model.base_model(input_id, use_cache=True, past_key_values=past_key_values)
+        input_ids = torch.cat([input_ids, input_id], dim=-1)
+
+        if tokenizer.eos_token_id in input_ids[0, input_len:].tolist():
+            break
+        if new_token > 1024:
+            break
+        if input_ids.shape[1] > 1960:
+            break
+    return input_ids, new_token, idx
+
+
+def run_eval(
+        base_model_path,
+        ea_model_path,
+        model_id,
+        question_file,
+        question_begin,
+        question_end,
+        answer_file,
+        max_new_token,
+        num_choices,
+        num_gpus_per_model,
+        num_gpus_total,
+        max_gpu_memory,
+        temperature,
+        tree_choices,
+):
+    questions = load_questions(question_file, question_begin, question_end)
+    # random shuffle the questions to balance the loading
+    # random.shuffle(questions)
+    shuffled_ids = [q["question_id"] for q in questions]
+    # with open(f"data/{args.bench_name}/model_ids/{args.model_id}.shuffled_ids", "w") as fout:
+    #     json.dump(shuffled_ids, fout)
+
+    # Split the question file into `num_gpus` files
+    assert num_gpus_total % num_gpus_per_model == 0
+    use_ray = num_gpus_total // num_gpus_per_model > 1
+
+    if use_ray:
+        get_answers_func = ray.remote(num_gpus=num_gpus_per_model)(
+            get_model_answers
+        ).remote
+    else:
+        get_answers_func = get_model_answers
+
+    chunk_size = len(questions) // (num_gpus_total // num_gpus_per_model)  # // 2
+    ans_handles = []
+    for i in range(0, len(questions), chunk_size):
+        ans_handles.append(
+            get_answers_func(
+                base_model_path,
+                ea_model_path,
+                model_id,
+                questions[i: i + chunk_size],
+                answer_file,
+                max_new_token,
+                num_choices,
+                num_gpus_per_model,
+                max_gpu_memory,
+                temperature,
+                tree_choices,
+            )
+        )
+
+    if use_ray:
+        ray.get(ans_handles)
+
+
+@torch.inference_mode()
+def get_model_answers(
+        base_model_path,
+        ea_model_path,
+        model_id,
+        questions,
+        answer_file,
+        max_new_token,
+        num_choices,
+        num_gpus_per_model,
+        max_gpu_memory,
+        temperature,
+        tree_choices,
+):
+    #temperature = 0.0
+
+    model = EaModel.from_pretrained(
+        base_model_path=base_model_path,
+        ea_model_path=ea_model_path,
+        Type="Mixtral",
+        torch_dtype=torch.float16,
+        low_cpu_mem_usage=True,
+        # load_in_8bit=True,
+        device_map="auto"
+    )
+
+    tokenizer = model.get_tokenizer()
+
+    if temperature > 1e-5:
+        logits_processor = prepare_logits_processor(temperature=temperature)
+    else:
+        logits_processor = None
+
+    model.eval()
+    print('Check model training state:', model.training)
+
+    cuda_visible_devices = os.environ.get('CUDA_VISIBLE_DEVICES')
+    print('CUDA VISIBLE DEVICES:', cuda_visible_devices)
+
+    question = questions[0]
+
+    # warmup
+    for _ in range(3):
+        torch.manual_seed(0)
+        conv = get_conversation_template("llama-2-chat")
+        conv.system_message = ''
+        conv.sep2 = "</s>"
+        turns = []
+        idxs = []
+        new_tokens = []
+        wall_time = []
+        for j in range(len(question["turns"])):
+            qs = question["turns"][j]
+            conv.append_message(conv.roles[0], qs)
+            conv.append_message(conv.roles[1], None)
+            prompt = conv.get_prompt()
+            input_ids = tokenizer([prompt]).input_ids
+
+            # try:
+            torch.cuda.synchronize()
+            start_time = time.time()
+
+            output_ids, new_token, idx = ea_forward(
+                torch.as_tensor(input_ids).cuda(),
+                model,
+                tokenizer,
+                tree_choices,
+                logits_processor,
+            )
+            torch.cuda.synchronize()
+            total_time = time.time() - start_time
+            output_ids = output_ids[0][len(input_ids[0]):]
+            # be consistent with the template's stop_token_ids
+            if conv.stop_token_ids:
+                stop_token_ids_index = [
+                    i
+                    for i, id in enumerate(output_ids)
+                    if id in conv.stop_token_ids
+                ]
+                if len(stop_token_ids_index) > 0:
+                    output_ids = output_ids[: stop_token_ids_index[0]]
+
+            output = tokenizer.decode(
+                output_ids,
+                spaces_between_special_tokens=False,
+            )
+            conv.stop_str = "</s>"
+            if conv.stop_str and output.find(conv.stop_str) > 0:
+                output = output[: output.find(conv.stop_str)]
+            for special_token in tokenizer.special_tokens_map.values():
+                if isinstance(special_token, list):
+                    for special_tok in special_token:
+                        output = output.replace(special_tok, "")
+                else:
+                    output = output.replace(special_token, "")
+            output = output.strip()
+
+            if conv.name == "xgen" and output.startswith("Assistant:"):
+                output = output.replace("Assistant:", "", 1).strip()
+
+
+            turns.append(output)
+            idxs.append(int(idx))
+            new_tokens.append(int(new_token))
+            wall_time.append(total_time)
+            conv.messages[-1][-1] = output
+    print('Warmup done')
+
+    # questions=questions[6:]
+    for question in tqdm(questions):
+
+        choices = []
+        for i in range(num_choices):
+            torch.manual_seed(i)
+            conv = get_conversation_template("llama-2-chat")
+            conv.system_message = ''
+            conv.sep2 = "</s>"
+            turns = []
+            idxs = []
+            new_tokens = []
+            wall_time = []
+            for j in range(len(question["turns"])):
+                qs = question["turns"][j]
+                conv.append_message(conv.roles[0], qs)
+                conv.append_message(conv.roles[1], None)
+                prompt = conv.get_prompt()
+                input_ids = tokenizer([prompt]).input_ids
+
+                try:
+                    torch.cuda.synchronize()
+                    start_time = time.time()
+                    output_ids, new_token, idx = ea_forward(
+                        torch.as_tensor(input_ids).cuda(),
+                        model,
+                        tokenizer,
+                        tree_choices,
+                        logits_processor,
+                    )
+                    torch.cuda.synchronize()
+                    total_time = time.time() - start_time
+                    output_ids = output_ids[0][len(input_ids[0]):]
+
+                    if conv.stop_token_ids:
+                        stop_token_ids_index = [
+                            i
+                            for i, id in enumerate(output_ids)
+                            if id in conv.stop_token_ids
+                        ]
+                        if len(stop_token_ids_index) > 0:
+                            output_ids = output_ids[: stop_token_ids_index[0]]
+
+                    output = tokenizer.decode(
+                        output_ids,
+                        spaces_between_special_tokens=False,
+                    )
+                    if conv.stop_str and output.find(conv.stop_str) > 0:
+                        output = output[: output.find(conv.stop_str)]
+                    for special_token in tokenizer.special_tokens_map.values():
+                        if isinstance(special_token, list):
+                            for special_tok in special_token:
+                                output = output.replace(special_tok, "")
+                        else:
+                            output = output.replace(special_token, "")
+                    output = output.strip()
+
+                    if conv.name == "xgen" and output.startswith("Assistant:"):
+                        output = output.replace("Assistant:", "", 1).strip()
+                except RuntimeError as e:
+                    print("ERROR question ID: ", question["question_id"])
+                    output = "ERROR"
+
+                turns.append(output)
+                idxs.append(int(idx))
+                new_tokens.append(int(new_token))
+                wall_time.append(total_time)
+                conv.messages[-1][-1] = output
+            # torch.cuda.empty_cache()
+            choices.append({"index": i, "turns": turns, "idxs": idxs, "new_tokens": new_tokens, "wall_time": wall_time})
+
+        # Dump answers
+        os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+        with open(os.path.expanduser(answer_file), "a") as fout:
+            ans_json = {
+                "question_id": question["question_id"],
+                "answer_id": shortuuid.uuid(),
+                "model_id": model_id,
+                "choices": choices,
+                "tstamp": time.time(),
+            }
+            fout.write(json.dumps(ans_json) + "\n")
+
+
+def reorg_answer_file(answer_file):
+    """Sort by question id and de-duplication"""
+    answers = {}
+    with open(answer_file, "r") as fin:
+        for l in fin:
+            qid = json.loads(l)["question_id"]
+            answers[qid] = l
+
+    qids = sorted(list(answers.keys()))
+    with open(answer_file, "w") as fout:
+        for qid in qids:
+            fout.write(answers[qid])
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--ea-model-path",
+        type=str,
+        default="down_checkpoints/LC70B",
+        help="The path to the weights. This can be a local folder or a Hugging Face repo ID.",
+    )
+    parser.add_argument("--base-model-path", type=str, default="/home/lyh/weights/hf/llama2chat/70B/",
+                        help="1")
+    parser.add_argument(
+        "--load-in-8bit", action="store_false", help="Use 8-bit quantization"
+    )
+    parser.add_argument("--model-id", type=str, default="ess-llama-2-chat-70b-fp16-baseline")
+    parser.add_argument(
+        "--bench-name",
+        type=str,
+        default="mt_bench",
+        help="The name of the benchmark question set.",
+    )
+    parser.add_argument(
+        "--question-begin",
+        type=int,
+        help="A debug option. The begin index of questions.",
+    )
+    parser.add_argument(
+        "--question-end", type=int, help="A debug option. The end index of questions."
+    )
+    parser.add_argument("--answer-file", type=str, help="The output answer file.")
+    parser.add_argument(
+        "--max-new-token",
+        type=int,
+        default=1024,
+        help="The maximum number of new generated tokens.",
+    )
+    parser.add_argument(
+        "--num-choices",
+        type=int,
+        default=1,
+        help="How many completion choices to generate.",
+    )
+    parser.add_argument(
+        "--num-gpus-per-model",
+        type=int,
+        default=1,
+        help="The number of GPUs per model.",
+    )
+    parser.add_argument(
+        "--num-gpus-total", type=int, default=1, help="The total number of GPUs."
+    )
+    parser.add_argument(
+        "--max-gpu-memory",
+        type=str,
+        help="Maxmum GPU memory used for model weights per GPU.",
+    )
+
+    parser.add_argument(
+        "--temperature",
+        type=float,
+        de
+
+# ===== FILE: eagle/evaluation/gen_baseline_answer_vicuna.py =====
+"""Generate answers with local models.
+
+Usage:
+python3 gen_model_answer.py --model-path lmsys/fastchat-t5-3b-v1.0 --model-id fastchat-t5-3b-v1.0
+"""
+import argparse
+import json
+import os
+script_dir = os.path.dirname(__file__)
+parent_dir = os.path.dirname(script_dir)
+#os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2,3,4,5,6,7"
+import time
+import shortuuid
+from tqdm import tqdm
+
+from fastchat.llm_judge.common import load_questions
+from fastchat.model import get_conversation_template
+
+#try:
+from ..model.utils import *
+from ..model.ea_model import EaModel
+from ..model.kv_cache import initialize_past_key_values
+from ..model.choices import *
+
+
+
+def ea_forward(input_ids, model, tokenizer, tree_choices, logits_processor=None, max_steps=2048):
+    assert input_ids.shape[0] == 1, "Only support batch size 1 for now!!"
+    # Avoid modifying the input_ids in-place
+    input_ids = input_ids.clone()
+    model.ea_layer.reset_kv()
+
+    if hasattr(model, "tree_choices") and model.tree_choices == tree_choices:
+        tree_buffers = model.tree_buffers
+    else:
+        tree_buffers = generate_tree_buffers(
+            tree_choices, device=model.base_model.model.layers[-1].self_attn.q_proj.weight.device
+        )
+        tree_buffers["retrieve_indices_head"] = tree_buffers["retrieve_indices"].to(
+            model.base_model.lm_head.weight.device)
+    model.tree_buffers = tree_buffers
+    model.tree_choices = tree_choices
+
+    # Initialize the past key and value states
+    if hasattr(model, "past_key_values"):
+        past_key_values = model.past_key_values
+        past_key_values_data = model.past_key_values_data
+        current_length_data = model.current_length_data
+        # Reset the past key and value states
+        current_length_data.zero_()
+    else:
+        (
+            past_key_values,
+            past_key_values_data,
+            current_length_data,
+        ) = initialize_past_key_values(model.base_model)
+        model.past_key_values = past_key_values
+        model.past_key_values_data = past_key_values_data
+        model.current_length_data = current_length_data
+
+    input_len = input_ids.shape[1]
+    reset_tree_mode(model)
+
+    outputs = model.base_model(input_ids, past_key_values=past_key_values, use_cache=True)
+    new_token = 0
+
+    for idx in range(max_steps):
+        if logits_processor is not None:
+            logits = outputs.logits[:, -1]
+            logits = logits_processor(None, logits)
+            probabilities = torch.nn.functional.softmax(logits, dim=-1)
+            input_id = torch.multinomial(probabilities, 1)
+        else:
+            input_id = outputs.logits[:, -1:].argmax(dim=-1)
+        outputs = model.base_model(input_id, use_cache=True, past_key_values=past_key_values)
+        input_ids = torch.cat([input_ids, input_id], dim=-1)
+
+        if tokenizer.eos_token_id in input_ids[0, input_len:].tolist():
+            break
+        if new_token > 1024:
+            break
+        if input_ids.shape[1] > 1960:
+            break
+    return input_ids, new_token, idx
+
+
+def run_eval(
+        base_model_path,
+        ea_model_path,
+        model_id,
+        question_file,
+        question_begin,
+        question_end,
+        answer_file,
+        max_new_token,
+        num_choices,
+        num_gpus_per_model,
+        num_gpus_total,
+        max_gpu_memory,
+        temperature,
+        tree_choices,
+):
+    questions = load_questions(question_file, question_begin, question_end)
+    # random shuffle the questions to balance the loading
+    # random.shuffle(questions)
+    shuffled_ids = [q["question_id"] for q in questions]
+    # with open(f"data/{args.bench_name}/model_ids/{args.model_id}.shuffled_ids", "w") as fout:
+    #     json.dump(shuffled_ids, fout)
+
+    # Split the question file into `num_gpus` files
+    assert num_gpus_total % num_gpus_per_model == 0
+    use_ray = num_gpus_total // num_gpus_per_model > 1
+
+    if use_ray:
+        get_answers_func = ray.remote(num_gpus=num_gpus_per_model)(
+            get_model_answers
+        ).remote
+    else:
+        get_answers_func = get_model_answers
+
+    chunk_size = len(questions) // (num_gpus_total // num_gpus_per_model)  # // 2
+    ans_handles = []
+    for i in range(0, len(questions), chunk_size):
+        ans_handles.append(
+            get_answers_func(
+                base_model_path,
+                ea_model_path,
+                model_id,
+                questions[i: i + chunk_size],
+                answer_file,
+                max_new_token,
+                num_choices,
+                num_gpus_per_model,
+                max_gpu_memory,
+                temperature,
+                tree_choices,
+            )
+        )
+
+    if use_ray:
+        ray.get(ans_handles)
+
+
+@torch.inference_mode()
+def get_model_answers(
+        base_model_path,
+        ea_model_path,
+        model_id,
+        questions,
+        answer_file,
+        max_new_token,
+        num_choices,
+        num_gpus_per_model,
+        max_gpu_memory,
+        temperature,
+        tree_choices,
+):
+    #temperature = 0.0
+
+    model = EaModel.from_pretrained(
+        base_model_path=base_model_path,
+        ea_model_path=ea_model_path,
+        torch_dtype=torch.float16,
+        low_cpu_mem_usage=True,
+        # load_in_8bit=True,
+        device_map="auto"
+    )
+
+    tokenizer = model.get_tokenizer()
+
+    if temperature > 1e-5:
+        logits_processor = prepare_logits_processor(temperature=temperature)
+    else:
+        logits_processor = None
+
+    model.eval()
+    print('Check model training state:', model.training)
+
+    cuda_visible_devices = os.environ.get('CUDA_VISIBLE_DEVICES')
+    print('CUDA VISIBLE DEVICES:', cuda_visible_devices)
+
+    question = questions[0]
+
+    # warmup
+    for _ in range(3):
+        torch.manual_seed(0)
+        conv = get_conversation_template("vicuna")
+        turns = []
+        idxs = []
+        new_tokens = []
+        wall_time = []
+        for j in range(len(question["turns"])):
+            qs = question["turns"][j]
+            conv.append_message(conv.roles[0], qs)
+            conv.append_message(conv.roles[1], None)
+            prompt = conv.get_prompt()
+            input_ids = tokenizer([prompt]).input_ids
+
+            # try:
+            torch.cuda.synchronize()
+            start_time = time.time()
+
+            output_ids, new_token, idx = ea_forward(
+                torch.as_tensor(input_ids).cuda(),
+                model,
+                tokenizer,
+                tree_choices,
+                logits_processor,
+            )
+            torch.cuda.synchronize()
+            total_time = time.time() - start_time
+            output_ids = output_ids[0][len(input_ids[0]):]
+            # be consistent with the template's stop_token_ids
+            if conv.stop_token_ids:
+                stop_token_ids_index = [
+                    i
+                    for i, id in enumerate(output_ids)
+                    if id in conv.stop_token_ids
+                ]
+                if len(stop_token_ids_index) > 0:
+                    output_ids = output_ids[: stop_token_ids_index[0]]
+
+            output = tokenizer.decode(
+                output_ids,
+                spaces_between_special_tokens=False,
+            )
+            conv.stop_str = "</s>"
+            if conv.stop_str and output.find(conv.stop_str) > 0:
+                output = output[: output.find(conv.stop_str)]
+            for special_token in tokenizer.special_tokens_map.values():
+                if isinstance(special_token, list):
+                    for special_tok in special_token:
+                        output = output.replace(special_tok, "")
+                else:
+                    output = output.replace(special_token, "")
+            output = output.strip()
+
+            if conv.name == "xgen" and output.startswith("Assistant:"):
+                output = output.replace("Assistant:", "", 1).strip()
+
+
+            turns.append(output)
+            idxs.append(int(idx))
+            new_tokens.append(int(new_token))
+            wall_time.append(total_time)
+            conv.messages[-1][-1] = output
+    print('Warmup done')
+
+    # questions=questions[6:]
+    for question in tqdm(questions):
+
+        choices = []
+        for i in range(num_choices):
+            torch.manual_seed(i)
+            conv = get_conversation_template("vicuna")
+            turns = []
+            idxs = []
+            new_tokens = []
+            wall_time = []
+            for j in range(len(question["turns"])):
+                qs = question["turns"][j]
+                conv.append_message(conv.roles[0], qs)
+                conv.append_message(conv.roles[1], None)
+                prompt = conv.get_prompt()
+                input_ids = tokenizer([prompt]).input_ids
+
+                try:
+                    torch.cuda.synchronize()
+                    start_time = time.time()
+                    output_ids, new_token, idx = ea_forward(
+                        torch.as_tensor(input_ids).cuda(),
+                        model,
+                        tokenizer,
+                        tree_choices,
+                        logits_processor,
+                    )
+                    torch.cuda.synchronize()
+                    total_time = time.time() - start_time
+                    output_ids = output_ids[0][len(input_ids[0]):]
+
+                    if conv.stop_token_ids:
+                        stop_token_ids_index = [
+                            i
+                            for i, id in enumerate(output_ids)
+                            if id in conv.stop_token_ids
+                        ]
+                        if len(stop_token_ids_index) > 0:
+                            output_ids = output_ids[: stop_token_ids_index[0]]
+
+                    output = tokenizer.decode(
+                        output_ids,
+                        spaces_between_special_tokens=False,
+                    )
+                    if conv.stop_str and output.find(conv.stop_str) > 0:
+                        output = output[: output.find(conv.stop_str)]
+                    for special_token in tokenizer.special_tokens_map.values():
+                        if isinstance(special_token, list):
+                            for special_tok in special_token:
+                                output = output.replace(special_tok, "")
+                        else:
+                            output = output.replace(special_token, "")
+                    output = output.strip()
+
+                    if conv.name == "xgen" and output.startswith("Assistant:"):
+                        output = output.replace("Assistant:", "", 1).strip()
+                except RuntimeError as e:
+                    print("ERROR question ID: ", question["question_id"])
+                    output = "ERROR"
+
+                turns.append(output)
+                idxs.append(int(idx))
+                new_tokens.append(int(new_token))
+                wall_time.append(total_time)
+                conv.messages[-1][-1] = output
+            # torch.cuda.empty_cache()
+            choices.append({"index": i, "turns": turns, "idxs": idxs, "new_tokens": new_tokens, "wall_time": wall_time})
+
+        # Dump answers
+        os.makedirs(os.path.dirname(answer_file), exist_ok=True)
+        with open(os.path.expanduser(answer_file), "a") as fout:
+            ans_json = {
+                "question_id": question["question_id"],
+                "answer_id": shortuuid.uuid(),
+                "model_id": model_id,
+                "choices": choices,
+                "tstamp": time.time(),
+            }
+            fout.write(json.dumps(ans_json) + "\n")
+
+
+def reorg_answer_file(answer_file):
+    """Sort by question id and de-duplication"""
+    answers = {}
+    with open(answer_file, "r") as fin:
+        for l in fin:
+            qid = json.loads(l)["question_id"]
+            answers[qid] = l
+
+    qids = sorted(list(answers.keys()))
+    with open(answer_file, "w") as fout:
+        for qid in qids:
+            fout.write(answers[qid])
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--ea-model-path",
+        type=str,
+        default="down_checkpoints/LC70B",
+        help="The path to the weights. This can be a local folder or a Hugging Face repo ID.",
+    )
+    parser.add_argument("--base-model-path", type=str, default="/home/lyh/weights/hf/llama2chat/70B/",
+                        help="1")
+    parser.add_argument(
+        "--load-in-8bit", action="store_false", help="Use 8-bit quantization"
+    )
+    parser.add_argument("--model-id", type=str, default="ess-vicuna-70b-fp16-baseline")
+    parser.add_argument(
+        "--bench-name",
+        type=str,
+        default="mt_bench",
+        help="The name of the benchmark question set.",
+    )
+    parser.add_argument(
+        "--question-begin",
+        type=int,
+        help="A debug option. The begin index of questions.",
+    )
+    parser.add_argument(
+        "--question-end", type=int, help="A debug option. The end index of questions."
+    )
+    parser.add_argument("--answer-file", type=str, help="The output answer file.")
+    parser.add_argument(
+        "--max-new-token",
+        type=int,
+        default=1024,
+        help="The maximum number of new generated tokens.",
+    )
+    parser.add_argument(
+        "--num-choices",
+        type=int,
+        default=1,
+        help="How many completion choices to generate.",
+    )
+    parser.add_argument(
+        "--num-gpus-per-model",
+        type=int,
+        default=1,
+        help="The number of GPUs per model.",
+    )
+    parser.add_argument(
+        "--num-gpus-total", type=int, default=1, help="The total number of GPUs."
+    )
+    parser.add_argument(
+        "--max-gpu-memory",
+        type=str,
+        help="Maxmum GPU memory used for model weights per GPU.",
+    )
+
+    parser.add_argument(
+        "--temperature",
+        type=float,
+        default=1.0,
+    )
+
+    parser.add_argument(
+        "--tree-choices",
+        type=str,
+        default="mc_sim_7b_63",
+    )
+
+    args = parser.parse_args()
+
+   
+
+# ===== FILE: eagle/evaluation/gen_ea_alpha_llama2chat.py =====
+"""Generate answers with local models.
+
+Usage:
+python3 gen_model_answer.py --model-path lmsys/fastchat-t5-3b-v1.0 --model-id fastchat-t5-3b-v1.0
+"""
+import argparse
+import json
+import os
+script_dir = os.path.dirname(__file__)
+parent_dir = os.path.dirname(script_dir)
+from accelerate.utils import set_seed
+set_seed(0)
+# os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2,3,4,5,6,7"
+# os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+import time
+
+import shortuuid
+from fastchat.llm_judge.common import load_questions
+from fastchat.model import get_conversation_template
+from tqdm import tqdm
+
+from model.ea_model import EaModel
+from model.kv_cache import initialize_past_key_values
+from model.utils_alpha import *
+from model.choices import *
+
+
+def ea_forward(input_ids, model, tokenizer, tree_choices, logits_processor=None, max_steps=512):
+    assert input_ids.shape[0] == 1, "Only support batch size 1 for now!!"
+    # Avoid modifying the input_ids in-place
+    input_ids = input_ids.clone()
+    model.ea_layer.reset_kv()
+
+    max_len = max([len(i) for i in tree_choices])
+    alpha_num = [0 for _ in range(max_len)]
+    alpha = [0 for _ in range(max_len)]
+
+    if hasattr(model, "tree_choices") and model.tree_choices == tree_choices:
+        tree_buffers = model.tree_buffers
+    else:
+        tree_buffers = generate_tree_buffers(
+            tree_choices, device=model.base_model.model.layers[-1].self_attn.q_proj.weight.device
+        )
+    model.tree_buffers = tree_buffers
+    model.tree_choices = tree_choices
+
+    # Initialize the past key and value states
+    if hasattr(model, "past_key_values"):
+        past_key_values = model.past_key_values
+        past_key_values_data = model.past_key_values_data
+        current_length_data = model.current_length_data
+        # Reset the past key and value states
+        current_length_data.zero_()
+    else:
+        (
+            past_key_values,
+            past_key_values_data,
+            current_length_data,
+        ) = initialize_past_key_values(model.base_model)
+        model.past_key_values = past_key_values
+        model.past_key_values_data = past_key_values_data
+        model.current_length_data = current_length_data
+
+    input_len = input_ids.shape[1]
+    reset_tree_mode(model)
+    tree_logits, logits, hidden_state, sample_token = initialize_tree(
+        input_ids, model, tree_buffers["tree_attn_mask"], past_key_values, logits_processor
+    )
+    new_token = 0
+
+    for idx in range(max_steps):
+        candidates, cart_candidates_prob, tree_candidates = generate_candidates(
+            tree_logits,
+            tree_buffers["tree_indices"],
+            tree_buffers["retrieve_indices"],
+            sample_token,
+            logits_processor
+        )
+        logits, hidden_state_new, outputs = tree_decoding(
+            model,
+            tree_candidates,
+            past_key_values,
+            tree_buffers["tree_position_ids"],
+            input_ids,
+            tree_buffers["retrieve_indices"],
+        )
+        best_candidate, accept_length,sample_p = evaluate_posterior(
+                logits, candidates, logits_processor, cart_candidates_prob,alpha,alpha_num,tree_logits[2], tree_buffers["p_indices"],
+            tree_candidates, tree_buffers["b_indices"]
+            )
+        input_ids, tree_logits, new_token, hidden_state, sample_token = update_inference_inputs(
+            input_ids,
+            candidates,
+            best_candidate,
+            accept_length,
+            tree_buffers["retrieve_indices"],
+            logits_processor,
+            logits,
+            tree_logits,
+            new_token,
+            past_key_values_data,
+            current_length_data,
+            model,
+            hidden_state,
+            hidden_state_new,
+            sample_p
+        )
+        if tokenizer.eos_token_id in input_ids[0, input_len:].tolist():
+            break
+        if new_token > 1024:
+            break
+        if input_ids.shape[1] > 1960:
+            break
+    return input_ids, new_token, idx, alpha, alpha_num
+
+
+def run_eval(
+        base_model_path,
+        ea_model_path,
+        model_id,
+        question_file,
+        question_begin,
+        question_end,
+        answer_file,
+        max_new_token,
+        num_choices,
+        num_gpus_per_model,
+        num_gpus_total,
+        max_gpu_memory,
+        temperature,
+        tree_choices,
+):
+    questions = load_questions(question_file, question_begin, question_end)
+    # random shuffle the questions to balance the loading
+    # random.shuffle(questions)
+    shuffled_ids = [q["question_id"] for q in questions]
+    # with open(f"data/{args.bench_name}/model_ids/{args.model_id}.shuffled_ids", "w") as fout:
+    #     json.dump(shuffled_ids, fout)
+
+    # Split the question file into `num_gpus` files
+    assert num_gpus_total % num_gpus_per_model == 0
+    use_ray = num_gpus_total // num_gpus_per_model > 1
+
+    if use_ray:
+        get_answers_func = ray.remote(num_gpus=num_gpus_per_model)(
+            get_model_answers
+        ).remote
+    else:
+        get_answers_func = get_model_answers
+
+    chunk_size = len(questions) // (num_gpus_total // num_gpus_per_model)  # // 2
+    ans_handles = []
+    for i in range(0, len(questions), chunk_size):
+        ans_handles.append(
+            get_answers_func(
+                base_model_path,
+                ea_model_path,
+                model_id,
+                questions[i: i + chunk_size],
+                answer_file,
+                max_new_token,
+                num_choices,
+                num_gpus_per_model,
+                max_gpu_memory,
+                tem
