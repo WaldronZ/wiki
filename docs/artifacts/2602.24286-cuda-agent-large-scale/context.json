@@ -1,0 +1,32 @@
+{
+  "slug": "2602.24286-cuda-agent-large-scale",
+  "arxiv_id": "2602.24286",
+  "title": "CUDA Agent: Large-Scale Agentic RL for High-Performance CUDA Kernel Generation",
+  "authors": [
+    "Weinan Dai",
+    "Hanlin Wu",
+    "Qiying Yu",
+    "Huan-ang Gao",
+    "Jiahao Li",
+    "Chengquan Jiang",
+    "Weiqiang Lou",
+    "Yufan Song",
+    "Hongli Yu",
+    "Jiaze Chen",
+    "Wei-Ying Ma",
+    "Ya-Qin Zhang",
+    "Jingjing Liu",
+    "Mingxuan Wang",
+    "Xin Liu",
+    "Hao Zhou"
+  ],
+  "year": 2026,
+  "published": "2026-02-27T18:58:05Z",
+  "abs_url": "https://arxiv.org/abs/2602.24286v1",
+  "pdf_url": "https://arxiv.org/pdf/2602.24286v1",
+  "source_dir": "/Users/waldron/projects/AutoPaperReader/sources/2602.24286-cuda-agent-large-scale/arxiv",
+  "main_tex_path": "/Users/waldron/projects/AutoPaperReader/sources/2602.24286-cuda-agent-large-scale/arxiv/paper.tex",
+  "report_md_path": "/Users/waldron/projects/AutoPaperReader/docs/2602.24286-cuda-agent-large-scale.md",
+  "report_html_path": "/Users/waldron/projects/AutoPaperReader/docs/2602.24286-cuda-agent-large-scale.html",
+  "pdf_fallback_path": "sources/2602.24286-cuda-agent-large-scale/arxiv/paper.pdf"
+}

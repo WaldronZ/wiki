@@ -25,6 +25,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("report_md_path")
     parser.add_argument("report_html_path")
     parser.add_argument("--slug", default="")
+    parser.add_argument("--mindmap-path", default="")
     return parser.parse_args()
 
 
@@ -116,19 +117,26 @@ def copy_local_assets(markdown: str, html_path: Path, slug: str) -> str:
     assets_dir = html_path.parent / "assets" / slug
     assets_dir.mkdir(parents=True, exist_ok=True)
 
+    def split_asset_ref(raw_path: str) -> tuple[str, str]:
+        match = re.match(r"^([^?#]+)([?#].*)?$", raw_path)
+        if not match:
+            return raw_path, ""
+        return match.group(1), match.group(2) or ""
+
     def repl(match: re.Match[str]) -> str:
         prefix, raw_path, suffix = match.group(1), match.group(2), match.group(3)
         if raw_path.startswith(("http://", "https://", "data:")):
             return match.group(0)
-        if Path(raw_path).suffix.lower() not in asset_suffixes:
+        asset_ref, asset_anchor = split_asset_ref(raw_path)
+        if Path(asset_ref).suffix.lower() not in asset_suffixes:
             return match.group(0)
 
         candidates = []
-        path = Path(raw_path)
-        if raw_path.startswith("../"):
+        path = Path(asset_ref)
+        if asset_ref.startswith("../"):
             candidates.append((html_path.parent / path).resolve())
-            candidates.append((ROOT / raw_path.removeprefix("../")).resolve())
-        elif raw_path.startswith("sources/"):
+            candidates.append((ROOT / asset_ref.removeprefix("../")).resolve())
+        elif asset_ref.startswith("sources/"):
             candidates.append((ROOT / path).resolve())
         else:
             candidates.append((html_path.parent / path).resolve())
@@ -141,7 +149,7 @@ def copy_local_assets(markdown: str, html_path: Path, slug: str) -> str:
         if not target.exists() or target.stat().st_size != asset_path.stat().st_size:
             shutil.copy2(asset_path, target)
         rel = target.relative_to(html_path.parent).as_posix()
-        return f"{prefix}{rel}{suffix}"
+        return f"{prefix}{rel}{asset_anchor}{suffix}"
 
     return re.sub(r"(!\[[^\]]*\]\()([^)\s]+)(\))", repl, markdown)
 
@@ -323,7 +331,7 @@ def render_mindmap_overview(markdown: str) -> str:
 </div>"""
 
 
-def render_html(meta: dict[str, Any], markdown: str, slug: str) -> str:
+def render_html(meta: dict[str, Any], markdown: str, slug: str, *, mindmap_override: str = "") -> str:
     title = infer_title(markdown, meta)
     title_en = str(meta.get("title_en") or meta.get("title") or "").strip()
     authors = ", ".join(as_list(meta.get("authors"))) or "Unknown"
@@ -334,14 +342,23 @@ def render_html(meta: dict[str, Any], markdown: str, slug: str) -> str:
     code_url = code_match.group(0) if code_match else ""
     if not code_url and slug == "2307.08691-flashattention-2":
         code_url = "https://github.com/Dao-AILab/flash-attention"
-    project_match = re.search(r"https?://flashinfer\.ai[^\s)）]*", markdown)
-    project_url = project_match.group(0) if project_match else ""
+    project_match = re.search(
+        r"(?:官方项目页|项目页|project(?:\s+page)?)[：:\s]*(https?://[^\s)）]+)",
+        markdown,
+        re.IGNORECASE,
+    )
+    if not project_match:
+        project_match = re.search(r"(https?://(?:flashinfer\.ai|machinelearning\.apple\.com)/[^\s)）]+)", markdown)
+    project_url = project_match.group(1) if project_match else ""
     topics = as_list(meta.get("topics"))
     methods = as_list(meta.get("methods"))
     year = str(meta.get("year") or "").strip()
-    submitted_match = re.search(r"arXiv 编号与日期[：:][^\n；;]*[；;]\s*([^\n]+)", markdown)
+    submitted_match = re.search(
+        r"(?:arXiv 编号与(?:提交)?日期|提交日期)[：:]\s*([^\n]+)",
+        markdown,
+    )
     submitted = submitted_match.group(1).strip() if submitted_match else ""
-    mindmap = build_mindmap(slug, meta)
+    mindmap = mindmap_override.strip() or build_mindmap(slug, meta)
 
     payload = {
         "markdown": markdown,
@@ -359,14 +376,14 @@ def render_html(meta: dict[str, Any], markdown: str, slug: str) -> str:
         links.append(f'<a class="hero-link" href="{html.escape(project_url)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2Zm6.93 9h-3.02a15.8 15.8 0 0 0-1.13-5.06A8.02 8.02 0 0 1 18.93 11ZM12 4.04c.82 1.14 1.57 3.37 1.82 6.96h-3.64c.25-3.59 1-5.82 1.82-6.96ZM4.07 13h3.02c.18 1.94.58 3.72 1.13 5.06A8.02 8.02 0 0 1 4.07 13Zm3.02-2H4.07a8.02 8.02 0 0 1 4.15-5.06A15.8 15.8 0 0 0 7.09 11ZM12 19.96c-.82-1.14-1.57-3.37-1.82-6.96h3.64c-.25 3.59-1 5.82-1.82 6.96Zm3.78-1.9c.55-1.34.95-3.12 1.13-5.06h3.02a8.02 8.02 0 0 1-4.15 5.06Z"></path></svg>project</a>')
     link_html = "\n        ".join(links)
 
-    template = r"""<!doctype html>
+    template = r"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>__TITLE__</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.11.1/styles/github.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.11.1/styles/github.min.css">
   <style>
     :root {
       color-scheme: light;
@@ -938,7 +955,7 @@ def render_html(meta: dict[str, Any], markdown: str, slug: str) -> str:
   <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.11.1/build/highlight.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.11.1/highlight.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/markmap-autoloader@0.18.12"></script>
   <script>
     marked.setOptions({ gfm: true, breaks: false });
@@ -1183,7 +1200,7 @@ def render_html(meta: dict[str, Any], markdown: str, slug: str) -> str:
             img.src = src.replace("../sources/", "sources/");
           }
         };
-        if (src.endsWith(".pdf")) {
+        if (/\.pdf(?:$|[?#])/i.test(src)) {
           const object = document.createElement("object");
           object.className = "figure-pdf";
           object.type = "application/pdf";
@@ -1322,11 +1339,18 @@ def main() -> None:
     text = md_path.read_text(encoding="utf-8")
     meta, body = strip_frontmatter(text)
     slug = args.slug or str(meta.get("slug") or md_path.stem)
+    mindmap_override = ""
+    if args.mindmap_path:
+        mindmap_path = Path(args.mindmap_path).expanduser()
+        if not mindmap_path.is_absolute():
+            mindmap_path = ROOT / mindmap_path
+        if mindmap_path.exists():
+            mindmap_override = mindmap_path.read_text(encoding="utf-8", errors="ignore")
     body = fix_markdown_paths(body, html_path)
     body = copy_local_assets(body, html_path, slug)
     body = protect_display_math(body)
     body = protect_inline_math(body)
-    html_text = render_html(meta, body, slug)
+    html_text = render_html(meta, body, slug, mindmap_override=mindmap_override)
     html_path.parent.mkdir(parents=True, exist_ok=True)
     html_path.write_text(html_text, encoding="utf-8")
     rel = html_path.relative_to(ROOT) if html_path.is_relative_to(ROOT) else html_path

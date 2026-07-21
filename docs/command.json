@@ -1,22 +1,22 @@
 {
-  "generated_at": "2026-06-15T14:49:54",
-  "count": 5,
+  "generated_at": "2026-07-21T14:06:34",
+  "count": 12,
   "inbox_count": 0,
   "lane_count": 6,
   "active_status_workflow": "personal",
-  "quality_score": 92.0,
+  "quality_score": 73.8,
   "publish_ready": false,
   "summary": {
-    "papers": 5,
-    "actions": 62,
-    "high_priority_papers": 5,
-    "high_actions": 3,
-    "medium_actions": 59,
+    "papers": 12,
+    "actions": 136,
+    "high_priority_papers": 12,
+    "high_actions": 6,
+    "medium_actions": 121,
     "due_review": 0,
-    "needs_review_plan": 5,
+    "needs_review_plan": 12,
     "stale_reports": 0,
-    "taxonomy_registry_high": 1,
-    "taxonomy_registry_medium": 64,
+    "taxonomy_registry_high": 4,
+    "taxonomy_registry_medium": 112,
     "workflow_count": 2,
     "inbox_count": 0
   },
@@ -140,17 +140,17 @@
       "metrics": [
         {
           "label": "论文",
-          "value": 5,
+          "value": 12,
           "hint": "library size"
         },
         {
           "label": "高优先级",
-          "value": 5,
+          "value": 12,
           "hint": "priority high"
         },
         {
           "label": "缺计划",
-          "value": 5,
+          "value": 12,
           "hint": "needs next_review"
         }
       ],
@@ -255,7 +255,7 @@
         },
         {
           "label": "路由画像",
-          "value": 2,
+          "value": 4,
           "hint": "research lines"
         }
       ],
@@ -374,17 +374,17 @@
       "metrics": [
         {
           "label": "高风险标签",
-          "value": 1,
+          "value": 4,
           "hint": "registry high"
         },
         {
           "label": "中风险标签",
-          "value": 64,
+          "value": 112,
           "hint": "registry medium"
         },
         {
           "label": "分类任务",
-          "value": 57,
+          "value": 117,
           "hint": "taxonomy actions"
         }
       ],
@@ -620,7 +620,7 @@
       "metrics": [
         {
           "label": "研究线",
-          "value": 2,
+          "value": 4,
           "hint": "lines"
         },
         {
@@ -760,12 +760,12 @@
         },
         {
           "label": "质量分",
-          "value": 92.0,
+          "value": 73.8,
           "hint": "quality score"
         },
         {
           "label": "High action",
-          "value": 3,
+          "value": 6,
           "hint": "blocking work"
         }
       ],
@@ -780,25 +780,25 @@
     {
       "label": "处理高优先级论文",
       "href": "priority.html?urgency=high",
-      "count": 5,
+      "count": 12,
       "reason": "论文级优先级聚合了复习、分类、代码和阅读阶段。"
     },
     {
       "label": "处理高优先级行动",
       "href": "actions.html?severity=high",
-      "count": 3,
+      "count": 6,
       "reason": "高优先级队列会阻碍发布或长期维护。"
     },
     {
       "label": "补复习计划",
       "href": "review.html",
-      "count": 5,
+      "count": 12,
       "reason": "缺 next_review 的论文会从长期知识库里慢慢失焦。"
     },
     {
       "label": "治理标签注册表",
       "href": "registry.html?severity=high",
-      "count": 1,
+      "count": 4,
       "reason": "标签定义、alias 和过载桶决定大库检索质量。"
     },
     {

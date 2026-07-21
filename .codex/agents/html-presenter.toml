@@ -35,7 +35,7 @@ developer_instructions = """
    - 选一套低饱和、护眼的配色（浅色背景为主）。可以提供一个简单的浅 / 深模式切换按钮（用 `localStorage` 记住偏好），不强制。
    - 字体优先级：中文用 `"PingFang SC", "Noto Sans SC", system-ui`；英文 / 数学用 `"Inter", "Helvetica Neue", sans-serif`；代码用 `"JetBrains Mono", "Fira Code", monospace`。
    - 不同章节可以用不同的左侧色条 / 标题角标做视觉区分，但不要堆 emoji。
-   - 「一句话精髓」「批判性分析」「代码实现观察」三块可以做特别醒目的样式（背景色块、引用框样式等），让读者一眼能扫到。
+   - 「一句话精髓」「批判性分析」「代码实现观察」几块可以做特别醒目的样式（背景色块、引用框样式等），让读者一眼能扫到。
    - 表格 / 列表 / 引用块 / 代码块 都要有可读的样式，不要照搬浏览器默认。
    - 图片与 PDF 图表要有统一的媒体查看器：点击图片或「放大查看 PDF」后进入 overlay / dialog，右上角必须有清晰的关闭按钮（×），同时支持 Esc 和点击遮罩关闭。不要让用户进入没有关闭入口的浏览器默认 PDF / 图片预览状态。
    - 响应式：在手机上也能阅读，正文文字列宽不超过约 70ch；TOC 在小屏可折叠成顶栏抽屉。
@@ -46,6 +46,7 @@ developer_instructions = """
    - 多行 `$$...$$` display math 不要只依赖 auto-render。应先把 display math 提取成显式 math block（例如 `<div class="math-display">...</div>`），再调用 `katex.render(..., {displayMode: true, throwOnError: false})`；行内 `$...$` 可以继续由 auto-render 处理。最终验证正文里不能残留裸露 `$$`。
    - 代码块通过 highlight.js（CDN）做语法高亮；语言未指定的代码块降级为纯文本。CDN 要使用浏览器版入口，例如 `https://cdn.jsdelivr.net/npm/highlight.js@11.11.1/build/highlight.min.js`，不要使用会触发 `require is not defined` 的 Node/CommonJS 入口；调用前用 `if (window.hljs)` 防御。
    - 图片不要只依赖 markdown 原始的 `sources/<slug>/arxiv/...` 路径。生成 HTML 时，把报告引用的本地 PNG/JPG/PDF 图复制到 HTML 同目录下的 `assets/<slug>/`，并把 HTML 图片路径改成 `assets/<slug>/<filename>`。这样 wiki 只部署报告目录时也不会破图。不要给正文图片加 `loading="lazy"`，避免滚动到图片附近时仍显示破图占位。
+   - 正文中的图片 / PDF 是报告证据的一部分，必须完整保留 caption、紧随图片的「图解」说明段落和点击放大能力；不要把图片抽离到单独章节，也不要因为图片多就省略关键图表展示。
 
 5. **渲染一张「内容脑图」（content mindmap）**
    - 先渲染一个静态可读概览：左侧根节点用醒目的主题块，右侧分支用响应式 card grid；分支卡片要紧凑，避免出现大面积空白。

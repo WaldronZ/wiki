@@ -1,8 +1,9 @@
 {
-  "generated_at": "2026-06-15T14:49:54",
-  "count": 5,
-  "line_count": 2,
+  "generated_at": "2026-07-21T14:06:34",
+  "count": 12,
+  "line_count": 5,
   "risk_counts": {
+    "high": 3,
     "medium": 2
   },
   "recommended_roles": [
@@ -17,19 +18,19 @@
       "line": "Parallel Decoding with Diffusion Models",
       "href": "lines/parallel-decoding-with-diffusion-models.html",
       "library_href": "library.html?line=Parallel+Decoding+with+Diffusion+Models",
-      "count": 3,
+      "count": 4,
       "owner": "decoding-owner",
       "team": "generation",
       "cadence": "biweekly",
-      "risk": "medium",
-      "score": 57,
-      "first_year": 2026,
+      "risk": "high",
+      "score": 50,
+      "first_year": 2025,
       "latest_year": 2026,
-      "year_span": 1,
+      "year_span": 2,
       "role_counts": {
         "foundation": 1,
         "variant": 1,
-        "followup": 1
+        "followup": 2
       },
       "missing_roles": [
         "baseline",
@@ -38,12 +39,16 @@
       ],
       "top_topics": [
         {
+          "name": "Speculative Decoding",
+          "count": 4
+        },
+        {
           "name": "Diffusion Language Models",
           "count": 3
         },
         {
-          "name": "Speculative Decoding",
-          "count": 3
+          "name": "LLM",
+          "count": 2
         },
         {
           "name": "LLM Serving",
@@ -58,18 +63,18 @@
           "count": 2
         },
         {
-          "name": "LLM",
+          "name": "KV Cache",
           "count": 1
         },
         {
-          "name": "KV Cache",
+          "name": "Efficient Inference",
           "count": 1
         }
       ],
       "top_methods": [
         {
           "name": "gated LoRA",
-          "count": 1
+          "count": 2
         },
         {
           "name": "introspective consistency",
@@ -101,6 +106,16 @@
         }
       ],
       "milestones": [
+        {
+          "year": 2025,
+          "count": 1,
+          "roles": {
+            "followup": 1
+          },
+          "representative_slugs": [
+            "2507.11851-llm-future-mtp"
+          ]
+        },
         {
           "year": 2026,
           "count": 3,
@@ -191,6 +206,31 @@
             "target hidden features"
           ],
           "href": "2602.06036-dflash.html"
+        },
+        {
+          "slug": "2507.11851-llm-future-mtp",
+          "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
+          "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
+          "year": 2025,
+          "role": "followup",
+          "status": "read",
+          "importance": 4,
+          "has_code": false,
+          "topics": [
+            "Efficient Inference",
+            "LLM",
+            "Multi-Token Prediction",
+            "Non-Autoregressive Generation",
+            "Speculative Decoding"
+          ],
+          "methods": [
+            "gated LoRA",
+            "latent consistency matching",
+            "masked-input formulation",
+            "quadratic speculative decoding",
+            "sampler head"
+          ],
+          "href": "2507.11851-llm-future-mtp.html"
         }
       ],
       "queues": {
@@ -201,32 +241,37 @@
         "needs_review_plan": [
           "2604.11035-introspective-dlm",
           "2605.12825-orthrus",
-          "2602.06036-dflash"
+          "2602.06036-dflash",
+          "2507.11851-llm-future-mtp"
         ],
         "no_review": [
           "2604.11035-introspective-dlm",
           "2605.12825-orthrus",
-          "2602.06036-dflash"
+          "2602.06036-dflash",
+          "2507.11851-llm-future-mtp"
         ],
-        "no_code_observation": []
+        "no_code_observation": [
+          "2507.11851-llm-future-mtp"
+        ]
       },
       "actions": [
         {
           "type": "role_gap",
-          "priority": 46,
+          "priority": 53,
           "label": "补齐角色：baseline, main, system",
           "href": "library.html?line=Parallel+Decoding+with+Diffusion+Models",
           "slugs": []
         },
         {
           "type": "review_plan",
-          "priority": 67,
-          "label": "补复习计划 3 篇",
+          "priority": 71,
+          "label": "补复习计划 4 篇",
           "href": "review.html?line=Parallel+Decoding+with+Diffusion+Models",
           "slugs": [
             "2604.11035-introspective-dlm",
             "2605.12825-orthrus",
-            "2602.06036-dflash"
+            "2602.06036-dflash",
+            "2507.11851-llm-future-mtp"
           ]
         },
         {
@@ -236,6 +281,275 @@
           "href": "quality.html?line=Parallel+Decoding+with+Diffusion+Models",
           "slugs": [
             "2604.11035-introspective-dlm"
+          ]
+        },
+        {
+          "type": "code_observation",
+          "priority": 45,
+          "label": "补代码观察 1 篇",
+          "href": "library.html?line=Parallel+Decoding+with+Diffusion+Models",
+          "slugs": [
+            "2507.11851-llm-future-mtp"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "llm-serving",
+      "line": "LLM Serving",
+      "href": "lines/llm-serving.html",
+      "library_href": "library.html?line=LLM+Serving",
+      "count": 3,
+      "owner": "unassigned",
+      "team": "",
+      "cadence": "",
+      "risk": "high",
+      "score": 53,
+      "first_year": 2025,
+      "latest_year": 2026,
+      "year_span": 2,
+      "role_counts": {
+        "main": 1,
+        "system": 1,
+        "tooling": 1
+      },
+      "missing_roles": [
+        "foundation",
+        "baseline"
+      ],
+      "top_topics": [
+        {
+          "name": "LLM Serving",
+          "count": 2
+        },
+        {
+          "name": "Disaggregated Serving",
+          "count": 1
+        },
+        {
+          "name": "Load Balancing",
+          "count": 1
+        },
+        {
+          "name": "MoE",
+          "count": 1
+        },
+        {
+          "name": "LLM Inference",
+          "count": 1
+        },
+        {
+          "name": "Semi-Autoregressive Generation",
+          "count": 1
+        },
+        {
+          "name": "Speculative Decoding",
+          "count": 1
+        },
+        {
+          "name": "Compiler/DSL",
+          "count": 1
+        }
+      ],
+      "top_methods": [
+        {
+          "name": "Balanced K-means",
+          "count": 1
+        },
+        {
+          "name": "Expert Locality Routing",
+          "count": 1
+        },
+        {
+          "name": "Signature Cache",
+          "count": 1
+        },
+        {
+          "name": "confidence-scheduled verification",
+          "count": 1
+        },
+        {
+          "name": "hardware-aware scheduling",
+          "count": 1
+        },
+        {
+          "name": "Markov head",
+          "count": 1
+        },
+        {
+          "name": "semi-autoregressive generation",
+          "count": 1
+        },
+        {
+          "name": "Speculative Decoding",
+          "count": 1
+        }
+      ],
+      "milestones": [
+        {
+          "year": 2025,
+          "count": 1,
+          "roles": {
+            "tooling": 1
+          },
+          "representative_slugs": [
+            "2512.23424-akg-kernel-agent-multi"
+          ]
+        },
+        {
+          "year": 2026,
+          "count": 2,
+          "roles": {
+            "main": 1,
+            "system": 1
+          },
+          "representative_slugs": [
+            "2607.00466-eldr",
+            "noarxiv-2026-dspark"
+          ]
+        }
+      ],
+      "representative_papers": [
+        {
+          "slug": "2607.00466-eldr",
+          "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+          "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+          "year": 2026,
+          "role": "main",
+          "status": "read",
+          "importance": 4,
+          "has_code": false,
+          "topics": [
+            "Disaggregated Serving",
+            "LLM Serving",
+            "Load Balancing",
+            "MoE"
+          ],
+          "methods": [
+            "Balanced K-means",
+            "Expert Locality Routing",
+            "Signature Cache"
+          ],
+          "href": "2607.00466-eldr.html"
+        },
+        {
+          "slug": "noarxiv-2026-dspark",
+          "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+          "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+          "year": 2026,
+          "role": "system",
+          "status": "read",
+          "importance": 4,
+          "has_code": true,
+          "topics": [
+            "LLM Inference",
+            "LLM Serving",
+            "Semi-Autoregressive Generation",
+            "Speculative Decoding"
+          ],
+          "methods": [
+            "confidence-scheduled verification",
+            "hardware-aware scheduling",
+            "Markov head",
+            "semi-autoregressive generation",
+            "Speculative Decoding"
+          ],
+          "href": "noarxiv-2026-dspark.html"
+        },
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "year": 2025,
+          "role": "tooling",
+          "status": "read",
+          "importance": 4,
+          "has_code": false,
+          "topics": [
+            "Compiler/DSL",
+            "Hardware Acceleration",
+            "Kernel Generation",
+            "LLM Code Generation",
+            "Multi-Agent Systems"
+          ],
+          "methods": [
+            "Document-Driven Integration",
+            "Hierarchical Code Retrieval",
+            "Iterative Search-Based Optimization",
+            "Multi-Agent Workflow",
+            "Unified Sketch",
+            "Verification and Profiling Loop"
+          ],
+          "href": "2512.23424-akg-kernel-agent-multi.html"
+        }
+      ],
+      "queues": {
+        "missing_taxonomy": [
+          "2512.23424-akg-kernel-agent-multi"
+        ],
+        "taxonomy_load": [
+          "2512.23424-akg-kernel-agent-multi"
+        ],
+        "needs_review_plan": [
+          "2607.00466-eldr",
+          "noarxiv-2026-dspark",
+          "2512.23424-akg-kernel-agent-multi"
+        ],
+        "no_review": [
+          "2607.00466-eldr",
+          "noarxiv-2026-dspark",
+          "2512.23424-akg-kernel-agent-multi"
+        ],
+        "no_code_observation": [
+          "2607.00466-eldr",
+          "2512.23424-akg-kernel-agent-multi"
+        ]
+      },
+      "actions": [
+        {
+          "type": "role_gap",
+          "priority": 49,
+          "label": "补齐角色：foundation, baseline",
+          "href": "library.html?line=LLM+Serving",
+          "slugs": []
+        },
+        {
+          "type": "review_plan",
+          "priority": 67,
+          "label": "补复习计划 3 篇",
+          "href": "review.html?line=LLM+Serving",
+          "slugs": [
+            "2607.00466-eldr",
+            "noarxiv-2026-dspark",
+            "2512.23424-akg-kernel-agent-multi"
+          ]
+        },
+        {
+          "type": "metadata_gap",
+          "priority": 59,
+          "label": "补 taxonomy 1 篇",
+          "href": "library.html?line=LLM+Serving",
+          "slugs": [
+            "2512.23424-akg-kernel-agent-multi"
+          ]
+        },
+        {
+          "type": "taxonomy_load",
+          "priority": 50,
+          "label": "审分类粒度 1 篇",
+          "href": "quality.html?line=LLM+Serving",
+          "slugs": [
+            "2512.23424-akg-kernel-agent-multi"
+          ]
+        },
+        {
+          "type": "code_observation",
+          "priority": 48,
+          "label": "补代码观察 2 篇",
+          "href": "library.html?line=LLM+Serving",
+          "slugs": [
+            "2607.00466-eldr",
+            "2512.23424-akg-kernel-agent-multi"
           ]
         }
       ]
@@ -447,21 +761,405 @@
           ]
         }
       ]
+    },
+    {
+      "id": "unassigned",
+      "line": "Unassigned",
+      "href": "library.html?line=Unassigned",
+      "library_href": "library.html?line=Unassigned",
+      "count": 2,
+      "owner": "unassigned",
+      "team": "",
+      "cadence": "",
+      "risk": "high",
+      "score": 31,
+      "first_year": 2026,
+      "latest_year": 2026,
+      "year_span": 1,
+      "role_counts": {
+        "unclassified": 2
+      },
+      "missing_roles": [
+        "foundation",
+        "baseline",
+        "main",
+        "system"
+      ],
+      "top_topics": [
+        {
+          "name": "Distributed Inference",
+          "count": 1
+        },
+        {
+          "name": "LLM Inference",
+          "count": 1
+        },
+        {
+          "name": "Speculative Decoding",
+          "count": 1
+        },
+        {
+          "name": "Systems Optimization",
+          "count": 1
+        },
+        {
+          "name": "RAG",
+          "count": 1
+        }
+      ],
+      "top_methods": [
+        {
+          "name": "asynchronous decoding",
+          "count": 1
+        },
+        {
+          "name": "cache-aware sampling",
+          "count": 1
+        },
+        {
+          "name": "fallback speculation",
+          "count": 1
+        },
+        {
+          "name": "geometric fan-out",
+          "count": 1
+        },
+        {
+          "name": "Speculative Decoding",
+          "count": 1
+        },
+        {
+          "name": "verification outcome cache",
+          "count": 1
+        }
+      ],
+      "milestones": [
+        {
+          "year": 2026,
+          "count": 1,
+          "roles": {
+            "unclassified": 1
+          },
+          "representative_slugs": [
+            "2603.03251-speculative-speculative-decoding"
+          ]
+        }
+      ],
+      "representative_papers": [
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "year": 2026,
+          "role": "unclassified",
+          "status": "read",
+          "importance": 4,
+          "has_code": true,
+          "topics": [
+            "Distributed Inference",
+            "LLM Inference",
+            "Speculative Decoding",
+            "Systems Optimization"
+          ],
+          "methods": [
+            "asynchronous decoding",
+            "cache-aware sampling",
+            "fallback speculation",
+            "geometric fan-out",
+            "Speculative Decoding",
+            "verification outcome cache"
+          ],
+          "href": "2603.03251-speculative-speculative-decoding.html"
+        },
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "Semantic Search Evaluation",
+          "year": "",
+          "role": "unclassified",
+          "status": "read",
+          "importance": "",
+          "has_code": false,
+          "topics": [
+            "RAG"
+          ],
+          "methods": [],
+          "href": "semantic-search-evaluation.md"
+        }
+      ],
+      "queues": {
+        "missing_taxonomy": [
+          "2603.03251-speculative-speculative-decoding",
+          "semantic-search-evaluation"
+        ],
+        "taxonomy_load": [
+          "2603.03251-speculative-speculative-decoding",
+          "semantic-search-evaluation"
+        ],
+        "needs_review_plan": [
+          "2603.03251-speculative-speculative-decoding",
+          "semantic-search-evaluation"
+        ],
+        "no_review": [
+          "2603.03251-speculative-speculative-decoding",
+          "semantic-search-evaluation"
+        ],
+        "no_code_observation": [
+          "semantic-search-evaluation"
+        ]
+      },
+      "actions": [
+        {
+          "type": "role_gap",
+          "priority": 73,
+          "label": "补齐角色：foundation, baseline, main, system",
+          "href": "library.html?line=Unassigned",
+          "slugs": []
+        },
+        {
+          "type": "review_plan",
+          "priority": 63,
+          "label": "补复习计划 2 篇",
+          "href": "review.html?line=Unassigned",
+          "slugs": [
+            "2603.03251-speculative-speculative-decoding",
+            "semantic-search-evaluation"
+          ]
+        },
+        {
+          "type": "metadata_gap",
+          "priority": 64,
+          "label": "补 taxonomy 2 篇",
+          "href": "library.html?line=Unassigned",
+          "slugs": [
+            "2603.03251-speculative-speculative-decoding",
+            "semantic-search-evaluation"
+          ]
+        },
+        {
+          "type": "taxonomy_load",
+          "priority": 54,
+          "label": "审分类粒度 2 篇",
+          "href": "quality.html?line=Unassigned",
+          "slugs": [
+            "2603.03251-speculative-speculative-decoding",
+            "semantic-search-evaluation"
+          ]
+        },
+        {
+          "type": "code_observation",
+          "priority": 45,
+          "label": "补代码观察 1 篇",
+          "href": "library.html?line=Unassigned",
+          "slugs": [
+            "semantic-search-evaluation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vlm-acceleration",
+      "line": "VLM Acceleration",
+      "href": "lines/vlm-acceleration.html",
+      "library_href": "library.html?line=VLM+Acceleration",
+      "count": 1,
+      "owner": "unassigned",
+      "team": "",
+      "cadence": "",
+      "risk": "medium",
+      "score": 65,
+      "first_year": 2026,
+      "latest_year": 2026,
+      "year_span": 1,
+      "role_counts": {
+        "main": 1
+      },
+      "missing_roles": [
+        "foundation",
+        "baseline",
+        "system"
+      ],
+      "top_topics": [
+        {
+          "name": "Multimodal Inference",
+          "count": 1
+        },
+        {
+          "name": "Speculative Decoding",
+          "count": 1
+        },
+        {
+          "name": "Vision-Language Models",
+          "count": 1
+        },
+        {
+          "name": "Visual Token Pruning",
+          "count": 1
+        },
+        {
+          "name": "VLM Acceleration",
+          "count": 1
+        }
+      ],
+      "top_methods": [
+        {
+          "name": "distillation",
+          "count": 1
+        },
+        {
+          "name": "FinalWipe",
+          "count": 1
+        },
+        {
+          "name": "multi-head twig",
+          "count": 1
+        },
+        {
+          "name": "pruning-oriented reinforcement learning",
+          "count": 1
+        },
+        {
+          "name": "tree-based self-speculative decoding",
+          "count": 1
+        },
+        {
+          "name": "twig-guided token pruning",
+          "count": 1
+        }
+      ],
+      "milestones": [
+        {
+          "year": 2026,
+          "count": 1,
+          "roles": {
+            "main": 1
+          },
+          "representative_slugs": [
+            "2503.14075-twigvlm-plus-plus"
+          ]
+        }
+      ],
+      "representative_papers": [
+        {
+          "slug": "2503.14075-twigvlm-plus-plus",
+          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+          "year": 2026,
+          "role": "main",
+          "status": "read",
+          "importance": 4,
+          "has_code": true,
+          "topics": [
+            "Multimodal Inference",
+            "Speculative Decoding",
+            "Vision-Language Models",
+            "Visual Token Pruning",
+            "VLM Acceleration"
+          ],
+          "methods": [
+            "distillation",
+            "FinalWipe",
+            "multi-head twig",
+            "pruning-oriented reinforcement learning",
+            "tree-based self-speculative decoding",
+            "twig-guided token pruning"
+          ],
+          "href": "2503.14075-twigvlm-plus-plus.html"
+        }
+      ],
+      "queues": {
+        "missing_taxonomy": [],
+        "taxonomy_load": [
+          "2503.14075-twigvlm-plus-plus"
+        ],
+        "needs_review_plan": [
+          "2503.14075-twigvlm-plus-plus"
+        ],
+        "no_review": [
+          "2503.14075-twigvlm-plus-plus"
+        ],
+        "no_code_observation": []
+      },
+      "actions": [
+        {
+          "type": "role_gap",
+          "priority": 38,
+          "label": "补齐角色：foundation, baseline, system",
+          "href": "library.html?line=VLM+Acceleration",
+          "slugs": []
+        },
+        {
+          "type": "review_plan",
+          "priority": 59,
+          "label": "补复习计划 1 篇",
+          "href": "review.html?line=VLM+Acceleration",
+          "slugs": [
+            "2503.14075-twigvlm-plus-plus"
+          ]
+        },
+        {
+          "type": "taxonomy_load",
+          "priority": 50,
+          "label": "审分类粒度 1 篇",
+          "href": "quality.html?line=VLM+Acceleration",
+          "slugs": [
+            "2503.14075-twigvlm-plus-plus"
+          ]
+        }
+      ]
     }
   ],
   "actions": [
     {
+      "line": "Unassigned",
+      "risk": "high",
+      "score": 31,
+      "type": "role_gap",
+      "priority": 73,
+      "label": "补齐角色：foundation, baseline, main, system",
+      "href": "library.html?line=Unassigned",
+      "slugs": []
+    },
+    {
       "line": "Parallel Decoding with Diffusion Models",
-      "risk": "medium",
-      "score": 57,
+      "risk": "high",
+      "score": 50,
       "type": "review_plan",
-      "priority": 67,
-      "label": "补复习计划 3 篇",
+      "priority": 71,
+      "label": "补复习计划 4 篇",
       "href": "review.html?line=Parallel+Decoding+with+Diffusion+Models",
       "slugs": [
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus",
-        "2602.06036-dflash"
+        "2602.06036-dflash",
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "line": "LLM Serving",
+      "risk": "high",
+      "score": 53,
+      "type": "review_plan",
+      "priority": 67,
+      "label": "补复习计划 3 篇",
+      "href": "review.html?line=LLM+Serving",
+      "slugs": [
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark",
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "line": "Unassigned",
+      "risk": "high",
+      "score": 31,
+      "type": "metadata_gap",
+      "priority": 64,
+      "label": "补 taxonomy 2 篇",
+      "href": "library.html?line=Unassigned",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding",
+        "semantic-search-evaluation"
       ]
     },
     {
@@ -478,6 +1176,66 @@
       ]
     },
     {
+      "line": "Unassigned",
+      "risk": "high",
+      "score": 31,
+      "type": "review_plan",
+      "priority": 63,
+      "label": "补复习计划 2 篇",
+      "href": "review.html?line=Unassigned",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding",
+        "semantic-search-evaluation"
+      ]
+    },
+    {
+      "line": "LLM Serving",
+      "risk": "high",
+      "score": 53,
+      "type": "metadata_gap",
+      "priority": 59,
+      "label": "补 taxonomy 1 篇",
+      "href": "library.html?line=LLM+Serving",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "line": "VLM Acceleration",
+      "risk": "medium",
+      "score": 65,
+      "type": "review_plan",
+      "priority": 59,
+      "label": "补复习计划 1 篇",
+      "href": "review.html?line=VLM+Acceleration",
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "line": "Unassigned",
+      "risk": "high",
+      "score": 31,
+      "type": "taxonomy_load",
+      "priority": 54,
+      "label": "审分类粒度 2 篇",
+      "href": "quality.html?line=Unassigned",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding",
+        "semantic-search-evaluation"
+      ]
+    },
+    {
+      "line": "Parallel Decoding with Diffusion Models",
+      "risk": "high",
+      "score": 50,
+      "type": "role_gap",
+      "priority": 53,
+      "label": "补齐角色：baseline, main, system",
+      "href": "library.html?line=Parallel+Decoding+with+Diffusion+Models",
+      "slugs": []
+    },
+    {
       "line": "Efficient Attention Kernels",
       "risk": "medium",
       "score": 70,
@@ -490,9 +1248,21 @@
       ]
     },
     {
+      "line": "LLM Serving",
+      "risk": "high",
+      "score": 53,
+      "type": "taxonomy_load",
+      "priority": 50,
+      "label": "审分类粒度 1 篇",
+      "href": "quality.html?line=LLM+Serving",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
       "line": "Parallel Decoding with Diffusion Models",
-      "risk": "medium",
-      "score": 57,
+      "risk": "high",
+      "score": 50,
       "type": "taxonomy_load",
       "priority": 50,
       "label": "审分类粒度 1 篇",
@@ -502,13 +1272,72 @@
       ]
     },
     {
-      "line": "Parallel Decoding with Diffusion Models",
+      "line": "VLM Acceleration",
       "risk": "medium",
-      "score": 57,
+      "score": 65,
+      "type": "taxonomy_load",
+      "priority": 50,
+      "label": "审分类粒度 1 篇",
+      "href": "quality.html?line=VLM+Acceleration",
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "line": "LLM Serving",
+      "risk": "high",
+      "score": 53,
       "type": "role_gap",
-      "priority": 46,
-      "label": "补齐角色：baseline, main, system",
+      "priority": 49,
+      "label": "补齐角色：foundation, baseline",
+      "href": "library.html?line=LLM+Serving",
+      "slugs": []
+    },
+    {
+      "line": "LLM Serving",
+      "risk": "high",
+      "score": 53,
+      "type": "code_observation",
+      "priority": 48,
+      "label": "补代码观察 2 篇",
+      "href": "library.html?line=LLM+Serving",
+      "slugs": [
+        "2607.00466-eldr",
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "line": "Parallel Decoding with Diffusion Models",
+      "risk": "high",
+      "score": 50,
+      "type": "code_observation",
+      "priority": 45,
+      "label": "补代码观察 1 篇",
       "href": "library.html?line=Parallel+Decoding+with+Diffusion+Models",
+      "slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "line": "Unassigned",
+      "risk": "high",
+      "score": 31,
+      "type": "code_observation",
+      "priority": 45,
+      "label": "补代码观察 1 篇",
+      "href": "library.html?line=Unassigned",
+      "slugs": [
+        "semantic-search-evaluation"
+      ]
+    },
+    {
+      "line": "VLM Acceleration",
+      "risk": "medium",
+      "score": 65,
+      "type": "role_gap",
+      "priority": 38,
+      "label": "补齐角色：foundation, baseline, system",
+      "href": "library.html?line=VLM+Acceleration",
       "slugs": []
     },
     {

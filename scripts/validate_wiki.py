@@ -264,6 +264,11 @@ def parse_args() -> argparse.Namespace:
 
 
 def strip_frontmatter(text: str) -> tuple[dict[str, Any], str]:
+    # Strip UTF-8 BOM if present
+    if text.startswith("﻿"):
+        text = text[1:]
+    # Normalize Windows line endings
+    text = text.replace("\r\n", "\n").replace("\r", "\n")
     if not text.startswith("---\n"):
         return {}, text
     end = text.find("\n---", 4)

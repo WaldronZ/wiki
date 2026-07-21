@@ -75,7 +75,7 @@ line_role: system
 status: read
 reading_stage: skimmed
 review_stage: fresh
-next_review: 2026-06-30
+next_review: 2027-06-30
 importance: 4
 confidence: 5
 reproducibility: 4

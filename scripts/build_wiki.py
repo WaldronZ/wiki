@@ -1388,6 +1388,32 @@ def percent(part: int | float, total: int | float) -> str:
     return f"{round(float(part) * 100 / float(total))}%"
 
 
+def numeric_score(value: Any, *, default: int = 0) -> int:
+    if value in {None, ""}:
+        return default
+    if isinstance(value, bool):
+        return int(value)
+    if isinstance(value, (int, float)):
+        return int(value)
+    text = str(value).strip()
+    if not text:
+        return default
+    match = re.search(r"-?\d+", text)
+    if not match:
+        return default
+    return int(match.group(0))
+
+
+def normalized_status(value: Any) -> str:
+    text = str(value or "").strip()
+    if not text:
+        return "read"
+    # Use the global STATUS_VALUES (loaded from taxonomy config) if available;
+    # fall back to the hardcoded set when called before load_taxonomy_config.
+    allowed = STATUS_VALUES if STATUS_VALUES else {"queued", "unread", "reading", "read", "triaged", "archived"}
+    return text if text in allowed else text
+
+
 def format_bytes(size: int | float) -> str:
     value = float(size or 0)
     units = ["B", "KB", "MB", "GB"]
@@ -1408,6 +1434,12 @@ def build_paper(md_path: Path, report_dir: Path) -> dict[str, Any]:
     arxiv_id = infer_arxiv_id(slug, body, meta)
     html_path = md_path.with_suffix(".html")
     stat = md_path.stat()
+    code_url = infer_url(body, arxiv_id, meta, "code_url")
+    has_code = (
+        bool(meta["has_code"])
+        if "has_code" in meta
+        else bool(code_url) or "## 10. 代码实现观察" in body or "代码仓库" in body
+    )
 
     paper = {
         "slug": slug,
@@ -1418,7 +1450,7 @@ def build_paper(md_path: Path, report_dir: Path) -> dict[str, Any]:
         "year": infer_year(arxiv_id, body, meta),
         "arxiv_id": arxiv_id,
         "arxiv_url": infer_url(body, arxiv_id, meta, "arxiv_url"),
-        "code_url": infer_url(body, arxiv_id, meta, "code_url"),
+        "code_url": code_url,
         "domains": infer_list_field(meta, "domains"),
         "tracks": infer_list_field(meta, "tracks"),
         "problems": infer_list_field(meta, "problems"),
@@ -1426,15 +1458,15 @@ def build_paper(md_path: Path, report_dir: Path) -> dict[str, Any]:
         "methods": infer_methods(meta),
         "research_line": infer_research_line(meta),
         "line_role": str(meta.get("line_role") or "").strip(),
-        "status": str(meta.get("status") or "read"),
+        "status": normalized_status(meta.get("status") or "read"),
         "reading_stage": str(meta.get("reading_stage") or "").strip(),
         "review_stage": str(meta.get("review_stage") or "").strip(),
         "last_reviewed": str(meta.get("last_reviewed") or "").strip(),
         "next_review": str(meta.get("next_review") or "").strip(),
-        "importance": meta.get("importance"),
-        "confidence": meta.get("confidence"),
-        "reproducibility": meta.get("reproducibility"),
-        "has_code": bool(meta.get("has_code")) or "## 10. 代码实现观察" in body or "代码仓库" in body,
+        "importance": numeric_score(meta.get("importance")),
+        "confidence": numeric_score(meta.get("confidence")),
+        "reproducibility": numeric_score(meta.get("reproducibility")),
+        "has_code": has_code,
         "md_path": md_path.relative_to(report_dir).as_posix(),
         "html_path": html_path.relative_to(report_dir).as_posix() if html_path.exists() else "",
         "excerpt": infer_excerpt(body, meta),

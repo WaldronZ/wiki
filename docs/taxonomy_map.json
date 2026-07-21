@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-06-15T14:49:54",
-  "count": 5,
+  "generated_at": "2026-07-21T14:06:34",
+  "count": 12,
   "field_order": [
     {
       "key": "research_line",
@@ -69,14 +69,54 @@
       "field": "domain",
       "label": "Domain",
       "value": "LLM Systems",
-      "count": 5,
+      "count": 9,
       "href": "library.html?domain=LLM+Systems",
       "sample_slugs": [
         "2307.08691-flashattention-2",
         "2501.01005-flashinfer",
+        "2503.14075-twigvlm-plus-plus",
+        "2507.11851-llm-future-mtp",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
+        "2605.12825-orthrus",
+        "2607.00466-eldr"
+      ]
+    },
+    {
+      "id": "domain:Unassigned",
+      "field": "domain",
+      "label": "Domain",
+      "value": "Unassigned",
+      "count": 3,
+      "href": "library.html",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi",
+        "2603.03251-speculative-speculative-decoding",
+        "semantic-search-evaluation"
+      ]
+    },
+    {
+      "id": "domain:Multimodal Systems",
+      "field": "domain",
+      "label": "Domain",
+      "value": "Multimodal Systems",
+      "count": 1,
+      "href": "library.html?domain=Multimodal+Systems",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "id": "method:Speculative Decoding",
+      "field": "method",
+      "label": "Method",
+      "value": "Speculative Decoding",
+      "count": 3,
+      "href": "library.html?method=Speculative+Decoding",
+      "sample_slugs": [
+        "2602.06036-dflash",
+        "2603.03251-speculative-speculative-decoding",
+        "noarxiv-2026-dspark"
       ]
     },
     {
@@ -89,6 +129,40 @@
       "sample_slugs": [
         "2307.08691-flashattention-2",
         "2501.01005-flashinfer"
+      ]
+    },
+    {
+      "id": "method:gated LoRA",
+      "field": "method",
+      "label": "Method",
+      "value": "gated LoRA",
+      "count": 2,
+      "href": "library.html?method=gated+LoRA",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp",
+        "2604.11035-introspective-dlm"
+      ]
+    },
+    {
+      "id": "method:asynchronous decoding",
+      "field": "method",
+      "label": "Method",
+      "value": "asynchronous decoding",
+      "count": 1,
+      "href": "library.html?method=asynchronous+decoding",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "id": "method:Balanced K-means",
+      "field": "method",
+      "label": "Method",
+      "value": "Balanced K-means",
+      "count": 1,
+      "href": "library.html?method=Balanced+K-means",
+      "sample_slugs": [
+        "2607.00466-eldr"
       ]
     },
     {
@@ -114,6 +188,17 @@
       ]
     },
     {
+      "id": "method:cache-aware sampling",
+      "field": "method",
+      "label": "Method",
+      "value": "cache-aware sampling",
+      "count": 1,
+      "href": "library.html?method=cache-aware+sampling",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
       "id": "method:composable KV-cache format",
       "field": "method",
       "label": "Method",
@@ -122,6 +207,17 @@
       "href": "library.html?method=composable+KV-cache+format",
       "sample_slugs": [
         "2501.01005-flashinfer"
+      ]
+    },
+    {
+      "id": "method:confidence-scheduled verification",
+      "field": "method",
+      "label": "Method",
+      "value": "confidence-scheduled verification",
+      "count": 1,
+      "href": "library.html?method=confidence-scheduled+verification",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
       ]
     },
     {
@@ -147,6 +243,28 @@
       ]
     },
     {
+      "id": "method:distillation",
+      "field": "method",
+      "label": "Method",
+      "value": "distillation",
+      "count": 1,
+      "href": "library.html?method=distillation",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "id": "method:Document-Driven Integration",
+      "field": "method",
+      "label": "Method",
+      "value": "Document-Driven Integration",
+      "count": 1,
+      "href": "library.html?method=Document-Driven+Integration",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
       "id": "method:dual-view attention",
       "field": "method",
       "label": "Method",
@@ -155,6 +273,39 @@
       "href": "library.html?method=dual-view+attention",
       "sample_slugs": [
         "2605.12825-orthrus"
+      ]
+    },
+    {
+      "id": "method:Expert Locality Routing",
+      "field": "method",
+      "label": "Method",
+      "value": "Expert Locality Routing",
+      "count": 1,
+      "href": "library.html?method=Expert+Locality+Routing",
+      "sample_slugs": [
+        "2607.00466-eldr"
+      ]
+    },
+    {
+      "id": "method:fallback speculation",
+      "field": "method",
+      "label": "Method",
+      "value": "fallback speculation",
+      "count": 1,
+      "href": "library.html?method=fallback+speculation",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "id": "method:FinalWipe",
+      "field": "method",
+      "label": "Method",
+      "value": "FinalWipe",
+      "count": 1,
+      "href": "library.html?method=FinalWipe",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
       ]
     },
     {
@@ -169,14 +320,36 @@
       ]
     },
     {
-      "id": "method:gated LoRA",
+      "id": "method:geometric fan-out",
       "field": "method",
       "label": "Method",
-      "value": "gated LoRA",
+      "value": "geometric fan-out",
       "count": 1,
-      "href": "library.html?method=gated+LoRA",
+      "href": "library.html?method=geometric+fan-out",
       "sample_slugs": [
-        "2604.11035-introspective-dlm"
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "id": "method:hardware-aware scheduling",
+      "field": "method",
+      "label": "Method",
+      "value": "hardware-aware scheduling",
+      "count": 1,
+      "href": "library.html?method=hardware-aware+scheduling",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "id": "method:Hierarchical Code Retrieval",
+      "field": "method",
+      "label": "Method",
+      "value": "Hierarchical Code Retrieval",
+      "count": 1,
+      "href": "library.html?method=Hierarchical+Code+Retrieval",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
       ]
     },
     {
@@ -213,6 +386,17 @@
       ]
     },
     {
+      "id": "method:Iterative Search-Based Optimization",
+      "field": "method",
+      "label": "Method",
+      "value": "Iterative Search-Based Optimization",
+      "count": 1,
+      "href": "library.html?method=Iterative+Search-Based+Optimization",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
       "id": "method:JIT compilation",
       "field": "method",
       "label": "Method",
@@ -232,6 +416,17 @@
       "href": "library.html?method=KV+injection",
       "sample_slugs": [
         "2602.06036-dflash"
+      ]
+    },
+    {
+      "id": "method:latent consistency matching",
+      "field": "method",
+      "label": "Method",
+      "value": "latent consistency matching",
+      "count": 1,
+      "href": "library.html?method=latent+consistency+matching",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
       ]
     },
     {
@@ -257,6 +452,17 @@
       ]
     },
     {
+      "id": "method:Markov head",
+      "field": "method",
+      "label": "Method",
+      "value": "Markov head",
+      "count": 1,
+      "href": "library.html?method=Markov+head",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
       "id": "method:masked diffusion",
       "field": "method",
       "label": "Method",
@@ -265,6 +471,39 @@
       "href": "library.html?method=masked+diffusion",
       "sample_slugs": [
         "2605.12825-orthrus"
+      ]
+    },
+    {
+      "id": "method:masked-input formulation",
+      "field": "method",
+      "label": "Method",
+      "value": "masked-input formulation",
+      "count": 1,
+      "href": "library.html?method=masked-input+formulation",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "id": "method:Multi-Agent Workflow",
+      "field": "method",
+      "label": "Method",
+      "value": "Multi-Agent Workflow",
+      "count": 1,
+      "href": "library.html?method=Multi-Agent+Workflow",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "id": "method:multi-head twig",
+      "field": "method",
+      "label": "Method",
+      "value": "multi-head twig",
+      "count": 1,
+      "href": "library.html?method=multi-head+twig",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
       ]
     },
     {
@@ -301,6 +540,50 @@
       ]
     },
     {
+      "id": "method:pruning-oriented reinforcement learning",
+      "field": "method",
+      "label": "Method",
+      "value": "pruning-oriented reinforcement learning",
+      "count": 1,
+      "href": "library.html?method=pruning-oriented+reinforcement+learning",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "id": "method:quadratic speculative decoding",
+      "field": "method",
+      "label": "Method",
+      "value": "quadratic speculative decoding",
+      "count": 1,
+      "href": "library.html?method=quadratic+speculative+decoding",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "id": "method:sampler head",
+      "field": "method",
+      "label": "Method",
+      "value": "sampler head",
+      "count": 1,
+      "href": "library.html?method=sampler+head",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "id": "method:semi-autoregressive generation",
+      "field": "method",
+      "label": "Method",
+      "value": "semi-autoregressive generation",
+      "count": 1,
+      "href": "library.html?method=semi-autoregressive+generation",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
       "id": "method:SGLang serving",
       "field": "method",
       "label": "Method",
@@ -323,14 +606,14 @@
       ]
     },
     {
-      "id": "method:Speculative Decoding",
+      "id": "method:Signature Cache",
       "field": "method",
       "label": "Method",
-      "value": "Speculative Decoding",
+      "value": "Signature Cache",
       "count": 1,
-      "href": "library.html?method=Speculative+Decoding",
+      "href": "library.html?method=Signature+Cache",
       "sample_slugs": [
-        "2602.06036-dflash"
+        "2607.00466-eldr"
       ]
     },
     {
@@ -356,6 +639,72 @@
       ]
     },
     {
+      "id": "method:tree-based self-speculative decoding",
+      "field": "method",
+      "label": "Method",
+      "value": "tree-based self-speculative decoding",
+      "count": 1,
+      "href": "library.html?method=tree-based+self-speculative+decoding",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "id": "method:twig-guided token pruning",
+      "field": "method",
+      "label": "Method",
+      "value": "twig-guided token pruning",
+      "count": 1,
+      "href": "library.html?method=twig-guided+token+pruning",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "id": "method:Unassigned",
+      "field": "method",
+      "label": "Method",
+      "value": "Unassigned",
+      "count": 1,
+      "href": "library.html",
+      "sample_slugs": [
+        "semantic-search-evaluation"
+      ]
+    },
+    {
+      "id": "method:Unified Sketch",
+      "field": "method",
+      "label": "Method",
+      "value": "Unified Sketch",
+      "count": 1,
+      "href": "library.html?method=Unified+Sketch",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "id": "method:Verification and Profiling Loop",
+      "field": "method",
+      "label": "Method",
+      "value": "Verification and Profiling Loop",
+      "count": 1,
+      "href": "library.html?method=Verification+and+Profiling+Loop",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "id": "method:verification outcome cache",
+      "field": "method",
+      "label": "Method",
+      "value": "verification outcome cache",
+      "count": 1,
+      "href": "library.html?method=verification+outcome+cache",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
       "id": "method:work partitioning",
       "field": "method",
       "label": "Method",
@@ -364,6 +713,32 @@
       "href": "library.html?method=work+partitioning",
       "sample_slugs": [
         "2307.08691-flashattention-2"
+      ]
+    },
+    {
+      "id": "problem:Lossless Speculative Decoding",
+      "field": "problem",
+      "label": "Problem",
+      "value": "Lossless Speculative Decoding",
+      "count": 3,
+      "href": "library.html?problem=Lossless+Speculative+Decoding",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp",
+        "2602.06036-dflash",
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "id": "problem:Unassigned",
+      "field": "problem",
+      "label": "Problem",
+      "value": "Unassigned",
+      "count": 3,
+      "href": "library.html",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi",
+        "2603.03251-speculative-speculative-decoding",
+        "semantic-search-evaluation"
       ]
     },
     {
@@ -389,14 +764,36 @@
       ]
     },
     {
-      "id": "problem:Lossless Speculative Decoding",
+      "id": "problem:Efficient VLM Inference",
       "field": "problem",
       "label": "Problem",
-      "value": "Lossless Speculative Decoding",
+      "value": "Efficient VLM Inference",
       "count": 1,
-      "href": "library.html?problem=Lossless+Speculative+Decoding",
+      "href": "library.html?problem=Efficient+VLM+Inference",
       "sample_slugs": [
-        "2602.06036-dflash"
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "id": "problem:Load-Aware Serving",
+      "field": "problem",
+      "label": "Problem",
+      "value": "Load-Aware Serving",
+      "count": 1,
+      "href": "library.html?problem=Load-Aware+Serving",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "id": "problem:Long-Response Decoding",
+      "field": "problem",
+      "label": "Problem",
+      "value": "Long-Response Decoding",
+      "count": 1,
+      "href": "library.html?problem=Long-Response+Decoding",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
       ]
     },
     {
@@ -411,6 +808,17 @@
       ]
     },
     {
+      "id": "problem:MoE Serving",
+      "field": "problem",
+      "label": "Problem",
+      "value": "MoE Serving",
+      "count": 1,
+      "href": "library.html?problem=MoE+Serving",
+      "sample_slugs": [
+        "2607.00466-eldr"
+      ]
+    },
+    {
       "id": "problem:Parallel Diffusion Decoding",
       "field": "problem",
       "label": "Problem",
@@ -422,16 +830,41 @@
       ]
     },
     {
+      "id": "problem:Visual Token Redundancy",
+      "field": "problem",
+      "label": "Problem",
+      "value": "Visual Token Redundancy",
+      "count": 1,
+      "href": "library.html?problem=Visual+Token+Redundancy",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
       "id": "research_line:Parallel Decoding with Diffusion Models",
       "field": "research_line",
       "label": "Research line",
       "value": "Parallel Decoding with Diffusion Models",
-      "count": 3,
+      "count": 4,
       "href": "library.html?line=Parallel+Decoding+with+Diffusion+Models",
       "sample_slugs": [
+        "2507.11851-llm-future-mtp",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus"
+      ]
+    },
+    {
+      "id": "research_line:LLM Serving",
+      "field": "research_line",
+      "label": "Research line",
+      "value": "LLM Serving",
+      "count": 3,
+      "href": "library.html?line=LLM+Serving",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi",
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark"
       ]
     },
     {
@@ -447,29 +880,26 @@
       ]
     },
     {
-      "id": "topic:Diffusion Language Models",
-      "field": "topic",
-      "label": "Topic",
-      "value": "Diffusion Language Models",
-      "count": 3,
-      "href": "library.html?topic=Diffusion+Language+Models",
+      "id": "research_line:Unassigned",
+      "field": "research_line",
+      "label": "Research line",
+      "value": "Unassigned",
+      "count": 2,
+      "href": "library.html",
       "sample_slugs": [
-        "2602.06036-dflash",
-        "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
+        "2603.03251-speculative-speculative-decoding",
+        "semantic-search-evaluation"
       ]
     },
     {
-      "id": "topic:LLM Serving",
-      "field": "topic",
-      "label": "Topic",
-      "value": "LLM Serving",
-      "count": 3,
-      "href": "library.html?topic=LLM+Serving",
+      "id": "research_line:VLM Acceleration",
+      "field": "research_line",
+      "label": "Research line",
+      "value": "VLM Acceleration",
+      "count": 1,
+      "href": "library.html?line=VLM+Acceleration",
       "sample_slugs": [
-        "2501.01005-flashinfer",
-        "2602.06036-dflash",
-        "2604.11035-introspective-dlm"
+        "2503.14075-twigvlm-plus-plus"
       ]
     },
     {
@@ -477,8 +907,54 @@
       "field": "topic",
       "label": "Topic",
       "value": "Speculative Decoding",
-      "count": 3,
+      "count": 7,
       "href": "library.html?topic=Speculative+Decoding",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus",
+        "2507.11851-llm-future-mtp",
+        "2602.06036-dflash",
+        "2603.03251-speculative-speculative-decoding",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus",
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "id": "topic:LLM Serving",
+      "field": "topic",
+      "label": "Topic",
+      "value": "LLM Serving",
+      "count": 5,
+      "href": "library.html?topic=LLM+Serving",
+      "sample_slugs": [
+        "2501.01005-flashinfer",
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "id": "topic:LLM Inference",
+      "field": "topic",
+      "label": "Topic",
+      "value": "LLM Inference",
+      "count": 4,
+      "href": "library.html?topic=LLM+Inference",
+      "sample_slugs": [
+        "2602.06036-dflash",
+        "2603.03251-speculative-speculative-decoding",
+        "2605.12825-orthrus",
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "id": "topic:Diffusion Language Models",
+      "field": "topic",
+      "label": "Topic",
+      "value": "Diffusion Language Models",
+      "count": 3,
+      "href": "library.html?topic=Diffusion+Language+Models",
       "sample_slugs": [
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
@@ -498,15 +974,15 @@
       ]
     },
     {
-      "id": "topic:LLM Inference",
+      "id": "topic:LLM",
       "field": "topic",
       "label": "Topic",
-      "value": "LLM Inference",
+      "value": "LLM",
       "count": 2,
-      "href": "library.html?topic=LLM+Inference",
+      "href": "library.html?topic=LLM",
       "sample_slugs": [
-        "2602.06036-dflash",
-        "2605.12825-orthrus"
+        "2507.11851-llm-future-mtp",
+        "2604.11035-introspective-dlm"
       ]
     },
     {
@@ -533,6 +1009,39 @@
       ]
     },
     {
+      "id": "topic:Compiler/DSL",
+      "field": "topic",
+      "label": "Topic",
+      "value": "Compiler/DSL",
+      "count": 1,
+      "href": "library.html?topic=Compiler%2FDSL",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "id": "topic:Disaggregated Serving",
+      "field": "topic",
+      "label": "Topic",
+      "value": "Disaggregated Serving",
+      "count": 1,
+      "href": "library.html?topic=Disaggregated+Serving",
+      "sample_slugs": [
+        "2607.00466-eldr"
+      ]
+    },
+    {
+      "id": "topic:Distributed Inference",
+      "field": "topic",
+      "label": "Topic",
+      "value": "Distributed Inference",
+      "count": 1,
+      "href": "library.html?topic=Distributed+Inference",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
       "id": "topic:Efficient Attention",
       "field": "topic",
       "label": "Topic",
@@ -541,6 +1050,17 @@
       "href": "library.html?topic=Efficient+Attention",
       "sample_slugs": [
         "2307.08691-flashattention-2"
+      ]
+    },
+    {
+      "id": "topic:Efficient Inference",
+      "field": "topic",
+      "label": "Topic",
+      "value": "Efficient Inference",
+      "count": 1,
+      "href": "library.html?topic=Efficient+Inference",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
       ]
     },
     {
@@ -566,6 +1086,17 @@
       ]
     },
     {
+      "id": "topic:Hardware Acceleration",
+      "field": "topic",
+      "label": "Topic",
+      "value": "Hardware Acceleration",
+      "count": 1,
+      "href": "library.html?topic=Hardware+Acceleration",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
       "id": "topic:Inference Optimization",
       "field": "topic",
       "label": "Topic",
@@ -577,14 +1108,36 @@
       ]
     },
     {
-      "id": "topic:LLM",
+      "id": "topic:Kernel Generation",
       "field": "topic",
       "label": "Topic",
-      "value": "LLM",
+      "value": "Kernel Generation",
       "count": 1,
-      "href": "library.html?topic=LLM",
+      "href": "library.html?topic=Kernel+Generation",
       "sample_slugs": [
-        "2604.11035-introspective-dlm"
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "id": "topic:LLM Code Generation",
+      "field": "topic",
+      "label": "Topic",
+      "value": "LLM Code Generation",
+      "count": 1,
+      "href": "library.html?topic=LLM+Code+Generation",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "id": "topic:Load Balancing",
+      "field": "topic",
+      "label": "Topic",
+      "value": "Load Balancing",
+      "count": 1,
+      "href": "library.html?topic=Load+Balancing",
+      "sample_slugs": [
+        "2607.00466-eldr"
       ]
     },
     {
@@ -599,6 +1152,94 @@
       ]
     },
     {
+      "id": "topic:MoE",
+      "field": "topic",
+      "label": "Topic",
+      "value": "MoE",
+      "count": 1,
+      "href": "library.html?topic=MoE",
+      "sample_slugs": [
+        "2607.00466-eldr"
+      ]
+    },
+    {
+      "id": "topic:Multi-Agent Systems",
+      "field": "topic",
+      "label": "Topic",
+      "value": "Multi-Agent Systems",
+      "count": 1,
+      "href": "library.html?topic=Multi-Agent+Systems",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "id": "topic:Multi-Token Prediction",
+      "field": "topic",
+      "label": "Topic",
+      "value": "Multi-Token Prediction",
+      "count": 1,
+      "href": "library.html?topic=Multi-Token+Prediction",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "id": "topic:Multimodal Inference",
+      "field": "topic",
+      "label": "Topic",
+      "value": "Multimodal Inference",
+      "count": 1,
+      "href": "library.html?topic=Multimodal+Inference",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "id": "topic:Non-Autoregressive Generation",
+      "field": "topic",
+      "label": "Topic",
+      "value": "Non-Autoregressive Generation",
+      "count": 1,
+      "href": "library.html?topic=Non-Autoregressive+Generation",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "id": "topic:RAG",
+      "field": "topic",
+      "label": "Topic",
+      "value": "RAG",
+      "count": 1,
+      "href": "library.html?topic=RAG",
+      "sample_slugs": [
+        "semantic-search-evaluation"
+      ]
+    },
+    {
+      "id": "topic:Semi-Autoregressive Generation",
+      "field": "topic",
+      "label": "Topic",
+      "value": "Semi-Autoregressive Generation",
+      "count": 1,
+      "href": "library.html?topic=Semi-Autoregressive+Generation",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "id": "topic:Systems Optimization",
+      "field": "topic",
+      "label": "Topic",
+      "value": "Systems Optimization",
+      "count": 1,
+      "href": "library.html?topic=Systems+Optimization",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
       "id": "topic:Transformer",
       "field": "topic",
       "label": "Topic",
@@ -610,16 +1251,53 @@
       ]
     },
     {
+      "id": "topic:Vision-Language Models",
+      "field": "topic",
+      "label": "Topic",
+      "value": "Vision-Language Models",
+      "count": 1,
+      "href": "library.html?topic=Vision-Language+Models",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "id": "topic:Visual Token Pruning",
+      "field": "topic",
+      "label": "Topic",
+      "value": "Visual Token Pruning",
+      "count": 1,
+      "href": "library.html?topic=Visual+Token+Pruning",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "id": "topic:VLM Acceleration",
+      "field": "topic",
+      "label": "Topic",
+      "value": "VLM Acceleration",
+      "count": 1,
+      "href": "library.html?topic=VLM+Acceleration",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
       "id": "track:Inference Acceleration",
       "field": "track",
       "label": "Track",
       "value": "Inference Acceleration",
-      "count": 3,
+      "count": 7,
       "href": "library.html?track=Inference+Acceleration",
       "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus",
+        "2507.11851-llm-future-mtp",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
+        "2605.12825-orthrus",
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark"
       ]
     },
     {
@@ -627,12 +1305,27 @@
       "field": "track",
       "label": "Track",
       "value": "Parallel Decoding",
-      "count": 3,
+      "count": 5,
       "href": "library.html?track=Parallel+Decoding",
       "sample_slugs": [
+        "2507.11851-llm-future-mtp",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
+        "2605.12825-orthrus",
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "id": "track:Unassigned",
+      "field": "track",
+      "label": "Track",
+      "value": "Unassigned",
+      "count": 3,
+      "href": "library.html",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi",
+        "2603.03251-speculative-speculative-decoding",
+        "semantic-search-evaluation"
       ]
     },
     {
@@ -657,6 +1350,17 @@
       "sample_slugs": [
         "2501.01005-flashinfer"
       ]
+    },
+    {
+      "id": "track:VLM Acceleration",
+      "field": "track",
+      "label": "Track",
+      "value": "VLM Acceleration",
+      "count": 1,
+      "href": "library.html?track=VLM+Acceleration",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
     }
   ],
   "edges": [
@@ -667,12 +1371,16 @@
       "source_value": "LLM Systems",
       "target_field": "track",
       "target_value": "Inference Acceleration",
-      "count": 3,
+      "count": 7,
       "href": "library.html?domain=LLM+Systems&track=Inference+Acceleration",
       "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus",
+        "2507.11851-llm-future-mtp",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
+        "2605.12825-orthrus",
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark"
       ]
     },
     {
@@ -682,12 +1390,14 @@
       "source_value": "LLM Systems",
       "target_field": "track",
       "target_value": "Parallel Decoding",
-      "count": 3,
+      "count": 5,
       "href": "library.html?domain=LLM+Systems&track=Parallel+Decoding",
       "sample_slugs": [
+        "2507.11851-llm-future-mtp",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
+        "2605.12825-orthrus",
+        "noarxiv-2026-dspark"
       ]
     },
     {
@@ -697,9 +1407,10 @@
       "source_value": "Parallel Decoding with Diffusion Models",
       "target_field": "domain",
       "target_value": "LLM Systems",
-      "count": 3,
+      "count": 4,
       "href": "library.html?line=Parallel+Decoding+with+Diffusion+Models&domain=LLM+Systems",
       "sample_slugs": [
+        "2507.11851-llm-future-mtp",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus"
@@ -712,9 +1423,10 @@
       "source_value": "Parallel Decoding with Diffusion Models",
       "target_field": "track",
       "target_value": "Inference Acceleration",
-      "count": 3,
+      "count": 4,
       "href": "library.html?line=Parallel+Decoding+with+Diffusion+Models&track=Inference+Acceleration",
       "sample_slugs": [
+        "2507.11851-llm-future-mtp",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus"
@@ -727,12 +1439,88 @@
       "source_value": "Parallel Decoding with Diffusion Models",
       "target_field": "track",
       "target_value": "Parallel Decoding",
-      "count": 3,
+      "count": 4,
       "href": "library.html?line=Parallel+Decoding+with+Diffusion+Models&track=Parallel+Decoding",
       "sample_slugs": [
+        "2507.11851-llm-future-mtp",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus"
+      ]
+    },
+    {
+      "source": "problem:Lossless Speculative Decoding",
+      "target": "topic:Speculative Decoding",
+      "source_field": "problem",
+      "source_value": "Lossless Speculative Decoding",
+      "target_field": "topic",
+      "target_value": "Speculative Decoding",
+      "count": 3,
+      "href": "library.html?problem=Lossless+Speculative+Decoding&topic=Speculative+Decoding",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp",
+        "2602.06036-dflash",
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "topic:LLM Inference",
+      "target": "method:Speculative Decoding",
+      "source_field": "topic",
+      "source_value": "LLM Inference",
+      "target_field": "method",
+      "target_value": "Speculative Decoding",
+      "count": 3,
+      "href": "library.html?topic=LLM+Inference&method=Speculative+Decoding",
+      "sample_slugs": [
+        "2602.06036-dflash",
+        "2603.03251-speculative-speculative-decoding",
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "topic:Speculative Decoding",
+      "target": "method:Speculative Decoding",
+      "source_field": "topic",
+      "source_value": "Speculative Decoding",
+      "target_field": "method",
+      "target_value": "Speculative Decoding",
+      "count": 3,
+      "href": "library.html?topic=Speculative+Decoding&method=Speculative+Decoding",
+      "sample_slugs": [
+        "2602.06036-dflash",
+        "2603.03251-speculative-speculative-decoding",
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "track:Inference Acceleration",
+      "target": "problem:Lossless Speculative Decoding",
+      "source_field": "track",
+      "source_value": "Inference Acceleration",
+      "target_field": "problem",
+      "target_value": "Lossless Speculative Decoding",
+      "count": 3,
+      "href": "library.html?track=Inference+Acceleration&problem=Lossless+Speculative+Decoding",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp",
+        "2602.06036-dflash",
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "track:Parallel Decoding",
+      "target": "problem:Lossless Speculative Decoding",
+      "source_field": "track",
+      "source_value": "Parallel Decoding",
+      "target_field": "problem",
+      "target_value": "Lossless Speculative Decoding",
+      "count": 3,
+      "href": "library.html?track=Parallel+Decoding&problem=Lossless+Speculative+Decoding",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp",
+        "2602.06036-dflash",
+        "noarxiv-2026-dspark"
       ]
     },
     {
@@ -750,6 +1538,48 @@
       ]
     },
     {
+      "source": "problem:Lossless Speculative Decoding",
+      "target": "method:Speculative Decoding",
+      "source_field": "problem",
+      "source_value": "Lossless Speculative Decoding",
+      "target_field": "method",
+      "target_value": "Speculative Decoding",
+      "count": 2,
+      "href": "library.html?problem=Lossless+Speculative+Decoding&method=Speculative+Decoding",
+      "sample_slugs": [
+        "2602.06036-dflash",
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "problem:Lossless Speculative Decoding",
+      "target": "topic:LLM Inference",
+      "source_field": "problem",
+      "source_value": "Lossless Speculative Decoding",
+      "target_field": "topic",
+      "target_value": "LLM Inference",
+      "count": 2,
+      "href": "library.html?problem=Lossless+Speculative+Decoding&topic=LLM+Inference",
+      "sample_slugs": [
+        "2602.06036-dflash",
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "problem:Lossless Speculative Decoding",
+      "target": "topic:LLM Serving",
+      "source_field": "problem",
+      "source_value": "Lossless Speculative Decoding",
+      "target_field": "topic",
+      "target_value": "LLM Serving",
+      "count": 2,
+      "href": "library.html?problem=Lossless+Speculative+Decoding&topic=LLM+Serving",
+      "sample_slugs": [
+        "2602.06036-dflash",
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
       "source": "research_line:Efficient Attention Kernels",
       "target": "domain:LLM Systems",
       "source_field": "research_line",
@@ -761,6 +1591,20 @@
       "sample_slugs": [
         "2307.08691-flashattention-2",
         "2501.01005-flashinfer"
+      ]
+    },
+    {
+      "source": "research_line:LLM Serving",
+      "target": "domain:LLM Systems",
+      "source_field": "research_line",
+      "source_value": "LLM Serving",
+      "target_field": "domain",
+      "target_value": "LLM Systems",
+      "count": 2,
+      "href": "library.html?line=LLM+Serving&domain=LLM+Systems",
+      "sample_slugs": [
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark"
       ]
     },
     {
@@ -778,6 +1622,62 @@
       ]
     },
     {
+      "source": "research_line:LLM Serving",
+      "target": "track:Inference Acceleration",
+      "source_field": "research_line",
+      "source_value": "LLM Serving",
+      "target_field": "track",
+      "target_value": "Inference Acceleration",
+      "count": 2,
+      "href": "library.html?line=LLM+Serving&track=Inference+Acceleration",
+      "sample_slugs": [
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "topic:LLM",
+      "target": "method:gated LoRA",
+      "source_field": "topic",
+      "source_value": "LLM",
+      "target_field": "method",
+      "target_value": "gated LoRA",
+      "count": 2,
+      "href": "library.html?topic=LLM&method=gated+LoRA",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp",
+        "2604.11035-introspective-dlm"
+      ]
+    },
+    {
+      "source": "topic:LLM Serving",
+      "target": "method:Speculative Decoding",
+      "source_field": "topic",
+      "source_value": "LLM Serving",
+      "target_field": "method",
+      "target_value": "Speculative Decoding",
+      "count": 2,
+      "href": "library.html?topic=LLM+Serving&method=Speculative+Decoding",
+      "sample_slugs": [
+        "2602.06036-dflash",
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "topic:Speculative Decoding",
+      "target": "method:gated LoRA",
+      "source_field": "topic",
+      "source_value": "Speculative Decoding",
+      "target_field": "method",
+      "target_value": "gated LoRA",
+      "count": 2,
+      "href": "library.html?topic=Speculative+Decoding&method=gated+LoRA",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp",
+        "2604.11035-introspective-dlm"
+      ]
+    },
+    {
       "source": "domain:LLM Systems",
       "target": "track:Inference Serving Systems",
       "source_field": "domain",
@@ -788,6 +1688,45 @@
       "href": "library.html?domain=LLM+Systems&track=Inference+Serving+Systems",
       "sample_slugs": [
         "2501.01005-flashinfer"
+      ]
+    },
+    {
+      "source": "domain:LLM Systems",
+      "target": "track:VLM Acceleration",
+      "source_field": "domain",
+      "source_value": "LLM Systems",
+      "target_field": "track",
+      "target_value": "VLM Acceleration",
+      "count": 1,
+      "href": "library.html?domain=LLM+Systems&track=VLM+Acceleration",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "domain:Multimodal Systems",
+      "target": "track:Inference Acceleration",
+      "source_field": "domain",
+      "source_value": "Multimodal Systems",
+      "target_field": "track",
+      "target_value": "Inference Acceleration",
+      "count": 1,
+      "href": "library.html?domain=Multimodal+Systems&track=Inference+Acceleration",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "domain:Multimodal Systems",
+      "target": "track:VLM Acceleration",
+      "source_field": "domain",
+      "source_value": "Multimodal Systems",
+      "target_field": "track",
+      "target_value": "VLM Acceleration",
+      "count": 1,
+      "href": "library.html?domain=Multimodal+Systems&track=VLM+Acceleration",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
       ]
     },
     {
@@ -934,6 +1873,227 @@
       ]
     },
     {
+      "source": "problem:Efficient VLM Inference",
+      "target": "method:distillation",
+      "source_field": "problem",
+      "source_value": "Efficient VLM Inference",
+      "target_field": "method",
+      "target_value": "distillation",
+      "count": 1,
+      "href": "library.html?problem=Efficient+VLM+Inference&method=distillation",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Efficient VLM Inference",
+      "target": "method:FinalWipe",
+      "source_field": "problem",
+      "source_value": "Efficient VLM Inference",
+      "target_field": "method",
+      "target_value": "FinalWipe",
+      "count": 1,
+      "href": "library.html?problem=Efficient+VLM+Inference&method=FinalWipe",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Efficient VLM Inference",
+      "target": "method:multi-head twig",
+      "source_field": "problem",
+      "source_value": "Efficient VLM Inference",
+      "target_field": "method",
+      "target_value": "multi-head twig",
+      "count": 1,
+      "href": "library.html?problem=Efficient+VLM+Inference&method=multi-head+twig",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Efficient VLM Inference",
+      "target": "method:pruning-oriented reinforcement learning",
+      "source_field": "problem",
+      "source_value": "Efficient VLM Inference",
+      "target_field": "method",
+      "target_value": "pruning-oriented reinforcement learning",
+      "count": 1,
+      "href": "library.html?problem=Efficient+VLM+Inference&method=pruning-oriented+reinforcement+learning",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Efficient VLM Inference",
+      "target": "method:tree-based self-speculative decoding",
+      "source_field": "problem",
+      "source_value": "Efficient VLM Inference",
+      "target_field": "method",
+      "target_value": "tree-based self-speculative decoding",
+      "count": 1,
+      "href": "library.html?problem=Efficient+VLM+Inference&method=tree-based+self-speculative+decoding",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Efficient VLM Inference",
+      "target": "method:twig-guided token pruning",
+      "source_field": "problem",
+      "source_value": "Efficient VLM Inference",
+      "target_field": "method",
+      "target_value": "twig-guided token pruning",
+      "count": 1,
+      "href": "library.html?problem=Efficient+VLM+Inference&method=twig-guided+token+pruning",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Load-Aware Serving",
+      "target": "method:confidence-scheduled verification",
+      "source_field": "problem",
+      "source_value": "Load-Aware Serving",
+      "target_field": "method",
+      "target_value": "confidence-scheduled verification",
+      "count": 1,
+      "href": "library.html?problem=Load-Aware+Serving&method=confidence-scheduled+verification",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "problem:Load-Aware Serving",
+      "target": "method:hardware-aware scheduling",
+      "source_field": "problem",
+      "source_value": "Load-Aware Serving",
+      "target_field": "method",
+      "target_value": "hardware-aware scheduling",
+      "count": 1,
+      "href": "library.html?problem=Load-Aware+Serving&method=hardware-aware+scheduling",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "problem:Load-Aware Serving",
+      "target": "method:Markov head",
+      "source_field": "problem",
+      "source_value": "Load-Aware Serving",
+      "target_field": "method",
+      "target_value": "Markov head",
+      "count": 1,
+      "href": "library.html?problem=Load-Aware+Serving&method=Markov+head",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "problem:Load-Aware Serving",
+      "target": "method:semi-autoregressive generation",
+      "source_field": "problem",
+      "source_value": "Load-Aware Serving",
+      "target_field": "method",
+      "target_value": "semi-autoregressive generation",
+      "count": 1,
+      "href": "library.html?problem=Load-Aware+Serving&method=semi-autoregressive+generation",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "problem:Load-Aware Serving",
+      "target": "method:Speculative Decoding",
+      "source_field": "problem",
+      "source_value": "Load-Aware Serving",
+      "target_field": "method",
+      "target_value": "Speculative Decoding",
+      "count": 1,
+      "href": "library.html?problem=Load-Aware+Serving&method=Speculative+Decoding",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "problem:Long-Response Decoding",
+      "target": "method:distillation",
+      "source_field": "problem",
+      "source_value": "Long-Response Decoding",
+      "target_field": "method",
+      "target_value": "distillation",
+      "count": 1,
+      "href": "library.html?problem=Long-Response+Decoding&method=distillation",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Long-Response Decoding",
+      "target": "method:FinalWipe",
+      "source_field": "problem",
+      "source_value": "Long-Response Decoding",
+      "target_field": "method",
+      "target_value": "FinalWipe",
+      "count": 1,
+      "href": "library.html?problem=Long-Response+Decoding&method=FinalWipe",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Long-Response Decoding",
+      "target": "method:multi-head twig",
+      "source_field": "problem",
+      "source_value": "Long-Response Decoding",
+      "target_field": "method",
+      "target_value": "multi-head twig",
+      "count": 1,
+      "href": "library.html?problem=Long-Response+Decoding&method=multi-head+twig",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Long-Response Decoding",
+      "target": "method:pruning-oriented reinforcement learning",
+      "source_field": "problem",
+      "source_value": "Long-Response Decoding",
+      "target_field": "method",
+      "target_value": "pruning-oriented reinforcement learning",
+      "count": 1,
+      "href": "library.html?problem=Long-Response+Decoding&method=pruning-oriented+reinforcement+learning",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Long-Response Decoding",
+      "target": "method:tree-based self-speculative decoding",
+      "source_field": "problem",
+      "source_value": "Long-Response Decoding",
+      "target_field": "method",
+      "target_value": "tree-based self-speculative decoding",
+      "count": 1,
+      "href": "library.html?problem=Long-Response+Decoding&method=tree-based+self-speculative+decoding",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Long-Response Decoding",
+      "target": "method:twig-guided token pruning",
+      "source_field": "problem",
+      "source_value": "Long-Response Decoding",
+      "target_field": "method",
+      "target_value": "twig-guided token pruning",
+      "count": 1,
+      "href": "library.html?problem=Long-Response+Decoding&method=twig-guided+token+pruning",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
       "source": "problem:Lossless Speculative Decoding",
       "target": "method:block diffusion",
       "source_field": "problem",
@@ -944,6 +2104,45 @@
       "href": "library.html?problem=Lossless+Speculative+Decoding&method=block+diffusion",
       "sample_slugs": [
         "2602.06036-dflash"
+      ]
+    },
+    {
+      "source": "problem:Lossless Speculative Decoding",
+      "target": "method:confidence-scheduled verification",
+      "source_field": "problem",
+      "source_value": "Lossless Speculative Decoding",
+      "target_field": "method",
+      "target_value": "confidence-scheduled verification",
+      "count": 1,
+      "href": "library.html?problem=Lossless+Speculative+Decoding&method=confidence-scheduled+verification",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "problem:Lossless Speculative Decoding",
+      "target": "method:gated LoRA",
+      "source_field": "problem",
+      "source_value": "Lossless Speculative Decoding",
+      "target_field": "method",
+      "target_value": "gated LoRA",
+      "count": 1,
+      "href": "library.html?problem=Lossless+Speculative+Decoding&method=gated+LoRA",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "source": "problem:Lossless Speculative Decoding",
+      "target": "method:hardware-aware scheduling",
+      "source_field": "problem",
+      "source_value": "Lossless Speculative Decoding",
+      "target_field": "method",
+      "target_value": "hardware-aware scheduling",
+      "count": 1,
+      "href": "library.html?problem=Lossless+Speculative+Decoding&method=hardware-aware+scheduling",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
       ]
     },
     {
@@ -961,6 +2160,45 @@
     },
     {
       "source": "problem:Lossless Speculative Decoding",
+      "target": "method:latent consistency matching",
+      "source_field": "problem",
+      "source_value": "Lossless Speculative Decoding",
+      "target_field": "method",
+      "target_value": "latent consistency matching",
+      "count": 1,
+      "href": "library.html?problem=Lossless+Speculative+Decoding&method=latent+consistency+matching",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "source": "problem:Lossless Speculative Decoding",
+      "target": "method:Markov head",
+      "source_field": "problem",
+      "source_value": "Lossless Speculative Decoding",
+      "target_field": "method",
+      "target_value": "Markov head",
+      "count": 1,
+      "href": "library.html?problem=Lossless+Speculative+Decoding&method=Markov+head",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "problem:Lossless Speculative Decoding",
+      "target": "method:masked-input formulation",
+      "source_field": "problem",
+      "source_value": "Lossless Speculative Decoding",
+      "target_field": "method",
+      "target_value": "masked-input formulation",
+      "count": 1,
+      "href": "library.html?problem=Lossless+Speculative+Decoding&method=masked-input+formulation",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "source": "problem:Lossless Speculative Decoding",
       "target": "method:parallel drafting",
       "source_field": "problem",
       "source_value": "Lossless Speculative Decoding",
@@ -974,15 +2212,41 @@
     },
     {
       "source": "problem:Lossless Speculative Decoding",
-      "target": "method:Speculative Decoding",
+      "target": "method:quadratic speculative decoding",
       "source_field": "problem",
       "source_value": "Lossless Speculative Decoding",
       "target_field": "method",
-      "target_value": "Speculative Decoding",
+      "target_value": "quadratic speculative decoding",
       "count": 1,
-      "href": "library.html?problem=Lossless+Speculative+Decoding&method=Speculative+Decoding",
+      "href": "library.html?problem=Lossless+Speculative+Decoding&method=quadratic+speculative+decoding",
       "sample_slugs": [
-        "2602.06036-dflash"
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "source": "problem:Lossless Speculative Decoding",
+      "target": "method:sampler head",
+      "source_field": "problem",
+      "source_value": "Lossless Speculative Decoding",
+      "target_field": "method",
+      "target_value": "sampler head",
+      "count": 1,
+      "href": "library.html?problem=Lossless+Speculative+Decoding&method=sampler+head",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "source": "problem:Lossless Speculative Decoding",
+      "target": "method:semi-autoregressive generation",
+      "source_field": "problem",
+      "source_value": "Lossless Speculative Decoding",
+      "target_field": "method",
+      "target_value": "semi-autoregressive generation",
+      "count": 1,
+      "href": "library.html?problem=Lossless+Speculative+Decoding&method=semi-autoregressive+generation",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
       ]
     },
     {
@@ -1064,6 +2328,45 @@
       ]
     },
     {
+      "source": "problem:MoE Serving",
+      "target": "method:Balanced K-means",
+      "source_field": "problem",
+      "source_value": "MoE Serving",
+      "target_field": "method",
+      "target_value": "Balanced K-means",
+      "count": 1,
+      "href": "library.html?problem=MoE+Serving&method=Balanced+K-means",
+      "sample_slugs": [
+        "2607.00466-eldr"
+      ]
+    },
+    {
+      "source": "problem:MoE Serving",
+      "target": "method:Expert Locality Routing",
+      "source_field": "problem",
+      "source_value": "MoE Serving",
+      "target_field": "method",
+      "target_value": "Expert Locality Routing",
+      "count": 1,
+      "href": "library.html?problem=MoE+Serving&method=Expert+Locality+Routing",
+      "sample_slugs": [
+        "2607.00466-eldr"
+      ]
+    },
+    {
+      "source": "problem:MoE Serving",
+      "target": "method:Signature Cache",
+      "source_field": "problem",
+      "source_value": "MoE Serving",
+      "target_field": "method",
+      "target_value": "Signature Cache",
+      "count": 1,
+      "href": "library.html?problem=MoE+Serving&method=Signature+Cache",
+      "sample_slugs": [
+        "2607.00466-eldr"
+      ]
+    },
+    {
       "source": "problem:Parallel Diffusion Decoding",
       "target": "method:gated LoRA",
       "source_field": "problem",
@@ -1139,6 +2442,240 @@
       "href": "library.html?problem=Parallel+Diffusion+Decoding&method=SGLang+serving",
       "sample_slugs": [
         "2604.11035-introspective-dlm"
+      ]
+    },
+    {
+      "source": "problem:Unassigned",
+      "target": "method:asynchronous decoding",
+      "source_field": "problem",
+      "source_value": "Unassigned",
+      "target_field": "method",
+      "target_value": "asynchronous decoding",
+      "count": 1,
+      "href": "library.html?method=asynchronous+decoding",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "problem:Unassigned",
+      "target": "method:cache-aware sampling",
+      "source_field": "problem",
+      "source_value": "Unassigned",
+      "target_field": "method",
+      "target_value": "cache-aware sampling",
+      "count": 1,
+      "href": "library.html?method=cache-aware+sampling",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "problem:Unassigned",
+      "target": "method:Document-Driven Integration",
+      "source_field": "problem",
+      "source_value": "Unassigned",
+      "target_field": "method",
+      "target_value": "Document-Driven Integration",
+      "count": 1,
+      "href": "library.html?method=Document-Driven+Integration",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "problem:Unassigned",
+      "target": "method:fallback speculation",
+      "source_field": "problem",
+      "source_value": "Unassigned",
+      "target_field": "method",
+      "target_value": "fallback speculation",
+      "count": 1,
+      "href": "library.html?method=fallback+speculation",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "problem:Unassigned",
+      "target": "method:geometric fan-out",
+      "source_field": "problem",
+      "source_value": "Unassigned",
+      "target_field": "method",
+      "target_value": "geometric fan-out",
+      "count": 1,
+      "href": "library.html?method=geometric+fan-out",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "problem:Unassigned",
+      "target": "method:Hierarchical Code Retrieval",
+      "source_field": "problem",
+      "source_value": "Unassigned",
+      "target_field": "method",
+      "target_value": "Hierarchical Code Retrieval",
+      "count": 1,
+      "href": "library.html?method=Hierarchical+Code+Retrieval",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "problem:Unassigned",
+      "target": "method:Iterative Search-Based Optimization",
+      "source_field": "problem",
+      "source_value": "Unassigned",
+      "target_field": "method",
+      "target_value": "Iterative Search-Based Optimization",
+      "count": 1,
+      "href": "library.html?method=Iterative+Search-Based+Optimization",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "problem:Unassigned",
+      "target": "method:Multi-Agent Workflow",
+      "source_field": "problem",
+      "source_value": "Unassigned",
+      "target_field": "method",
+      "target_value": "Multi-Agent Workflow",
+      "count": 1,
+      "href": "library.html?method=Multi-Agent+Workflow",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "problem:Unassigned",
+      "target": "method:Speculative Decoding",
+      "source_field": "problem",
+      "source_value": "Unassigned",
+      "target_field": "method",
+      "target_value": "Speculative Decoding",
+      "count": 1,
+      "href": "library.html?method=Speculative+Decoding",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "problem:Unassigned",
+      "target": "method:Unified Sketch",
+      "source_field": "problem",
+      "source_value": "Unassigned",
+      "target_field": "method",
+      "target_value": "Unified Sketch",
+      "count": 1,
+      "href": "library.html?method=Unified+Sketch",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "problem:Unassigned",
+      "target": "method:Verification and Profiling Loop",
+      "source_field": "problem",
+      "source_value": "Unassigned",
+      "target_field": "method",
+      "target_value": "Verification and Profiling Loop",
+      "count": 1,
+      "href": "library.html?method=Verification+and+Profiling+Loop",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "problem:Unassigned",
+      "target": "method:verification outcome cache",
+      "source_field": "problem",
+      "source_value": "Unassigned",
+      "target_field": "method",
+      "target_value": "verification outcome cache",
+      "count": 1,
+      "href": "library.html?method=verification+outcome+cache",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "problem:Visual Token Redundancy",
+      "target": "method:distillation",
+      "source_field": "problem",
+      "source_value": "Visual Token Redundancy",
+      "target_field": "method",
+      "target_value": "distillation",
+      "count": 1,
+      "href": "library.html?problem=Visual+Token+Redundancy&method=distillation",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Visual Token Redundancy",
+      "target": "method:FinalWipe",
+      "source_field": "problem",
+      "source_value": "Visual Token Redundancy",
+      "target_field": "method",
+      "target_value": "FinalWipe",
+      "count": 1,
+      "href": "library.html?problem=Visual+Token+Redundancy&method=FinalWipe",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Visual Token Redundancy",
+      "target": "method:multi-head twig",
+      "source_field": "problem",
+      "source_value": "Visual Token Redundancy",
+      "target_field": "method",
+      "target_value": "multi-head twig",
+      "count": 1,
+      "href": "library.html?problem=Visual+Token+Redundancy&method=multi-head+twig",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Visual Token Redundancy",
+      "target": "method:pruning-oriented reinforcement learning",
+      "source_field": "problem",
+      "source_value": "Visual Token Redundancy",
+      "target_field": "method",
+      "target_value": "pruning-oriented reinforcement learning",
+      "count": 1,
+      "href": "library.html?problem=Visual+Token+Redundancy&method=pruning-oriented+reinforcement+learning",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Visual Token Redundancy",
+      "target": "method:tree-based self-speculative decoding",
+      "source_field": "problem",
+      "source_value": "Visual Token Redundancy",
+      "target_field": "method",
+      "target_value": "tree-based self-speculative decoding",
+      "count": 1,
+      "href": "library.html?problem=Visual+Token+Redundancy&method=tree-based+self-speculative+decoding",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Visual Token Redundancy",
+      "target": "method:twig-guided token pruning",
+      "source_field": "problem",
+      "source_value": "Visual Token Redundancy",
+      "target_field": "method",
+      "target_value": "twig-guided token pruning",
+      "count": 1,
+      "href": "library.html?problem=Visual+Token+Redundancy&method=twig-guided+token+pruning",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
       ]
     },
     {
@@ -1259,6 +2796,188 @@
       ]
     },
     {
+      "source": "problem:Efficient VLM Inference",
+      "target": "topic:Multimodal Inference",
+      "source_field": "problem",
+      "source_value": "Efficient VLM Inference",
+      "target_field": "topic",
+      "target_value": "Multimodal Inference",
+      "count": 1,
+      "href": "library.html?problem=Efficient+VLM+Inference&topic=Multimodal+Inference",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Efficient VLM Inference",
+      "target": "topic:Speculative Decoding",
+      "source_field": "problem",
+      "source_value": "Efficient VLM Inference",
+      "target_field": "topic",
+      "target_value": "Speculative Decoding",
+      "count": 1,
+      "href": "library.html?problem=Efficient+VLM+Inference&topic=Speculative+Decoding",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Efficient VLM Inference",
+      "target": "topic:Vision-Language Models",
+      "source_field": "problem",
+      "source_value": "Efficient VLM Inference",
+      "target_field": "topic",
+      "target_value": "Vision-Language Models",
+      "count": 1,
+      "href": "library.html?problem=Efficient+VLM+Inference&topic=Vision-Language+Models",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Efficient VLM Inference",
+      "target": "topic:Visual Token Pruning",
+      "source_field": "problem",
+      "source_value": "Efficient VLM Inference",
+      "target_field": "topic",
+      "target_value": "Visual Token Pruning",
+      "count": 1,
+      "href": "library.html?problem=Efficient+VLM+Inference&topic=Visual+Token+Pruning",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Efficient VLM Inference",
+      "target": "topic:VLM Acceleration",
+      "source_field": "problem",
+      "source_value": "Efficient VLM Inference",
+      "target_field": "topic",
+      "target_value": "VLM Acceleration",
+      "count": 1,
+      "href": "library.html?problem=Efficient+VLM+Inference&topic=VLM+Acceleration",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Load-Aware Serving",
+      "target": "topic:LLM Inference",
+      "source_field": "problem",
+      "source_value": "Load-Aware Serving",
+      "target_field": "topic",
+      "target_value": "LLM Inference",
+      "count": 1,
+      "href": "library.html?problem=Load-Aware+Serving&topic=LLM+Inference",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "problem:Load-Aware Serving",
+      "target": "topic:LLM Serving",
+      "source_field": "problem",
+      "source_value": "Load-Aware Serving",
+      "target_field": "topic",
+      "target_value": "LLM Serving",
+      "count": 1,
+      "href": "library.html?problem=Load-Aware+Serving&topic=LLM+Serving",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "problem:Load-Aware Serving",
+      "target": "topic:Semi-Autoregressive Generation",
+      "source_field": "problem",
+      "source_value": "Load-Aware Serving",
+      "target_field": "topic",
+      "target_value": "Semi-Autoregressive Generation",
+      "count": 1,
+      "href": "library.html?problem=Load-Aware+Serving&topic=Semi-Autoregressive+Generation",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "problem:Load-Aware Serving",
+      "target": "topic:Speculative Decoding",
+      "source_field": "problem",
+      "source_value": "Load-Aware Serving",
+      "target_field": "topic",
+      "target_value": "Speculative Decoding",
+      "count": 1,
+      "href": "library.html?problem=Load-Aware+Serving&topic=Speculative+Decoding",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "problem:Long-Response Decoding",
+      "target": "topic:Multimodal Inference",
+      "source_field": "problem",
+      "source_value": "Long-Response Decoding",
+      "target_field": "topic",
+      "target_value": "Multimodal Inference",
+      "count": 1,
+      "href": "library.html?problem=Long-Response+Decoding&topic=Multimodal+Inference",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Long-Response Decoding",
+      "target": "topic:Speculative Decoding",
+      "source_field": "problem",
+      "source_value": "Long-Response Decoding",
+      "target_field": "topic",
+      "target_value": "Speculative Decoding",
+      "count": 1,
+      "href": "library.html?problem=Long-Response+Decoding&topic=Speculative+Decoding",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Long-Response Decoding",
+      "target": "topic:Vision-Language Models",
+      "source_field": "problem",
+      "source_value": "Long-Response Decoding",
+      "target_field": "topic",
+      "target_value": "Vision-Language Models",
+      "count": 1,
+      "href": "library.html?problem=Long-Response+Decoding&topic=Vision-Language+Models",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Long-Response Decoding",
+      "target": "topic:Visual Token Pruning",
+      "source_field": "problem",
+      "source_value": "Long-Response Decoding",
+      "target_field": "topic",
+      "target_value": "Visual Token Pruning",
+      "count": 1,
+      "href": "library.html?problem=Long-Response+Decoding&topic=Visual+Token+Pruning",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Long-Response Decoding",
+      "target": "topic:VLM Acceleration",
+      "source_field": "problem",
+      "source_value": "Long-Response Decoding",
+      "target_field": "topic",
+      "target_value": "VLM Acceleration",
+      "count": 1,
+      "href": "library.html?problem=Long-Response+Decoding&topic=VLM+Acceleration",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
       "source": "problem:Lossless Speculative Decoding",
       "target": "topic:Diffusion Language Models",
       "source_field": "problem",
@@ -1273,41 +2992,67 @@
     },
     {
       "source": "problem:Lossless Speculative Decoding",
-      "target": "topic:LLM Inference",
+      "target": "topic:Efficient Inference",
       "source_field": "problem",
       "source_value": "Lossless Speculative Decoding",
       "target_field": "topic",
-      "target_value": "LLM Inference",
+      "target_value": "Efficient Inference",
       "count": 1,
-      "href": "library.html?problem=Lossless+Speculative+Decoding&topic=LLM+Inference",
+      "href": "library.html?problem=Lossless+Speculative+Decoding&topic=Efficient+Inference",
       "sample_slugs": [
-        "2602.06036-dflash"
+        "2507.11851-llm-future-mtp"
       ]
     },
     {
       "source": "problem:Lossless Speculative Decoding",
-      "target": "topic:LLM Serving",
+      "target": "topic:LLM",
       "source_field": "problem",
       "source_value": "Lossless Speculative Decoding",
       "target_field": "topic",
-      "target_value": "LLM Serving",
+      "target_value": "LLM",
       "count": 1,
-      "href": "library.html?problem=Lossless+Speculative+Decoding&topic=LLM+Serving",
+      "href": "library.html?problem=Lossless+Speculative+Decoding&topic=LLM",
       "sample_slugs": [
-        "2602.06036-dflash"
+        "2507.11851-llm-future-mtp"
       ]
     },
     {
       "source": "problem:Lossless Speculative Decoding",
-      "target": "topic:Speculative Decoding",
+      "target": "topic:Multi-Token Prediction",
       "source_field": "problem",
       "source_value": "Lossless Speculative Decoding",
       "target_field": "topic",
-      "target_value": "Speculative Decoding",
+      "target_value": "Multi-Token Prediction",
       "count": 1,
-      "href": "library.html?problem=Lossless+Speculative+Decoding&topic=Speculative+Decoding",
+      "href": "library.html?problem=Lossless+Speculative+Decoding&topic=Multi-Token+Prediction",
       "sample_slugs": [
-        "2602.06036-dflash"
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "source": "problem:Lossless Speculative Decoding",
+      "target": "topic:Non-Autoregressive Generation",
+      "source_field": "problem",
+      "source_value": "Lossless Speculative Decoding",
+      "target_field": "topic",
+      "target_value": "Non-Autoregressive Generation",
+      "count": 1,
+      "href": "library.html?problem=Lossless+Speculative+Decoding&topic=Non-Autoregressive+Generation",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "source": "problem:Lossless Speculative Decoding",
+      "target": "topic:Semi-Autoregressive Generation",
+      "source_field": "problem",
+      "source_value": "Lossless Speculative Decoding",
+      "target_field": "topic",
+      "target_value": "Semi-Autoregressive Generation",
+      "count": 1,
+      "href": "library.html?problem=Lossless+Speculative+Decoding&topic=Semi-Autoregressive+Generation",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
       ]
     },
     {
@@ -1376,6 +3121,58 @@
       ]
     },
     {
+      "source": "problem:MoE Serving",
+      "target": "topic:Disaggregated Serving",
+      "source_field": "problem",
+      "source_value": "MoE Serving",
+      "target_field": "topic",
+      "target_value": "Disaggregated Serving",
+      "count": 1,
+      "href": "library.html?problem=MoE+Serving&topic=Disaggregated+Serving",
+      "sample_slugs": [
+        "2607.00466-eldr"
+      ]
+    },
+    {
+      "source": "problem:MoE Serving",
+      "target": "topic:LLM Serving",
+      "source_field": "problem",
+      "source_value": "MoE Serving",
+      "target_field": "topic",
+      "target_value": "LLM Serving",
+      "count": 1,
+      "href": "library.html?problem=MoE+Serving&topic=LLM+Serving",
+      "sample_slugs": [
+        "2607.00466-eldr"
+      ]
+    },
+    {
+      "source": "problem:MoE Serving",
+      "target": "topic:Load Balancing",
+      "source_field": "problem",
+      "source_value": "MoE Serving",
+      "target_field": "topic",
+      "target_value": "Load Balancing",
+      "count": 1,
+      "href": "library.html?problem=MoE+Serving&topic=Load+Balancing",
+      "sample_slugs": [
+        "2607.00466-eldr"
+      ]
+    },
+    {
+      "source": "problem:MoE Serving",
+      "target": "topic:MoE",
+      "source_field": "problem",
+      "source_value": "MoE Serving",
+      "target_field": "topic",
+      "target_value": "MoE",
+      "count": 1,
+      "href": "library.html?problem=MoE+Serving&topic=MoE",
+      "sample_slugs": [
+        "2607.00466-eldr"
+      ]
+    },
+    {
       "source": "problem:Parallel Diffusion Decoding",
       "target": "topic:Diffusion Language Models",
       "source_field": "problem",
@@ -1441,6 +3238,240 @@
       ]
     },
     {
+      "source": "problem:Unassigned",
+      "target": "topic:Compiler/DSL",
+      "source_field": "problem",
+      "source_value": "Unassigned",
+      "target_field": "topic",
+      "target_value": "Compiler/DSL",
+      "count": 1,
+      "href": "library.html?topic=Compiler%2FDSL",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "problem:Unassigned",
+      "target": "topic:Distributed Inference",
+      "source_field": "problem",
+      "source_value": "Unassigned",
+      "target_field": "topic",
+      "target_value": "Distributed Inference",
+      "count": 1,
+      "href": "library.html?topic=Distributed+Inference",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "problem:Unassigned",
+      "target": "topic:Hardware Acceleration",
+      "source_field": "problem",
+      "source_value": "Unassigned",
+      "target_field": "topic",
+      "target_value": "Hardware Acceleration",
+      "count": 1,
+      "href": "library.html?topic=Hardware+Acceleration",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "problem:Unassigned",
+      "target": "topic:Kernel Generation",
+      "source_field": "problem",
+      "source_value": "Unassigned",
+      "target_field": "topic",
+      "target_value": "Kernel Generation",
+      "count": 1,
+      "href": "library.html?topic=Kernel+Generation",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "problem:Unassigned",
+      "target": "topic:LLM Code Generation",
+      "source_field": "problem",
+      "source_value": "Unassigned",
+      "target_field": "topic",
+      "target_value": "LLM Code Generation",
+      "count": 1,
+      "href": "library.html?topic=LLM+Code+Generation",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "problem:Unassigned",
+      "target": "topic:LLM Inference",
+      "source_field": "problem",
+      "source_value": "Unassigned",
+      "target_field": "topic",
+      "target_value": "LLM Inference",
+      "count": 1,
+      "href": "library.html?topic=LLM+Inference",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "problem:Unassigned",
+      "target": "topic:Multi-Agent Systems",
+      "source_field": "problem",
+      "source_value": "Unassigned",
+      "target_field": "topic",
+      "target_value": "Multi-Agent Systems",
+      "count": 1,
+      "href": "library.html?topic=Multi-Agent+Systems",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "problem:Unassigned",
+      "target": "topic:RAG",
+      "source_field": "problem",
+      "source_value": "Unassigned",
+      "target_field": "topic",
+      "target_value": "RAG",
+      "count": 1,
+      "href": "library.html?topic=RAG",
+      "sample_slugs": [
+        "semantic-search-evaluation"
+      ]
+    },
+    {
+      "source": "problem:Unassigned",
+      "target": "topic:Speculative Decoding",
+      "source_field": "problem",
+      "source_value": "Unassigned",
+      "target_field": "topic",
+      "target_value": "Speculative Decoding",
+      "count": 1,
+      "href": "library.html?topic=Speculative+Decoding",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "problem:Unassigned",
+      "target": "topic:Systems Optimization",
+      "source_field": "problem",
+      "source_value": "Unassigned",
+      "target_field": "topic",
+      "target_value": "Systems Optimization",
+      "count": 1,
+      "href": "library.html?topic=Systems+Optimization",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "problem:Visual Token Redundancy",
+      "target": "topic:Multimodal Inference",
+      "source_field": "problem",
+      "source_value": "Visual Token Redundancy",
+      "target_field": "topic",
+      "target_value": "Multimodal Inference",
+      "count": 1,
+      "href": "library.html?problem=Visual+Token+Redundancy&topic=Multimodal+Inference",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Visual Token Redundancy",
+      "target": "topic:Speculative Decoding",
+      "source_field": "problem",
+      "source_value": "Visual Token Redundancy",
+      "target_field": "topic",
+      "target_value": "Speculative Decoding",
+      "count": 1,
+      "href": "library.html?problem=Visual+Token+Redundancy&topic=Speculative+Decoding",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Visual Token Redundancy",
+      "target": "topic:Vision-Language Models",
+      "source_field": "problem",
+      "source_value": "Visual Token Redundancy",
+      "target_field": "topic",
+      "target_value": "Vision-Language Models",
+      "count": 1,
+      "href": "library.html?problem=Visual+Token+Redundancy&topic=Vision-Language+Models",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Visual Token Redundancy",
+      "target": "topic:Visual Token Pruning",
+      "source_field": "problem",
+      "source_value": "Visual Token Redundancy",
+      "target_field": "topic",
+      "target_value": "Visual Token Pruning",
+      "count": 1,
+      "href": "library.html?problem=Visual+Token+Redundancy&topic=Visual+Token+Pruning",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Visual Token Redundancy",
+      "target": "topic:VLM Acceleration",
+      "source_field": "problem",
+      "source_value": "Visual Token Redundancy",
+      "target_field": "topic",
+      "target_value": "VLM Acceleration",
+      "count": 1,
+      "href": "library.html?problem=Visual+Token+Redundancy&topic=VLM+Acceleration",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "research_line:LLM Serving",
+      "target": "domain:Unassigned",
+      "source_field": "research_line",
+      "source_value": "LLM Serving",
+      "target_field": "domain",
+      "target_value": "Unassigned",
+      "count": 1,
+      "href": "library.html?line=LLM+Serving",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "research_line:VLM Acceleration",
+      "target": "domain:LLM Systems",
+      "source_field": "research_line",
+      "source_value": "VLM Acceleration",
+      "target_field": "domain",
+      "target_value": "LLM Systems",
+      "count": 1,
+      "href": "library.html?line=VLM+Acceleration&domain=LLM+Systems",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "research_line:VLM Acceleration",
+      "target": "domain:Multimodal Systems",
+      "source_field": "research_line",
+      "source_value": "VLM Acceleration",
+      "target_field": "domain",
+      "target_value": "Multimodal Systems",
+      "count": 1,
+      "href": "library.html?line=VLM+Acceleration&domain=Multimodal+Systems",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
       "source": "research_line:Efficient Attention Kernels",
       "target": "track:Inference Serving Systems",
       "source_field": "research_line",
@@ -1451,6 +3482,58 @@
       "href": "library.html?line=Efficient+Attention+Kernels&track=Inference+Serving+Systems",
       "sample_slugs": [
         "2501.01005-flashinfer"
+      ]
+    },
+    {
+      "source": "research_line:LLM Serving",
+      "target": "track:Parallel Decoding",
+      "source_field": "research_line",
+      "source_value": "LLM Serving",
+      "target_field": "track",
+      "target_value": "Parallel Decoding",
+      "count": 1,
+      "href": "library.html?line=LLM+Serving&track=Parallel+Decoding",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "research_line:LLM Serving",
+      "target": "track:Unassigned",
+      "source_field": "research_line",
+      "source_value": "LLM Serving",
+      "target_field": "track",
+      "target_value": "Unassigned",
+      "count": 1,
+      "href": "library.html?line=LLM+Serving",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "research_line:VLM Acceleration",
+      "target": "track:Inference Acceleration",
+      "source_field": "research_line",
+      "source_value": "VLM Acceleration",
+      "target_field": "track",
+      "target_value": "Inference Acceleration",
+      "count": 1,
+      "href": "library.html?line=VLM+Acceleration&track=Inference+Acceleration",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "research_line:VLM Acceleration",
+      "target": "track:VLM Acceleration",
+      "source_field": "research_line",
+      "source_value": "VLM Acceleration",
+      "target_field": "track",
+      "target_value": "VLM Acceleration",
+      "count": 1,
+      "href": "library.html?line=VLM+Acceleration&track=VLM+Acceleration",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
       ]
     },
     {
@@ -1529,6 +3612,84 @@
       "href": "library.html?topic=Attention+Kernels&method=load-balanced+scheduling",
       "sample_slugs": [
         "2501.01005-flashinfer"
+      ]
+    },
+    {
+      "source": "topic:Compiler/DSL",
+      "target": "method:Document-Driven Integration",
+      "source_field": "topic",
+      "source_value": "Compiler/DSL",
+      "target_field": "method",
+      "target_value": "Document-Driven Integration",
+      "count": 1,
+      "href": "library.html?topic=Compiler%2FDSL&method=Document-Driven+Integration",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "topic:Compiler/DSL",
+      "target": "method:Hierarchical Code Retrieval",
+      "source_field": "topic",
+      "source_value": "Compiler/DSL",
+      "target_field": "method",
+      "target_value": "Hierarchical Code Retrieval",
+      "count": 1,
+      "href": "library.html?topic=Compiler%2FDSL&method=Hierarchical+Code+Retrieval",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "topic:Compiler/DSL",
+      "target": "method:Iterative Search-Based Optimization",
+      "source_field": "topic",
+      "source_value": "Compiler/DSL",
+      "target_field": "method",
+      "target_value": "Iterative Search-Based Optimization",
+      "count": 1,
+      "href": "library.html?topic=Compiler%2FDSL&method=Iterative+Search-Based+Optimization",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "topic:Compiler/DSL",
+      "target": "method:Multi-Agent Workflow",
+      "source_field": "topic",
+      "source_value": "Compiler/DSL",
+      "target_field": "method",
+      "target_value": "Multi-Agent Workflow",
+      "count": 1,
+      "href": "library.html?topic=Compiler%2FDSL&method=Multi-Agent+Workflow",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "topic:Compiler/DSL",
+      "target": "method:Unified Sketch",
+      "source_field": "topic",
+      "source_value": "Compiler/DSL",
+      "target_field": "method",
+      "target_value": "Unified Sketch",
+      "count": 1,
+      "href": "library.html?topic=Compiler%2FDSL&method=Unified+Sketch",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "topic:Compiler/DSL",
+      "target": "method:Verification and Profiling Loop",
+      "source_field": "topic",
+      "source_value": "Compiler/DSL",
+      "target_field": "method",
+      "target_value": "Verification and Profiling Loop",
+      "count": 1,
+      "href": "library.html?topic=Compiler%2FDSL&method=Verification+and+Profiling+Loop",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
       ]
     },
     {
@@ -1740,6 +3901,123 @@
       ]
     },
     {
+      "source": "topic:Disaggregated Serving",
+      "target": "method:Balanced K-means",
+      "source_field": "topic",
+      "source_value": "Disaggregated Serving",
+      "target_field": "method",
+      "target_value": "Balanced K-means",
+      "count": 1,
+      "href": "library.html?topic=Disaggregated+Serving&method=Balanced+K-means",
+      "sample_slugs": [
+        "2607.00466-eldr"
+      ]
+    },
+    {
+      "source": "topic:Disaggregated Serving",
+      "target": "method:Expert Locality Routing",
+      "source_field": "topic",
+      "source_value": "Disaggregated Serving",
+      "target_field": "method",
+      "target_value": "Expert Locality Routing",
+      "count": 1,
+      "href": "library.html?topic=Disaggregated+Serving&method=Expert+Locality+Routing",
+      "sample_slugs": [
+        "2607.00466-eldr"
+      ]
+    },
+    {
+      "source": "topic:Disaggregated Serving",
+      "target": "method:Signature Cache",
+      "source_field": "topic",
+      "source_value": "Disaggregated Serving",
+      "target_field": "method",
+      "target_value": "Signature Cache",
+      "count": 1,
+      "href": "library.html?topic=Disaggregated+Serving&method=Signature+Cache",
+      "sample_slugs": [
+        "2607.00466-eldr"
+      ]
+    },
+    {
+      "source": "topic:Distributed Inference",
+      "target": "method:asynchronous decoding",
+      "source_field": "topic",
+      "source_value": "Distributed Inference",
+      "target_field": "method",
+      "target_value": "asynchronous decoding",
+      "count": 1,
+      "href": "library.html?topic=Distributed+Inference&method=asynchronous+decoding",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "topic:Distributed Inference",
+      "target": "method:cache-aware sampling",
+      "source_field": "topic",
+      "source_value": "Distributed Inference",
+      "target_field": "method",
+      "target_value": "cache-aware sampling",
+      "count": 1,
+      "href": "library.html?topic=Distributed+Inference&method=cache-aware+sampling",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "topic:Distributed Inference",
+      "target": "method:fallback speculation",
+      "source_field": "topic",
+      "source_value": "Distributed Inference",
+      "target_field": "method",
+      "target_value": "fallback speculation",
+      "count": 1,
+      "href": "library.html?topic=Distributed+Inference&method=fallback+speculation",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "topic:Distributed Inference",
+      "target": "method:geometric fan-out",
+      "source_field": "topic",
+      "source_value": "Distributed Inference",
+      "target_field": "method",
+      "target_value": "geometric fan-out",
+      "count": 1,
+      "href": "library.html?topic=Distributed+Inference&method=geometric+fan-out",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "topic:Distributed Inference",
+      "target": "method:Speculative Decoding",
+      "source_field": "topic",
+      "source_value": "Distributed Inference",
+      "target_field": "method",
+      "target_value": "Speculative Decoding",
+      "count": 1,
+      "href": "library.html?topic=Distributed+Inference&method=Speculative+Decoding",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "topic:Distributed Inference",
+      "target": "method:verification outcome cache",
+      "source_field": "topic",
+      "source_value": "Distributed Inference",
+      "target_field": "method",
+      "target_value": "verification outcome cache",
+      "count": 1,
+      "href": "library.html?topic=Distributed+Inference&method=verification+outcome+cache",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
       "source": "topic:Efficient Attention",
       "target": "method:CUDA / GPU parallelism",
       "source_field": "topic",
@@ -1802,6 +4080,71 @@
       "href": "library.html?topic=Efficient+Attention&method=work+partitioning",
       "sample_slugs": [
         "2307.08691-flashattention-2"
+      ]
+    },
+    {
+      "source": "topic:Efficient Inference",
+      "target": "method:gated LoRA",
+      "source_field": "topic",
+      "source_value": "Efficient Inference",
+      "target_field": "method",
+      "target_value": "gated LoRA",
+      "count": 1,
+      "href": "library.html?topic=Efficient+Inference&method=gated+LoRA",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "source": "topic:Efficient Inference",
+      "target": "method:latent consistency matching",
+      "source_field": "topic",
+      "source_value": "Efficient Inference",
+      "target_field": "method",
+      "target_value": "latent consistency matching",
+      "count": 1,
+      "href": "library.html?topic=Efficient+Inference&method=latent+consistency+matching",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "source": "topic:Efficient Inference",
+      "target": "method:masked-input formulation",
+      "source_field": "topic",
+      "source_value": "Efficient Inference",
+      "target_field": "method",
+      "target_value": "masked-input formulation",
+      "count": 1,
+      "href": "library.html?topic=Efficient+Inference&method=masked-input+formulation",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "source": "topic:Efficient Inference",
+      "target": "method:quadratic speculative decoding",
+      "source_field": "topic",
+      "source_value": "Efficient Inference",
+      "target_field": "method",
+      "target_value": "quadratic speculative decoding",
+      "count": 1,
+      "href": "library.html?topic=Efficient+Inference&method=quadratic+speculative+decoding",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "source": "topic:Efficient Inference",
+      "target": "method:sampler head",
+      "source_field": "topic",
+      "source_value": "Efficient Inference",
+      "target_field": "method",
+      "target_value": "sampler head",
+      "count": 1,
+      "href": "library.html?topic=Efficient+Inference&method=sampler+head",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
       ]
     },
     {
@@ -1948,6 +4291,84 @@
       ]
     },
     {
+      "source": "topic:Hardware Acceleration",
+      "target": "method:Document-Driven Integration",
+      "source_field": "topic",
+      "source_value": "Hardware Acceleration",
+      "target_field": "method",
+      "target_value": "Document-Driven Integration",
+      "count": 1,
+      "href": "library.html?topic=Hardware+Acceleration&method=Document-Driven+Integration",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "topic:Hardware Acceleration",
+      "target": "method:Hierarchical Code Retrieval",
+      "source_field": "topic",
+      "source_value": "Hardware Acceleration",
+      "target_field": "method",
+      "target_value": "Hierarchical Code Retrieval",
+      "count": 1,
+      "href": "library.html?topic=Hardware+Acceleration&method=Hierarchical+Code+Retrieval",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "topic:Hardware Acceleration",
+      "target": "method:Iterative Search-Based Optimization",
+      "source_field": "topic",
+      "source_value": "Hardware Acceleration",
+      "target_field": "method",
+      "target_value": "Iterative Search-Based Optimization",
+      "count": 1,
+      "href": "library.html?topic=Hardware+Acceleration&method=Iterative+Search-Based+Optimization",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "topic:Hardware Acceleration",
+      "target": "method:Multi-Agent Workflow",
+      "source_field": "topic",
+      "source_value": "Hardware Acceleration",
+      "target_field": "method",
+      "target_value": "Multi-Agent Workflow",
+      "count": 1,
+      "href": "library.html?topic=Hardware+Acceleration&method=Multi-Agent+Workflow",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "topic:Hardware Acceleration",
+      "target": "method:Unified Sketch",
+      "source_field": "topic",
+      "source_value": "Hardware Acceleration",
+      "target_field": "method",
+      "target_value": "Unified Sketch",
+      "count": 1,
+      "href": "library.html?topic=Hardware+Acceleration&method=Unified+Sketch",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "topic:Hardware Acceleration",
+      "target": "method:Verification and Profiling Loop",
+      "source_field": "topic",
+      "source_value": "Hardware Acceleration",
+      "target_field": "method",
+      "target_value": "Verification and Profiling Loop",
+      "count": 1,
+      "href": "library.html?topic=Hardware+Acceleration&method=Verification+and+Profiling+Loop",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
       "source": "topic:Inference Optimization",
       "target": "method:block-sparse attention",
       "source_field": "topic",
@@ -2023,6 +4444,84 @@
       "href": "library.html?topic=Inference+Optimization&method=load-balanced+scheduling",
       "sample_slugs": [
         "2501.01005-flashinfer"
+      ]
+    },
+    {
+      "source": "topic:Kernel Generation",
+      "target": "method:Document-Driven Integration",
+      "source_field": "topic",
+      "source_value": "Kernel Generation",
+      "target_field": "method",
+      "target_value": "Document-Driven Integration",
+      "count": 1,
+      "href": "library.html?topic=Kernel+Generation&method=Document-Driven+Integration",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "topic:Kernel Generation",
+      "target": "method:Hierarchical Code Retrieval",
+      "source_field": "topic",
+      "source_value": "Kernel Generation",
+      "target_field": "method",
+      "target_value": "Hierarchical Code Retrieval",
+      "count": 1,
+      "href": "library.html?topic=Kernel+Generation&method=Hierarchical+Code+Retrieval",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "topic:Kernel Generation",
+      "target": "method:Iterative Search-Based Optimization",
+      "source_field": "topic",
+      "source_value": "Kernel Generation",
+      "target_field": "method",
+      "target_value": "Iterative Search-Based Optimization",
+      "count": 1,
+      "href": "library.html?topic=Kernel+Generation&method=Iterative+Search-Based+Optimization",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "topic:Kernel Generation",
+      "target": "method:Multi-Agent Workflow",
+      "source_field": "topic",
+      "source_value": "Kernel Generation",
+      "target_field": "method",
+      "target_value": "Multi-Agent Workflow",
+      "count": 1,
+      "href": "library.html?topic=Kernel+Generation&method=Multi-Agent+Workflow",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "topic:Kernel Generation",
+      "target": "method:Unified Sketch",
+      "source_field": "topic",
+      "source_value": "Kernel Generation",
+      "target_field": "method",
+      "target_value": "Unified Sketch",
+      "count": 1,
+      "href": "library.html?topic=Kernel+Generation&method=Unified+Sketch",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "topic:Kernel Generation",
+      "target": "method:Verification and Profiling Loop",
+      "source_field": "topic",
+      "source_value": "Kernel Generation",
+      "target_field": "method",
+      "target_value": "Verification and Profiling Loop",
+      "count": 1,
+      "href": "library.html?topic=Kernel+Generation&method=Verification+and+Profiling+Loop",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
       ]
     },
     {
@@ -2170,19 +4669,6 @@
     },
     {
       "source": "topic:LLM",
-      "target": "method:gated LoRA",
-      "source_field": "topic",
-      "source_value": "LLM",
-      "target_field": "method",
-      "target_value": "gated LoRA",
-      "count": 1,
-      "href": "library.html?topic=LLM&method=gated+LoRA",
-      "sample_slugs": [
-        "2604.11035-introspective-dlm"
-      ]
-    },
-    {
-      "source": "topic:LLM",
       "target": "method:introspective consistency",
       "source_field": "topic",
       "source_value": "LLM",
@@ -2209,6 +4695,19 @@
     },
     {
       "source": "topic:LLM",
+      "target": "method:latent consistency matching",
+      "source_field": "topic",
+      "source_value": "LLM",
+      "target_field": "method",
+      "target_value": "latent consistency matching",
+      "count": 1,
+      "href": "library.html?topic=LLM&method=latent+consistency+matching",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "source": "topic:LLM",
       "target": "method:logit-shifted causal training",
       "source_field": "topic",
       "source_value": "LLM",
@@ -2218,6 +4717,19 @@
       "href": "library.html?topic=LLM&method=logit-shifted+causal+training",
       "sample_slugs": [
         "2604.11035-introspective-dlm"
+      ]
+    },
+    {
+      "source": "topic:LLM",
+      "target": "method:masked-input formulation",
+      "source_field": "topic",
+      "source_value": "LLM",
+      "target_field": "method",
+      "target_value": "masked-input formulation",
+      "count": 1,
+      "href": "library.html?topic=LLM&method=masked-input+formulation",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
       ]
     },
     {
@@ -2235,6 +4747,32 @@
     },
     {
       "source": "topic:LLM",
+      "target": "method:quadratic speculative decoding",
+      "source_field": "topic",
+      "source_value": "LLM",
+      "target_field": "method",
+      "target_value": "quadratic speculative decoding",
+      "count": 1,
+      "href": "library.html?topic=LLM&method=quadratic+speculative+decoding",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "source": "topic:LLM",
+      "target": "method:sampler head",
+      "source_field": "topic",
+      "source_value": "LLM",
+      "target_field": "method",
+      "target_value": "sampler head",
+      "count": 1,
+      "href": "library.html?topic=LLM&method=sampler+head",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "source": "topic:LLM",
       "target": "method:SGLang serving",
       "source_field": "topic",
       "source_value": "LLM",
@@ -2244,6 +4782,97 @@
       "href": "library.html?topic=LLM&method=SGLang+serving",
       "sample_slugs": [
         "2604.11035-introspective-dlm"
+      ]
+    },
+    {
+      "source": "topic:LLM Code Generation",
+      "target": "method:Document-Driven Integration",
+      "source_field": "topic",
+      "source_value": "LLM Code Generation",
+      "target_field": "method",
+      "target_value": "Document-Driven Integration",
+      "count": 1,
+      "href": "library.html?topic=LLM+Code+Generation&method=Document-Driven+Integration",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "topic:LLM Code Generation",
+      "target": "method:Hierarchical Code Retrieval",
+      "source_field": "topic",
+      "source_value": "LLM Code Generation",
+      "target_field": "method",
+      "target_value": "Hierarchical Code Retrieval",
+      "count": 1,
+      "href": "library.html?topic=LLM+Code+Generation&method=Hierarchical+Code+Retrieval",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "topic:LLM Code Generation",
+      "target": "method:Iterative Search-Based Optimization",
+      "source_field": "topic",
+      "source_value": "LLM Code Generation",
+      "target_field": "method",
+      "target_value": "Iterative Search-Based Optimization",
+      "count": 1,
+      "href": "library.html?topic=LLM+Code+Generation&method=Iterative+Search-Based+Optimization",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "topic:LLM Code Generation",
+      "target": "method:Multi-Agent Workflow",
+      "source_field": "topic",
+      "source_value": "LLM Code Generation",
+      "target_field": "method",
+      "target_value": "Multi-Agent Workflow",
+      "count": 1,
+      "href": "library.html?topic=LLM+Code+Generation&method=Multi-Agent+Workflow",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "topic:LLM Code Generation",
+      "target": "method:Unified Sketch",
+      "source_field": "topic",
+      "source_value": "LLM Code Generation",
+      "target_field": "method",
+      "target_value": "Unified Sketch",
+      "count": 1,
+      "href": "library.html?topic=LLM+Code+Generation&method=Unified+Sketch",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "topic:LLM Code Generation",
+      "target": "method:Verification and Profiling Loop",
+      "source_field": "topic",
+      "source_value": "LLM Code Generation",
+      "target_field": "method",
+      "target_value": "Verification and Profiling Loop",
+      "count": 1,
+      "href": "library.html?topic=LLM+Code+Generation&method=Verification+and+Profiling+Loop",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "topic:LLM Inference",
+      "target": "method:asynchronous decoding",
+      "source_field": "topic",
+      "source_value": "LLM Inference",
+      "target_field": "method",
+      "target_value": "asynchronous decoding",
+      "count": 1,
+      "href": "library.html?topic=LLM+Inference&method=asynchronous+decoding",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
       ]
     },
     {
@@ -2261,6 +4890,32 @@
     },
     {
       "source": "topic:LLM Inference",
+      "target": "method:cache-aware sampling",
+      "source_field": "topic",
+      "source_value": "LLM Inference",
+      "target_field": "method",
+      "target_value": "cache-aware sampling",
+      "count": 1,
+      "href": "library.html?topic=LLM+Inference&method=cache-aware+sampling",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "topic:LLM Inference",
+      "target": "method:confidence-scheduled verification",
+      "source_field": "topic",
+      "source_value": "LLM Inference",
+      "target_field": "method",
+      "target_value": "confidence-scheduled verification",
+      "count": 1,
+      "href": "library.html?topic=LLM+Inference&method=confidence-scheduled+verification",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "topic:LLM Inference",
       "target": "method:dual-view attention",
       "source_field": "topic",
       "source_value": "LLM Inference",
@@ -2274,6 +4929,19 @@
     },
     {
       "source": "topic:LLM Inference",
+      "target": "method:fallback speculation",
+      "source_field": "topic",
+      "source_value": "LLM Inference",
+      "target_field": "method",
+      "target_value": "fallback speculation",
+      "count": 1,
+      "href": "library.html?topic=LLM+Inference&method=fallback+speculation",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "topic:LLM Inference",
       "target": "method:forward KL distillation",
       "source_field": "topic",
       "source_value": "LLM Inference",
@@ -2283,6 +4951,32 @@
       "href": "library.html?topic=LLM+Inference&method=forward+KL+distillation",
       "sample_slugs": [
         "2605.12825-orthrus"
+      ]
+    },
+    {
+      "source": "topic:LLM Inference",
+      "target": "method:geometric fan-out",
+      "source_field": "topic",
+      "source_value": "LLM Inference",
+      "target_field": "method",
+      "target_value": "geometric fan-out",
+      "count": 1,
+      "href": "library.html?topic=LLM+Inference&method=geometric+fan-out",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "topic:LLM Inference",
+      "target": "method:hardware-aware scheduling",
+      "source_field": "topic",
+      "source_value": "LLM Inference",
+      "target_field": "method",
+      "target_value": "hardware-aware scheduling",
+      "count": 1,
+      "href": "library.html?topic=LLM+Inference&method=hardware-aware+scheduling",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
       ]
     },
     {
@@ -2313,6 +5007,19 @@
     },
     {
       "source": "topic:LLM Inference",
+      "target": "method:Markov head",
+      "source_field": "topic",
+      "source_value": "LLM Inference",
+      "target_field": "method",
+      "target_value": "Markov head",
+      "count": 1,
+      "href": "library.html?topic=LLM+Inference&method=Markov+head",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "topic:LLM Inference",
       "target": "method:masked diffusion",
       "source_field": "topic",
       "source_value": "LLM Inference",
@@ -2339,6 +5046,19 @@
     },
     {
       "source": "topic:LLM Inference",
+      "target": "method:semi-autoregressive generation",
+      "source_field": "topic",
+      "source_value": "LLM Inference",
+      "target_field": "method",
+      "target_value": "semi-autoregressive generation",
+      "count": 1,
+      "href": "library.html?topic=LLM+Inference&method=semi-autoregressive+generation",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "topic:LLM Inference",
       "target": "method:shared KV cache",
       "source_field": "topic",
       "source_value": "LLM Inference",
@@ -2352,19 +5072,6 @@
     },
     {
       "source": "topic:LLM Inference",
-      "target": "method:Speculative Decoding",
-      "source_field": "topic",
-      "source_value": "LLM Inference",
-      "target_field": "method",
-      "target_value": "Speculative Decoding",
-      "count": 1,
-      "href": "library.html?topic=LLM+Inference&method=Speculative+Decoding",
-      "sample_slugs": [
-        "2602.06036-dflash"
-      ]
-    },
-    {
-      "source": "topic:LLM Inference",
       "target": "method:target hidden features",
       "source_field": "topic",
       "source_value": "LLM Inference",
@@ -2374,6 +5081,32 @@
       "href": "library.html?topic=LLM+Inference&method=target+hidden+features",
       "sample_slugs": [
         "2602.06036-dflash"
+      ]
+    },
+    {
+      "source": "topic:LLM Inference",
+      "target": "method:verification outcome cache",
+      "source_field": "topic",
+      "source_value": "LLM Inference",
+      "target_field": "method",
+      "target_value": "verification outcome cache",
+      "count": 1,
+      "href": "library.html?topic=LLM+Inference&method=verification+outcome+cache",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "topic:LLM Serving",
+      "target": "method:Balanced K-means",
+      "source_field": "topic",
+      "source_value": "LLM Serving",
+      "target_field": "method",
+      "target_value": "Balanced K-means",
+      "count": 1,
+      "href": "library.html?topic=LLM+Serving&method=Balanced+K-means",
+      "sample_slugs": [
+        "2607.00466-eldr"
       ]
     },
     {
@@ -2417,6 +5150,19 @@
     },
     {
       "source": "topic:LLM Serving",
+      "target": "method:confidence-scheduled verification",
+      "source_field": "topic",
+      "source_value": "LLM Serving",
+      "target_field": "method",
+      "target_value": "confidence-scheduled verification",
+      "count": 1,
+      "href": "library.html?topic=LLM+Serving&method=confidence-scheduled+verification",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "topic:LLM Serving",
       "target": "method:CUDA Graph",
       "source_field": "topic",
       "source_value": "LLM Serving",
@@ -2426,6 +5172,19 @@
       "href": "library.html?topic=LLM+Serving&method=CUDA+Graph",
       "sample_slugs": [
         "2501.01005-flashinfer"
+      ]
+    },
+    {
+      "source": "topic:LLM Serving",
+      "target": "method:Expert Locality Routing",
+      "source_field": "topic",
+      "source_value": "LLM Serving",
+      "target_field": "method",
+      "target_value": "Expert Locality Routing",
+      "count": 1,
+      "href": "library.html?topic=LLM+Serving&method=Expert+Locality+Routing",
+      "sample_slugs": [
+        "2607.00466-eldr"
       ]
     },
     {
@@ -2452,6 +5211,19 @@
       "href": "library.html?topic=LLM+Serving&method=gated+LoRA",
       "sample_slugs": [
         "2604.11035-introspective-dlm"
+      ]
+    },
+    {
+      "source": "topic:LLM Serving",
+      "target": "method:hardware-aware scheduling",
+      "source_field": "topic",
+      "source_value": "LLM Serving",
+      "target_field": "method",
+      "target_value": "hardware-aware scheduling",
+      "count": 1,
+      "href": "library.html?topic=LLM+Serving&method=hardware-aware+scheduling",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
       ]
     },
     {
@@ -2534,6 +5306,19 @@
     },
     {
       "source": "topic:LLM Serving",
+      "target": "method:Markov head",
+      "source_field": "topic",
+      "source_value": "LLM Serving",
+      "target_field": "method",
+      "target_value": "Markov head",
+      "count": 1,
+      "href": "library.html?topic=LLM+Serving&method=Markov+head",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "topic:LLM Serving",
       "target": "method:p/q acceptance",
       "source_field": "topic",
       "source_value": "LLM Serving",
@@ -2560,6 +5345,19 @@
     },
     {
       "source": "topic:LLM Serving",
+      "target": "method:semi-autoregressive generation",
+      "source_field": "topic",
+      "source_value": "LLM Serving",
+      "target_field": "method",
+      "target_value": "semi-autoregressive generation",
+      "count": 1,
+      "href": "library.html?topic=LLM+Serving&method=semi-autoregressive+generation",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "topic:LLM Serving",
       "target": "method:SGLang serving",
       "source_field": "topic",
       "source_value": "LLM Serving",
@@ -2573,15 +5371,15 @@
     },
     {
       "source": "topic:LLM Serving",
-      "target": "method:Speculative Decoding",
+      "target": "method:Signature Cache",
       "source_field": "topic",
       "source_value": "LLM Serving",
       "target_field": "method",
-      "target_value": "Speculative Decoding",
+      "target_value": "Signature Cache",
       "count": 1,
-      "href": "library.html?topic=LLM+Serving&method=Speculative+Decoding",
+      "href": "library.html?topic=LLM+Serving&method=Signature+Cache",
       "sample_slugs": [
-        "2602.06036-dflash"
+        "2607.00466-eldr"
       ]
     },
     {
@@ -2595,6 +5393,45 @@
       "href": "library.html?topic=LLM+Serving&method=target+hidden+features",
       "sample_slugs": [
         "2602.06036-dflash"
+      ]
+    },
+    {
+      "source": "topic:Load Balancing",
+      "target": "method:Balanced K-means",
+      "source_field": "topic",
+      "source_value": "Load Balancing",
+      "target_field": "method",
+      "target_value": "Balanced K-means",
+      "count": 1,
+      "href": "library.html?topic=Load+Balancing&method=Balanced+K-means",
+      "sample_slugs": [
+        "2607.00466-eldr"
+      ]
+    },
+    {
+      "source": "topic:Load Balancing",
+      "target": "method:Expert Locality Routing",
+      "source_field": "topic",
+      "source_value": "Load Balancing",
+      "target_field": "method",
+      "target_value": "Expert Locality Routing",
+      "count": 1,
+      "href": "library.html?topic=Load+Balancing&method=Expert+Locality+Routing",
+      "sample_slugs": [
+        "2607.00466-eldr"
+      ]
+    },
+    {
+      "source": "topic:Load Balancing",
+      "target": "method:Signature Cache",
+      "source_field": "topic",
+      "source_value": "Load Balancing",
+      "target_field": "method",
+      "target_value": "Signature Cache",
+      "count": 1,
+      "href": "library.html?topic=Load+Balancing&method=Signature+Cache",
+      "sample_slugs": [
+        "2607.00466-eldr"
       ]
     },
     {
@@ -2660,6 +5497,331 @@
       "href": "library.html?topic=Long+Context&method=work+partitioning",
       "sample_slugs": [
         "2307.08691-flashattention-2"
+      ]
+    },
+    {
+      "source": "topic:MoE",
+      "target": "method:Balanced K-means",
+      "source_field": "topic",
+      "source_value": "MoE",
+      "target_field": "method",
+      "target_value": "Balanced K-means",
+      "count": 1,
+      "href": "library.html?topic=MoE&method=Balanced+K-means",
+      "sample_slugs": [
+        "2607.00466-eldr"
+      ]
+    },
+    {
+      "source": "topic:MoE",
+      "target": "method:Expert Locality Routing",
+      "source_field": "topic",
+      "source_value": "MoE",
+      "target_field": "method",
+      "target_value": "Expert Locality Routing",
+      "count": 1,
+      "href": "library.html?topic=MoE&method=Expert+Locality+Routing",
+      "sample_slugs": [
+        "2607.00466-eldr"
+      ]
+    },
+    {
+      "source": "topic:MoE",
+      "target": "method:Signature Cache",
+      "source_field": "topic",
+      "source_value": "MoE",
+      "target_field": "method",
+      "target_value": "Signature Cache",
+      "count": 1,
+      "href": "library.html?topic=MoE&method=Signature+Cache",
+      "sample_slugs": [
+        "2607.00466-eldr"
+      ]
+    },
+    {
+      "source": "topic:Multi-Agent Systems",
+      "target": "method:Document-Driven Integration",
+      "source_field": "topic",
+      "source_value": "Multi-Agent Systems",
+      "target_field": "method",
+      "target_value": "Document-Driven Integration",
+      "count": 1,
+      "href": "library.html?topic=Multi-Agent+Systems&method=Document-Driven+Integration",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "topic:Multi-Agent Systems",
+      "target": "method:Hierarchical Code Retrieval",
+      "source_field": "topic",
+      "source_value": "Multi-Agent Systems",
+      "target_field": "method",
+      "target_value": "Hierarchical Code Retrieval",
+      "count": 1,
+      "href": "library.html?topic=Multi-Agent+Systems&method=Hierarchical+Code+Retrieval",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "topic:Multi-Agent Systems",
+      "target": "method:Iterative Search-Based Optimization",
+      "source_field": "topic",
+      "source_value": "Multi-Agent Systems",
+      "target_field": "method",
+      "target_value": "Iterative Search-Based Optimization",
+      "count": 1,
+      "href": "library.html?topic=Multi-Agent+Systems&method=Iterative+Search-Based+Optimization",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "topic:Multi-Agent Systems",
+      "target": "method:Multi-Agent Workflow",
+      "source_field": "topic",
+      "source_value": "Multi-Agent Systems",
+      "target_field": "method",
+      "target_value": "Multi-Agent Workflow",
+      "count": 1,
+      "href": "library.html?topic=Multi-Agent+Systems&method=Multi-Agent+Workflow",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "topic:Multi-Agent Systems",
+      "target": "method:Unified Sketch",
+      "source_field": "topic",
+      "source_value": "Multi-Agent Systems",
+      "target_field": "method",
+      "target_value": "Unified Sketch",
+      "count": 1,
+      "href": "library.html?topic=Multi-Agent+Systems&method=Unified+Sketch",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "topic:Multi-Agent Systems",
+      "target": "method:Verification and Profiling Loop",
+      "source_field": "topic",
+      "source_value": "Multi-Agent Systems",
+      "target_field": "method",
+      "target_value": "Verification and Profiling Loop",
+      "count": 1,
+      "href": "library.html?topic=Multi-Agent+Systems&method=Verification+and+Profiling+Loop",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "topic:Multi-Token Prediction",
+      "target": "method:gated LoRA",
+      "source_field": "topic",
+      "source_value": "Multi-Token Prediction",
+      "target_field": "method",
+      "target_value": "gated LoRA",
+      "count": 1,
+      "href": "library.html?topic=Multi-Token+Prediction&method=gated+LoRA",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "source": "topic:Multi-Token Prediction",
+      "target": "method:latent consistency matching",
+      "source_field": "topic",
+      "source_value": "Multi-Token Prediction",
+      "target_field": "method",
+      "target_value": "latent consistency matching",
+      "count": 1,
+      "href": "library.html?topic=Multi-Token+Prediction&method=latent+consistency+matching",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "source": "topic:Multi-Token Prediction",
+      "target": "method:masked-input formulation",
+      "source_field": "topic",
+      "source_value": "Multi-Token Prediction",
+      "target_field": "method",
+      "target_value": "masked-input formulation",
+      "count": 1,
+      "href": "library.html?topic=Multi-Token+Prediction&method=masked-input+formulation",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "source": "topic:Multi-Token Prediction",
+      "target": "method:quadratic speculative decoding",
+      "source_field": "topic",
+      "source_value": "Multi-Token Prediction",
+      "target_field": "method",
+      "target_value": "quadratic speculative decoding",
+      "count": 1,
+      "href": "library.html?topic=Multi-Token+Prediction&method=quadratic+speculative+decoding",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "source": "topic:Multi-Token Prediction",
+      "target": "method:sampler head",
+      "source_field": "topic",
+      "source_value": "Multi-Token Prediction",
+      "target_field": "method",
+      "target_value": "sampler head",
+      "count": 1,
+      "href": "library.html?topic=Multi-Token+Prediction&method=sampler+head",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "source": "topic:Multimodal Inference",
+      "target": "method:distillation",
+      "source_field": "topic",
+      "source_value": "Multimodal Inference",
+      "target_field": "method",
+      "target_value": "distillation",
+      "count": 1,
+      "href": "library.html?topic=Multimodal+Inference&method=distillation",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "topic:Multimodal Inference",
+      "target": "method:FinalWipe",
+      "source_field": "topic",
+      "source_value": "Multimodal Inference",
+      "target_field": "method",
+      "target_value": "FinalWipe",
+      "count": 1,
+      "href": "library.html?topic=Multimodal+Inference&method=FinalWipe",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "topic:Multimodal Inference",
+      "target": "method:multi-head twig",
+      "source_field": "topic",
+      "source_value": "Multimodal Inference",
+      "target_field": "method",
+      "target_value": "multi-head twig",
+      "count": 1,
+      "href": "library.html?topic=Multimodal+Inference&method=multi-head+twig",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "topic:Multimodal Inference",
+      "target": "method:pruning-oriented reinforcement learning",
+      "source_field": "topic",
+      "source_value": "Multimodal Inference",
+      "target_field": "method",
+      "target_value": "pruning-oriented reinforcement learning",
+      "count": 1,
+      "href": "library.html?topic=Multimodal+Inference&method=pruning-oriented+reinforcement+learning",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "topic:Multimodal Inference",
+      "target": "method:tree-based self-speculative decoding",
+      "source_field": "topic",
+      "source_value": "Multimodal Inference",
+      "target_field": "method",
+      "target_value": "tree-based self-speculative decoding",
+      "count": 1,
+      "href": "library.html?topic=Multimodal+Inference&method=tree-based+self-speculative+decoding",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "topic:Multimodal Inference",
+      "target": "method:twig-guided token pruning",
+      "source_field": "topic",
+      "source_value": "Multimodal Inference",
+      "target_field": "method",
+      "target_value": "twig-guided token pruning",
+      "count": 1,
+      "href": "library.html?topic=Multimodal+Inference&method=twig-guided+token+pruning",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "topic:Non-Autoregressive Generation",
+      "target": "method:gated LoRA",
+      "source_field": "topic",
+      "source_value": "Non-Autoregressive Generation",
+      "target_field": "method",
+      "target_value": "gated LoRA",
+      "count": 1,
+      "href": "library.html?topic=Non-Autoregressive+Generation&method=gated+LoRA",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "source": "topic:Non-Autoregressive Generation",
+      "target": "method:latent consistency matching",
+      "source_field": "topic",
+      "source_value": "Non-Autoregressive Generation",
+      "target_field": "method",
+      "target_value": "latent consistency matching",
+      "count": 1,
+      "href": "library.html?topic=Non-Autoregressive+Generation&method=latent+consistency+matching",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "source": "topic:Non-Autoregressive Generation",
+      "target": "method:masked-input formulation",
+      "source_field": "topic",
+      "source_value": "Non-Autoregressive Generation",
+      "target_field": "method",
+      "target_value": "masked-input formulation",
+      "count": 1,
+      "href": "library.html?topic=Non-Autoregressive+Generation&method=masked-input+formulation",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "source": "topic:Non-Autoregressive Generation",
+      "target": "method:quadratic speculative decoding",
+      "source_field": "topic",
+      "source_value": "Non-Autoregressive Generation",
+      "target_field": "method",
+      "target_value": "quadratic speculative decoding",
+      "count": 1,
+      "href": "library.html?topic=Non-Autoregressive+Generation&method=quadratic+speculative+decoding",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "source": "topic:Non-Autoregressive Generation",
+      "target": "method:sampler head",
+      "source_field": "topic",
+      "source_value": "Non-Autoregressive Generation",
+      "target_field": "method",
+      "target_value": "sampler head",
+      "count": 1,
+      "href": "library.html?topic=Non-Autoregressive+Generation&method=sampler+head",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
       ]
     },
     {
@@ -2806,6 +5968,97 @@
       ]
     },
     {
+      "source": "topic:RAG",
+      "target": "method:Unassigned",
+      "source_field": "topic",
+      "source_value": "RAG",
+      "target_field": "method",
+      "target_value": "Unassigned",
+      "count": 1,
+      "href": "library.html?topic=RAG",
+      "sample_slugs": [
+        "semantic-search-evaluation"
+      ]
+    },
+    {
+      "source": "topic:Semi-Autoregressive Generation",
+      "target": "method:confidence-scheduled verification",
+      "source_field": "topic",
+      "source_value": "Semi-Autoregressive Generation",
+      "target_field": "method",
+      "target_value": "confidence-scheduled verification",
+      "count": 1,
+      "href": "library.html?topic=Semi-Autoregressive+Generation&method=confidence-scheduled+verification",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "topic:Semi-Autoregressive Generation",
+      "target": "method:hardware-aware scheduling",
+      "source_field": "topic",
+      "source_value": "Semi-Autoregressive Generation",
+      "target_field": "method",
+      "target_value": "hardware-aware scheduling",
+      "count": 1,
+      "href": "library.html?topic=Semi-Autoregressive+Generation&method=hardware-aware+scheduling",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "topic:Semi-Autoregressive Generation",
+      "target": "method:Markov head",
+      "source_field": "topic",
+      "source_value": "Semi-Autoregressive Generation",
+      "target_field": "method",
+      "target_value": "Markov head",
+      "count": 1,
+      "href": "library.html?topic=Semi-Autoregressive+Generation&method=Markov+head",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "topic:Semi-Autoregressive Generation",
+      "target": "method:semi-autoregressive generation",
+      "source_field": "topic",
+      "source_value": "Semi-Autoregressive Generation",
+      "target_field": "method",
+      "target_value": "semi-autoregressive generation",
+      "count": 1,
+      "href": "library.html?topic=Semi-Autoregressive+Generation&method=semi-autoregressive+generation",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "topic:Semi-Autoregressive Generation",
+      "target": "method:Speculative Decoding",
+      "source_field": "topic",
+      "source_value": "Semi-Autoregressive Generation",
+      "target_field": "method",
+      "target_value": "Speculative Decoding",
+      "count": 1,
+      "href": "library.html?topic=Semi-Autoregressive+Generation&method=Speculative+Decoding",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "topic:Speculative Decoding",
+      "target": "method:asynchronous decoding",
+      "source_field": "topic",
+      "source_value": "Speculative Decoding",
+      "target_field": "method",
+      "target_value": "asynchronous decoding",
+      "count": 1,
+      "href": "library.html?topic=Speculative+Decoding&method=asynchronous+decoding",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
       "source": "topic:Speculative Decoding",
       "target": "method:block diffusion",
       "source_field": "topic",
@@ -2816,6 +6069,45 @@
       "href": "library.html?topic=Speculative+Decoding&method=block+diffusion",
       "sample_slugs": [
         "2602.06036-dflash"
+      ]
+    },
+    {
+      "source": "topic:Speculative Decoding",
+      "target": "method:cache-aware sampling",
+      "source_field": "topic",
+      "source_value": "Speculative Decoding",
+      "target_field": "method",
+      "target_value": "cache-aware sampling",
+      "count": 1,
+      "href": "library.html?topic=Speculative+Decoding&method=cache-aware+sampling",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "topic:Speculative Decoding",
+      "target": "method:confidence-scheduled verification",
+      "source_field": "topic",
+      "source_value": "Speculative Decoding",
+      "target_field": "method",
+      "target_value": "confidence-scheduled verification",
+      "count": 1,
+      "href": "library.html?topic=Speculative+Decoding&method=confidence-scheduled+verification",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "topic:Speculative Decoding",
+      "target": "method:distillation",
+      "source_field": "topic",
+      "source_value": "Speculative Decoding",
+      "target_field": "method",
+      "target_value": "distillation",
+      "count": 1,
+      "href": "library.html?topic=Speculative+Decoding&method=distillation",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
       ]
     },
     {
@@ -2833,6 +6125,32 @@
     },
     {
       "source": "topic:Speculative Decoding",
+      "target": "method:fallback speculation",
+      "source_field": "topic",
+      "source_value": "Speculative Decoding",
+      "target_field": "method",
+      "target_value": "fallback speculation",
+      "count": 1,
+      "href": "library.html?topic=Speculative+Decoding&method=fallback+speculation",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "topic:Speculative Decoding",
+      "target": "method:FinalWipe",
+      "source_field": "topic",
+      "source_value": "Speculative Decoding",
+      "target_field": "method",
+      "target_value": "FinalWipe",
+      "count": 1,
+      "href": "library.html?topic=Speculative+Decoding&method=FinalWipe",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "topic:Speculative Decoding",
       "target": "method:forward KL distillation",
       "source_field": "topic",
       "source_value": "Speculative Decoding",
@@ -2846,15 +6164,28 @@
     },
     {
       "source": "topic:Speculative Decoding",
-      "target": "method:gated LoRA",
+      "target": "method:geometric fan-out",
       "source_field": "topic",
       "source_value": "Speculative Decoding",
       "target_field": "method",
-      "target_value": "gated LoRA",
+      "target_value": "geometric fan-out",
       "count": 1,
-      "href": "library.html?topic=Speculative+Decoding&method=gated+LoRA",
+      "href": "library.html?topic=Speculative+Decoding&method=geometric+fan-out",
       "sample_slugs": [
-        "2604.11035-introspective-dlm"
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "topic:Speculative Decoding",
+      "target": "method:hardware-aware scheduling",
+      "source_field": "topic",
+      "source_value": "Speculative Decoding",
+      "target_field": "method",
+      "target_value": "hardware-aware scheduling",
+      "count": 1,
+      "href": "library.html?topic=Speculative+Decoding&method=hardware-aware+scheduling",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
       ]
     },
     {
@@ -2911,6 +6242,19 @@
     },
     {
       "source": "topic:Speculative Decoding",
+      "target": "method:latent consistency matching",
+      "source_field": "topic",
+      "source_value": "Speculative Decoding",
+      "target_field": "method",
+      "target_value": "latent consistency matching",
+      "count": 1,
+      "href": "library.html?topic=Speculative+Decoding&method=latent+consistency+matching",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "source": "topic:Speculative Decoding",
       "target": "method:logit-shifted causal training",
       "source_field": "topic",
       "source_value": "Speculative Decoding",
@@ -2924,6 +6268,19 @@
     },
     {
       "source": "topic:Speculative Decoding",
+      "target": "method:Markov head",
+      "source_field": "topic",
+      "source_value": "Speculative Decoding",
+      "target_field": "method",
+      "target_value": "Markov head",
+      "count": 1,
+      "href": "library.html?topic=Speculative+Decoding&method=Markov+head",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "topic:Speculative Decoding",
       "target": "method:masked diffusion",
       "source_field": "topic",
       "source_value": "Speculative Decoding",
@@ -2933,6 +6290,32 @@
       "href": "library.html?topic=Speculative+Decoding&method=masked+diffusion",
       "sample_slugs": [
         "2605.12825-orthrus"
+      ]
+    },
+    {
+      "source": "topic:Speculative Decoding",
+      "target": "method:masked-input formulation",
+      "source_field": "topic",
+      "source_value": "Speculative Decoding",
+      "target_field": "method",
+      "target_value": "masked-input formulation",
+      "count": 1,
+      "href": "library.html?topic=Speculative+Decoding&method=masked-input+formulation",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "source": "topic:Speculative Decoding",
+      "target": "method:multi-head twig",
+      "source_field": "topic",
+      "source_value": "Speculative Decoding",
+      "target_field": "method",
+      "target_value": "multi-head twig",
+      "count": 1,
+      "href": "library.html?topic=Speculative+Decoding&method=multi-head+twig",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
       ]
     },
     {
@@ -2963,6 +6346,58 @@
     },
     {
       "source": "topic:Speculative Decoding",
+      "target": "method:pruning-oriented reinforcement learning",
+      "source_field": "topic",
+      "source_value": "Speculative Decoding",
+      "target_field": "method",
+      "target_value": "pruning-oriented reinforcement learning",
+      "count": 1,
+      "href": "library.html?topic=Speculative+Decoding&method=pruning-oriented+reinforcement+learning",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "topic:Speculative Decoding",
+      "target": "method:quadratic speculative decoding",
+      "source_field": "topic",
+      "source_value": "Speculative Decoding",
+      "target_field": "method",
+      "target_value": "quadratic speculative decoding",
+      "count": 1,
+      "href": "library.html?topic=Speculative+Decoding&method=quadratic+speculative+decoding",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "source": "topic:Speculative Decoding",
+      "target": "method:sampler head",
+      "source_field": "topic",
+      "source_value": "Speculative Decoding",
+      "target_field": "method",
+      "target_value": "sampler head",
+      "count": 1,
+      "href": "library.html?topic=Speculative+Decoding&method=sampler+head",
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "source": "topic:Speculative Decoding",
+      "target": "method:semi-autoregressive generation",
+      "source_field": "topic",
+      "source_value": "Speculative Decoding",
+      "target_field": "method",
+      "target_value": "semi-autoregressive generation",
+      "count": 1,
+      "href": "library.html?topic=Speculative+Decoding&method=semi-autoregressive+generation",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "topic:Speculative Decoding",
       "target": "method:SGLang serving",
       "source_field": "topic",
       "source_value": "Speculative Decoding",
@@ -2989,19 +6424,6 @@
     },
     {
       "source": "topic:Speculative Decoding",
-      "target": "method:Speculative Decoding",
-      "source_field": "topic",
-      "source_value": "Speculative Decoding",
-      "target_field": "method",
-      "target_value": "Speculative Decoding",
-      "count": 1,
-      "href": "library.html?topic=Speculative+Decoding&method=Speculative+Decoding",
-      "sample_slugs": [
-        "2602.06036-dflash"
-      ]
-    },
-    {
-      "source": "topic:Speculative Decoding",
       "target": "method:target hidden features",
       "source_field": "topic",
       "source_value": "Speculative Decoding",
@@ -3011,6 +6433,123 @@
       "href": "library.html?topic=Speculative+Decoding&method=target+hidden+features",
       "sample_slugs": [
         "2602.06036-dflash"
+      ]
+    },
+    {
+      "source": "topic:Speculative Decoding",
+      "target": "method:tree-based self-speculative decoding",
+      "source_field": "topic",
+      "source_value": "Speculative Decoding",
+      "target_field": "method",
+      "target_value": "tree-based self-speculative decoding",
+      "count": 1,
+      "href": "library.html?topic=Speculative+Decoding&method=tree-based+self-speculative+decoding",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "topic:Speculative Decoding",
+      "target": "method:twig-guided token pruning",
+      "source_field": "topic",
+      "source_value": "Speculative Decoding",
+      "target_field": "method",
+      "target_value": "twig-guided token pruning",
+      "count": 1,
+      "href": "library.html?topic=Speculative+Decoding&method=twig-guided+token+pruning",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "topic:Speculative Decoding",
+      "target": "method:verification outcome cache",
+      "source_field": "topic",
+      "source_value": "Speculative Decoding",
+      "target_field": "method",
+      "target_value": "verification outcome cache",
+      "count": 1,
+      "href": "library.html?topic=Speculative+Decoding&method=verification+outcome+cache",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "topic:Systems Optimization",
+      "target": "method:asynchronous decoding",
+      "source_field": "topic",
+      "source_value": "Systems Optimization",
+      "target_field": "method",
+      "target_value": "asynchronous decoding",
+      "count": 1,
+      "href": "library.html?topic=Systems+Optimization&method=asynchronous+decoding",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "topic:Systems Optimization",
+      "target": "method:cache-aware sampling",
+      "source_field": "topic",
+      "source_value": "Systems Optimization",
+      "target_field": "method",
+      "target_value": "cache-aware sampling",
+      "count": 1,
+      "href": "library.html?topic=Systems+Optimization&method=cache-aware+sampling",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "topic:Systems Optimization",
+      "target": "method:fallback speculation",
+      "source_field": "topic",
+      "source_value": "Systems Optimization",
+      "target_field": "method",
+      "target_value": "fallback speculation",
+      "count": 1,
+      "href": "library.html?topic=Systems+Optimization&method=fallback+speculation",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "topic:Systems Optimization",
+      "target": "method:geometric fan-out",
+      "source_field": "topic",
+      "source_value": "Systems Optimization",
+      "target_field": "method",
+      "target_value": "geometric fan-out",
+      "count": 1,
+      "href": "library.html?topic=Systems+Optimization&method=geometric+fan-out",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "topic:Systems Optimization",
+      "target": "method:Speculative Decoding",
+      "source_field": "topic",
+      "source_value": "Systems Optimization",
+      "target_field": "method",
+      "target_value": "Speculative Decoding",
+      "count": 1,
+      "href": "library.html?topic=Systems+Optimization&method=Speculative+Decoding",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "topic:Systems Optimization",
+      "target": "method:verification outcome cache",
+      "source_field": "topic",
+      "source_value": "Systems Optimization",
+      "target_field": "method",
+      "target_value": "verification outcome cache",
+      "count": 1,
+      "href": "library.html?topic=Systems+Optimization&method=verification+outcome+cache",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
       ]
     },
     {
@@ -3079,6 +6618,240 @@
       ]
     },
     {
+      "source": "topic:Vision-Language Models",
+      "target": "method:distillation",
+      "source_field": "topic",
+      "source_value": "Vision-Language Models",
+      "target_field": "method",
+      "target_value": "distillation",
+      "count": 1,
+      "href": "library.html?topic=Vision-Language+Models&method=distillation",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "topic:Vision-Language Models",
+      "target": "method:FinalWipe",
+      "source_field": "topic",
+      "source_value": "Vision-Language Models",
+      "target_field": "method",
+      "target_value": "FinalWipe",
+      "count": 1,
+      "href": "library.html?topic=Vision-Language+Models&method=FinalWipe",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "topic:Vision-Language Models",
+      "target": "method:multi-head twig",
+      "source_field": "topic",
+      "source_value": "Vision-Language Models",
+      "target_field": "method",
+      "target_value": "multi-head twig",
+      "count": 1,
+      "href": "library.html?topic=Vision-Language+Models&method=multi-head+twig",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "topic:Vision-Language Models",
+      "target": "method:pruning-oriented reinforcement learning",
+      "source_field": "topic",
+      "source_value": "Vision-Language Models",
+      "target_field": "method",
+      "target_value": "pruning-oriented reinforcement learning",
+      "count": 1,
+      "href": "library.html?topic=Vision-Language+Models&method=pruning-oriented+reinforcement+learning",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "topic:Vision-Language Models",
+      "target": "method:tree-based self-speculative decoding",
+      "source_field": "topic",
+      "source_value": "Vision-Language Models",
+      "target_field": "method",
+      "target_value": "tree-based self-speculative decoding",
+      "count": 1,
+      "href": "library.html?topic=Vision-Language+Models&method=tree-based+self-speculative+decoding",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "topic:Vision-Language Models",
+      "target": "method:twig-guided token pruning",
+      "source_field": "topic",
+      "source_value": "Vision-Language Models",
+      "target_field": "method",
+      "target_value": "twig-guided token pruning",
+      "count": 1,
+      "href": "library.html?topic=Vision-Language+Models&method=twig-guided+token+pruning",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "topic:Visual Token Pruning",
+      "target": "method:distillation",
+      "source_field": "topic",
+      "source_value": "Visual Token Pruning",
+      "target_field": "method",
+      "target_value": "distillation",
+      "count": 1,
+      "href": "library.html?topic=Visual+Token+Pruning&method=distillation",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "topic:Visual Token Pruning",
+      "target": "method:FinalWipe",
+      "source_field": "topic",
+      "source_value": "Visual Token Pruning",
+      "target_field": "method",
+      "target_value": "FinalWipe",
+      "count": 1,
+      "href": "library.html?topic=Visual+Token+Pruning&method=FinalWipe",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "topic:Visual Token Pruning",
+      "target": "method:multi-head twig",
+      "source_field": "topic",
+      "source_value": "Visual Token Pruning",
+      "target_field": "method",
+      "target_value": "multi-head twig",
+      "count": 1,
+      "href": "library.html?topic=Visual+Token+Pruning&method=multi-head+twig",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "topic:Visual Token Pruning",
+      "target": "method:pruning-oriented reinforcement learning",
+      "source_field": "topic",
+      "source_value": "Visual Token Pruning",
+      "target_field": "method",
+      "target_value": "pruning-oriented reinforcement learning",
+      "count": 1,
+      "href": "library.html?topic=Visual+Token+Pruning&method=pruning-oriented+reinforcement+learning",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "topic:Visual Token Pruning",
+      "target": "method:tree-based self-speculative decoding",
+      "source_field": "topic",
+      "source_value": "Visual Token Pruning",
+      "target_field": "method",
+      "target_value": "tree-based self-speculative decoding",
+      "count": 1,
+      "href": "library.html?topic=Visual+Token+Pruning&method=tree-based+self-speculative+decoding",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "topic:Visual Token Pruning",
+      "target": "method:twig-guided token pruning",
+      "source_field": "topic",
+      "source_value": "Visual Token Pruning",
+      "target_field": "method",
+      "target_value": "twig-guided token pruning",
+      "count": 1,
+      "href": "library.html?topic=Visual+Token+Pruning&method=twig-guided+token+pruning",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "topic:VLM Acceleration",
+      "target": "method:distillation",
+      "source_field": "topic",
+      "source_value": "VLM Acceleration",
+      "target_field": "method",
+      "target_value": "distillation",
+      "count": 1,
+      "href": "library.html?topic=VLM+Acceleration&method=distillation",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "topic:VLM Acceleration",
+      "target": "method:FinalWipe",
+      "source_field": "topic",
+      "source_value": "VLM Acceleration",
+      "target_field": "method",
+      "target_value": "FinalWipe",
+      "count": 1,
+      "href": "library.html?topic=VLM+Acceleration&method=FinalWipe",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "topic:VLM Acceleration",
+      "target": "method:multi-head twig",
+      "source_field": "topic",
+      "source_value": "VLM Acceleration",
+      "target_field": "method",
+      "target_value": "multi-head twig",
+      "count": 1,
+      "href": "library.html?topic=VLM+Acceleration&method=multi-head+twig",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "topic:VLM Acceleration",
+      "target": "method:pruning-oriented reinforcement learning",
+      "source_field": "topic",
+      "source_value": "VLM Acceleration",
+      "target_field": "method",
+      "target_value": "pruning-oriented reinforcement learning",
+      "count": 1,
+      "href": "library.html?topic=VLM+Acceleration&method=pruning-oriented+reinforcement+learning",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "topic:VLM Acceleration",
+      "target": "method:tree-based self-speculative decoding",
+      "source_field": "topic",
+      "source_value": "VLM Acceleration",
+      "target_field": "method",
+      "target_value": "tree-based self-speculative decoding",
+      "count": 1,
+      "href": "library.html?topic=VLM+Acceleration&method=tree-based+self-speculative+decoding",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "topic:VLM Acceleration",
+      "target": "method:twig-guided token pruning",
+      "source_field": "topic",
+      "source_value": "VLM Acceleration",
+      "target_field": "method",
+      "target_value": "twig-guided token pruning",
+      "count": 1,
+      "href": "library.html?topic=VLM+Acceleration&method=twig-guided+token+pruning",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
       "source": "track:Attention Kernels",
       "target": "problem:Customizable Attention Serving",
       "source_field": "track",
@@ -3106,15 +6879,41 @@
     },
     {
       "source": "track:Inference Acceleration",
-      "target": "problem:Lossless Speculative Decoding",
+      "target": "problem:Efficient VLM Inference",
       "source_field": "track",
       "source_value": "Inference Acceleration",
       "target_field": "problem",
-      "target_value": "Lossless Speculative Decoding",
+      "target_value": "Efficient VLM Inference",
       "count": 1,
-      "href": "library.html?track=Inference+Acceleration&problem=Lossless+Speculative+Decoding",
+      "href": "library.html?track=Inference+Acceleration&problem=Efficient+VLM+Inference",
       "sample_slugs": [
-        "2602.06036-dflash"
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "track:Inference Acceleration",
+      "target": "problem:Load-Aware Serving",
+      "source_field": "track",
+      "source_value": "Inference Acceleration",
+      "target_field": "problem",
+      "target_value": "Load-Aware Serving",
+      "count": 1,
+      "href": "library.html?track=Inference+Acceleration&problem=Load-Aware+Serving",
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "track:Inference Acceleration",
+      "target": "problem:Long-Response Decoding",
+      "source_field": "track",
+      "source_value": "Inference Acceleration",
+      "target_field": "problem",
+      "target_value": "Long-Response Decoding",
+      "count": 1,
+      "href": "library.html?track=Inference+Acceleration&problem=Long-Response+Decoding",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
       ]
     },
     {
@@ -3132,6 +6931,19 @@
     },
     {
       "source": "track:Inference Acceleration",
+      "target": "problem:MoE Serving",
+      "source_field": "track",
+      "source_value": "Inference Acceleration",
+      "target_field": "problem",
+      "target_value": "MoE Serving",
+      "count": 1,
+      "href": "library.html?track=Inference+Acceleration&problem=MoE+Serving",
+      "sample_slugs": [
+        "2607.00466-eldr"
+      ]
+    },
+    {
+      "source": "track:Inference Acceleration",
       "target": "problem:Parallel Diffusion Decoding",
       "source_field": "track",
       "source_value": "Inference Acceleration",
@@ -3141,6 +6953,19 @@
       "href": "library.html?track=Inference+Acceleration&problem=Parallel+Diffusion+Decoding",
       "sample_slugs": [
         "2604.11035-introspective-dlm"
+      ]
+    },
+    {
+      "source": "track:Inference Acceleration",
+      "target": "problem:Visual Token Redundancy",
+      "source_field": "track",
+      "source_value": "Inference Acceleration",
+      "target_field": "problem",
+      "target_value": "Visual Token Redundancy",
+      "count": 1,
+      "href": "library.html?track=Inference+Acceleration&problem=Visual+Token+Redundancy",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
       ]
     },
     {
@@ -3158,15 +6983,15 @@
     },
     {
       "source": "track:Parallel Decoding",
-      "target": "problem:Lossless Speculative Decoding",
+      "target": "problem:Load-Aware Serving",
       "source_field": "track",
       "source_value": "Parallel Decoding",
       "target_field": "problem",
-      "target_value": "Lossless Speculative Decoding",
+      "target_value": "Load-Aware Serving",
       "count": 1,
-      "href": "library.html?track=Parallel+Decoding&problem=Lossless+Speculative+Decoding",
+      "href": "library.html?track=Parallel+Decoding&problem=Load-Aware+Serving",
       "sample_slugs": [
-        "2602.06036-dflash"
+        "noarxiv-2026-dspark"
       ]
     },
     {
@@ -3194,33 +7019,72 @@
       "sample_slugs": [
         "2604.11035-introspective-dlm"
       ]
+    },
+    {
+      "source": "track:VLM Acceleration",
+      "target": "problem:Efficient VLM Inference",
+      "source_field": "track",
+      "source_value": "VLM Acceleration",
+      "target_field": "problem",
+      "target_value": "Efficient VLM Inference",
+      "count": 1,
+      "href": "library.html?track=VLM+Acceleration&problem=Efficient+VLM+Inference",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "track:VLM Acceleration",
+      "target": "problem:Long-Response Decoding",
+      "source_field": "track",
+      "source_value": "VLM Acceleration",
+      "target_field": "problem",
+      "target_value": "Long-Response Decoding",
+      "count": 1,
+      "href": "library.html?track=VLM+Acceleration&problem=Long-Response+Decoding",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "track:VLM Acceleration",
+      "target": "problem:Visual Token Redundancy",
+      "source_field": "track",
+      "source_value": "VLM Acceleration",
+      "target_field": "problem",
+      "target_value": "Visual Token Redundancy",
+      "count": 1,
+      "href": "library.html?track=VLM+Acceleration&problem=Visual+Token+Redundancy",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
     }
   ],
   "clusters": [
     {
       "research_line": "Parallel Decoding with Diffusion Models",
-      "count": 3,
+      "count": 4,
       "href": "library.html?line=Parallel+Decoding+with+Diffusion+Models",
       "top_domains": [
         {
           "value": "LLM Systems",
-          "count": 3
+          "count": 4
         }
       ],
       "top_tracks": [
         {
           "value": "Inference Acceleration",
-          "count": 3
+          "count": 4
         },
         {
           "value": "Parallel Decoding",
-          "count": 3
+          "count": 4
         }
       ],
       "top_problems": [
         {
           "value": "Lossless Speculative Decoding",
-          "count": 1
+          "count": 2
         },
         {
           "value": "Parallel Diffusion Decoding",
@@ -3233,11 +7097,11 @@
       ],
       "top_topics": [
         {
-          "value": "Diffusion Language Models",
-          "count": 3
+          "value": "Speculative Decoding",
+          "count": 4
         },
         {
-          "value": "Speculative Decoding",
+          "value": "Diffusion Language Models",
           "count": 3
         },
         {
@@ -3249,15 +7113,19 @@
           "count": 2
         },
         {
-          "value": "Parallel Decoding",
+          "value": "LLM",
           "count": 2
         },
         {
-          "value": "LLM",
-          "count": 1
+          "value": "Parallel Decoding",
+          "count": 2
         }
       ],
       "top_methods": [
+        {
+          "value": "gated LoRA",
+          "count": 2
+        },
         {
           "value": "block diffusion",
           "count": 1
@@ -3277,16 +7145,105 @@
         {
           "value": "target hidden features",
           "count": 1
+        }
+      ],
+      "slugs": [
+        "2507.11851-llm-future-mtp",
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus"
+      ]
+    },
+    {
+      "research_line": "LLM Serving",
+      "count": 3,
+      "href": "library.html?line=LLM+Serving",
+      "top_domains": [
+        {
+          "value": "LLM Systems",
+          "count": 2
+        }
+      ],
+      "top_tracks": [
+        {
+          "value": "Inference Acceleration",
+          "count": 2
         },
         {
-          "value": "gated LoRA",
+          "value": "Parallel Decoding",
+          "count": 1
+        }
+      ],
+      "top_problems": [
+        {
+          "value": "MoE Serving",
+          "count": 1
+        },
+        {
+          "value": "Load-Aware Serving",
+          "count": 1
+        },
+        {
+          "value": "Lossless Speculative Decoding",
+          "count": 1
+        }
+      ],
+      "top_topics": [
+        {
+          "value": "LLM Serving",
+          "count": 2
+        },
+        {
+          "value": "Disaggregated Serving",
+          "count": 1
+        },
+        {
+          "value": "Load Balancing",
+          "count": 1
+        },
+        {
+          "value": "MoE",
+          "count": 1
+        },
+        {
+          "value": "LLM Inference",
+          "count": 1
+        },
+        {
+          "value": "Semi-Autoregressive Generation",
+          "count": 1
+        }
+      ],
+      "top_methods": [
+        {
+          "value": "Balanced K-means",
+          "count": 1
+        },
+        {
+          "value": "Expert Locality Routing",
+          "count": 1
+        },
+        {
+          "value": "Signature Cache",
+          "count": 1
+        },
+        {
+          "value": "confidence-scheduled verification",
+          "count": 1
+        },
+        {
+          "value": "hardware-aware scheduling",
+          "count": 1
+        },
+        {
+          "value": "Markov head",
           "count": 1
         }
       ],
       "slugs": [
-        "2602.06036-dflash",
-        "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
+        "2512.23424-akg-kernel-agent-multi",
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark"
       ]
     },
     {
@@ -3375,17 +7332,175 @@
         "2307.08691-flashattention-2",
         "2501.01005-flashinfer"
       ]
+    },
+    {
+      "research_line": "Unassigned",
+      "count": 2,
+      "href": "library.html",
+      "top_domains": [],
+      "top_tracks": [],
+      "top_problems": [],
+      "top_topics": [
+        {
+          "value": "Distributed Inference",
+          "count": 1
+        },
+        {
+          "value": "LLM Inference",
+          "count": 1
+        },
+        {
+          "value": "Speculative Decoding",
+          "count": 1
+        },
+        {
+          "value": "Systems Optimization",
+          "count": 1
+        },
+        {
+          "value": "RAG",
+          "count": 1
+        }
+      ],
+      "top_methods": [
+        {
+          "value": "asynchronous decoding",
+          "count": 1
+        },
+        {
+          "value": "cache-aware sampling",
+          "count": 1
+        },
+        {
+          "value": "fallback speculation",
+          "count": 1
+        },
+        {
+          "value": "geometric fan-out",
+          "count": 1
+        },
+        {
+          "value": "Speculative Decoding",
+          "count": 1
+        },
+        {
+          "value": "verification outcome cache",
+          "count": 1
+        }
+      ],
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding",
+        "semantic-search-evaluation"
+      ]
+    },
+    {
+      "research_line": "VLM Acceleration",
+      "count": 1,
+      "href": "library.html?line=VLM+Acceleration",
+      "top_domains": [
+        {
+          "value": "LLM Systems",
+          "count": 1
+        },
+        {
+          "value": "Multimodal Systems",
+          "count": 1
+        }
+      ],
+      "top_tracks": [
+        {
+          "value": "Inference Acceleration",
+          "count": 1
+        },
+        {
+          "value": "VLM Acceleration",
+          "count": 1
+        }
+      ],
+      "top_problems": [
+        {
+          "value": "Efficient VLM Inference",
+          "count": 1
+        },
+        {
+          "value": "Long-Response Decoding",
+          "count": 1
+        },
+        {
+          "value": "Visual Token Redundancy",
+          "count": 1
+        }
+      ],
+      "top_topics": [
+        {
+          "value": "Multimodal Inference",
+          "count": 1
+        },
+        {
+          "value": "Speculative Decoding",
+          "count": 1
+        },
+        {
+          "value": "Vision-Language Models",
+          "count": 1
+        },
+        {
+          "value": "Visual Token Pruning",
+          "count": 1
+        },
+        {
+          "value": "VLM Acceleration",
+          "count": 1
+        }
+      ],
+      "top_methods": [
+        {
+          "value": "distillation",
+          "count": 1
+        },
+        {
+          "value": "FinalWipe",
+          "count": 1
+        },
+        {
+          "value": "multi-head twig",
+          "count": 1
+        },
+        {
+          "value": "pruning-oriented reinforcement learning",
+          "count": 1
+        },
+        {
+          "value": "tree-based self-speculative decoding",
+          "count": 1
+        },
+        {
+          "value": "twig-guided token pruning",
+          "count": 1
+        }
+      ],
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
     }
   ],
   "isolated_nodes": [],
   "recommendations": [
-    "当前分类图谱连接正常，可以优先从强边和研究线簇继续扩展。"
+    "有 1 个 topic/method/problem 节点覆盖面偏大，可在 taxonomy.html 或 facets.html 中考虑拆分。",
+    "有 2 篇论文未进入研究线，建议先分配 research_line 再细化下游分类。"
   ],
   "slug_titles": {
+    "2607.00466-eldr": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+    "2603.03251-speculative-speculative-decoding": "推测性推测解码",
+    "2503.14075-twigvlm-plus-plus": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+    "noarxiv-2026-dspark": "DSpark：基于置信度调度的半自回归 speculative decoding",
     "2602.06036-dflash": "DFlash：用于快速 speculative decoding 的块扩散方法",
     "2604.11035-introspective-dlm": "内省式扩散语言模型",
     "2605.12825-orthrus": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+    "2507.11851-llm-future-mtp": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
+    "2512.23424-akg-kernel-agent-multi": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
     "2501.01005-flashinfer": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
-    "2307.08691-flashattention-2": "FlashAttention-2：用更好的并行性与工作划分加速 Attention"
+    "2307.08691-flashattention-2": "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
+    "semantic-search-evaluation": "Semantic Search Evaluation"
   }
 }

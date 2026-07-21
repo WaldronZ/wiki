@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LLM Serving</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f3ee;
+      --panel: #fffdf8;
+      --ink: #222426;
+      --muted: #6b6f76;
+      --line: #ded8cd;
+      --accent: #2f6f73;
+      --accent-2: #8a5d3b;
+      --chip: #edf3f1;
+      --shadow: 0 14px 36px rgba(48, 44, 36, .08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "PingFang SC", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+      line-height: 1.65;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+    header { padding: 44px 0 22px; }
+    .eyebrow { color: var(--accent-2); font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    h1 { margin: 8px 0 10px; font-size: clamp(30px, 5vw, 56px); line-height: 1.08; letter-spacing: 0; }
+    .lead { max-width: 760px; margin: 0; color: var(--muted); font-size: 17px; }
+    .stats { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+    .stat, .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 999px;
+      padding: 7px 12px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      padding: 12px 0;
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+    }
+    .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(138px, 1fr)); gap: 10px; }
+    .controls input[type="search"] { grid-column: span 2; min-width: 260px; }
+    input, select {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--ink);
+      padding: 0 12px;
+      font: inherit;
+    }
+    main { padding: 28px 0 56px; }
+    .overview { margin-bottom: 30px; }
+    .line-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+    .line-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 15px;
+    }
+    .line-card h2 { margin: 0 0 8px; font-size: 18px; line-height: 1.25; }
+    .line-card ul { margin: 10px 0 0; padding-left: 18px; }
+    .taxonomy-kicker { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 10px; }
+    .results-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin: 0 0 16px;
+      color: var(--muted);
+    }
+    .results-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .saved-view { min-width: 180px; width: auto; }
+    .pager {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 22px;
+      color: var(--muted);
+    }
+    .pager[hidden] { display: none; }
+    .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin: 24px 0; }
+    .metric-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .metric-card strong { display: block; font-size: 28px; line-height: 1.1; }
+    .metric-card span { color: var(--muted); font-size: 13px; }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    .data-table th, .data-table td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+    .data-table th { color: var(--muted); font-size: 13px; font-weight: 700; }
+    .data-table tr:last-child td { border-bottom: 0; }
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+    .library-table {
+      width: 100%;
+      min-width: 1080px;
+      border-collapse: collapse;
+    }
+    .library-table th, .library-table td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }
+    .library-table th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: #f0ebe1;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+      text-transform: uppercase;
+    }
+    .library-table tr:last-child td { border-bottom: 0; }
+    .library-table tr[hidden] { display: none; }
+    .library-title { min-width: 300px; }
+    .library-title strong { display: block; font-size: 15px; line-height: 1.3; }
+    .library-taxonomy { min-width: 210px; }
+    .library-actions { display: flex; flex-wrap: wrap; gap: 8px; min-width: 145px; }
+    .status-stack { display: grid; gap: 5px; }
+    .score-grid { display: grid; grid-template-columns: repeat(3, minmax(42px, 1fr)); gap: 6px; }
+    .score-grid span {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #faf7f0;
+      padding: 4px 6px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+    }
+    .queue-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .queue-list { margin: 0; padding-left: 18px; }
+    .queue-list li { margin: 8px 0; }
+    .taxonomy-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+    .taxonomy-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .taxonomy-panel h2 { margin: 0 0 10px; font-size: 20px; }
+    .taxonomy-panel .data-table { border: 0; }
+    .matrix-link { display: inline-flex; min-width: 32px; justify-content: center; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+    }
+    .card h2 { margin: 0 0 8px; font-size: 20px; line-height: 1.25; letter-spacing: 0; }
+    .line-detail { display: grid; gap: 18px; }
+    .role-section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .role-section h2 { margin: 0 0 12px; font-size: 20px; }
+    .paper-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 14px;
+      padding: 12px 0;
+      border-top: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+    }
+    .paper-row:first-of-type { border-top: 0; }
+    .paper-row h3 { margin: 0 0 4px; font-size: 17px; line-height: 1.3; }
+    .paper-row .chips { margin-top: 8px; padding-top: 0; }
+    .meta { color: var(--muted); font-size: 13px; }
+    .essence {
+      margin: 12px 0 0;
+      padding: 10px 12px;
+      border-left: 3px solid var(--accent);
+      border-radius: 7px;
+      background: var(--chip);
+      color: #2f5054;
+      font-size: 14px;
+    }
+    .excerpt { color: #3f4448; margin: 12px 0; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 12px; }
+    .chip { background: var(--chip); padding: 4px 9px; font-size: 12px; }
+    .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 0 11px;
+      font-size: 14px;
+      font-weight: 650;
+      color: var(--accent);
+      cursor: pointer;
+    }
+    .button:disabled { cursor: not-allowed; opacity: .45; }
+    .quick-open {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 80;
+      min-width: 92px;
+      box-shadow: var(--shadow);
+    }
+    .quick-panel[hidden] { display: none; }
+    .quick-panel {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      place-items: start center;
+      padding: 74px 16px 16px;
+      background: rgba(34, 36, 38, .28);
+    }
+    .quick-dialog {
+      width: min(680px, 100%);
+      max-height: min(720px, calc(100vh - 96px));
+      display: grid;
+      grid-template-rows: auto 1fr;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: 0 24px 80px rgba(28, 31, 32, .24);
+      overflow: hidden;
+    }
+    .quick-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .quick-close { min-width: 40px; padding: 0; }
+    .quick-list {
+      overflow-y: auto;
+      padding: 8px;
+    }
+    .quick-item {
+      display: grid;
+      gap: 2px;
+      width: 100%;
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: var(--ink);
+    }
+    .quick-item-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .quick-kind {
+      flex: 0 0 auto;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #faf7f0;
+      color: var(--muted);
+      padding: 1px 7px;
+      font-size: 11px;
+      font-weight: 750;
+      text-transform: uppercase;
+    }
+    .quick-item:hover, .quick-item.is-active {
+      background: var(--chip);
+      text-decoration: none;
+    }
+    .quick-item strong { line-height: 1.25; }
+    .quick-empty { padding: 24px; color: var(--muted); }
+    .section-title { margin: 28px 0 12px; font-size: 22px; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 10px; }
+    .tag-pill {
+      display: inline-flex;
+      justify-content: space-between;
+      gap: 20px;
+      min-width: 150px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 10px 12px;
+    }
+    .empty {
+      border: 1px dashed var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+      padding: 28px;
+      color: var(--muted);
+    }
+    .card-flags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .flag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      border-radius: 999px;
+      background: #f7f3eb;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      padding: 0 8px;
+      font-size: 12px;
+    }
+    @media (max-width: 760px) {
+      .controls { grid-template-columns: 1fr; }
+      .controls input[type="search"] { grid-column: auto; min-width: 0; }
+      .results-bar { align-items: flex-start; flex-direction: column; }
+      .pager { justify-content: flex-start; flex-wrap: wrap; }
+      .paper-row { grid-template-columns: 1fr; }
+      .data-table { display: block; overflow-x: auto; }
+      header { padding-top: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+<button class="button quick-open" type="button" id="quickOpen">快速跳转</button>
+<div class="quick-panel" id="quickPanel" hidden>
+  <div class="quick-dialog" role="dialog" aria-modal="true" aria-label="快速跳转">
+    <div class="quick-head">
+      <input id="quickSearch" type="search" placeholder="搜索页面或论文" aria-labelledby="quickTitle">
+      <button class="button quick-close" type="button" id="quickClose" aria-label="关闭">×</button>
+    </div>
+    <div class="quick-list" id="quickList"></div>
+  </div>
+</div>
+
+<header class="shell">
+  <div class="eyebrow">Research Line</div>
+  <h1>LLM Serving</h1>
+  <p class="lead">按论文在该研究线中的角色组织：foundation、baseline、main、system、variant、followup 等角色来自 frontmatter，可按你的分类习惯自由扩展。</p>
+  <div class="stats">
+    <a class="stat" href="../index.html">返回首页</a>
+    <a class="stat" href="../library.html">论文库表格</a>
+    <a class="stat" href="../review.html">复习计划</a>
+    <a class="stat" href="../dashboard.html">管理控制台</a>
+    <a class="stat" href="../collections.html">集合视图</a>
+    <a class="stat" href="../related.html">关联网络</a>
+    <a class="stat" href="../gaps.html">研究缺口</a>
+    <a class="stat" href="../taxonomy.html">分类治理</a>
+    <a class="stat" href="../timeline.html">时间轴</a>
+    <a class="stat" href="../matrix.html">研究矩阵</a>
+    <a class="stat" href="index.html">全部研究线</a>
+    <span class="stat">论文 3</span>
+    <span class="stat">角色 3</span>
+  </div>
+</header>
+<main class="shell">
+  <div class="line-detail"><section class="role-section"><h2>main <span class="meta">1</span></h2><article class="paper-row"><div><h3><a href="../2607.00466-eldr.html">ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由</a></h3><div class="meta">ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving</div><div class="chips"><span class="chip">Disaggregated Serving</span><span class="chip">LLM Serving</span><span class="chip">Load Balancing</span><span class="chip">Balanced K-means</span><span class="chip">Expert Locality Routing</span><span class="chip">Signature Cache</span></div></div><div class="card-flags"><span class="flag">2026</span><span class="flag">重要性 4</span><span class="flag">状态 read</span></div></article></section><section class="role-section"><h2>system <span class="meta">1</span></h2><article class="paper-row"><div><h3><a href="../noarxiv-2026-dspark.html">DSpark：基于置信度调度的半自回归 speculative decoding</a></h3><div class="meta">DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation</div><div class="chips"><span class="chip">LLM Inference</span><span class="chip">LLM Serving</span><span class="chip">Semi-Autoregressive Generation</span><span class="chip">confidence-scheduled verification</span><span class="chip">hardware-aware scheduling</span><span class="chip">Markov head</span></div></div><div class="card-flags"><span class="flag">2026</span><span class="flag">重要性 4</span><span class="flag">状态 read</span><span class="flag">有代码</span></div></article></section><section class="role-section"><h2>tooling <span class="meta">1</span></h2><article class="paper-row"><div><h3><a href="../2512.23424-akg-kernel-agent-multi.html">AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架</a></h3><div class="meta">AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis</div><div class="chips"><span class="chip">Compiler/DSL</span><span class="chip">Hardware Acceleration</span><span class="chip">Kernel Generation</span><span class="chip">Document-Driven Integration</span><span class="chip">Hierarchical Code Retrieval</span><span class="chip">Iterative Search-Based Optimization</span></div></div><div class="card-flags"><span class="flag">2025</span><span class="flag">重要性 4</span><span class="flag">状态 read</span></div></article></section></div>
+</main>
+
+<script>
+(() => {
+  const prefix = "../";
+  const openButton = document.querySelector("#quickOpen");
+  const panel = document.querySelector("#quickPanel");
+  const search = document.querySelector("#quickSearch");
+  const list = document.querySelector("#quickList");
+  const closeButton = document.querySelector("#quickClose");
+  if (!openButton || !panel || !search || !list || !closeButton) return;
+
+  function withPrefix(href) {
+    if (!href || href.startsWith("#") || href.startsWith("/") || /^[a-z][a-z0-9+.-]*:/i.test(href)) return href;
+    return prefix + href;
+  }
+
+  const quickEntries = [{"title": "首页", "href": "index.html", "meta": "卡片检索、筛选、研究线概览", "kind": "view"}, {"title": "命令中心", "href": "command.html", "meta": "按使用场景组织入口、队列、数据和命令", "kind": "ops"}, {"title": "论文库表格", "href": "library.html", "meta": "密集筛选、列管理、批量更新", "kind": "view"}, {"title": "管理控制台", "href": "dashboard.html", "meta": "覆盖率、队列和运营指标", "kind": "ops"}, {"title": "发布摘要", "href": "release.html", "meta": "页面入口、数据文件、质量状态", "kind": "ops"}, {"title": "治理快照", "href": "snapshot.html", "meta": "当前发布基线、队列和治理策略快照", "kind": "ops"}, {"title": "行动中心", "href": "actions.html", "meta": "统一运营队列和可分派任务", "kind": "ops"}, {"title": "优先级决策台", "href": "priority.html", "meta": "按论文聚合复习、分类、代码和阅读优先级", "kind": "ops"}, {"title": "运营队列", "href": "queues.html", "meta": "缺分类、复习、代码检查和高优先级待读队列", "kind": "ops"}, {"title": "分类组合", "href": "cohorts.html", "meta": "分类组合队列、过载组合和专题候选", "kind": "analysis"}, {"title": "集合视图", "href": "collections.html", "meta": "共享视图、智能集合、研究线入口", "kind": "view"}, {"title": "分类均衡", "href": "balance.html", "meta": "分类维度健康度、长尾和过载复盘", "kind": "ops"}, {"title": "覆盖地图", "href": "coverage.html", "meta": "研究线 x 分类字段覆盖缺口", "kind": "ops"}, {"title": "分类工作台", "href": "facets.html", "meta": "标签规模、长尾和过载分类", "kind": "ops"}, {"title": "关联网络", "href": "related.html", "meta": "标签共现、相似论文、孤岛论文", "kind": "analysis"}, {"title": "研究缺口", "href": "gaps.html", "meta": "下一步行动和研究线缺口", "kind": "ops"}, {"title": "状态看板", "href": "board.html", "meta": "拖拽式状态流和 CSV patch", "kind": "workflow"}, {"title": "工作流中心", "href": "workflow.html", "meta": "状态体系对比、分布和漂移审计", "kind": "workflow"}, {"title": "状态选择器", "href": "status.html", "meta": "动态选择状态体系、阶段和值并生成可分享视图", "kind": "workflow"}, {"title": "视图目录", "href": "views.html", "meta": "共享视图、系统队列和状态/研究线视图目录", "kind": "workflow"}, {"title": "治理预设", "href": "presets.html", "meta": "批量治理 preset、字段写入和 workflow 兼容性", "kind": "workflow"}, {"title": "批次规划", "href": "batch.html", "meta": "按分类、状态和复习缺口切分可执行论文批次", "kind": "ops"}, {"title": "分类透视表", "href": "pivot.html", "meta": "任意两个分类维度交叉分析论文分布", "kind": "analysis"}, {"title": "论文对比", "href": "compare.html", "meta": "并排比较候选论文的分类、状态和质量信号", "kind": "analysis"}, {"title": "分类图谱", "href": "taxonomy_map.html", "meta": "分类节点、共现边和研究线簇", "kind": "analysis"}, {"title": "研究簇", "href": "clusters.html", "meta": "研究线簇、拆分候选和代表论文", "kind": "analysis"}, {"title": "研究路线图", "href": "roadmap.html", "meta": "按研究线组织阶段、里程碑和下一步计划", "kind": "planning"}, {"title": "规模就绪", "href": "scale.html", "meta": "大规模论文库容量、风险和扩展建议", "kind": "ops"}, {"title": "Owner 工作台", "href": "ownership.html", "meta": "研究线 owner、工作量和治理队列", "kind": "ops"}, {"title": "分类路由器", "href": "routing.html", "meta": "新论文研究线和标签推荐", "kind": "workflow"}, {"title": "开源上手", "href": "onboarding.html", "meta": "贡献路径、质量门和数据契约", "kind": "ops"}, {"title": "数据目录", "href": "catalog.html", "meta": "机器数据、页面和契约的接入目录", "kind": "ops"}, {"title": "批量导入", "href": "intake.html", "meta": "批量粘贴论文链接、去重并导出 inbox CSV", "kind": "workflow"}, {"title": "待处理池", "href": "inbox.html", "meta": "候选论文队列和去重提示", "kind": "workflow"}, {"title": "去重工作台", "href": "dedupe.html", "meta": "库内报告、候选论文和导入队列重复项治理", "kind": "ops"}, {"title": "标签注册表", "href": "registry.html", "meta": "分类标签字典、alias 和跨字段治理", "kind": "ops"}, {"title": "分类成熟度", "href": "curation.html", "meta": "逐篇论文分类完整度、缺口和补齐队列", "kind": "ops"}, {"title": "复习计划", "href": "review.html", "meta": "待复习、需建计划、建议日期", "kind": "workflow"}, {"title": "时效治理", "href": "freshness.html", "meta": "报告新鲜度、过期分析和研究线维护", "kind": "ops"}, {"title": "质量治理", "href": "quality.html", "meta": "弱元数据、别名建议、taxonomy drift", "kind": "ops"}, {"title": "分类治理", "href": "taxonomy.html", "meta": "分类矩阵、状态工作流、治理队列", "kind": "ops"}, {"title": "时间轴", "href": "timeline.html", "meta": "按年份和研究线浏览论文演进", "kind": "analysis"}, {"title": "研究矩阵", "href": "matrix.html", "meta": "research line x year 覆盖", "kind": "analysis"}, {"title": "研究线", "href": "lines/index.html", "meta": "按研究脉络组织论文", "kind": "view"}, {"title": "分类总览", "href": "tags.html", "meta": "按标签聚合论文", "kind": "view"}, {"title": "Data: papers.json", "href": "papers.json", "meta": "论文索引、taxonomy 聚合、前端 controls", "kind": "data"}, {"title": "Data: search_index.json", "href": "search_index.json", "meta": "正文全文检索索引", "kind": "data"}, {"title": "Data: stats.json", "href": "stats.json", "meta": "运营统计、覆盖率和队列规模", "kind": "data"}, {"title": "Data: quality.json", "href": "quality.json", "meta": "质量问题、taxonomy load、taxonomy drift、标签别名建议", "kind": "data"}, {"title": "Data: review.json", "href": "review.json", "meta": "复习计划和建议 next_review", "kind": "data"}, {"title": "Data: freshness.json", "href": "freshness.json", "meta": "报告新鲜度、过期分析和研究线维护队列", "kind": "data"}, {"title": "Data: taxonomy_actions.json", "href": "taxonomy_actions.json", "meta": "分类长尾、过载和空候选治理任务", "kind": "data"}, {"title": "Data: actions.json", "href": "actions.json", "meta": "统一行动队列，汇总质量、复习、分类和 inbox 任务", "kind": "data"}, {"title": "Data: priority.json", "href": "priority.json", "meta": "论文级优先级决策数据，聚合复习、分类、代码和阅读信号", "kind": "data"}, {"title": "Data: command.json", "href": "command.json", "meta": "场景化命令中心，组织页面入口、队列、数据和推荐命令", "kind": "data"}, {"title": "Data: queues.json", "href": "queues.json", "meta": "运营队列、推荐 preset 和批量写回入口", "kind": "data"}, {"title": "Data: cohorts.json", "href": "cohorts.json", "meta": "分类组合队列、过载组合和专题候选", "kind": "data"}, {"title": "Data: workflow.json", "href": "workflow.json", "meta": "状态工作流配置、分布和漂移审计", "kind": "data"}, {"title": "Data: status.json", "href": "status.json", "meta": "运行时状态选择器、状态字段选项和论文状态快照", "kind": "data"}, {"title": "Data: views.json", "href": "views.json", "meta": "共享视图、系统队列、研究线和状态工作流视图目录", "kind": "data"}, {"title": "Data: presets.json", "href": "presets.json", "meta": "批量治理 preset、字段写入和 workflow 兼容性", "kind": "data"}, {"title": "Data: batch.json", "href": "batch.json", "meta": "按分类、状态和治理缺口生成的可执行论文批次", "kind": "data"}, {"title": "Data: collections.json", "href": "collections.json", "meta": "共享视图、智能集合和研究线集合的机器可读入口", "kind": "data"}, {"title": "Data: coverage.json", "href": "coverage.json", "meta": "研究线分类覆盖、字段缺口、缺失 slug 和 owner 信号", "kind": "data"}, {"title": "Data: gaps.json", "href": "gaps.json", "meta": "研究线缺口、下一步行动和运营队列", "kind": "data"}, {"title": "Data: pivot.json", "href": "pivot.json", "meta": "分类透视表维度、论文投影和交叉分布", "kind": "data"}, {"title": "Data: compare.json", "href": "compare.json", "meta": "论文对比视图数据和推荐对比集合", "kind": "data"}, {"title": "Data: taxonomy_map.json", "href": "taxonomy_map.json", "meta": "分类节点、共现边、研究线簇和图谱治理建议", "kind": "data"}, {"title": "Data: clusters.json", "href": "clusters.json", "meta": "研究线簇、拆分候选和代表论文", "kind": "data"}, {"title": "Data: roadmap.json", "href": "roadmap.json", "meta": "研究线路线图、阶段覆盖、里程碑和下一步计划", "kind": "data"}, {"title": "Data: scale.json", "href": "scale.json", "meta": "规模就绪评分、容量投影和大库治理风险", "kind": "data"}, {"title": "Data: ownership.json", "href": "ownership.json", "meta": "研究线 owner、工作量和治理队列", "kind": "data"}, {"title": "Data: routing.json", "href": "routing.json", "meta": "新论文分类路由画像和推荐权重", "kind": "data"}, {"title": "Data: onboarding.json", "href": "onboarding.json", "meta": "开源贡献路径、质量门和数据契约清单", "kind": "data"}, {"title": "Data: catalog.json", "href": "catalog.json", "meta": "机器数据、页面入口和契约字段目录", "kind": "data"}, {"title": "Data: snapshot.json", "href": "snapshot.json", "meta": "当前知识库治理快照和发布基线", "kind": "data"}, {"title": "Data: intake.json", "href": "intake.json", "meta": "批量导入去重索引、默认字段和 inbox CSV 契约", "kind": "data"}, {"title": "Data: inbox.json", "href": "inbox.json", "meta": "候选论文队列和重复项", "kind": "data"}, {"title": "Data: dedupe.json", "href": "dedupe.json", "meta": "重复报告、候选重复项和去重建议", "kind": "data"}, {"title": "Data: registry.json", "href": "registry.json", "meta": "分类标签注册表、alias、字段复用和治理信号", "kind": "data"}, {"title": "Data: facets.json", "href": "facets.json", "meta": "分类字段目录、候选值规模和治理动作", "kind": "data"}, {"title": "Data: curation.json", "href": "curation.json", "meta": "逐篇论文分类成熟度、缺失字段和补齐建议", "kind": "data"}, {"title": "Data: manifest.json", "href": "manifest.json", "meta": "发布摘要和页面入口清单", "kind": "data"}, {"title": "View: 重点论文", "href": "library.html?importance=5&sort=importance", "meta": "all · importance=5, sort=importance", "kind": "view"}, {"title": "View: 未设置复习", "href": "index.html?review=none&sort=importance", "meta": "index · review=none, sort=importance", "kind": "view"}, {"title": "View: Attention Kernels", "href": "library.html?track=Attention+Kernels&sort=year", "meta": "library · track=Attention Kernels, sort=year", "kind": "view"}, {"title": "Playbook: Taxonomy merge batch", "href": "release.html", "meta": "Review merge candidates, prepare a metadata patch, dry-run it, then refresh quality gates.", "kind": "playbook"}, {"title": "Playbook: Taxonomy balance review", "href": "release.html", "meta": "Turn overloaded or sparse taxonomy buckets into project tasks before changing labels.", "kind": "playbook"}, {"title": "Playbook: Weekly action review", "href": "release.html", "meta": "Export the unified queue, assign dynamic task statuses, and run the local quality gate.", "kind": "playbook"}, {"title": "Playbook: Paper intake batch", "href": "release.html", "meta": "Preview a candidate CSV, merge it into inbox.csv, rebuild, then validate the incoming queue.", "kind": "playbook"}, {"title": "Playbook: Status workflow rollout", "href": "release.html", "meta": "Preview a downloaded status workflow, write it to taxonomy.json, rebuild, then validate.", "kind": "playbook"}, {"title": "Playbook: Shared view rollout", "href": "release.html", "meta": "Promote browser-saved queues into repository shared_views and validate the refreshed wiki.", "kind": "playbook"}, {"title": "Playbook: Release readiness", "href": "release.html", "meta": "Rebuild the wiki, validate strict taxonomy, then run the full quality gate before publishing.", "kind": "playbook"}, {"title": "Command: Build wiki", "href": "release.html", "meta": "python3 scripts/build_wiki.py docs", "kind": "command"}, {"title": "Command: Quality gate", "href": "release.html", "meta": "python3 scripts/check_quality.py docs", "kind": "command"}, {"title": "Command: Strict validation", "href": "release.html", "meta": "python3 scripts/validate_wiki.py docs --strict-taxonomy", "kind": "command"}, {"title": "Command: Preview edited metadata CSV", "href": "release.html", "meta": "python3 scripts/apply_library_metadata.py docs --input <csv>", "kind": "command"}, {"title": "Command: Audit edited metadata CSV", "href": "release.html", "meta": "python3 scripts/apply_library_metadata.py docs --input <csv> --audit-output docs/exports/metadata-audit.json", "kind": "command"}, {"title": "Command: Preview candidate inbox CSV", "href": "release.html", "meta": "python3 scripts/apply_inbox_items.py docs --input <candidate_csv>", "kind": "command"}, {"title": "Command: Apply candidate inbox CSV", "href": "release.html", "meta": "python3 scripts/apply_inbox_items.py docs --input <candidate_csv> --write", "kind": "command"}, {"title": "Command: Apply edited metadata CSV", "href": "release.html", "meta": "python3 scripts/apply_library_metadata.py docs --input <csv> --write", "kind": "command"}, {"title": "Command: Apply taxonomy aliases", "href": "release.html", "meta": "python3 scripts/apply_taxonomy_aliases.py docs --write", "kind": "command"}, {"title": "Command: Preview status workflow JSON", "href": "release.html", "meta": "python3 scripts/apply_status_workflow.py docs --input <taxonomy_status_workflow.json>", "kind": "command"}, {"title": "Command: Apply status workflow JSON", "href": "release.html", "meta": "python3 scripts/apply_status_workflow.py docs --input <taxonomy_status_workflow.json> --write", "kind": "command"}, {"title": "Command: Export status selection checklist", "href": "release.html", "meta": "python3 scripts/export_status.py docs --output docs/exports/status.md", "kind": "command"}, {"title": "Command: Export status selection project tasks", "href": "release.html", "meta": "python3 scripts/export_status.py docs --format project --output docs/exports/status-project.csv", "kind": "command"}, {"title": "Command: Export status metadata patch", "href": "release.html", "meta": "python3 scripts/export_status.py docs --format patch --field status --set-value <status> --output docs/exports/status-patch.csv", "kind": "command"}, {"title": "Command: Export status workflow config", "href": "release.html", "meta": "python3 scripts/export_status.py docs --format workflow-config --output docs/exports/status-workflow.json", "kind": "command"}, {"title": "Command: Preview governance policy JSON", "href": "release.html", "meta": "python3 scripts/apply_governance_policy.py docs --input <taxonomy_governance_policy.json>", "kind": "command"}, {"title": "Command: Apply governance policy JSON", "href": "release.html", "meta": "python3 scripts/apply_governance_policy.py docs --input <taxonomy_governance_policy.json> --write", "kind": "command"}, {"title": "Command: Preview shared views JSON", "href": "release.html", "meta": "python3 scripts/apply_shared_views.py docs --input <shared_views.json>", "kind": "command"}, {"title": "Command: Apply shared views JSON", "href": "release.html", "meta": "python3 scripts/apply_shared_views.py docs --input <shared_views.json> --write", "kind": "command"}, {"title": "Command: Export taxonomy actions checklist", "href": "release.html", "meta": "python3 scripts/export_taxonomy_actions.py docs --output docs/exports/taxonomy-actions.md", "kind": "command"}, {"title": "Command: Export taxonomy action project tasks", "href": "release.html", "meta": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv", "kind": "command"}, {"title": "Command: Export taxonomy action patch template", "href": "release.html", "meta": "python3 scripts/export_taxonomy_actions.py docs --format patch --action merge_candidate --output docs/exports/taxonomy-action-patch.csv", "kind": "command"}, {"title": "Command: Export taxonomy value change patch", "href": "release.html", "meta": "python3 scripts/export_taxonomy_change.py docs --field topics --from-value <old> --to-value <new> --output docs/exports/taxonomy-change-patch.csv", "kind": "command"}, {"title": "Command: Export taxonomy registry checklist", "href": "release.html", "meta": "python3 scripts/export_taxonomy_registry.py docs --output docs/exports/taxonomy-registry.md", "kind": "command"}, {"title": "Command: Export taxonomy registry project tasks", "href": "release.html", "meta": "python3 scripts/export_taxonomy_registry.py docs --format project --severity high --severity medium --output docs/exports/taxonomy-registry-project.csv", "kind": "command"}, {"title": "Command: Export unified action checklist", "href": "release.html", "meta": "python3 scripts/export_actions.py docs --output docs/exports/actions.md", "kind": "command"}, {"title": "Command: Export unified action project tasks", "href": "release.html", "meta": "python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv", "kind": "command"}, {"title": "Command: Export priority checklist", "href": "release.html", "meta": "python3 scripts/export_priority.py docs --output docs/exports/priority.md", "kind": "command"}, {"title": "Command: Export priority project tasks", "href": "release.html", "meta": "python3 scripts/export_priority.py docs --format project --urgency high --output docs/exports/priority-project.csv", "kind": "command"}, {"title": "Command: Export priority review patch", "href": "release.html", "meta": "python3 scripts/export_priority.py docs --format review-patch --needs-review-plan --output docs/exports/priority-review-patch.csv", "kind": "command"}, {"title": "Command: Export desktop bootstrap bundle", "href": "release.html", "meta": "python3 scripts/export_catalog_bundle.py docs --output docs/exports/bootstrap-bundle.json", "kind": "command"}, {"title": "Command: Export desktop bootstrap manifest", "href": "release.html", "meta": "python3 scripts/export_catalog_bundle.py docs --no-payloads --output docs/exports/bootstrap-manifest.json", "kind": "command"}, {"title": "Command: Validate desktop bootstrap bundle", "href": "release.html", "meta": "python3 scripts/validate_catalog_bundle.py docs/exports/bootstrap-bundle.json --report-dir docs --require-payloads", "kind": "command"}, {"title": "Command: Export operational queue checklist", "href": "release.html", "meta": "python3 scripts/export_queues.py docs --output docs/exports/queues.md", "kind": "command"}, {"title": "Command: Export operational queue project tasks", "href": "release.html", "meta": "python3 scripts/export_queues.py docs --format project --severity high --output docs/exports/queues-project.csv", "kind": "command"}, {"title": "Command: Export operational queue review patch", "href": "release.html", "meta": "python3 scripts/export_queues.py docs --format patch --queue missing-review-plan --field review_stage --set-value due --output docs/exports/queues-review-patch.csv", "kind": "command"}, {"title": "Command: Export taxonomy cohort checklist", "href": "release.html", "meta": "python3 scripts/export_cohorts.py docs --output docs/exports/cohorts.md", "kind": "command"}, {"title": "Command: Export taxonomy cohort project tasks", "href": "release.html", "meta": "python3 scripts/export_cohorts.py docs --format project --action singleton --output docs/exports/cohorts-project.csv", "kind": "command"}, {"title": "Command: Export taxonomy cohort topic patch", "href": "release.html", "meta": "python3 scripts/export_cohorts.py docs --format patch --action topic_candidate --field topics --set-value <topic> --list-mode append --output docs/exports/cohorts-topic-patch.csv", "kind": "command"}, {"title": "Command: Export batch checklist", "href": "release.html", "meta": "python3 scripts/export_batches.py docs --output docs/exports/batches.md", "kind": "command"}, {"title": "Command: Export batch project tasks", "href": "release.html", "meta": "python3 scripts/export_batches.py docs --format project --severity high --output docs/exports/batches-project.csv", "kind": "command"}, {"title": "Command: Export batch review-stage patch", "href": "release.html", "meta": "python3 scripts/export_batches.py docs --format patch --gap review --field review_stage --set-value due --output docs/exports/batches-review-patch.csv", "kind": "command"}, {"title": "Command: Export collection checklist", "href": "release.html", "meta": "python3 scripts/export_collections.py docs --output docs/exports/collections.md", "kind": "command"}, {"title": "Command: Export coverage gap checklist", "href": "release.html", "meta": "python3 scripts/export_coverage.py docs --output docs/exports/coverage.md", "kind": "command"}, {"title": "Command: Export coverage project tasks", "href": "release.html", "meta": "python3 scripts/export_coverage.py docs --format project --risk high --risk medium --output docs/exports/coverage-project.csv", "kind": "command"}, {"title": "Command: Export coverage topic patch", "href": "release.html", "meta": "python3 scripts/export_coverage.py docs --format patch --field topics --set-value <topic> --output docs/exports/coverage-topic-patch.csv", "kind": "command"}, {"title": "Command: Export research gap checklist", "href": "release.html", "meta": "python3 scripts/export_gaps.py docs --output docs/exports/gaps.md", "kind": "command"}, {"title": "Command: Export research gap project tasks", "href": "release.html", "meta": "python3 scripts/export_gaps.py docs --format project --min-priority 20 --output docs/exports/gaps-project.csv", "kind": "command"}, {"title": "Command: Export view directory checklist", "href": "release.html", "meta": "python3 scripts/export_views.py docs --output docs/exports/views.md", "kind": "command"}, {"title": "Command: Export view sidebar JSON", "href": "release.html", "meta": "python3 scripts/export_views.py docs --format sidebar --min-count 1 --output docs/exports/views-sidebar.json", "kind": "command"}, {"title": "Command: Export view status patch", "href": "release.html", "meta": "python3 scripts/export_views.py docs --format patch --view <view_id_or_name> --field status --set-value reading --output docs/exports/views-status-patch.csv", "kind": "command"}, {"title": "Command: Export collection project tasks", "href": "release.html", "meta": "python3 scripts/export_collections.py docs --format project --output docs/exports/collections-project.csv", "kind": "command"}, {"title": "Command: Export ownership workload checklist", "href": "release.html", "meta": "python3 scripts/export_ownership.py docs --output docs/exports/ownership.md", "kind": "command"}, {"title": "Command: Export ownership project tasks", "href": "release.html", "meta": "python3 scripts/export_ownership.py docs --format project --only-open-queues --output docs/exports/ownership-project.csv", "kind": "command"}, {"title": "Command: Export roadmap checklist", "href": "release.html", "meta": "python3 scripts/export_roadmap.py docs --output docs/exports/roadmap.md", "kind": "command"}, {"title": "Command: Export roadmap project tasks", "href": "release.html", "meta": "python3 scripts/export_roadmap.py docs --format project --output docs/exports/roadmap-project.csv", "kind": "command"}, {"title": "Command: Export taxonomy balance project tasks", "href": "release.html", "meta": "python3 scripts/export_taxonomy_balance.py docs --format project --max-score 50 --output docs/exports/taxonomy-balance-project.csv", "kind": "command"}, {"title": "Command: Export taxonomy load audit CSV", "href": "release.html", "meta": "python3 scripts/export_taxonomy_load.py docs --format csv --output docs/exports/taxonomy-load.csv", "kind": "command"}, {"title": "Command: Export taxonomy load patch CSV", "href": "release.html", "meta": "python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv", "kind": "command"}, {"title": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由", "href": "2607.00466-eldr.html", "meta": "LLM Serving · read · 2607.00466v2", "kind": "paper"}, {"title": "推测性推测解码", "href": "2603.03251-speculative-speculative-decoding.html", "meta": "Unassigned · read · 2603.03251", "kind": "paper"}, {"title": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型", "href": "2503.14075-twigvlm-plus-plus.html", "meta": "VLM Acceleration · read · 2503.14075v3", "kind": "paper"}, {"title": "DSpark：基于置信度调度的半自回归 speculative decoding", "href": "noarxiv-2026-dspark.html", "meta": "LLM Serving · read · noarxiv-2026-dspark", "kind": "paper"}, {"title": "DFlash：用于快速 speculative decoding 的块扩散方法", "href": "2602.06036-dflash.html", "meta": "Parallel Decoding with Diffusion Models · read · 2602.06036v1", "kind": "paper"}, {"title": "内省式扩散语言模型", "href": "2604.11035-introspective-dlm.html", "meta": "Parallel Decoding with Diffusion Models · read · 2604.11035v1", "kind": "paper"}, {"title": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成", "href": "2605.12825-orthrus.html", "meta": "Parallel Decoding with Diffusion Models · read · 2605.12825v2", "kind": "paper"}, {"title": "你的 LLM 知道未来：揭示它的多 token 预测潜力", "href": "2507.11851-llm-future-mtp.html", "meta": "Parallel Decoding with Diffusion Models · read · 2507.11851", "kind": "paper"}, {"title": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架", "href": "2512.23424-akg-kernel-agent-multi.html", "meta": "LLM Serving · read · 2512.23424", "kind": "paper"}, {"title": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎", "href": "2501.01005-flashinfer.html", "meta": "Efficient Attention Kernels · read · 2501.01005v2", "kind": "paper"}, {"title": "FlashAttention-2：用更好的并行性与工作划分加速 Attention", "href": "2307.08691-flashattention-2.html", "meta": "Efficient Attention Kernels · read · 2307.08691v1", "kind": "paper"}, {"title": "Semantic Search Evaluation", "href": "semantic-search-evaluation.md", "meta": "Unassigned · read", "kind": "paper"}].map((entry) => ({
+    ...entry,
+    href: withPrefix(entry.href || ""),
+    meta: entry.meta || "",
+    kind: entry.kind || "entry",
+  })).filter((entry) => entry.title && entry.href);
+
+  const dataPapers = (window.PAPER_WIKI && Array.isArray(window.PAPER_WIKI.papers))
+    ? window.PAPER_WIKI.papers.map((paper) => ({
+        title: paper.title_zh || paper.title || paper.slug,
+        href: withPrefix(paper.html_path || paper.md_path || ""),
+        meta: [paper.research_line, paper.status, paper.arxiv_id].filter(Boolean).join(" · "),
+        kind: "paper",
+      })).filter((item) => item.href)
+    : [];
+  const rowPapers = Array.from(document.querySelectorAll("[data-slug][data-href]")).map((row) => ({
+    title: row.dataset.titleZh || row.dataset.title || row.dataset.slug,
+    href: row.dataset.href || "",
+    meta: [row.dataset.line, row.dataset.status, row.dataset.arxivId].filter(Boolean).join(" · "),
+    kind: "paper",
+  })).filter((item) => item.href);
+  const entryMap = new Map([...quickEntries, ...dataPapers, ...rowPapers].map((item) => [`${item.kind}:${item.href}:${item.title}`, item]));
+  const entries = Array.from(entryMap.values());
+  const kindPriority = { view: 5, page: 4, paper: 3, playbook: 2, command: 1, data: 1 };
+  let activeIndex = 0;
+
+  function score(entry, query) {
+    if (!query) return kindPriority[entry.kind] || 1;
+    const haystack = `${entry.title} ${entry.meta} ${entry.href}`.toLowerCase();
+    if (haystack.includes(query)) return (entry.title.toLowerCase().includes(query) ? 30 : 20) + (kindPriority[entry.kind] || 1);
+    return 0;
+  }
+
+  function currentEntries() {
+    const query = search.value.trim().toLowerCase();
+    return entries
+      .map((entry) => [score(entry, query), entry])
+      .filter(([rank]) => rank > 0)
+      .sort((left, right) => right[0] - left[0] || left[1].title.localeCompare(right[1].title))
+      .slice(0, 40)
+      .map(([, entry]) => entry);
+  }
+
+  function render() {
+    const visible = currentEntries();
+    activeIndex = Math.min(activeIndex, Math.max(visible.length - 1, 0));
+    if (!visible.length) {
+      list.innerHTML = '<div class="quick-empty">没有匹配结果</div>';
+      return;
+    }
+    list.replaceChildren(...visible.map((entry, index) => {
+      const link = document.createElement("a");
+      link.className = `quick-item${index === activeIndex ? " is-active" : ""}`;
+      link.href = entry.href;
+      link.dataset.index = String(index);
+      const titleWrap = document.createElement("span");
+      titleWrap.className = "quick-item-title";
+      const title = document.createElement("strong");
+      title.textContent = entry.title;
+      const kind = document.createElement("span");
+      kind.className = "quick-kind";
+      kind.textContent = entry.kind;
+      titleWrap.append(title, kind);
+      const meta = document.createElement("span");
+      meta.className = "meta";
+      meta.textContent = entry.meta || entry.href;
+      link.append(titleWrap, meta);
+      return link;
+    }));
+  }
+
+  function open() {
+    panel.hidden = false;
+    search.value = "";
+    activeIndex = 0;
+    render();
+    search.focus();
+  }
+
+  function close() {
+    panel.hidden = true;
+    openButton.focus();
+  }
+
+  openButton.addEventListener("click", open);
+  closeButton.addEventListener("click", close);
+  panel.addEventListener("click", (event) => {
+    if (event.target === panel) close();
+  });
+  search.addEventListener("input", () => {
+    activeIndex = 0;
+    render();
+  });
+  search.addEventListener("keydown", (event) => {
+    const visible = currentEntries();
+    if (event.key === "Escape") {
+      event.preventDefault();
+      close();
+    } else if (event.key === "ArrowDown") {
+      event.preventDefault();
+      activeIndex = Math.min(activeIndex + 1, Math.max(visible.length - 1, 0));
+      render();
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      activeIndex = Math.max(activeIndex - 1, 0);
+      render();
+    } else if (event.key === "Enter" && visible[activeIndex]) {
+      event.preventDefault();
+      window.location.href = visible[activeIndex].href;
+    }
+  });
+  document.addEventListener("keydown", (event) => {
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+      event.preventDefault();
+      panel.hidden ? open() : close();
+    }
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-06-15T14:49:54",
-  "count": 5,
-  "label_count": 74,
+  "generated_at": "2026-07-21T14:06:34",
+  "count": 12,
+  "label_count": 127,
   "configured_label_count": 32,
   "alias_count": 3,
   "labels": [
@@ -15,7 +15,7 @@
           "label": "结构域",
           "english": "Domain",
           "query_key": "domain",
-          "count": 5,
+          "count": 9,
           "configured": true,
           "href": "library.html?domain=LLM+Systems",
           "definition": {
@@ -28,14 +28,18 @@
       "field_names": [
         "domains"
       ],
-      "total_count": 5,
-      "paper_count": 5,
+      "total_count": 9,
+      "paper_count": 9,
       "slugs": [
         "2307.08691-flashattention-2",
         "2501.01005-flashinfer",
+        "2503.14075-twigvlm-plus-plus",
+        "2507.11851-llm-future-mtp",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
+        "2605.12825-orthrus",
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark"
       ],
       "papers": [
         {
@@ -54,6 +58,24 @@
           "href": "2501.01005-flashinfer.html",
           "year": 2025,
           "research_line": "Efficient Attention Kernels",
+          "importance": 4
+        },
+        {
+          "slug": "2503.14075-twigvlm-plus-plus",
+          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+          "href": "2503.14075-twigvlm-plus-plus.html",
+          "year": 2026,
+          "research_line": "VLM Acceleration",
+          "importance": 4
+        },
+        {
+          "slug": "2507.11851-llm-future-mtp",
+          "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
+          "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
+          "href": "2507.11851-llm-future-mtp.html",
+          "year": 2025,
+          "research_line": "Parallel Decoding with Diffusion Models",
           "importance": 4
         },
         {
@@ -81,6 +103,15 @@
           "href": "2605.12825-orthrus.html",
           "year": 2026,
           "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        },
+        {
+          "slug": "2607.00466-eldr",
+          "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+          "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+          "href": "2607.00466-eldr.html",
+          "year": 2026,
+          "research_line": "LLM Serving",
           "importance": 4
         }
       ],
@@ -113,46 +144,62 @@
       "query_href": "library.html?domain=LLM+Systems"
     },
     {
-      "id": "parallel-decoding",
-      "label": "Parallel Decoding",
-      "key": "parallel decoding",
+      "id": "llm-serving",
+      "label": "LLM Serving",
+      "key": "llm serving",
       "fields": [
+        {
+          "field": "research_line",
+          "label": "研究线",
+          "english": "Research line",
+          "query_key": "line",
+          "count": 3,
+          "configured": false,
+          "href": "library.html?line=LLM+Serving"
+        },
         {
           "field": "topics",
           "label": "主题",
           "english": "Topic",
           "query_key": "topic",
-          "count": 2,
-          "configured": true,
-          "href": "library.html?topic=Parallel+Decoding",
-          "definition": {
-            "description": "Methods that generate or verify multiple tokens per step rather than strictly left-to-right one-token decoding.",
-            "owner": "decoding-owner",
-            "status": "active"
-          }
-        },
-        {
-          "field": "tracks",
-          "label": "方向",
-          "english": "Track",
-          "query_key": "track",
-          "count": 3,
+          "count": 5,
           "configured": false,
-          "href": "library.html?track=Parallel+Decoding"
+          "href": "library.html?topic=LLM+Serving"
         }
       ],
       "field_names": [
-        "topics",
-        "tracks"
+        "research_line",
+        "topics"
       ],
-      "total_count": 5,
-      "paper_count": 3,
+      "total_count": 8,
+      "paper_count": 6,
       "slugs": [
+        "2501.01005-flashinfer",
+        "2512.23424-akg-kernel-agent-multi",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark"
       ],
       "papers": [
+        {
+          "slug": "2501.01005-flashinfer",
+          "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
+          "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
+          "href": "2501.01005-flashinfer.html",
+          "year": 2025,
+          "research_line": "Efficient Attention Kernels",
+          "importance": 4
+        },
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html",
+          "year": 2025,
+          "research_line": "LLM Serving",
+          "importance": 4
+        },
         {
           "slug": "2602.06036-dflash",
           "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
@@ -172,42 +219,171 @@
           "importance": 5
         },
         {
-          "slug": "2605.12825-orthrus",
-          "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion",
-          "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
-          "href": "2605.12825-orthrus.html",
+          "slug": "2607.00466-eldr",
+          "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+          "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+          "href": "2607.00466-eldr.html",
           "year": 2026,
-          "research_line": "Parallel Decoding with Diffusion Models",
+          "research_line": "LLM Serving",
+          "importance": 4
+        },
+        {
+          "slug": "noarxiv-2026-dspark",
+          "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+          "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+          "href": "noarxiv-2026-dspark.html",
+          "year": 2026,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [
+        "serving systems"
+      ],
+      "alias_count": 1,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "cross_field",
+        "has_aliases",
+        "undefined_label",
+        "unowned_research_line"
+      ],
+      "severity": "high",
+      "recommended_action": "给这条 research_line 在 taxonomy.json 的 research_line_owners 中补 owner/team/cadence。",
+      "query_href": "library.html?topic=LLM+Serving"
+    },
+    {
+      "id": "vlm-acceleration",
+      "label": "VLM Acceleration",
+      "key": "vlm acceleration",
+      "fields": [
+        {
+          "field": "research_line",
+          "label": "研究线",
+          "english": "Research line",
+          "query_key": "line",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?line=VLM+Acceleration"
+        },
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?topic=VLM+Acceleration"
+        },
+        {
+          "field": "tracks",
+          "label": "方向",
+          "english": "Track",
+          "query_key": "track",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?track=VLM+Acceleration"
+        }
+      ],
+      "field_names": [
+        "research_line",
+        "topics",
+        "tracks"
+      ],
+      "total_count": 3,
+      "paper_count": 1,
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "papers": [
+        {
+          "slug": "2503.14075-twigvlm-plus-plus",
+          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+          "href": "2503.14075-twigvlm-plus-plus.html",
+          "year": 2026,
+          "research_line": "VLM Acceleration",
           "importance": 4
         }
       ],
       "aliases": [],
       "alias_count": 0,
-      "configured": true,
-      "configured_fields": [
-        "topics"
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "cross_field",
+        "singleton",
+        "undefined_label",
+        "unowned_research_line"
       ],
-      "definitions": [
+      "severity": "high",
+      "recommended_action": "给这条 research_line 在 taxonomy.json 的 research_line_owners 中补 owner/team/cadence。",
+      "query_href": "library.html?track=VLM+Acceleration"
+    },
+    {
+      "id": "tooling",
+      "label": "tooling",
+      "key": "tooling",
+      "fields": [
         {
-          "field": "topics",
-          "description": "Methods that generate or verify multiple tokens per step rather than strictly left-to-right one-token decoding.",
-          "owner": "decoding-owner",
-          "status": "active"
+          "field": "line_role",
+          "label": "研究线角色",
+          "english": "Line role",
+          "query_key": "role",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?role=tooling"
         }
       ],
-      "definition_count": 1,
-      "definition_status": "active",
-      "description": "Methods that generate or verify multiple tokens per step rather than strictly left-to-right one-token decoding.",
-      "owner": {
-        "owner": "decoding-owner"
-      },
-      "owner_name": "decoding-owner",
-      "signals": [
-        "cross_field"
+      "field_names": [
+        "line_role"
       ],
-      "severity": "medium",
-      "recommended_action": "确认同名标签跨字段语义是否一致；若语义不同，改名让字段职责更清楚。",
-      "query_href": "library.html?track=Parallel+Decoding"
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "papers": [
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html",
+          "year": 2025,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "unconfigured_value"
+      ],
+      "severity": "high",
+      "recommended_action": "确认这是新流程值还是拼写漂移：前者写入 taxonomy.json，后者批量修正报告 frontmatter。",
+      "query_href": "library.html?role=tooling"
     },
     {
       "id": "speculative-decoding",
@@ -219,7 +395,7 @@
           "label": "方法",
           "english": "Method",
           "query_key": "method",
-          "count": 1,
+          "count": 3,
           "configured": true,
           "href": "library.html?method=Speculative+Decoding",
           "definition": {
@@ -233,7 +409,7 @@
           "label": "主题",
           "english": "Topic",
           "query_key": "topic",
-          "count": 3,
+          "count": 7,
           "configured": true,
           "href": "library.html?topic=Speculative+Decoding",
           "definition": {
@@ -247,14 +423,36 @@
         "methods",
         "topics"
       ],
-      "total_count": 4,
-      "paper_count": 3,
+      "total_count": 10,
+      "paper_count": 7,
       "slugs": [
+        "2503.14075-twigvlm-plus-plus",
+        "2507.11851-llm-future-mtp",
         "2602.06036-dflash",
+        "2603.03251-speculative-speculative-decoding",
         "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
+        "2605.12825-orthrus",
+        "noarxiv-2026-dspark"
       ],
       "papers": [
+        {
+          "slug": "2503.14075-twigvlm-plus-plus",
+          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+          "href": "2503.14075-twigvlm-plus-plus.html",
+          "year": 2026,
+          "research_line": "VLM Acceleration",
+          "importance": 4
+        },
+        {
+          "slug": "2507.11851-llm-future-mtp",
+          "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
+          "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
+          "href": "2507.11851-llm-future-mtp.html",
+          "year": 2025,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        },
         {
           "slug": "2602.06036-dflash",
           "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
@@ -262,6 +460,15 @@
           "href": "2602.06036-dflash.html",
           "year": 2026,
           "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        },
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html",
+          "year": 2026,
+          "research_line": "Unassigned",
           "importance": 4
         },
         {
@@ -280,6 +487,15 @@
           "href": "2605.12825-orthrus.html",
           "year": 2026,
           "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        },
+        {
+          "slug": "noarxiv-2026-dspark",
+          "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+          "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+          "href": "noarxiv-2026-dspark.html",
+          "year": 2026,
+          "research_line": "LLM Serving",
           "importance": 4
         }
       ],
@@ -317,6 +533,318 @@
       "severity": "medium",
       "recommended_action": "确认同名标签跨字段语义是否一致；若语义不同，改名让字段职责更清楚。",
       "query_href": "library.html?topic=Speculative+Decoding"
+    },
+    {
+      "id": "inference-acceleration",
+      "label": "Inference Acceleration",
+      "key": "inference acceleration",
+      "fields": [
+        {
+          "field": "tracks",
+          "label": "方向",
+          "english": "Track",
+          "query_key": "track",
+          "count": 7,
+          "configured": false,
+          "href": "library.html?track=Inference+Acceleration"
+        }
+      ],
+      "field_names": [
+        "tracks"
+      ],
+      "total_count": 7,
+      "paper_count": 7,
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus",
+        "2507.11851-llm-future-mtp",
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus",
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark"
+      ],
+      "papers": [
+        {
+          "slug": "2503.14075-twigvlm-plus-plus",
+          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+          "href": "2503.14075-twigvlm-plus-plus.html",
+          "year": 2026,
+          "research_line": "VLM Acceleration",
+          "importance": 4
+        },
+        {
+          "slug": "2507.11851-llm-future-mtp",
+          "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
+          "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
+          "href": "2507.11851-llm-future-mtp.html",
+          "year": 2025,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        },
+        {
+          "slug": "2602.06036-dflash",
+          "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
+          "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
+          "href": "2602.06036-dflash.html",
+          "year": 2026,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        },
+        {
+          "slug": "2604.11035-introspective-dlm",
+          "title": "Introspective Diffusion Language Models",
+          "title_zh": "内省式扩散语言模型",
+          "href": "2604.11035-introspective-dlm.html",
+          "year": 2026,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 5
+        },
+        {
+          "slug": "2605.12825-orthrus",
+          "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion",
+          "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+          "href": "2605.12825-orthrus.html",
+          "year": 2026,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        },
+        {
+          "slug": "2607.00466-eldr",
+          "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+          "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+          "href": "2607.00466-eldr.html",
+          "year": 2026,
+          "research_line": "LLM Serving",
+          "importance": 4
+        },
+        {
+          "slug": "noarxiv-2026-dspark",
+          "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+          "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+          "href": "noarxiv-2026-dspark.html",
+          "year": 2026,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "给该标签补 label_definitions 说明，或确认它应合并到已有规范标签。",
+      "query_href": "library.html?track=Inference+Acceleration"
+    },
+    {
+      "id": "parallel-decoding",
+      "label": "Parallel Decoding",
+      "key": "parallel decoding",
+      "fields": [
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 2,
+          "configured": true,
+          "href": "library.html?topic=Parallel+Decoding",
+          "definition": {
+            "description": "Methods that generate or verify multiple tokens per step rather than strictly left-to-right one-token decoding.",
+            "owner": "decoding-owner",
+            "status": "active"
+          }
+        },
+        {
+          "field": "tracks",
+          "label": "方向",
+          "english": "Track",
+          "query_key": "track",
+          "count": 5,
+          "configured": false,
+          "href": "library.html?track=Parallel+Decoding"
+        }
+      ],
+      "field_names": [
+        "topics",
+        "tracks"
+      ],
+      "total_count": 7,
+      "paper_count": 5,
+      "slugs": [
+        "2507.11851-llm-future-mtp",
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus",
+        "noarxiv-2026-dspark"
+      ],
+      "papers": [
+        {
+          "slug": "2507.11851-llm-future-mtp",
+          "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
+          "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
+          "href": "2507.11851-llm-future-mtp.html",
+          "year": 2025,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        },
+        {
+          "slug": "2602.06036-dflash",
+          "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
+          "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
+          "href": "2602.06036-dflash.html",
+          "year": 2026,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        },
+        {
+          "slug": "2604.11035-introspective-dlm",
+          "title": "Introspective Diffusion Language Models",
+          "title_zh": "内省式扩散语言模型",
+          "href": "2604.11035-introspective-dlm.html",
+          "year": 2026,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 5
+        },
+        {
+          "slug": "2605.12825-orthrus",
+          "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion",
+          "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+          "href": "2605.12825-orthrus.html",
+          "year": 2026,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        },
+        {
+          "slug": "noarxiv-2026-dspark",
+          "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+          "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+          "href": "noarxiv-2026-dspark.html",
+          "year": 2026,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": true,
+      "configured_fields": [
+        "topics"
+      ],
+      "definitions": [
+        {
+          "field": "topics",
+          "description": "Methods that generate or verify multiple tokens per step rather than strictly left-to-right one-token decoding.",
+          "owner": "decoding-owner",
+          "status": "active"
+        }
+      ],
+      "definition_count": 1,
+      "definition_status": "active",
+      "description": "Methods that generate or verify multiple tokens per step rather than strictly left-to-right one-token decoding.",
+      "owner": {
+        "owner": "decoding-owner"
+      },
+      "owner_name": "decoding-owner",
+      "signals": [
+        "cross_field"
+      ],
+      "severity": "medium",
+      "recommended_action": "确认同名标签跨字段语义是否一致；若语义不同，改名让字段职责更清楚。",
+      "query_href": "library.html?track=Parallel+Decoding"
+    },
+    {
+      "id": "llm-inference",
+      "label": "LLM Inference",
+      "key": "llm inference",
+      "fields": [
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 4,
+          "configured": false,
+          "href": "library.html?topic=LLM+Inference"
+        }
+      ],
+      "field_names": [
+        "topics"
+      ],
+      "total_count": 4,
+      "paper_count": 4,
+      "slugs": [
+        "2602.06036-dflash",
+        "2603.03251-speculative-speculative-decoding",
+        "2605.12825-orthrus",
+        "noarxiv-2026-dspark"
+      ],
+      "papers": [
+        {
+          "slug": "2602.06036-dflash",
+          "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
+          "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
+          "href": "2602.06036-dflash.html",
+          "year": 2026,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        },
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html",
+          "year": 2026,
+          "research_line": "Unassigned",
+          "importance": 4
+        },
+        {
+          "slug": "2605.12825-orthrus",
+          "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion",
+          "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+          "href": "2605.12825-orthrus.html",
+          "year": 2026,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        },
+        {
+          "slug": "noarxiv-2026-dspark",
+          "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+          "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+          "href": "noarxiv-2026-dspark.html",
+          "year": 2026,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [
+        "llm inference acceleration"
+      ],
+      "alias_count": 1,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "has_aliases",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "给该标签补 label_definitions 说明，或确认它应合并到已有规范标签。",
+      "query_href": "library.html?topic=LLM+Inference"
     },
     {
       "id": "attention-kernels",
@@ -480,31 +1008,40 @@
       "query_href": "library.html?topic=Diffusion+Language+Models"
     },
     {
-      "id": "inference-acceleration",
-      "label": "Inference Acceleration",
-      "key": "inference acceleration",
+      "id": "lossless-speculative-decoding",
+      "label": "Lossless Speculative Decoding",
+      "key": "lossless speculative decoding",
       "fields": [
         {
-          "field": "tracks",
-          "label": "方向",
-          "english": "Track",
-          "query_key": "track",
+          "field": "problems",
+          "label": "问题",
+          "english": "Problem",
+          "query_key": "problem",
           "count": 3,
           "configured": false,
-          "href": "library.html?track=Inference+Acceleration"
+          "href": "library.html?problem=Lossless+Speculative+Decoding"
         }
       ],
       "field_names": [
-        "tracks"
+        "problems"
       ],
       "total_count": 3,
       "paper_count": 3,
       "slugs": [
+        "2507.11851-llm-future-mtp",
         "2602.06036-dflash",
-        "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
+        "noarxiv-2026-dspark"
       ],
       "papers": [
+        {
+          "slug": "2507.11851-llm-future-mtp",
+          "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
+          "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
+          "href": "2507.11851-llm-future-mtp.html",
+          "year": 2025,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        },
         {
           "slug": "2602.06036-dflash",
           "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
@@ -515,21 +1052,12 @@
           "importance": 4
         },
         {
-          "slug": "2604.11035-introspective-dlm",
-          "title": "Introspective Diffusion Language Models",
-          "title_zh": "内省式扩散语言模型",
-          "href": "2604.11035-introspective-dlm.html",
+          "slug": "noarxiv-2026-dspark",
+          "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+          "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+          "href": "noarxiv-2026-dspark.html",
           "year": 2026,
-          "research_line": "Parallel Decoding with Diffusion Models",
-          "importance": 5
-        },
-        {
-          "slug": "2605.12825-orthrus",
-          "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion",
-          "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
-          "href": "2605.12825-orthrus.html",
-          "year": 2026,
-          "research_line": "Parallel Decoding with Diffusion Models",
+          "research_line": "LLM Serving",
           "importance": 4
         }
       ],
@@ -548,49 +1076,39 @@
       ],
       "severity": "medium",
       "recommended_action": "给该标签补 label_definitions 说明，或确认它应合并到已有规范标签。",
-      "query_href": "library.html?track=Inference+Acceleration"
+      "query_href": "library.html?problem=Lossless+Speculative+Decoding"
     },
     {
-      "id": "llm-serving",
-      "label": "LLM Serving",
-      "key": "llm serving",
+      "id": "gated-lora",
+      "label": "gated LoRA",
+      "key": "gated lora",
       "fields": [
         {
-          "field": "topics",
-          "label": "主题",
-          "english": "Topic",
-          "query_key": "topic",
-          "count": 3,
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 2,
           "configured": false,
-          "href": "library.html?topic=LLM+Serving"
+          "href": "library.html?method=gated+LoRA"
         }
       ],
       "field_names": [
-        "topics"
+        "methods"
       ],
-      "total_count": 3,
-      "paper_count": 3,
+      "total_count": 2,
+      "paper_count": 2,
       "slugs": [
-        "2501.01005-flashinfer",
-        "2602.06036-dflash",
+        "2507.11851-llm-future-mtp",
         "2604.11035-introspective-dlm"
       ],
       "papers": [
         {
-          "slug": "2501.01005-flashinfer",
-          "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
-          "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
-          "href": "2501.01005-flashinfer.html",
+          "slug": "2507.11851-llm-future-mtp",
+          "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
+          "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
+          "href": "2507.11851-llm-future-mtp.html",
           "year": 2025,
-          "research_line": "Efficient Attention Kernels",
-          "importance": 4
-        },
-        {
-          "slug": "2602.06036-dflash",
-          "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
-          "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
-          "href": "2602.06036-dflash.html",
-          "year": 2026,
           "research_line": "Parallel Decoding with Diffusion Models",
           "importance": 4
         },
@@ -604,10 +1122,8 @@
           "importance": 5
         }
       ],
-      "aliases": [
-        "serving systems"
-      ],
-      "alias_count": 1,
+      "aliases": [],
+      "alias_count": 0,
       "configured": false,
       "configured_fields": [],
       "definitions": [],
@@ -617,12 +1133,11 @@
       "owner": {},
       "owner_name": "",
       "signals": [
-        "has_aliases",
         "undefined_label"
       ],
       "severity": "medium",
       "recommended_action": "给该标签补 label_definitions 说明，或确认它应合并到已有规范标签。",
-      "query_href": "library.html?topic=LLM+Serving"
+      "query_href": "library.html?method=gated+LoRA"
     },
     {
       "id": "kv-cache",
@@ -686,9 +1201,9 @@
       "query_href": "library.html?topic=KV+Cache"
     },
     {
-      "id": "llm-inference",
-      "label": "LLM Inference",
-      "key": "llm inference",
+      "id": "llm",
+      "label": "LLM",
+      "key": "llm",
       "fields": [
         {
           "field": "topics",
@@ -697,7 +1212,7 @@
           "query_key": "topic",
           "count": 2,
           "configured": false,
-          "href": "library.html?topic=LLM+Inference"
+          "href": "library.html?topic=LLM"
         }
       ],
       "field_names": [
@@ -706,33 +1221,31 @@
       "total_count": 2,
       "paper_count": 2,
       "slugs": [
-        "2602.06036-dflash",
-        "2605.12825-orthrus"
+        "2507.11851-llm-future-mtp",
+        "2604.11035-introspective-dlm"
       ],
       "papers": [
         {
-          "slug": "2602.06036-dflash",
-          "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
-          "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
-          "href": "2602.06036-dflash.html",
-          "year": 2026,
+          "slug": "2507.11851-llm-future-mtp",
+          "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
+          "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
+          "href": "2507.11851-llm-future-mtp.html",
+          "year": 2025,
           "research_line": "Parallel Decoding with Diffusion Models",
           "importance": 4
         },
         {
-          "slug": "2605.12825-orthrus",
-          "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion",
-          "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
-          "href": "2605.12825-orthrus.html",
+          "slug": "2604.11035-introspective-dlm",
+          "title": "Introspective Diffusion Language Models",
+          "title_zh": "内省式扩散语言模型",
+          "href": "2604.11035-introspective-dlm.html",
           "year": 2026,
           "research_line": "Parallel Decoding with Diffusion Models",
-          "importance": 4
+          "importance": 5
         }
       ],
-      "aliases": [
-        "llm inference acceleration"
-      ],
-      "alias_count": 1,
+      "aliases": [],
+      "alias_count": 0,
       "configured": false,
       "configured_fields": [],
       "definitions": [],
@@ -742,12 +1255,178 @@
       "owner": {},
       "owner_name": "",
       "signals": [
-        "has_aliases",
         "undefined_label"
       ],
       "severity": "medium",
       "recommended_action": "给该标签补 label_definitions 说明，或确认它应合并到已有规范标签。",
-      "query_href": "library.html?topic=LLM+Inference"
+      "query_href": "library.html?topic=LLM"
+    },
+    {
+      "id": "semi-autoregressive-generation",
+      "label": "Semi-Autoregressive Generation",
+      "key": "semi autoregressive generation",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=semi-autoregressive+generation"
+        },
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?topic=Semi-Autoregressive+Generation"
+        }
+      ],
+      "field_names": [
+        "methods",
+        "topics"
+      ],
+      "total_count": 2,
+      "paper_count": 1,
+      "slugs": [
+        "noarxiv-2026-dspark"
+      ],
+      "papers": [
+        {
+          "slug": "noarxiv-2026-dspark",
+          "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+          "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+          "href": "noarxiv-2026-dspark.html",
+          "year": 2026,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "cross_field",
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "确认同名标签跨字段语义是否一致；若语义不同，改名让字段职责更清楚。",
+      "query_href": "library.html?topic=Semi-Autoregressive+Generation"
+    },
+    {
+      "id": "asynchronous-decoding",
+      "label": "asynchronous decoding",
+      "key": "asynchronous decoding",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=asynchronous+decoding"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "papers": [
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html",
+          "year": 2026,
+          "research_line": "Unassigned",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=asynchronous+decoding"
+    },
+    {
+      "id": "balanced-k-means",
+      "label": "Balanced K-means",
+      "key": "balanced k means",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=Balanced+K-means"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2607.00466-eldr"
+      ],
+      "papers": [
+        {
+          "slug": "2607.00466-eldr",
+          "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+          "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+          "href": "2607.00466-eldr.html",
+          "year": 2026,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=Balanced+K-means"
     },
     {
       "id": "block-diffusion",
@@ -854,6 +1533,110 @@
       "query_href": "library.html?method=block-sparse+attention"
     },
     {
+      "id": "cache-aware-sampling",
+      "label": "cache-aware sampling",
+      "key": "cache aware sampling",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=cache-aware+sampling"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "papers": [
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html",
+          "year": 2026,
+          "research_line": "Unassigned",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=cache-aware+sampling"
+    },
+    {
+      "id": "compiler-dsl",
+      "label": "Compiler/DSL",
+      "key": "compiler dsl",
+      "fields": [
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?topic=Compiler%2FDSL"
+        }
+      ],
+      "field_names": [
+        "topics"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "papers": [
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html",
+          "year": 2025,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?topic=Compiler%2FDSL"
+    },
+    {
       "id": "composable-kv-cache-format",
       "label": "composable KV-cache format",
       "key": "composable kv cache format",
@@ -904,6 +1687,58 @@
       "severity": "medium",
       "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
       "query_href": "library.html?method=composable+KV-cache+format"
+    },
+    {
+      "id": "confidence-scheduled-verification",
+      "label": "confidence-scheduled verification",
+      "key": "confidence scheduled verification",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=confidence-scheduled+verification"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "noarxiv-2026-dspark"
+      ],
+      "papers": [
+        {
+          "slug": "noarxiv-2026-dspark",
+          "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+          "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+          "href": "noarxiv-2026-dspark.html",
+          "year": 2026,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=confidence-scheduled+verification"
     },
     {
       "id": "cuda-gpu-parallelism",
@@ -1062,6 +1897,214 @@
       "query_href": "library.html?problem=Customizable+Attention+Serving"
     },
     {
+      "id": "disaggregated-serving",
+      "label": "Disaggregated Serving",
+      "key": "disaggregated serving",
+      "fields": [
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?topic=Disaggregated+Serving"
+        }
+      ],
+      "field_names": [
+        "topics"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2607.00466-eldr"
+      ],
+      "papers": [
+        {
+          "slug": "2607.00466-eldr",
+          "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+          "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+          "href": "2607.00466-eldr.html",
+          "year": 2026,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?topic=Disaggregated+Serving"
+    },
+    {
+      "id": "distillation",
+      "label": "distillation",
+      "key": "distillation",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=distillation"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "papers": [
+        {
+          "slug": "2503.14075-twigvlm-plus-plus",
+          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+          "href": "2503.14075-twigvlm-plus-plus.html",
+          "year": 2026,
+          "research_line": "VLM Acceleration",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=distillation"
+    },
+    {
+      "id": "distributed-inference",
+      "label": "Distributed Inference",
+      "key": "distributed inference",
+      "fields": [
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?topic=Distributed+Inference"
+        }
+      ],
+      "field_names": [
+        "topics"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "papers": [
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html",
+          "year": 2026,
+          "research_line": "Unassigned",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?topic=Distributed+Inference"
+    },
+    {
+      "id": "document-driven-integration",
+      "label": "Document-Driven Integration",
+      "key": "document driven integration",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=Document-Driven+Integration"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "papers": [
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html",
+          "year": 2025,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=Document-Driven+Integration"
+    },
+    {
       "id": "dual-view-attention",
       "label": "dual-view attention",
       "key": "dual view attention",
@@ -1218,6 +2261,266 @@
       "query_href": "library.html?problem=Efficient+Exact+Attention"
     },
     {
+      "id": "efficient-inference",
+      "label": "Efficient Inference",
+      "key": "efficient inference",
+      "fields": [
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?topic=Efficient+Inference"
+        }
+      ],
+      "field_names": [
+        "topics"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2507.11851-llm-future-mtp"
+      ],
+      "papers": [
+        {
+          "slug": "2507.11851-llm-future-mtp",
+          "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
+          "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
+          "href": "2507.11851-llm-future-mtp.html",
+          "year": 2025,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?topic=Efficient+Inference"
+    },
+    {
+      "id": "efficient-vlm-inference",
+      "label": "Efficient VLM Inference",
+      "key": "efficient vlm inference",
+      "fields": [
+        {
+          "field": "problems",
+          "label": "问题",
+          "english": "Problem",
+          "query_key": "problem",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?problem=Efficient+VLM+Inference"
+        }
+      ],
+      "field_names": [
+        "problems"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "papers": [
+        {
+          "slug": "2503.14075-twigvlm-plus-plus",
+          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+          "href": "2503.14075-twigvlm-plus-plus.html",
+          "year": 2026,
+          "research_line": "VLM Acceleration",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?problem=Efficient+VLM+Inference"
+    },
+    {
+      "id": "expert-locality-routing",
+      "label": "Expert Locality Routing",
+      "key": "expert locality routing",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=Expert+Locality+Routing"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2607.00466-eldr"
+      ],
+      "papers": [
+        {
+          "slug": "2607.00466-eldr",
+          "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+          "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+          "href": "2607.00466-eldr.html",
+          "year": 2026,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=Expert+Locality+Routing"
+    },
+    {
+      "id": "fallback-speculation",
+      "label": "fallback speculation",
+      "key": "fallback speculation",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=fallback+speculation"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "papers": [
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html",
+          "year": 2026,
+          "research_line": "Unassigned",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=fallback+speculation"
+    },
+    {
+      "id": "finalwipe",
+      "label": "FinalWipe",
+      "key": "finalwipe",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=FinalWipe"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "papers": [
+        {
+          "slug": "2503.14075-twigvlm-plus-plus",
+          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+          "href": "2503.14075-twigvlm-plus-plus.html",
+          "year": 2026,
+          "research_line": "VLM Acceleration",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=FinalWipe"
+    },
+    {
       "id": "forward-kl-distillation",
       "label": "forward KL distillation",
       "key": "forward kl distillation",
@@ -1270,9 +2573,9 @@
       "query_href": "library.html?method=forward+KL+distillation"
     },
     {
-      "id": "gated-lora",
-      "label": "gated LoRA",
-      "key": "gated lora",
+      "id": "geometric-fan-out",
+      "label": "geometric fan-out",
+      "key": "geometric fan out",
       "fields": [
         {
           "field": "methods",
@@ -1281,7 +2584,7 @@
           "query_key": "method",
           "count": 1,
           "configured": false,
-          "href": "library.html?method=gated+LoRA"
+          "href": "library.html?method=geometric+fan-out"
         }
       ],
       "field_names": [
@@ -1290,17 +2593,17 @@
       "total_count": 1,
       "paper_count": 1,
       "slugs": [
-        "2604.11035-introspective-dlm"
+        "2603.03251-speculative-speculative-decoding"
       ],
       "papers": [
         {
-          "slug": "2604.11035-introspective-dlm",
-          "title": "Introspective Diffusion Language Models",
-          "title_zh": "内省式扩散语言模型",
-          "href": "2604.11035-introspective-dlm.html",
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html",
           "year": 2026,
-          "research_line": "Parallel Decoding with Diffusion Models",
-          "importance": 5
+          "research_line": "Unassigned",
+          "importance": 4
         }
       ],
       "aliases": [],
@@ -1319,7 +2622,7 @@
       ],
       "severity": "medium",
       "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
-      "query_href": "library.html?method=gated+LoRA"
+      "query_href": "library.html?method=geometric+fan-out"
     },
     {
       "id": "gpu-kernel-optimization",
@@ -1424,6 +2727,162 @@
       "severity": "medium",
       "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
       "query_href": "library.html?topic=GPU+Systems"
+    },
+    {
+      "id": "hardware-acceleration",
+      "label": "Hardware Acceleration",
+      "key": "hardware acceleration",
+      "fields": [
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?topic=Hardware+Acceleration"
+        }
+      ],
+      "field_names": [
+        "topics"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "papers": [
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html",
+          "year": 2025,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?topic=Hardware+Acceleration"
+    },
+    {
+      "id": "hardware-aware-scheduling",
+      "label": "hardware-aware scheduling",
+      "key": "hardware aware scheduling",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=hardware-aware+scheduling"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "noarxiv-2026-dspark"
+      ],
+      "papers": [
+        {
+          "slug": "noarxiv-2026-dspark",
+          "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+          "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+          "href": "noarxiv-2026-dspark.html",
+          "year": 2026,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=hardware-aware+scheduling"
+    },
+    {
+      "id": "hierarchical-code-retrieval",
+      "label": "Hierarchical Code Retrieval",
+      "key": "hierarchical code retrieval",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=Hierarchical+Code+Retrieval"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "papers": [
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html",
+          "year": 2025,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=Hierarchical+Code+Retrieval"
     },
     {
       "id": "inference-optimization",
@@ -1686,6 +3145,58 @@
       "query_href": "library.html?method=introspective+strided+decoding"
     },
     {
+      "id": "iterative-search-based-optimization",
+      "label": "Iterative Search-Based Optimization",
+      "key": "iterative search based optimization",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=Iterative+Search-Based+Optimization"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "papers": [
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html",
+          "year": 2025,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=Iterative+Search-Based+Optimization"
+    },
+    {
       "id": "jit-compilation",
       "label": "JIT compilation",
       "key": "jit compilation",
@@ -1736,6 +3247,58 @@
       "severity": "medium",
       "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
       "query_href": "library.html?method=JIT+compilation"
+    },
+    {
+      "id": "kernel-generation",
+      "label": "Kernel Generation",
+      "key": "kernel generation",
+      "fields": [
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?topic=Kernel+Generation"
+        }
+      ],
+      "field_names": [
+        "topics"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "papers": [
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html",
+          "year": 2025,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?topic=Kernel+Generation"
     },
     {
       "id": "kv-injection",
@@ -1790,37 +3353,37 @@
       "query_href": "library.html?method=KV+injection"
     },
     {
-      "id": "llm",
-      "label": "LLM",
-      "key": "llm",
+      "id": "latent-consistency-matching",
+      "label": "latent consistency matching",
+      "key": "latent consistency matching",
       "fields": [
         {
-          "field": "topics",
-          "label": "主题",
-          "english": "Topic",
-          "query_key": "topic",
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
           "count": 1,
           "configured": false,
-          "href": "library.html?topic=LLM"
+          "href": "library.html?method=latent+consistency+matching"
         }
       ],
       "field_names": [
-        "topics"
+        "methods"
       ],
       "total_count": 1,
       "paper_count": 1,
       "slugs": [
-        "2604.11035-introspective-dlm"
+        "2507.11851-llm-future-mtp"
       ],
       "papers": [
         {
-          "slug": "2604.11035-introspective-dlm",
-          "title": "Introspective Diffusion Language Models",
-          "title_zh": "内省式扩散语言模型",
-          "href": "2604.11035-introspective-dlm.html",
-          "year": 2026,
+          "slug": "2507.11851-llm-future-mtp",
+          "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
+          "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
+          "href": "2507.11851-llm-future-mtp.html",
+          "year": 2025,
           "research_line": "Parallel Decoding with Diffusion Models",
-          "importance": 5
+          "importance": 4
         }
       ],
       "aliases": [],
@@ -1839,7 +3402,163 @@
       ],
       "severity": "medium",
       "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
-      "query_href": "library.html?topic=LLM"
+      "query_href": "library.html?method=latent+consistency+matching"
+    },
+    {
+      "id": "llm-code-generation",
+      "label": "LLM Code Generation",
+      "key": "llm code generation",
+      "fields": [
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?topic=LLM+Code+Generation"
+        }
+      ],
+      "field_names": [
+        "topics"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "papers": [
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html",
+          "year": 2025,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?topic=LLM+Code+Generation"
+    },
+    {
+      "id": "load-balancing",
+      "label": "Load Balancing",
+      "key": "load balancing",
+      "fields": [
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?topic=Load+Balancing"
+        }
+      ],
+      "field_names": [
+        "topics"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2607.00466-eldr"
+      ],
+      "papers": [
+        {
+          "slug": "2607.00466-eldr",
+          "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+          "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+          "href": "2607.00466-eldr.html",
+          "year": 2026,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?topic=Load+Balancing"
+    },
+    {
+      "id": "load-aware-serving",
+      "label": "Load-Aware Serving",
+      "key": "load aware serving",
+      "fields": [
+        {
+          "field": "problems",
+          "label": "问题",
+          "english": "Problem",
+          "query_key": "problem",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?problem=Load-Aware+Serving"
+        }
+      ],
+      "field_names": [
+        "problems"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "noarxiv-2026-dspark"
+      ],
+      "papers": [
+        {
+          "slug": "noarxiv-2026-dspark",
+          "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+          "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+          "href": "noarxiv-2026-dspark.html",
+          "year": 2026,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?problem=Load-Aware+Serving"
     },
     {
       "id": "load-balanced-scheduling",
@@ -1998,9 +3717,9 @@
       "query_href": "library.html?topic=Long+Context"
     },
     {
-      "id": "lossless-speculative-decoding",
-      "label": "Lossless Speculative Decoding",
-      "key": "lossless speculative decoding",
+      "id": "long-response-decoding",
+      "label": "Long-Response Decoding",
+      "key": "long response decoding",
       "fields": [
         {
           "field": "problems",
@@ -2009,7 +3728,7 @@
           "query_key": "problem",
           "count": 1,
           "configured": false,
-          "href": "library.html?problem=Lossless+Speculative+Decoding"
+          "href": "library.html?problem=Long-Response+Decoding"
         }
       ],
       "field_names": [
@@ -2018,16 +3737,16 @@
       "total_count": 1,
       "paper_count": 1,
       "slugs": [
-        "2602.06036-dflash"
+        "2503.14075-twigvlm-plus-plus"
       ],
       "papers": [
         {
-          "slug": "2602.06036-dflash",
-          "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
-          "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
-          "href": "2602.06036-dflash.html",
+          "slug": "2503.14075-twigvlm-plus-plus",
+          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+          "href": "2503.14075-twigvlm-plus-plus.html",
           "year": 2026,
-          "research_line": "Parallel Decoding with Diffusion Models",
+          "research_line": "VLM Acceleration",
           "importance": 4
         }
       ],
@@ -2047,7 +3766,59 @@
       ],
       "severity": "medium",
       "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
-      "query_href": "library.html?problem=Lossless+Speculative+Decoding"
+      "query_href": "library.html?problem=Long-Response+Decoding"
+    },
+    {
+      "id": "markov-head",
+      "label": "Markov head",
+      "key": "markov head",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=Markov+head"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "noarxiv-2026-dspark"
+      ],
+      "papers": [
+        {
+          "slug": "noarxiv-2026-dspark",
+          "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+          "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+          "href": "noarxiv-2026-dspark.html",
+          "year": 2026,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=Markov+head"
     },
     {
       "id": "masked-diffusion",
@@ -2102,6 +3873,58 @@
       "query_href": "library.html?method=masked+diffusion"
     },
     {
+      "id": "masked-input-formulation",
+      "label": "masked-input formulation",
+      "key": "masked input formulation",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=masked-input+formulation"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2507.11851-llm-future-mtp"
+      ],
+      "papers": [
+        {
+          "slug": "2507.11851-llm-future-mtp",
+          "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
+          "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
+          "href": "2507.11851-llm-future-mtp.html",
+          "year": 2025,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=masked-input+formulation"
+    },
+    {
       "id": "memory-efficient-parallel-token-generation",
       "label": "Memory-Efficient Parallel Token Generation",
       "key": "memory efficient parallel token generation",
@@ -2152,6 +3975,474 @@
       "severity": "medium",
       "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
       "query_href": "library.html?problem=Memory-Efficient+Parallel+Token+Generation"
+    },
+    {
+      "id": "moe",
+      "label": "MoE",
+      "key": "moe",
+      "fields": [
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?topic=MoE"
+        }
+      ],
+      "field_names": [
+        "topics"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2607.00466-eldr"
+      ],
+      "papers": [
+        {
+          "slug": "2607.00466-eldr",
+          "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+          "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+          "href": "2607.00466-eldr.html",
+          "year": 2026,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?topic=MoE"
+    },
+    {
+      "id": "moe-serving",
+      "label": "MoE Serving",
+      "key": "moe serving",
+      "fields": [
+        {
+          "field": "problems",
+          "label": "问题",
+          "english": "Problem",
+          "query_key": "problem",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?problem=MoE+Serving"
+        }
+      ],
+      "field_names": [
+        "problems"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2607.00466-eldr"
+      ],
+      "papers": [
+        {
+          "slug": "2607.00466-eldr",
+          "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+          "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+          "href": "2607.00466-eldr.html",
+          "year": 2026,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?problem=MoE+Serving"
+    },
+    {
+      "id": "multi-agent-systems",
+      "label": "Multi-Agent Systems",
+      "key": "multi agent systems",
+      "fields": [
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?topic=Multi-Agent+Systems"
+        }
+      ],
+      "field_names": [
+        "topics"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "papers": [
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html",
+          "year": 2025,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?topic=Multi-Agent+Systems"
+    },
+    {
+      "id": "multi-agent-workflow",
+      "label": "Multi-Agent Workflow",
+      "key": "multi agent workflow",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=Multi-Agent+Workflow"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "papers": [
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html",
+          "year": 2025,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=Multi-Agent+Workflow"
+    },
+    {
+      "id": "multi-head-twig",
+      "label": "multi-head twig",
+      "key": "multi head twig",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=multi-head+twig"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "papers": [
+        {
+          "slug": "2503.14075-twigvlm-plus-plus",
+          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+          "href": "2503.14075-twigvlm-plus-plus.html",
+          "year": 2026,
+          "research_line": "VLM Acceleration",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=multi-head+twig"
+    },
+    {
+      "id": "multi-token-prediction",
+      "label": "Multi-Token Prediction",
+      "key": "multi token prediction",
+      "fields": [
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?topic=Multi-Token+Prediction"
+        }
+      ],
+      "field_names": [
+        "topics"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2507.11851-llm-future-mtp"
+      ],
+      "papers": [
+        {
+          "slug": "2507.11851-llm-future-mtp",
+          "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
+          "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
+          "href": "2507.11851-llm-future-mtp.html",
+          "year": 2025,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?topic=Multi-Token+Prediction"
+    },
+    {
+      "id": "multimodal-inference",
+      "label": "Multimodal Inference",
+      "key": "multimodal inference",
+      "fields": [
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?topic=Multimodal+Inference"
+        }
+      ],
+      "field_names": [
+        "topics"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "papers": [
+        {
+          "slug": "2503.14075-twigvlm-plus-plus",
+          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+          "href": "2503.14075-twigvlm-plus-plus.html",
+          "year": 2026,
+          "research_line": "VLM Acceleration",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?topic=Multimodal+Inference"
+    },
+    {
+      "id": "multimodal-systems",
+      "label": "Multimodal Systems",
+      "key": "multimodal systems",
+      "fields": [
+        {
+          "field": "domains",
+          "label": "结构域",
+          "english": "Domain",
+          "query_key": "domain",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?domain=Multimodal+Systems"
+        }
+      ],
+      "field_names": [
+        "domains"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "papers": [
+        {
+          "slug": "2503.14075-twigvlm-plus-plus",
+          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+          "href": "2503.14075-twigvlm-plus-plus.html",
+          "year": 2026,
+          "research_line": "VLM Acceleration",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?domain=Multimodal+Systems"
+    },
+    {
+      "id": "non-autoregressive-generation",
+      "label": "Non-Autoregressive Generation",
+      "key": "non autoregressive generation",
+      "fields": [
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?topic=Non-Autoregressive+Generation"
+        }
+      ],
+      "field_names": [
+        "topics"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2507.11851-llm-future-mtp"
+      ],
+      "papers": [
+        {
+          "slug": "2507.11851-llm-future-mtp",
+          "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
+          "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
+          "href": "2507.11851-llm-future-mtp.html",
+          "year": 2025,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?topic=Non-Autoregressive+Generation"
     },
     {
       "id": "online-softmax",
@@ -2362,6 +4653,214 @@
       "query_href": "library.html?method=parallel+drafting"
     },
     {
+      "id": "pruning-oriented-reinforcement-learning",
+      "label": "pruning-oriented reinforcement learning",
+      "key": "pruning oriented reinforcement learning",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=pruning-oriented+reinforcement+learning"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "papers": [
+        {
+          "slug": "2503.14075-twigvlm-plus-plus",
+          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+          "href": "2503.14075-twigvlm-plus-plus.html",
+          "year": 2026,
+          "research_line": "VLM Acceleration",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=pruning-oriented+reinforcement+learning"
+    },
+    {
+      "id": "quadratic-speculative-decoding",
+      "label": "quadratic speculative decoding",
+      "key": "quadratic speculative decoding",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=quadratic+speculative+decoding"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2507.11851-llm-future-mtp"
+      ],
+      "papers": [
+        {
+          "slug": "2507.11851-llm-future-mtp",
+          "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
+          "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
+          "href": "2507.11851-llm-future-mtp.html",
+          "year": 2025,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=quadratic+speculative+decoding"
+    },
+    {
+      "id": "rag",
+      "label": "RAG",
+      "key": "rag",
+      "fields": [
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?topic=RAG"
+        }
+      ],
+      "field_names": [
+        "topics"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "papers": [
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "Semantic Search Evaluation",
+          "href": "semantic-search-evaluation.md",
+          "year": "",
+          "research_line": "Unassigned",
+          "importance": ""
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?topic=RAG"
+    },
+    {
+      "id": "sampler-head",
+      "label": "sampler head",
+      "key": "sampler head",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=sampler+head"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2507.11851-llm-future-mtp"
+      ],
+      "papers": [
+        {
+          "slug": "2507.11851-llm-future-mtp",
+          "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
+          "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
+          "href": "2507.11851-llm-future-mtp.html",
+          "year": 2025,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=sampler+head"
+    },
+    {
       "id": "sglang-serving",
       "label": "SGLang serving",
       "key": "sglang serving",
@@ -2464,6 +4963,110 @@
       "severity": "medium",
       "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
       "query_href": "library.html?method=shared+KV+cache"
+    },
+    {
+      "id": "signature-cache",
+      "label": "Signature Cache",
+      "key": "signature cache",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=Signature+Cache"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2607.00466-eldr"
+      ],
+      "papers": [
+        {
+          "slug": "2607.00466-eldr",
+          "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+          "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+          "href": "2607.00466-eldr.html",
+          "year": 2026,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=Signature+Cache"
+    },
+    {
+      "id": "systems-optimization",
+      "label": "Systems Optimization",
+      "key": "systems optimization",
+      "fields": [
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?topic=Systems+Optimization"
+        }
+      ],
+      "field_names": [
+        "topics"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "papers": [
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html",
+          "year": 2026,
+          "research_line": "Unassigned",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?topic=Systems+Optimization"
     },
     {
       "id": "target-hidden-features",
@@ -2620,6 +5223,422 @@
       "severity": "medium",
       "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
       "query_href": "library.html?topic=Transformer"
+    },
+    {
+      "id": "tree-based-self-speculative-decoding",
+      "label": "tree-based self-speculative decoding",
+      "key": "tree based self speculative decoding",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=tree-based+self-speculative+decoding"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "papers": [
+        {
+          "slug": "2503.14075-twigvlm-plus-plus",
+          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+          "href": "2503.14075-twigvlm-plus-plus.html",
+          "year": 2026,
+          "research_line": "VLM Acceleration",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=tree-based+self-speculative+decoding"
+    },
+    {
+      "id": "twig-guided-token-pruning",
+      "label": "twig-guided token pruning",
+      "key": "twig guided token pruning",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=twig-guided+token+pruning"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "papers": [
+        {
+          "slug": "2503.14075-twigvlm-plus-plus",
+          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+          "href": "2503.14075-twigvlm-plus-plus.html",
+          "year": 2026,
+          "research_line": "VLM Acceleration",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=twig-guided+token+pruning"
+    },
+    {
+      "id": "unified-sketch",
+      "label": "Unified Sketch",
+      "key": "unified sketch",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=Unified+Sketch"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "papers": [
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html",
+          "year": 2025,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=Unified+Sketch"
+    },
+    {
+      "id": "verification-and-profiling-loop",
+      "label": "Verification and Profiling Loop",
+      "key": "verification and profiling loop",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=Verification+and+Profiling+Loop"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "papers": [
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html",
+          "year": 2025,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=Verification+and+Profiling+Loop"
+    },
+    {
+      "id": "verification-outcome-cache",
+      "label": "verification outcome cache",
+      "key": "verification outcome cache",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=verification+outcome+cache"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "papers": [
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html",
+          "year": 2026,
+          "research_line": "Unassigned",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=verification+outcome+cache"
+    },
+    {
+      "id": "vision-language-models",
+      "label": "Vision-Language Models",
+      "key": "vision language models",
+      "fields": [
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?topic=Vision-Language+Models"
+        }
+      ],
+      "field_names": [
+        "topics"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "papers": [
+        {
+          "slug": "2503.14075-twigvlm-plus-plus",
+          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+          "href": "2503.14075-twigvlm-plus-plus.html",
+          "year": 2026,
+          "research_line": "VLM Acceleration",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?topic=Vision-Language+Models"
+    },
+    {
+      "id": "visual-token-pruning",
+      "label": "Visual Token Pruning",
+      "key": "visual token pruning",
+      "fields": [
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?topic=Visual+Token+Pruning"
+        }
+      ],
+      "field_names": [
+        "topics"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "papers": [
+        {
+          "slug": "2503.14075-twigvlm-plus-plus",
+          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+          "href": "2503.14075-twigvlm-plus-plus.html",
+          "year": 2026,
+          "research_line": "VLM Acceleration",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?topic=Visual+Token+Pruning"
+    },
+    {
+      "id": "visual-token-redundancy",
+      "label": "Visual Token Redundancy",
+      "key": "visual token redundancy",
+      "fields": [
+        {
+          "field": "problems",
+          "label": "问题",
+          "english": "Problem",
+          "query_key": "problem",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?problem=Visual+Token+Redundancy"
+        }
+      ],
+      "field_names": [
+        "problems"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "papers": [
+        {
+          "slug": "2503.14075-twigvlm-plus-plus",
+          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+          "href": "2503.14075-twigvlm-plus-plus.html",
+          "year": 2026,
+          "research_line": "VLM Acceleration",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?problem=Visual+Token+Redundancy"
     },
     {
       "id": "work-partitioning",
@@ -2823,61 +5842,6 @@
       "severity": "medium",
       "recommended_action": "配置中存在但当前未使用；可保留为预设，也可移除以降低选择噪音。",
       "query_href": "library.html?status=cited"
-    },
-    {
-      "id": "code-checked",
-      "label": "code_checked",
-      "key": "code checked",
-      "fields": [
-        {
-          "field": "reading_stage",
-          "label": "阅读阶段",
-          "english": "Reading stage",
-          "query_key": "stage",
-          "count": 0,
-          "configured": true,
-          "href": "library.html?stage=code_checked",
-          "definition": {
-            "description": "Implementation, repository structure, or reproducibility notes have been checked.",
-            "owner": "workflow",
-            "status": "active"
-          }
-        }
-      ],
-      "field_names": [
-        "reading_stage"
-      ],
-      "total_count": 0,
-      "paper_count": 0,
-      "slugs": [],
-      "papers": [],
-      "aliases": [],
-      "alias_count": 0,
-      "configured": true,
-      "configured_fields": [
-        "reading_stage"
-      ],
-      "definitions": [
-        {
-          "field": "reading_stage",
-          "description": "Implementation, repository structure, or reproducibility notes have been checked.",
-          "owner": "workflow",
-          "status": "active"
-        }
-      ],
-      "definition_count": 1,
-      "definition_status": "active",
-      "description": "Implementation, repository structure, or reproducibility notes have been checked.",
-      "owner": {
-        "owner": "workflow"
-      },
-      "owner_name": "workflow",
-      "signals": [
-        "unused_configured"
-      ],
-      "severity": "medium",
-      "recommended_action": "配置中存在但当前未使用；可保留为预设，也可移除以降低选择噪音。",
-      "query_href": "library.html?stage=code_checked"
     },
     {
       "id": "due",
@@ -3153,47 +6117,6 @@
       "severity": "medium",
       "recommended_action": "配置中存在但当前未使用；可保留为预设，也可移除以降低选择噪音。",
       "query_href": "library.html?status=inbox"
-    },
-    {
-      "id": "main",
-      "label": "main",
-      "key": "main",
-      "fields": [
-        {
-          "field": "line_role",
-          "label": "研究线角色",
-          "english": "Line role",
-          "query_key": "role",
-          "count": 0,
-          "configured": true,
-          "href": "library.html?role=main"
-        }
-      ],
-      "field_names": [
-        "line_role"
-      ],
-      "total_count": 0,
-      "paper_count": 0,
-      "slugs": [],
-      "papers": [],
-      "aliases": [],
-      "alias_count": 0,
-      "configured": true,
-      "configured_fields": [
-        "line_role"
-      ],
-      "definitions": [],
-      "definition_count": 0,
-      "definition_status": "",
-      "description": "",
-      "owner": {},
-      "owner_name": "",
-      "signals": [
-        "unused_configured"
-      ],
-      "severity": "medium",
-      "recommended_action": "配置中存在但当前未使用；可保留为预设，也可移除以降低选择噪音。",
-      "query_href": "library.html?role=main"
     },
     {
       "id": "normal-read",
@@ -3677,36 +6600,43 @@
       "query_href": "library.html?status=unread"
     },
     {
-      "id": "deep-read",
-      "label": "deep_read",
-      "key": "deep read",
+      "id": "read",
+      "label": "read",
+      "key": "read",
       "fields": [
         {
-          "field": "reading_stage",
-          "label": "阅读阶段",
-          "english": "Reading stage",
-          "query_key": "stage",
-          "count": 5,
+          "field": "status",
+          "label": "阅读状态",
+          "english": "Status",
+          "query_key": "status",
+          "count": 12,
           "configured": true,
-          "href": "library.html?stage=deep_read",
+          "href": "library.html?status=read",
           "definition": {
-            "description": "Detailed pass including equations, assumptions, ablations, and cross-paper comparison.",
+            "description": "Main report is stable enough to use as reference material.",
             "owner": "workflow",
             "status": "active"
           }
         }
       ],
       "field_names": [
-        "reading_stage"
+        "status"
       ],
-      "total_count": 5,
-      "paper_count": 5,
+      "total_count": 12,
+      "paper_count": 12,
       "slugs": [
         "2307.08691-flashattention-2",
         "2501.01005-flashinfer",
+        "2503.14075-twigvlm-plus-plus",
+        "2507.11851-llm-future-mtp",
+        "2512.23424-akg-kernel-agent-multi",
         "2602.06036-dflash",
+        "2603.03251-speculative-speculative-decoding",
         "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
+        "2605.12825-orthrus",
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark",
+        "semantic-search-evaluation"
       ],
       "papers": [
         {
@@ -3725,6 +6655,149 @@
           "href": "2501.01005-flashinfer.html",
           "year": 2025,
           "research_line": "Efficient Attention Kernels",
+          "importance": 4
+        },
+        {
+          "slug": "2503.14075-twigvlm-plus-plus",
+          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+          "href": "2503.14075-twigvlm-plus-plus.html",
+          "year": 2026,
+          "research_line": "VLM Acceleration",
+          "importance": 4
+        },
+        {
+          "slug": "2507.11851-llm-future-mtp",
+          "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
+          "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
+          "href": "2507.11851-llm-future-mtp.html",
+          "year": 2025,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        },
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html",
+          "year": 2025,
+          "research_line": "LLM Serving",
+          "importance": 4
+        },
+        {
+          "slug": "2602.06036-dflash",
+          "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
+          "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
+          "href": "2602.06036-dflash.html",
+          "year": 2026,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        },
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html",
+          "year": 2026,
+          "research_line": "Unassigned",
+          "importance": 4
+        },
+        {
+          "slug": "2604.11035-introspective-dlm",
+          "title": "Introspective Diffusion Language Models",
+          "title_zh": "内省式扩散语言模型",
+          "href": "2604.11035-introspective-dlm.html",
+          "year": 2026,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 5
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": true,
+      "configured_fields": [
+        "status"
+      ],
+      "definitions": [
+        {
+          "field": "status",
+          "description": "Main report is stable enough to use as reference material.",
+          "owner": "workflow",
+          "status": "active"
+        }
+      ],
+      "definition_count": 1,
+      "definition_status": "active",
+      "description": "Main report is stable enough to use as reference material.",
+      "owner": {
+        "owner": "workflow"
+      },
+      "owner_name": "workflow",
+      "signals": [],
+      "severity": "ok",
+      "recommended_action": "当前标签状态稳定。",
+      "query_href": "library.html?status=read"
+    },
+    {
+      "id": "deep-read",
+      "label": "deep_read",
+      "key": "deep read",
+      "fields": [
+        {
+          "field": "reading_stage",
+          "label": "阅读阶段",
+          "english": "Reading stage",
+          "query_key": "stage",
+          "count": 7,
+          "configured": true,
+          "href": "library.html?stage=deep_read",
+          "definition": {
+            "description": "Detailed pass including equations, assumptions, ablations, and cross-paper comparison.",
+            "owner": "workflow",
+            "status": "active"
+          }
+        }
+      ],
+      "field_names": [
+        "reading_stage"
+      ],
+      "total_count": 7,
+      "paper_count": 7,
+      "slugs": [
+        "2307.08691-flashattention-2",
+        "2501.01005-flashinfer",
+        "2507.11851-llm-future-mtp",
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus",
+        "2607.00466-eldr"
+      ],
+      "papers": [
+        {
+          "slug": "2307.08691-flashattention-2",
+          "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning",
+          "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
+          "href": "2307.08691-flashattention-2.html",
+          "year": 2023,
+          "research_line": "Efficient Attention Kernels",
+          "importance": 5
+        },
+        {
+          "slug": "2501.01005-flashinfer",
+          "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
+          "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
+          "href": "2501.01005-flashinfer.html",
+          "year": 2025,
+          "research_line": "Efficient Attention Kernels",
+          "importance": 4
+        },
+        {
+          "slug": "2507.11851-llm-future-mtp",
+          "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
+          "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
+          "href": "2507.11851-llm-future-mtp.html",
+          "year": 2025,
+          "research_line": "Parallel Decoding with Diffusion Models",
           "importance": 4
         },
         {
@@ -3752,6 +6825,15 @@
           "href": "2605.12825-orthrus.html",
           "year": 2026,
           "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        },
+        {
+          "slug": "2607.00466-eldr",
+          "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+          "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+          "href": "2607.00466-eldr.html",
+          "year": 2026,
+          "research_line": "LLM Serving",
           "importance": 4
         }
       ],
@@ -3782,111 +6864,6 @@
       "query_href": "library.html?stage=deep_read"
     },
     {
-      "id": "read",
-      "label": "read",
-      "key": "read",
-      "fields": [
-        {
-          "field": "status",
-          "label": "阅读状态",
-          "english": "Status",
-          "query_key": "status",
-          "count": 5,
-          "configured": true,
-          "href": "library.html?status=read",
-          "definition": {
-            "description": "Main report is stable enough to use as reference material.",
-            "owner": "workflow",
-            "status": "active"
-          }
-        }
-      ],
-      "field_names": [
-        "status"
-      ],
-      "total_count": 5,
-      "paper_count": 5,
-      "slugs": [
-        "2307.08691-flashattention-2",
-        "2501.01005-flashinfer",
-        "2602.06036-dflash",
-        "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
-      ],
-      "papers": [
-        {
-          "slug": "2307.08691-flashattention-2",
-          "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning",
-          "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
-          "href": "2307.08691-flashattention-2.html",
-          "year": 2023,
-          "research_line": "Efficient Attention Kernels",
-          "importance": 5
-        },
-        {
-          "slug": "2501.01005-flashinfer",
-          "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
-          "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
-          "href": "2501.01005-flashinfer.html",
-          "year": 2025,
-          "research_line": "Efficient Attention Kernels",
-          "importance": 4
-        },
-        {
-          "slug": "2602.06036-dflash",
-          "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
-          "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
-          "href": "2602.06036-dflash.html",
-          "year": 2026,
-          "research_line": "Parallel Decoding with Diffusion Models",
-          "importance": 4
-        },
-        {
-          "slug": "2604.11035-introspective-dlm",
-          "title": "Introspective Diffusion Language Models",
-          "title_zh": "内省式扩散语言模型",
-          "href": "2604.11035-introspective-dlm.html",
-          "year": 2026,
-          "research_line": "Parallel Decoding with Diffusion Models",
-          "importance": 5
-        },
-        {
-          "slug": "2605.12825-orthrus",
-          "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion",
-          "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
-          "href": "2605.12825-orthrus.html",
-          "year": 2026,
-          "research_line": "Parallel Decoding with Diffusion Models",
-          "importance": 4
-        }
-      ],
-      "aliases": [],
-      "alias_count": 0,
-      "configured": true,
-      "configured_fields": [
-        "status"
-      ],
-      "definitions": [
-        {
-          "field": "status",
-          "description": "Main report is stable enough to use as reference material.",
-          "owner": "workflow",
-          "status": "active"
-        }
-      ],
-      "definition_count": 1,
-      "definition_status": "active",
-      "description": "Main report is stable enough to use as reference material.",
-      "owner": {
-        "owner": "workflow"
-      },
-      "owner_name": "workflow",
-      "signals": [],
-      "severity": "ok",
-      "recommended_action": "当前标签状态稳定。",
-      "query_href": "library.html?status=read"
-    },
-    {
       "id": "parallel-decoding-with-diffusion-models",
       "label": "Parallel Decoding with Diffusion Models",
       "key": "parallel decoding with diffusion models",
@@ -3896,7 +6873,7 @@
           "label": "研究线",
           "english": "Research line",
           "query_key": "line",
-          "count": 3,
+          "count": 4,
           "configured": true,
           "href": "library.html?line=Parallel+Decoding+with+Diffusion+Models",
           "definition": {
@@ -3909,14 +6886,24 @@
       "field_names": [
         "research_line"
       ],
-      "total_count": 3,
-      "paper_count": 3,
+      "total_count": 4,
+      "paper_count": 4,
       "slugs": [
+        "2507.11851-llm-future-mtp",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus"
       ],
       "papers": [
+        {
+          "slug": "2507.11851-llm-future-mtp",
+          "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
+          "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
+          "href": "2507.11851-llm-future-mtp.html",
+          "year": 2025,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        },
         {
           "slug": "2602.06036-dflash",
           "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
@@ -3973,6 +6960,81 @@
       "severity": "ok",
       "recommended_action": "当前标签状态稳定。",
       "query_href": "library.html?line=Parallel+Decoding+with+Diffusion+Models"
+    },
+    {
+      "id": "code-checked",
+      "label": "code_checked",
+      "key": "code checked",
+      "fields": [
+        {
+          "field": "reading_stage",
+          "label": "阅读阶段",
+          "english": "Reading stage",
+          "query_key": "stage",
+          "count": 2,
+          "configured": true,
+          "href": "library.html?stage=code_checked",
+          "definition": {
+            "description": "Implementation, repository structure, or reproducibility notes have been checked.",
+            "owner": "workflow",
+            "status": "active"
+          }
+        }
+      ],
+      "field_names": [
+        "reading_stage"
+      ],
+      "total_count": 2,
+      "paper_count": 2,
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus",
+        "noarxiv-2026-dspark"
+      ],
+      "papers": [
+        {
+          "slug": "2503.14075-twigvlm-plus-plus",
+          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+          "href": "2503.14075-twigvlm-plus-plus.html",
+          "year": 2026,
+          "research_line": "VLM Acceleration",
+          "importance": 4
+        },
+        {
+          "slug": "noarxiv-2026-dspark",
+          "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+          "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+          "href": "noarxiv-2026-dspark.html",
+          "year": 2026,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": true,
+      "configured_fields": [
+        "reading_stage"
+      ],
+      "definitions": [
+        {
+          "field": "reading_stage",
+          "description": "Implementation, repository structure, or reproducibility notes have been checked.",
+          "owner": "workflow",
+          "status": "active"
+        }
+      ],
+      "definition_count": 1,
+      "definition_status": "active",
+      "description": "Implementation, repository structure, or reproducibility notes have been checked.",
+      "owner": {
+        "owner": "workflow"
+      },
+      "owner_name": "workflow",
+      "signals": [],
+      "severity": "ok",
+      "recommended_action": "当前标签状态稳定。",
+      "query_href": "library.html?stage=code_checked"
     },
     {
       "id": "efficient-attention-kernels",
@@ -4128,6 +7190,67 @@
       "query_href": "library.html?method=FlashAttention"
     },
     {
+      "id": "followup",
+      "label": "followup",
+      "key": "followup",
+      "fields": [
+        {
+          "field": "line_role",
+          "label": "研究线角色",
+          "english": "Line role",
+          "query_key": "role",
+          "count": 2,
+          "configured": true,
+          "href": "library.html?role=followup"
+        }
+      ],
+      "field_names": [
+        "line_role"
+      ],
+      "total_count": 2,
+      "paper_count": 2,
+      "slugs": [
+        "2507.11851-llm-future-mtp",
+        "2602.06036-dflash"
+      ],
+      "papers": [
+        {
+          "slug": "2507.11851-llm-future-mtp",
+          "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
+          "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
+          "href": "2507.11851-llm-future-mtp.html",
+          "year": 2025,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        },
+        {
+          "slug": "2602.06036-dflash",
+          "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
+          "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
+          "href": "2602.06036-dflash.html",
+          "year": 2026,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": true,
+      "configured_fields": [
+        "line_role"
+      ],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [],
+      "severity": "ok",
+      "recommended_action": "当前标签状态稳定。",
+      "query_href": "library.html?role=followup"
+    },
+    {
       "id": "foundation",
       "label": "foundation",
       "key": "foundation",
@@ -4189,36 +7312,46 @@
       "query_href": "library.html?role=foundation"
     },
     {
-      "id": "followup",
-      "label": "followup",
-      "key": "followup",
+      "id": "main",
+      "label": "main",
+      "key": "main",
       "fields": [
         {
           "field": "line_role",
           "label": "研究线角色",
           "english": "Line role",
           "query_key": "role",
-          "count": 1,
+          "count": 2,
           "configured": true,
-          "href": "library.html?role=followup"
+          "href": "library.html?role=main"
         }
       ],
       "field_names": [
         "line_role"
       ],
-      "total_count": 1,
-      "paper_count": 1,
+      "total_count": 2,
+      "paper_count": 2,
       "slugs": [
-        "2602.06036-dflash"
+        "2503.14075-twigvlm-plus-plus",
+        "2607.00466-eldr"
       ],
       "papers": [
         {
-          "slug": "2602.06036-dflash",
-          "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
-          "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
-          "href": "2602.06036-dflash.html",
+          "slug": "2503.14075-twigvlm-plus-plus",
+          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+          "href": "2503.14075-twigvlm-plus-plus.html",
           "year": 2026,
-          "research_line": "Parallel Decoding with Diffusion Models",
+          "research_line": "VLM Acceleration",
+          "importance": 4
+        },
+        {
+          "slug": "2607.00466-eldr",
+          "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+          "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+          "href": "2607.00466-eldr.html",
+          "year": 2026,
+          "research_line": "LLM Serving",
           "importance": 4
         }
       ],
@@ -4237,7 +7370,7 @@
       "signals": [],
       "severity": "ok",
       "recommended_action": "当前标签状态稳定。",
-      "query_href": "library.html?role=followup"
+      "query_href": "library.html?role=main"
     },
     {
       "id": "system",
@@ -4249,7 +7382,7 @@
           "label": "研究线角色",
           "english": "Line role",
           "query_key": "role",
-          "count": 1,
+          "count": 2,
           "configured": true,
           "href": "library.html?role=system"
         }
@@ -4257,10 +7390,11 @@
       "field_names": [
         "line_role"
       ],
-      "total_count": 1,
-      "paper_count": 1,
+      "total_count": 2,
+      "paper_count": 2,
       "slugs": [
-        "2501.01005-flashinfer"
+        "2501.01005-flashinfer",
+        "noarxiv-2026-dspark"
       ],
       "papers": [
         {
@@ -4270,6 +7404,15 @@
           "href": "2501.01005-flashinfer.html",
           "year": 2025,
           "research_line": "Efficient Attention Kernels",
+          "importance": 4
+        },
+        {
+          "slug": "noarxiv-2026-dspark",
+          "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+          "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+          "href": "noarxiv-2026-dspark.html",
+          "year": 2026,
+          "research_line": "LLM Serving",
           "importance": 4
         }
       ],
@@ -4343,37 +7486,39 @@
     }
   ],
   "summary": {
-    "high": 1,
-    "medium": 64,
+    "high": 4,
+    "medium": 112,
     "low": 0,
-    "ok": 9,
-    "cross_field": 3,
-    "singleton": 37,
-    "unused_configured": 19,
-    "unowned_research_line": 0,
+    "ok": 11,
+    "cross_field": 6,
+    "singleton": 87,
+    "unused_configured": 17,
+    "unowned_research_line": 2,
     "defined": 25,
     "deprecated_in_use": 0,
-    "undefined_label": 42
+    "undefined_label": 94
   },
   "field_counts": {
-    "domains": 1,
-    "line_role": 7,
-    "methods": 26,
-    "problems": 5,
+    "domains": 2,
+    "line_role": 8,
+    "methods": 54,
+    "problems": 10,
     "reading_stage": 5,
-    "research_line": 2,
+    "research_line": 4,
     "review_stage": 4,
     "status": 9,
-    "topics": 14,
-    "tracks": 4
+    "topics": 33,
+    "tracks": 5
   },
   "signals": {
-    "cross_field": 3,
+    "cross_field": 6,
     "has_aliases": 3,
     "overloaded": 1,
-    "singleton": 37,
-    "undefined_label": 42,
-    "unused_configured": 19
+    "singleton": 87,
+    "unconfigured_value": 1,
+    "undefined_label": 94,
+    "unowned_research_line": 2,
+    "unused_configured": 17
   },
   "csv_columns": [
     "label",

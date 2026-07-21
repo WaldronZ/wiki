@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-06-15T14:49:54",
-  "count": 5,
+  "generated_at": "2026-07-21T14:06:34",
+  "count": 12,
   "active_status_workflow": "personal",
   "workflow_count": 2,
   "workflows": [
@@ -80,7 +80,7 @@
             },
             {
               "value": "read",
-              "count": 5,
+              "count": 12,
               "configured": true,
               "definition": {
                 "description": "Main report is stable enough to use as reference material.",
@@ -113,11 +113,15 @@
           "field": "reading_stage",
           "label": "阅读阶段",
           "configured_count": 4,
-          "used_configured_count": 1,
+          "used_configured_count": 2,
           "defined_count": 4,
           "deprecated_count": 0,
-          "empty_count": 0,
-          "empty_slugs": [],
+          "empty_count": 3,
+          "empty_slugs": [
+            "2512.23424-akg-kernel-agent-multi",
+            "2603.03251-speculative-speculative-decoding",
+            "semantic-search-evaluation"
+          ],
           "values": [
             {
               "value": "skim",
@@ -149,7 +153,7 @@
             },
             {
               "value": "deep_read",
-              "count": 5,
+              "count": 7,
               "configured": true,
               "definition": {
                 "description": "Detailed pass including equations, assumptions, ablations, and cross-paper comparison.",
@@ -163,7 +167,7 @@
             },
             {
               "value": "code_checked",
-              "count": 0,
+              "count": 2,
               "configured": true,
               "definition": {
                 "description": "Implementation, repository structure, or reproducibility notes have been checked.",
@@ -185,13 +189,20 @@
           "used_configured_count": 0,
           "defined_count": 3,
           "deprecated_count": 0,
-          "empty_count": 5,
+          "empty_count": 12,
           "empty_slugs": [
             "2307.08691-flashattention-2",
             "2501.01005-flashinfer",
+            "2503.14075-twigvlm-plus-plus",
+            "2507.11851-llm-future-mtp",
+            "2512.23424-akg-kernel-agent-multi",
             "2602.06036-dflash",
+            "2603.03251-speculative-speculative-decoding",
             "2604.11035-introspective-dlm",
-            "2605.12825-orthrus"
+            "2605.12825-orthrus",
+            "2607.00466-eldr",
+            "noarxiv-2026-dspark",
+            "semantic-search-evaluation"
           ],
           "values": [
             {
@@ -241,7 +252,7 @@
         }
       },
       "unconfigured_total": 0,
-      "empty_total": 5,
+      "empty_total": 15,
       "definition_total": 12,
       "deprecated_total": 0,
       "board_href": "board.html?workflow=personal",
@@ -370,7 +381,7 @@
           "unconfigured": [
             {
               "value": "read",
-              "count": 5,
+              "count": 12,
               "configured": false,
               "definition": {
                 "description": "Main report is stable enough to use as reference material.",
@@ -384,9 +395,16 @@
               "slugs": [
                 "2307.08691-flashattention-2",
                 "2501.01005-flashinfer",
+                "2503.14075-twigvlm-plus-plus",
+                "2507.11851-llm-future-mtp",
+                "2512.23424-akg-kernel-agent-multi",
                 "2602.06036-dflash",
+                "2603.03251-speculative-speculative-decoding",
                 "2604.11035-introspective-dlm",
-                "2605.12825-orthrus"
+                "2605.12825-orthrus",
+                "2607.00466-eldr",
+                "noarxiv-2026-dspark",
+                "semantic-search-evaluation"
               ]
             }
           ]
@@ -395,11 +413,15 @@
           "field": "reading_stage",
           "label": "阅读阶段",
           "configured_count": 5,
-          "used_configured_count": 1,
+          "used_configured_count": 2,
           "defined_count": 5,
           "deprecated_count": 0,
-          "empty_count": 0,
-          "empty_slugs": [],
+          "empty_count": 3,
+          "empty_slugs": [
+            "2512.23424-akg-kernel-agent-multi",
+            "2603.03251-speculative-speculative-decoding",
+            "semantic-search-evaluation"
+          ],
           "values": [
             {
               "value": "skim",
@@ -431,7 +453,7 @@
             },
             {
               "value": "deep_read",
-              "count": 5,
+              "count": 7,
               "configured": true,
               "definition": {
                 "description": "Detailed pass including equations, assumptions, ablations, and cross-paper comparison.",
@@ -445,7 +467,7 @@
             },
             {
               "value": "code_checked",
-              "count": 0,
+              "count": 2,
               "configured": true,
               "definition": {
                 "description": "Implementation, repository structure, or reproducibility notes have been checked.",
@@ -481,13 +503,20 @@
           "used_configured_count": 0,
           "defined_count": 4,
           "deprecated_count": 0,
-          "empty_count": 5,
+          "empty_count": 12,
           "empty_slugs": [
             "2307.08691-flashattention-2",
             "2501.01005-flashinfer",
+            "2503.14075-twigvlm-plus-plus",
+            "2507.11851-llm-future-mtp",
+            "2512.23424-akg-kernel-agent-multi",
             "2602.06036-dflash",
+            "2603.03251-speculative-speculative-decoding",
             "2604.11035-introspective-dlm",
-            "2605.12825-orthrus"
+            "2605.12825-orthrus",
+            "2607.00466-eldr",
+            "noarxiv-2026-dspark",
+            "semantic-search-evaluation"
           ],
           "values": [
             {
@@ -551,7 +580,7 @@
         }
       },
       "unconfigured_total": 1,
-      "empty_total": 5,
+      "empty_total": 15,
       "definition_total": 16,
       "deprecated_total": 0,
       "board_href": "board.html?workflow=research",
@@ -559,6 +588,58 @@
     }
   ],
   "papers": [
+    {
+      "slug": "2607.00466-eldr",
+      "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+      "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+      "research_line": "LLM Serving",
+      "line_role": "main",
+      "status": "read",
+      "reading_stage": "deep_read",
+      "review_stage": "",
+      "importance": 4,
+      "has_code": false,
+      "href": "2607.00466-eldr.html"
+    },
+    {
+      "slug": "2603.03251-speculative-speculative-decoding",
+      "title": "Speculative Speculative Decoding",
+      "title_zh": "推测性推测解码",
+      "research_line": "Unassigned",
+      "line_role": "",
+      "status": "read",
+      "reading_stage": "",
+      "review_stage": "",
+      "importance": 4,
+      "has_code": true,
+      "href": "2603.03251-speculative-speculative-decoding.html"
+    },
+    {
+      "slug": "2503.14075-twigvlm-plus-plus",
+      "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+      "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+      "research_line": "VLM Acceleration",
+      "line_role": "main",
+      "status": "read",
+      "reading_stage": "code_checked",
+      "review_stage": "",
+      "importance": 4,
+      "has_code": true,
+      "href": "2503.14075-twigvlm-plus-plus.html"
+    },
+    {
+      "slug": "noarxiv-2026-dspark",
+      "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+      "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+      "research_line": "LLM Serving",
+      "line_role": "system",
+      "status": "read",
+      "reading_stage": "code_checked",
+      "review_stage": "",
+      "importance": 4,
+      "has_code": true,
+      "href": "noarxiv-2026-dspark.html"
+    },
     {
       "slug": "2602.06036-dflash",
       "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
@@ -599,6 +680,32 @@
       "href": "2605.12825-orthrus.html"
     },
     {
+      "slug": "2507.11851-llm-future-mtp",
+      "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
+      "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
+      "research_line": "Parallel Decoding with Diffusion Models",
+      "line_role": "followup",
+      "status": "read",
+      "reading_stage": "deep_read",
+      "review_stage": "",
+      "importance": 4,
+      "has_code": false,
+      "href": "2507.11851-llm-future-mtp.html"
+    },
+    {
+      "slug": "2512.23424-akg-kernel-agent-multi",
+      "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+      "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+      "research_line": "LLM Serving",
+      "line_role": "tooling",
+      "status": "read",
+      "reading_stage": "",
+      "review_stage": "",
+      "importance": 4,
+      "has_code": false,
+      "href": "2512.23424-akg-kernel-agent-multi.html"
+    },
+    {
       "slug": "2501.01005-flashinfer",
       "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
       "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
@@ -623,6 +730,19 @@
       "importance": 5,
       "has_code": true,
       "href": "2307.08691-flashattention-2.html"
+    },
+    {
+      "slug": "semantic-search-evaluation",
+      "title": "Semantic Search Evaluation",
+      "title_zh": "Semantic Search Evaluation",
+      "research_line": "Unassigned",
+      "line_role": "",
+      "status": "read",
+      "reading_stage": "",
+      "review_stage": "",
+      "importance": "",
+      "has_code": false,
+      "href": "semantic-search-evaluation.md"
     }
   ],
   "defaults": {

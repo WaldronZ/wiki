@@ -1,0 +1,22 @@
+{
+  "slug": "2607.00466-eldr-expert-locality-aware",
+  "arxiv_id": "2607.00466",
+  "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+  "authors": [
+    "Sangjin Choi",
+    "Sukmin Cho",
+    "Yifan Xiong",
+    "Ziyue Yang",
+    "Youngjin Kwon",
+    "Peng Cheng"
+  ],
+  "year": 2026,
+  "published": "2026-07-01T05:34:38Z",
+  "abs_url": "https://arxiv.org/abs/2607.00466v2",
+  "pdf_url": "https://arxiv.org/pdf/2607.00466v2",
+  "source_dir": "/Users/waldron/projects/AutoPaperReader/sources/2607.00466-eldr-expert-locality-aware/arxiv",
+  "main_tex_path": "/Users/waldron/projects/AutoPaperReader/sources/2607.00466-eldr-expert-locality-aware/arxiv/main.tex",
+  "report_md_path": "/Users/waldron/projects/AutoPaperReader/docs/2607.00466-eldr-expert-locality-aware.md",
+  "report_html_path": "/Users/waldron/projects/AutoPaperReader/docs/2607.00466-eldr-expert-locality-aware.html",
+  "pdf_fallback_path": "sources/2607.00466-eldr-expert-locality-aware/arxiv/paper.pdf"
+}

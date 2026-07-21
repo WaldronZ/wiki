@@ -5,8 +5,6 @@ __pycache__/
 # Local editor/app state.
 .idea/
 .vscode/
-docs/.obsidian/
-docs/wiki/
 
 # Downloaded paper sources and cloned code can be very large and are reproducible.
 sources/
@@ -14,3 +12,10 @@ sources/
 # Runtime logs and scratch output.
 logs/
 tmp/
+app.db
+app.db-*
+build/
+dist/
+*.spec
+frontend/node_modules/
+frontend/dist/

@@ -49,7 +49,41 @@ model: sonnet
 
 5. **写报告**
    - 用 `Write` 在 `report_path` 创建文件（首次写入）。
-   - 文件开头先写 YAML frontmatter，供动态 wiki 分类和筛选。至少包含 `slug`、`title`、`title_zh`、`title_en`、`arxiv_id`、`year`、`authors`、`topics`、`methods`、`status: read`、`importance`、`has_code`。不确定的字段可以留空或省略，但 `topics` / `methods` 要根据论文内容给出尽量准确的 2–6 个标签。
+   - **文件的最开头必须是 YAML frontmatter**（`---` 行开始，`---` 行结束），这是 wiki 验证的硬性要求，缺失会导致整个流程失败。
+   - **必须包含以下全部 20 个字段**（与 validate_wiki.py 的 REQUIRED_META 一致）：
+     ```yaml
+     ---
+     slug: "<arxiv_id>-<short-name>"        # 必填，匹配文件名
+     title: "<英文论文标题>"                  # 必填
+     title_zh: "<中文标题>"                   # 必填
+     title_en: "<英文标题>"                   # 必填
+     arxiv_id: "<arxiv_id>"                  # 必填，如 2307.08691v1
+     year: 2025                              # 必填，整数
+     authors:                                # 必填，至少 1 项
+       - "<作者或作者组>"
+     domains:                                # 必填，至少 1 项，如 LLM Systems
+       - "<Domain>"
+     tracks:                                 # 必填，至少 1 项，如 Inference Acceleration
+       - "<Track>"
+     problems:                               # 必填，至少 1 项，如 Efficient Exact Attention
+       - "<Problem>"
+     topics:                                 # 必填，2-6 个标签
+       - "<Topic>"
+     methods:                                # 必填，2-6 个标签
+       - "<Method>"
+     research_line: "<研究方向>"              # 必填
+     line_role: "<foundation|baseline|main|system|variant|followup|survey>"  # 必填
+     status: read                            # 必填
+     reading_stage: deep_read                # 必填
+     importance: 3                           # 必填，1-5 整数
+     confidence: 3                           # 必填，1-5 整数
+     reproducibility: 3                      # 必填，1-5 整数
+     has_code: false                         # 必填，true 或 false
+     ---
+     ```
+   - 不确定分类的字段（domains/tracks/problems）可以根据论文内容合理推断，但**不能省略**。
+   - `topics` / `methods` 要根据论文内容给出尽量准确的 2–6 个标签。
+   - **写完后自查**：确认文件第一行是 `---`，最后一行 `---` 之后才是正文。
    - 严格按下方「报告结构」组织小节，**不能漏小节**；如果某一节确实信息不足，写「论文未提供 / 估算如下：...」也要保留小节标题。
    - 中文为主，关键术语保留英文原词（例如 attention、in-context learning、KV cache、RoPE 等不要硬翻）。
    - 公式用 LaTeX 数学（行内 `$...$`，行间 `$$...$$`），照抄论文中的关键公式而不是自己重写。
@@ -72,12 +106,23 @@ arxiv_id: "<arxiv_id>"
 year: <年份>
 authors:
   - <作者或作者组>
+domains:
+  - <领域，如 LLM Systems / Computer Vision>
+tracks:
+  - <方向，如 Inference Acceleration / Attention Kernels>
+problems:
+  - <问题，如 Efficient Exact Attention / Long Context>
 topics:
   - <研究主题，如 LLM / RAG / Reasoning>
 methods:
   - <方法标签，如 self-attention / MoE / RLHF>
+research_line: <研究方向，如 Efficient Attention Kernels>
+line_role: <foundation|baseline|main|system|variant|followup|survey>
 status: read
-importance: <1-5，可估可留空>
+reading_stage: <skim|overview|deep_read>
+importance: <1-5>
+confidence: <1-5>
+reproducibility: <1-5>
 has_code: <true|false>
 ---
 

@@ -9,9 +9,9 @@ paper_reader/
 ├── AGENTS.md                  # 本文件：项目说明 + 主线 agent 流程
 ├── .Codex/
 │   └── agents/
-│       ├── paper-analyst.md   # 子 agent：读 tex 源码，写阅读报告
-│       ├── code-analyst.md    # 子 agent：读代码，补充报告
-│       └── html-presenter.md  # 子 agent：把 markdown 报告渲染成单文件 HTML 网页
+│       ├── paper-analyst.toml # 子 agent：读 tex 源码，写阅读报告
+│       ├── code-analyst.toml  # 子 agent：读代码，补充报告
+│       └── html-presenter.toml # 子 agent：把 markdown 报告渲染成单文件 HTML 网页
 ├── sources/                   # 论文 tex 源码与代码仓库的存放地
 │   └── <slug>/                # 每篇论文一个子目录（见命名约定）
 │       ├── arxiv/             #   解压后的 tex 源码
@@ -60,7 +60,7 @@ paper_reader/
 - slug、`sources/<slug>/arxiv/` 路径、主 tex 文件路径
 - 已经从 abstract 页拿到的元数据（题目、作者、单位、提交日期、arxiv 链接），让子 agent 不必重复抓取
 - 报告要写到本次确定的报告路径（默认 `docs/<slug>.md`，若用户指定了其它目录则为 `<报告目录>/<slug>.md`，请写完整路径）
-- 把 `.Codex/agents/paper-analyst.md` 中规定的报告结构作为硬性要求重述一遍，避免子 agent 漏写小节
+- 把 `.Codex/agents/paper-analyst.toml` 中规定的报告结构作为硬性要求重述一遍，避免子 agent 漏写小节
 
 paper-analyst 子 agent 会在内部完成阅读 + 批判性分析（包括上网查相关论文），最后把完整报告写入你传给它的报告路径。
 
@@ -181,6 +181,8 @@ has_code: <true|false>
 - 全文用一级标题 `#` 作为论文标题，二级 `##` 作为上面 1–10 的章节，三级 `###` 用于子点。
 - 公式用 `$...$` 与 `$$...$$`。
 - 引用论文图片时，把图片相对路径写到 markdown 里（指向 `sources/<slug>/arxiv/...`），不要把图片复制到 `docs/`。
+- 图表不是装饰内容：报告必须把论文图表作为证据来读。图表应放在对应论证位置，而不是集中堆到文末；例如架构图放在「方法细节」，主结果图 / 表放在「实验」，失败案例图放在「批判性分析」。
+- 每张展示的图 / 表下面直接写 2–4 句「图解：...」，说明它展示了什么、支撑哪条 claim、读者应关注哪个趋势 / 对比 / 失败案例。
 - 不要在报告里堆砌 emoji。
 
 ## 工具使用约定

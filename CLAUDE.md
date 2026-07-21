@@ -63,6 +63,21 @@ paper_reader/
 
 paper-analyst 子 agent 会在内部完成阅读 + 批判性分析（包括上网查相关论文），最后把完整报告写入你传给它的报告路径。
 
+### 第 2.5 步：验证 frontmatter（必做）
+
+paper-analyst 写完报告后，**立即**用 `Read` 读取报告文件的前 40 行，确认：
+
+1. 文件第一行是 `---`（不能有空行或 BOM）
+2. `---` 和 `---` 之间包含全部 20 个必填字段
+3. `slug` 与文件名一致
+4. `authors`、`topics`、`methods` 等 list 字段至少有一项
+5. `importance`、`confidence`、`reproducibility` 是 1–5 的整数
+6. `has_code` 是 `true` 或 `false`
+
+如果 frontmatter 缺失或不完整，**不要重新派发子 agent**，直接用 `Edit` 自己补全。补全时参考 `docs/guides/report.template.md` 和论文的 abstract 页元数据。
+
+验证通过后才继续下一步。
+
 ### 第 3 步：（如果有代码）派发 code-analyst 子 agent
 
 仅当 `sources/<slug>/code/` 存在且非空时执行。调用 `Agent` 工具，`subagent_type` 用 `code-analyst`，任务里告诉它：
@@ -127,29 +142,40 @@ python3 scripts/build_wiki.py <报告目录>
 
 报告文件（默认 `docs/<slug>.md`，或用户指定目录下的 `<slug>.md`）必须包含下列小节，**用中文撰写为主，关键术语保留英文原词**（如 attention、in-context learning、KV cache 等）。子 agent 会按这一节生成正文，主线 agent 在派发任务时也要把这一节作为契约重述。
 
-报告文件开头应包含 YAML frontmatter，供动态 wiki 做分类、筛选和知识管理。frontmatter 至少包含：
+报告文件开头**必须**包含 YAML frontmatter，供动态 wiki 做分类、筛选和知识管理。**全部 20 个字段都是必填的**（与 `validate_wiki.py` 的 `REQUIRED_META` 一致），缺失任何一个都会导致验证失败：
 
 ```yaml
 ---
-slug: <slug>
+slug: <slug>                                          # 匹配文件名
 title: <英文原标题或主标题>
 title_zh: <中文标题>
 title_en: <英文标题>
 arxiv_id: "<arxiv_id>"
-year: <年份>
-authors:
+year: <年份>                                           # 整数
+authors:                                               # 至少 1 项
   - <作者或作者组>
-topics:
-  - <研究主题，如 LLM / RAG / Reasoning>
-methods:
-  - <方法标签，如 self-attention / MoE / RLHF>
+domains:                                               # 至少 1 项，如 LLM Systems
+  - <Domain>
+tracks:                                                # 至少 1 项，如 Inference Acceleration
+  - <Track>
+problems:                                              # 至少 1 项，如 Efficient Exact Attention
+  - <Problem>
+topics:                                                # 2-6 个标签
+  - <研究主题>
+methods:                                               # 2-6 个标签
+  - <方法标签>
+research_line: <研究方向>                               # 如 Efficient Attention Kernels
+line_role: <foundation|baseline|main|system|variant|followup|survey>
 status: read
-importance: <1-5，可估可留空>
+reading_stage: <skim|overview|deep_read>
+importance: <1-5>
+confidence: <1-5>
+reproducibility: <1-5>
 has_code: <true|false>
 ---
 ```
 
-如果某些字段信息不足，可以留空或省略；`scripts/build_wiki.py` 会尽量从正文兜底推断，但 frontmatter 越准，wiki 分类越可靠。
+如果某些分类字段（domains / tracks / problems）信息不足，可以根据论文内容合理推断，但**不能省略**。`topics` / `methods` 要给出尽量准确的 2–6 个标签。
 
 1. **基本情况**：题目（中英对照）、作者、单位、arxiv 编号与提交日期、arxiv 链接、（如有）代码仓库链接。
 2. **核心贡献概述**：1–2 句专业表述。同时给出中文版本和英文版本，**英文版本尽量摘自原文**（abstract / introduction / conclusion 中的原句），并标注出处段落。

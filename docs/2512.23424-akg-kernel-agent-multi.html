@@ -1,0 +1,966 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.11.1/styles/github.min.css">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f7f8;
+      --paper: #ffffff;
+      --ink: #22262a;
+      --muted: #667078;
+      --line: #d8e0e5;
+      --accent: #2c6e73;
+      --accent-2: #6f5b8a;
+      --soft: #e7f0ed;
+      --soft-2: #eef0f5;
+      --shadow: 0 18px 45px rgba(31, 44, 52, .08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "PingFang SC", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+      line-height: 1.72;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .shell { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
+    .hero { padding: 16px 0 20px; }
+    .crumb { display: none; }
+    h1 { margin: 0 0 8px; font-size: clamp(30px, 5vw, 52px); line-height: 1.1; letter-spacing: 0; }
+    .subtitle { max-width: 820px; color: var(--muted); font-size: 18px; margin: 0; }
+    .meta-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 0; }
+    .pill, .hero-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--paper);
+      padding: 0 12px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .hero-link { color: var(--accent); font-weight: 700; }
+    .hero-link svg {
+      width: 15px;
+      height: 15px;
+      margin-right: 6px;
+      fill: currentColor;
+      flex: 0 0 auto;
+    }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .chips span {
+      border: 1px solid #cfdedc;
+      background: var(--soft);
+      color: #33595d;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 13px;
+    }
+    .panel {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    .mindmap-panel { padding: 22px; margin: 14px auto 18px; }
+    .panel-title { margin: 0 0 10px; font-size: 18px; }
+    .mind-overview {
+      display: grid;
+      grid-template-columns: minmax(180px, .42fr) 1fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+    .mind-root {
+      min-height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      border-radius: 8px;
+      border: 1px solid #cbdeda;
+      background: linear-gradient(180deg, #edf7f5, #ffffff);
+      color: #234e52;
+      font-size: clamp(20px, 2.4vw, 28px);
+      font-weight: 800;
+      line-height: 1.15;
+      padding: 20px;
+    }
+    .mind-branches {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 12px;
+    }
+    .mind-branch {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 12px;
+      min-height: 132px;
+    }
+    .mind-branch h3 {
+      margin: 0 0 6px;
+      font-size: 16px;
+      color: var(--accent);
+    }
+    .mind-branch ul {
+      margin: 0;
+      padding-left: 1.1em;
+      color: #4a5358;
+      font-size: 13.5px;
+      line-height: 1.5;
+    }
+    .mindmap-toggle {
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      overflow: hidden;
+    }
+    .mindmap-toggle summary {
+      cursor: pointer;
+      padding: 10px 14px;
+      color: var(--accent);
+      font-weight: 700;
+      list-style: none;
+    }
+    .mindmap-toggle summary::-webkit-details-marker { display: none; }
+    .markmap {
+      height: 520px;
+      border-top: 1px solid var(--line);
+      background: #fffdf8;
+      overflow: hidden;
+      pointer-events: none;
+      user-select: none;
+    }
+    .markmap svg {
+      width: 100%;
+      height: 520px;
+      display: block;
+      pointer-events: none;
+    }
+    .reader-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(210px, 248px);
+      gap: 14px;
+      align-items: start;
+      padding-bottom: 56px;
+      transition: grid-template-columns .18s ease;
+    }
+    .reader-layout.sidebar-collapsed {
+      grid-template-columns: minmax(0, 1fr) 44px;
+    }
+    .side-toc {
+      grid-column: 2;
+      grid-row: 1;
+      position: sticky;
+      top: 64px;
+      max-height: calc(100vh - 84px);
+      overflow: hidden;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    .side-toggle {
+      width: 100%;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      background: #ffffff;
+      color: var(--accent);
+      padding: 0 12px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 750;
+      cursor: pointer;
+    }
+    .side-toggle-icon {
+      width: 20px;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--muted);
+      background: #fff;
+      flex: 0 0 auto;
+    }
+    .side-toc nav {
+      max-height: calc(100vh - 130px);
+      overflow-y: auto;
+      padding: 8px;
+    }
+    .side-toc a {
+      display: block;
+      border-radius: 7px;
+      border: 1px solid transparent;
+      padding: 8px 10px;
+      color: #405059;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+    .side-toc a:hover,
+    .side-toc a.is-active {
+      background: var(--soft);
+      text-decoration: none;
+      border-color: #cbdeda;
+      color: #234e52;
+    }
+    .side-toc.is-collapsed .side-toggle {
+      width: 44px;
+      height: 44px;
+      min-height: 44px;
+      justify-content: center;
+      border-bottom: 0;
+      padding: 0;
+    }
+    .side-toc.is-collapsed {
+      width: 44px;
+      height: 44px;
+      justify-self: end;
+    }
+    .side-toc.is-collapsed nav,
+    .side-toc.is-collapsed .side-toggle-text {
+      display: none;
+    }
+    .article { grid-column: 1; grid-row: 1; min-width: 0; }
+    .report-section {
+      margin: 16px 0;
+      padding: 22px;
+      border-left: 5px solid var(--accent);
+      background: var(--paper);
+      border-radius: 8px;
+      border-top: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+    .report-section:nth-of-type(3) {
+      border-left-color: #6f5b8a;
+      background: linear-gradient(90deg, #f4f0fa 0, #fff 140px);
+    }
+    .report-section:nth-of-type(7) {
+      border-left-color: #9a623d;
+      background: linear-gradient(90deg, #f7f1ed 0, #fff 160px);
+    }
+    .report-section:nth-of-type(10) {
+      border-left-color: #3f6c88;
+      background: linear-gradient(90deg, #eef4f8 0, #fff 160px);
+    }
+    details.report-section { padding: 0; overflow: hidden; }
+    details.report-section summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 18px 22px;
+      font-size: 22px;
+      font-weight: 760;
+      line-height: 1.25;
+    }
+    details.report-section summary::-webkit-details-marker { display: none; }
+    details.report-section summary::after {
+      content: "收起";
+      float: right;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 500;
+      margin-top: 5px;
+    }
+    .report-section > h2,
+    details.report-section > summary {
+      scroll-margin-top: 96px;
+    }
+    details.report-section:not([open]) summary::after { content: "展开"; }
+    .section-body { padding: 0 22px 22px; }
+    .article > h1 {
+      margin: 18px 0;
+      padding: 18px 22px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      font-size: clamp(24px, 3vw, 34px);
+    }
+    h2, h3 { letter-spacing: 0; line-height: 1.32; }
+    h2 { margin: 0 0 12px; font-size: 24px; }
+    h3 { margin: 22px 0 8px; font-size: 19px; color: #293d42; }
+    p { margin: 10px 0; }
+    ul, ol { padding-left: 1.4em; }
+    li { margin: 5px 0; }
+    blockquote {
+      margin: 14px 0;
+      padding: 10px 14px;
+      border-left: 4px solid var(--accent-2);
+      background: var(--soft-2);
+      color: #51483f;
+      border-radius: 6px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      overflow: hidden;
+      border-radius: 8px;
+      display: block;
+      overflow-x: auto;
+    }
+    th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; }
+    th { background: #edf3f1; }
+    pre {
+      padding: 14px;
+      overflow-x: auto;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #f7f7f5;
+    }
+    code {
+      font-family: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .92em;
+    }
+    :not(pre) > code {
+      background: #eef1ef;
+      border-radius: 5px;
+      padding: 1px 5px;
+    }
+    .math-inline {
+      display: inline-block;
+      max-width: 100%;
+      vertical-align: baseline;
+    }
+    img, object.figure-pdf {
+      max-width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      display: block;
+      margin: 14px auto;
+    }
+    img.media-thumb { cursor: zoom-in; }
+    object.figure-pdf { width: 100%; min-height: 420px; }
+    .figure-fallback { display: block; margin: 8px 0 16px; font-size: 13px; color: var(--muted); }
+    .figure-open {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--paper);
+      color: var(--accent);
+      padding: 0 12px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .figure-open:hover { background: var(--soft); }
+    .media-viewer {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: none;
+      background: rgba(28, 31, 32, .72);
+      padding: 22px;
+    }
+    .media-viewer.is-open {
+      display: grid;
+      place-items: center;
+    }
+    .media-dialog {
+      position: relative;
+      width: min(1180px, 96vw);
+      height: min(860px, 92vh);
+      border-radius: 8px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, .28);
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      overflow: hidden;
+    }
+    .media-bar {
+      min-height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid var(--line);
+      padding: 0 10px 0 14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .media-title {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .media-close {
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .media-close:hover { background: var(--soft); }
+    .media-content {
+      min-height: 0;
+      overflow: auto;
+      padding: 14px;
+      display: grid;
+      place-items: center;
+      background: #f3f6f8;
+    }
+    .media-content img {
+      max-width: 100%;
+      max-height: calc(92vh - 88px);
+      object-fit: contain;
+      margin: 0;
+      cursor: default;
+    }
+    .media-content iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #fff;
+      border-radius: 6px;
+    }
+    body.media-viewer-open { overflow: hidden; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 75%, transparent);
+    }
+    .topbar-inner { min-height: 42px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .topbar a,
+    .topbar button {
+      border: 0;
+      background: transparent;
+      color: var(--accent);
+      padding: 0;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .topbar button:hover { text-decoration: underline; }
+    @media (max-width: 960px) {
+      .reader-layout,
+      .reader-layout.sidebar-collapsed {
+        display: block;
+      }
+      .side-toc {
+        position: sticky;
+        top: 42px;
+        z-index: 1;
+        margin-bottom: 16px;
+        max-height: none;
+        width: auto;
+        height: auto;
+        justify-self: stretch;
+      }
+      .side-toc nav {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        max-height: none;
+        padding: 8px;
+      }
+      .side-toc a {
+        white-space: nowrap;
+        border: 1px solid var(--line);
+        background: #fff;
+      }
+      .side-toc.is-collapsed .side-toggle {
+        width: 100%;
+        height: auto;
+        min-height: 44px;
+        justify-content: space-between;
+        border-bottom: 0;
+        padding: 0 12px;
+      }
+      .side-toc.is-collapsed {
+        width: auto;
+        height: auto;
+      }
+      .side-toc.is-collapsed .side-toggle-text {
+        display: inline;
+      }
+    }
+    @media (max-width: 760px) {
+      .hero { padding-top: 12px; }
+      .report-section { padding: 16px; }
+      details.report-section summary { padding: 15px 16px; font-size: 19px; }
+      .section-body { padding: 0 16px 16px; }
+      .mind-overview { grid-template-columns: 1fr; }
+      .mind-root { min-height: 120px; }
+      .markmap, .markmap svg { height: 360px; }
+    }
+  </style>
+</head>
+<body>
+  <script>
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    if (window.location.hash === "#side-toc") {
+      history.replaceState(null, "", window.location.pathname + window.location.search);
+      window.scrollTo(0, 0);
+    }
+  </script>
+  <div class="topbar">
+    <div class="shell topbar-inner">
+      <a href="index.html">论文 wiki</a>
+      <button id="topbar-toc-toggle" type="button">目录</button>
+    </div>
+  </div>
+  <header class="shell hero">
+    <div class="crumb">Paper Reading Report</div>
+    <h1>AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架</h1>
+    <p class="subtitle">AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis</p>
+    <div class="meta-row">
+      <span class="pill">Jinye Du, Quan Yuan, Zuyao Zhang, Yanzhi Yi, Jiahui Hu, Wangyi Chen, Yiyang Zhu, Qishui Zheng, Wenxiang Zou, Xiangyu Chang, Zuohe Zheng, Zichun Ye, Chao Liu, Shanni Li, Renwei Zhang, Yiping Deng, Xinwei Hu, Xuefeng Jin, Jie Zhao</span>
+      <span class="pill">2025</span>
+      <span class="pill">2512.23424</span>
+      
+      <a class="hero-link" href="https://arxiv.org/abs/2512.23424"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3Z"></path><path d="M5 5h6v2H7v10h10v-4h2v6H5V5Z"></path></svg>arxiv</a>
+    </div>
+    <div class="chips"><span>Kernel Generation</span><span>LLM Code Generation</span><span>Compiler/DSL</span><span>Hardware Acceleration</span><span>Multi-Agent Systems</span><span>Multi-Agent Workflow</span><span>Unified Sketch</span><span>Document-Driven Integration</span><span>Hierarchical Code Retrieval</span><span>Iterative Search-Based Optimization</span><span>Verification and Profiling Loop</span></div>
+  </header>
+  <section class="shell panel mindmap-panel">
+    <h2 class="panel-title">内容脑图</h2>
+    <div class="mind-overview">
+  <div class="mind-root">AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架</div>
+  <div class="mind-branches"><article class="mind-branch">
+  <h3>研究问题</h3>
+  <ul><li>动机</li><li>关键瓶颈</li></ul>
+</article><article class="mind-branch">
+  <h3>方法设计</h3>
+  <ul><li>核心算法</li><li>关键公式</li></ul>
+</article><article class="mind-branch">
+  <h3>实验验证</h3>
+  <ul><li>数据集</li><li>baseline</li><li>ablation</li></ul>
+</article><article class="mind-branch">
+  <h3>批判视角</h3>
+  <ul><li>前作关系</li><li>局限</li></ul>
+</article><article class="mind-branch">
+  <h3>代码实现</h3>
+  <ul><li>工程约束</li><li>可复现性</li></ul>
+</article></div>
+</div>
+    <details class="mindmap-toggle">
+      <summary>交互脑图</summary>
+      <div class="markmap"><script type="text/template"># AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架
+## 研究问题
+- 动机
+- 关键瓶颈
+## 方法设计
+- 核心算法
+- 关键公式
+## 实验验证
+- 数据集
+- baseline
+- ablation
+## 批判视角
+- 前作关系
+- 局限
+## 代码实现
+- 工程约束
+- 可复现性</script></div>
+    </details>
+  </section>
+  <div class="shell reader-layout" id="reader-layout">
+    <aside class="side-toc" id="paper-side-toc">
+      <button class="side-toggle" id="side-toggle" type="button" aria-label="收起目录" title="收起目录">
+        <span class="side-toggle-text">目录</span>
+        <span class="side-toggle-icon" aria-hidden="true">›</span>
+      </button>
+      <nav id="side-links" aria-label="章节目录"></nav>
+    </aside>
+    <main class="article" id="article"></main>
+  </div>
+  <div class="media-viewer" id="media-viewer" aria-hidden="true">
+    <div class="media-dialog" role="dialog" aria-modal="true" aria-labelledby="media-title">
+      <div class="media-bar">
+        <div class="media-title" id="media-title">图表预览</div>
+        <button class="media-close" id="media-close" type="button" aria-label="关闭预览" title="关闭预览">×</button>
+      </div>
+      <div class="media-content" id="media-content"></div>
+    </div>
+  </div>
+  <script>window.REPORT_PAYLOAD = {"markdown": "# AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis\n\n## 1. 基本情况\n\n这篇论文提出 **AKG kernel agent**，全称为 **AI-driven Kernel Generator**，目标是用 LLM 驱动的 multi-agent system 自动完成高性能计算 kernel 的生成、迁移与调优。论文背景是：现代 AI 模型，尤其是 LLM、多模态模型和推荐系统，越来越依赖大量定制化高性能算子；同时 sparsity、quantization、fusion、动态 shape 以及硬件平台快速迭代，使手工 kernel 优化难以跟上模型和硬件演化速度。\n\n论文的核心定位不是提出某个单一 kernel 优化算法，而是提出一个面向多 DSL、多硬件后端的自动 kernel synthesis 框架。它支持的目标 DSL / 语言包括论文中明确提到的 **Triton、TileLang、CPP、CUDA-C、AscendC** 等，目标后端包括 **GPU、NPU、CPU**，并支持 PyTorch、MindSpore、NumPy 等 frontend reference implementation。\n\n从个人知识库角度看，这篇论文可归入 **LLM Serving** 或更宽泛的 **AI Systems / AI Infra** 方向。它不是 serving runtime 本身，而是服务于 LLM Serving 体系中的高性能算子生成与移植，因此 `line_role` 更适合标为 **tooling**。它与 Triton、TVM、FlashAttention、KernelBench、AutoTriton、KernelLLM、Kevin、QiMeng-Kernel 等工作处于同一技术语境：如何自动化生成正确且高性能的硬件 kernel。\n\n论文宣称在 **KernelBench** 上使用 Triton DSL、跨 GPU 和 NPU backend 评估时，AKG kernel agent 相比 PyTorch Eager baseline 实现获得平均 **1.46<span class=\"math-inline\" data-tex=\"\\times\"></span> speedup**。在论文 introduction 末尾还提到，系统在 KernelBench Level 1 上可达最高 **100% correctness**，在作者自建、更困难且包含 dynamic shapes 的 benchmark 上达到 **85--91% correctness**，并能生成匹配或超过 PyTorch Eager 的 kernel。\n\n需要注意：用户提供的 TeX 主文件内容在 Methodology 的 `Iterative Search-Based Optimization` 算法部分被截断，未包含完整实验表格、附录和 bibliography。因此本报告对实验细节的复原主要依据摘要和 introduction 中的结果描述，不额外编造未给出的表格数值。\n\n## 2. 核心贡献概述\n\n本文的贡献可以概括为：**把 LLM kernel generation 从“单模型直接写代码”改造成“带中间表示、文档注入、检索增强、验证反馈和性能搜索”的 multi-agent 工程系统**。\n\n具体而言，AKG kernel agent 的核心由四类 agent 组成：\n\n1. **Designer**：分析 operator specification 和硬件特性，生成一个 DSL-agnostic 的 **Unified Sketch**。\n2. **Coder**：把 Unified Sketch 翻译为目标 DSL 的可执行 kernel 代码。\n3. **Verifier**：负责编译、数值正确性验证和性能 profiling。\n4. **Conductor**：作为 orchestrator，根据 Verifier 反馈判断错误类型，并把任务路由回 Coder 或 Designer。\n\n这套设计的关键思想是解耦两件事：\n\n- **优化策略设计**：如何 tile、parallelize、reuse memory、组织 reduction、利用 cache / shared memory / registers / NPU core。\n- **目标 DSL 实现**：如何用 Triton、CUDA-C、TileLang、AscendC 等具体语法表达上述策略。\n\n论文认为，直接让 LLM 从 PyTorch reference implementation 一步生成高性能 kernel，容易把算法理解、硬件优化和 DSL 语法混在一起，导致 compile error、numerical mismatch 或性能很差。AKG 通过 Unified Sketch 将优化 intent 先显式表达出来，再由 Coder 结合文档和案例完成落地。\n\n此外，论文提出 **Document-Driven Integration, DDI**，把硬件手册、DSL API reference、专家优化经验、常见坑、示例代码组织成标准化文档，让 agent 在 runtime 消费这些知识。这样，系统可以通过接入新文档快速支持新 DSL 或新硬件，而不是修改 agent 主逻辑。\n\n最后，系统加入 **Hierarchical Code Retrieval** 和 **Iterative Search-Based Optimization**。前者用于从数据库中找到语义、DSL/backend、shape 都相近的已有 kernel 示例；后者通过多轮并行生成、验证、profiling、对比分析和 island model 搜索更优 kernel。\n\n## 3. 一句话精髓（写给外行）\n\n这篇论文想做一个“会读硬件说明书、会拆任务、会写代码、会跑测试、会反复调优”的 AI 程序员团队，自动把普通的 PyTorch 算子改写成适配不同芯片的高性能 kernel。\n\n## 4. 学术贡献清单\n\n### 4.1 Multi-agent kernel generation architecture\n\n论文提出由 Designer、Coder、Verifier、Conductor 构成的 multi-agent workflow。相比单个 LLM prompt 直接生成 kernel，这种架构有三个优点：\n\n- 将高层优化策略和底层代码生成拆开；\n- 将错误处理显式建模为状态路由问题；\n- 允许在每个阶段注入不同类型知识，例如硬件文档、DSL API、历史示例、错误日志。\n\n其中 **Conductor** 是系统闭环的关键。它不是固定把所有失败都送回同一个 agent，而是根据错误类型做 adaptive routing：\n\n- syntax error、API misuse、runtime error 更可能送回 **Coder**；\n- algorithm error、memory pattern error、parallelization 结构错误更可能送回 **Designer**。\n\n论文给出的 Conductor 伪代码如下：\n\n1. 若 Verifier 成功，则结束；\n2. 否则根据日志分类错误；\n3. 用 LLM 结合历史状态分析 root cause；\n4. 根据错误类型返回下一个 agent 和修复建议。\n\n### 4.2 Unified Sketch：可迁移的优化意图中间表示\n\n论文提出 **Unified Sketch** 作为 Designer 与 Coder 之间的中间层。它不是传统 compiler IR，而是面向 LLM 理解和生成的 minimalist DSL。形式化定义为：\n\n\n<div class=\"math-display\">\\mathcal{S} = (\\mathcal{D}, \\mathcal{O}, \\mathcal{C}, \\mathcal{H})</div>\n\n\n其中：\n\n- <span class=\"math-inline\" data-tex=\"\\mathcal{D}\"></span>：declarations，包括 symbols、tensors、constexpr；\n- <span class=\"math-inline\" data-tex=\"\\mathcal{O}\"></span>：core operations，包括 `alloc`、`load`、`store` 和标准 compute 函数；\n- <span class=\"math-inline\" data-tex=\"\\mathcal{C}\"></span>：control flow，用 Python 风格 `for` / `range` 表达 tiling 和 loop nest；\n- <span class=\"math-inline\" data-tex=\"\\mathcal{H}\"></span>：optimization hints，用 `@llm_hint` 表示 parallelization、pipeline、vectorize、unroll 等意图。\n\nUnified Sketch 的重要性在于，它使用硬件无关的语义 hint。例如：\n\n- `\"fastest\"` 可对应 GPU register；\n- `\"fast\"` 可对应 shared memory / L1；\n- `\"coreidx\"` 可对应 NPU core parallelism；\n- `\"grididx\"` / `\"threadidx\"` 可对应 GPU execution hierarchy。\n\n这让同一个 sketch 理论上可以被翻译到 GPU、NPU 或 CPU 后端。\n\n### 4.3 Document-Driven Integration\n\n论文把 documentation 视为系统扩展接口。DocSpec 包含四类文档：\n\n1. **basic documentation**：核心概念、语法、执行模型；\n2. **API documentation**：接口签名和使用模式；\n3. **expert suggestions**：优化建议和常见错误；\n4. **reference examples**：按 frontend / DSL / backend 组织的工作样例。\n\n这种机制解决的是 kernel generation 中的一个实际问题：硬件和 DSL 太多，不能为每个组合硬编码支持逻辑。DDI 的主张是：只要能把新 target 的知识写进标准文档，agent 就能在 runtime 读取并使用。\n\n论文还提到对长文档做动态选择和 LLM-based compression：例如生成 reduction kernel 时优先加载 reduction primitives、shared memory 相关文档，而不是把整个 API reference 都塞进 prompt。\n\n### 4.4 Hierarchical Code Retrieval\n\n论文指出，普通 RAG 在 kernel retrieval 中有局限：代码表面相似不代表语义或 shape pattern 相近；语义相近的优化策略也可能语法上差异很大。因此它提出分层检索：\n\n1. 用 LLM 从 query operator 中抽取 task features；\n2. 对 computation logic 做 embedding semantic search；\n3. 对 DSL、backend、operator type 做 hard filtering；\n4. 对 shape compatibility 做 semantic matching；\n5. 返回 top-<span class=\"math-inline\" data-tex=\"k\"></span> 示例给 Coder。\n\n第一阶段候选集形式为：\n\n\n<div class=\"math-display\">\\mathcal{C}_1 = \\{ x \\in \\mathcal{DB} \\mid \\cos(\\mathbf{e}_q, \\mathbf{e}_x) &gt; \\tau \\}</div>\n\n\n其中 cosine similarity 为：\n\n\n<div class=\"math-display\">\\cos(\\mathbf{u}, \\mathbf{v}) =\n\\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\|\\mathbf{u}\\| \\|\\mathbf{v}\\|}</div>\n\n\nshape 匹配分数为：\n\n\n<div class=\"math-display\">\\text{score}(q, x) =\n\\cos(\\mathbf{e}_q^{\\text{shape}}, \\mathbf{e}_x^{\\text{shape}})</div>\n\n\n这一设计让 Coder 获得更贴近目标后端、目标 DSL 和目标 shape 的样例，从而降低 API misuse 和错误边界处理的概率。\n\n### 4.5 Iterative Search-Based Optimization\n\n论文把性能调优建模为搜索问题：\n\n\n<div class=\"math-display\">I^* = \\arg\\min_{I \\in \\mathcal{I}(O)} T(I, H)</div>\n\n\n其中 <span class=\"math-inline\" data-tex=\"\\mathcal{I}(O)\"></span> 是 operator <span class=\"math-inline\" data-tex=\"O\"></span> 的有效实现空间，<span class=\"math-inline\" data-tex=\"T(I,H)\"></span> 是实现 <span class=\"math-inline\" data-tex=\"I\"></span> 在硬件 <span class=\"math-inline\" data-tex=\"H\"></span> 上的执行时间。\n\nAKG 不是只生成一个 kernel，而是多轮并行生成多个候选，实现如下闭环：\n\n1. 生成初始候选 population；\n2. 编译、验证和 profile；\n3. 对 high-performing 和 low-performing 实现做 LLM comparative analysis；\n4. 识别有效 tiling、memory pattern、parallelization choices；\n5. 形成下一轮优化计划；\n6. 继续生成新候选。\n\n论文还引入 **island model**，把候选 population 划分成多个半独立 island，周期性迁移 elite implementations：\n\n\n<div class=\"math-display\">\\text{Island}_i.\\text{population}\n\\leftarrow\n\\text{Island}_i.\\text{population}\n\\cup\n\\text{Elite}(\\text{Island}_{i-1})</div>\n\n\n这可以在探索多样性和传播优秀策略之间取得平衡。\n\n## 5. 写作故事线\n\n论文的叙事结构比较典型，按“问题—现有方法不足—系统设计—评估”的路线展开。\n\n### 5.1 问题引入：AI 模型越来越依赖高性能 kernel\n\nIntroduction 首先强调：AI 模型性能高度依赖底层 computational kernels。随着 LLM、多模态模型、推荐系统变复杂，以及 sparsity、quantization、fusion 等技术普及，算子形态变得更细碎、更定制化。与此同时，硬件平台快速变化，开发者需要为不同 GPU、NPU、CPU 架构写不同版本 kernel。\n\n手工优化需要同时懂算法和硬件，例如 memory hierarchy、parallel execution model、instruction set、thread block size、memory access pattern 等。这种优化高度专业、重复且不可扩展。论文用 FlashAttention 的演进作为例子：即使是影响力很大的 kernel，对新架构的优化也常常滞后。\n\n### 5.2 现有 LLM 方案的不足\n\n论文接着讨论 LLM code generation 的机会。GPT-4、DeepSeek-R1 等模型已经能生成较复杂代码，因此 kernel generation 也成为可能。但现有方法有两个主流方向：\n\n- 用 general-purpose LLM + prompting；\n- fine-tune specialized kernel model。\n\n论文认为二者都存在不足：\n\n- general-purpose LLM 容易生成编译错误、数值错误或低性能代码；\n- fine-tuned models 受限于高质量 kernel 数据稀缺，泛化到多 operator、多 hardware、多 DSL 时困难。\n\nKernelBench、MultiKernelBench、TritonBench 等 benchmark 暴露了这些问题。\n\n### 5.3 核心转折：不是更强的单模型，而是结构化 agent 系统\n\n本文的关键转折是：不要让一个 LLM 一次性解决所有问题，而是用多 agent 拆分问题。Designer 负责策略，Coder 负责实现，Verifier 负责客观检测，Conductor 负责流程控制和错误归因。\n\n这个写作选择让论文从“LLM 能不能写 kernel”转向“如何组织 LLM、文档、检索、编译器和 profiler 形成可扩展系统”。\n\n### 5.4 泛化问题：用文档驱动而不是硬编码\n\n然后论文提出 Document-Driven Integration，以回应跨平台泛化问题。因为新 DSL、新硬件、新 API 不断出现，框架不能依赖固定代码逻辑。把 documentation 标准化为 agent 的输入，是论文认为系统可扩展的关键。\n\n### 5.5 性能问题：正确还不够，还要搜索调优\n\n最后论文承认，能生成正确 kernel 不代表性能好。因此引入 iterative search、parallel candidate generation、comparative analysis 和 island model，通过多轮 profiler feedback 寻找更快实现。\n\n整体故事线可以简化为：\n\n> 手写 kernel 不可扩展；单 LLM 生成 kernel 不可靠；所以需要一个能读文档、检索样例、拆分任务、验证反馈、反复搜索的 multi-agent kernel generation system。\n\n## 6. 核心参考文献\n\n根据 TeX 主文件中出现的 citation，本文核心相关工作可分为以下几类。\n\n### 6.1 深度学习框架与编译执行\n\n- **PyTorch**：`paszke2019pytorch`\n- **PyTorch 2 / compiler stack**：`ansel2024pytorch`\n\n这些工作是 baseline 和系统背景。AKG 生成的 kernel 需要与 PyTorch / MindSpore / NumPy reference implementation 对齐，实验也以 PyTorch Eager 作为重要性能 baseline。\n\n### 6.2 高性能注意力与手工 kernel 优化案例\n\n- **FlashAttention**：`dao2022flashattention`\n- **FlashAttention-2**：`dao2023flashattention`\n- **FlashAttention 后续优化**：`shah2024flashattention`\n\nFlashAttention 被用来说明手工 kernel 优化的重要性和困难性：即便一个 kernel 很关键，跨硬件迁移和持续调优仍然需要大量专家投入。\n\n### 6.3 DSL 与自动 kernel 生成基础设施\n\n- **Triton**：`tillet2019triton`\n- **TileLang**：`wang2025tilelang`\n- **OpenMP**：`dagum1998openmp`\n\nTriton 是本文实验中的主要 DSL 之一，也是现代 AI kernel generation 的重要目标语言。TileLang、AscendC、CUDA-C、CPP 等则展示 AKG 希望支持的多 DSL 目标。\n\n### 6.4 LLM 与代码生成\n\n- **GPT-4**：`achiam2023gpt`\n- **DeepSeek-R1**：`guo2025deepseek`\n- **pass@k 代码生成评估**：`chen2021evaluating`\n\n这些文献为 LLM code generation 和 pass@k correctness metric 提供背景。\n\n### 6.5 Kernel benchmark\n\n- **KernelBench**：`ouyang2025kernelbench`\n- **MultiKernelBench**：`wen2025multikernelbench`\n- **TritonBench**：`li2025tritonbench`\n- **GEAK**：`wang2025geak`\n\n这些 benchmark 是 AKG 的主要比较语境。论文还批评既有 benchmark 存在 operator diversity 不足、reward hacking loopholes 等问题，并提出自建 benchmark 包含 fused operators 和 dynamic input shapes。\n\n### 6.6 LLM-based kernel optimization\n\n- **KernelLLM**：`kernelllm2025`\n- **Kevin-32B**：`baronio2025kevin`\n- **QiMeng-GEMM**：`zhou2025qimeng`\n- **AutoTriton**：`li2025autotriton`\n- **CUDA-L1**：`li2025cuda`\n- **ConCuR**：`kong2025concur`\n\n这些工作代表 prompt-based、RL-based、data-centric 和 fine-tuning-based kernel generation 方向。本文认为它们多数偏单体 LLM 或受限于数据与泛化。\n\n### 6.7 Multi-agent kernel generation\n\n- **Astra**：`wei2025astra`\n- **Adaptive Self-improvement Agentic System**：`zhang2025adaptive`\n- **QiMeng-Kernel**：`zhu2025qimeng`\n\n这些是和 AKG 最接近的系统。论文声称自己的差异点在于 **Unified Sketch** 和 **structured document-ingestion framework**。\n\n### 6.8 RAG 与搜索\n\n- **Retrieval-Augmented Generation**：`lewis2020retrieval`\n- **Island model**：`whitley1999island`\n\n前者支撑 hierarchical retrieval，后者支撑 iterative search 中的 population diversity 设计。\n\n## 7. 批判性分析\n\n### 7.1 优点：系统设计贴近 kernel 工程现实\n\n本文的最大优点是没有把问题简化为“让 LLM 直接写 Triton”。真实 kernel 工程中，困难来自多个层次：\n\n- 算子语义理解；\n- shape / dtype / layout 适配；\n- tiling 与 parallelization；\n- memory hierarchy 利用；\n- DSL API 细节；\n- 编译错误和 runtime error；\n- numerical tolerance；\n- profiling 与性能回归。\n\nAKG 的 multi-agent decomposition 正好对应这些工程子问题。尤其是 Verifier + Conductor 的闭环，让系统能够利用编译器和 profiler 的客观反馈，而不是只依赖 LLM 自评。\n\n### 7.2 优点：Unified Sketch 是合理的抽象层\n\nUnified Sketch 的价值在于，它比自然语言设计说明更结构化，又比真实 DSL 更抽象。对 LLM 来说，它降低了语法负担；对跨平台迁移来说，它保留了优化意图。\n\n例如 `alloc(..., llm_hint=[\"fast\", \"accumulator\"])` 这样的表达，不绑定 CUDA shared memory、NPU local memory 或 CPU cache，而是表达“这里需要较快存储、作为累加器使用”的意图。这种 abstraction 对多 backend generation 是有意义的。\n\n不过，Unified Sketch 是否足以表达复杂 kernel 优化仍需更多证据。例如：\n\n- tensor core / mma 指令级优化；\n- warp-level primitives；\n- bank conflict avoidance；\n- asynchronous copy / double buffering；\n- inter-block synchronization；\n- complex layout transformation；\n- sparse / quantized kernel 的 bit-level packing。\n\n主文件中给出的 RMSNorm sketch 较清晰，但不代表它能覆盖所有高性能 kernel 细节。\n\n### 7.3 优点：Document-Driven Integration 抓住了可维护性痛点\n\nLLM agent 系统最大的问题之一是知识更新。硬件手册和 DSL API 持续变化，如果知识固化在 prompt template 或代码逻辑中，很快会过时。DDI 把新 target 支持转化为文档准备任务，这对工业环境更现实。\n\n但 DDI 的质量依赖文档质量。论文提到有 automated documentation formatting tool，但 TeX 截断内容中没有看到这个工具的详细评估，例如：\n\n- 文档格式错误时系统如何鲁棒处理？\n- LLM compression 是否会丢掉关键 API 约束？\n- expert suggestions 的质量如何度量？\n- 不同文档规模对 prompt cost 和 correctness 的影响如何？\n\n这些是系统落地时的关键问题。\n\n### 7.4 风险：性能 claim 需要更完整实验支持\n\n摘要给出平均 1.46<span class=\"math-inline\" data-tex=\"\\times\"></span> speedup，introduction 提到 KernelBench Level 1 correctness 最高 100%，自建 benchmark 85--91%。这些结果有吸引力，但由于提供的 TeX 内容未包含完整实验章节和表格，因此目前无法核查：\n\n- baseline 具体有哪些；\n- 是否与 AutoTriton、KernelLLM、Kevin、QiMeng-Kernel 等直接比较；\n- 1.46<span class=\"math-inline\" data-tex=\"\\times\"></span> 是 arithmetic mean、geometric mean 还是按任务平均；\n- 失败样本如何计入 speedup；\n- NPU 上 Triton 支持的具体实现方式；\n- benchmark 中 static vs dynamic shape 的比例；\n- profiling 是否包含 compile time；\n- generated kernel 与 PyTorch Eager 的公平性，例如是否比较 eager unfused baseline 而非 torch.compile / vendor library。\n\n论文 introduction 中提到 “up to 1.46<span class=\"math-inline\" data-tex=\"\\times\"></span> geometric mean speedup”，摘要中则说 “average speedup of 1.46<span class=\"math-inline\" data-tex=\"\\times\"></span>”。如果完整论文没有进一步澄清，读者需要警惕平均方式差异。\n\n### 7.5 风险：LLM agent 成本与稳定性未在已给内容中充分展开\n\nMulti-agent + RAG + 多轮搜索通常会带来较高成本：\n\n- 多次 LLM call；\n- 多候选代码编译；\n- 多轮 profiling；\n- 文档检索和压缩；\n- Conductor 的错误分析；\n- island model 的并行探索。\n\n对于离线 kernel 库构建，这些成本可以接受；但如果希望在模型部署时即时生成 kernel，则 latency 和资源成本可能不可忽略。已给内容中没有看到对 end-to-end generation time、token cost、compile cost、profiling budget 的完整报告。\n\n### 7.6 风险：benchmark reward hacking 的修正需要具体机制\n\n论文声称自建 benchmark 修正了 KernelBench 中的 reward-hacking vulnerabilities，并包含 fused operators 和 dynamic shapes。这是一个重要贡献点，但 TeX 截断部分未显示 benchmark 具体设计。理想情况下需要说明：\n\n- reward hacking 的具体形式是什么；\n- 如何防止 hard-code output、shape-specific hack 或 baseline exploit；\n- dynamic shape 测试如何采样；\n- correctness threshold 是否足以覆盖数值稳定性；\n- 是否有 hidden tests。\n\n没有这些细节时，这一贡献还停留在声明层面。\n\n## 8. 方法细节\n\n### 8.1 输入与输出\n\n系统输入通常是一个 operator specification，可能以 PyTorch、MindSpore 或 NumPy reference implementation 表达。系统还接收目标硬件和目标 DSL 信息，例如：\n\n- frontend：PyTorch / MindSpore / NumPy；\n- DSL：Triton / TileLang / CUDA-C / AscendC / CPP；\n- backend：CUDA GPU / Ascend NPU / CPU；\n- operator shape、dtype、layout、dynamic shape 约束。\n\n系统输出是完整 kernel implementation，包括：\n\n- device-side kernel function；\n- host-side wrapper；\n- 与 frontend 对接的调用逻辑；\n- 可能的 autotuned parameters 或 constexpr。\n\n### 8.2 Designer：从 operator 到 Unified Sketch\n\nDesigner 的任务是理解计算语义并生成优化计划。论文强调它会考虑：\n\n1. computation inherent parallelism；\n2. memory bandwidth constraints；\n3. data reuse opportunity；\n4. hardware-specific feature，例如 tensor cores、vector units；\n5. previous failed attempts 的反馈。\n\nUnified Sketch 的四个组成部分为：\n\n\n<div class=\"math-display\">\\mathcal{S} = (\\mathcal{D}, \\mathcal{O}, \\mathcal{C}, \\mathcal{H})</div>\n\n\n其中 <span class=\"math-inline\" data-tex=\"\\mathcal{D}\"></span> 声明符号和 tensor，<span class=\"math-inline\" data-tex=\"\\mathcal{O}\"></span> 表示核心操作，<span class=\"math-inline\" data-tex=\"\\mathcal{C}\"></span> 表示 loop / tiling 结构，<span class=\"math-inline\" data-tex=\"\\mathcal{H}\"></span> 表示 optimization hints。\n\n论文给出的 RMSNorm sketch 示例展示了两阶段计算：\n\n1. 第一遍遍历 <span class=\"math-inline\" data-tex=\"F\"></span> 维，计算 square sum；\n2. 计算 mean、加 epsilon、sqrt 得到 RMS；\n3. 第二遍重新加载输入并归一化；\n4. 按 batch 和 <span class=\"math-inline\" data-tex=\"D1\"></span> tile 并行。\n\n这个 sketch 中的关键 hint 包括：\n\n- `@llm_hint(\"parallel\", \"coreidx\")`：指示并行映射到 core；\n- `@llm_hint(\"pipeline\")`：指示 pipeline；\n- `alloc(..., [\"fast\", \"accumulator\", \"init_zero\"])`：指示快速 memory 上的累加 buffer；\n- `alloc(..., [\"fastest\", \"temp_workspace\"])`：指示临时 workspace 可能放在最快层级。\n\n### 8.3 Coder：从 Unified Sketch 到目标 DSL 代码\n\nCoder 的输入包括：\n\n- Unified Sketch；\n- target DSL specifications；\n- API documentation；\n- retrieved examples；\n- previous error logs 和 Conductor suggestions；\n- frontend-specific templates。\n\nCoder 的主要工作是：\n\n1. 解析 sketch 中的 tiling、memory、parallelization 决策；\n2. 查阅目标 DSL API；\n3. 参考相似示例；\n4. 生成 kernel 和 wrapper；\n5. 根据 Verifier 的错误反馈迭代修复。\n\n这部分的关键并不是 LLM 单纯“翻译”，而是把 sketch、文档、示例和错误日志合并为上下文，生成符合目标 DSL idiom 的代码。\n\n### 8.4 Verifier：正确性和性能门禁\n\nVerifier 负责三件事：\n\n1. compilation；\n2. numerical correctness；\n3. performance profiling。\n\n数值误差定义为：\n\n\n<div class=\"math-display\">e_i =\n\\begin{cases}\n\\frac{|y_i^{gen} - y_i^{ref}|}{|y_i^{ref}|} &amp; \\text{if } |y_i^{ref}| &gt; \\epsilon \\\\\n|y_i^{gen} - y_i^{ref}| &amp; \\text{otherwise}\n\\end{cases}</div>\n\n\n通过条件为：\n\n\n<div class=\"math-display\">\\frac{|\\{i : e_i &gt; \\tau\\}|}{N} \\leq \\tau</div>\n\n\n这里 <span class=\"math-inline\" data-tex=\"\\tau\"></span> 是与 dtype 相关的阈值。这个定义同时考虑相对误差和接近零时的绝对误差。\n\n代码生成 correctness 使用 pass@k：\n\n\n<div class=\"math-display\">\\text{pass@}k =\n\\frac{1}{N}\n\\sum_{i=1}^{N}\n\\left(\n1 -\n\\frac{\\binom{n-c_i}{k}}{\\binom{n}{k}}\n\\right)</div>\n\n\n其中 <span class=\"math-inline\" data-tex=\"N\"></span> 是任务数，<span class=\"math-inline\" data-tex=\"n\"></span> 是每个任务生成样本数，<span class=\"math-inline\" data-tex=\"c_i\"></span> 是第 <span class=\"math-inline\" data-tex=\"i\"></span> 个任务正确样本数。\n\n性能 speedup 定义为：\n\n\n<div class=\"math-display\">\\text{Speedup} =\n\\frac{T_{base}}{T_{gen}}</div>\n\n\n同时定义：\n\n\n<div class=\"math-display\">\\text{fast}_p =\n\\frac{1}{N}\n\\sum_{i=1}^{N}\n\\mathbbm{1}[\\text{Speedup}_i \\geq p]</div>\n\n\n即 speedup 至少达到 <span class=\"math-inline\" data-tex=\"p\"></span> 的任务比例。\n\n### 8.5 Conductor：错误分析与动态路由\n\nConductor 维护完整 execution history，并根据 Verifier 返回的结果做错误分类。论文列举的错误类别包括：\n\n- Syntax；\n- ApiMisuse；\n- Runtime；\n- Algorithm；\n- MemoryPattern。\n\n路由规则大致为：\n\n- syntax / API / runtime 问题：返回 Coder；\n- algorithm / memory pattern 问题：返回 Designer；\n- 成功：结束。\n\n这相当于把 kernel generation 变成一个状态机，而不是固定 pipeline。\n\n### 8.6 Document-Driven Integration\n\nDDI 的核心流程可以理解为：\n\n1. 用户准备符合 DocSpec 的文档；\n2. 系统格式化和索引这些文档；\n3. agent 根据当前任务动态加载相关片段；\n4. 长 API 文档经 LLM compression 提取相关接口；\n5. expert suggestions 进入 Coder 和 Conductor 的 prompt；\n6. examples 进入 hierarchical retrieval。\n\n这套机制使新 DSL / backend 的支持从“改代码”变为“加文档”。\n\n### 8.7 Hierarchical Retrieval\n\n检索流程：\n\n1. LLM 抽取 query operator 的 task features；\n2. 计算 feature embedding；\n3. 从数据库中按 computation logic 做 semantic search；\n4. 对 DSL、backend 做 exact filter；\n5. 对 shape 做 compatibility ranking；\n6. 返回 top-<span class=\"math-inline\" data-tex=\"k\"></span> examples。\n\n这种机制比单纯代码 embedding 更适合 kernel，因为 kernel 的性能和正确性高度依赖 shape、layout 和硬件后端。\n\n### 8.8 Iterative Search\n\n搜索流程包括：\n\n- 初始生成多个候选；\n- 每个候选经过 Verifier；\n- 收集成功和失败样本；\n- 对高性能与低性能代码做 contrastive analysis；\n- 制定下一轮优化计划；\n- 使用 island model 保持多样性；\n- 将成功实现、sketch 和分析结果写入数据库，供未来 RAG 使用。\n\n这一点使系统具备“经验积累”能力：它不仅为当前 operator 找 kernel，也在构建后续任务可复用的 kernel knowledge base。\n\n## 9. 实验\n\n### 9.1 评估对象\n\n根据摘要和 introduction，论文评估 AKG kernel agent 的主要对象包括：\n\n- **KernelBench**；\n- 作者自建 benchmark；\n- 多个 DSL-backend 组合；\n- Triton DSL 在 GPU 和 NPU 后端上的表现；\n- fused operators，覆盖 LLM、computer vision、recommendation models；\n- static 和 dynamic input shapes。\n\n论文强调自建 benchmark 的特点是：\n\n1. 包含实际模型中常见的 fused operators；\n2. 同时包含 static shapes 和 dynamic shapes；\n3. 修正已有 benchmark 中 reward-hacking 漏洞；\n4. 更贴近真实生产环境。\n\n### 9.2 Baseline\n\n明确出现的 baseline 是 **PyTorch Eager baseline implementations**。摘要中称 AKG 在 KernelBench 上相对 PyTorch Eager 获得平均 **1.46<span class=\"math-inline\" data-tex=\"\\times\"></span> speedup**。\n\nIntroduction 中还提到与已有方法的语境相关，包括 KernelLLM、Kevin-32B、AutoTriton、QiMeng 等，但在提供的 TeX 片段中未看到完整对比实验表。因此不能断言论文实际做了与这些方法的逐项数值比较。\n\n### 9.3 Correctness 指标\n\n论文采用 pass@k 和基于 element-wise error 的 correctness verification。Introduction 中给出结果：\n\n- 在 KernelBench Level 1 上，AKG kernel agent 最高达到 **100% correctness**；\n- 在作者更困难、包含 dynamic shapes 的 benchmark 上达到 **85--91% correctness**。\n\n这里 “85--91%” 很可能对应不同 DSL-backend 或不同设置，但由于表格缺失，不能进一步展开。\n\n### 9.4 性能指标\n\n性能通过 profiling 后的 execution time 计算：\n\n\n<div class=\"math-display\">\\text{Speedup} = \\frac{T_{base}}{T_{gen}}</div>\n\n\n论文声称：\n\n- 在 KernelBench 上，使用 Triton DSL、跨 GPU 和 NPU backend，平均 speedup 为 **1.46<span class=\"math-inline\" data-tex=\"\\times\"></span>**；\n- introduction 还提到生成 kernel 能 match or exceed PyTorch Eager performance；\n- 使用 iterative search-based tuning 可进一步提升性能。\n\n需要注意，PyTorch Eager 往往不是最强 baseline。对于许多 kernel，torch.compile、vendor library、hand-written Triton/CUDA 或 fused implementation 可能显著强于 eager。因此 1.46<span class=\"math-inline\" data-tex=\"\\times\"></span> 说明系统能自动超过普通 eager reference，但不一定说明达到专家手写 kernel 水平。\n\n### 9.5 Ablation 期待点\n\n在已给 TeX 片段中没有看到完整 ablation，但根据方法设计，合理的 ablation 应包括：\n\n- without Unified Sketch；\n- without document-driven integration；\n- without hierarchical retrieval；\n- without Conductor adaptive routing；\n- without iterative search；\n- fixed pipeline vs adaptive routing；\n- ordinary RAG vs hierarchical retrieval；\n- single candidate vs parallel candidates；\n- static shape vs dynamic shape。\n\n如果完整论文中有这些实验，它们对证明系统各模块必要性很关键。仅有整体 speedup 不足以说明 multi-agent、DDI、RAG 和 search 分别贡献多少。\n\n### 9.6 实验可信度小结\n\n从已给文本看，实验 claim 方向合理，但读者需要在完整 PDF 中重点核查：\n\n1. benchmark task 数量；\n2. operator 类型分布；\n3. hardware 具体型号；\n4. DSL-backend 组合；\n5. LLM backbone；\n6. generation budget；\n7. compilation / profiling 设置；\n8. failed samples 如何处理；\n9. 与 torch.compile / vendor optimized kernel 的比较；\n10. dynamic shape 测试是否为 hidden / held-out。\n\n## 10. 代码实现观察\n\n未检查到论文元数据或 TeX 主文件中提供公开代码仓库链接；因此不编造代码实现细节。\n", "mindmap": "# AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架\n## 研究问题\n- 动机\n- 关键瓶颈\n## 方法设计\n- 核心算法\n- 关键公式\n## 实验验证\n- 数据集\n- baseline\n- ablation\n## 批判视角\n- 前作关系\n- 局限\n## 代码实现\n- 工程约束\n- 可复现性"};</script>
+  <script src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.11.1/build/highlight.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markmap-autoloader@0.18.12"></script>
+  <script>
+    marked.setOptions({ gfm: true, breaks: false });
+    const article = document.querySelector("#article");
+    article.innerHTML = DOMPurify.sanitize(marked.parse(window.REPORT_PAYLOAD.markdown));
+
+    function slugify(text, index) {
+      return "sec-" + index + "-" + text.trim().toLowerCase()
+        .replace(/[^\w\u4e00-\u9fa5]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+    }
+
+    function sectionize() {
+      const original = Array.from(article.childNodes);
+      article.innerHTML = "";
+      let current = null;
+      let index = 0;
+      for (const node of original) {
+        if (node.nodeType === 1 && node.tagName === "H2") {
+          index += 1;
+          const title = node.textContent.trim();
+          const id = slugify(title, index);
+          node.id = id;
+          if (index <= 4) {
+            current = document.createElement("section");
+            current.className = "report-section";
+            current.appendChild(node);
+          } else {
+            current = document.createElement("details");
+            current.className = "report-section";
+            current.open = true;
+            const summary = document.createElement("summary");
+            summary.textContent = title;
+            summary.id = id;
+            const body = document.createElement("div");
+            body.className = "section-body";
+            current.appendChild(summary);
+            current.appendChild(body);
+          }
+          article.appendChild(current);
+          const sideLink = document.createElement("a");
+          sideLink.href = "#" + id;
+          sideLink.textContent = title;
+          sideLink.dataset.target = id;
+          document.querySelector("#side-links").appendChild(sideLink);
+          continue;
+        }
+        if (current) {
+          const body = current.querySelector(".section-body") || current;
+          body.appendChild(node);
+        } else {
+          article.appendChild(node);
+        }
+      }
+    }
+
+    function setupSidebar() {
+      const layout = document.querySelector("#reader-layout");
+      const sidebar = document.querySelector("#paper-side-toc");
+      const button = document.querySelector("#side-toggle");
+      const icon = button.querySelector(".side-toggle-icon");
+      const topbarToggle = document.querySelector("#topbar-toc-toggle");
+      const sideNav = document.querySelector("#side-links");
+      const links = Array.from(document.querySelectorAll("#side-links a"));
+
+      if (window.location.hash === "#side-toc") {
+        history.replaceState(null, "", window.location.pathname + window.location.search);
+        window.scrollTo({ top: 0, behavior: "auto" });
+      }
+
+      function readSavedState() {
+        try {
+          return window.localStorage && window.localStorage.getItem("paper-sidebar-collapsed") === "true";
+        } catch {
+          return false;
+        }
+      }
+
+      function writeSavedState(collapsed) {
+        try {
+          if (window.localStorage) {
+            window.localStorage.setItem("paper-sidebar-collapsed", String(collapsed));
+          }
+        } catch {
+          // Storage can be unavailable in restricted browser contexts.
+        }
+      }
+
+      function setCollapsed(collapsed) {
+        layout.classList.toggle("sidebar-collapsed", collapsed);
+        sidebar.classList.toggle("is-collapsed", collapsed);
+        button.setAttribute("aria-label", collapsed ? "展开目录" : "收起目录");
+        button.setAttribute("title", collapsed ? "展开目录" : "收起目录");
+        if (icon) icon.textContent = collapsed ? "‹" : "›";
+        writeSavedState(collapsed);
+      }
+
+      setCollapsed(readSavedState());
+      button.addEventListener("click", () => setCollapsed(!sidebar.classList.contains("is-collapsed")));
+      if (topbarToggle) {
+        topbarToggle.addEventListener("click", () => {
+          if (window.location.hash === "#side-toc") {
+            history.replaceState(null, "", window.location.pathname + window.location.search);
+          }
+          setCollapsed(!sidebar.classList.contains("is-collapsed"));
+        });
+      }
+
+      const targets = links
+        .map(link => document.getElementById(link.dataset.target))
+        .filter(Boolean);
+
+      function setActive(id) {
+        links.forEach(link => link.classList.toggle("is-active", link.dataset.target === id));
+        const activeLink = links.find(link => link.dataset.target === id);
+        if (activeLink && sideNav && !sidebar.classList.contains("is-collapsed")) {
+          const linkTop = activeLink.offsetTop;
+          const linkBottom = linkTop + activeLink.offsetHeight;
+          const navTop = sideNav.scrollTop;
+          const navBottom = navTop + sideNav.clientHeight;
+          if (linkTop < navTop) {
+            sideNav.scrollTop = Math.max(linkTop - 8, 0);
+          } else if (linkBottom > navBottom) {
+            sideNav.scrollTop = linkBottom - sideNav.clientHeight + 8;
+          }
+        }
+      }
+
+      function updateActiveFromScroll() {
+        if (!targets.length) return;
+        const offset = 150;
+        let active = targets[0];
+        for (const target of targets) {
+          if (target.getBoundingClientRect().top <= offset) {
+            active = target;
+          } else {
+            break;
+          }
+        }
+        setActive(active.id);
+      }
+
+      let ticking = false;
+      function requestActiveUpdate() {
+        if (ticking) return;
+        ticking = true;
+        window.requestAnimationFrame(() => {
+          ticking = false;
+          updateActiveFromScroll();
+        });
+      }
+
+      links.forEach(link => {
+        link.addEventListener("click", event => {
+          event.preventDefault();
+          const target = document.getElementById(link.dataset.target);
+          if (!target) return;
+          const parentDetails = target.closest("details.report-section");
+          if (parentDetails) parentDetails.open = true;
+          setActive(target.id);
+          history.pushState(null, "", "#" + target.id);
+          target.scrollIntoView({ block: "start", behavior: "auto" });
+          if (window.matchMedia("(max-width: 960px)").matches) {
+            setCollapsed(true);
+          }
+          window.setTimeout(updateActiveFromScroll, 80);
+        });
+      });
+
+      window.addEventListener("scroll", requestActiveUpdate, { passive: true });
+      window.addEventListener("resize", requestActiveUpdate);
+      window.addEventListener("hashchange", () => {
+        const id = decodeURIComponent(window.location.hash.slice(1));
+        if (id && document.getElementById(id)) setActive(id);
+        window.setTimeout(updateActiveFromScroll, 80);
+      });
+      if (window.location.hash) {
+        const id = decodeURIComponent(window.location.hash.slice(1));
+        if (id && document.getElementById(id)) setActive(id);
+      } else if (links[0]) {
+        setActive(links[0].dataset.target);
+      }
+      updateActiveFromScroll();
+    }
+
+    function setupMediaViewer() {
+      const viewer = document.querySelector("#media-viewer");
+      const content = document.querySelector("#media-content");
+      const title = document.querySelector("#media-title");
+      const closeButton = document.querySelector("#media-close");
+      if (!viewer || !content || !title || !closeButton) return null;
+
+      function close() {
+        viewer.classList.remove("is-open");
+        viewer.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("media-viewer-open");
+        content.innerHTML = "";
+      }
+
+      function open(src, type, label) {
+        content.innerHTML = "";
+        title.textContent = label || (type === "pdf" ? "PDF 图表" : "图表预览");
+        if (type === "pdf") {
+          const frame = document.createElement("iframe");
+          frame.src = src;
+          frame.title = title.textContent;
+          content.appendChild(frame);
+        } else {
+          const image = document.createElement("img");
+          image.src = src;
+          image.alt = label || "图表预览";
+          content.appendChild(image);
+        }
+        viewer.classList.add("is-open");
+        viewer.setAttribute("aria-hidden", "false");
+        document.body.classList.add("media-viewer-open");
+        closeButton.focus({ preventScroll: true });
+      }
+
+      closeButton.addEventListener("click", close);
+      viewer.addEventListener("click", event => {
+        if (event.target === viewer) close();
+      });
+      window.addEventListener("keydown", event => {
+        if (event.key === "Escape" && viewer.classList.contains("is-open")) close();
+      });
+
+      return { open, close };
+    }
+
+    function enhanceLinks() {
+      const mediaViewer = setupMediaViewer();
+      article.querySelectorAll("a[href]").forEach(a => {
+        const href = a.getAttribute("href") || "";
+        if (/^https?:\/\//.test(href)) a.target = "_blank";
+      });
+      article.querySelectorAll("img").forEach(img => {
+        const src = img.getAttribute("src") || "";
+        img.decoding = "async";
+        img.onerror = () => {
+          if (src.startsWith("../sources/")) {
+            img.src = src.replace("../sources/", "sources/");
+          }
+        };
+        if (src.endsWith(".pdf")) {
+          const object = document.createElement("object");
+          object.className = "figure-pdf";
+          object.type = "application/pdf";
+          object.data = src;
+          const fallback = document.createElement("button");
+          fallback.className = "figure-open";
+          fallback.type = "button";
+          fallback.textContent = "放大查看 PDF";
+          fallback.addEventListener("click", () => {
+            if (mediaViewer) mediaViewer.open(src, "pdf", img.getAttribute("alt") || "PDF 图表");
+          });
+          img.replaceWith(object);
+          object.insertAdjacentElement("afterend", fallback);
+        } else {
+          img.classList.add("media-thumb");
+          img.setAttribute("tabindex", "0");
+          img.setAttribute("role", "button");
+          img.setAttribute("title", "点击放大查看");
+          const openImage = () => {
+            if (mediaViewer) mediaViewer.open(img.currentSrc || img.src, "image", img.getAttribute("alt") || "图表预览");
+          };
+          img.addEventListener("click", openImage);
+          img.addEventListener("keydown", event => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              openImage();
+            }
+          });
+        }
+      });
+    }
+
+    function linkifyArxivIds(root) {
+      const re = /(?<![\w/.-])(?:arXiv:)?(\d{4}\.\d{4,5})(v\d+)?(?![\w/.-])/g;
+      const skipTags = new Set(["A", "CODE", "PRE", "SCRIPT", "STYLE", "TEXTAREA"]);
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+          const parent = node.parentElement;
+          if (!parent || skipTags.has(parent.tagName)) return NodeFilter.FILTER_REJECT;
+          re.lastIndex = 0;
+          return re.test(node.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+        }
+      });
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach(node => {
+        re.lastIndex = 0;
+        const frag = document.createDocumentFragment();
+        let last = 0;
+        for (const match of node.nodeValue.matchAll(re)) {
+          frag.appendChild(document.createTextNode(node.nodeValue.slice(last, match.index)));
+          const link = document.createElement("a");
+          link.href = "https://arxiv.org/abs/" + match[1];
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+          link.textContent = match[0];
+          frag.appendChild(link);
+          last = match.index + match[0].length;
+        }
+        frag.appendChild(document.createTextNode(node.nodeValue.slice(last)));
+        node.replaceWith(frag);
+      });
+    }
+
+    function renderDisplayMath() {
+      article.querySelectorAll(".math-display").forEach(el => {
+        const source = el.textContent.trim();
+        try {
+          katex.render(source, el, { displayMode: true, throwOnError: false });
+        } catch (error) {
+          el.classList.add("math-error");
+          el.textContent = source;
+        }
+      });
+    }
+
+    function renderInlineMath() {
+      article.querySelectorAll(".math-inline").forEach(el => {
+        const source = el.getAttribute("data-tex") || el.textContent.trim();
+        try {
+          katex.render(source, el, { displayMode: false, throwOnError: false });
+        } catch (error) {
+          el.classList.add("math-error");
+          el.textContent = source;
+        }
+      });
+    }
+
+    sectionize();
+    setupSidebar();
+    enhanceLinks();
+    linkifyArxivIds(article);
+    renderDisplayMath();
+    renderInlineMath();
+    renderMathInElement(article, {
+      delimiters: [
+        { left: "$", right: "$", display: false }
+      ],
+      ignoredClasses: ["math-display", "math-inline"],
+      throwOnError: false
+    });
+    if (window.hljs) {
+      hljs.highlightAll();
+    }
+  </script>
+</body>
+</html>

@@ -1,22 +1,109 @@
 {
-  "generated_at": "2026-06-15T14:49:54",
-  "count": 5,
-  "owner_count": 2,
-  "unassigned_line_count": 0,
+  "generated_at": "2026-07-21T14:06:34",
+  "count": 12,
+  "owner_count": 5,
+  "unassigned_line_count": 3,
   "owners": [
     {
-      "owner": "decoding-owner",
-      "team": "generation",
+      "owner": "Unassigned",
+      "team": "",
       "line_count": 1,
       "paper_count": 3,
-      "risk_points": 6,
+      "risk_points": 11,
       "queues": {
-        "missing_taxonomy": 0,
+        "missing_taxonomy": 1,
         "needs_review_plan": 3,
         "due_review": 0,
         "freshness_due": 0,
         "stale": 0,
-        "no_code_observation": 0
+        "no_code_observation": 2
+      },
+      "lines": [
+        {
+          "line": "LLM Serving",
+          "href": "lines/llm-serving.html",
+          "owner": "Unassigned",
+          "team": "",
+          "cadence": "",
+          "note": "",
+          "count": 3,
+          "avg_importance": 4.0,
+          "code_coverage": "33%",
+          "risk": "high",
+          "risk_points": 11,
+          "queues": {
+            "missing_taxonomy": 1,
+            "needs_review_plan": 3,
+            "due_review": 0,
+            "freshness_due": 0,
+            "stale": 0,
+            "no_code_observation": 2
+          },
+          "sample_slugs": [
+            "2607.00466-eldr",
+            "noarxiv-2026-dspark",
+            "2512.23424-akg-kernel-agent-multi"
+          ]
+        }
+      ],
+      "risk": "high"
+    },
+    {
+      "owner": "Unassigned",
+      "team": "",
+      "line_count": 1,
+      "paper_count": 2,
+      "risk_points": 11,
+      "queues": {
+        "missing_taxonomy": 2,
+        "needs_review_plan": 2,
+        "due_review": 0,
+        "freshness_due": 0,
+        "stale": 0,
+        "no_code_observation": 1
+      },
+      "lines": [
+        {
+          "line": "Unassigned",
+          "href": "library.html?line=Unassigned",
+          "owner": "Unassigned",
+          "team": "",
+          "cadence": "",
+          "note": "",
+          "count": 2,
+          "avg_importance": 2.0,
+          "code_coverage": "50%",
+          "risk": "high",
+          "risk_points": 11,
+          "queues": {
+            "missing_taxonomy": 2,
+            "needs_review_plan": 2,
+            "due_review": 0,
+            "freshness_due": 0,
+            "stale": 0,
+            "no_code_observation": 1
+          },
+          "sample_slugs": [
+            "2603.03251-speculative-speculative-decoding",
+            "semantic-search-evaluation"
+          ]
+        }
+      ],
+      "risk": "high"
+    },
+    {
+      "owner": "decoding-owner",
+      "team": "generation",
+      "line_count": 1,
+      "paper_count": 4,
+      "risk_points": 9,
+      "queues": {
+        "missing_taxonomy": 0,
+        "needs_review_plan": 4,
+        "due_review": 0,
+        "freshness_due": 0,
+        "stale": 0,
+        "no_code_observation": 1
       },
       "lines": [
         {
@@ -26,23 +113,24 @@
           "team": "generation",
           "cadence": "biweekly",
           "note": "Track diffusion language model and speculative decoding updates.",
-          "count": 3,
-          "avg_importance": 4.3,
-          "code_coverage": "100%",
+          "count": 4,
+          "avg_importance": 4.2,
+          "code_coverage": "75%",
           "risk": "medium",
-          "risk_points": 6,
+          "risk_points": 9,
           "queues": {
             "missing_taxonomy": 0,
-            "needs_review_plan": 3,
+            "needs_review_plan": 4,
             "due_review": 0,
             "freshness_due": 0,
             "stale": 0,
-            "no_code_observation": 0
+            "no_code_observation": 1
           },
           "sample_slugs": [
             "2602.06036-dflash",
             "2604.11035-introspective-dlm",
-            "2605.12825-orthrus"
+            "2605.12825-orthrus",
+            "2507.11851-llm-future-mtp"
           ]
         }
       ],
@@ -90,9 +178,102 @@
         }
       ],
       "risk": "medium"
+    },
+    {
+      "owner": "Unassigned",
+      "team": "",
+      "line_count": 1,
+      "paper_count": 1,
+      "risk_points": 2,
+      "queues": {
+        "missing_taxonomy": 0,
+        "needs_review_plan": 1,
+        "due_review": 0,
+        "freshness_due": 0,
+        "stale": 0,
+        "no_code_observation": 0
+      },
+      "lines": [
+        {
+          "line": "VLM Acceleration",
+          "href": "lines/vlm-acceleration.html",
+          "owner": "Unassigned",
+          "team": "",
+          "cadence": "",
+          "note": "",
+          "count": 1,
+          "avg_importance": 4.0,
+          "code_coverage": "100%",
+          "risk": "medium",
+          "risk_points": 2,
+          "queues": {
+            "missing_taxonomy": 0,
+            "needs_review_plan": 1,
+            "due_review": 0,
+            "freshness_due": 0,
+            "stale": 0,
+            "no_code_observation": 0
+          },
+          "sample_slugs": [
+            "2503.14075-twigvlm-plus-plus"
+          ]
+        }
+      ],
+      "risk": "medium"
     }
   ],
   "lines": [
+    {
+      "line": "LLM Serving",
+      "href": "lines/llm-serving.html",
+      "owner": "Unassigned",
+      "team": "",
+      "cadence": "",
+      "note": "",
+      "count": 3,
+      "avg_importance": 4.0,
+      "code_coverage": "33%",
+      "risk": "high",
+      "risk_points": 11,
+      "queues": {
+        "missing_taxonomy": 1,
+        "needs_review_plan": 3,
+        "due_review": 0,
+        "freshness_due": 0,
+        "stale": 0,
+        "no_code_observation": 2
+      },
+      "sample_slugs": [
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark",
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "line": "Unassigned",
+      "href": "library.html?line=Unassigned",
+      "owner": "Unassigned",
+      "team": "",
+      "cadence": "",
+      "note": "",
+      "count": 2,
+      "avg_importance": 2.0,
+      "code_coverage": "50%",
+      "risk": "high",
+      "risk_points": 11,
+      "queues": {
+        "missing_taxonomy": 2,
+        "needs_review_plan": 2,
+        "due_review": 0,
+        "freshness_due": 0,
+        "stale": 0,
+        "no_code_observation": 1
+      },
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding",
+        "semantic-search-evaluation"
+      ]
+    },
     {
       "line": "Parallel Decoding with Diffusion Models",
       "href": "lines/parallel-decoding-with-diffusion-models.html",
@@ -100,23 +281,24 @@
       "team": "generation",
       "cadence": "biweekly",
       "note": "Track diffusion language model and speculative decoding updates.",
-      "count": 3,
-      "avg_importance": 4.3,
-      "code_coverage": "100%",
+      "count": 4,
+      "avg_importance": 4.2,
+      "code_coverage": "75%",
       "risk": "medium",
-      "risk_points": 6,
+      "risk_points": 9,
       "queues": {
         "missing_taxonomy": 0,
-        "needs_review_plan": 3,
+        "needs_review_plan": 4,
         "due_review": 0,
         "freshness_due": 0,
         "stale": 0,
-        "no_code_observation": 0
+        "no_code_observation": 1
       },
       "sample_slugs": [
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
+        "2605.12825-orthrus",
+        "2507.11851-llm-future-mtp"
       ]
     },
     {
@@ -142,6 +324,30 @@
       "sample_slugs": [
         "2501.01005-flashinfer",
         "2307.08691-flashattention-2"
+      ]
+    },
+    {
+      "line": "VLM Acceleration",
+      "href": "lines/vlm-acceleration.html",
+      "owner": "Unassigned",
+      "team": "",
+      "cadence": "",
+      "note": "",
+      "count": 1,
+      "avg_importance": 4.0,
+      "code_coverage": "100%",
+      "risk": "medium",
+      "risk_points": 2,
+      "queues": {
+        "missing_taxonomy": 0,
+        "needs_review_plan": 1,
+        "due_review": 0,
+        "freshness_due": 0,
+        "stale": 0,
+        "no_code_observation": 0
+      },
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
       ]
     }
   ],

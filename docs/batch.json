@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-06-15T14:49:54",
-  "count": 5,
+  "generated_at": "2026-07-21T14:06:34",
+  "count": 12,
   "report_dir": "docs",
   "dimension_count": 11,
-  "batch_count": 60,
+  "batch_count": 127,
   "dimensions": [
     {
       "key": "research_line",
@@ -84,167 +84,59 @@
     }
   ],
   "summary": {
-    "high": 60,
+    "high": 127,
     "medium": 0,
     "low": 0,
-    "missing_review": 99,
-    "missing_taxonomy": 0
+    "missing_review": 229,
+    "missing_taxonomy": 50
   },
   "batches": [
-    {
-      "id": "code::yes",
-      "dimension": "code",
-      "dimension_label": "Code",
-      "value": "yes",
-      "count": 5,
-      "severity": "high",
-      "priority": 121,
-      "latest_year": 2026,
-      "high_importance": 2,
-      "missing_review": 5,
-      "due_review": 0,
-      "missing_taxonomy": 0,
-      "no_code": 0,
-      "recommended_action": "补 next_review 5 篇",
-      "href": "library.html?code=yes",
-      "export_command": "",
-      "slugs": [
-        "2307.08691-flashattention-2",
-        "2501.01005-flashinfer",
-        "2602.06036-dflash",
-        "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
-      ],
-      "sample_slugs": [
-        "2604.11035-introspective-dlm",
-        "2307.08691-flashattention-2",
-        "2602.06036-dflash",
-        "2605.12825-orthrus",
-        "2501.01005-flashinfer"
-      ],
-      "sample_titles": [
-        "内省式扩散语言模型",
-        "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
-        "DFlash：用于快速 speculative decoding 的块扩散方法",
-        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
-        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
-      ]
-    },
-    {
-      "id": "domain::LLM Systems",
-      "dimension": "domain",
-      "dimension_label": "Domain",
-      "value": "LLM Systems",
-      "count": 5,
-      "severity": "high",
-      "priority": 121,
-      "latest_year": 2026,
-      "high_importance": 2,
-      "missing_review": 5,
-      "due_review": 0,
-      "missing_taxonomy": 0,
-      "no_code": 0,
-      "recommended_action": "补 next_review 5 篇",
-      "href": "library.html?domain=LLM+Systems",
-      "export_command": "",
-      "slugs": [
-        "2307.08691-flashattention-2",
-        "2501.01005-flashinfer",
-        "2602.06036-dflash",
-        "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
-      ],
-      "sample_slugs": [
-        "2604.11035-introspective-dlm",
-        "2307.08691-flashattention-2",
-        "2602.06036-dflash",
-        "2605.12825-orthrus",
-        "2501.01005-flashinfer"
-      ],
-      "sample_titles": [
-        "内省式扩散语言模型",
-        "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
-        "DFlash：用于快速 speculative decoding 的块扩散方法",
-        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
-        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
-      ]
-    },
-    {
-      "id": "reading_stage::deep_read",
-      "dimension": "reading_stage",
-      "dimension_label": "Reading stage",
-      "value": "deep_read",
-      "count": 5,
-      "severity": "high",
-      "priority": 121,
-      "latest_year": 2026,
-      "high_importance": 2,
-      "missing_review": 5,
-      "due_review": 0,
-      "missing_taxonomy": 0,
-      "no_code": 0,
-      "recommended_action": "补 next_review 5 篇",
-      "href": "library.html?stage=deep_read",
-      "export_command": "",
-      "slugs": [
-        "2307.08691-flashattention-2",
-        "2501.01005-flashinfer",
-        "2602.06036-dflash",
-        "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
-      ],
-      "sample_slugs": [
-        "2604.11035-introspective-dlm",
-        "2307.08691-flashattention-2",
-        "2602.06036-dflash",
-        "2605.12825-orthrus",
-        "2501.01005-flashinfer"
-      ],
-      "sample_titles": [
-        "内省式扩散语言模型",
-        "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
-        "DFlash：用于快速 speculative decoding 的块扩散方法",
-        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
-        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
-      ]
-    },
     {
       "id": "review_stage::未设置",
       "dimension": "review_stage",
       "dimension_label": "Review stage",
       "value": "未设置",
-      "count": 5,
+      "count": 12,
       "severity": "high",
-      "priority": 121,
+      "priority": 171,
       "latest_year": 2026,
       "high_importance": 2,
-      "missing_review": 5,
+      "missing_review": 12,
       "due_review": 0,
-      "missing_taxonomy": 0,
-      "no_code": 0,
-      "recommended_action": "补 next_review 5 篇",
+      "missing_taxonomy": 3,
+      "no_code": 4,
+      "recommended_action": "补 next_review 12 篇",
       "href": "library.html",
       "export_command": "",
       "slugs": [
         "2307.08691-flashattention-2",
         "2501.01005-flashinfer",
+        "2503.14075-twigvlm-plus-plus",
+        "2507.11851-llm-future-mtp",
+        "2512.23424-akg-kernel-agent-multi",
         "2602.06036-dflash",
+        "2603.03251-speculative-speculative-decoding",
         "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
+        "2605.12825-orthrus",
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark",
+        "semantic-search-evaluation"
       ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2307.08691-flashattention-2",
         "2602.06036-dflash",
-        "2605.12825-orthrus",
-        "2501.01005-flashinfer"
+        "noarxiv-2026-dspark",
+        "2607.00466-eldr",
+        "2503.14075-twigvlm-plus-plus"
       ],
       "sample_titles": [
         "内省式扩散语言模型",
         "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
         "DFlash：用于快速 speculative decoding 的块扩散方法",
-        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
-        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+        "DSpark：基于置信度调度的半自回归 speculative decoding",
+        "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型"
       ]
     },
     {
@@ -252,29 +144,212 @@
       "dimension": "status",
       "dimension_label": "Status",
       "value": "read",
-      "count": 5,
+      "count": 12,
       "severity": "high",
-      "priority": 121,
+      "priority": 171,
       "latest_year": 2026,
       "high_importance": 2,
-      "missing_review": 5,
+      "missing_review": 12,
       "due_review": 0,
-      "missing_taxonomy": 0,
-      "no_code": 0,
-      "recommended_action": "补 next_review 5 篇",
+      "missing_taxonomy": 3,
+      "no_code": 4,
+      "recommended_action": "补 next_review 12 篇",
       "href": "library.html?status=read",
       "export_command": "python3 scripts/export_reading_list.py docs --status read --output docs/exports/status-read-reading-list.md",
       "slugs": [
         "2307.08691-flashattention-2",
         "2501.01005-flashinfer",
+        "2503.14075-twigvlm-plus-plus",
+        "2507.11851-llm-future-mtp",
+        "2512.23424-akg-kernel-agent-multi",
         "2602.06036-dflash",
+        "2603.03251-speculative-speculative-decoding",
         "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
+        "2605.12825-orthrus",
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark",
+        "semantic-search-evaluation"
       ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2307.08691-flashattention-2",
         "2602.06036-dflash",
+        "noarxiv-2026-dspark",
+        "2607.00466-eldr",
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "DSpark：基于置信度调度的半自回归 speculative decoding",
+        "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型"
+      ]
+    },
+    {
+      "id": "code::yes",
+      "dimension": "code",
+      "dimension_label": "Code",
+      "value": "yes",
+      "count": 8,
+      "severity": "high",
+      "priority": 141,
+      "latest_year": 2026,
+      "high_importance": 2,
+      "missing_review": 8,
+      "due_review": 0,
+      "missing_taxonomy": 1,
+      "no_code": 0,
+      "recommended_action": "补 next_review 8 篇",
+      "href": "library.html?code=yes",
+      "export_command": "",
+      "slugs": [
+        "2307.08691-flashattention-2",
+        "2501.01005-flashinfer",
+        "2503.14075-twigvlm-plus-plus",
+        "2602.06036-dflash",
+        "2603.03251-speculative-speculative-decoding",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus",
+        "noarxiv-2026-dspark"
+      ],
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2307.08691-flashattention-2",
+        "2602.06036-dflash",
+        "noarxiv-2026-dspark",
+        "2503.14075-twigvlm-plus-plus",
+        "2605.12825-orthrus"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "DSpark：基于置信度调度的半自回归 speculative decoding",
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
+      ]
+    },
+    {
+      "id": "domain::LLM Systems",
+      "dimension": "domain",
+      "dimension_label": "Domain",
+      "value": "LLM Systems",
+      "count": 9,
+      "severity": "high",
+      "priority": 141,
+      "latest_year": 2026,
+      "high_importance": 2,
+      "missing_review": 9,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 2,
+      "recommended_action": "补 next_review 9 篇",
+      "href": "library.html?domain=LLM+Systems",
+      "export_command": "",
+      "slugs": [
+        "2307.08691-flashattention-2",
+        "2501.01005-flashinfer",
+        "2503.14075-twigvlm-plus-plus",
+        "2507.11851-llm-future-mtp",
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus",
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark"
+      ],
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2307.08691-flashattention-2",
+        "2602.06036-dflash",
+        "noarxiv-2026-dspark",
+        "2607.00466-eldr",
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "DSpark：基于置信度调度的半自回归 speculative decoding",
+        "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型"
+      ]
+    },
+    {
+      "id": "topic::Speculative Decoding",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "Speculative Decoding",
+      "count": 7,
+      "severity": "high",
+      "priority": 133,
+      "latest_year": 2026,
+      "high_importance": 1,
+      "missing_review": 7,
+      "due_review": 0,
+      "missing_taxonomy": 1,
+      "no_code": 1,
+      "recommended_action": "补 next_review 7 篇",
+      "href": "library.html?topic=Speculative+Decoding",
+      "export_command": "python3 scripts/export_reading_list.py docs --topic 'Speculative Decoding' --output docs/exports/topic-speculative-decoding-reading-list.md",
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus",
+        "2507.11851-llm-future-mtp",
+        "2602.06036-dflash",
+        "2603.03251-speculative-speculative-decoding",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus",
+        "noarxiv-2026-dspark"
+      ],
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2602.06036-dflash",
+        "noarxiv-2026-dspark",
+        "2503.14075-twigvlm-plus-plus",
+        "2605.12825-orthrus",
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "DSpark：基于置信度调度的半自回归 speculative decoding",
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+        "推测性推测解码"
+      ]
+    },
+    {
+      "id": "reading_stage::deep_read",
+      "dimension": "reading_stage",
+      "dimension_label": "Reading stage",
+      "value": "deep_read",
+      "count": 7,
+      "severity": "high",
+      "priority": 131,
+      "latest_year": 2026,
+      "high_importance": 2,
+      "missing_review": 7,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 2,
+      "recommended_action": "补 next_review 7 篇",
+      "href": "library.html?stage=deep_read",
+      "export_command": "",
+      "slugs": [
+        "2307.08691-flashattention-2",
+        "2501.01005-flashinfer",
+        "2507.11851-llm-future-mtp",
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus",
+        "2607.00466-eldr"
+      ],
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2307.08691-flashattention-2",
+        "2602.06036-dflash",
+        "2607.00466-eldr",
         "2605.12825-orthrus",
         "2501.01005-flashinfer"
       ],
@@ -282,8 +357,334 @@
         "内省式扩散语言模型",
         "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
         "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
         "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
         "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "track::Inference Acceleration",
+      "dimension": "track",
+      "dimension_label": "Track",
+      "value": "Inference Acceleration",
+      "count": 7,
+      "severity": "high",
+      "priority": 128,
+      "latest_year": 2026,
+      "high_importance": 1,
+      "missing_review": 7,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 2,
+      "recommended_action": "补 next_review 7 篇",
+      "href": "library.html?track=Inference+Acceleration",
+      "export_command": "python3 scripts/export_reading_list.py docs --track 'Inference Acceleration' --output docs/exports/track-inference-acceleration-reading-list.md",
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus",
+        "2507.11851-llm-future-mtp",
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus",
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark"
+      ],
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2602.06036-dflash",
+        "noarxiv-2026-dspark",
+        "2607.00466-eldr",
+        "2503.14075-twigvlm-plus-plus",
+        "2605.12825-orthrus"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "DSpark：基于置信度调度的半自回归 speculative decoding",
+        "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
+      ]
+    },
+    {
+      "id": "code::no",
+      "dimension": "code",
+      "dimension_label": "Code",
+      "value": "no",
+      "count": 4,
+      "severity": "high",
+      "priority": 120,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 4,
+      "due_review": 0,
+      "missing_taxonomy": 2,
+      "no_code": 4,
+      "recommended_action": "补 next_review 4 篇",
+      "href": "library.html?code=no",
+      "export_command": "",
+      "slugs": [
+        "2507.11851-llm-future-mtp",
+        "2512.23424-akg-kernel-agent-multi",
+        "2607.00466-eldr",
+        "semantic-search-evaluation"
+      ],
+      "sample_slugs": [
+        "2607.00466-eldr",
+        "2512.23424-akg-kernel-agent-multi",
+        "2507.11851-llm-future-mtp",
+        "semantic-search-evaluation"
+      ],
+      "sample_titles": [
+        "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+        "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+        "你的 LLM 知道未来：揭示它的多 token 预测潜力",
+        "Semantic Search Evaluation"
+      ]
+    },
+    {
+      "id": "domain::未设置",
+      "dimension": "domain",
+      "dimension_label": "Domain",
+      "value": "未设置",
+      "count": 3,
+      "severity": "high",
+      "priority": 120,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 3,
+      "due_review": 0,
+      "missing_taxonomy": 3,
+      "no_code": 2,
+      "recommended_action": "补 next_review 3 篇",
+      "href": "library.html",
+      "export_command": "",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi",
+        "2603.03251-speculative-speculative-decoding",
+        "semantic-search-evaluation"
+      ],
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding",
+        "2512.23424-akg-kernel-agent-multi",
+        "semantic-search-evaluation"
+      ],
+      "sample_titles": [
+        "推测性推测解码",
+        "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+        "Semantic Search Evaluation"
+      ]
+    },
+    {
+      "id": "problem::未设置",
+      "dimension": "problem",
+      "dimension_label": "Problem",
+      "value": "未设置",
+      "count": 3,
+      "severity": "high",
+      "priority": 120,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 3,
+      "due_review": 0,
+      "missing_taxonomy": 3,
+      "no_code": 2,
+      "recommended_action": "补 next_review 3 篇",
+      "href": "library.html",
+      "export_command": "",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi",
+        "2603.03251-speculative-speculative-decoding",
+        "semantic-search-evaluation"
+      ],
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding",
+        "2512.23424-akg-kernel-agent-multi",
+        "semantic-search-evaluation"
+      ],
+      "sample_titles": [
+        "推测性推测解码",
+        "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+        "Semantic Search Evaluation"
+      ]
+    },
+    {
+      "id": "reading_stage::未设置",
+      "dimension": "reading_stage",
+      "dimension_label": "Reading stage",
+      "value": "未设置",
+      "count": 3,
+      "severity": "high",
+      "priority": 120,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 3,
+      "due_review": 0,
+      "missing_taxonomy": 3,
+      "no_code": 2,
+      "recommended_action": "补 next_review 3 篇",
+      "href": "library.html",
+      "export_command": "",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi",
+        "2603.03251-speculative-speculative-decoding",
+        "semantic-search-evaluation"
+      ],
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding",
+        "2512.23424-akg-kernel-agent-multi",
+        "semantic-search-evaluation"
+      ],
+      "sample_titles": [
+        "推测性推测解码",
+        "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+        "Semantic Search Evaluation"
+      ]
+    },
+    {
+      "id": "track::未设置",
+      "dimension": "track",
+      "dimension_label": "Track",
+      "value": "未设置",
+      "count": 3,
+      "severity": "high",
+      "priority": 120,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 3,
+      "due_review": 0,
+      "missing_taxonomy": 3,
+      "no_code": 2,
+      "recommended_action": "补 next_review 3 篇",
+      "href": "library.html",
+      "export_command": "",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi",
+        "2603.03251-speculative-speculative-decoding",
+        "semantic-search-evaluation"
+      ],
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding",
+        "2512.23424-akg-kernel-agent-multi",
+        "semantic-search-evaluation"
+      ],
+      "sample_titles": [
+        "推测性推测解码",
+        "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+        "Semantic Search Evaluation"
+      ]
+    },
+    {
+      "id": "topic::LLM Serving",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "LLM Serving",
+      "count": 5,
+      "severity": "high",
+      "priority": 118,
+      "latest_year": 2026,
+      "high_importance": 1,
+      "missing_review": 5,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 1,
+      "recommended_action": "补 next_review 5 篇",
+      "href": "library.html?topic=LLM+Serving",
+      "export_command": "python3 scripts/export_reading_list.py docs --topic 'LLM Serving' --output docs/exports/topic-llm-serving-reading-list.md",
+      "slugs": [
+        "2501.01005-flashinfer",
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark"
+      ],
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2602.06036-dflash",
+        "noarxiv-2026-dspark",
+        "2607.00466-eldr",
+        "2501.01005-flashinfer"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "DSpark：基于置信度调度的半自回归 speculative decoding",
+        "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "track::Parallel Decoding",
+      "dimension": "track",
+      "dimension_label": "Track",
+      "value": "Parallel Decoding",
+      "count": 5,
+      "severity": "high",
+      "priority": 118,
+      "latest_year": 2026,
+      "high_importance": 1,
+      "missing_review": 5,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 1,
+      "recommended_action": "补 next_review 5 篇",
+      "href": "library.html?track=Parallel+Decoding",
+      "export_command": "python3 scripts/export_reading_list.py docs --track 'Parallel Decoding' --output docs/exports/track-parallel-decoding-reading-list.md",
+      "slugs": [
+        "2507.11851-llm-future-mtp",
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus",
+        "noarxiv-2026-dspark"
+      ],
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2602.06036-dflash",
+        "noarxiv-2026-dspark",
+        "2605.12825-orthrus",
+        "2507.11851-llm-future-mtp"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "DSpark：基于置信度调度的半自回归 speculative decoding",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+        "你的 LLM 知道未来：揭示它的多 token 预测潜力"
+      ]
+    },
+    {
+      "id": "topic::LLM Inference",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "LLM Inference",
+      "count": 4,
+      "severity": "high",
+      "priority": 115,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 4,
+      "due_review": 0,
+      "missing_taxonomy": 1,
+      "no_code": 0,
+      "recommended_action": "补 next_review 4 篇",
+      "href": "library.html?topic=LLM+Inference",
+      "export_command": "python3 scripts/export_reading_list.py docs --topic 'LLM Inference' --output docs/exports/topic-llm-inference-reading-list.md",
+      "slugs": [
+        "2602.06036-dflash",
+        "2603.03251-speculative-speculative-decoding",
+        "2605.12825-orthrus",
+        "noarxiv-2026-dspark"
+      ],
+      "sample_slugs": [
+        "2602.06036-dflash",
+        "noarxiv-2026-dspark",
+        "2605.12825-orthrus",
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_titles": [
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "DSpark：基于置信度调度的半自回归 speculative decoding",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+        "推测性推测解码"
       ]
     },
     {
@@ -291,19 +692,20 @@
       "dimension": "research_line",
       "dimension_label": "研究线",
       "value": "Parallel Decoding with Diffusion Models",
-      "count": 3,
+      "count": 4,
       "severity": "high",
-      "priority": 108,
+      "priority": 113,
       "latest_year": 2026,
       "high_importance": 1,
-      "missing_review": 3,
+      "missing_review": 4,
       "due_review": 0,
       "missing_taxonomy": 0,
-      "no_code": 0,
-      "recommended_action": "补 next_review 3 篇",
+      "no_code": 1,
+      "recommended_action": "补 next_review 4 篇",
       "href": "library.html?line=Parallel+Decoding+with+Diffusion+Models",
       "export_command": "python3 scripts/export_reading_list.py docs --line 'Parallel Decoding with Diffusion Models' --output docs/exports/research-line-parallel-decoding-with-diffusion-models-reading-list.md",
       "slugs": [
+        "2507.11851-llm-future-mtp",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus"
@@ -311,12 +713,140 @@
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2602.06036-dflash",
-        "2605.12825-orthrus"
+        "2605.12825-orthrus",
+        "2507.11851-llm-future-mtp"
       ],
       "sample_titles": [
         "内省式扩散语言模型",
         "DFlash：用于快速 speculative decoding 的块扩散方法",
-        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+        "你的 LLM 知道未来：揭示它的多 token 预测潜力"
+      ]
+    },
+    {
+      "id": "line_role::未设置",
+      "dimension": "line_role",
+      "dimension_label": "研究角色",
+      "value": "未设置",
+      "count": 2,
+      "severity": "high",
+      "priority": 110,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 2,
+      "due_review": 0,
+      "missing_taxonomy": 2,
+      "no_code": 1,
+      "recommended_action": "补 next_review 2 篇",
+      "href": "library.html",
+      "export_command": "",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding",
+        "semantic-search-evaluation"
+      ],
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding",
+        "semantic-search-evaluation"
+      ],
+      "sample_titles": [
+        "推测性推测解码",
+        "Semantic Search Evaluation"
+      ]
+    },
+    {
+      "id": "method::Speculative Decoding",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "Speculative Decoding",
+      "count": 3,
+      "severity": "high",
+      "priority": 110,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 3,
+      "due_review": 0,
+      "missing_taxonomy": 1,
+      "no_code": 0,
+      "recommended_action": "补 next_review 3 篇",
+      "href": "library.html?method=Speculative+Decoding",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'Speculative Decoding' --output docs/exports/method-speculative-decoding-reading-list.md",
+      "slugs": [
+        "2602.06036-dflash",
+        "2603.03251-speculative-speculative-decoding",
+        "noarxiv-2026-dspark"
+      ],
+      "sample_slugs": [
+        "2602.06036-dflash",
+        "noarxiv-2026-dspark",
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_titles": [
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "DSpark：基于置信度调度的半自回归 speculative decoding",
+        "推测性推测解码"
+      ]
+    },
+    {
+      "id": "research_line::LLM Serving",
+      "dimension": "research_line",
+      "dimension_label": "研究线",
+      "value": "LLM Serving",
+      "count": 3,
+      "severity": "high",
+      "priority": 110,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 3,
+      "due_review": 0,
+      "missing_taxonomy": 1,
+      "no_code": 2,
+      "recommended_action": "补 next_review 3 篇",
+      "href": "library.html?line=LLM+Serving",
+      "export_command": "python3 scripts/export_reading_list.py docs --line 'LLM Serving' --output docs/exports/research-line-llm-serving-reading-list.md",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi",
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark"
+      ],
+      "sample_slugs": [
+        "noarxiv-2026-dspark",
+        "2607.00466-eldr",
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_titles": [
+        "DSpark：基于置信度调度的半自回归 speculative decoding",
+        "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+        "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架"
+      ]
+    },
+    {
+      "id": "research_line::Unassigned",
+      "dimension": "research_line",
+      "dimension_label": "研究线",
+      "value": "Unassigned",
+      "count": 2,
+      "severity": "high",
+      "priority": 110,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 2,
+      "due_review": 0,
+      "missing_taxonomy": 2,
+      "no_code": 1,
+      "recommended_action": "补 next_review 2 篇",
+      "href": "library.html?line=Unassigned",
+      "export_command": "python3 scripts/export_reading_list.py docs --line Unassigned --output docs/exports/research-line-unassigned-reading-list.md",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding",
+        "semantic-search-evaluation"
+      ],
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding",
+        "semantic-search-evaluation"
+      ],
+      "sample_titles": [
+        "推测性推测解码",
+        "Semantic Search Evaluation"
       ]
     },
     {
@@ -336,138 +866,6 @@
       "recommended_action": "补 next_review 3 篇",
       "href": "library.html?topic=Diffusion+Language+Models",
       "export_command": "python3 scripts/export_reading_list.py docs --topic 'Diffusion Language Models' --output docs/exports/topic-diffusion-language-models-reading-list.md",
-      "slugs": [
-        "2602.06036-dflash",
-        "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
-      ],
-      "sample_slugs": [
-        "2604.11035-introspective-dlm",
-        "2602.06036-dflash",
-        "2605.12825-orthrus"
-      ],
-      "sample_titles": [
-        "内省式扩散语言模型",
-        "DFlash：用于快速 speculative decoding 的块扩散方法",
-        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
-      ]
-    },
-    {
-      "id": "topic::LLM Serving",
-      "dimension": "topic",
-      "dimension_label": "Topic",
-      "value": "LLM Serving",
-      "count": 3,
-      "severity": "high",
-      "priority": 108,
-      "latest_year": 2026,
-      "high_importance": 1,
-      "missing_review": 3,
-      "due_review": 0,
-      "missing_taxonomy": 0,
-      "no_code": 0,
-      "recommended_action": "补 next_review 3 篇",
-      "href": "library.html?topic=LLM+Serving",
-      "export_command": "python3 scripts/export_reading_list.py docs --topic 'LLM Serving' --output docs/exports/topic-llm-serving-reading-list.md",
-      "slugs": [
-        "2501.01005-flashinfer",
-        "2602.06036-dflash",
-        "2604.11035-introspective-dlm"
-      ],
-      "sample_slugs": [
-        "2604.11035-introspective-dlm",
-        "2602.06036-dflash",
-        "2501.01005-flashinfer"
-      ],
-      "sample_titles": [
-        "内省式扩散语言模型",
-        "DFlash：用于快速 speculative decoding 的块扩散方法",
-        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
-      ]
-    },
-    {
-      "id": "topic::Speculative Decoding",
-      "dimension": "topic",
-      "dimension_label": "Topic",
-      "value": "Speculative Decoding",
-      "count": 3,
-      "severity": "high",
-      "priority": 108,
-      "latest_year": 2026,
-      "high_importance": 1,
-      "missing_review": 3,
-      "due_review": 0,
-      "missing_taxonomy": 0,
-      "no_code": 0,
-      "recommended_action": "补 next_review 3 篇",
-      "href": "library.html?topic=Speculative+Decoding",
-      "export_command": "python3 scripts/export_reading_list.py docs --topic 'Speculative Decoding' --output docs/exports/topic-speculative-decoding-reading-list.md",
-      "slugs": [
-        "2602.06036-dflash",
-        "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
-      ],
-      "sample_slugs": [
-        "2604.11035-introspective-dlm",
-        "2602.06036-dflash",
-        "2605.12825-orthrus"
-      ],
-      "sample_titles": [
-        "内省式扩散语言模型",
-        "DFlash：用于快速 speculative decoding 的块扩散方法",
-        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
-      ]
-    },
-    {
-      "id": "track::Inference Acceleration",
-      "dimension": "track",
-      "dimension_label": "Track",
-      "value": "Inference Acceleration",
-      "count": 3,
-      "severity": "high",
-      "priority": 108,
-      "latest_year": 2026,
-      "high_importance": 1,
-      "missing_review": 3,
-      "due_review": 0,
-      "missing_taxonomy": 0,
-      "no_code": 0,
-      "recommended_action": "补 next_review 3 篇",
-      "href": "library.html?track=Inference+Acceleration",
-      "export_command": "python3 scripts/export_reading_list.py docs --track 'Inference Acceleration' --output docs/exports/track-inference-acceleration-reading-list.md",
-      "slugs": [
-        "2602.06036-dflash",
-        "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
-      ],
-      "sample_slugs": [
-        "2604.11035-introspective-dlm",
-        "2602.06036-dflash",
-        "2605.12825-orthrus"
-      ],
-      "sample_titles": [
-        "内省式扩散语言模型",
-        "DFlash：用于快速 speculative decoding 的块扩散方法",
-        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
-      ]
-    },
-    {
-      "id": "track::Parallel Decoding",
-      "dimension": "track",
-      "dimension_label": "Track",
-      "value": "Parallel Decoding",
-      "count": 3,
-      "severity": "high",
-      "priority": 108,
-      "latest_year": 2026,
-      "high_importance": 1,
-      "missing_review": 3,
-      "due_review": 0,
-      "missing_taxonomy": 0,
-      "no_code": 0,
-      "recommended_action": "补 next_review 3 篇",
-      "href": "library.html?track=Parallel+Decoding",
-      "export_command": "python3 scripts/export_reading_list.py docs --track 'Parallel Decoding' --output docs/exports/track-parallel-decoding-reading-list.md",
       "slugs": [
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
@@ -515,6 +913,39 @@
       ]
     },
     {
+      "id": "problem::Lossless Speculative Decoding",
+      "dimension": "problem",
+      "dimension_label": "Problem",
+      "value": "Lossless Speculative Decoding",
+      "count": 3,
+      "severity": "high",
+      "priority": 105,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 3,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 1,
+      "recommended_action": "补 next_review 3 篇",
+      "href": "library.html?problem=Lossless+Speculative+Decoding",
+      "export_command": "",
+      "slugs": [
+        "2507.11851-llm-future-mtp",
+        "2602.06036-dflash",
+        "noarxiv-2026-dspark"
+      ],
+      "sample_slugs": [
+        "2602.06036-dflash",
+        "noarxiv-2026-dspark",
+        "2507.11851-llm-future-mtp"
+      ],
+      "sample_titles": [
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "DSpark：基于置信度调度的半自回归 speculative decoding",
+        "你的 LLM 知道未来：揭示它的多 token 预测潜力"
+      ]
+    },
+    {
       "id": "method::FlashAttention",
       "dimension": "method",
       "dimension_label": "Method",
@@ -545,6 +976,36 @@
       ]
     },
     {
+      "id": "method::gated LoRA",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "gated LoRA",
+      "count": 2,
+      "severity": "high",
+      "priority": 103,
+      "latest_year": 2026,
+      "high_importance": 1,
+      "missing_review": 2,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 1,
+      "recommended_action": "补 next_review 2 篇",
+      "href": "library.html?method=gated+LoRA",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'gated LoRA' --output docs/exports/method-gated-lora-reading-list.md",
+      "slugs": [
+        "2507.11851-llm-future-mtp",
+        "2604.11035-introspective-dlm"
+      ],
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2507.11851-llm-future-mtp"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "你的 LLM 知道未来：揭示它的多 token 预测潜力"
+      ]
+    },
+    {
       "id": "research_line::Efficient Attention Kernels",
       "dimension": "research_line",
       "dimension_label": "研究线",
@@ -572,6 +1033,36 @@
       "sample_titles": [
         "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
         "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "topic::LLM",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "LLM",
+      "count": 2,
+      "severity": "high",
+      "priority": 103,
+      "latest_year": 2026,
+      "high_importance": 1,
+      "missing_review": 2,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 1,
+      "recommended_action": "补 next_review 2 篇",
+      "href": "library.html?topic=LLM",
+      "export_command": "python3 scripts/export_reading_list.py docs --topic LLM --output docs/exports/topic-llm-reading-list.md",
+      "slugs": [
+        "2507.11851-llm-future-mtp",
+        "2604.11035-introspective-dlm"
+      ],
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2507.11851-llm-future-mtp"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "你的 LLM 知道未来：揭示它的多 token 预测潜力"
       ]
     },
     {
@@ -635,6 +1126,585 @@
       ]
     },
     {
+      "id": "line_role::followup",
+      "dimension": "line_role",
+      "dimension_label": "研究角色",
+      "value": "followup",
+      "count": 2,
+      "severity": "high",
+      "priority": 100,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 2,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 1,
+      "recommended_action": "补 next_review 2 篇",
+      "href": "library.html?role=followup",
+      "export_command": "",
+      "slugs": [
+        "2507.11851-llm-future-mtp",
+        "2602.06036-dflash"
+      ],
+      "sample_slugs": [
+        "2602.06036-dflash",
+        "2507.11851-llm-future-mtp"
+      ],
+      "sample_titles": [
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "你的 LLM 知道未来：揭示它的多 token 预测潜力"
+      ]
+    },
+    {
+      "id": "line_role::main",
+      "dimension": "line_role",
+      "dimension_label": "研究角色",
+      "value": "main",
+      "count": 2,
+      "severity": "high",
+      "priority": 100,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 2,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 1,
+      "recommended_action": "补 next_review 2 篇",
+      "href": "library.html?role=main",
+      "export_command": "",
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus",
+        "2607.00466-eldr"
+      ],
+      "sample_slugs": [
+        "2607.00466-eldr",
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_titles": [
+        "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型"
+      ]
+    },
+    {
+      "id": "line_role::system",
+      "dimension": "line_role",
+      "dimension_label": "研究角色",
+      "value": "system",
+      "count": 2,
+      "severity": "high",
+      "priority": 100,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 2,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 2 篇",
+      "href": "library.html?role=system",
+      "export_command": "",
+      "slugs": [
+        "2501.01005-flashinfer",
+        "noarxiv-2026-dspark"
+      ],
+      "sample_slugs": [
+        "noarxiv-2026-dspark",
+        "2501.01005-flashinfer"
+      ],
+      "sample_titles": [
+        "DSpark：基于置信度调度的半自回归 speculative decoding",
+        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "line_role::tooling",
+      "dimension": "line_role",
+      "dimension_label": "研究角色",
+      "value": "tooling",
+      "count": 1,
+      "severity": "high",
+      "priority": 100,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 1,
+      "no_code": 1,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?role=tooling",
+      "export_command": "",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_titles": [
+        "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架"
+      ]
+    },
+    {
+      "id": "method::asynchronous decoding",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "asynchronous decoding",
+      "count": 1,
+      "severity": "high",
+      "priority": 100,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 1,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=asynchronous+decoding",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'asynchronous decoding' --output docs/exports/method-asynchronous-decoding-reading-list.md",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_titles": [
+        "推测性推测解码"
+      ]
+    },
+    {
+      "id": "method::cache-aware sampling",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "cache-aware sampling",
+      "count": 1,
+      "severity": "high",
+      "priority": 100,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 1,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=cache-aware+sampling",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'cache-aware sampling' --output docs/exports/method-cache-aware-sampling-reading-list.md",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_titles": [
+        "推测性推测解码"
+      ]
+    },
+    {
+      "id": "method::Document-Driven Integration",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "Document-Driven Integration",
+      "count": 1,
+      "severity": "high",
+      "priority": 100,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 1,
+      "no_code": 1,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=Document-Driven+Integration",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'Document-Driven Integration' --output docs/exports/method-document-driven-integration-reading-list.md",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_titles": [
+        "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架"
+      ]
+    },
+    {
+      "id": "method::fallback speculation",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "fallback speculation",
+      "count": 1,
+      "severity": "high",
+      "priority": 100,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 1,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=fallback+speculation",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'fallback speculation' --output docs/exports/method-fallback-speculation-reading-list.md",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_titles": [
+        "推测性推测解码"
+      ]
+    },
+    {
+      "id": "method::geometric fan-out",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "geometric fan-out",
+      "count": 1,
+      "severity": "high",
+      "priority": 100,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 1,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=geometric+fan-out",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'geometric fan-out' --output docs/exports/method-geometric-fan-out-reading-list.md",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_titles": [
+        "推测性推测解码"
+      ]
+    },
+    {
+      "id": "method::Hierarchical Code Retrieval",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "Hierarchical Code Retrieval",
+      "count": 1,
+      "severity": "high",
+      "priority": 100,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 1,
+      "no_code": 1,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=Hierarchical+Code+Retrieval",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'Hierarchical Code Retrieval' --output docs/exports/method-hierarchical-code-retrieval-reading-list.md",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_titles": [
+        "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架"
+      ]
+    },
+    {
+      "id": "method::Iterative Search-Based Optimization",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "Iterative Search-Based Optimization",
+      "count": 1,
+      "severity": "high",
+      "priority": 100,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 1,
+      "no_code": 1,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=Iterative+Search-Based+Optimization",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'Iterative Search-Based Optimization' --output docs/exports/method-iterative-search-based-optimization-reading-list.md",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_titles": [
+        "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架"
+      ]
+    },
+    {
+      "id": "method::Multi-Agent Workflow",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "Multi-Agent Workflow",
+      "count": 1,
+      "severity": "high",
+      "priority": 100,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 1,
+      "no_code": 1,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=Multi-Agent+Workflow",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'Multi-Agent Workflow' --output docs/exports/method-multi-agent-workflow-reading-list.md",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_titles": [
+        "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架"
+      ]
+    },
+    {
+      "id": "method::Unified Sketch",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "Unified Sketch",
+      "count": 1,
+      "severity": "high",
+      "priority": 100,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 1,
+      "no_code": 1,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=Unified+Sketch",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'Unified Sketch' --output docs/exports/method-unified-sketch-reading-list.md",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_titles": [
+        "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架"
+      ]
+    },
+    {
+      "id": "method::Verification and Profiling Loop",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "Verification and Profiling Loop",
+      "count": 1,
+      "severity": "high",
+      "priority": 100,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 1,
+      "no_code": 1,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=Verification+and+Profiling+Loop",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'Verification and Profiling Loop' --output docs/exports/method-verification-and-profiling-loop-reading-list.md",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_titles": [
+        "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架"
+      ]
+    },
+    {
+      "id": "method::verification outcome cache",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "verification outcome cache",
+      "count": 1,
+      "severity": "high",
+      "priority": 100,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 1,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=verification+outcome+cache",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'verification outcome cache' --output docs/exports/method-verification-outcome-cache-reading-list.md",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_titles": [
+        "推测性推测解码"
+      ]
+    },
+    {
+      "id": "method::未设置",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "未设置",
+      "count": 1,
+      "severity": "high",
+      "priority": 100,
+      "latest_year": "",
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 1,
+      "no_code": 1,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html",
+      "export_command": "",
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "sample_slugs": [
+        "semantic-search-evaluation"
+      ],
+      "sample_titles": [
+        "Semantic Search Evaluation"
+      ]
+    },
+    {
+      "id": "reading_stage::code_checked",
+      "dimension": "reading_stage",
+      "dimension_label": "Reading stage",
+      "value": "code_checked",
+      "count": 2,
+      "severity": "high",
+      "priority": 100,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 2,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 2 篇",
+      "href": "library.html?stage=code_checked",
+      "export_command": "",
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus",
+        "noarxiv-2026-dspark"
+      ],
+      "sample_slugs": [
+        "noarxiv-2026-dspark",
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_titles": [
+        "DSpark：基于置信度调度的半自回归 speculative decoding",
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型"
+      ]
+    },
+    {
+      "id": "topic::Compiler/DSL",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "Compiler/DSL",
+      "count": 1,
+      "severity": "high",
+      "priority": 100,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 1,
+      "no_code": 1,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?topic=Compiler%2FDSL",
+      "export_command": "python3 scripts/export_reading_list.py docs --topic Compiler/DSL --output docs/exports/topic-compiler-dsl-reading-list.md",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_titles": [
+        "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架"
+      ]
+    },
+    {
+      "id": "topic::Distributed Inference",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "Distributed Inference",
+      "count": 1,
+      "severity": "high",
+      "priority": 100,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 1,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?topic=Distributed+Inference",
+      "export_command": "python3 scripts/export_reading_list.py docs --topic 'Distributed Inference' --output docs/exports/topic-distributed-inference-reading-list.md",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_titles": [
+        "推测性推测解码"
+      ]
+    },
+    {
+      "id": "topic::Hardware Acceleration",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "Hardware Acceleration",
+      "count": 1,
+      "severity": "high",
+      "priority": 100,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 1,
+      "no_code": 1,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?topic=Hardware+Acceleration",
+      "export_command": "python3 scripts/export_reading_list.py docs --topic 'Hardware Acceleration' --output docs/exports/topic-hardware-acceleration-reading-list.md",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_titles": [
+        "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架"
+      ]
+    },
+    {
+      "id": "topic::Kernel Generation",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "Kernel Generation",
+      "count": 1,
+      "severity": "high",
+      "priority": 100,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 1,
+      "no_code": 1,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?topic=Kernel+Generation",
+      "export_command": "python3 scripts/export_reading_list.py docs --topic 'Kernel Generation' --output docs/exports/topic-kernel-generation-reading-list.md",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_titles": [
+        "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架"
+      ]
+    },
+    {
       "id": "topic::KV Cache",
       "dimension": "topic",
       "dimension_label": "Topic",
@@ -665,33 +1735,111 @@
       ]
     },
     {
-      "id": "topic::LLM Inference",
+      "id": "topic::LLM Code Generation",
       "dimension": "topic",
       "dimension_label": "Topic",
-      "value": "LLM Inference",
-      "count": 2,
+      "value": "LLM Code Generation",
+      "count": 1,
+      "severity": "high",
+      "priority": 100,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 1,
+      "no_code": 1,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?topic=LLM+Code+Generation",
+      "export_command": "python3 scripts/export_reading_list.py docs --topic 'LLM Code Generation' --output docs/exports/topic-llm-code-generation-reading-list.md",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_titles": [
+        "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架"
+      ]
+    },
+    {
+      "id": "topic::Multi-Agent Systems",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "Multi-Agent Systems",
+      "count": 1,
+      "severity": "high",
+      "priority": 100,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 1,
+      "no_code": 1,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?topic=Multi-Agent+Systems",
+      "export_command": "python3 scripts/export_reading_list.py docs --topic 'Multi-Agent Systems' --output docs/exports/topic-multi-agent-systems-reading-list.md",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_titles": [
+        "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架"
+      ]
+    },
+    {
+      "id": "topic::RAG",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "RAG",
+      "count": 1,
+      "severity": "high",
+      "priority": 100,
+      "latest_year": "",
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 1,
+      "no_code": 1,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?topic=RAG",
+      "export_command": "python3 scripts/export_reading_list.py docs --topic RAG --output docs/exports/topic-rag-reading-list.md",
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "sample_slugs": [
+        "semantic-search-evaluation"
+      ],
+      "sample_titles": [
+        "Semantic Search Evaluation"
+      ]
+    },
+    {
+      "id": "topic::Systems Optimization",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "Systems Optimization",
+      "count": 1,
       "severity": "high",
       "priority": 100,
       "latest_year": 2026,
       "high_importance": 0,
-      "missing_review": 2,
+      "missing_review": 1,
       "due_review": 0,
-      "missing_taxonomy": 0,
+      "missing_taxonomy": 1,
       "no_code": 0,
-      "recommended_action": "补 next_review 2 篇",
-      "href": "library.html?topic=LLM+Inference",
-      "export_command": "python3 scripts/export_reading_list.py docs --topic 'LLM Inference' --output docs/exports/topic-llm-inference-reading-list.md",
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?topic=Systems+Optimization",
+      "export_command": "python3 scripts/export_reading_list.py docs --topic 'Systems Optimization' --output docs/exports/topic-systems-optimization-reading-list.md",
       "slugs": [
-        "2602.06036-dflash",
-        "2605.12825-orthrus"
+        "2603.03251-speculative-speculative-decoding"
       ],
       "sample_slugs": [
-        "2602.06036-dflash",
-        "2605.12825-orthrus"
+        "2603.03251-speculative-speculative-decoding"
       ],
       "sample_titles": [
-        "DFlash：用于快速 speculative decoding 的块扩散方法",
-        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
+        "推测性推测解码"
       ]
     },
     {
@@ -719,33 +1867,6 @@
       ],
       "sample_titles": [
         "FlashAttention-2：用更好的并行性与工作划分加速 Attention"
-      ]
-    },
-    {
-      "id": "method::gated LoRA",
-      "dimension": "method",
-      "dimension_label": "Method",
-      "value": "gated LoRA",
-      "count": 1,
-      "severity": "high",
-      "priority": 98,
-      "latest_year": 2026,
-      "high_importance": 1,
-      "missing_review": 1,
-      "due_review": 0,
-      "missing_taxonomy": 0,
-      "no_code": 0,
-      "recommended_action": "补 next_review 1 篇",
-      "href": "library.html?method=gated+LoRA",
-      "export_command": "python3 scripts/export_reading_list.py docs --method 'gated LoRA' --output docs/exports/method-gated-lora-reading-list.md",
-      "slugs": [
-        "2604.11035-introspective-dlm"
-      ],
-      "sample_slugs": [
-        "2604.11035-introspective-dlm"
-      ],
-      "sample_titles": [
-        "内省式扩散语言模型"
       ]
     },
     {
@@ -1073,33 +2194,6 @@
       ]
     },
     {
-      "id": "topic::LLM",
-      "dimension": "topic",
-      "dimension_label": "Topic",
-      "value": "LLM",
-      "count": 1,
-      "severity": "high",
-      "priority": 98,
-      "latest_year": 2026,
-      "high_importance": 1,
-      "missing_review": 1,
-      "due_review": 0,
-      "missing_taxonomy": 0,
-      "no_code": 0,
-      "recommended_action": "补 next_review 1 篇",
-      "href": "library.html?topic=LLM",
-      "export_command": "python3 scripts/export_reading_list.py docs --topic LLM --output docs/exports/topic-llm-reading-list.md",
-      "slugs": [
-        "2604.11035-introspective-dlm"
-      ],
-      "sample_slugs": [
-        "2604.11035-introspective-dlm"
-      ],
-      "sample_titles": [
-        "内省式扩散语言模型"
-      ]
-    },
-    {
       "id": "topic::Long Context",
       "dimension": "topic",
       "dimension_label": "Topic",
@@ -1154,10 +2248,10 @@
       ]
     },
     {
-      "id": "line_role::followup",
-      "dimension": "line_role",
-      "dimension_label": "研究角色",
-      "value": "followup",
+      "id": "domain::Multimodal Systems",
+      "dimension": "domain",
+      "dimension_label": "Domain",
+      "value": "Multimodal Systems",
       "count": 1,
       "severity": "high",
       "priority": 95,
@@ -1168,43 +2262,16 @@
       "missing_taxonomy": 0,
       "no_code": 0,
       "recommended_action": "补 next_review 1 篇",
-      "href": "library.html?role=followup",
+      "href": "library.html?domain=Multimodal+Systems",
       "export_command": "",
       "slugs": [
-        "2602.06036-dflash"
+        "2503.14075-twigvlm-plus-plus"
       ],
       "sample_slugs": [
-        "2602.06036-dflash"
+        "2503.14075-twigvlm-plus-plus"
       ],
       "sample_titles": [
-        "DFlash：用于快速 speculative decoding 的块扩散方法"
-      ]
-    },
-    {
-      "id": "line_role::system",
-      "dimension": "line_role",
-      "dimension_label": "研究角色",
-      "value": "system",
-      "count": 1,
-      "severity": "high",
-      "priority": 95,
-      "latest_year": 2025,
-      "high_importance": 0,
-      "missing_review": 1,
-      "due_review": 0,
-      "missing_taxonomy": 0,
-      "no_code": 0,
-      "recommended_action": "补 next_review 1 篇",
-      "href": "library.html?role=system",
-      "export_command": "",
-      "slugs": [
-        "2501.01005-flashinfer"
-      ],
-      "sample_slugs": [
-        "2501.01005-flashinfer"
-      ],
-      "sample_titles": [
-        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型"
       ]
     },
     {
@@ -1232,6 +2299,33 @@
       ],
       "sample_titles": [
         "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
+      ]
+    },
+    {
+      "id": "method::Balanced K-means",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "Balanced K-means",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 1,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=Balanced+K-means",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'Balanced K-means' --output docs/exports/method-balanced-k-means-reading-list.md",
+      "slugs": [
+        "2607.00466-eldr"
+      ],
+      "sample_slugs": [
+        "2607.00466-eldr"
+      ],
+      "sample_titles": [
+        "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由"
       ]
     },
     {
@@ -1316,6 +2410,33 @@
       ]
     },
     {
+      "id": "method::confidence-scheduled verification",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "confidence-scheduled verification",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=confidence-scheduled+verification",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'confidence-scheduled verification' --output docs/exports/method-confidence-scheduled-verification-reading-list.md",
+      "slugs": [
+        "noarxiv-2026-dspark"
+      ],
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ],
+      "sample_titles": [
+        "DSpark：基于置信度调度的半自回归 speculative decoding"
+      ]
+    },
+    {
       "id": "method::CUDA Graph",
       "dimension": "method",
       "dimension_label": "Method",
@@ -1340,6 +2461,33 @@
       ],
       "sample_titles": [
         "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "method::distillation",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "distillation",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=distillation",
+      "export_command": "python3 scripts/export_reading_list.py docs --method distillation --output docs/exports/method-distillation-reading-list.md",
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_titles": [
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型"
       ]
     },
     {
@@ -1370,6 +2518,60 @@
       ]
     },
     {
+      "id": "method::Expert Locality Routing",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "Expert Locality Routing",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 1,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=Expert+Locality+Routing",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'Expert Locality Routing' --output docs/exports/method-expert-locality-routing-reading-list.md",
+      "slugs": [
+        "2607.00466-eldr"
+      ],
+      "sample_slugs": [
+        "2607.00466-eldr"
+      ],
+      "sample_titles": [
+        "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由"
+      ]
+    },
+    {
+      "id": "method::FinalWipe",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "FinalWipe",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=FinalWipe",
+      "export_command": "python3 scripts/export_reading_list.py docs --method FinalWipe --output docs/exports/method-finalwipe-reading-list.md",
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_titles": [
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型"
+      ]
+    },
+    {
       "id": "method::forward KL distillation",
       "dimension": "method",
       "dimension_label": "Method",
@@ -1394,6 +2596,33 @@
       ],
       "sample_titles": [
         "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
+      ]
+    },
+    {
+      "id": "method::hardware-aware scheduling",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "hardware-aware scheduling",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=hardware-aware+scheduling",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'hardware-aware scheduling' --output docs/exports/method-hardware-aware-scheduling-reading-list.md",
+      "slugs": [
+        "noarxiv-2026-dspark"
+      ],
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ],
+      "sample_titles": [
+        "DSpark：基于置信度调度的半自回归 speculative decoding"
       ]
     },
     {
@@ -1478,6 +2707,33 @@
       ]
     },
     {
+      "id": "method::latent consistency matching",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "latent consistency matching",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 1,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=latent+consistency+matching",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'latent consistency matching' --output docs/exports/method-latent-consistency-matching-reading-list.md",
+      "slugs": [
+        "2507.11851-llm-future-mtp"
+      ],
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ],
+      "sample_titles": [
+        "你的 LLM 知道未来：揭示它的多 token 预测潜力"
+      ]
+    },
+    {
       "id": "method::load-balanced scheduling",
       "dimension": "method",
       "dimension_label": "Method",
@@ -1502,6 +2758,33 @@
       ],
       "sample_titles": [
         "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "method::Markov head",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "Markov head",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=Markov+head",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'Markov head' --output docs/exports/method-markov-head-reading-list.md",
+      "slugs": [
+        "noarxiv-2026-dspark"
+      ],
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ],
+      "sample_titles": [
+        "DSpark：基于置信度调度的半自回归 speculative decoding"
       ]
     },
     {
@@ -1532,6 +2815,60 @@
       ]
     },
     {
+      "id": "method::masked-input formulation",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "masked-input formulation",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 1,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=masked-input+formulation",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'masked-input formulation' --output docs/exports/method-masked-input-formulation-reading-list.md",
+      "slugs": [
+        "2507.11851-llm-future-mtp"
+      ],
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ],
+      "sample_titles": [
+        "你的 LLM 知道未来：揭示它的多 token 预测潜力"
+      ]
+    },
+    {
+      "id": "method::multi-head twig",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "multi-head twig",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=multi-head+twig",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'multi-head twig' --output docs/exports/method-multi-head-twig-reading-list.md",
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_titles": [
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型"
+      ]
+    },
+    {
       "id": "method::parallel drafting",
       "dimension": "method",
       "dimension_label": "Method",
@@ -1556,6 +2893,114 @@
       ],
       "sample_titles": [
         "DFlash：用于快速 speculative decoding 的块扩散方法"
+      ]
+    },
+    {
+      "id": "method::pruning-oriented reinforcement learning",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "pruning-oriented reinforcement learning",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=pruning-oriented+reinforcement+learning",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'pruning-oriented reinforcement learning' --output docs/exports/method-pruning-oriented-reinforcement-learning-reading-list.md",
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_titles": [
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型"
+      ]
+    },
+    {
+      "id": "method::quadratic speculative decoding",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "quadratic speculative decoding",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 1,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=quadratic+speculative+decoding",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'quadratic speculative decoding' --output docs/exports/method-quadratic-speculative-decoding-reading-list.md",
+      "slugs": [
+        "2507.11851-llm-future-mtp"
+      ],
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ],
+      "sample_titles": [
+        "你的 LLM 知道未来：揭示它的多 token 预测潜力"
+      ]
+    },
+    {
+      "id": "method::sampler head",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "sampler head",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 1,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=sampler+head",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'sampler head' --output docs/exports/method-sampler-head-reading-list.md",
+      "slugs": [
+        "2507.11851-llm-future-mtp"
+      ],
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ],
+      "sample_titles": [
+        "你的 LLM 知道未来：揭示它的多 token 预测潜力"
+      ]
+    },
+    {
+      "id": "method::semi-autoregressive generation",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "semi-autoregressive generation",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=semi-autoregressive+generation",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'semi-autoregressive generation' --output docs/exports/method-semi-autoregressive-generation-reading-list.md",
+      "slugs": [
+        "noarxiv-2026-dspark"
+      ],
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ],
+      "sample_titles": [
+        "DSpark：基于置信度调度的半自回归 speculative decoding"
       ]
     },
     {
@@ -1586,10 +3031,10 @@
       ]
     },
     {
-      "id": "method::Speculative Decoding",
+      "id": "method::Signature Cache",
       "dimension": "method",
       "dimension_label": "Method",
-      "value": "Speculative Decoding",
+      "value": "Signature Cache",
       "count": 1,
       "severity": "high",
       "priority": 95,
@@ -1598,18 +3043,18 @@
       "missing_review": 1,
       "due_review": 0,
       "missing_taxonomy": 0,
-      "no_code": 0,
+      "no_code": 1,
       "recommended_action": "补 next_review 1 篇",
-      "href": "library.html?method=Speculative+Decoding",
-      "export_command": "python3 scripts/export_reading_list.py docs --method 'Speculative Decoding' --output docs/exports/method-speculative-decoding-reading-list.md",
+      "href": "library.html?method=Signature+Cache",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'Signature Cache' --output docs/exports/method-signature-cache-reading-list.md",
       "slugs": [
-        "2602.06036-dflash"
+        "2607.00466-eldr"
       ],
       "sample_slugs": [
-        "2602.06036-dflash"
+        "2607.00466-eldr"
       ],
       "sample_titles": [
-        "DFlash：用于快速 speculative decoding 的块扩散方法"
+        "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由"
       ]
     },
     {
@@ -1640,6 +3085,60 @@
       ]
     },
     {
+      "id": "method::tree-based self-speculative decoding",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "tree-based self-speculative decoding",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=tree-based+self-speculative+decoding",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'tree-based self-speculative decoding' --output docs/exports/method-tree-based-self-speculative-decoding-reading-list.md",
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_titles": [
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型"
+      ]
+    },
+    {
+      "id": "method::twig-guided token pruning",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "twig-guided token pruning",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=twig-guided+token+pruning",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'twig-guided token pruning' --output docs/exports/method-twig-guided-token-pruning-reading-list.md",
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_titles": [
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型"
+      ]
+    },
+    {
       "id": "problem::Customizable Attention Serving",
       "dimension": "problem",
       "dimension_label": "Problem",
@@ -1667,10 +3166,10 @@
       ]
     },
     {
-      "id": "problem::Lossless Speculative Decoding",
+      "id": "problem::Efficient VLM Inference",
       "dimension": "problem",
       "dimension_label": "Problem",
-      "value": "Lossless Speculative Decoding",
+      "value": "Efficient VLM Inference",
       "count": 1,
       "severity": "high",
       "priority": 95,
@@ -1681,16 +3180,70 @@
       "missing_taxonomy": 0,
       "no_code": 0,
       "recommended_action": "补 next_review 1 篇",
-      "href": "library.html?problem=Lossless+Speculative+Decoding",
+      "href": "library.html?problem=Efficient+VLM+Inference",
       "export_command": "",
       "slugs": [
-        "2602.06036-dflash"
+        "2503.14075-twigvlm-plus-plus"
       ],
       "sample_slugs": [
-        "2602.06036-dflash"
+        "2503.14075-twigvlm-plus-plus"
       ],
       "sample_titles": [
-        "DFlash：用于快速 speculative decoding 的块扩散方法"
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型"
+      ]
+    },
+    {
+      "id": "problem::Load-Aware Serving",
+      "dimension": "problem",
+      "dimension_label": "Problem",
+      "value": "Load-Aware Serving",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?problem=Load-Aware+Serving",
+      "export_command": "",
+      "slugs": [
+        "noarxiv-2026-dspark"
+      ],
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ],
+      "sample_titles": [
+        "DSpark：基于置信度调度的半自回归 speculative decoding"
+      ]
+    },
+    {
+      "id": "problem::Long-Response Decoding",
+      "dimension": "problem",
+      "dimension_label": "Problem",
+      "value": "Long-Response Decoding",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?problem=Long-Response+Decoding",
+      "export_command": "",
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_titles": [
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型"
       ]
     },
     {
@@ -1721,6 +3274,87 @@
       ]
     },
     {
+      "id": "problem::MoE Serving",
+      "dimension": "problem",
+      "dimension_label": "Problem",
+      "value": "MoE Serving",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 1,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?problem=MoE+Serving",
+      "export_command": "",
+      "slugs": [
+        "2607.00466-eldr"
+      ],
+      "sample_slugs": [
+        "2607.00466-eldr"
+      ],
+      "sample_titles": [
+        "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由"
+      ]
+    },
+    {
+      "id": "problem::Visual Token Redundancy",
+      "dimension": "problem",
+      "dimension_label": "Problem",
+      "value": "Visual Token Redundancy",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?problem=Visual+Token+Redundancy",
+      "export_command": "",
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_titles": [
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型"
+      ]
+    },
+    {
+      "id": "research_line::VLM Acceleration",
+      "dimension": "research_line",
+      "dimension_label": "研究线",
+      "value": "VLM Acceleration",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?line=VLM+Acceleration",
+      "export_command": "python3 scripts/export_reading_list.py docs --line 'VLM Acceleration' --output docs/exports/research-line-vlm-acceleration-reading-list.md",
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_titles": [
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型"
+      ]
+    },
+    {
       "id": "topic::Attention Kernels",
       "dimension": "topic",
       "dimension_label": "Topic",
@@ -1745,6 +3379,60 @@
       ],
       "sample_titles": [
         "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+      ]
+    },
+    {
+      "id": "topic::Disaggregated Serving",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "Disaggregated Serving",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 1,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?topic=Disaggregated+Serving",
+      "export_command": "python3 scripts/export_reading_list.py docs --topic 'Disaggregated Serving' --output docs/exports/topic-disaggregated-serving-reading-list.md",
+      "slugs": [
+        "2607.00466-eldr"
+      ],
+      "sample_slugs": [
+        "2607.00466-eldr"
+      ],
+      "sample_titles": [
+        "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由"
+      ]
+    },
+    {
+      "id": "topic::Efficient Inference",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "Efficient Inference",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 1,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?topic=Efficient+Inference",
+      "export_command": "python3 scripts/export_reading_list.py docs --topic 'Efficient Inference' --output docs/exports/topic-efficient-inference-reading-list.md",
+      "slugs": [
+        "2507.11851-llm-future-mtp"
+      ],
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ],
+      "sample_titles": [
+        "你的 LLM 知道未来：揭示它的多 token 预测潜力"
       ]
     },
     {
@@ -1802,6 +3490,249 @@
       ]
     },
     {
+      "id": "topic::Load Balancing",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "Load Balancing",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 1,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?topic=Load+Balancing",
+      "export_command": "python3 scripts/export_reading_list.py docs --topic 'Load Balancing' --output docs/exports/topic-load-balancing-reading-list.md",
+      "slugs": [
+        "2607.00466-eldr"
+      ],
+      "sample_slugs": [
+        "2607.00466-eldr"
+      ],
+      "sample_titles": [
+        "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由"
+      ]
+    },
+    {
+      "id": "topic::MoE",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "MoE",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 1,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?topic=MoE",
+      "export_command": "python3 scripts/export_reading_list.py docs --topic MoE --output docs/exports/topic-moe-reading-list.md",
+      "slugs": [
+        "2607.00466-eldr"
+      ],
+      "sample_slugs": [
+        "2607.00466-eldr"
+      ],
+      "sample_titles": [
+        "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由"
+      ]
+    },
+    {
+      "id": "topic::Multi-Token Prediction",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "Multi-Token Prediction",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 1,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?topic=Multi-Token+Prediction",
+      "export_command": "python3 scripts/export_reading_list.py docs --topic 'Multi-Token Prediction' --output docs/exports/topic-multi-token-prediction-reading-list.md",
+      "slugs": [
+        "2507.11851-llm-future-mtp"
+      ],
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ],
+      "sample_titles": [
+        "你的 LLM 知道未来：揭示它的多 token 预测潜力"
+      ]
+    },
+    {
+      "id": "topic::Multimodal Inference",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "Multimodal Inference",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?topic=Multimodal+Inference",
+      "export_command": "python3 scripts/export_reading_list.py docs --topic 'Multimodal Inference' --output docs/exports/topic-multimodal-inference-reading-list.md",
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_titles": [
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型"
+      ]
+    },
+    {
+      "id": "topic::Non-Autoregressive Generation",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "Non-Autoregressive Generation",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 1,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?topic=Non-Autoregressive+Generation",
+      "export_command": "python3 scripts/export_reading_list.py docs --topic 'Non-Autoregressive Generation' --output docs/exports/topic-non-autoregressive-generation-reading-list.md",
+      "slugs": [
+        "2507.11851-llm-future-mtp"
+      ],
+      "sample_slugs": [
+        "2507.11851-llm-future-mtp"
+      ],
+      "sample_titles": [
+        "你的 LLM 知道未来：揭示它的多 token 预测潜力"
+      ]
+    },
+    {
+      "id": "topic::Semi-Autoregressive Generation",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "Semi-Autoregressive Generation",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?topic=Semi-Autoregressive+Generation",
+      "export_command": "python3 scripts/export_reading_list.py docs --topic 'Semi-Autoregressive Generation' --output docs/exports/topic-semi-autoregressive-generation-reading-list.md",
+      "slugs": [
+        "noarxiv-2026-dspark"
+      ],
+      "sample_slugs": [
+        "noarxiv-2026-dspark"
+      ],
+      "sample_titles": [
+        "DSpark：基于置信度调度的半自回归 speculative decoding"
+      ]
+    },
+    {
+      "id": "topic::Vision-Language Models",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "Vision-Language Models",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?topic=Vision-Language+Models",
+      "export_command": "python3 scripts/export_reading_list.py docs --topic 'Vision-Language Models' --output docs/exports/topic-vision-language-models-reading-list.md",
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_titles": [
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型"
+      ]
+    },
+    {
+      "id": "topic::Visual Token Pruning",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "Visual Token Pruning",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?topic=Visual+Token+Pruning",
+      "export_command": "python3 scripts/export_reading_list.py docs --topic 'Visual Token Pruning' --output docs/exports/topic-visual-token-pruning-reading-list.md",
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_titles": [
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型"
+      ]
+    },
+    {
+      "id": "topic::VLM Acceleration",
+      "dimension": "topic",
+      "dimension_label": "Topic",
+      "value": "VLM Acceleration",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?topic=VLM+Acceleration",
+      "export_command": "python3 scripts/export_reading_list.py docs --topic 'VLM Acceleration' --output docs/exports/topic-vlm-acceleration-reading-list.md",
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_titles": [
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型"
+      ]
+    },
+    {
       "id": "track::Inference Serving Systems",
       "dimension": "track",
       "dimension_label": "Track",
@@ -1827,163 +3758,82 @@
       "sample_titles": [
         "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
       ]
+    },
+    {
+      "id": "track::VLM Acceleration",
+      "dimension": "track",
+      "dimension_label": "Track",
+      "value": "VLM Acceleration",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?track=VLM+Acceleration",
+      "export_command": "python3 scripts/export_reading_list.py docs --track 'VLM Acceleration' --output docs/exports/track-vlm-acceleration-reading-list.md",
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_titles": [
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型"
+      ]
     }
   ],
   "top_batches": [
-    {
-      "id": "code::yes",
-      "dimension": "code",
-      "dimension_label": "Code",
-      "value": "yes",
-      "count": 5,
-      "severity": "high",
-      "priority": 121,
-      "latest_year": 2026,
-      "high_importance": 2,
-      "missing_review": 5,
-      "due_review": 0,
-      "missing_taxonomy": 0,
-      "no_code": 0,
-      "recommended_action": "补 next_review 5 篇",
-      "href": "library.html?code=yes",
-      "export_command": "",
-      "slugs": [
-        "2307.08691-flashattention-2",
-        "2501.01005-flashinfer",
-        "2602.06036-dflash",
-        "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
-      ],
-      "sample_slugs": [
-        "2604.11035-introspective-dlm",
-        "2307.08691-flashattention-2",
-        "2602.06036-dflash",
-        "2605.12825-orthrus",
-        "2501.01005-flashinfer"
-      ],
-      "sample_titles": [
-        "内省式扩散语言模型",
-        "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
-        "DFlash：用于快速 speculative decoding 的块扩散方法",
-        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
-        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
-      ]
-    },
-    {
-      "id": "domain::LLM Systems",
-      "dimension": "domain",
-      "dimension_label": "Domain",
-      "value": "LLM Systems",
-      "count": 5,
-      "severity": "high",
-      "priority": 121,
-      "latest_year": 2026,
-      "high_importance": 2,
-      "missing_review": 5,
-      "due_review": 0,
-      "missing_taxonomy": 0,
-      "no_code": 0,
-      "recommended_action": "补 next_review 5 篇",
-      "href": "library.html?domain=LLM+Systems",
-      "export_command": "",
-      "slugs": [
-        "2307.08691-flashattention-2",
-        "2501.01005-flashinfer",
-        "2602.06036-dflash",
-        "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
-      ],
-      "sample_slugs": [
-        "2604.11035-introspective-dlm",
-        "2307.08691-flashattention-2",
-        "2602.06036-dflash",
-        "2605.12825-orthrus",
-        "2501.01005-flashinfer"
-      ],
-      "sample_titles": [
-        "内省式扩散语言模型",
-        "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
-        "DFlash：用于快速 speculative decoding 的块扩散方法",
-        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
-        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
-      ]
-    },
-    {
-      "id": "reading_stage::deep_read",
-      "dimension": "reading_stage",
-      "dimension_label": "Reading stage",
-      "value": "deep_read",
-      "count": 5,
-      "severity": "high",
-      "priority": 121,
-      "latest_year": 2026,
-      "high_importance": 2,
-      "missing_review": 5,
-      "due_review": 0,
-      "missing_taxonomy": 0,
-      "no_code": 0,
-      "recommended_action": "补 next_review 5 篇",
-      "href": "library.html?stage=deep_read",
-      "export_command": "",
-      "slugs": [
-        "2307.08691-flashattention-2",
-        "2501.01005-flashinfer",
-        "2602.06036-dflash",
-        "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
-      ],
-      "sample_slugs": [
-        "2604.11035-introspective-dlm",
-        "2307.08691-flashattention-2",
-        "2602.06036-dflash",
-        "2605.12825-orthrus",
-        "2501.01005-flashinfer"
-      ],
-      "sample_titles": [
-        "内省式扩散语言模型",
-        "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
-        "DFlash：用于快速 speculative decoding 的块扩散方法",
-        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
-        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
-      ]
-    },
     {
       "id": "review_stage::未设置",
       "dimension": "review_stage",
       "dimension_label": "Review stage",
       "value": "未设置",
-      "count": 5,
+      "count": 12,
       "severity": "high",
-      "priority": 121,
+      "priority": 171,
       "latest_year": 2026,
       "high_importance": 2,
-      "missing_review": 5,
+      "missing_review": 12,
       "due_review": 0,
-      "missing_taxonomy": 0,
-      "no_code": 0,
-      "recommended_action": "补 next_review 5 篇",
+      "missing_taxonomy": 3,
+      "no_code": 4,
+      "recommended_action": "补 next_review 12 篇",
       "href": "library.html",
       "export_command": "",
       "slugs": [
         "2307.08691-flashattention-2",
         "2501.01005-flashinfer",
+        "2503.14075-twigvlm-plus-plus",
+        "2507.11851-llm-future-mtp",
+        "2512.23424-akg-kernel-agent-multi",
         "2602.06036-dflash",
+        "2603.03251-speculative-speculative-decoding",
         "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
+        "2605.12825-orthrus",
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark",
+        "semantic-search-evaluation"
       ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2307.08691-flashattention-2",
         "2602.06036-dflash",
-        "2605.12825-orthrus",
-        "2501.01005-flashinfer"
+        "noarxiv-2026-dspark",
+        "2607.00466-eldr",
+        "2503.14075-twigvlm-plus-plus"
       ],
       "sample_titles": [
         "内省式扩散语言模型",
         "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
         "DFlash：用于快速 speculative decoding 的块扩散方法",
-        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
-        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+        "DSpark：基于置信度调度的半自回归 speculative decoding",
+        "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型"
       ]
     },
     {
@@ -1991,137 +3841,136 @@
       "dimension": "status",
       "dimension_label": "Status",
       "value": "read",
-      "count": 5,
+      "count": 12,
       "severity": "high",
-      "priority": 121,
+      "priority": 171,
       "latest_year": 2026,
       "high_importance": 2,
-      "missing_review": 5,
+      "missing_review": 12,
       "due_review": 0,
-      "missing_taxonomy": 0,
-      "no_code": 0,
-      "recommended_action": "补 next_review 5 篇",
+      "missing_taxonomy": 3,
+      "no_code": 4,
+      "recommended_action": "补 next_review 12 篇",
       "href": "library.html?status=read",
       "export_command": "python3 scripts/export_reading_list.py docs --status read --output docs/exports/status-read-reading-list.md",
       "slugs": [
         "2307.08691-flashattention-2",
         "2501.01005-flashinfer",
+        "2503.14075-twigvlm-plus-plus",
+        "2507.11851-llm-future-mtp",
+        "2512.23424-akg-kernel-agent-multi",
         "2602.06036-dflash",
+        "2603.03251-speculative-speculative-decoding",
         "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
+        "2605.12825-orthrus",
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark",
+        "semantic-search-evaluation"
       ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2307.08691-flashattention-2",
         "2602.06036-dflash",
-        "2605.12825-orthrus",
-        "2501.01005-flashinfer"
+        "noarxiv-2026-dspark",
+        "2607.00466-eldr",
+        "2503.14075-twigvlm-plus-plus"
       ],
       "sample_titles": [
         "内省式扩散语言模型",
         "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
         "DFlash：用于快速 speculative decoding 的块扩散方法",
-        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
-        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+        "DSpark：基于置信度调度的半自回归 speculative decoding",
+        "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型"
       ]
     },
     {
-      "id": "research_line::Parallel Decoding with Diffusion Models",
-      "dimension": "research_line",
-      "dimension_label": "研究线",
-      "value": "Parallel Decoding with Diffusion Models",
-      "count": 3,
+      "id": "code::yes",
+      "dimension": "code",
+      "dimension_label": "Code",
+      "value": "yes",
+      "count": 8,
       "severity": "high",
-      "priority": 108,
+      "priority": 141,
       "latest_year": 2026,
-      "high_importance": 1,
-      "missing_review": 3,
+      "high_importance": 2,
+      "missing_review": 8,
       "due_review": 0,
-      "missing_taxonomy": 0,
+      "missing_taxonomy": 1,
       "no_code": 0,
-      "recommended_action": "补 next_review 3 篇",
-      "href": "library.html?line=Parallel+Decoding+with+Diffusion+Models",
-      "export_command": "python3 scripts/export_reading_list.py docs --line 'Parallel Decoding with Diffusion Models' --output docs/exports/research-line-parallel-decoding-with-diffusion-models-reading-list.md",
+      "recommended_action": "补 next_review 8 篇",
+      "href": "library.html?code=yes",
+      "export_command": "",
       "slugs": [
-        "2602.06036-dflash",
-        "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
-      ],
-      "sample_slugs": [
-        "2604.11035-introspective-dlm",
-        "2602.06036-dflash",
-        "2605.12825-orthrus"
-      ],
-      "sample_titles": [
-        "内省式扩散语言模型",
-        "DFlash：用于快速 speculative decoding 的块扩散方法",
-        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
-      ]
-    },
-    {
-      "id": "topic::Diffusion Language Models",
-      "dimension": "topic",
-      "dimension_label": "Topic",
-      "value": "Diffusion Language Models",
-      "count": 3,
-      "severity": "high",
-      "priority": 108,
-      "latest_year": 2026,
-      "high_importance": 1,
-      "missing_review": 3,
-      "due_review": 0,
-      "missing_taxonomy": 0,
-      "no_code": 0,
-      "recommended_action": "补 next_review 3 篇",
-      "href": "library.html?topic=Diffusion+Language+Models",
-      "export_command": "python3 scripts/export_reading_list.py docs --topic 'Diffusion Language Models' --output docs/exports/topic-diffusion-language-models-reading-list.md",
-      "slugs": [
-        "2602.06036-dflash",
-        "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
-      ],
-      "sample_slugs": [
-        "2604.11035-introspective-dlm",
-        "2602.06036-dflash",
-        "2605.12825-orthrus"
-      ],
-      "sample_titles": [
-        "内省式扩散语言模型",
-        "DFlash：用于快速 speculative decoding 的块扩散方法",
-        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
-      ]
-    },
-    {
-      "id": "topic::LLM Serving",
-      "dimension": "topic",
-      "dimension_label": "Topic",
-      "value": "LLM Serving",
-      "count": 3,
-      "severity": "high",
-      "priority": 108,
-      "latest_year": 2026,
-      "high_importance": 1,
-      "missing_review": 3,
-      "due_review": 0,
-      "missing_taxonomy": 0,
-      "no_code": 0,
-      "recommended_action": "补 next_review 3 篇",
-      "href": "library.html?topic=LLM+Serving",
-      "export_command": "python3 scripts/export_reading_list.py docs --topic 'LLM Serving' --output docs/exports/topic-llm-serving-reading-list.md",
-      "slugs": [
+        "2307.08691-flashattention-2",
         "2501.01005-flashinfer",
+        "2503.14075-twigvlm-plus-plus",
         "2602.06036-dflash",
-        "2604.11035-introspective-dlm"
+        "2603.03251-speculative-speculative-decoding",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus",
+        "noarxiv-2026-dspark"
       ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
+        "2307.08691-flashattention-2",
         "2602.06036-dflash",
-        "2501.01005-flashinfer"
+        "noarxiv-2026-dspark",
+        "2503.14075-twigvlm-plus-plus",
+        "2605.12825-orthrus"
       ],
       "sample_titles": [
         "内省式扩散语言模型",
+        "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
         "DFlash：用于快速 speculative decoding 的块扩散方法",
-        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
+        "DSpark：基于置信度调度的半自回归 speculative decoding",
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
+      ]
+    },
+    {
+      "id": "domain::LLM Systems",
+      "dimension": "domain",
+      "dimension_label": "Domain",
+      "value": "LLM Systems",
+      "count": 9,
+      "severity": "high",
+      "priority": 141,
+      "latest_year": 2026,
+      "high_importance": 2,
+      "missing_review": 9,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 2,
+      "recommended_action": "补 next_review 9 篇",
+      "href": "library.html?domain=LLM+Systems",
+      "export_command": "",
+      "slugs": [
+        "2307.08691-flashattention-2",
+        "2501.01005-flashinfer",
+        "2503.14075-twigvlm-plus-plus",
+        "2507.11851-llm-future-mtp",
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus",
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark"
+      ],
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2307.08691-flashattention-2",
+        "2602.06036-dflash",
+        "noarxiv-2026-dspark",
+        "2607.00466-eldr",
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "DSpark：基于置信度调度的半自回归 speculative decoding",
+        "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型"
       ]
     },
     {
@@ -2129,32 +3978,85 @@
       "dimension": "topic",
       "dimension_label": "Topic",
       "value": "Speculative Decoding",
-      "count": 3,
+      "count": 7,
       "severity": "high",
-      "priority": 108,
+      "priority": 133,
       "latest_year": 2026,
       "high_importance": 1,
-      "missing_review": 3,
+      "missing_review": 7,
       "due_review": 0,
-      "missing_taxonomy": 0,
-      "no_code": 0,
-      "recommended_action": "补 next_review 3 篇",
+      "missing_taxonomy": 1,
+      "no_code": 1,
+      "recommended_action": "补 next_review 7 篇",
       "href": "library.html?topic=Speculative+Decoding",
       "export_command": "python3 scripts/export_reading_list.py docs --topic 'Speculative Decoding' --output docs/exports/topic-speculative-decoding-reading-list.md",
       "slugs": [
+        "2503.14075-twigvlm-plus-plus",
+        "2507.11851-llm-future-mtp",
         "2602.06036-dflash",
+        "2603.03251-speculative-speculative-decoding",
         "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
+        "2605.12825-orthrus",
+        "noarxiv-2026-dspark"
       ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2602.06036-dflash",
-        "2605.12825-orthrus"
+        "noarxiv-2026-dspark",
+        "2503.14075-twigvlm-plus-plus",
+        "2605.12825-orthrus",
+        "2603.03251-speculative-speculative-decoding"
       ],
       "sample_titles": [
         "内省式扩散语言模型",
         "DFlash：用于快速 speculative decoding 的块扩散方法",
-        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
+        "DSpark：基于置信度调度的半自回归 speculative decoding",
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+        "推测性推测解码"
+      ]
+    },
+    {
+      "id": "reading_stage::deep_read",
+      "dimension": "reading_stage",
+      "dimension_label": "Reading stage",
+      "value": "deep_read",
+      "count": 7,
+      "severity": "high",
+      "priority": 131,
+      "latest_year": 2026,
+      "high_importance": 2,
+      "missing_review": 7,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 2,
+      "recommended_action": "补 next_review 7 篇",
+      "href": "library.html?stage=deep_read",
+      "export_command": "",
+      "slugs": [
+        "2307.08691-flashattention-2",
+        "2501.01005-flashinfer",
+        "2507.11851-llm-future-mtp",
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus",
+        "2607.00466-eldr"
+      ],
+      "sample_slugs": [
+        "2604.11035-introspective-dlm",
+        "2307.08691-flashattention-2",
+        "2602.06036-dflash",
+        "2607.00466-eldr",
+        "2605.12825-orthrus",
+        "2501.01005-flashinfer"
+      ],
+      "sample_titles": [
+        "内省式扩散语言模型",
+        "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
+        "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+        "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎"
       ]
     },
     {
@@ -2162,95 +4064,210 @@
       "dimension": "track",
       "dimension_label": "Track",
       "value": "Inference Acceleration",
-      "count": 3,
+      "count": 7,
       "severity": "high",
-      "priority": 108,
+      "priority": 128,
       "latest_year": 2026,
       "high_importance": 1,
-      "missing_review": 3,
+      "missing_review": 7,
       "due_review": 0,
       "missing_taxonomy": 0,
-      "no_code": 0,
-      "recommended_action": "补 next_review 3 篇",
+      "no_code": 2,
+      "recommended_action": "补 next_review 7 篇",
       "href": "library.html?track=Inference+Acceleration",
       "export_command": "python3 scripts/export_reading_list.py docs --track 'Inference Acceleration' --output docs/exports/track-inference-acceleration-reading-list.md",
       "slugs": [
+        "2503.14075-twigvlm-plus-plus",
+        "2507.11851-llm-future-mtp",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
+        "2605.12825-orthrus",
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark"
       ],
       "sample_slugs": [
         "2604.11035-introspective-dlm",
         "2602.06036-dflash",
+        "noarxiv-2026-dspark",
+        "2607.00466-eldr",
+        "2503.14075-twigvlm-plus-plus",
         "2605.12825-orthrus"
       ],
       "sample_titles": [
         "内省式扩散语言模型",
         "DFlash：用于快速 speculative decoding 的块扩散方法",
+        "DSpark：基于置信度调度的半自回归 speculative decoding",
+        "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+        "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
         "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
       ]
     },
     {
-      "id": "track::Parallel Decoding",
-      "dimension": "track",
-      "dimension_label": "Track",
-      "value": "Parallel Decoding",
-      "count": 3,
+      "id": "code::no",
+      "dimension": "code",
+      "dimension_label": "Code",
+      "value": "no",
+      "count": 4,
       "severity": "high",
-      "priority": 108,
+      "priority": 120,
       "latest_year": 2026,
-      "high_importance": 1,
-      "missing_review": 3,
+      "high_importance": 0,
+      "missing_review": 4,
       "due_review": 0,
-      "missing_taxonomy": 0,
-      "no_code": 0,
-      "recommended_action": "补 next_review 3 篇",
-      "href": "library.html?track=Parallel+Decoding",
-      "export_command": "python3 scripts/export_reading_list.py docs --track 'Parallel Decoding' --output docs/exports/track-parallel-decoding-reading-list.md",
-      "slugs": [
-        "2602.06036-dflash",
-        "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
-      ],
-      "sample_slugs": [
-        "2604.11035-introspective-dlm",
-        "2602.06036-dflash",
-        "2605.12825-orthrus"
-      ],
-      "sample_titles": [
-        "内省式扩散语言模型",
-        "DFlash：用于快速 speculative decoding 的块扩散方法",
-        "Orthrus：通过双视角扩散实现内存高效的并行 token 生成"
-      ]
-    },
-    {
-      "id": "line_role::foundation",
-      "dimension": "line_role",
-      "dimension_label": "研究角色",
-      "value": "foundation",
-      "count": 2,
-      "severity": "high",
-      "priority": 106,
-      "latest_year": 2026,
-      "high_importance": 2,
-      "missing_review": 2,
-      "due_review": 0,
-      "missing_taxonomy": 0,
-      "no_code": 0,
-      "recommended_action": "补 next_review 2 篇",
-      "href": "library.html?role=foundation",
+      "missing_taxonomy": 2,
+      "no_code": 4,
+      "recommended_action": "补 next_review 4 篇",
+      "href": "library.html?code=no",
       "export_command": "",
       "slugs": [
-        "2307.08691-flashattention-2",
-        "2604.11035-introspective-dlm"
+        "2507.11851-llm-future-mtp",
+        "2512.23424-akg-kernel-agent-multi",
+        "2607.00466-eldr",
+        "semantic-search-evaluation"
       ],
       "sample_slugs": [
-        "2604.11035-introspective-dlm",
-        "2307.08691-flashattention-2"
+        "2607.00466-eldr",
+        "2512.23424-akg-kernel-agent-multi",
+        "2507.11851-llm-future-mtp",
+        "semantic-search-evaluation"
       ],
       "sample_titles": [
-        "内省式扩散语言模型",
-        "FlashAttention-2：用更好的并行性与工作划分加速 Attention"
+        "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+        "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+        "你的 LLM 知道未来：揭示它的多 token 预测潜力",
+        "Semantic Search Evaluation"
+      ]
+    },
+    {
+      "id": "domain::未设置",
+      "dimension": "domain",
+      "dimension_label": "Domain",
+      "value": "未设置",
+      "count": 3,
+      "severity": "high",
+      "priority": 120,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 3,
+      "due_review": 0,
+      "missing_taxonomy": 3,
+      "no_code": 2,
+      "recommended_action": "补 next_review 3 篇",
+      "href": "library.html",
+      "export_command": "",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi",
+        "2603.03251-speculative-speculative-decoding",
+        "semantic-search-evaluation"
+      ],
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding",
+        "2512.23424-akg-kernel-agent-multi",
+        "semantic-search-evaluation"
+      ],
+      "sample_titles": [
+        "推测性推测解码",
+        "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+        "Semantic Search Evaluation"
+      ]
+    },
+    {
+      "id": "problem::未设置",
+      "dimension": "problem",
+      "dimension_label": "Problem",
+      "value": "未设置",
+      "count": 3,
+      "severity": "high",
+      "priority": 120,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 3,
+      "due_review": 0,
+      "missing_taxonomy": 3,
+      "no_code": 2,
+      "recommended_action": "补 next_review 3 篇",
+      "href": "library.html",
+      "export_command": "",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi",
+        "2603.03251-speculative-speculative-decoding",
+        "semantic-search-evaluation"
+      ],
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding",
+        "2512.23424-akg-kernel-agent-multi",
+        "semantic-search-evaluation"
+      ],
+      "sample_titles": [
+        "推测性推测解码",
+        "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+        "Semantic Search Evaluation"
+      ]
+    },
+    {
+      "id": "reading_stage::未设置",
+      "dimension": "reading_stage",
+      "dimension_label": "Reading stage",
+      "value": "未设置",
+      "count": 3,
+      "severity": "high",
+      "priority": 120,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 3,
+      "due_review": 0,
+      "missing_taxonomy": 3,
+      "no_code": 2,
+      "recommended_action": "补 next_review 3 篇",
+      "href": "library.html",
+      "export_command": "",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi",
+        "2603.03251-speculative-speculative-decoding",
+        "semantic-search-evaluation"
+      ],
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding",
+        "2512.23424-akg-kernel-agent-multi",
+        "semantic-search-evaluation"
+      ],
+      "sample_titles": [
+        "推测性推测解码",
+        "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+        "Semantic Search Evaluation"
+      ]
+    },
+    {
+      "id": "track::未设置",
+      "dimension": "track",
+      "dimension_label": "Track",
+      "value": "未设置",
+      "count": 3,
+      "severity": "high",
+      "priority": 120,
+      "latest_year": 2026,
+      "high_importance": 0,
+      "missing_review": 3,
+      "due_review": 0,
+      "missing_taxonomy": 3,
+      "no_code": 2,
+      "recommended_action": "补 next_review 3 篇",
+      "href": "library.html",
+      "export_command": "",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi",
+        "2603.03251-speculative-speculative-decoding",
+        "semantic-search-evaluation"
+      ],
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding",
+        "2512.23424-akg-kernel-agent-multi",
+        "semantic-search-evaluation"
+      ],
+      "sample_titles": [
+        "推测性推测解码",
+        "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+        "Semantic Search Evaluation"
       ]
     }
   ],

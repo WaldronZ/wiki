@@ -29,7 +29,7 @@ developer_instructions = '''
    - Method：公式逐条理解，注意符号定义、模型架构、训练目标、推理流程、复杂度。把关键公式抄录下来，准备写进报告（用 `$...$` / `$$...$$`）。
    - Experiments：数据集、指标、baseline、主表、消融表，作者自己的分析段落。
    - Conclusion / Limitations / Broader impact：找作者自己承认的弱点，作为批判性分析的起点之一。
-   - 图片：tex 中常以 `\includegraphics{...}` 引用。如果是 png/jpg/pdf 且文件存在于 `sources_dir`，可以用 `Read` 直接打开看（你支持多模态）；架构图、loss 曲线、attention 可视化往往含有正文未写明的信息。
+   - 图片与表格：tex 中常以 `\includegraphics{...}`、`\begin{figure}`、`\begin{table}` 引用。必须系统性扫描所有 figure / table，而不是只看正文提到的少数图。若 png/jpg/pdf 文件存在于 `sources_dir`，用多模态能力打开查看；架构图、loss 曲线、attention 可视化、ablation 表格往往含有正文未写明的信息。
 
 3. **找算力线索**
    - `Grep` 关键词：`GPU`、`A100`、`H100`、`TPU`、`epoch`、`steps`、`batch size`、`tokens`、`hours`、`days`、`FLOPs`。
@@ -50,6 +50,8 @@ developer_instructions = '''
    - 中文为主，关键术语保留英文原词（例如 attention、in-context learning、KV cache、RoPE 等不要硬翻）。
    - 公式用 LaTeX 数学（行内 `$...$`，行间 `$$...$$`），照抄论文中的关键公式而不是自己重写。
    - 报告里所有指向原始材料的图片路径，写 `sources/<slug>/arxiv/...` 这样的相对路径，不要把图片复制到 `docs/`。
+   - 图表必须就地嵌入到对应分析段落：架构图放「方法细节」，主结果曲线 / 表格放「实验」，失败案例或限制相关图放「批判性分析」。不要把所有图片集中堆到文末的独立图表章节。
+   - 每张展示的图 / 表下面直接写 2–4 句「图解：...」：说明它展示了什么、支撑了哪条 claim、读者应关注哪个趋势 / 对比 / 失败案例。
    - 区分「作者认为」与「我认为」：作者的解读照实复述，agent 自己的判断单独成段或加「（agent 评论）」前缀。
 
 6. **回报主线 agent**
@@ -126,6 +128,12 @@ has_code: <true|false>
 ### 9.5 结果分析
 - 作者的分析
 - agent 的分析（明确区分）
+
+图表放置要求：
+- 不单独设置「论文图表解读」大节；所有关键图表都插入到它实际支撑的正文位置。
+- 对每张可定位到文件的图片，用 Markdown 图片语法展示，例如 `![Figure 1: caption](sources/<slug>/arxiv/figures/figure1.pdf)`。
+- 图片 / 表格后紧跟 2–4 句「图解：...」说明，不要只写“如图所示”。
+- 如果图表文件缺失或由 LaTeX/TikZ 动态生成，仍在对应段落根据 caption 和正文引用解释它的作用，并说明无法直接展示的原因。
 ```
 
 第 10 节「代码实现观察」由 `code-analyst` 子 agent 负责追加，你不用预留也不用占位。

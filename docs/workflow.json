@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-06-15T14:49:54",
-  "count": 5,
+  "generated_at": "2026-07-21T14:06:34",
+  "count": 12,
   "active_status_workflow": "personal",
   "workflow_count": 2,
   "workflows": [
@@ -80,7 +80,7 @@
             },
             {
               "value": "read",
-              "count": 5,
+              "count": 12,
               "configured": true,
               "definition": {
                 "description": "Main report is stable enough to use as reference material.",
@@ -113,11 +113,15 @@
           "field": "reading_stage",
           "label": "阅读阶段",
           "configured_count": 4,
-          "used_configured_count": 1,
+          "used_configured_count": 2,
           "defined_count": 4,
           "deprecated_count": 0,
-          "empty_count": 0,
-          "empty_slugs": [],
+          "empty_count": 3,
+          "empty_slugs": [
+            "2512.23424-akg-kernel-agent-multi",
+            "2603.03251-speculative-speculative-decoding",
+            "semantic-search-evaluation"
+          ],
           "values": [
             {
               "value": "skim",
@@ -149,7 +153,7 @@
             },
             {
               "value": "deep_read",
-              "count": 5,
+              "count": 7,
               "configured": true,
               "definition": {
                 "description": "Detailed pass including equations, assumptions, ablations, and cross-paper comparison.",
@@ -163,7 +167,7 @@
             },
             {
               "value": "code_checked",
-              "count": 0,
+              "count": 2,
               "configured": true,
               "definition": {
                 "description": "Implementation, repository structure, or reproducibility notes have been checked.",
@@ -185,13 +189,20 @@
           "used_configured_count": 0,
           "defined_count": 3,
           "deprecated_count": 0,
-          "empty_count": 5,
+          "empty_count": 12,
           "empty_slugs": [
             "2307.08691-flashattention-2",
             "2501.01005-flashinfer",
+            "2503.14075-twigvlm-plus-plus",
+            "2507.11851-llm-future-mtp",
+            "2512.23424-akg-kernel-agent-multi",
             "2602.06036-dflash",
+            "2603.03251-speculative-speculative-decoding",
             "2604.11035-introspective-dlm",
-            "2605.12825-orthrus"
+            "2605.12825-orthrus",
+            "2607.00466-eldr",
+            "noarxiv-2026-dspark",
+            "semantic-search-evaluation"
           ],
           "values": [
             {
@@ -241,7 +252,7 @@
         }
       },
       "unconfigured_total": 0,
-      "empty_total": 5,
+      "empty_total": 15,
       "definition_total": 12,
       "deprecated_total": 0,
       "board_href": "board.html?workflow=personal",
@@ -370,7 +381,7 @@
           "unconfigured": [
             {
               "value": "read",
-              "count": 5,
+              "count": 12,
               "configured": false,
               "definition": {
                 "description": "Main report is stable enough to use as reference material.",
@@ -384,9 +395,16 @@
               "slugs": [
                 "2307.08691-flashattention-2",
                 "2501.01005-flashinfer",
+                "2503.14075-twigvlm-plus-plus",
+                "2507.11851-llm-future-mtp",
+                "2512.23424-akg-kernel-agent-multi",
                 "2602.06036-dflash",
+                "2603.03251-speculative-speculative-decoding",
                 "2604.11035-introspective-dlm",
-                "2605.12825-orthrus"
+                "2605.12825-orthrus",
+                "2607.00466-eldr",
+                "noarxiv-2026-dspark",
+                "semantic-search-evaluation"
               ]
             }
           ]
@@ -395,11 +413,15 @@
           "field": "reading_stage",
           "label": "阅读阶段",
           "configured_count": 5,
-          "used_configured_count": 1,
+          "used_configured_count": 2,
           "defined_count": 5,
           "deprecated_count": 0,
-          "empty_count": 0,
-          "empty_slugs": [],
+          "empty_count": 3,
+          "empty_slugs": [
+            "2512.23424-akg-kernel-agent-multi",
+            "2603.03251-speculative-speculative-decoding",
+            "semantic-search-evaluation"
+          ],
           "values": [
             {
               "value": "skim",
@@ -431,7 +453,7 @@
             },
             {
               "value": "deep_read",
-              "count": 5,
+              "count": 7,
               "configured": true,
               "definition": {
                 "description": "Detailed pass including equations, assumptions, ablations, and cross-paper comparison.",
@@ -445,7 +467,7 @@
             },
             {
               "value": "code_checked",
-              "count": 0,
+              "count": 2,
               "configured": true,
               "definition": {
                 "description": "Implementation, repository structure, or reproducibility notes have been checked.",
@@ -481,13 +503,20 @@
           "used_configured_count": 0,
           "defined_count": 4,
           "deprecated_count": 0,
-          "empty_count": 5,
+          "empty_count": 12,
           "empty_slugs": [
             "2307.08691-flashattention-2",
             "2501.01005-flashinfer",
+            "2503.14075-twigvlm-plus-plus",
+            "2507.11851-llm-future-mtp",
+            "2512.23424-akg-kernel-agent-multi",
             "2602.06036-dflash",
+            "2603.03251-speculative-speculative-decoding",
             "2604.11035-introspective-dlm",
-            "2605.12825-orthrus"
+            "2605.12825-orthrus",
+            "2607.00466-eldr",
+            "noarxiv-2026-dspark",
+            "semantic-search-evaluation"
           ],
           "values": [
             {
@@ -551,7 +580,7 @@
         }
       },
       "unconfigured_total": 1,
-      "empty_total": 5,
+      "empty_total": 15,
       "definition_total": 16,
       "deprecated_total": 0,
       "board_href": "board.html?workflow=research",
@@ -561,7 +590,7 @@
   "active_unconfigured": [],
   "shared_workflow_views": [],
   "recommendations": [
-    "有 5 篇论文缺 review_stage，可在 library.html 批量补齐复习阶段。",
+    "有 12 篇论文缺 review_stage，可在 library.html 批量补齐复习阶段。",
     "当前 workflow 有 4 个空 status，可保留为候选列，或在 workflow 中移除。"
   ],
   "commands": [

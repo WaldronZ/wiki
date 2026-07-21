@@ -1,0 +1,1442 @@
+% ===== FILE: sources/2607.00466-eldr-expert-locality-aware/arxiv/main.tex =====
+﻿\documentclass[sigplan, 10pt, nonacm, screen]{acmart}
+
+\renewcommand\footnotetextcopyrightpermission[1]{}
+\settopmatter{printfolios=true}
+\AtBeginDocument{
+  \providecommand\BibTeX{{Bib\TeX}}}
+
+\usepackage{xspace}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage{kotex}
+\usepackage{enumitem}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\usepackage[nameinlink]{cleveref}
+
+\crefname{figure}{fig.}{figs.}
+\Crefname{figure}{Fig.}{Figs.}
+\crefformat{section}{\S#2#1#3}
+\crefmultiformat{section}{\S\S#2#1#3}{ and~#2#1#3}{, #2#1#3}{, and~#2#1#3}
+
+\makeatletter
+\newcommand\paragraphnew{\@startsection{paragraph}{4}{\parindent}
+  {0pt}
+  {-0.4em}
+  {\ACM@NRadjust{\@parfont\@adddotafter}}}
+\makeatother
+
+\makeatletter
+\newcommand{\subsubsectionnew}{
+  \def\@toclevel{3}
+  \@startsection{subsubsection}{3}{\z@}
+  {-.25\baselineskip \@plus -1\p@ \@minus -.1\p@}
+  {-3.5\p@}
+  {\ACM@NRadjust{\@subsubsecfont\@adddotafter}}
+}
+\makeatother
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  keepspaces=true,
+  frame=single,
+  showstringspaces=false
+}
+
+
+\def\sectionautorefname{$\S$}
+\def\subsectionautorefname{$\S$}
+\def\subsubsectionautorefname{$\S$}
+
+
+\newcommand{\sys}{\textsc{ELDR}\xspace}
+
+\begin{document}
+\pagestyle{plain}
+\title{\sys: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving}
+
+\author{Sangjin Choi}
+\authornote{Work done during an internship at Microsoft Research.}
+\affiliation{
+  \institution{KAIST}
+  \city{Daejeon}
+  \country{Korea}
+}
+
+\author{Sukmin Cho}
+\authornotemark[1]
+\affiliation{
+  \institution{KAIST}
+  \city{Daejeon}
+  \country{Korea}
+}
+
+\author{Yifan Xiong}
+\affiliation{
+  \institution{Microsoft Research}
+  \city{Beijing}
+  \country{China}
+}
+
+\author{Ziyue Yang}
+\authornote{Work partially done while the author was at Microsoft Research.}
+\affiliation{
+  \institution{Shanghai Xingyunzhili \\ Artificial Intelligence Institute}
+  \city{Shanghai}
+  \country{China}
+}
+
+\author{Youngjin Kwon}
+\authornote{Corresponding author.}
+\correspondingauthor
+\affiliation{
+  \institution{KAIST}
+  \city{Daejeon}
+  \country{Korea}
+}
+
+\author{Peng Cheng}
+\affiliation{
+  \institution{Microsoft Research}
+  \city{Redmond}
+  \state{WA}
+  \country{USA}
+}
+
+\input{text/00_abstract}
+
+\maketitle
+
+\input{text/01_introduction}
+\input{text/02_background}
+\input{text/03_motivation}
+\input{text/04_design}
+\input{text/05_implementation}
+\input{text/06_evaluation}
+\input{text/07_related}
+\input{text/08_conclusion}
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{sample-base}
+
+\end{document}
+
+
+
+% ===== FILE: sources/2607.00466-eldr-expert-locality-aware/arxiv/text/00_abstract.tex =====
+﻿\begin{abstract}
+In prefill--decode (PD) disaggregated LLM serving, each request is
+assigned to a decode worker after prefill. Existing decode routers
+balance only load; for mixture-of-experts (MoE) models this is
+incomplete: equally loaded workers can differ in latency, since each
+decode step loads the weights of every distinct expert its batch
+activates.
+We present \sys, an expert-locality-aware decode router for
+PD-disaggregated MoE serving. From a request's prefill expert
+activations, \sys builds an expert signature predicting the experts it
+will activate during generation. Offline, balanced $K$-means partitions
+signature space across decode workers; online, locality-band routing
+sends each request to the least-loaded worker among those best matching
+its signature. A signature cache, co-indexed with the KV cache at
+KV-block granularity, keeps signatures exact under prefix caching.
+Implemented in vLLM and evaluated on deployments of up to 40 GPUs,
+\sys reduces median TPOT by 5.9--13.9\% over the strongest of four
+load-balancing baselines across three MoE models and two workloads,
+with model outputs unchanged.
+\end{abstract}
+
+
+% ===== FILE: sources/2607.00466-eldr-expert-locality-aware/arxiv/text/01_introduction.tex =====
+﻿\section{Introduction}
+\label{sec:introduction}
+
+Large Language Model (LLM) serving is moving toward Prefill-Decode (PD)
+disaggregation, which runs prompt processing (prefill) and token generation
+(decode) on separate worker pools~\cite{distserve}. The phases mismatch: prefill
+runs the prompt in parallel and is compute-bound, while decode is sequential and
+latency-sensitive, so colocating them lets long prefills stall decode and hurts
+both Time-to-First-Token (TTFT) and Time-per-Output-Token (TPOT). An $x$P$y$D
+deployment instead provisions $x$ prefill and $y$ decode workers
+separately~\cite{dynamo,llmd,deepseekv3,mooncake}, turning routing into the
+central serving decision: each request is assigned a prefill worker for its
+prompt and, once its KV state is materialized, a decode worker for its
+generation. Prefill-side routing has drawn most of the attention, where
+cache-affinity policies reuse KV state across prompts. Decode-side routing has
+not: existing policies balance load and otherwise treat decode workers as
+interchangeable. For dense models they are, since equal-load workers do equal
+feed-forward work. For mixture-of-experts (MoE) models they are not.
+
+For MoE models, equal load does not mean equal latency. Decode is
+memory-bandwidth bound, and at batched decode its cost is set by the \emph{union}
+of distinct experts the batch loads from HBM each step. Here sparsity inverts.
+The property that makes MoE cheap, routing each token to only a few
+experts~\cite{qwen3,gptoss,gemma4}, fragments the decode batch across
+experts and destroys the weight reuse a dense batch enjoys, where one weight load
+amortizes over every token. A step pays for every expert any of its tokens
+selects, so the union, not the token count, governs latency. The gap is large:
+on Qwen3-30B-A3B, growing the active-expert count from 16 to 128 raises MoE-layer
+latency $4.7\times$ at fixed batch size, while batch size at fixed active-expert
+count barely moves it (\cref{sec:motivation}).
+Because the union depends on which requests share a worker, expert
+composition is a first-order latency knob that load-based routing
+cannot see---a second routing axis: \emph{expert locality}.
+
+Expert locality is exploitable because it is structured.
+The MoE gate%
+\footnote{We call the MoE router the MoE gate to avoid confusion with the PD router.}
+picks each
+token's experts from its hidden representation, so requests from the same domain
+activate overlapping experts: across tasks, code, math, medical, and legal
+prompts exercise distinct expert regions, and multilingual traffic separates by
+language. Expert choice is thus correlated across related requests, not just
+sparse within a token. Concretely, we observe same-domain decode batches activate
+$17$--$21\%$ fewer distinct experts per step than mixed batches on task workloads
+(\cref{sec:motivation}), so a router that colocates similar requests shrinks each
+worker's per-step union while a load-only router scatters them.
+
+Structure helps only if the router can see it in time. Placement happens at the
+prefill-to-decode handoff, before any output token, so decode-time expert choices
+are not yet observable. But prefill has already pushed the prompt through the same
+gates that will route decode, and the two agree: per-expert prefill and decode
+activation correlate at $0.70$ to $0.92$ across three MoE models
+(\cref{sec:motivation}). Expert locality is therefore not only structured but
+visible at exactly the moment the router must act.
+
+We present \sys, an expert-locality-aware decode router for PD-disaggregated MoE
+serving. \sys turns each request's prefill activations into a compact
+\emph{expert signature} whose distances predict decode-time expert overlap, so
+requests with nearby signatures share experts at decode. It selects the signature
+representation by a single criterion, how faithfully signature proximity predicts
+that overlap, decoupled from any downstream clustering or routing.
+
+Routing must then satisfy two objectives that need different information.
+Locality, which experts colocated requests share, is an aggregate property
+visible only across many requests; load, which decode's non-MoE work imposes per
+colocated request, is instantaneous and visible only at the decision. Pure
+locality overloads popular domains; pure load balancing scatters expert-similar
+requests. \sys splits the decision along that information boundary. Offline,
+\emph{balanced $K$-means} partitions signature space into one locality region per
+decode worker, capturing structure without inheriting workload skew. Online,
+\emph{locality-band routing} keeps the workers whose centroids fall within a
+similarity band of the request's best match and routes to the least loaded among
+them: the band enforces locality, the load choice inside it absorbs live skew,
+and one decision serves both.
+
+One case stresses the online path: prefix caching. A cache hit skips
+prefill for the shared prefix, so the gate never runs there and the
+signature is incomplete---worst exactly for the cache-hit requests
+that prefix-aware routing concentrates. \sys therefore keeps an
+expert-signature cache co-indexed with the KV cache at block
+granularity: each block carries its tokens' expert footprint, and
+summing cached and freshly computed blocks recovers the full
+signature---coherent across partial hits, evictions, and reuse, with
+no recomputation and no change to caching.
+
+We implement \sys in vLLM~\cite{vllm} as a thin layer over an existing
+PD-disaggregated stack: prefill-time signature capture, an offline fit,
+locality-band routing, and the block-granular signature cache. \sys
+changes only which decode worker serves a request, leaving the model,
+gate decisions, kernels, and batching untouched, so expert
+selections---and hence outputs---are identical to standard top-$k$
+gating. Across three MoE models
+(Qwen3-30B-A3B~\cite{qwen3}, GPT-OSS-120B~\cite{gptoss},
+Gemma-4-26B-A4B~\cite{gemma4}) on task and language workloads,
+\sys cuts median TPOT by $7.0$--$13.9\%$ (task) and
+$5.9$--$10.0\%$ (language) over the best load-balancing
+baseline with a signature cache under $1\%$ of the KV cache.
+\sys further generalizes to a 235B deployment under expert parallelism (\cref{sec:eval_generalization}).
+
+\sys makes three contributions:
+
+\begin{itemize}[leftmargin=*, itemsep=0pt, topsep=0pt]
+\item \textbf{Expert locality as a predictable routing axis.} Decode latency in
+PD-disaggregated MoE serving turns on the distinct experts colocated requests
+activate; this locality is structured by domain; and, the enabler, it is readable
+from prefill before decode begins.
+
+\item \textbf{Expert-locality-aware decode routing.} \sys builds a
+quality-selected expert signature, partitions it across decoders with
+balanced $K$-means, and routes with a locality band that balances expert
+locality against live load.
+
+\item \textbf{Prefix-cache-coherent signatures.} A block-granular signature cache
+co-indexed with the KV cache keeps signatures exact across partial hits, full
+hits, and evictions, so \sys composes with prefix caching at negligible cost.
+\end{itemize}
+
+
+% ===== FILE: sources/2607.00466-eldr-expert-locality-aware/arxiv/text/02_background.tex =====
+﻿\section{Background}
+\label{sec:background}
+
+\subsection{Mixture-of-Experts Large Language Models}
+\label{sec:background_moe}
+
+Mixture-of-Experts (MoE) has become a primary architecture for scaling frontier Large Language Models (LLMs) because it decouples model capacity from per-token computation. Instead of applying the same dense feed-forward network (FFN) to every token, an MoE layer replaces the FFN with multiple expert FFNs and an MoE gate that activates a small subset of experts for each token. As a result, the model can contain many more parameters than a dense model while using only a fraction of them during each forward pass. This sparse activation makes MoE
+attractive for efficient scaling: it increases model capacity and enables richer
+expert specialization without proportionally increasing per-token FLOPs. Recent
+architectures push this idea further with fine-grained experts, splitting
+FFN capacity across more, smaller experts so that each token can be routed to a
+more specialized combination of experts while keeping per-token FLOPs bounded.
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=.88\textwidth]{figure/03_motivation/domain_2x3_layer.pdf}
+\vspace{-1em}
+\caption{Decode-phase per-expert activation relative to the cross-domain mean,
+for three MoE models along task (top) and language (bottom,
+WildChat~\cite{wildchat}) domains at each model's most discriminative layer.
+Darker is above-average (below-average clipped to white); experts are reordered
+per panel into contiguous per-domain blocks. Each domain over-activates a
+distinct subset of experts. Task domains:
+Code~\cite{humaneval, bigcodebench, ds1000, mbpp},
+Math~\cite{gsm8k, math,math500, olympiadbench, aquarat},
+Medical~\cite{medqa, pubmedqa, mmlu}, and
+Legal~\cite{lexglue}.}
+\label{fig:domain}
+\end{figure*}
+
+
+\subsection{Prefill-Decode Disaggregated Serving}
+\label{sec:background_pd}
+
+Prefill-Decode (PD) disaggregation~\cite{distserve} is a practical
+architecture for latency-sensitive LLM serving. Inference has two
+phases: \emph{prefill} processes the prompt in parallel and is
+compute-bound, while \emph{decode} generates tokens autoregressively and
+is latency-sensitive and memory-bandwidth-bound. Colocating them causes
+phase interference---long prefills stall latency-sensitive decode
+steps---and forces one resource allocation onto two mismatched
+workloads. PD disaggregation separates the phases onto independent
+pools, typically an \emph{xPyD} configuration of $x$ prefill and $y$
+decode workers, scaling capacity per phase.
+
+This makes routing a central serving decision. A \emph{PD router}
+assigns each request a prefill worker for the prompt and a decode worker
+for generation, determining where its KV state transfers and which
+worker serves its tokens. Existing policies optimize system-level
+objectives---cache-aware routers prefer prefillers holding reusable KV
+blocks~\cite{mooncake}, load-balancing policies (round-robin,
+join-shortest-queue, power-of-two-choices) spread requests---but decide
+only \emph{where} a request runs, agnostic to the model-internal expert
+activations that set MoE decode's memory-bandwidth cost. This leaves the
+activated-expert cost each request imposes on its decode worker
+unmodeled.
+
+
+% ===== FILE: sources/2607.00466-eldr-expert-locality-aware/arxiv/text/03_motivation.tex =====
+﻿\section{Motivation}
+\label{sec:motivation}
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.95\columnwidth]{figure/03_motivation/moe_latency.pdf}
+\vspace{-1em}
+\caption{MoE layer latency scales with active experts, not batch
+size (single MoE layer, one MI300X).}
+\Description{}
+\label{fig:moe_latency}
+\end{figure}
+
+
+\subsection{Active Expert Count Drives MoE Decode Latency}
+\label{sec:motivation_active_experts}
+
+MoE decode latency is governed by the number of distinct experts
+activated at each decode step. Sparsity reduces computation but
+amplifies decode's memory-bandwidth bottleneck by fragmenting the
+batch across experts. In a dense model, every token in a decode batch
+executes the same FFN, so one weight load amortizes over the whole
+batch. In an MoE model, the gate partitions the batch among experts,
+and weight reuse occurs only among tokens sharing an expert; as
+experts grow more numerous and finer-grained, fragmentation lowers
+arithmetic intensity further. MoE decode cost is therefore dominated
+by expert weight access: each step fetches the weights of every expert
+the batch activates.
+
+
+
+To isolate this effect, we benchmark the single-layer MoE expert
+computation on one MI300X, sweeping decode batch size and the number
+of distinct active experts for Qwen3-30B-A3B, GPT-OSS-120B, and
+Gemma-4-26B-A4B. Across all models, latency tracks active experts far
+more strongly than batch size (\Cref{fig:moe_latency}): on
+Qwen3-30B-A3B, growing active experts from 16 to 128 raises latency
+$4.7\times$ at batch size 64, while batch size at a fixed expert count
+barely moves it.
+
+This result shows that MoE decode efficiency depends on expert reuse
+within a batch. However, exploiting this requires the serving system to know
+which requests are likely to activate overlapping experts. We next show
+that this overlap is not random. Instead, expert usage is structured by
+request domain, making expert locality a predictable property that a serving
+system can exploit.
+
+\subsection{Experts Specialize by Domain}
+
+The MoE gate is input-dependent by design. The gate scores experts using
+the token's hidden representation and dispatches the token to the top-scoring
+experts. Because the hidden representation encodes contextual features, domains
+such as task and language are natural axes along which expert usage may differ.
+
+\Cref{fig:domain} shows decode-phase expert activation across three
+models: Qwen3-30B-A3B, GPT-OSS-120B, and Gemma-4-26B-A4B. The figure evaluates
+two sources of request structure: task and language. The task axis uses a
+mixture of code, math, medical, and legal benchmarks. The language axis
+uses multilingual WildChat requests, a corpus of one million real-world
+user--ChatGPT interactions spanning 68 languages such as English, Chinese,
+Russian, and French. In each heatmap, rows correspond to domains and
+columns correspond to experts, with color indicating activation
+relative to the average for that expert across domains. Experts are sorted by
+their dominant domain, so experts most activated by the same domain appear
+contiguously.
+
+Across models, expert activation is strongly structured by both task and
+language. Code, math, medical, and legal requests over-activate
+different expert subsets. The same pattern appears on the multilingual axis:
+English, Chinese, Russian, and French requests activate different expert
+regions rather than uniformly exercising the full expert pool. This shows that
+expert selection is correlated across related requests, not just sparse at the
+individual-token level.
+
+This specialization makes active-expert reduction actionable for serving:
+same-domain requests are more likely to share experts at decode time, so
+co-locating them on a worker yields a smaller per-step active-expert set
+than mixed batches. The active-expert count therefore depends on which
+requests are placed together, not only on how much work each worker
+receives. This structure is a property of the model's gating networks---stable
+across requests of the same domain and observable wherever the
+gating networks are exercised. To exploit it for placement, a serving
+system must identify each request's expert footprint at the moment of
+prefill$\to$decode handoff, before any decode token has been generated.
+
+\subsection{Prefill Predicts Decode Expert Activation}
+\label{sec:motivation_prefill_decode}
+
+\begin{figure}[t!]
+\centering
+\includegraphics[width=0.95\columnwidth]{figure/03_motivation/pd_scatter.pdf}
+\vspace{-1em}
+\caption{Prefill expert activation predicts decode activation. Each
+point is one expert (normalized prefill $x$ vs.\ decode $y$, pooled over
+domains); points near the diagonal are experts used about equally in
+both phases.
+}
+\label{fig:pd_scatter}
+\end{figure}
+
+Expert locality can guide a decode routing policy only if it is visible before
+decode begins. In an $x$P$y$D deployment, a request first runs on a prefill worker
+and is then assigned to one of the decode workers, where it will be batched with
+other active requests. The decode routing policy must make this placement
+decision before any output tokens are generated, so the request's decode-phase
+expert usage is not yet observable. The prefill phase, however, has already
+processed the prompt through the same MoE layers, exposing the expert choices
+made by the model's gating networks.
+
+\Cref{fig:pd_scatter} compares prefill and decode expert activation across
+the task and language domains studied above. Each point corresponds to one
+expert: the $x$-axis is its normalized activation during prefill, and the $y$-axis is
+its normalized activation during decode. Points near the diagonal indicate that
+experts heavily used while reading the prompt are also heavily used while
+generating the response. The correlation is strong for Qwen3-30B-A3B and
+Gemma-4-26B-A4B, and substantial for GPT-OSS-120B.
+
+This correlation makes decode expert locality available before decode begins.
+Although the exact decode tokens are unknown at placement time, the prefill
+phase has already exposed a request-specific expert footprint that predicts the
+experts likely to be reused during generation. Thus, in an $x$P$y$D deployment, the
+system observes an expert-locality signal precisely at the boundary where the
+request leaves the prefill worker and must be assigned to a decode worker.
+
+\subsection{Opportunity: Expert-Locality-Aware Decode Routing}
+\label{sec:motivation_opportunity}
+
+
+In PD-disaggregated MoE serving, decode-step latency is governed not
+only by per-worker load but by request composition: requests that
+dispatch to overlapping experts activate fewer distinct experts per
+step than an equally sized batch of unrelated requests.
+\Cref{fig:opp_sweep} quantifies this: same-domain batches
+activate 17--21\% (task) and 3--10\% (language) fewer experts per
+step than mixed-domain batches across batch sizes 32--128.
+
+Expert locality offers a second routing axis for
+PD\--dis\-ag\-gre\-gat\-ed MoE serving.
+Existing decode routing policies
+balance per-worker load but ignore expert overlap. Placing
+expert-similar requests on the same decoder shrinks the per-step
+active-expert set; placing dissimilar requests together expands
+it. The signal that enables overlap-aware routing is observable
+at the prefill$\,\to\,$decode handoff: prefill expert activations
+predict decode-time expert usage. We call the per-request
+representation of this signal the \emph{expert signature}.
+
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.95\columnwidth]{figure/03_motivation/active_experts_sweep.pdf}
+\vspace{-1em}
+\caption{Same-domain batches (blue) activate fewer experts per decode
+step than mixed-domain (orange),
+for task (top) and language (bottom) across three MoE models.}
+\label{fig:opp_sweep}
+\end{figure}
+
+
+
+\subsection{Challenges}
+\label{sec:motivation_challenges}
+
+Turning this opportunity into a working routing policy raises three
+challenges.
+
+\subsubsectionnew{Designing the expert signature}
+The expert signature predicts a request's decode-time expert
+usage from its prefill activations, so that requests with
+similar predicted usage can be colocated to share experts.
+It is the building block of \sys's design: every routing
+decision derives from it, and routing quality is bounded above
+by signature quality.
+The challenge is to turn raw prefill data into a vector space
+suited to clustering---one in which proximity between two
+signatures reflects how much their requests overlap in
+decode-time expert activation. Only such a space lets a
+clustering group requests by genuine expert affinity rather
+than by spurious similarity. The design space is large: raw
+activation counts, gate logits, layer masks, and reweighting
+schemes all yield candidate representations, each inducing a
+different geometry. Selecting among them requires a criterion
+that measures how faithfully signature proximity predicts
+decode-time expert overlap, independent of any particular
+clustering or routing policy built on top.
+
+\subsubsectionnew{Reconciling locality and load}
+\label{sec:challenge_load}
+Locality alone is not enough. Non-MoE compute---attention, QKV
+projection, normalization---scales with the number of active
+requests on a worker, not with how many distinct experts they
+share. A locality-only policy concentrates traffic on the
+workers whose profiles match the dominant request domains; in
+WildChat, the top two languages alone account for $\sim$75\%
+of requests (\Cref{fig:wildchat}). Overloaded workers
+see inflated non-MoE work and rising tail TPOT. The opposite
+extreme---a balance-only policy like round-robin or pure
+JSQ---keeps queues even but scatters expert-similar requests,
+erasing the locality benefit. Both objectives must hold at once.
+
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.95\columnwidth]{figure/03_motivation/wc_langdist.pdf}
+\vspace{-1em}
+\caption{WildChat~\cite{wildchat} request volume is heavily skewed: English and
+Chinese alone are $\sim$75\% of requests.
+}
+\label{fig:wildchat}
+\end{figure}
+
+Combining the two is hard because they draw on different information.
+Locality is purely \emph{aggregate}: which signatures group together is
+visible only across many requests, never from one. Balancing load needs
+that aggregate view too---structural skew, where some clusters carry far
+more traffic than others, lets the router anticipate the distribution
+instead of reacting request by request---but also an \emph{instantaneous}
+view: runtime variance from Poisson arrivals, variable output lengths,
+and prior routing decisions that no aggregate can predict, so the router
+can track each worker's live load at the moment of decision. No single
+mechanism provides both: aggregate-only is blind to live load,
+instantaneous-only discards the cross-request structure. The challenge is
+to bring both views into the routing pipeline.
+
+\subsubsectionnew{Maintaining signature coherence across prefix
+cache hits}
+\label{sec:challenge_prefix}
+
+The expert signature is produced during prefill, but prefill is
+often partially or fully skipped. With a prefix cache hit, the
+system reuses cached KV states for the shared prompt prefix
+without re-running the gating networks on the cached tokens.
+The expert footprint for those tokens is therefore absent from
+this request's prefill---even though it was produced (and
+discarded) when an earlier request first populated the cache.
+Without a mechanism to recover this footprint, the signature
+for a cache-hit request is incomplete and misroutes the request.
+
+A natural answer is to cache the per-request signature.
+This works on full prompt matches but breaks on \emph{partial hits}:
+a request can share its leading KV blocks with a previous
+one and diverge on the rest, and no whole-prompt signature
+describes this kind of overlap. KV blocks are also dynamically
+evicted, and recycled across requests, so any signature
+mechanism must remain coherent under these transitions. The challenge
+is to keep the signature coherent with the cache across these
+states---partial hits, evictions, and reuse---without disabling
+the cache or re-running prefills.
+
+
+% ===== FILE: sources/2607.00466-eldr-expert-locality-aware/arxiv/text/04_design.tex =====
+﻿\section{Design}
+\label{sec:design}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figure/04_design/fig_overview.pdf}
+\vspace{-2.0em}
+\caption{\sys architecture: offline fitting of one centroid
+per decode worker over expert signatures, then online routing
+at the prefill--decode handoff by signature similarity,
+subject to load.}
+\label{fig:eldr_overview}
+\end{figure}
+
+We present \sys, an \textbf{E}xpert-\textbf{L}ocality-aware
+\textbf{D}ecode \textbf{R}outing policy for PD-disaggregated MoE
+serving. Instead of placing decode requests by load alone, \sys
+uses each request's prefill expert activation to choose a decode
+worker where it is likely to share experts with other
+requests. This makes expert locality a practical routing signal
+for reducing TPOT.
+
+\subsection{Overview}
+\label{sec:design_overview}
+
+\Cref{fig:eldr_overview} shows the \sys architecture.
+\sys integrates into an existing PD-disaggregated serving stack
+as a thin layer: a request router in front of the prefill--decode
+workers and a prefill-time hook that records per-block \emph{(1) expert
+signatures} alongside the KV cache, with offline routing state
+loaded once at startup. The model, kernels, batching, and the
+prefill/decode engines are left unmodified. We implement and
+evaluate \sys on vLLM~\cite{vllm}, and the design ports directly
+to other stacks such as SGLang~\cite{sglang}. \sys runs in two
+stages: an \emph{(2) offline stage} that groups requests by their
+prefill-time signatures to reduce expert activation, and an
+\emph{(3) online stage} that uses this profile to route each request
+at the prefill--decode handoff.
+
+\paragraphnew{Expert Signature}
+\sys builds on the observation that a request's prefill expert
+activations are highly correlated with its decode expert
+activations (\cref{sec:motivation_prefill_decode}). To
+exploit this, we design a per-request representation, the
+\emph{expert signature} (\cref{sec:design_signature}), that
+summarizes a request's prefill-time expert activations and predicts
+which experts it will use at decode time. The signature lets us
+estimate how much two requests' decode-time expert usage overlaps
+directly from prefill information, via the cosine similarity between
+their signatures. \sys therefore groups requests by signature
+similarity, so that the distinct experts activated across a group
+are fewer than under naive, similarity-agnostic routing.
+
+\paragraphnew{Offline}
+Before serving, \sys runs a small calibration set through prefill and
+collects each request's expert signature. \sys then clusters these
+signatures (\cref{sec:design_clustering}) along two axes:
+locality, so signatures grouped on one worker share experts, and
+balance, so clusters are evenly sized across decode workers (one centroid
+per worker). Re-fitting is cheap: the balanced $K$-means clustering over the
+captured signatures completes in under $10$\,s on CPU and updates only
+the router's centroid table, leaving the model and decode workers
+running. A PD scale-up or scale-down, or a shifted workload, then needs
+only this re-fit at the new decode-worker count, reassigning one
+centroid per worker. We use a single offline fit in this work.
+
+\paragraphnew{Online}
+During serving, \sys leaves the standard PD pipeline intact and
+adds two lightweight steps: signature capture during prefill and
+a routing decision at the prefill--decode handoff:
+
+\begin{enumerate}[leftmargin=*, topsep=0pt]
+\item The router sends the request to a prefill worker using
+prefix-aware routing.
+
+\item The prefill worker runs prefill while \sys captures the
+request's \emph{expert signature}
+(\cref{sec:design_signature}) in a signature cache
+co-indexed with the KV cache
+(\cref{sec:design_prefix_cache}).
+
+\item At handoff, the request's expert signature---summed over
+its expert signature cache blocks---is returned to the router
+with the KV-transfer metadata.
+
+\item The router invokes \sys's \emph{locality-band routing}
+(\cref{sec:design_route}): it compares the signature
+against the decoder centroids and routes to the least-loaded
+worker within the locality band of the closest centroid.
+
+\item The selected decoder pulls the KV cache and generates on the
+unchanged decode engine; co-locating similar-signature requests shrinks
+the per-step active-expert union, reducing decode latency.
+\end{enumerate}
+
+\subsection{Expert Signature}
+\label{sec:design_signature}
+
+\sys summarizes each request's prefill-time expert activations into
+a compact per-request representation, the \textbf{expert signature}.
+The raw material is cheap to collect at prefill: a per-layer
+histogram of how many tokens each expert receives, available as a
+by-product of routing. The signature is designed so that the
+distance between two signatures predicts how much the two requests
+overlap in their decode-time expert usage---requests with nearby
+signatures activate similar experts at decode, requests with distant
+signatures activate different ones. The clustering layer
+(\cref{sec:design_clustering}) then groups requests whose signatures
+are close, so each decode worker loads few distinct experts per step.
+
+Turning the raw histogram into a good signature still takes care.
+The per-layer counts are the right raw signal, but two effects keep
+raw count distance from tracking decode-time overlap as closely as
+it could: a few generalist experts fire on nearly every request,
+inflating the norm and masking the rare specialists that distinguish
+workloads, and many layers carry little signal that separates
+requests. The signature therefore weights the counts and selects
+which layers to keep, on top of what to count. We proceed in three
+steps: we make the design goal precise (\cref{sec:sig_metric})---a
+signature is good when its distances rank request pairs the same way
+their decode-time expert overlap does---then construct the signature
+from three principles justified against that goal
+(\cref{sec:sig_construction}), and validate each choice empirically
+(\cref{sec:sig_validation}).
+
+\subsubsectionnew{Goal of Signature Design}
+\label{sec:sig_metric}
+
+The signature design aims to make decode-time expert overlap
+predictable from prefill alone, so clustering on signatures groups
+requests that load few distinct experts per step and thereby bounds
+decode latency. A signature meets this goal when requests with nearby
+signatures activate similar experts at decode time, and distant
+signatures activate different ones.
+
+To quantify it, we encode each calibration request $i$'s decode-time
+behavior as a per-step \emph{activation probability}
+$p_i(\ell, e) \in [0, 1]$: the fraction of $i$'s decode steps in which
+the gate at layer $\ell$ selected expert $e$. Flattened across all
+$(\ell, e)$ pairs and L2-normalized, $p_i \in \mathbb{R}^{LE}$ is the
+decode-time pattern the signature must predict. Distance in $p$-space
+is the natural quantification of decode-time expert overlap. Signature
+quality is then the rank correlation between signature pair-distance and
+decode-pattern pair-distance, over random calibration pairs:
+\begin{equation}
+\rho \;=\; \mathrm{Spearman}\big(\,
+  \mathrm{cos\text{-}dist}(s_i, s_j),\;\mathrm{cos\text{-}dist}(p_i, p_j)
+\,\big).
+\label{eq:rho}
+\end{equation}
+
+We use Spearman (rank) correlation rather than Pearson: signature
+distance lives in $\mathbb{R}^d$ while decode-pattern distance lives in
+$\mathbb{R}^{LE}$, so their numerical values are not commensurable.
+Only the ordering of pairs is, and ordering is exactly what the
+clustering layer consumes when deciding which requests to colocate.
+Rank agreement also captures the goal property: high $\rho$ means nearby
+signatures correspond to similar decode-time expert activation, and
+distant signatures to different activation.
+
+\subsubsectionnew{Signature Design}
+\label{sec:sig_construction}
+Three principles guide $s_r$:
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+\item \textbf{Discrete, not continuous.} The target $p_i(\ell,e)$ is the
+normalized count of top-$k$ selections at each $(\ell,e)$ over decode, so
+the signature should measure the same quantity. Only the discrete
+top-$k$ loads experts---sub-threshold scores are computed but never fetch
+one---so a discrete prefill count is a sparse, same-form estimator of
+which experts fire. Continuous gate scores instead spread softmax mass
+over all $E$ experts, assigning magnitude to experts the top-$k$ never
+loads and smoothing away the contrast that distinguishes requests.
+
+\item \textbf{Downweight common experts.} A handful of generalist
+experts fire on almost every prefill. They carry little information
+about request identity, yet their large counts drown out the rare
+specialist experts that actually distinguish workloads. We multiply
+each $(\ell, e)$ count by its inverse document frequency (IDF) over
+the calibration corpus, which shrinks the common experts and
+amplifies the rare ones. This reweighting works at the granularity of
+$(\ell, e)$ cells, denoising the signature \emph{before} we choose a
+layer mask.
+
+\item \textbf{Keep informative layers.} Layers contribute unequally:
+some carry routing signal that maps prefill to decode, others add
+dimensions that don't separate requests and dilute the signature
+direction. The mask $\mathcal{S}\subseteq\{1,\ldots,L\}$ is the subset
+we keep, chosen per deployment to maximize $\rho$
+(Eq.~\ref{eq:rho}) on calibration data.
+\end{itemize}
+
+Four steps build $s_r$. The IDF table and layer mask are fit once
+offline on calibration data; counting, IDF reweighting, layer masking,
+and normalization run online at the prefill$\,\to\,$decode handoff.
+
+\begin{enumerate}[leftmargin=*]
+\item \emph{Count.} At each layer $\ell$, count how many prefill tokens
+are routed to each expert, giving $c_r(\ell)\in\mathbb{N}^{E}$.
+
+\item \emph{Downweight common experts.} Multiply each cell by its
+inverse document frequency,
+$w(\ell,e)=\log\!\big((|\mathcal{C}|+1)/(\mathrm{df}(\ell,e)+1)\big)$,
+where $\mathrm{df}(\ell,e)$ counts calibration requests
+$\mathcal{C}$ in which expert~$e$ fires at least once at layer~$\ell$.
+The reweighted count is
+$\tilde c_r(\ell,e)=c_r(\ell,e)\cdot w(\ell,e)$.
+
+\item \emph{Select layers.} The mask~$\mathcal{S}$ is fit offline by
+greedy layer selection on $\rho$: starting from an empty mask,
+the layer whose inclusion most increases cumulative~$\rho$ is appended
+at each step, producing an ordering of all $L$ layers. We keep the
+first $N^{*}$ layers in this ordering, where $N^{*}$ is the size at
+which cumulative~$\rho$ peaks (the~$\bigstar$ in~\Cref{fig:sig_layers}).
+At runtime, the per-request reweighted counts on $\mathcal{S}$ stack to
+$x_r=\big[\,\tilde c_r(\ell)\,\big]_{\ell\in\mathcal{S}}\in\mathbb{R}^{N^{*}\cdot E}$.
+
+\item \emph{Normalize.} Divide by the vector's length so similarity
+reflects the shape of expert usage, not the request's token count:
+\begin{equation}
+s_r \;=\; x_r \,/\, \lVert x_r\rVert_2.
+\label{eq:sig}
+\end{equation}
+\end{enumerate}
+
+The signature $s_r$ is the building block consumed by the decode
+clustering and routing layers (\cref{sec:design_routing}).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.95\columnwidth]{figure/04_design/sig_transform.pdf}
+\vspace{-1em}
+\caption{Signature quality~$\rho$ (Eq.~\ref{eq:rho}) for six candidate
+transformations~$T$. Bars are the mean across six cells
+(3 models~$\times$ 2 workloads); whiskers span the per-cell min/max.}
+\label{fig:sig_transform}
+\end{figure}
+
+
+\subsubsectionnew{Validation}
+\label{sec:sig_validation}
+We validate each design choice by its effect on $\rho$
+(Eq.~\ref{eq:rho}), measured on 1{,}000 calibration requests per cell
+across three models (Qwen3-30B-A3B, GPT-OSS-120B, Gemma-4-26B-A4B) and
+two workloads (task, language).
+
+\paragraphnew{Discrete beats continuous}
+\Cref{fig:sig_transform} compares six choices of $T$ on the full
+layer mask: count and count$\cdot$idf (Steps~1--2 of
+\S\ref{sec:sig_construction}), plus four ablations---$\sqrt{\text{count}}$;
+\emph{gate prob} and \emph{gate logit}, the summed softmax and raw
+gate scores over prefill tokens; and \emph{binary}, the indicator that
+an expert appears in the top-$k$ at least once.
+The three count-based variants beat both continuous ones by
+\textgreater 0.035 in mean~$\rho$: continuous scores put mass on experts
+the decode top-$k$ never loads, and that mass cannot appear in~$p_i$.
+
+\paragraphnew{{IDF denoises}}
+Among the discrete variants, count$\cdot$idf raises mean~$\rho$ over
+plain count by 1.5pt and its worst case ($\min_c \rho$) by 4.9pt
+($0.63\rightarrow0.68$ on GPT-OSS language), with no loss on the best
+case. The gain concentrates on GPT-OSS, where a few generalist experts
+dominate the raw count and inflate the $\ell_2$ norm; IDF down-weights
+them and surfaces the rare experts that distinguish workloads (+8.9pt on
+GPT-OSS task).
+
+\paragraphnew{Layer mask compresses}
+Running greedy layer selection on count$\cdot$idf signatures,
+\Cref{fig:sig_layers} plots cumulative~$\rho$ against layers kept.
+Every cell peaks at $N^{*}<L$, exceeding the all-layer $\rho(L)$ by
+0.005 to 0.032: extra layers add dimensions that don't separate requests
+and dilute the signature. \sys's offline fit uses this per-cell
+peak~$N^{*}$.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.95\columnwidth]{figure/04_design/sig_layers.pdf}
+\vspace{-1em}
+\caption{Cumulative~$\rho$ (Eq.~\ref{eq:rho}) versus the number of
+layers kept under greedy layer selection. One panel per model;
+task (blue) and language (orange) shown separately. The star
+marks the peak~$N^{*}$ chosen by \sys{}'s offline fit.}
+\label{fig:sig_layers}
+\end{figure}
+
+
+\subsection{Decode Clustering and Routing}
+\label{sec:design_routing}
+
+Given an expert signature, \sys routes the request to one of
+$K$ decode workers under two objectives. \emph{1) Locality}---co-located
+requests should share experts---is what the signature is built to
+enable. \emph{2) Load balance} is the constraint routing cannot ignore:
+non-MoE compute (attention, QKV projection, normalization) scales with
+a worker's batch size, so an overloaded worker spikes tail TPOT
+(\cref{sec:challenge_load}).
+\sys splits these objectives across two stages by the information each
+needs. Locality is visible offline from aggregate calibration data, so
+the offline stage (\cref{sec:design_clustering}) clusters signatures
+into $K$ locality regions of equal calibration volume, one per worker.
+Load depends on the instantaneous per-worker state at the
+prefill$\,\to\,$decode handoff, so the online stage
+(\cref{sec:design_route}) routes each request within its region toward
+the less-loaded worker.
+
+
+\subsubsectionnew{Offline clustering}
+\label{sec:design_clustering}
+
+\sys produces one centroid per decode worker by clustering the
+calibration signatures into $K$ groups such that signatures within a
+group are close (locality) and groups are balanced in size.
+$K$-means~\cite{kmeans} is the standard algorithm for locality-driven
+clustering: it minimizes the mean cosine distance between each signature
+and its assigned centroid. This objective optimizes locality but has no
+size penalty---a single centroid in a tight, dense region serves all
+those points cheaply because they are close to it, while a centroid
+covering a sparse region serves few points but at similar per-point
+cost. On skewed data, this produces uneven cluster sizes, and since each
+cluster maps to one decode worker, the imbalance translates directly to
+uneven decoder load at runtime, causing tail latency spikes. The missing
+piece is a size constraint: \sys uses \textbf{Hungarian-balanced
+$K$-means}~\cite{balancedkmeans}, which replaces nearest-neighbor
+assignment with a globally optimal assignment: each centroid takes at most
+$\lceil N/K \rceil$ points, and the assignment minimizing total cosine
+distance is found by the Hungarian algorithm. Online routing
+(\cref{sec:design_route}) uses cosine similarity to the resulting $K$
+unit centroids to identify candidate decoders.
+Because $K$ is the number of decode workers, scaling the decode pool up
+or down can be absorbed by a re-cluster at the new $K$---a cheap offline
+re-fit (under $10$\,s, \S\ref{sec:overhead}) that needs no
+re-deployment; the same re-fit could track workload drift.
+
+\Cref{fig:cluster_pca} projects the calibration signatures onto
+their first two principal components and overlays the balanced $K$-means
+centroids. Task domains (Code/Math/Medical/Legal) and WildChat languages
+(English/Chinese/Russian/French) occupy distinct regions across all
+three models---the signature space has genuine semantic structure for
+the clustering to exploit. The centroids spread across the distinct
+regions rather than crowding onto the densest one, which is exactly the
+property the balance constraint buys: equal cluster size is only
+achievable when centroids cover all the distinct regions, not when they
+collapse onto the most populated one. Some centroids consequently land
+in sparser regions of the projection---vanilla $K$-means would draw them
+onto the densest modes, but the balance constraint pulls them outward to
+absorb their $\approx\!N/K$ share.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.95\columnwidth]{figure/04_design/cluster_pca.pdf}
+\vspace{-1em}
+\caption{PCA of calibration signatures with Hungarian-balanced centroids
+($K{=}8$ for legibility), colored by task domain (top) or top-4
+WildChat~\cite{wildchat} language (bottom).}
+\label{fig:cluster_pca}
+\end{figure}
+
+\subsubsectionnew{Online routing}
+\label{sec:design_route}
+
+Pure top-1 routing---sending each request to its single nearest
+centroid---spikes tail latency because it ignores instantaneous load:
+a burst of requests near one centroid creates load imbalance at that
+worker while others sit idle. \sys's online routing rule,
+\textbf{locality-band routing}, favors locality when the signature
+singles out one worker, and falls back to load-aware balancing when
+several workers are nearly tied.
+
+For each request, \sys computes cosine similarity between the
+request's expert signature and each of the $K$ centroids; let
+$s^* = \max_k s_k$ denote the highest similarity.
+Among workers with $s_k \ge s^* - \tau$ (the \emph{locality band}), \sys
+selects the one with the smallest load---the number of in-flight decode
+requests on that worker, tracked at the proxy and updated as requests are
+dispatched and complete. The parameter $\tau \in [0, 1]$
+interpolates between pure top-1 routing ($\tau{=}0$) and pure
+shortest-queue routing ($\tau{=}1$).
+
+The locality band adapts to signature confidence: a confident
+signature that strongly favors one centroid puts few workers in the
+band (locality preserved), while an ambiguous signature near several
+centroids puts more workers in the band (load balance applied). \sys
+uses $\tau{=}0.1$ throughout the paper;~\cref{sec:design-validation}
+examines this choice.
+
+
+\subsection{Prefix Cache Coherence}
+\label{sec:design_prefix_cache}
+
+
+
+Prefix caching reuses KV blocks across requests that share a prompt prefix,
+skipping the prefill of the shared portion entirely. This creates a problem
+for \sys. Routing requires the full prompt's expert signature, but the
+expert activations for a cached prefix were produced by an earlier request
+and are not computed at this request's prefill.
+
+A naive approach is to cache each request's expert signature and reuse it
+when an identical prompt arrives. But a request can interact with the
+prefix cache in several ways: a prompt may miss the cache entirely, hit
+on some leading blocks and compute the rest (a partial hit), or hit on
+the entire prompt and skip prefill (a full hit); a cached block may also
+be evicted and reused for a different request. A per-request signature
+cache only matches on full hits, and any mismatch degrades the expert
+locality routing is meant to exploit.
+
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.95\columnwidth]{figure/04_design/fig_prefix_coherence.pdf}
+\vspace{-1em}
+\caption{\sys stores expert signatures at KV cache block granularity: the
+signature cache is co-indexed with KV cache.}
+\label{fig:prefix_cache_coherence}
+\end{figure}
+
+The prefix cache manages KV blocks one at a time, so \sys tracks the expert
+signature at the same granularity: one row per KV block, indexed by the same
+block id. As prefill writes a token's K/V into a block, the top-$k$ experts
+selected for that token at each MoE layer are written to the matching signature
+row. A request's KV cache spans a block set $\mathcal{B}(r)$, so its signature
+is the sum over those blocks, $s_r = \sum_{b \in \mathcal{B}(r)} \mathrm{sig}[b]$,
+exact regardless of which request populated each block: on a partial hit
+(\Cref{fig:prefix_cache_coherence}), cached blocks contribute rows from
+the earlier request that first prefilled them and fresh blocks contribute this
+request's rows, and the sum matches a cold prefill of the same prompt. The
+signature cache inherits the KV cache's lifecycle---a reused block resets its
+signature, a cached prefix carries its signature, and an eviction reclaims both
+stores together---so \sys keeps no prefix-tree, eviction, or sharing state of
+its own.
+
+\sys's signature cache is a preallocated GPU tensor with one slot per
+KV-cache block, using one int8 per (block, MoE layer, expert); its total
+size is bounded by $\text{num\_gpu\_blocks} \cdot L \cdot E$ bytes. For
+the models we evaluate ($L \le 48$, $E{=}128$), each block's row is at
+most $6$\,KiB, keeping the whole cache well under $1\%$ of the KV cache
+it shadows. Each forward accumulates the new tokens' expert picks into
+the matching rows in a single GPU pass; retrieving a request's signature
+sums its blocks' rows into its $[L,E]$ signature, batched into the
+post-step device-to-host copy. Indexed by block id and tied to the KV
+cache's block lifecycle, the cache adds no allocator, no eviction state,
+and no synchronization beyond what the KV cache already provides.
+
+
+% ===== FILE: sources/2607.00466-eldr-expert-locality-aware/arxiv/text/05_implementation.tex =====
+﻿\section{Implementation}
+\label{sec:implementation}
+
+\sys is implemented on top of vLLM~\cite{vllm} as three components: a routing
+proxy that dispatches each request to a decoder by signature locality,
+engine-side hooks that emit per-request expert signatures during prefill, and a
+one-shot offline pipeline that clusters captured signatures into per-decoder
+centroids---roughly $2{,}000$ lines of new Python.
+
+\paragraphnew{Signature path}
+A prefill hook accumulates per-layer per-expert activation counts at KV-block
+granularity, stored in an expert signature cache keyed by block id. At prefill
+completion, the prompt's per-block signatures are summed and piggybacked onto
+the existing prefill--decode handoff---no new RPC channel, and no per-request
+state in the proxy.
+
+\paragraphnew{Per-decoder EP load balancing}
+Following METRO~\cite{metro}---which balances expert-parallel (EP) ranks by
+\emph{activated-expert} load rather than token count---we use the calibration
+trace to estimate each cluster's expected per-expert decode activation, then for
+every (decoder, layer) greedily assign the next most-active expert to the
+lightest-loaded rank. Since each decoder serves a distinct cluster, a single
+global EP layout would balance one cluster at the others' expense; per-decoder
+placement matches each decoder to the workload it sees while holding the
+per-rank expert count fixed (uniform weight memory).
+
+\paragraphnew{Offline fit}
+A single script turns the calibration trace into the artifacts loaded at
+startup: a routing artifact (layer mask, IDF weights, and $K$
+Hungarian-balanced centroids in the masked, IDF-weighted, L2-normalized space)
+and, for multi-GPU expert parallelism, an expert placement file. It runs once
+per (model, dataset, $K$); recalibration is needed only when the model, dataset,
+or prefill--decode topology changes.
+
+
+% ===== FILE: sources/2607.00466-eldr-expert-locality-aware/arxiv/text/06_evaluation.tex =====
+﻿\section{Evaluation}
+\label{sec:evaluation}
+
+\begin{figure*}[t!]
+\centering
+\begin{minipage}[t]{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figure/06_evaluation/fig_main_task.pdf}
+\vspace{-1.5em}
+\caption{TPOT (median, p99) and median TTFT vs request rate on the
+\textbf{task} workload at 8P16D.}
+\label{fig:main_task}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figure/06_evaluation/fig_main_lang.pdf}
+\vspace{-1.5em}
+\caption{TPOT (median, p99) and median TTFT vs request rate on the
+\textbf{language} workload at 8P16D.}
+\label{fig:main_language}
+\end{minipage}
+\end{figure*}
+
+\paragraphnew{Testbed} We evaluate \sys on a 5-node cluster of
+AMD MI300X GPUs (8 GPUs per node, 192 GB HBM each), interconnected
+by 400 Gbps NDR InfiniBand with 8 ConnectX-7 HCAs per node (one
+per GPU). All experiments run on vLLM~\cite{vllm} 0.21.0rc1 /
+ROCm 7.2, with prefill--decode disaggregation served by vLLM's
+NIXL~\cite{nixl} connector.
+
+\paragraphnew{Models} We exercise four open MoE models. Three are served at
+$TP{=}1$: \textbf{Qwen3-30B-A3B}~\cite{qwen3} (128 experts, top-8, bf16),
+\textbf{GPT-OSS-120B}~\cite{gptoss} (128 experts, top-4, mxfp4), and
+\textbf{Gemma-4-26B-A4B}~\cite{gemma4} (128 experts, top-8, bf16).
+For the large-MoE scaling study, \textbf{Qwen3-235B-A22B}~\cite{qwen3}
+(128 experts, top-8, bf16) is served with $TP{=}4$ / $EP{=}4$ per instance.
+
+\paragraphnew{Datasets} Each model is evaluated on two workloads.
+\textbf{Task} is an 11,668-prompt mix spanning four domains drawn
+from public benchmarks, with naturally unequal domain shares
+reflecting source-dataset sizes: 3,600 \emph{legal}~\cite{lexglue},
+2,779 \emph{code}~\cite{humaneval, bigcodebench, ds1000, mbpp},
+2,744 \emph{math}~\cite{gsm8k,math,math500,olympiadbench, aquarat},
+and 2,545 \emph{medical}~\cite{medqa, pubmedqa, mmlu}\footnote{We use the
+professional-medicine subset of MMLU~\cite{mmlu}.} --- a 1.41$\times$
+largest/smallest ratio that stresses load balance when
+routing by signature. \textbf{Language} is a 14,000-prompt subset
+of WildChat~\cite{wildchat} that inherits the heavy language skew
+shown in~\Cref{fig:wildchat}: English, Chinese, Russian, and
+French account for 87.6\% of the volume.
+For each dataset, the 1,000-prompt
+offline calibration split is disjoint from the serving evaluation
+set.
+
+\paragraphnew{Topologies and workload}
+Unless noted, the main evaluation uses an 8-prefiller / 16-decoder
+(8P16D) topology, with each instance at $TP{=}1$ so the 24 GPUs
+straddle 3 nodes. We additionally sweep 8P8D and 8P24D for topology
+generalization, and 2P8D~$\times$~($TP{=}4$, $EP{=}4$) for the
+235B run, the largest deployment in this study at 40 GPUs spanning
+all five nodes of the cluster. Requests are Poisson-distributed at
+offered rates from 20 to 100 qps (24--56 qps for 235B), each rate
+held for 120s with a 30s warmup. We cap output at 512 tokens and
+enforce \texttt{ignore\_eos}.
+
+\paragraphnew{Routers and baselines} Our serving stack follows the prefill/decode
+policy split adopted by vLLM~\cite{vllm}, SGLang~\cite{sglang}, and NVIDIA
+Dynamo~\cite{dynamo}: cache- and hash-affinity policies on the prefill side,
+where the prefiller holds cross-request KV state, and load-balance policies on
+the decode side, where each request receives a fresh per-request KV transfer
+and the decoder holds no cross-request state. We adopt PrefixHash---from the
+affinity family---at our prefill, with a least-loaded fallback when the
+prefix-matched prefiller is above a $1.25\times$ average-load threshold. On the
+decode side we compare \sys against four load-balance baselines---Random,
+Round-Robin (RR), Join-Shortest-Queue (JSQ)~\cite{jsq}, and
+Power-of-Two-Choices (P2C)~\cite{p2c}---and Domain, a na\"ive
+locality-aware baseline that mirrors \sys but routes on a given oracle
+domain label instead of the expert signature: it splits the decoders
+among the domains in proportion to the calibration domain mix, and sends
+each request to the decoders assigned to its domain, load-balanced among
+them by JSQ. Within each cell, all six routers share the same prefill
+policy and decoder pool, so a cell isolates the decoder routing decision.
+
+\paragraphnew{\sys configuration} All experiments use the design from~\cref{sec:design}: count$\cdot$idf signatures restricted to a
+greedy $\rho$-selected layer subset, Hungarian-balanced $K$-means
+with $K{=}D$ (one cluster per decoder), and $\tau{=}0.1$
+locality-band routing. The 235B run additionally enables per-cluster
+per-layer expert-rank permutation for EP load balancing. Signature
+capture takes 4--15 minutes per (model, dataset) for the 1,000
+calibration prompts; the offline fit (greedy mask selection plus
+balanced $K$-means) completes in under 10 seconds.
+
+\subsection{Main Results}
+\sys reduces median TPOT across all three models and both workloads,
+with the size of the win tracking how separable the workload's expert
+activations are. The two baseline families isolate \sys's two
+ingredients: the load balancers add load-awareness without locality,
+Domain adds static locality without live load, and \sys combines finer
+locality with live load. We report the mean across the five request
+rates; the improvement holds across the whole sweep rather than at a
+single operating point.
+
+On the task workload (\Cref{fig:main_task}), where prompts fall
+into well-defined domains (code, math, medical, legal), \sys reduces
+median TPOT by $7.0$--$13.9\%$ and tail TPOT by $3.4$--$6.0\%$ over the
+best load balancer, and sits below every one at every rate. Domain is a
+stronger baseline here---its labels align with the model's expert
+clusters, so a static per-domain partition concentrates each block's
+expert working set and itself reduces median TPOT by $6.8$--$9.7\%$ over
+the load balancers---yet \sys still beats it, by $1.4$--$6.9\%$ on
+median and $1.6$--$4.5\%$ on tail TPOT, because its $K{=}16$ signature
+clusters resolve locality more finely than four labels and its
+$\tau$-band spills load across cluster boundaries that Domain's hard
+partition forbids. \sys's median TTFT tracks the baselines and is lower
+near saturation, where its faster decoders relieve prefill
+back-pressure.
+
+On the language workload (\Cref{fig:main_language}), where domain
+boundaries are softer, \sys reduces median TPOT by $5.9$--$10.0\%$ over
+the best load balancer; mean tail TPOT reduces by $6.2\%$ on
+Qwen3-30B-A3B and regresses by $1.5\%$ on GPT-OSS-120B and $0.2\%$ on
+Gemma-4-26B-A4B, though at the per-cell peak all three reduce ($9.6\%$,
+$1.0\%$, $5.6\%$). Domain collapses here: a language label is a coarse
+proxy for expert activation---\Cref{fig:cluster_pca} shows several
+of \sys's centroids falling within a single language, so one static
+block per language mixes unrelated signature clusters---and its skewed
+mix over-subscribes one block, so Domain only matches the load balancers
+on median TPOT (within $3\%$ of RR) and regresses tail TPOT by up to
+$6.1\%$ as the hot block saturates. \sys beats Domain by $5.7$--$9.1\%$
+on median and $7.0$--$9.5\%$ on tail TPOT: its finer signature
+clusters capture the intra-language sub-structure that the
+coarse labels miss (\Cref{fig:cluster_pca}),
+and its $\tau$-band routing rebalances live load that the static
+partition cannot. Median TTFT again tracks the baselines.
+
+\subsection{Overhead Analysis}
+\label{sec:overhead}
+\sys's overhead has a one-time offline part and a per-request serving
+part. Offline, the router is built once per deployment: a
+signature-capture pass over the $1{,}000$ calibration prompts, then the
+fit---greedy mask plus balanced $K$-means---which completes in under
+$10$~s on CPU and is cheap to re-run on configuration changes. At
+serving time (\Cref{tab:overhead}), \sys adds $0.86$~ms per
+request, $1.2\%$ of the $69$~ms median TTFT, dominated by per-forward
+signature capture on the prefiller; the scheduler fetch and routing
+decision are sub-percent. The signature cache occupies $0.24\%$ of HBM
+and each request carries a $12$~KiB signature, negligible against the
+multi-megabyte KV transfer. This is why median TTFT stays within the
+across-baseline spread in the main results.
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\caption{\sys runtime overhead (Qwen3-30B-A3B, task, 8P16D, $60$~req/s;
+median TTFT $69$~ms).}
+\label{tab:overhead}
+\vspace{-1.0em}
+\begin{tabular}{llrr}
+\toprule
+Component & Locus & P50 & \% TTFT \\
+\midrule
+\texttt{record()} hook      & prefill host & $0.02$\,ms          & $<0.1$ \\
+\texttt{reduce()} scatter   & prefill GPU  & $0.48$\,ms          & $0.7$ \\
+\texttt{stage\_sigs()} D2H  & prefill GPU  & $0.21$\,ms          & $0.3$ \\
+\texttt{pop\_sig} fetch     & scheduler    & $7.0$\,\textmu s    & $<0.1$ \\
+Route ($\tau$-JSQ)          & proxy        & $0.15$\,ms          & $0.2$ \\
+\midrule
+\textbf{Total}              &              & $\mathbf{0.86}$\,\textbf{ms} & $\mathbf{1.2}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Design Validation}
+\label{sec:design-validation}
+
+\begin{figure}[t!]
+\centering
+\includegraphics[width=0.95\columnwidth]{figure/06_evaluation/fig_expert_reduction.pdf}
+\vspace{-1.0em}
+\caption{Mean active experts per decode step on Qwen3-30B-A3B in the task domain on
+an 8P16D cluster.}
+\label{fig:expert_reduction}
+\end{figure}
+
+\paragraphnew{Active-Expert Reduction}
+\label{sec:expert-reduction}
+We validate that \sys's TPOT improvements come from a reduction in
+the number of distinct experts activated per decode step.
+\Cref{fig:expert_reduction} measures this count on
+Qwen3-30B-A3B serving the task domain at 8P16D, aggregated over
+$\sim$50K decode steps. \sys reduces the per-step active-expert
+count by $22.0\%$ on average across decode batch sizes compared
+to RR.
+
+\begin{figure}[t!]
+\centering
+\includegraphics[width=0.95\columnwidth]{figure/06_evaluation/fig_transform_ablation.pdf}
+\vspace{-1.0em}
+\caption{TPOT P50/P99 \%\,$\Delta$ vs.\ RR at $r{=}60$\,req/s (8P16D, six
+(model, dataset) cells) for two signature transforms: the IDF-reweighted
+top-$k$ count (\textbf{count$\cdot$idf}) vs.\ the continuous softmax
+gate (\textbf{gate-prob}). Rest of the recipe
+fixed (greedy mask, balanced $K$-means $K{=}16$, $\tau{=}0.1$).}
+\label{fig:transform_ablation}
+\end{figure}
+
+\paragraphnew{Expert Signature}
+We validate \sys's signature choice: the IDF-reweighted top-$k$ count
+(count$\cdot$idf).
+\Cref{fig:transform_ablation} compares it against the
+strongest continuous alternative, the softmax gate-probability,
+to validate the discrete signature design
+(\cref{sec:design_signature}). count$\cdot$idf reduces TPOT
+P50 by an additional $3$\,pp on average and up to $14$\,pp across
+the six cells, confirming that $\rho$ faithfully ranks signature
+quality and that discrete prefill counts are the right primitive.
+
+\begin{figure}[t!]
+\centering
+\includegraphics[width=0.95\columnwidth]{figure/06_evaluation/fig_cluster_ablation.pdf}
+\vspace{-1em}
+\caption{Mean \%$\Delta$ vs.\ RR over five request rates
+($20$--$100$\,qps) at 8P16D with $\tau{=}0.1$.}
+\label{fig:cluster_ablation}
+\end{figure}
+
+\paragraphnew{Offline Cluster Balance}
+\label{sec:eval_cluster_ablation}
+\Cref{fig:cluster_ablation} validates \sys's choice of
+Hungarian-balanced $K$-means over vanilla $K$-means at
+$\tau{=}0.1$. Vanilla $K$-means reduces median TPOT by up to
+$9.8\%$ but \emph{regresses} tail TPOT by as much as $17.4\%$:
+the per-decoder locality win is real, but the load imbalance pushes
+the tail well past round-robin. Hungarian-balanced $K$-means recovers
+both metrics, reducing P50 by up to $12.6\%$ and P99 by up to
+$6.8\%$---uniform decoder utilization keeps the tail in check
+without sacrificing the median win.
+
+\begin{figure}[t!]
+\centering
+\includegraphics[width=0.95\columnwidth]{figure/06_evaluation/fig_tau_ablation.pdf}
+\vspace{-0.5em}
+\caption{Mean \%$\Delta$ vs RR (five rates, 20--100 qps; 8P16D) for six
+cells (three models $\times$ two datasets) at four $\tau$ values.}
+\label{fig:tau_ablation}
+\end{figure}
+
+\paragraphnew{Locality Band Width}
+\label{sec:eval_tau_ablation}
+\Cref{fig:tau_ablation} validates \sys's choice of
+$\tau{=}0.1$ across $\tau \in \{0, 0.1, 0.2, 0.3\}$. Pure top-1
+routing ($\tau{=}0$) regresses tail TPOT on four of six
+workloads---by as much as $7.9\%$ on Gemma language and $6.7\%$
+on Gemma task---because a transient burst of similar requests
+lands on one decoder. A small band of $\tau{=}0.1$ removes the
+regression on every workload while reducing median TPOT by
+$5.2$--$12.7\%$ relative to RR. Beyond that the tail reduction
+saturates and median TPOT erodes as more requests spill outside
+their locality band, so \sys settles on $\tau{=}0.1$.
+
+\begin{figure}[t!]
+\centering
+\includegraphics[width=0.95\columnwidth]{figure/06_evaluation/fig_prefix_cache_gptoss_task.pdf}
+\vspace{-1.0em}
+\caption{Composition with prefix caching on GPT-OSS-120B in the task
+domain on an 8P16D cluster at $r{=}100$\,req/s, with
+requests sampled cyclically from 2000 task prompts.}
+\label{fig:prefix_ablation}
+\vspace{0.6em}
+\captionof{table}{Topology generalization on Qwen3-30B-A3B, language workload:
+mean \%$\Delta$ vs RR across 20--100~qps.}
+\label{tab:topology}
+\begin{tabular}{lccc}
+\toprule
+ & 8P8D & 8P16D & 8P24D \\
+\midrule
+TPOT P50 & $-8.0\%$ & $-9.8\%$ & $-10.2\%$ \\
+TPOT P99 & $-2.5\%$ & $-0.8\%$ & $-1.1\%$ \\
+\bottomrule
+\end{tabular}
+\end{figure}
+
+\paragraphnew{Prefix Cache Composition}
+\label{sec:eval_prefix_cache}
+\Cref{fig:prefix_ablation} validates that \sys composes with
+the prefix cache. Turning the cache on collapses TTFT for both
+routers without changing TPOT, and \sys's TPOT advantage over RR
+(${\approx}13\%$ on P50, $5\%$ on P99) is preserved across both
+cache states. The locality benefit and the prefix-cache benefit are
+additive. A secondary back-pressure effect shows up on TTFT: \sys's
+faster decoders drain requests sooner, keeping prefill queues
+shorter and reducing TTFT when the cache is off.
+
+\subsection{Generalization}
+\label{sec:eval_generalization}
+\paragraphnew{Decoder Pool Size}
+To check that \sys generalizes across decoder counts, we sweep three
+prefill--decode topologies on Qwen3-30B-A3B (language workload,
+$TP{=}1$), holding the prefiller pool at 8 and growing the decoder pool:
+8P8D (16 GPUs), 8P16D (24), and 8P24D (32). Over five rates
+(20--100~qps), the mean median-TPOT reduction vs.\ round-robin grows
+monotonically with the pool---$8.0\%$, $9.8\%$, $10.2\%$
+(\Cref{tab:topology})---while tail TPOT stays within noise of
+round-robin throughout. This follows the mechanism: more decoders split
+each workload into finer clusters with narrower expert coverage, so the
+per-decoder expert union shrinks and the latency reduction scales with
+it. \sys thus generalizes across topologies, improving as the pool
+expands.
+
+\paragraphnew{Large MoE with Expert Parallelism}
+We scale \sys to Qwen3-235B-A22B at 2P8D, $TP{=}4$, $EP{=}4$ per instance
+(40 GPUs, 5 nodes), where each decoder shards attention and experts
+across four GPUs. Clustering alone is insufficient here---a cluster's hot
+experts can concentrate on one EP rank and bottleneck the decoder---so
+each \sys decoder pairs clustering with the per-decoder expert placement
+of~\cref{sec:implementation}, spreading each cluster's expected expert
+work evenly across the four GPUs. On WildChat (\Cref{fig:qwen235},
+24--56~req/s), \sys reduces median TPOT by $2.7$--$4.3\%$ and tail TPOT
+by $0.6$--$2.0\%$ at every rate, confirming that locality routing
+generalizes to large-MoE deployments with expert parallelism.
+
+\begin{figure}[t!]
+\centering
+\includegraphics[width=0.95\columnwidth]{figure/06_evaluation/fig_qwen235_2p8d.pdf}
+\vspace{-1.0em}
+\caption{TPOT (median, p99) for Qwen3-235B-A22B on language workload
+at 2P8D with $TP{=}4$ and $EP{=}4$ per instance (40 GPUs across 5 nodes).}
+\label{fig:qwen235}
+\end{figure}
+
+
+% ===== FILE: sources/2607.00466-eldr-expert-locality-aware/arxiv/text/07_related.tex =====
+﻿\section{Related Work}
+\label{sec:related}
+
+\paragraphnew{PD disaggregated serving}
+Prefill/decode (PD) disaggregation runs compute-bound prefill and
+memory-bandwidth-bound decode on separate workers, removing interference
+and meeting phase SLOs~\cite{distserve,splitwise,mooncake}; we adopt its
+\emph{xPyD} topology. Cache-aware routers exploit prefix/KV
+locality~\cite{sglang,preble} but treat decode workers as interchangeable
+for expert computation. \sys complements them by adding
+\emph{expert-activation} locality as the decode-routing signal, leaving
+outputs unchanged.
+
+\paragraphnew{MoE Expert locality}
+Expert parallelism (EP) shards experts across devices, where skewed
+routing causes load imbalance. One line rebalances \emph{within} a
+deployment, replicating hot experts and rerouting tokens across EP
+ranks~\cite{eplb,metro,moetuner,leastloadedep}---\emph{intra}-worker
+balancing
+that evens per-GPU expert load but not which worker serves a request.
+Closest to us, systems exploiting expert-activation
+locality---clustering requests by prefill activations~\cite{eapatterns}
+or colocating experts with their tokens~\cite{semanticparallelism}---target
+inter-node all-to-all \emph{communication}, not decode bandwidth. A third
+line hits the same bandwidth bottleneck but \emph{approximately}, altering
+decode expert selection: dropping low-importance experts~\cite{lynx},
+piggybacking on already-loaded ones~\cite{opportunistic}, or sharing
+experts across a batch~\cite{xshare}, trading accuracy for speed.
+
+\sys differs on both axes. It performs \emph{inter}-worker balancing,
+routing whole requests \emph{across} decode workers by expert locality to
+shrink each worker's active experts. It is also \emph{lossless}: it
+changes only which worker serves a request, never a token's expert
+selection, so outputs match standard top-$k$ gating. It is thus exact
+where batch-aware methods approximate, and orthogonal to intra-worker
+balancing (each decode worker can still run EPLB internally), composing
+with these methods rather than replacing them.
+
+
+% ===== FILE: sources/2607.00466-eldr-expert-locality-aware/arxiv/text/08_conclusion.tex =====
+﻿\section{Conclusion}
+\label{sec:conclusion}
+Decode routing in PD-disaggregated MoE serving optimizes only
+decode-worker load. \sys adds a second axis, \emph{expert locality}: a
+prefill-derived signature drives load-tolerant routing that stays
+coherent with the prefix cache, losslessly lowering median and tail TPOT
+across models, workloads, and topologies.

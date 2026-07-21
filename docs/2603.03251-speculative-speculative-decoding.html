@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>推测性推测解码</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.11.1/styles/github.min.css">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f7f8;
+      --paper: #ffffff;
+      --ink: #22262a;
+      --muted: #667078;
+      --line: #d8e0e5;
+      --accent: #2c6e73;
+      --accent-2: #6f5b8a;
+      --soft: #e7f0ed;
+      --soft-2: #eef0f5;
+      --shadow: 0 18px 45px rgba(31, 44, 52, .08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "PingFang SC", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+      line-height: 1.72;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .shell { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
+    .hero { padding: 16px 0 20px; }
+    .crumb { display: none; }
+    h1 { margin: 0 0 8px; font-size: clamp(30px, 5vw, 52px); line-height: 1.1; letter-spacing: 0; }
+    .subtitle { max-width: 820px; color: var(--muted); font-size: 18px; margin: 0; }
+    .meta-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 0; }
+    .pill, .hero-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--paper);
+      padding: 0 12px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .hero-link { color: var(--accent); font-weight: 700; }
+    .hero-link svg {
+      width: 15px;
+      height: 15px;
+      margin-right: 6px;
+      fill: currentColor;
+      flex: 0 0 auto;
+    }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .chips span {
+      border: 1px solid #cfdedc;
+      background: var(--soft);
+      color: #33595d;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 13px;
+    }
+    .panel {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    .mindmap-panel { padding: 22px; margin: 14px auto 18px; }
+    .panel-title { margin: 0 0 10px; font-size: 18px; }
+    .mind-overview {
+      display: grid;
+      grid-template-columns: minmax(180px, .42fr) 1fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+    .mind-root {
+      min-height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      border-radius: 8px;
+      border: 1px solid #cbdeda;
+      background: linear-gradient(180deg, #edf7f5, #ffffff);
+      color: #234e52;
+      font-size: clamp(20px, 2.4vw, 28px);
+      font-weight: 800;
+      line-height: 1.15;
+      padding: 20px;
+    }
+    .mind-branches {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 12px;
+    }
+    .mind-branch {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 12px;
+      min-height: 132px;
+    }
+    .mind-branch h3 {
+      margin: 0 0 6px;
+      font-size: 16px;
+      color: var(--accent);
+    }
+    .mind-branch ul {
+      margin: 0;
+      padding-left: 1.1em;
+      color: #4a5358;
+      font-size: 13.5px;
+      line-height: 1.5;
+    }
+    .mindmap-toggle {
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      overflow: hidden;
+    }
+    .mindmap-toggle summary {
+      cursor: pointer;
+      padding: 10px 14px;
+      color: var(--accent);
+      font-weight: 700;
+      list-style: none;
+    }
+    .mindmap-toggle summary::-webkit-details-marker { display: none; }
+    .markmap {
+      height: 520px;
+      border-top: 1px solid var(--line);
+      background: #fffdf8;
+      overflow: hidden;
+      pointer-events: none;
+      user-select: none;
+    }
+    .markmap svg {
+      width: 100%;
+      height: 520px;
+      display: block;
+      pointer-events: none;
+    }
+    .reader-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(210px, 248px);
+      gap: 14px;
+      align-items: start;
+      padding-bottom: 56px;
+      transition: grid-template-columns .18s ease;
+    }
+    .reader-layout.sidebar-collapsed {
+      grid-template-columns: minmax(0, 1fr) 44px;
+    }
+    .side-toc {
+      grid-column: 2;
+      grid-row: 1;
+      position: sticky;
+      top: 64px;
+      max-height: calc(100vh - 84px);
+      overflow: hidden;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    .side-toggle {
+      width: 100%;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      background: #ffffff;
+      color: var(--accent);
+      padding: 0 12px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 750;
+      cursor: pointer;
+    }
+    .side-toggle-icon {
+      width: 20px;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--muted);
+      background: #fff;
+      flex: 0 0 auto;
+    }
+    .side-toc nav {
+      max-height: calc(100vh - 130px);
+      overflow-y: auto;
+      padding: 8px;
+    }
+    .side-toc a {
+      display: block;
+      border-radius: 7px;
+      border: 1px solid transparent;
+      padding: 8px 10px;
+      color: #405059;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+    .side-toc a:hover,
+    .side-toc a.is-active {
+      background: var(--soft);
+      text-decoration: none;
+      border-color: #cbdeda;
+      color: #234e52;
+    }
+    .side-toc.is-collapsed .side-toggle {
+      width: 44px;
+      height: 44px;
+      min-height: 44px;
+      justify-content: center;
+      border-bottom: 0;
+      padding: 0;
+    }
+    .side-toc.is-collapsed {
+      width: 44px;
+      height: 44px;
+      justify-self: end;
+    }
+    .side-toc.is-collapsed nav,
+    .side-toc.is-collapsed .side-toggle-text {
+      display: none;
+    }
+    .article { grid-column: 1; grid-row: 1; min-width: 0; }
+    .report-section {
+      margin: 16px 0;
+      padding: 22px;
+      border-left: 5px solid var(--accent);
+      background: var(--paper);
+      border-radius: 8px;
+      border-top: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+    .report-section:nth-of-type(3) {
+      border-left-color: #6f5b8a;
+      background: linear-gradient(90deg, #f4f0fa 0, #fff 140px);
+    }
+    .report-section:nth-of-type(7) {
+      border-left-color: #9a623d;
+      background: linear-gradient(90deg, #f7f1ed 0, #fff 160px);
+    }
+    .report-section:nth-of-type(10) {
+      border-left-color: #3f6c88;
+      background: linear-gradient(90deg, #eef4f8 0, #fff 160px);
+    }
+    details.report-section { padding: 0; overflow: hidden; }
+    details.report-section summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 18px 22px;
+      font-size: 22px;
+      font-weight: 760;
+      line-height: 1.25;
+    }
+    details.report-section summary::-webkit-details-marker { display: none; }
+    details.report-section summary::after {
+      content: "收起";
+      float: right;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 500;
+      margin-top: 5px;
+    }
+    .report-section > h2,
+    details.report-section > summary {
+      scroll-margin-top: 96px;
+    }
+    details.report-section:not([open]) summary::after { content: "展开"; }
+    .section-body { padding: 0 22px 22px; }
+    .article > h1 {
+      margin: 18px 0;
+      padding: 18px 22px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      font-size: clamp(24px, 3vw, 34px);
+    }
+    h2, h3 { letter-spacing: 0; line-height: 1.32; }
+    h2 { margin: 0 0 12px; font-size: 24px; }
+    h3 { margin: 22px 0 8px; font-size: 19px; color: #293d42; }
+    p { margin: 10px 0; }
+    ul, ol { padding-left: 1.4em; }
+    li { margin: 5px 0; }
+    blockquote {
+      margin: 14px 0;
+      padding: 10px 14px;
+      border-left: 4px solid var(--accent-2);
+      background: var(--soft-2);
+      color: #51483f;
+      border-radius: 6px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      overflow: hidden;
+      border-radius: 8px;
+      display: block;
+      overflow-x: auto;
+    }
+    th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; }
+    th { background: #edf3f1; }
+    pre {
+      padding: 14px;
+      overflow-x: auto;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #f7f7f5;
+    }
+    code {
+      font-family: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .92em;
+    }
+    :not(pre) > code {
+      background: #eef1ef;
+      border-radius: 5px;
+      padding: 1px 5px;
+    }
+    .math-inline {
+      display: inline-block;
+      max-width: 100%;
+      vertical-align: baseline;
+    }
+    img, object.figure-pdf {
+      max-width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      display: block;
+      margin: 14px auto;
+    }
+    img.media-thumb { cursor: zoom-in; }
+    object.figure-pdf { width: 100%; min-height: 420px; }
+    .figure-fallback { display: block; margin: 8px 0 16px; font-size: 13px; color: var(--muted); }
+    .figure-open {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--paper);
+      color: var(--accent);
+      padding: 0 12px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .figure-open:hover { background: var(--soft); }
+    .media-viewer {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: none;
+      background: rgba(28, 31, 32, .72);
+      padding: 22px;
+    }
+    .media-viewer.is-open {
+      display: grid;
+      place-items: center;
+    }
+    .media-dialog {
+      position: relative;
+      width: min(1180px, 96vw);
+      height: min(860px, 92vh);
+      border-radius: 8px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, .28);
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      overflow: hidden;
+    }
+    .media-bar {
+      min-height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid var(--line);
+      padding: 0 10px 0 14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .media-title {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .media-close {
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .media-close:hover { background: var(--soft); }
+    .media-content {
+      min-height: 0;
+      overflow: auto;
+      padding: 14px;
+      display: grid;
+      place-items: center;
+      background: #f3f6f8;
+    }
+    .media-content img {
+      max-width: 100%;
+      max-height: calc(92vh - 88px);
+      object-fit: contain;
+      margin: 0;
+      cursor: default;
+    }
+    .media-content iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #fff;
+      border-radius: 6px;
+    }
+    body.media-viewer-open { overflow: hidden; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 75%, transparent);
+    }
+    .topbar-inner { min-height: 42px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .topbar a,
+    .topbar button {
+      border: 0;
+      background: transparent;
+      color: var(--accent);
+      padding: 0;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .topbar button:hover { text-decoration: underline; }
+    @media (max-width: 960px) {
+      .reader-layout,
+      .reader-layout.sidebar-collapsed {
+        display: block;
+      }
+      .side-toc {
+        position: sticky;
+        top: 42px;
+        z-index: 1;
+        margin-bottom: 16px;
+        max-height: none;
+        width: auto;
+        height: auto;
+        justify-self: stretch;
+      }
+      .side-toc nav {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        max-height: none;
+        padding: 8px;
+      }
+      .side-toc a {
+        white-space: nowrap;
+        border: 1px solid var(--line);
+        background: #fff;
+      }
+      .side-toc.is-collapsed .side-toggle {
+        width: 100%;
+        height: auto;
+        min-height: 44px;
+        justify-content: space-between;
+        border-bottom: 0;
+        padding: 0 12px;
+      }
+      .side-toc.is-collapsed {
+        width: auto;
+        height: auto;
+      }
+      .side-toc.is-collapsed .side-toggle-text {
+        display: inline;
+      }
+    }
+    @media (max-width: 760px) {
+      .hero { padding-top: 12px; }
+      .report-section { padding: 16px; }
+      details.report-section summary { padding: 15px 16px; font-size: 19px; }
+      .section-body { padding: 0 16px 16px; }
+      .mind-overview { grid-template-columns: 1fr; }
+      .mind-root { min-height: 120px; }
+      .markmap, .markmap svg { height: 360px; }
+    }
+  </style>
+</head>
+<body>
+  <script>
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    if (window.location.hash === "#side-toc") {
+      history.replaceState(null, "", window.location.pathname + window.location.search);
+      window.scrollTo(0, 0);
+    }
+  </script>
+  <div class="topbar">
+    <div class="shell topbar-inner">
+      <a href="index.html">论文 wiki</a>
+      <button id="topbar-toc-toggle" type="button">目录</button>
+    </div>
+  </div>
+  <header class="shell hero">
+    <div class="crumb">Paper Reading Report</div>
+    <h1>推测性推测解码</h1>
+    <p class="subtitle">Speculative Speculative Decoding</p>
+    <div class="meta-row">
+      <span class="pill">Tanishq Kumar, Tri Dao, Avner May</span>
+      <span class="pill">2026</span>
+      <span class="pill">2603.03251</span>
+      <span class="pill">2026-03-03 UTC（v1）；arXiv 页面显示 last revised 2026-05-04（v3）</span>
+      <a class="hero-link" href="https://arxiv.org/abs/2603.03251"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3Z"></path><path d="M5 5h6v2H7v10h10v-4h2v6H5V5Z"></path></svg>arxiv</a>
+        <a class="hero-link" href="https://github.com/tanishqkumar/ssd"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8.7 16.6-5-4.6 5-4.6 1.35 1.48L6.66 12l3.39 3.12L8.7 16.6Zm6.6 0-1.35-1.48L17.34 12l-3.39-3.12L15.3 7.4l5 4.6-5 4.6Z"></path></svg>code</a>
+    </div>
+    <div class="chips"><span>LLM Inference</span><span>Speculative Decoding</span><span>Distributed Inference</span><span>Systems Optimization</span><span>speculative decoding</span><span>asynchronous decoding</span><span>verification outcome cache</span><span>cache-aware sampling</span><span>geometric fan-out</span><span>fallback speculation</span></div>
+  </header>
+  <section class="shell panel mindmap-panel">
+    <h2 class="panel-title">内容脑图</h2>
+    <div class="mind-overview">
+  <div class="mind-root">推测性推测解码</div>
+  <div class="mind-branches"><article class="mind-branch">
+  <h3>串行气泡</h3>
+  <ul><li>draft 等 verify</li><li>outcome 不确定</li><li>低延迟受限</li></ul>
+</article><article class="mind-branch">
+  <h3>SSD 框架</h3>
+  <ul><li>异步 draft</li><li>outcome cache</li><li>hit 即返回</li></ul>
+</article><article class="mind-branch">
+  <h3>Saguaro 策略</h3>
+  <ul><li>几何 fan-out</li><li>cache-aware sampling</li><li>batch fallback</li></ul>
+</article><article class="mind-branch">
+  <h3>系统实现</h3>
+  <ul><li>独立 H100 draft</li><li>PagedAttention</li><li>sparse mask</li></ul>
+</article><article class="mind-branch">
+  <h3>实验证据</h3>
+  <ul><li>Llama/Qwen</li><li>Pareto 前沿</li><li>ablation 支撑</li></ul>
+</article><article class="mind-branch">
+  <h3>边界复核</h3>
+  <ul><li>前作相邻</li><li>大 batch 压缩</li><li>复现门槛</li></ul>
+</article></div>
+</div>
+    <details class="mindmap-toggle">
+      <summary>交互脑图</summary>
+      <div class="markmap"><script type="text/template"># 推测性推测解码
+## 串行气泡
+- draft 等 verify
+- outcome 不确定
+- 低延迟受限
+## SSD 框架
+- 异步 draft
+- outcome cache
+- hit 即返回
+## Saguaro 策略
+- 几何 fan-out
+- cache-aware sampling
+- batch fallback
+## 系统实现
+- 独立 H100 draft
+- PagedAttention
+- sparse mask
+## 实验证据
+- Llama/Qwen
+- Pareto 前沿
+- ablation 支撑
+## 边界复核
+- 前作相邻
+- 大 batch 压缩
+- 复现门槛</script></div>
+    </details>
+  </section>
+  <div class="shell reader-layout" id="reader-layout">
+    <aside class="side-toc" id="paper-side-toc">
+      <button class="side-toggle" id="side-toggle" type="button" aria-label="收起目录" title="收起目录">
+        <span class="side-toggle-text">目录</span>
+        <span class="side-toggle-icon" aria-hidden="true">›</span>
+      </button>
+      <nav id="side-links" aria-label="章节目录"></nav>
+    </aside>
+    <main class="article" id="article"></main>
+  </div>
+  <div class="media-viewer" id="media-viewer" aria-hidden="true">
+    <div class="media-dialog" role="dialog" aria-modal="true" aria-labelledby="media-title">
+      <div class="media-bar">
+        <div class="media-title" id="media-title">图表预览</div>
+        <button class="media-close" id="media-close" type="button" aria-label="关闭预览" title="关闭预览">×</button>
+      </div>
+      <div class="media-content" id="media-content"></div>
+    </div>
+  </div>
+  <script>window.REPORT_PAYLOAD = {"markdown": "# 推测性推测解码（Speculative Speculative Decoding）\n\n## 1. 基本情况\n\n- 题目（中 / 英）：推测性推测解码 / Speculative Speculative Decoding\n- 作者：Tanishq Kumar, Tri Dao, Avner May\n- 单位：Department of Computer Science, Stanford University; Department of Computer Science, Princeton University; Together AI\n- arXiv 编号：2603.03251\n- 提交日期：2026-03-03 UTC（v1）；arXiv 页面显示 last revised 2026-05-04（v3）\n- arXiv 链接：https://arxiv.org/abs/2603.03251\n- PDF 链接：https://arxiv.org/pdf/2603.03251\n- 代码仓库：https://github.com/tanishqkumar/ssd\n- 领域与备注：cs.LG；ICLR 2026\n\n## 2. 核心贡献概述\n\n- 中文版：本文提出 speculative speculative decoding（SSD），把普通 speculative decoding 中“先 draft、再 verify、再继续 draft”的串行依赖进一步并行化：target model 验证上一轮 speculation 时，draft model 预判可能的 verification outcomes，并提前为这些结果生成下一轮 speculation。作者将该框架优化成 Saguaro，通过 outcome cache、geometric fan-out、cache-aware sampling 和 batch-aware fallback，使 Llama/Qwen 推理在多个任务上快于强 speculative decoding baseline。\n- English version（摘自 abstract / introduction）：Abstract 中的核心表述是：“If the actual verification outcome is in the predicted set, a speculation can be returned immediately.” Introduction 进一步总结 Saguaro “is on average 30% faster than the strongest speculative decoding baselines and up to 5x faster than autoregressive generation.”\n\n## 3. 一句话精髓（写给外行）\n\n如果普通 speculative decoding 像让小助手先写草稿再等老师批改，SSD 就是在老师批改时让小助手预演几种可能的批改结果，并把每种结果后的下一页都先写好。\n\n## 4. 学术贡献清单\n\n### 4.1 动机的发现与阐明\n\n作者指出，ordinary speculative decoding 虽然把 target model 的多个 token 验证合成一次并行 forward pass，但它自身仍有一个串行气泡：draft model 必须等 verifier 返回 accepted length 和 bonus token 后，才能知道下一轮从哪个 prefix 继续 speculation。这个瓶颈在 low-latency、small batch 推理中尤其明显，因为 draft latency 会进入 critical path。\n\n论文把这个瓶颈重写成一个 verification outcome prediction 问题。一次验证结果不是只有“接受几个 token”，还包含 residual distribution 或 target distribution 采出的 bonus token，因此 outcome 空间约为 <span class=\"math-inline\" data-tex=\"(K+1)V\"></span>。这解释了为什么简单地“异步跑 draft”不够：若只赌所有 token 都被接受，或只在 cache miss 后 just-in-time speculation，较高 temperature、较大 batch 或较低 acceptance 的场景很快会失效。\n\n### 4.2 方法的创新\n\n- 提出 SSD framework：target verifier 与 draft speculator 分别在不同硬件上并行执行，draft 在 verifier 运行时预测下一轮可能 prefix，并在 speculation cache 中准备好对应 token 和 logits。\n- 提出 Saguaro cache construction：在有限 cache budget <span class=\"math-inline\" data-tex=\"B\"></span> 下选择每个 accepted length <span class=\"math-inline\" data-tex=\"k\"></span> 的 fan-out <span class=\"math-inline\" data-tex=\"F_k\"></span>，理论上得到 capped geometric fan-out，而不是 naive uniform fan-out。\n- 提出 Saguaro sampling：通过下调 cached top-<span class=\"math-inline\" data-tex=\"F\"></span> draft tokens 的采样概率，把 residual distribution 的质量推向 cache 中的 token，从而提高 bonus token 命中 cache 的概率。\n- 提出 Saguaro fallback：根据 batch size 在 slow but accurate neural backup 与 low-latency backup（实现中为 random tokens，可替换为 n-gram / Infini-gram 等非神经 speculator）之间切换。\n- 系统实现层面：用 custom PyTorch inference engine、PagedAttention、continuous batching、TP、BF16、torch compilation、CUDAGraphs、NCCL 和 custom sparse attention mask，让 draft cache 的大量分支在单独 H100 上并行生成，同时不向 target 传输 draft KV cache。\n\n### 4.3 实验上的核心结论\n\n作者在 Llama-3.1-70B / Llama-3.2-1B draft 和 Qwen3-32B / Qwen3-0.6B draft 上评测 HumanEval、GSM8K、Alpaca、UltraFeedback。附录数值显示，Llama 系列平均 decode throughput 为 AR 54.7 tok/s、SD 161.8 tok/s、SSD 255.8 tok/s，即 SSD/SD 为 <span class=\"math-inline\" data-tex=\"1.58\\times\"></span>，SSD/AR 为 <span class=\"math-inline\" data-tex=\"4.68\\times\"></span>；Qwen 系列平均 SSD/SD 为 <span class=\"math-inline\" data-tex=\"1.49\\times\"></span>，SSD/AR 为 <span class=\"math-inline\" data-tex=\"2.29\\times\"></span>。主文图还显示 SSD 推动 throughput-latency Pareto frontier，特别是在 small batch 下收益最大。\n\n## 5. 写作故事线\n\n论文的叙事从一个很窄但关键的系统瓶颈出发：autoregressive decoding 是串行的，speculative decoding 已经把 target 验证并行化，但 draft 和 verification 之间仍然互相等待。Introduction 先用 Figure 1 把普通 SD 的 idle draft gap 和 SSD 的 async pre-speculation 对比出来，再提出三个挑战：如何预测 verification outcome、如何在 cache hit rate 与 acceptance rate 之间折中、cache miss 后如何 fallback。\n\n接着，Background 复述 speculative decoding 的 lossless accept/reject 机制、acceptance rate 公式和 residual distribution，并把 prior work 分成 parallel SD、tree-based SD、improved draft architectures 三条线。这个安排很重要：作者先承认已有异步和 tree 方向，再把本文的问题界定为“预测 verification outcome 并为 outcome 建 cache”，从而和 AMUSD/PEARL/SwiftSpec/SpecBranch 等工作区分。\n\n第 3 节给出 SSD framework 和 speedup bounds，完成理论抽象：只要 cache hit 发生，下一轮 draft latency 就被 verifier latency 遮住；若 miss，则退回 backup。第 4 节 Saguaro 按三个挑战拆解：cache topology 用 geometric fan-out；sampling 通过操控 residual distribution 增大 hit；fallback 用 batch-size threshold 避免整批等待 slow backup。第 5 节再用 end-to-end evaluation 证明这些局部优化叠加后，不只是 microbenchmark 变好，而是能在真实 serving engine 设定下超过 SD 与 open-source engines。\n\n![Figure 1: SSD high-level comparison and end-to-end speed](assets/2603.03251-speculative-speculative-decoding/ssd_fig1.pdf)\n\n图解：左侧说明普通 SD 的 verifier 验证完成后，仍要等待 draft 生成下一段 speculation；中间展示 SSD 在 verifier 工作时用独立 draft 设备提前生成多条可能后续。右侧给出 Llama-3.1-70B、batch size 1、greedy decoding 的概览结果，SSD 的平均 decode tok/s 约为 AR 的 4 倍、SD 的 1.3 倍左右。这张图承担了论文的“故事入口”：它不是改变 target distribution，而是把 draft overhead 从 critical path 中拿走。\n\n## 6. 核心参考文献\n\n- [1] Leviathan, Kalman, Matias 2023 — Fast Inference from Transformers via Speculative Decoding，arXiv:2211.17192。本文的 lossless speculative decoding 基础，提供 acceptance rate 与 <span class=\"math-inline\" data-tex=\"\\ell_1\"></span> 距离关系。\n- [2] Chen et al. 2023 — Accelerating Large Language Model Decoding with Speculative Sampling，arXiv:2302.01318。本文使用的 stochastic speculative sampling 与 residual distribution 背景。\n- [3] McDanel 2025 — AMUSD: Asynchronous Multi-Device Speculative Decoding for LLM Acceleration，arXiv:2410.17375。提前做异步 multi-device SD 的直接前作，SSD 批判其主要准备 all-accepted outcome。\n- [4] Liu et al. 2025 — PEARL: Parallel Speculative Decoding with Adaptive Draft Length，arXiv:2408.11850。针对 mutual waiting problem 的 parallel SD 前作，提供 pre-verify / post-verify 和 adaptive draft length。\n- [5] Zhang et al. 2025 — SwiftSpec: Ultra-Low Latency LLM Decoding by Scaling Asynchronous Speculative Decoding，arXiv:2506.11309。与 Saguaro 最相近的 async/disaggregated 系统之一，强调并行 tree generation、KV 管理和 fused kernels。\n- [6] Shen et al. 2025 — Speculative Decoding via Hybrid Drafting and Rollback-Aware Branch Parallelism，arXiv:2506.01979。与 SSD 同样受 branch prediction 启发，本文将其视作近似特殊情形：单 branching point 且 fallback speculator 与 regular speculator 相同。\n- [7] Chen et al. 2024 — Sequoia: Scalable, Robust, and Hardware-aware Speculative Decoding，arXiv:2402.12374。本文借用其 power-law acceptance/cache scaling 直觉，并与 tree topology 方向形成对照。\n- [8] Miao et al. 2024 — SpecInfer: Accelerating Generative Large Language Model Serving with Tree-based Speculative Inference and Verification。代表 token-tree speculative verification；SSD 强调自己增加 draft-side compute，而不是 target-side tree verification compute。\n- [9] Li et al. 2025 — EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test，arXiv:2503.01840。强 draft architecture baseline；SSD 可组合但会遇到 missing target activations 的 self-conditioning 问题。\n- [10] Kwon et al. 2023 / Yu et al. 2022 — PagedAttention / Orca。不是算法主线，但构成 Saguaro custom engine 的 serving-system 背景。\n\n## 7. 批判性分析\n\n从外部文献看，SSD 的“异步化 drafting 与 verification”不是凭空出现的方向。AMUSD（arXiv:2410.17375）已经把 draft 和 verify phase 解耦到多个设备上，PEARL（arXiv:2408.11850）也直接把 mutual waiting problem 作为动机，并用 pre-verify / post-verify 让 draft 与 verification 有重叠。SSD 的新意在于把“下一轮 prefix 不确定”明确建模为 verification outcome cache：outcome 包含 accepted length 与 bonus token，Saguaro 不只准备 all-accepted path，而是按概率和资源预算为多个 outcome 预生成 speculation。\n\n与 SwiftSpec（arXiv:2506.11309）和 SpecBranch（arXiv:2506.01979）的关系更微妙。SwiftSpec 同样把 speculative decoding 做成 asynchronous / disaggregated pipeline，并通过 parallel tree generation 和 KV-cache engineering 降低低延迟场景的 draft overhead；SpecBranch 也用 branch parallelism 预先 hedge likely rejections。Saguaro 相比二者的区别主要在三点：一是 outcome 定义包含 bonus token，因此 cache key 更贴近 exact speculative sampling；二是 fan-out allocation 有 geometric optimality 分析；三是加入 cache-aware sampling，主动改变 draft distribution 来控制 residual distribution。换言之，Saguaro 更像是对 asynchronous branch-parallel SD 的系统化和概率化版本，而不是“首次打破串行屏障”的孤立发明。\n\nMirror-SD（arXiv:2510.13161）进一步说明这一方向在 2025 年已有多个并行探索：它用 heterogeneous accelerator 上的 branch-complete rollouts 和 speculative streaming 降低 draft latency。SSD 与 Mirror-SD 的相似处是都把 draft/target 的等待气泡视为核心敌人；差异在于 SSD 保持 target verifier 只验证一条普通 speculation，不让 target 额外验证大树，而是把额外 compute 放到 draft-side cache。\n\nagent 评论：本文最脆弱的 claim 是“strongest speculative decoding baselines”和“up to 5x”的外推范围。附录的主要 end-to-end 数值是 single node H100、decode-only、512 prompts、batch size 1 或少量 batch sweep；SSD 还额外使用 1 张 H100 draft GPU，而 AR/SD baseline 多为 4 张 H100 target TP。作者确实给了 throughput-latency Pareto / tok/s/GPU 视角，但读者仍应把结论理解为“在低延迟、draft device 可独占或可 disaggregate 的 serving 场景下非常强”，而不是所有吞吐型 workload 的无条件胜利。\n\nagent 评论：第二个脆弱点是 cache hit 的经验幂律与 sampling trade-off。Theorem 里的 geometric fan-out 依赖 <span class=\"math-inline\" data-tex=\"r\"></span> power-law cache hit rate 假设，实验在 Llama/Qwen 与四个数据集上支持，但不同 draft-target pair、top-p/top-k sampling、long context、工具调用或多轮 chat 分布是否仍保持类似曲线，需要更多证据。Saguaro sampling 通过牺牲 acceptance rate 换 cache hit rate，这个 trade-off 在图中成立，但最优 <span class=\"math-inline\" data-tex=\"C\"></span> 仍是经验超参，且可能与 temperature、domain、draft quality 强耦合。\n\n![Figure: EAGLE-3 vs SSD-EAGLE-3 conditioning](assets/2603.03251-speculative-speculative-decoding/eagle3-figure.pdf)\n\n图解：这张附录图解释 SSD 与 EAGLE-3 组合时的一个隐含代价：标准 EAGLE-3 可以用上一轮 target activations 条件化，而 SSD 因为提前开始下一轮 speculation，需要用更多 draft self-activations 代替尚未产生的 target activations。它支持作者“SSD 可组合 EAGLE-3，但不是免费组合”的判断。读者应关注这里的限制：越长 lookahead 越可能降低 EAGLE-style draft 的 acceptance。\n\n## 8. 方法细节\n\n### 算法流程\n\n普通 speculative decoding 在每轮先用 draft model 生成 <span class=\"math-inline\" data-tex=\"K\"></span> 个 token，然后 target model 一次 forward 并行验证这些 token。SSD 把 speculator 与 verifier 放到不同硬件上，让二者异步循环：\n\n1. speculator 先生成当前轮 <span class=\"math-inline\" data-tex=\"spec\\_tokens\"></span> 并发给 verifier。\n2. verifier 对 <span class=\"math-inline\" data-tex=\"spec\\_tokens\"></span> 做标准 SD verification，得到 <span class=\"math-inline\" data-tex=\"verify\\_outcome=(k,t^*)\"></span>，其中 <span class=\"math-inline\" data-tex=\"k\"></span> 是 accepted length，<span class=\"math-inline\" data-tex=\"t^*\"></span> 是 bonus token。\n3. verifier 正在验证时，speculator 预测多个可能的 <span class=\"math-inline\" data-tex=\"verify\\_outcome\"></span>，并为每个 outcome 预先生成下一轮 speculation，写入 speculation cache。\n4. verifier 返回真实 outcome 后，若 outcome 命中 cache，speculator 立即返回对应 tokens 与 logits；若 miss，则调用 fallback speculator。\n5. verifier 仍执行标准 speculative verification，因此输出分布保持 target model 的分布不变；SSD 只改变 draft-side timing 与 cache construction。\n\n![Figure: speculation cache topology](assets/2603.03251-speculative-speculative-decoding/fan_out_simple_1.pdf)\n\n图解：该图把 speculation cache 画成从当前正在验证的 sequence trunk 出发的多条候选后续。<span class=\"math-inline\" data-tex=\"F_0,F_1,\\ldots\"></span> 表示不同 accepted length 下为 bonus token 预留的猜测数量。它说明 Saguaro 的核心不是验证整棵树，而是为“验证后会落到哪个 prefix”提前准备下一轮线性 speculation。\n\n### 关键公式\n\n普通 SD 的 acceptance rate 由 draft 与 target 分布距离决定：\n\n\n<div class=\"math-display\">\\alpha = \\sum_x \\min\\{p_{\\mathrm{target}}(x),\\,p_{\\mathrm{draft}}(x)\\} = 1 - \\tfrac{1}{2}\\lVert p_{\\mathrm{target}} - p_{\\mathrm{draft}} \\rVert_1</div>\n\n\n第一次 rejection 后的 bonus token 来自 residual distribution：\n\n\n<div class=\"math-display\">r(\\cdot) \\propto \\max\\left(p_{\\mathrm{target}}(\\cdot)-p_{\\mathrm{draft}}(\\cdot), 0\\right)</div>\n\n\nSSD 相对 autoregressive decoding 的 expected speedup 为：\n\n\n<div class=\"math-display\">speedup_{\\mathrm{SSD}} =\n\\frac{p_{\\mathrm{hit}} \\cdot E_{\\mathrm{hit}} + (1-p_{\\mathrm{hit}}) \\cdot E_{\\mathrm{miss}}}{p_{\\mathrm{hit}} \\cdot \\max(1, T_p) + (1-p_{\\mathrm{hit}}) \\cdot (1 + T_b)}.</div>\n\n\n其中 <span class=\"math-inline\" data-tex=\"T_p,T_b\"></span> 是 primary / backup speculator 相对 verifier 的 latency，<span class=\"math-inline\" data-tex=\"E_{\\mathrm{hit}},E_{\\mathrm{miss}}\"></span> 是 cache hit / miss 后期望生成 token 数。若 primary draft 能在 verifier 完成前结束，cache hit 会把 draft latency 从 denominator 中隐藏掉。\n\nSaguaro cache topology 的优化结果是 capped geometric fan-out。若 primary speculator acceptance rate 为 <span class=\"math-inline\" data-tex=\"a_p\"></span>，并具有 <span class=\"math-inline\" data-tex=\"r\"></span> power-law cache hit rate，则：\n\n\n<div class=\"math-display\">F_k = F_0 \\cdot a_p^{k/(1 + r)}  \\;\\; \\forall k &lt; K,</div>\n\n\n\n<div class=\"math-display\">F_K = F_0 \\cdot a_p^{K/(1 + r)} \\cdot (1-a_p)^{-1/(1 + r)}.</div>\n\n\n直觉是 accepted length 遵循截断几何分布：越不可能出现的 accepted length，越不该分配过多 bonus-token guesses。\n\nSaguaro sampling 用超参 <span class=\"math-inline\" data-tex=\"C\\in[0,1]\"></span> 下调 cache token 的 draft 概率：\n\n\n<div class=\"math-display\">\\sigma_{F,C}(z) \\propto  \\begin{cases}\nC\\cdot \\exp\\Big(z_t\\Big)&amp; \\text{if } t \\in \\text{top}_F(z) \\\\\n\\exp\\Big(z_t\\Big)&amp; \\text{otherwise.}\n\\end{cases}</div>\n\n\n由于 residual mass 与 <span class=\"math-inline\" data-tex=\"p_{\\mathrm{target}}(t)-p_{\\mathrm{draft}}(t)\"></span> 的正部有关，降低 top-<span class=\"math-inline\" data-tex=\"F\"></span> cached tokens 的 draft probability 会把 bonus token 的 residual mass 推向 cache，从而提高 cache hit；代价是 draft distribution 离 target 更远，acceptance rate 可能下降。\n\n![Figure: cache hit rate scaling with fan-out](assets/2603.03251-speculative-speculative-decoding/dts_analysis_final.pdf)\n\n图解：左右两个 rejection-rate 图显示，当 fan-out <span class=\"math-inline\" data-tex=\"F\"></span> 从 2 增大到 128，cache miss/rejection rate 近似按 log-log 直线下降，这支撑了 power-law cache hit 假设。右图显示 overall <span class=\"math-inline\" data-tex=\"p_{\\mathrm{hit}}(F)\"></span> 随 <span class=\"math-inline\" data-tex=\"F\"></span> 单调提高，温度越高通常越难命中。该图是 geometric fan-out 分析和“更多 draft compute 可换 cache hit”的经验基础。\n\n![Figure: Saguaro sampling trade-off](assets/2603.03251-speculative-speculative-decoding/unified_cache_hit_and_saguaro_plots.pdf)\n\n图解：左图展示 <span class=\"math-inline\" data-tex=\"C\"></span> 从 1 降到 0 时，cache hit rate 上升但 acceptance rate 下降，说明 Saguaro sampling 在两个目标之间做显式折中。右侧 toy schematic 解释了机制：downweight cached top tokens 后，residual distribution 从非 cache tokens 转向 cache tokens。读者应注意，这不是提升 draft quality，而是有意改变 draft sampling 来让 verifier 的 bonus token 更可预测。\n\n### 所用模型 / backbone / 数据流\n\n- Llama 主实验：target 为 Llama-3.1-Instruct 70B，draft 为 Llama-3.2-1B-Instruct。\n- Qwen 附录实验：target 为 Qwen3-32B，draft 为 Qwen3-0.6B；部分 cache scaling 图还比较 0.6B 与 1.7B draft。\n- AR / SD baseline：target model 以 tensor parallelism 跑在 <span class=\"math-inline\" data-tex=\"4\\times\"></span>H100 80GB；SD draft 与 target collocated。\n- SSD：target 仍为 <span class=\"math-inline\" data-tex=\"4\\times\"></span>H100，draft 额外跑在独立 <span class=\"math-inline\" data-tex=\"1\\times\"></span>H100 上，draft 与 target 每轮通过 NCCL 通信。\n- 通信内容：target 向 draft 发送 sequence ID、accepted-prefix length、recovery/bonus token、sequence lengths、draft block tables 和 temperature；draft 返回 cache-hit bitmap、每个 sequence 的 <span class=\"math-inline\" data-tex=\"K\"></span> speculative tokens 和 <span class=\"math-inline\" data-tex=\"K\"></span>-step logits。论文明确说不传输 KV cache。\n\n![Figure: custom SSD attention mask](assets/2603.03251-speculative-speculative-decoding/custom_mask_visualization.pdf)\n\n图解：该图展示 <span class=\"math-inline\" data-tex=\"B=1,K=3,F=4,i=2\"></span> 时的 custom sparse attention mask。黑色区域表示可 attend 的位置：左侧 prefix mask 对应 verified prefix，中间的斜带让每个 branch 只 attend 自己的 fork path。它揭示了 Saguaro 的系统难点：多 outcome speculation 不是简单 batch expand，还涉及复杂的 KV page 与 sparse attention 访问模式。\n\n### 算力资源需求\n\n论文没有训练新模型，因此主要算力是推理评测与系统实验。作者明确给出的资源是：所有实验在单个 NVIDIA H100 节点上完成；AR/SD 每次使用 TP=4，即 <span class=\"math-inline\" data-tex=\"4\\times\"></span>H100 80GB；SSD 使用 TP=4 target 加 <span class=\"math-inline\" data-tex=\"1\\times\"></span>H100 draft，即一次最多 5 张 H100。默认设置是 batch size 1、greedy decoding、decode throughput 不含 prefill；每个数据集取 128 prompts，每个 prompt 生成 512 decode tokens，四个数据集合计 512 prompts / 262,144 decode tokens。\n\n估算：按附录表的 Llama 平均 throughput，完整 262,144-token decode sweep 的墙钟时间约为：AR <span class=\"math-inline\" data-tex=\"262144/54.7 \\approx 79.9\"></span> 分钟，SD <span class=\"math-inline\" data-tex=\"262144/161.8 \\approx 27.0\"></span> 分钟，SSD <span class=\"math-inline\" data-tex=\"262144/255.8 \\approx 17.1\"></span> 分钟。Qwen SSD 平均 203.8 tok/s，对应约 21.4 分钟。真实总实验时间会更高，因为还包括 prefill、warmup、baseline sweeps、batch sweeps、不同 temperatures、不同 fan-out、Qwen/Llama 多组图和失败配置重跑。\n\n算力开销方面，附录写明 SSD 的 draft 每轮解码 <span class=\"math-inline\" data-tex=\"BK(K+1)F\"></span> 个 token，而普通 SD draft 每轮为 <span class=\"math-inline\" data-tex=\"BK\"></span> 个 token；若 <span class=\"math-inline\" data-tex=\"\\hat{c}\"></span> 是 draft forward pass 相对 target FLOPs 的单位 compute，则 draft-side 额外 FLOPs 因子为 <span class=\"math-inline\" data-tex=\"\\hat{c}(K+1)F\"></span>。speculation cache 需要存储 <span class=\"math-inline\" data-tex=\"O(BFK(K+1)(V+1))\"></span> bits，实践中约为 hundreds of MB；NCCL 通信是每轮 target-to-draft <span class=\"math-inline\" data-tex=\"O(B)\"></span> outcome 信息和 draft-to-target <span class=\"math-inline\" data-tex=\"O(BKV)\"></span> tokens/logits，作者称 NVLink 下不是瓶颈。\n\n## 9. 实验\n\n### 9.1 评测数据集\n\n- HumanEval：代码生成任务，用来测试结构化、可预测性较强的 code decoding 场景。\n- GSM8K：数学 word problems，用来测试推理/数学文本生成。\n- Alpaca：instruction-following prompts，用来测试一般指令响应。\n- UltraFeedback：chat / feedback 风格数据，用来测试更开放的对话式生成。\n\n实验抽样为每个数据集 128 prompts，每个 prompt 生成 512 decode tokens；四个数据集合计 512 prompts。论文使用 vanilla sampling，不使用 top-p 或 top-k；主文默认 batch size 1、greedy decoding，另有 temperature 与 batch-size sweep。\n\n### 9.2 评测指标\n\n- Decode throughput（tok/s）：每秒 decode tokens 数，不含 prefill。主结果直接用它比较 AR、SD、SSD 和 open-source engines。\n- Speedup ratio：包括 SSD/SD 与 SSD/AR，说明相对普通 speculative decoding 和 autoregressive decoding 的倍率。\n- Cache hit rate <span class=\"math-inline\" data-tex=\"p_{\\mathrm{hit}}\"></span>：verification outcome 是否命中 draft 预先构造的 speculation cache，是 SSD 是否能隐藏 draft latency 的核心指标。\n- Acceptance rate <span class=\"math-inline\" data-tex=\"\\alpha\"></span>：普通 SD 和 SSD 中 draft token 被 verifier 接受的概率，决定每轮平均产出 token 数。\n- Throughput-latency Pareto：以 tok/s/GPU 与 per-sequence latency inverse 展示不同 batch size 下的 device-normalized trade-off。\n\n### 9.3 主实验结果\n\n![Figure: Llama end-to-end throughput and Pareto frontier](assets/2603.03251-speculative-speculative-decoding/llama_e2e_pareto.pdf)\n\n图解：左图显示 Llama-3.1-70B 上，SSD 在 HumanEval、UltraFeedback、Alpaca、GSM8K 四个数据集上都高于 AR 和 SD，平均约 260 tok/s。右图显示 SSD 在 batch size 1 到 16 的 Pareto 曲线整体位于 SD 与 AR 的右上方，说明额外 draft GPU 没有简单地换来更低 latency，而是在 tok/s/GPU 维度也有改进。需要注意的是，曲线的最大优势集中在低 batch；高 batch 时 draft-side compute 更容易成为瓶颈。\n\n| Model | Dataset | AR tok/s | SD tok/s | SSD tok/s | SSD/SD | SSD/AR |\n|---|---:|---:|---:|---:|---:|---:|\n| Llama-3.1-Instruct 70B/1B | HumanEval | 54.7 | 176 | 283 | 1.60x | 5.17x |\n| Llama-3.1-Instruct 70B/1B | UltraFeedback | 54.7 | 138 | 215 | 1.55x | 3.93x |\n| Llama-3.1-Instruct 70B/1B | Alpaca | 54.7 | 145 | 224 | 1.55x | 4.10x |\n| Llama-3.1-Instruct 70B/1B | GSM8K | 54.7 | 188 | 301 | 1.60x | 5.50x |\n| Llama-3.1-Instruct 70B/1B | Average | 54.7 | 161.8 | 255.8 | 1.58x | 4.68x |\n| Qwen-3 32B/0.6B | HumanEval | 88.8 | 146 | 222 | 1.52x | 2.50x |\n| Qwen-3 32B/0.6B | UltraFeedback | 88.8 | 122 | 174 | 1.43x | 1.96x |\n| Qwen-3 32B/0.6B | Alpaca | 88.8 | 127 | 185 | 1.47x | 2.08x |\n| Qwen-3 32B/0.6B | GSM8K | 88.8 | 152 | 234 | 1.54x | 2.64x |\n| Qwen-3 32B/0.6B | Average | 88.8 | 136.8 | 203.8 | 1.49x | 2.29x |\n\n表解：该表来自附录 numerical results，给出比主图更精确的 throughput。Llama 上 SSD/SD 的提升稳定在 <span class=\"math-inline\" data-tex=\"1.55\\times\"></span> 到 <span class=\"math-inline\" data-tex=\"1.60\\times\"></span>，说明收益不是单个数据集驱动；Qwen 上提升略小但仍稳定在 <span class=\"math-inline\" data-tex=\"1.43\\times\"></span> 到 <span class=\"math-inline\" data-tex=\"1.54\\times\"></span>。AR tok/s 在同一模型族内恒定，符合作者测量 decode-only target throughput 的设置。\n\n![Figure: Qwen end-to-end speedups](assets/2603.03251-speculative-speculative-decoding/qwen_e2e.pdf)\n\n图解：Qwen3 图复现了 Llama 的方向性结论：SSD 在四个数据集上均快于 SD 和 AR，平均约 2.3x AR。右侧还显示 SGLang SD 与 SGLang EAGLE-3 baseline，SSD 仍高于这些 open-source engine 配置。它支持作者“model family agnostic”的 claim，但 Qwen 的绝对倍率低于 Llama，说明 draft-target pair 和模型大小比例会显著影响收益。\n\n### 9.4 消融实验\n\n**Cache topology / geometric fan-out。** 作者比较 uniform fan-out 与 theorem-derived geometric fan-out。在 Llama 和 Qwen 上，geometric fan-out 在 temperature 提高时尤其有用，因为 outcome 分布更分散，uniform allocation 更容易把 budget 浪费在低概率 accepted length 上。\n\n![Figure: Llama temperature and fan-out ablation](assets/2603.03251-speculative-speculative-decoding/temp_fan_out_llama.pdf)\n\n图解：左图显示在 temperature 0 到 1.0 下，SSD 均快于 SD；geometric fan-out 相比 uniform 的优势在高温时更明显。右图显示 cache hit rate 随 temperature 升高下降，但 geometric fan-out 始终提高 hit。它直接支撑“cache topology 不是装饰性优化，而是高温下维持 SSD 的关键”这一点。\n\n![Figure: Qwen temperature and fan-out ablation](assets/2603.03251-speculative-speculative-decoding/temp_fan_out_qwen.pdf)\n\n图解：Qwen 的 temperature sweep 走向与 Llama 类似，但整体速度和 hit rate 水平不同。geometric fan-out 对 Qwen 的绝对提升较温和，却仍在 temperature 1.0 下拉开更明显差距。该图说明 Saguaro 的 fan-out 策略不是只针对 Llama 调出来的，但不同模型族仍需重新调参。\n\n**Batch-size fallback。** 作者比较 fast backup、neural backup 和 sync baseline，并给出 batch 16 下增加 draft GPUs 的 forecast。\n\n![Figure: batch scaling and fallback](assets/2603.03251-speculative-speculative-decoding/batch_scaling_march2.pdf)\n\n图解：左图显示 batch size 为 1 时 neural backup 更强，但 batch size 增大后 fast backup 反而更优，因为只要 batch 中任一元素 cache miss，整批都要等 backup。右图说明增加 draft GPUs / fan-out 可以在 batch 16 下继续提高 decode tok/s，但提升已开始接近 compute-bound 形态。这个消融支撑 Saguaro fallback theorem，也暴露了 SSD 在大 batch 下对 draft compute 的强依赖。\n\n**Baseline sweeps。** 附录对 SGLang EAGLE-3、SGLang standalone SD 和 vLLM 进行了 lookahead / topk sweep。SGLang standalone 的最佳 Llama 结果约 201.9 tok/s，SGLang EAGLE-3 最佳约 192.8 tok/s，vLLM EAGLE-3 最佳约 197.6 tok/s；这解释了为什么主文把 SGLang SD 作为 strongest open-source inference engine baseline。若只看作者自研 SD baseline，Llama 平均为 161.8 tok/s；若看 sweep 中最好单配置，open-source SD baseline 会更强，但 SSD 平均 255.8 tok/s 仍明显领先。\n\n### 9.5 结果分析\n\n作者认为：SSD 的主要收益来自隐藏 draft latency，而不是让 target verifier 一次验证更多 target-side token tree。cache hit rate 越高，draft overhead 越容易完全消失；fan-out 增大可提升 hit，但也增加 draft-side compute，因此 Saguaro 必须优化 fan-out shape 和 fallback。作者还认为 SSD 不仅降低 latency，也推动 throughput-latency Pareto frontier，说明额外 device 的使用在低 batch 场景下是划算的。\n\n作者认为：Saguaro sampling 解决了一个普通 SD 没有的问题，即 bonus token 的 residual distribution 难预测。通过主动改变 draft sampling，让 cached top tokens 成为 residual distribution 的高概率区域，可以提高 hit rate；但 acceptance rate 会下降，所以最优 <span class=\"math-inline\" data-tex=\"C\"></span> 取决于 temperature、draft quality 与 cache budget。\n\nagent 认为：实验最有说服力的是 Llama/Qwen 两个模型族、四个数据集、open-source engine sweep 与系统实现细节的组合，而不是单个 speedup 数字。尤其是 decode-only 设置、extra draft GPU、batch size 1 默认条件，使得结论应被理解为低延迟 serving 优化：当用户愿意用额外 H100 或集群级 draft endpoint 换 latency 时，SSD 很有吸引力；当 workload 已经 throughput-bound 或 batch 很大时，收益会被 cache miss 和 draft compute 压缩。\n\nagent 认为：Saguaro 的失败模式也比较明确。第一，cache hit 不足时，SSD 会退回 backup，低 batch 下可用 neural backup 保质量和速度，大 batch 下只能用 fast backup 保 latency，但这会降低 <span class=\"math-inline\" data-tex=\"E_{\\mathrm{miss}}\"></span>。第二，custom sparse attention mask、KV page rollback、NCCL fused payload 都增加系统复杂度，论文虽然说 communication 不是瓶颈，但实现 bug 和数值一致性风险需要代码层面验证。第三，top-p/top-k、长上下文、服务端多租户和真实 prompt length 分布没有被充分覆盖，后续系统部署还需要更广的 workload study。\n\n## 10. 代码实现观察\n\n### 10.1 仓库基本情况\n\n- 仓库地址：https://github.com/tanishqkumar/ssd；本地浅克隆 commit 为 `d7eb8fa`。\n- License：MIT。`LICENSE` 与 `pyproject.toml` 都标注 MIT，代码可在 MIT 条款下复用。\n- 仓库不含模型权重或预处理数据。本地代码目录约 1.2 MB，未找到 `.safetensors`、`.bin`、`.pt`、`.pth`、`.ckpt` 权重文件；README 要求通过 HuggingFace cache 和脚本自行准备模型、数据。\n- 环境假设很具体：Python 3.11+、CUDA >= 12.8，README 明确说代码在 H100 上编写和测试；`pyproject.toml` 固定 `torch==2.8.0`、`triton==3.4.0`、`flashinfer-python==0.5.2`、`sgl-kernel==0.3.17.post1`、`nvidia-cutlass-dsl==4.2.1` 等依赖。没有 Dockerfile、CI 配置或 `requirements.txt`。\n- 模型和数据路径通过环境变量强绑定：`SSD_HF_CACHE` 必须指向 HuggingFace hub 目录，`SSD_DATASET_DIR` 必须指向已处理数据目录，`SSD_CUDA_ARCH` 默认是 `9.0`。`ssd/paths.py:19-55` 在 import 时就会检查缺失环境变量，因此普通脚本运行前必须先设置路径。\n\n### 10.2 方法实现核对\n\n- 与论文一致：async SSD 确实把 target TP ranks 和 draft runner 分成不同进程。`ssd/engine/llm_engine.py:61-93` 中，async 模式下 `num_tp_gpus = num_gpus - 1`，最后一个 rank 启动 `DraftRunner`，rank 0 启动 target `ModelRunner` 并通过 NCCL process group 与 draft 通信。`ssd/engine/model_runner.py:98-107` 使用 `dist.init_process_group(\"nccl\", ...)`，`ssd/engine/model_runner.py:258-259` 为 target rank 0 与 draft rank 单独建 `async_pg`。\n- 与论文一致：target 到 draft 的请求 payload 是 verification outcome key 与 KV 地址元数据，而不是 KV cache 本体。`ssd/engine/speculator_async.py:136-156` 发送 `(seq_id, accepted_len-1, recovery_token)`、sequence length、draft block table 和 temperature；`ssd/engine/speculator_async.py:181-185` 接收 cache-hit bitmap、<span class=\"math-inline\" data-tex=\"K\"></span> 个 speculative tokens 和 <span class=\"math-inline\" data-tex=\"K\"></span> 步 logits。draft 侧在 `ssd/engine/draft_runner.py:299-310` 解包同一 payload，在 `ssd/engine/draft_runner.py:360-362` 返回 fused hit/tokens 与 logits。\n\n文件 `ssd/engine/speculator_async.py:136-156` 的关键逻辑如下：\n\n```python\nself._cache_keys[i, 0] = seq.seq_id\nself._cache_keys[i, 1] = seq.last_spec_step_accepted_len - 1\nself._cache_keys[i, 2] = seq.recovery_token_id\nsend_int64(self.async_pg, self.draft_runner_rank,\n           self._cache_keys, self._num_tokens_buf,\n           self._block_tables_buf.to(torch.int64), temps_as_int64)\n```\n\n- 与论文一致：cache key 就是论文中的 verification outcome 近似实现。draft cache 的 key 在 `ssd/engine/draft_runner.py:824-830` 被构造成 `[seq_id, k_idx, rec_token]`，对应 sequence、accepted length 分支和 bonus/recovery token；命中时返回该 key 下预生成的 tokens/logits。\n- 与论文一致：standard speculative verification 被保留。`ssd/utils/verify.py:55-63` 只在 temperature 非零且 cache hit，或 JIT backup 真实跑了 draft 时，才走 <span class=\"math-inline\" data-tex=\"p/q\"></span> ratio acceptance；非 JIT 的 cache miss 不会把随机 fast fallback 当作 draft distribution，而是回退到 target 分布采 recovery token。这一点补足了论文没有展开的 exactness 保护。\n\n文件 `ssd/utils/verify.py:55-63`：\n\n```python\nbase_ratio_rows = ((temps_t > 0) | (temps_q > 0))\nif jit_speculate:\n    ratio_rows = base_ratio_rows\nelse:\n    ratio_rows = base_ratio_rows & (cache_hits.to(torch.bool)\n                                    if cache_hits is not None\n                                    else torch.zeros_like(base_ratio_rows, dtype=torch.bool))\n```\n\n- 与论文一致：PagedAttention / KV addressing 落在 `block_table` 与 FlashInfer paged KV wrapper 上。`ssd/layers/attention.py:105-130` 使用 `flash_attn_with_kvcache(..., page_table=context.block_tables, ...)`；async tree decode 则在 `ssd/engine/model_runner.py:159-205` 初始化 `flashinfer.BatchPrefillWithPagedKVCacheWrapper`，并为 CUDA graph 模式预分配 `custom_mask_buf`、`paged_kv_indices_buf` 等 buffer。\n- 与论文一致：custom sparse attention mask 有独立实现。`ssd/engine/helpers/mask_helpers.py:24-48` 预计算 prefix mask、glue/recovery causal mask 和 per-step diagonal mask；`ssd/engine/helpers/cudagraph_helpers.py:266-313` 在 step 0 用 CPU/Numpy 预打包所有 <span class=\"math-inline\" data-tex=\"K\"></span> 步 masks，再复制到 FlashInfer wrapper buffer，减少逐步 GPU mask 构造和 CPU sync。\n- 与论文一致：fanout `f` 和 lookahead `k` 是公开 CLI 参数。`bench/bench.py:34-40` 默认 sync `k=6`、async `f=3`，README 的 SSD 主命令为 `--gpus 5 --spec --async --k 7 --f 3`。`ssd/config.py:64-70` 会把单个 `f` 展开成长度 `K+1` 的 `fan_out_list`。\n- 与论文不一致：未发现会推翻论文主体算法或第 8/9 节实验设置的硬性不一致。\n- 需要限定理解：代码默认 `--f 3` 并不会自动按论文公式计算 capped geometric fan-out，而是生成均匀 `fan_out_list=[3]*(K+1)`；若要复现实验里的 geometric / hit-miss fanout，需要通过 `--flh`、`--flm` 显式传每个 accepted length 的 fanout。`bench/bench.py:37-39` 暴露这些参数，`ssd/utils/async_helpers/async_spec_helpers.py:57-75` 按 hit/miss 选择对应 per-depth counts。\n- 需要限定理解：Saguaro sampling 在代码中由 `--x` / `sampler_x` 开启。`ssd/layers/sampler.py:40-50` 和 `ssd/utils/async_helpers/async_spec_helpers.py:81-104` 对 top-<span class=\"math-inline\" data-tex=\"F\"></span> probability 乘 `sampler_x` 后重归一化；README 的主 benchmark 命令是 greedy `--temp 0`，未传 `--x`，因此该命令主要验证 async cache/fanout 路径，不触发 sampling trade-off。\n- 论文未提及但代码中存在的工程细节：默认 backup 是 `--backup jit`，即 cache miss 时 draft 侧即时跑神经 draft；`--backup fast` 时 `ssd/engine/draft_runner.py:192-195` 用随机 logits/token 初始化 miss slots，然后 verifier 对 miss 行直接按 target 分布恢复，避免等待神经 backup。EAGLE3 路径还要求 `jit_speculate=True`，见 `ssd/engine/draft_runner.py:40-42`。\n- 论文未提及但代码中存在的工程细节：大量使用 CUDA graphs。`ssd/engine/model_runner.py:278-302` 捕获 decode、verify、FI tree decode、EAGLE glue decode；`bench/bench.py:28` 的 `--eager` 用于关闭 CUDA graphs，README 明确建议总是用 `python -O` 关闭 debug overhead。\n- 论文未提及但代码中存在的工程细节：FlashInfer 0.5.2 有本地 monkey patch。`ssd/layers/sampler.py:7-21` 修补 `flashinfer.sampling.get_seed_and_offset` 的 CUDA generator state 问题，并在 `ssd/layers/sampler.py:23-36` 固定 `torch.manual_seed(0)` 和 sampler generator seed。\n- 论文未提及但代码中存在的工程细节：prefix caching 不是所有路径都同等启用。`ssd/engine/model_runner.py:506-516` 的通用 prefill 支持 prefix cache block tables；但 async draft prefill 在 `ssd/engine/draft_runner.py:83-91` 没把 `block_tables` 传入 context，代码注释写明这“essentially removes prefix caching”。因此 README 中的 prefix caching 支持应理解为 engine 支持，而非 async draft prefill 全路径无条件启用。\n- 论文未提及但代码中存在的工程细节：外部 baseline 需要分环境运行。`bench/README.md` 要求 SSD、SGLang 0.5.9、vLLM 0.16.0 使用不同环境，因为 FlashInfer 版本冲突；SGLang/vLLM benchmark 走 server API，并承认包含 HTTP overhead 和 prefill time，但认为 512 output tokens 下影响可忽略。\n\n### 10.3 真实算力规模\n\n- 官方 README 命令确认主路径与报告第 8/9 节一致：AR 使用 Llama 70B、`--gpus 4 --b 1 --temp 0 --numseqs 128 --output_len 512 --all`；sync SD 使用 `--gpus 4 --spec --k 6`；SSD 使用 `--gpus 5 --spec --async --k 7 --f 3`。`--all` 在 `bench/bench_helpers.py:196-222` 中展开为 HumanEval、Alpaca、GSM8K、UltraFeedback 四个数据集，每个 `numseqs` 条，所以默认是 <span class=\"math-inline\" data-tex=\"128\\times4=512\"></span> prompts。\n- Qwen 路径由同一个 benchmark 脚本支持，使用 `--qwen --size 32`，draft 默认映射到 Qwen3-0.6B。`bench/bench_helpers.py:113-128` 映射 Qwen3-32B target 与 Qwen3-0.6B draft；`bench/bench_helpers.py:96-112` 映射 Llama target，其中 native SSD 的 `--llama --size 70` 默认是 Llama-3.1-70B-Instruct。\n- 并行度：`ssd/config.py:55` 断言 `1 <= num_gpus <= 8`，代码只覆盖单节点；async SSD 中 target TP size 是 `num_gpus-1`，draft 固定单卡，见 `ssd/engine/llm_engine.py:61-93` 和 `ssd/engine/draft_runner.py:38`。因此 README 中的 Llama 70B SSD 命令等价于 target TP=4 加 1 张 draft GPU。\n- batch / 序列长度：`bench/bench.py:42-50` 默认 `block_sz=256`、`b=1`、`max_model_len=8192`、`input_len=128`、`output_len=512`、`numseqs=128`。`b` 控制 `max_num_seqs`，不是训练 batch；本仓库没有训练脚本、optimizer、grad accumulation 或 lr schedule。\n- 显存规模：KV cache 按当前 GPU free memory 动态分配，默认 `gpu_memory_utilization=0.7`；draft async config 把 draft GPU utilization 提到 0.8。更重要的是，draft async 会先为 tree cache logits 预留显存，代码公式在 `ssd/engine/model_runner.py:464-472`。\n\n文件 `ssd/engine/model_runner.py:464-472`：\n\n```python\nreserved_bytes = B * (K + 1) * F * (K + 1) * V * dtype_size\nusable_bytes = max(usable_bytes - reserved_bytes, 0)\nassert usable_bytes > 0\n```\n\n这比论文里“hundreds of MB”更具体：显存随 batch、<span class=\"math-inline\" data-tex=\"(K+1)^2\"></span>、fanout 和 vocab size 线性增长。以 README 默认 `B=1,K=7,F=3`、Llama vocab 约 128K、bf16 粗算，仅 logits tree cache 约 <span class=\"math-inline\" data-tex=\"1\\times8\\times3\\times8\\times128k\\times2 \\approx 49\"></span> MB；batch 16 时约 786 MB，还未计 FlashInfer workspace 与 KV pages。\n- FlashInfer/CUDA graph 额外内存：`ssd/engine/model_runner.py:159-205` 为 async draft wrapper 分配 512 MB workspace，并按 batch bucket 创建 CUDA graph wrapper；`ssd/engine/helpers/cudagraph_helpers.py:777-902` 为 FI tree decode 捕获不同 batch size 的 graph。\n- 与论文声称的算力对照：代码强力支持“single H100 node, target 4xH100 TP, SSD 额外 1xH100 draft”的实验设定；README 也明确 CUDA >= 12.8 且在 H100 测试。报告第 8 节对默认 512 prompts、512 decode tokens、5 张 H100 的描述无需修订。\n- 需要注意的 baseline 差异：`bench/run_sglang_bench.py:85-89` 默认 SGLang TP=4、`max-running-requests=1`、standalone SD `num_steps=4,num_draft_tokens=5`；`bench/run_vllm_bench.py:83-86` 默认 vLLM TP=4、`max-num-seqs=1`、`num_speculative_tokens=5`。但 `bench/bench_paths.py:46-53` 对外部 baseline 的 Llama 70B 默认路径是 Llama-3.3-70B-Instruct，不是 native SSD benchmark 的 Llama-3.1-70B；复现实验表时应显式设置 `BENCH_LLAMA_70B` 以匹配论文配置。\n\n### 10.4 可复现性评价\n\n- 综合评价：普通研究者可复现性偏低；若已经有单节点 5 张 H100、CUDA 12.8、Llama/Qwen 权重访问权限和稳定 HuggingFace cache，则可复现性为中。\n- 有利因素：仓库给出 MIT license、明确 README 命令、`uv.lock`、模型下载脚本、数据下载/预处理脚本、native SSD benchmark、SGLang/vLLM baseline wrapper、交互式 chat 脚本和可选 wandb logging。代码也固定了 Python 随机种子和 sampler generator seed。\n- 主要门槛：没有预训练权重、没有预处理数据、没有 Docker/CI、没有官方 reproduction log；Llama 权重需要 HuggingFace 访问授权，70B/32B target 和 5-GPU SSD 命令对普通实验室很重。SGLang/vLLM baseline 还需要额外 conda 环境。\n- 已知坑：`SSD_HF_CACHE` 与 `SSD_DATASET_DIR` 缺失会在 import 阶段报错；`SSD_HF_CACHE` 必须指向 hub 目录而不是 HF_HOME 根目录；README 建议 `python -O`，否则 debug prints/assert 路径会带来明显 overhead；Triton/TorchInductor cache 在网络文件系统上可能出错，bench README 建议设置本地 `TRITON_CACHE_DIR` 与 `TORCHINDUCTOR_CACHE_DIR`。\n- 已知坑：数据文件缺失时，`bench/bench_helpers.py:159-163`、`bench/bench_helpers.py:212-219` 会 warning 后回退到 random prompts；如果没有注意日志，可能误以为自己复现了四个真实数据集。复现实验表应检查 `SSD_DATASET_DIR` 下是否真有 `humaneval/`、`alpaca/`、`gsm8k/`、`ultrafeedback/` 的 JSONL。\n- 已知坑：bench README 说明 SGLang/vLLM 使用 server API，计时包含 HTTP overhead 和 prefill time；native SSD 的主结果打印同时含 `official_end_to_end_throughput` 和内部 `metrics_decode_throughput`。复现论文 decode-only 表时应优先对齐作者使用的 decode throughput 口径。\n- 功能边界：README roadmap 写明 draft data parallel、OpenAI-compatible HTTP serving、新模型/MoE 支持仍是未来工作；因此当前公开代码主要是研究型 single-node inference engine，而不是完整 production serving stack。\n", "mindmap": "# 推测性推测解码\n## 串行气泡\n- draft 等 verify\n- outcome 不确定\n- 低延迟受限\n## SSD 框架\n- 异步 draft\n- outcome cache\n- hit 即返回\n## Saguaro 策略\n- 几何 fan-out\n- cache-aware sampling\n- batch fallback\n## 系统实现\n- 独立 H100 draft\n- PagedAttention\n- sparse mask\n## 实验证据\n- Llama/Qwen\n- Pareto 前沿\n- ablation 支撑\n## 边界复核\n- 前作相邻\n- 大 batch 压缩\n- 复现门槛"};</script>
+  <script src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.11.1/highlight.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markmap-autoloader@0.18.12"></script>
+  <script>
+    marked.setOptions({ gfm: true, breaks: false });
+    const article = document.querySelector("#article");
+    article.innerHTML = DOMPurify.sanitize(marked.parse(window.REPORT_PAYLOAD.markdown));
+
+    function slugify(text, index) {
+      return "sec-" + index + "-" + text.trim().toLowerCase()
+        .replace(/[^\w\u4e00-\u9fa5]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+    }
+
+    function sectionize() {
+      const original = Array.from(article.childNodes);
+      article.innerHTML = "";
+      let current = null;
+      let index = 0;
+      for (const node of original) {
+        if (node.nodeType === 1 && node.tagName === "H2") {
+          index += 1;
+          const title = node.textContent.trim();
+          const id = slugify(title, index);
+          node.id = id;
+          if (index <= 4) {
+            current = document.createElement("section");
+            current.className = "report-section";
+            current.appendChild(node);
+          } else {
+            current = document.createElement("details");
+            current.className = "report-section";
+            current.open = true;
+            const summary = document.createElement("summary");
+            summary.textContent = title;
+            summary.id = id;
+            const body = document.createElement("div");
+            body.className = "section-body";
+            current.appendChild(summary);
+            current.appendChild(body);
+          }
+          article.appendChild(current);
+          const sideLink = document.createElement("a");
+          sideLink.href = "#" + id;
+          sideLink.textContent = title;
+          sideLink.dataset.target = id;
+          document.querySelector("#side-links").appendChild(sideLink);
+          continue;
+        }
+        if (current) {
+          const body = current.querySelector(".section-body") || current;
+          body.appendChild(node);
+        } else {
+          article.appendChild(node);
+        }
+      }
+    }
+
+    function setupSidebar() {
+      const layout = document.querySelector("#reader-layout");
+      const sidebar = document.querySelector("#paper-side-toc");
+      const button = document.querySelector("#side-toggle");
+      const icon = button.querySelector(".side-toggle-icon");
+      const topbarToggle = document.querySelector("#topbar-toc-toggle");
+      const sideNav = document.querySelector("#side-links");
+      const links = Array.from(document.querySelectorAll("#side-links a"));
+
+      if (window.location.hash === "#side-toc") {
+        history.replaceState(null, "", window.location.pathname + window.location.search);
+        window.scrollTo({ top: 0, behavior: "auto" });
+      }
+
+      function readSavedState() {
+        try {
+          return window.localStorage && window.localStorage.getItem("paper-sidebar-collapsed") === "true";
+        } catch {
+          return false;
+        }
+      }
+
+      function writeSavedState(collapsed) {
+        try {
+          if (window.localStorage) {
+            window.localStorage.setItem("paper-sidebar-collapsed", String(collapsed));
+          }
+        } catch {
+          // Storage can be unavailable in restricted browser contexts.
+        }
+      }
+
+      function setCollapsed(collapsed) {
+        layout.classList.toggle("sidebar-collapsed", collapsed);
+        sidebar.classList.toggle("is-collapsed", collapsed);
+        button.setAttribute("aria-label", collapsed ? "展开目录" : "收起目录");
+        button.setAttribute("title", collapsed ? "展开目录" : "收起目录");
+        if (icon) icon.textContent = collapsed ? "‹" : "›";
+        writeSavedState(collapsed);
+      }
+
+      setCollapsed(readSavedState());
+      button.addEventListener("click", () => setCollapsed(!sidebar.classList.contains("is-collapsed")));
+      if (topbarToggle) {
+        topbarToggle.addEventListener("click", () => {
+          if (window.location.hash === "#side-toc") {
+            history.replaceState(null, "", window.location.pathname + window.location.search);
+          }
+          setCollapsed(!sidebar.classList.contains("is-collapsed"));
+        });
+      }
+
+      const targets = links
+        .map(link => document.getElementById(link.dataset.target))
+        .filter(Boolean);
+
+      function setActive(id) {
+        links.forEach(link => link.classList.toggle("is-active", link.dataset.target === id));
+        const activeLink = links.find(link => link.dataset.target === id);
+        if (activeLink && sideNav && !sidebar.classList.contains("is-collapsed")) {
+          const linkTop = activeLink.offsetTop;
+          const linkBottom = linkTop + activeLink.offsetHeight;
+          const navTop = sideNav.scrollTop;
+          const navBottom = navTop + sideNav.clientHeight;
+          if (linkTop < navTop) {
+            sideNav.scrollTop = Math.max(linkTop - 8, 0);
+          } else if (linkBottom > navBottom) {
+            sideNav.scrollTop = linkBottom - sideNav.clientHeight + 8;
+          }
+        }
+      }
+
+      function updateActiveFromScroll() {
+        if (!targets.length) return;
+        const offset = 150;
+        let active = targets[0];
+        for (const target of targets) {
+          if (target.getBoundingClientRect().top <= offset) {
+            active = target;
+          } else {
+            break;
+          }
+        }
+        setActive(active.id);
+      }
+
+      let ticking = false;
+      function requestActiveUpdate() {
+        if (ticking) return;
+        ticking = true;
+        window.requestAnimationFrame(() => {
+          ticking = false;
+          updateActiveFromScroll();
+        });
+      }
+
+      links.forEach(link => {
+        link.addEventListener("click", event => {
+          event.preventDefault();
+          const target = document.getElementById(link.dataset.target);
+          if (!target) return;
+          const parentDetails = target.closest("details.report-section");
+          if (parentDetails) parentDetails.open = true;
+          setActive(target.id);
+          history.pushState(null, "", "#" + target.id);
+          target.scrollIntoView({ block: "start", behavior: "auto" });
+          if (window.matchMedia("(max-width: 960px)").matches) {
+            setCollapsed(true);
+          }
+          window.setTimeout(updateActiveFromScroll, 80);
+        });
+      });
+
+      window.addEventListener("scroll", requestActiveUpdate, { passive: true });
+      window.addEventListener("resize", requestActiveUpdate);
+      window.addEventListener("hashchange", () => {
+        const id = decodeURIComponent(window.location.hash.slice(1));
+        if (id && document.getElementById(id)) setActive(id);
+        window.setTimeout(updateActiveFromScroll, 80);
+      });
+      if (window.location.hash) {
+        const id = decodeURIComponent(window.location.hash.slice(1));
+        if (id && document.getElementById(id)) setActive(id);
+      } else if (links[0]) {
+        setActive(links[0].dataset.target);
+      }
+      updateActiveFromScroll();
+    }
+
+    function setupMediaViewer() {
+      const viewer = document.querySelector("#media-viewer");
+      const content = document.querySelector("#media-content");
+      const title = document.querySelector("#media-title");
+      const closeButton = document.querySelector("#media-close");
+      if (!viewer || !content || !title || !closeButton) return null;
+
+      function close() {
+        viewer.classList.remove("is-open");
+        viewer.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("media-viewer-open");
+        content.innerHTML = "";
+      }
+
+      function open(src, type, label) {
+        content.innerHTML = "";
+        title.textContent = label || (type === "pdf" ? "PDF 图表" : "图表预览");
+        if (type === "pdf") {
+          const frame = document.createElement("iframe");
+          frame.src = src;
+          frame.title = title.textContent;
+          content.appendChild(frame);
+        } else {
+          const image = document.createElement("img");
+          image.src = src;
+          image.alt = label || "图表预览";
+          content.appendChild(image);
+        }
+        viewer.classList.add("is-open");
+        viewer.setAttribute("aria-hidden", "false");
+        document.body.classList.add("media-viewer-open");
+        closeButton.focus({ preventScroll: true });
+      }
+
+      closeButton.addEventListener("click", close);
+      viewer.addEventListener("click", event => {
+        if (event.target === viewer) close();
+      });
+      window.addEventListener("keydown", event => {
+        if (event.key === "Escape" && viewer.classList.contains("is-open")) close();
+      });
+
+      return { open, close };
+    }
+
+    function enhanceLinks() {
+      const mediaViewer = setupMediaViewer();
+      article.querySelectorAll("a[href]").forEach(a => {
+        const href = a.getAttribute("href") || "";
+        if (/^https?:\/\//.test(href)) a.target = "_blank";
+      });
+      article.querySelectorAll("img").forEach(img => {
+        const src = img.getAttribute("src") || "";
+        img.decoding = "async";
+        img.onerror = () => {
+          if (src.startsWith("../sources/")) {
+            img.src = src.replace("../sources/", "sources/");
+          }
+        };
+        if (/\.pdf(?:$|[?#])/i.test(src)) {
+          const object = document.createElement("object");
+          object.className = "figure-pdf";
+          object.type = "application/pdf";
+          object.data = src;
+          const fallback = document.createElement("button");
+          fallback.className = "figure-open";
+          fallback.type = "button";
+          fallback.textContent = "放大查看 PDF";
+          fallback.addEventListener("click", () => {
+            if (mediaViewer) mediaViewer.open(src, "pdf", img.getAttribute("alt") || "PDF 图表");
+          });
+          img.replaceWith(object);
+          object.insertAdjacentElement("afterend", fallback);
+        } else {
+          img.classList.add("media-thumb");
+          img.setAttribute("tabindex", "0");
+          img.setAttribute("role", "button");
+          img.setAttribute("title", "点击放大查看");
+          const openImage = () => {
+            if (mediaViewer) mediaViewer.open(img.currentSrc || img.src, "image", img.getAttribute("alt") || "图表预览");
+          };
+          img.addEventListener("click", openImage);
+          img.addEventListener("keydown", event => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              openImage();
+            }
+          });
+        }
+      });
+    }
+
+    function linkifyArxivIds(root) {
+      const re = /(?<![\w/.-])(?:arXiv:)?(\d{4}\.\d{4,5})(v\d+)?(?![\w/.-])/g;
+      const skipTags = new Set(["A", "CODE", "PRE", "SCRIPT", "STYLE", "TEXTAREA"]);
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+          const parent = node.parentElement;
+          if (!parent || skipTags.has(parent.tagName)) return NodeFilter.FILTER_REJECT;
+          re.lastIndex = 0;
+          return re.test(node.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+        }
+      });
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach(node => {
+        re.lastIndex = 0;
+        const frag = document.createDocumentFragment();
+        let last = 0;
+        for (const match of node.nodeValue.matchAll(re)) {
+          frag.appendChild(document.createTextNode(node.nodeValue.slice(last, match.index)));
+          const link = document.createElement("a");
+          link.href = "https://arxiv.org/abs/" + match[1];
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+          link.textContent = match[0];
+          frag.appendChild(link);
+          last = match.index + match[0].length;
+        }
+        frag.appendChild(document.createTextNode(node.nodeValue.slice(last)));
+        node.replaceWith(frag);
+      });
+    }
+
+    function renderDisplayMath() {
+      article.querySelectorAll(".math-display").forEach(el => {
+        const source = el.textContent.trim();
+        try {
+          katex.render(source, el, { displayMode: true, throwOnError: false });
+        } catch (error) {
+          el.classList.add("math-error");
+          el.textContent = source;
+        }
+      });
+    }
+
+    function renderInlineMath() {
+      article.querySelectorAll(".math-inline").forEach(el => {
+        const source = el.getAttribute("data-tex") || el.textContent.trim();
+        try {
+          katex.render(source, el, { displayMode: false, throwOnError: false });
+        } catch (error) {
+          el.classList.add("math-error");
+          el.textContent = source;
+        }
+      });
+    }
+
+    sectionize();
+    setupSidebar();
+    enhanceLinks();
+    linkifyArxivIds(article);
+    renderDisplayMath();
+    renderInlineMath();
+    renderMathInElement(article, {
+      delimiters: [
+        { left: "$", right: "$", display: false }
+      ],
+      ignoredClasses: ["math-display", "math-inline"],
+      throwOnError: false
+    });
+    if (window.hljs) {
+      hljs.highlightAll();
+    }
+  </script>
+</body>
+</html>

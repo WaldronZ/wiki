@@ -1,0 +1,28 @@
+- figure in appendices/1_details_of_data.tex; label=fig:operator_examples; files=sources/2602.24286-cuda-agent-large-scale/arxiv/figures/transformers_op_v2.png, sources/2602.24286-cuda-agent-large-scale/arxiv/figures/torch_op_v2.png; caption=Examples of operator classes in our training data.
+- figure in appendices/1_details_of_data.tex; label=fig:max_sim_hist; files=sources/2602.24286-cuda-agent-large-scale/arxiv/pdf/max_sim.pdf; caption=Distribution of the maximum AST similarity between each training sample and all evaluation samples.
+- table in appendices/1_details_of_data.tex; label=tab:operator_distribution; caption=Composition of the final training dataset
+- table in appendices/3_base_model_performance.tex; label=tab:base_model_benchmarks_v2; caption=Comparison of our Base Model with other leading base models. The best results are highlighted in bold
+- table in appendices/4_concurrent_works.tex; label=tab:stark_cudaforge; caption=Results on KernelBench.
+- figure in appendices/5_case_study.tex; label=fig:level1_0_3_p1; files=sources/2602.24286-cuda-agent-large-scale/arxiv/examples/level_1/0_3_model.png; caption=Reference operator for diagonal matmul
+- figure in appendices/5_case_study.tex; label=fig:level1_0_3_p2; files=sources/2602.24286-cuda-agent-large-scale/arxiv/examples/level_1/0_3_diagonal_multiply.png; caption=Diagonal matmul
+- figure in appendices/5_case_study.tex; label=fig:level1_0_3_p3; files=sources/2602.24286-cuda-agent-large-scale/arxiv/examples/level_1/0_3_diagonal_multiply_binding.png; caption=Python/C++ binding for diagonal matmul
+- figure in appendices/5_case_study.tex; label=fig:level1_0_3_p4; files=sources/2602.24286-cuda-agent-large-scale/arxiv/examples/level_1/0_3_model_new.png; caption=Custom operator for diagonal matmul
+- figure in appendices/5_case_study.tex; label=fig:level2_3_105_p1; files=sources/2602.24286-cuda-agent-large-scale/arxiv/examples/level_2/3_105_model.png; caption=Reference operator for matrix multiplication, division, summation, and scaling (Case~ case:2
+- figure in appendices/5_case_study.tex; label=fig:level2_3_105_p2; files=sources/2602.24286-cuda-agent-large-scale/arxiv/examples/level_2/3_105_fused_sum_dot.png; caption=Fused sum-then-dot-product
+- figure in appendices/5_case_study.tex; label=fig:level2_3_105_p3; files=sources/2602.24286-cuda-agent-large-scale/arxiv/examples/level_2/3_105_fused_sum_dot_binding.png; caption=Python/C++ binding for fused sum-then-dot-product
+- figure in appendices/5_case_study.tex; label=fig:level2_3_105_p4; files=sources/2602.24286-cuda-agent-large-scale/arxiv/examples/level_2/3_105_model_new.png; caption=Custom operator for matrix multiplication, division, summation, and scaling (Case~ case:2
+- figure in appendices/5_case_study.tex; label=fig:level3_1_248_p1; files=sources/2602.24286-cuda-agent-large-scale/arxiv/examples/level_3/1_248_model.png; caption=Reference operator for Resnet BasicBlock (Case~ case:3
+- figure in appendices/5_case_study.tex; label=fig:level3_1_248_p2; files=sources/2602.24286-cuda-agent-large-scale/arxiv/examples/level_3/1_248_conv_cuda_part1.png; caption=cuDNN
+- figure in appendices/5_case_study.tex; label=fig:level3_1_248_p3; files=sources/2602.24286-cuda-agent-large-scale/arxiv/examples/level_3/1_248_conv_cuda_part2.png; caption=cuDNN
+- figure in appendices/5_case_study.tex; label=fig:level3_1_248_p4; files=sources/2602.24286-cuda-agent-large-scale/arxiv/examples/level_3/1_248_conv_cuda_binding.png; caption=Python/C++ binding for cuDNN
+- figure in appendices/5_case_study.tex; label=fig:level3_1_248_p5; files=sources/2602.24286-cuda-agent-large-scale/arxiv/examples/level_3/1_248_fused_add_relu.png; caption=Fused add-relu
+- figure in appendices/5_case_study.tex; label=fig:level3_1_248_p6; files=sources/2602.24286-cuda-agent-large-scale/arxiv/examples/level_3/1_248_fused_add_relu_binding.png; caption=Python/C++ binding for fused add-relu
+- figure in appendices/5_case_study.tex; label=fig:level3_1_248_p7; files=sources/2602.24286-cuda-agent-large-scale/arxiv/examples/level_3/1_248_model_new.png; caption=Custom operator for Resnet BasicBlock (Case~ case:3
+- figure in sections/1_intro.tex; label=fig:benchmark_chart; files=sources/2602.24286-cuda-agent-large-scale/arxiv/pdf/benchmark_chart.pdf; caption=Benchmark result.
+- figure in sections/1_intro.tex; label=fig:data-collection-pipeline; files=sources/2602.24286-cuda-agent-large-scale/arxiv/pdf/data_pipeline.pdf; caption=Overview of the three-stage data collection pipeline.
+- figure in sections/3_data_collection_pipeline.tex; label=fig:agent_loop; files=sources/2602.24286-cuda-agent-large-scale/arxiv/pdf/agent_loop_v2.pdf; caption=Overview of the agent loop.
+- figure in sections/5_stable_rl.tex; label=fig:training-pipeline; files=sources/2602.24286-cuda-agent-large-scale/arxiv/pdf/training_stages_v2.pdf; caption=Overview of training pipeline.
+- figure in sections/6_experiments.tex; label=fig:rft_reward; files=sources/2602.24286-cuda-agent-large-scale/arxiv/pdf/ablation_rft_reward_v2.pdf, sources/2602.24286-cuda-agent-large-scale/arxiv/pdf/ablation_rft_entropy_v2.pdf; caption=Training Reward.
+- figure in sections/6_experiments.tex; label=fig:vp_ev; files=sources/2602.24286-cuda-agent-large-scale/arxiv/pdf/ablation_value_pretrain_vf_explained_var_v2.pdf, sources/2602.24286-cuda-agent-large-scale/arxiv/pdf/ablation_value_pretrain_response_length_clip_ratio_v2.pdf; caption=Explained Variation of Value Function.
+- table in tables/ablation_table.tex; label=tab:ablation_res; caption=Ablation Study.
+- table in tables/main_result_table.tex; label=tab:main_results; caption=Main Results on KernelBench.

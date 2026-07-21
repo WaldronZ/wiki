@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-06-15T14:49:54",
-  "count": 5,
-  "line_count": 2,
-  "action_count": 6,
+  "generated_at": "2026-07-21T14:06:34",
+  "count": 12,
+  "line_count": 5,
+  "action_count": 18,
   "recommended_roles": [
     "foundation",
     "baseline",
@@ -10,21 +10,21 @@
     "system"
   ],
   "summary": {
-    "avg_score": 57.5,
-    "low_score_lines": 2,
-    "missing_role_lines": 2,
-    "missing_taxonomy": 0,
-    "taxonomy_load": 2,
-    "needs_review_plan": 5,
-    "no_code_observation": 0
+    "avg_score": 46.0,
+    "low_score_lines": 5,
+    "missing_role_lines": 5,
+    "missing_taxonomy": 3,
+    "taxonomy_load": 6,
+    "needs_review_plan": 12,
+    "no_code_observation": 4
   },
   "lines": [
     {
       "id": "parallel-decoding-with-diffusion-models",
       "line": "Parallel Decoding with Diffusion Models",
       "href": "lines/parallel-decoding-with-diffusion-models.html",
-      "count": 3,
-      "score": 50,
+      "count": 4,
+      "score": 41,
       "latest_year": 2026,
       "stale_years": 0,
       "missing_roles": [
@@ -39,9 +39,12 @@
       "no_review_slugs": [
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
+        "2605.12825-orthrus",
+        "2507.11851-llm-future-mtp"
       ],
-      "no_code_slugs": [],
+      "no_code_slugs": [
+        "2507.11851-llm-future-mtp"
+      ],
       "high_priority_papers": [
         {
           "slug": "2604.11035-introspective-dlm",
@@ -56,7 +59,7 @@
       "actions": [
         {
           "line": "Parallel Decoding with Diffusion Models",
-          "priority": 50,
+          "priority": 59,
           "type": "gap",
           "label": "补角色：baseline, main, system",
           "latest_year": 2026,
@@ -64,25 +67,27 @@
           "slugs": [
             "2602.06036-dflash",
             "2604.11035-introspective-dlm",
-            "2605.12825-orthrus"
+            "2605.12825-orthrus",
+            "2507.11851-llm-future-mtp"
           ]
         },
         {
           "line": "Parallel Decoding with Diffusion Models",
-          "priority": 50,
+          "priority": 59,
           "type": "gap",
-          "label": "补复习计划 3 篇",
+          "label": "补复习计划 4 篇",
           "latest_year": 2026,
           "href": "library.html?line=Parallel+Decoding+with+Diffusion+Models",
           "slugs": [
             "2602.06036-dflash",
             "2604.11035-introspective-dlm",
-            "2605.12825-orthrus"
+            "2605.12825-orthrus",
+            "2507.11851-llm-future-mtp"
           ]
         },
         {
           "line": "Parallel Decoding with Diffusion Models",
-          "priority": 50,
+          "priority": 59,
           "type": "gap",
           "label": "审分类粒度 1 篇",
           "latest_year": 2026,
@@ -90,7 +95,105 @@
           "slugs": [
             "2602.06036-dflash",
             "2604.11035-introspective-dlm",
-            "2605.12825-orthrus"
+            "2605.12825-orthrus",
+            "2507.11851-llm-future-mtp"
+          ]
+        },
+        {
+          "line": "Parallel Decoding with Diffusion Models",
+          "priority": 59,
+          "type": "gap",
+          "label": "补代码观察 1 篇",
+          "latest_year": 2026,
+          "href": "library.html?line=Parallel+Decoding+with+Diffusion+Models",
+          "slugs": [
+            "2602.06036-dflash",
+            "2604.11035-introspective-dlm",
+            "2605.12825-orthrus",
+            "2507.11851-llm-future-mtp"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "llm-serving",
+      "line": "LLM Serving",
+      "href": "lines/llm-serving.html",
+      "count": 3,
+      "score": 44,
+      "latest_year": 2026,
+      "stale_years": 0,
+      "missing_roles": [
+        "foundation",
+        "baseline"
+      ],
+      "missing_taxonomy_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "taxonomy_load_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "no_review_slugs": [
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark",
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "no_code_slugs": [
+        "2607.00466-eldr",
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "high_priority_papers": [],
+      "actions": [
+        {
+          "line": "LLM Serving",
+          "priority": 56,
+          "type": "gap",
+          "label": "补角色：foundation, baseline",
+          "latest_year": 2026,
+          "href": "library.html?line=LLM+Serving",
+          "slugs": [
+            "2607.00466-eldr",
+            "noarxiv-2026-dspark",
+            "2512.23424-akg-kernel-agent-multi"
+          ]
+        },
+        {
+          "line": "LLM Serving",
+          "priority": 56,
+          "type": "gap",
+          "label": "补复习计划 3 篇",
+          "latest_year": 2026,
+          "href": "library.html?line=LLM+Serving",
+          "slugs": [
+            "2607.00466-eldr",
+            "noarxiv-2026-dspark",
+            "2512.23424-akg-kernel-agent-multi"
+          ]
+        },
+        {
+          "line": "LLM Serving",
+          "priority": 56,
+          "type": "gap",
+          "label": "补 taxonomy 1 篇",
+          "latest_year": 2026,
+          "href": "library.html?line=LLM+Serving",
+          "slugs": [
+            "2607.00466-eldr",
+            "noarxiv-2026-dspark",
+            "2512.23424-akg-kernel-agent-multi"
+          ]
+        },
+        {
+          "line": "LLM Serving",
+          "priority": 56,
+          "type": "gap",
+          "label": "审分类粒度 1 篇",
+          "latest_year": 2026,
+          "href": "library.html?line=LLM+Serving",
+          "slugs": [
+            "2607.00466-eldr",
+            "noarxiv-2026-dspark",
+            "2512.23424-akg-kernel-agent-multi"
           ]
         }
       ]
@@ -165,12 +268,199 @@
           ]
         }
       ]
+    },
+    {
+      "id": "unassigned",
+      "line": "Unassigned",
+      "href": "library.html?line=Unassigned",
+      "count": 2,
+      "score": 20,
+      "latest_year": 2026,
+      "stale_years": 0,
+      "missing_roles": [
+        "foundation",
+        "baseline",
+        "main",
+        "system"
+      ],
+      "missing_taxonomy_slugs": [
+        "2603.03251-speculative-speculative-decoding",
+        "semantic-search-evaluation"
+      ],
+      "taxonomy_load_slugs": [
+        "2603.03251-speculative-speculative-decoding",
+        "semantic-search-evaluation"
+      ],
+      "no_review_slugs": [
+        "2603.03251-speculative-speculative-decoding",
+        "semantic-search-evaluation"
+      ],
+      "no_code_slugs": [
+        "semantic-search-evaluation"
+      ],
+      "high_priority_papers": [],
+      "actions": [
+        {
+          "line": "Unassigned",
+          "priority": 80,
+          "type": "gap",
+          "label": "补角色：foundation, baseline, main, system",
+          "latest_year": 2026,
+          "href": "library.html?line=Unassigned",
+          "slugs": [
+            "2603.03251-speculative-speculative-decoding",
+            "semantic-search-evaluation"
+          ]
+        },
+        {
+          "line": "Unassigned",
+          "priority": 80,
+          "type": "gap",
+          "label": "补复习计划 2 篇",
+          "latest_year": 2026,
+          "href": "library.html?line=Unassigned",
+          "slugs": [
+            "2603.03251-speculative-speculative-decoding",
+            "semantic-search-evaluation"
+          ]
+        },
+        {
+          "line": "Unassigned",
+          "priority": 80,
+          "type": "gap",
+          "label": "补 taxonomy 2 篇",
+          "latest_year": 2026,
+          "href": "library.html?line=Unassigned",
+          "slugs": [
+            "2603.03251-speculative-speculative-decoding",
+            "semantic-search-evaluation"
+          ]
+        },
+        {
+          "line": "Unassigned",
+          "priority": 80,
+          "type": "gap",
+          "label": "审分类粒度 2 篇",
+          "latest_year": 2026,
+          "href": "library.html?line=Unassigned",
+          "slugs": [
+            "2603.03251-speculative-speculative-decoding",
+            "semantic-search-evaluation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vlm-acceleration",
+      "line": "VLM Acceleration",
+      "href": "lines/vlm-acceleration.html",
+      "count": 1,
+      "score": 60,
+      "latest_year": 2026,
+      "stale_years": 0,
+      "missing_roles": [
+        "foundation",
+        "baseline",
+        "system"
+      ],
+      "missing_taxonomy_slugs": [],
+      "taxonomy_load_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "no_review_slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ],
+      "no_code_slugs": [],
+      "high_priority_papers": [],
+      "actions": [
+        {
+          "line": "VLM Acceleration",
+          "priority": 40,
+          "type": "gap",
+          "label": "补角色：foundation, baseline, system",
+          "latest_year": 2026,
+          "href": "library.html?line=VLM+Acceleration",
+          "slugs": [
+            "2503.14075-twigvlm-plus-plus"
+          ]
+        },
+        {
+          "line": "VLM Acceleration",
+          "priority": 40,
+          "type": "gap",
+          "label": "补复习计划 1 篇",
+          "latest_year": 2026,
+          "href": "library.html?line=VLM+Acceleration",
+          "slugs": [
+            "2503.14075-twigvlm-plus-plus"
+          ]
+        },
+        {
+          "line": "VLM Acceleration",
+          "priority": 40,
+          "type": "gap",
+          "label": "审分类粒度 1 篇",
+          "latest_year": 2026,
+          "href": "library.html?line=VLM+Acceleration",
+          "slugs": [
+            "2503.14075-twigvlm-plus-plus"
+          ]
+        }
+      ]
     }
   ],
   "actions": [
     {
+      "line": "Unassigned",
+      "priority": 80,
+      "type": "gap",
+      "label": "审分类粒度 2 篇",
+      "latest_year": 2026,
+      "href": "library.html?line=Unassigned",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding",
+        "semantic-search-evaluation"
+      ]
+    },
+    {
+      "line": "Unassigned",
+      "priority": 80,
+      "type": "gap",
+      "label": "补 taxonomy 2 篇",
+      "latest_year": 2026,
+      "href": "library.html?line=Unassigned",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding",
+        "semantic-search-evaluation"
+      ]
+    },
+    {
+      "line": "Unassigned",
+      "priority": 80,
+      "type": "gap",
+      "label": "补复习计划 2 篇",
+      "latest_year": 2026,
+      "href": "library.html?line=Unassigned",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding",
+        "semantic-search-evaluation"
+      ]
+    },
+    {
+      "line": "Unassigned",
+      "priority": 80,
+      "type": "gap",
+      "label": "补角色：foundation, baseline, main, system",
+      "latest_year": 2026,
+      "href": "library.html?line=Unassigned",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding",
+        "semantic-search-evaluation"
+      ]
+    },
+    {
       "line": "Parallel Decoding with Diffusion Models",
-      "priority": 50,
+      "priority": 59,
       "type": "gap",
       "label": "审分类粒度 1 篇",
       "latest_year": 2026,
@@ -178,25 +468,41 @@
       "slugs": [
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
+        "2605.12825-orthrus",
+        "2507.11851-llm-future-mtp"
       ]
     },
     {
       "line": "Parallel Decoding with Diffusion Models",
-      "priority": 50,
+      "priority": 59,
       "type": "gap",
-      "label": "补复习计划 3 篇",
+      "label": "补代码观察 1 篇",
       "latest_year": 2026,
       "href": "library.html?line=Parallel+Decoding+with+Diffusion+Models",
       "slugs": [
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
+        "2605.12825-orthrus",
+        "2507.11851-llm-future-mtp"
       ]
     },
     {
       "line": "Parallel Decoding with Diffusion Models",
-      "priority": 50,
+      "priority": 59,
+      "type": "gap",
+      "label": "补复习计划 4 篇",
+      "latest_year": 2026,
+      "href": "library.html?line=Parallel+Decoding+with+Diffusion+Models",
+      "slugs": [
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus",
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "line": "Parallel Decoding with Diffusion Models",
+      "priority": 59,
       "type": "gap",
       "label": "补角色：baseline, main, system",
       "latest_year": 2026,
@@ -204,7 +510,93 @@
       "slugs": [
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
+        "2605.12825-orthrus",
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "line": "LLM Serving",
+      "priority": 56,
+      "type": "gap",
+      "label": "审分类粒度 1 篇",
+      "latest_year": 2026,
+      "href": "library.html?line=LLM+Serving",
+      "slugs": [
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark",
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "line": "LLM Serving",
+      "priority": 56,
+      "type": "gap",
+      "label": "补 taxonomy 1 篇",
+      "latest_year": 2026,
+      "href": "library.html?line=LLM+Serving",
+      "slugs": [
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark",
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "line": "LLM Serving",
+      "priority": 56,
+      "type": "gap",
+      "label": "补复习计划 3 篇",
+      "latest_year": 2026,
+      "href": "library.html?line=LLM+Serving",
+      "slugs": [
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark",
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "line": "LLM Serving",
+      "priority": 56,
+      "type": "gap",
+      "label": "补角色：foundation, baseline",
+      "latest_year": 2026,
+      "href": "library.html?line=LLM+Serving",
+      "slugs": [
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark",
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "line": "VLM Acceleration",
+      "priority": 40,
+      "type": "gap",
+      "label": "审分类粒度 1 篇",
+      "latest_year": 2026,
+      "href": "library.html?line=VLM+Acceleration",
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "line": "VLM Acceleration",
+      "priority": 40,
+      "type": "gap",
+      "label": "补复习计划 1 篇",
+      "latest_year": 2026,
+      "href": "library.html?line=VLM+Acceleration",
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "line": "VLM Acceleration",
+      "priority": 40,
+      "type": "gap",
+      "label": "补角色：foundation, baseline, system",
+      "latest_year": 2026,
+      "href": "library.html?line=VLM+Acceleration",
+      "slugs": [
+        "2503.14075-twigvlm-plus-plus"
       ]
     },
     {
@@ -265,6 +657,15 @@
         "importance": 5
       },
       {
+        "slug": "2512.23424-akg-kernel-agent-multi",
+        "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+        "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+        "href": "2512.23424-akg-kernel-agent-multi.html",
+        "research_line": "LLM Serving",
+        "status": "read",
+        "importance": 4
+      },
+      {
         "slug": "2602.06036-dflash",
         "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
         "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
@@ -290,10 +691,120 @@
         "research_line": "Efficient Attention Kernels",
         "status": "read",
         "importance": 4
+      },
+      {
+        "slug": "noarxiv-2026-dspark",
+        "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+        "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+        "href": "noarxiv-2026-dspark.html",
+        "research_line": "LLM Serving",
+        "status": "read",
+        "importance": 4
+      },
+      {
+        "slug": "2603.03251-speculative-speculative-decoding",
+        "title": "Speculative Speculative Decoding",
+        "title_zh": "推测性推测解码",
+        "href": "2603.03251-speculative-speculative-decoding.html",
+        "research_line": "Unassigned",
+        "status": "read",
+        "importance": 4
+      },
+      {
+        "slug": "2503.14075-twigvlm-plus-plus",
+        "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+        "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+        "href": "2503.14075-twigvlm-plus-plus.html",
+        "research_line": "VLM Acceleration",
+        "status": "read",
+        "importance": 4
+      },
+      {
+        "slug": "2507.11851-llm-future-mtp",
+        "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
+        "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
+        "href": "2507.11851-llm-future-mtp.html",
+        "research_line": "Parallel Decoding with Diffusion Models",
+        "status": "read",
+        "importance": 4
+      },
+      {
+        "slug": "2607.00466-eldr",
+        "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+        "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+        "href": "2607.00466-eldr.html",
+        "research_line": "LLM Serving",
+        "status": "read",
+        "importance": 4
+      },
+      {
+        "slug": "semantic-search-evaluation",
+        "title": "Semantic Search Evaluation",
+        "title_zh": "Semantic Search Evaluation",
+        "href": "semantic-search-evaluation.md",
+        "research_line": "Unassigned",
+        "status": "read",
+        "importance": ""
       }
     ],
-    "missing_taxonomy": [],
-    "taxonomy_sparse": [],
+    "missing_taxonomy": [
+      {
+        "slug": "2603.03251-speculative-speculative-decoding",
+        "title": "Speculative Speculative Decoding",
+        "title_zh": "推测性推测解码",
+        "href": "2603.03251-speculative-speculative-decoding.html",
+        "research_line": "Unassigned",
+        "status": "read",
+        "importance": 4
+      },
+      {
+        "slug": "2512.23424-akg-kernel-agent-multi",
+        "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+        "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+        "href": "2512.23424-akg-kernel-agent-multi.html",
+        "research_line": "LLM Serving",
+        "status": "read",
+        "importance": 4
+      },
+      {
+        "slug": "semantic-search-evaluation",
+        "title": "Semantic Search Evaluation",
+        "title_zh": "Semantic Search Evaluation",
+        "href": "semantic-search-evaluation.md",
+        "research_line": "Unassigned",
+        "status": "read",
+        "importance": ""
+      }
+    ],
+    "taxonomy_sparse": [
+      {
+        "slug": "2512.23424-akg-kernel-agent-multi",
+        "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+        "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+        "href": "2512.23424-akg-kernel-agent-multi.html",
+        "research_line": "LLM Serving",
+        "status": "read",
+        "importance": 4
+      },
+      {
+        "slug": "2603.03251-speculative-speculative-decoding",
+        "title": "Speculative Speculative Decoding",
+        "title_zh": "推测性推测解码",
+        "href": "2603.03251-speculative-speculative-decoding.html",
+        "research_line": "Unassigned",
+        "status": "read",
+        "importance": 4
+      },
+      {
+        "slug": "semantic-search-evaluation",
+        "title": "Semantic Search Evaluation",
+        "title_zh": "Semantic Search Evaluation",
+        "href": "semantic-search-evaluation.md",
+        "research_line": "Unassigned",
+        "status": "read",
+        "importance": ""
+      }
+    ],
     "taxonomy_dense": [
       {
         "slug": "2501.01005-flashinfer",
@@ -301,6 +812,24 @@
         "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
         "href": "2501.01005-flashinfer.html",
         "research_line": "Efficient Attention Kernels",
+        "status": "read",
+        "importance": 4
+      },
+      {
+        "slug": "2503.14075-twigvlm-plus-plus",
+        "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+        "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+        "href": "2503.14075-twigvlm-plus-plus.html",
+        "research_line": "VLM Acceleration",
+        "status": "read",
+        "importance": 4
+      },
+      {
+        "slug": "2512.23424-akg-kernel-agent-multi",
+        "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+        "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+        "href": "2512.23424-akg-kernel-agent-multi.html",
+        "research_line": "LLM Serving",
         "status": "read",
         "importance": 4
       },
@@ -314,7 +843,44 @@
         "importance": 5
       }
     ],
-    "no_code_observation": []
+    "no_code_observation": [
+      {
+        "slug": "2607.00466-eldr",
+        "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+        "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+        "href": "2607.00466-eldr.html",
+        "research_line": "LLM Serving",
+        "status": "read",
+        "importance": 4
+      },
+      {
+        "slug": "2507.11851-llm-future-mtp",
+        "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
+        "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
+        "href": "2507.11851-llm-future-mtp.html",
+        "research_line": "Parallel Decoding with Diffusion Models",
+        "status": "read",
+        "importance": 4
+      },
+      {
+        "slug": "2512.23424-akg-kernel-agent-multi",
+        "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+        "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+        "href": "2512.23424-akg-kernel-agent-multi.html",
+        "research_line": "LLM Serving",
+        "status": "read",
+        "importance": 4
+      },
+      {
+        "slug": "semantic-search-evaluation",
+        "title": "Semantic Search Evaluation",
+        "title_zh": "Semantic Search Evaluation",
+        "href": "semantic-search-evaluation.md",
+        "research_line": "Unassigned",
+        "status": "read",
+        "importance": ""
+      }
+    ]
   },
   "links": {
     "html": "gaps.html",

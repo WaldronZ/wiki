@@ -1,8 +1,95 @@
 {
-  "generated_at": "2026-06-15T14:49:54",
-  "count": 5,
+  "generated_at": "2026-07-21T14:06:34",
+  "count": 12,
   "inbox_count": 0,
   "existing_papers": [
+    {
+      "slug": "2607.00466-eldr",
+      "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+      "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+      "title_en": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+      "arxiv_id": "2607.00466v2",
+      "arxiv_key": "2607.00466",
+      "title_keys": [
+        "eldr expert locality aware decode routing for pd disaggregated moe serving",
+        "eldr 面向 pd 分离 moe 服务的专家局部性感知解码路由"
+      ],
+      "link_keys": [
+        "2607.00466-eldr.html",
+        "2607.00466-eldr.md",
+        "https://arxiv.org/abs/2607.00466v2"
+      ],
+      "href": "2607.00466-eldr.html",
+      "research_line": "LLM Serving",
+      "status": "read",
+      "year": 2026
+    },
+    {
+      "slug": "2603.03251-speculative-speculative-decoding",
+      "title": "Speculative Speculative Decoding",
+      "title_zh": "推测性推测解码",
+      "title_en": "Speculative Speculative Decoding",
+      "arxiv_id": "2603.03251",
+      "arxiv_key": "2603.03251",
+      "title_keys": [
+        "speculative speculative decoding",
+        "推测性推测解码"
+      ],
+      "link_keys": [
+        "2603.03251-speculative-speculative-decoding.html",
+        "2603.03251-speculative-speculative-decoding.md",
+        "https://arxiv.org/abs/2603.03251",
+        "https://github.com/tanishqkumar/ssd"
+      ],
+      "href": "2603.03251-speculative-speculative-decoding.html",
+      "research_line": "Unassigned",
+      "status": "read",
+      "year": 2026
+    },
+    {
+      "slug": "2503.14075-twigvlm-plus-plus",
+      "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+      "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+      "title_en": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+      "arxiv_id": "2503.14075v3",
+      "arxiv_key": "2503.14075",
+      "title_keys": [
+        "growing a multi head twig via distillation and reinforcement learning to accelerate large vision language models",
+        "通过蒸馏与强化学习生长多头 twig 以加速大型视觉语言模型"
+      ],
+      "link_keys": [
+        "2503.14075-twigvlm-plus-plus.html",
+        "2503.14075-twigvlm-plus-plus.md",
+        "https://arxiv.org/abs/2503.14075v3",
+        "https://github.com/milvlg/twigvlm"
+      ],
+      "href": "2503.14075-twigvlm-plus-plus.html",
+      "research_line": "VLM Acceleration",
+      "status": "read",
+      "year": 2026
+    },
+    {
+      "slug": "noarxiv-2026-dspark",
+      "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+      "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+      "title_en": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+      "arxiv_id": "noarxiv-2026-dspark",
+      "arxiv_key": "noarxi",
+      "title_keys": [
+        "dspark confidence scheduled speculative decoding with semi autoregressive generation",
+        "dspark 基于置信度调度的半自回归 speculative decoding"
+      ],
+      "link_keys": [
+        "https://arxiv.org/abs/noarxiv-2026-dspark",
+        "https://github.com/deepseek-ai/deepspec/blob/main/dspark_paper.pdf",
+        "noarxiv-2026-dspark.html",
+        "noarxiv-2026-dspark.md"
+      ],
+      "href": "noarxiv-2026-dspark.html",
+      "research_line": "LLM Serving",
+      "status": "read",
+      "year": 2026
+    },
     {
       "slug": "2602.06036-dflash",
       "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
@@ -70,6 +157,49 @@
       "year": 2026
     },
     {
+      "slug": "2507.11851-llm-future-mtp",
+      "title": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
+      "title_zh": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
+      "title_en": "Your LLM Knows the Future: Uncovering Its Multi-Token Prediction Potential",
+      "arxiv_id": "2507.11851",
+      "arxiv_key": "2507.11851",
+      "title_keys": [
+        "your llm knows the future uncovering its multi token prediction potential",
+        "你的 llm 知道未来 揭示它的多 token 预测潜力"
+      ],
+      "link_keys": [
+        "2507.11851-llm-future-mtp.html",
+        "2507.11851-llm-future-mtp.md",
+        "https://arxiv.org/abs/2507.11851"
+      ],
+      "href": "2507.11851-llm-future-mtp.html",
+      "research_line": "Parallel Decoding with Diffusion Models",
+      "status": "read",
+      "year": 2025
+    },
+    {
+      "slug": "2512.23424-akg-kernel-agent-multi",
+      "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+      "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+      "title_en": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+      "arxiv_id": "2512.23424",
+      "arxiv_key": "2512.23424",
+      "title_keys": [
+        "akg kernel agent a multi agent framework for cross platform kernel synthesis",
+        "akg kernel agent 用于跨平台 kernel 合成的多智能体框架"
+      ],
+      "link_keys": [
+        "2512.23424-akg-kernel-agent-multi.html",
+        "2512.23424-akg-kernel-agent-multi.md",
+        "https://arxiv.org/abs/2512.23424",
+        "https://arxiv.org/abs/2512.23424v1"
+      ],
+      "href": "2512.23424-akg-kernel-agent-multi.html",
+      "research_line": "LLM Serving",
+      "status": "read",
+      "year": 2025
+    },
+    {
       "slug": "2501.01005-flashinfer",
       "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
       "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
@@ -112,6 +242,24 @@
       "research_line": "Efficient Attention Kernels",
       "status": "read",
       "year": 2023
+    },
+    {
+      "slug": "semantic-search-evaluation",
+      "title": "Semantic Search Evaluation",
+      "title_zh": "Semantic Search Evaluation",
+      "title_en": "",
+      "arxiv_id": "",
+      "arxiv_key": "",
+      "title_keys": [
+        "semantic search evaluation"
+      ],
+      "link_keys": [
+        "semantic-search-evaluation.md"
+      ],
+      "href": "semantic-search-evaluation.md",
+      "research_line": "Unassigned",
+      "status": "read",
+      "year": ""
     }
   ],
   "inbox_items": [],
@@ -129,7 +277,7 @@
     "priority": "normal",
     "tags": "",
     "note": "",
-    "added_at": "2026-06-15"
+    "added_at": "2026-07-21"
   },
   "statuses": [
     "new_candidate",
