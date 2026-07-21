@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T18:25:15",
+  "generated_at": "2026-07-21T20:41:17",
   "count": 13,
   "label_count": 133,
   "configured_label_count": 32,
@@ -2210,6 +2210,58 @@
       "query_href": "library.html?topic=Draft+Model+Training"
     },
     {
+      "id": "draft-tree",
+      "label": "Draft Tree",
+      "key": "draft tree",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=Draft+Tree"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html",
+          "year": 2025,
+          "research_line": "Speculative Decoding",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=Draft+Tree"
+    },
+    {
       "id": "dual-view-attention",
       "label": "dual-view attention",
       "key": "dual view attention",
@@ -2572,6 +2624,58 @@
       "severity": "medium",
       "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
       "query_href": "library.html?method=fallback+speculation"
+    },
+    {
+      "id": "feature-fusion",
+      "label": "Feature Fusion",
+      "key": "feature fusion",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=Feature+Fusion"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html",
+          "year": 2025,
+          "research_line": "Speculative Decoding",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=Feature+Fusion"
     },
     {
       "id": "finalwipe",
@@ -4342,58 +4446,6 @@
       "query_href": "library.html?method=multi-head+twig"
     },
     {
-      "id": "multi-layer-feature-fusion",
-      "label": "Multi-Layer Feature Fusion",
-      "key": "multi layer feature fusion",
-      "fields": [
-        {
-          "field": "methods",
-          "label": "方法",
-          "english": "Method",
-          "query_key": "method",
-          "count": 1,
-          "configured": false,
-          "href": "library.html?method=Multi-Layer+Feature+Fusion"
-        }
-      ],
-      "field_names": [
-        "methods"
-      ],
-      "total_count": 1,
-      "paper_count": 1,
-      "slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "papers": [
-        {
-          "slug": "2503.01840-eagle-3-scaling-up",
-          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
-          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
-          "href": "2503.01840-eagle-3-scaling-up.html",
-          "year": 2025,
-          "research_line": "Speculative Decoding",
-          "importance": 4
-        }
-      ],
-      "aliases": [],
-      "alias_count": 0,
-      "configured": false,
-      "configured_fields": [],
-      "definitions": [],
-      "definition_count": 0,
-      "definition_status": "",
-      "description": "",
-      "owner": {},
-      "owner_name": "",
-      "signals": [
-        "singleton",
-        "undefined_label"
-      ],
-      "severity": "medium",
-      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
-      "query_href": "library.html?method=Multi-Layer+Feature+Fusion"
-    },
-    {
       "id": "multi-token-prediction",
       "label": "Multi-Token Prediction",
       "key": "multi token prediction",
@@ -5226,58 +5278,6 @@
       "query_href": "library.html?method=Signature+Cache"
     },
     {
-      "id": "speculative-sampling",
-      "label": "Speculative Sampling",
-      "key": "speculative sampling",
-      "fields": [
-        {
-          "field": "methods",
-          "label": "方法",
-          "english": "Method",
-          "query_key": "method",
-          "count": 1,
-          "configured": false,
-          "href": "library.html?method=Speculative+Sampling"
-        }
-      ],
-      "field_names": [
-        "methods"
-      ],
-      "total_count": 1,
-      "paper_count": 1,
-      "slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "papers": [
-        {
-          "slug": "2503.01840-eagle-3-scaling-up",
-          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
-          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
-          "href": "2503.01840-eagle-3-scaling-up.html",
-          "year": 2025,
-          "research_line": "Speculative Decoding",
-          "importance": 4
-        }
-      ],
-      "aliases": [],
-      "alias_count": 0,
-      "configured": false,
-      "configured_fields": [],
-      "definitions": [],
-      "definition_count": 0,
-      "definition_status": "",
-      "description": "",
-      "owner": {},
-      "owner_name": "",
-      "signals": [
-        "singleton",
-        "undefined_label"
-      ],
-      "severity": "medium",
-      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
-      "query_href": "library.html?method=Speculative+Sampling"
-    },
-    {
       "id": "systems-optimization",
       "label": "Systems Optimization",
       "key": "systems optimization",
@@ -5434,6 +5434,58 @@
       "query_href": "library.html?method=tiling"
     },
     {
+      "id": "token-prediction",
+      "label": "Token Prediction",
+      "key": "token prediction",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=Token+Prediction"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html",
+          "year": 2025,
+          "research_line": "Speculative Decoding",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=Token+Prediction"
+    },
+    {
       "id": "training-time-test",
       "label": "Training-Time Test",
       "key": "training time test",
@@ -5536,58 +5588,6 @@
       "severity": "medium",
       "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
       "query_href": "library.html?topic=Transformer"
-    },
-    {
-      "id": "tree-based-draft",
-      "label": "Tree-Based Draft",
-      "key": "tree based draft",
-      "fields": [
-        {
-          "field": "methods",
-          "label": "方法",
-          "english": "Method",
-          "query_key": "method",
-          "count": 1,
-          "configured": false,
-          "href": "library.html?method=Tree-Based+Draft"
-        }
-      ],
-      "field_names": [
-        "methods"
-      ],
-      "total_count": 1,
-      "paper_count": 1,
-      "slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "papers": [
-        {
-          "slug": "2503.01840-eagle-3-scaling-up",
-          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
-          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
-          "href": "2503.01840-eagle-3-scaling-up.html",
-          "year": 2025,
-          "research_line": "Speculative Decoding",
-          "importance": 4
-        }
-      ],
-      "aliases": [],
-      "alias_count": 0,
-      "configured": false,
-      "configured_fields": [],
-      "definitions": [],
-      "definition_count": 0,
-      "definition_status": "",
-      "description": "",
-      "owner": {},
-      "owner_name": "",
-      "signals": [
-        "singleton",
-        "undefined_label"
-      ],
-      "severity": "medium",
-      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
-      "query_href": "library.html?method=Tree-Based+Draft"
     },
     {
       "id": "tree-based-self-speculative-decoding",

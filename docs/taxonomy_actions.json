@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T18:25:15",
+  "generated_at": "2026-07-21T20:41:16",
   "count": 114,
   "paper_count": 13,
   "summary": {
@@ -327,6 +327,21 @@
       "field": "methods",
       "field_label": "方法",
       "field_en": "Method",
+      "value": "Draft Tree",
+      "count": 1,
+      "share": 0.0769,
+      "href": "library.html?method=Draft+Tree",
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "methods",
+      "field_label": "方法",
+      "field_en": "Method",
       "value": "dual-view attention",
       "count": 1,
       "share": 0.0769,
@@ -363,6 +378,21 @@
       "href": "library.html?method=fallback+speculation",
       "sample_slugs": [
         "2603.03251-speculative-speculative-decoding"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "methods",
+      "field_label": "方法",
+      "field_en": "Method",
+      "value": "Feature Fusion",
+      "count": 1,
+      "share": 0.0769,
+      "href": "library.html?method=Feature+Fusion",
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up"
       ],
       "recommendation": "检查是否应合并为更通用标签。"
     },
@@ -657,21 +687,6 @@
       "field": "methods",
       "field_label": "方法",
       "field_en": "Method",
-      "value": "Multi-Layer Feature Fusion",
-      "count": 1,
-      "share": 0.0769,
-      "href": "library.html?method=Multi-Layer+Feature+Fusion",
-      "sample_slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "recommendation": "检查是否应合并为更通用标签。"
-    },
-    {
-      "action": "merge_candidate",
-      "severity": "medium",
-      "field": "methods",
-      "field_label": "方法",
-      "field_en": "Method",
       "value": "online softmax",
       "count": 1,
       "share": 0.0769,
@@ -822,21 +837,6 @@
       "field": "methods",
       "field_label": "方法",
       "field_en": "Method",
-      "value": "Speculative Sampling",
-      "count": 1,
-      "share": 0.0769,
-      "href": "library.html?method=Speculative+Sampling",
-      "sample_slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "recommendation": "检查是否应合并为更通用标签。"
-    },
-    {
-      "action": "merge_candidate",
-      "severity": "medium",
-      "field": "methods",
-      "field_label": "方法",
-      "field_en": "Method",
       "value": "target hidden features",
       "count": 1,
       "share": 0.0769,
@@ -867,10 +867,10 @@
       "field": "methods",
       "field_label": "方法",
       "field_en": "Method",
-      "value": "Training-Time Test",
+      "value": "Token Prediction",
       "count": 1,
       "share": 0.0769,
-      "href": "library.html?method=Training-Time+Test",
+      "href": "library.html?method=Token+Prediction",
       "sample_slugs": [
         "2503.01840-eagle-3-scaling-up"
       ],
@@ -882,10 +882,10 @@
       "field": "methods",
       "field_label": "方法",
       "field_en": "Method",
-      "value": "Tree-Based Draft",
+      "value": "Training-Time Test",
       "count": 1,
       "share": 0.0769,
-      "href": "library.html?method=Tree-Based+Draft",
+      "href": "library.html?method=Training-Time+Test",
       "sample_slugs": [
         "2503.01840-eagle-3-scaling-up"
       ],

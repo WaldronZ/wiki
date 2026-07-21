@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T18:25:15",
+  "generated_at": "2026-07-21T20:41:17",
   "count": 13,
   "field_order": [
     {
@@ -265,6 +265,17 @@
       ]
     },
     {
+      "id": "method:Draft Tree",
+      "field": "method",
+      "label": "Method",
+      "value": "Draft Tree",
+      "count": 1,
+      "href": "library.html?method=Draft+Tree",
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ]
+    },
+    {
       "id": "method:dual-view attention",
       "field": "method",
       "label": "Method",
@@ -295,6 +306,17 @@
       "href": "library.html?method=fallback+speculation",
       "sample_slugs": [
         "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "id": "method:Feature Fusion",
+      "field": "method",
+      "label": "Method",
+      "value": "Feature Fusion",
+      "count": 1,
+      "href": "library.html?method=Feature+Fusion",
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up"
       ]
     },
     {
@@ -507,17 +529,6 @@
       ]
     },
     {
-      "id": "method:Multi-Layer Feature Fusion",
-      "field": "method",
-      "label": "Method",
-      "value": "Multi-Layer Feature Fusion",
-      "count": 1,
-      "href": "library.html?method=Multi-Layer+Feature+Fusion",
-      "sample_slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ]
-    },
-    {
       "id": "method:online softmax",
       "field": "method",
       "label": "Method",
@@ -628,17 +639,6 @@
       ]
     },
     {
-      "id": "method:Speculative Sampling",
-      "field": "method",
-      "label": "Method",
-      "value": "Speculative Sampling",
-      "count": 1,
-      "href": "library.html?method=Speculative+Sampling",
-      "sample_slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ]
-    },
-    {
       "id": "method:target hidden features",
       "field": "method",
       "label": "Method",
@@ -661,23 +661,23 @@
       ]
     },
     {
+      "id": "method:Token Prediction",
+      "field": "method",
+      "label": "Method",
+      "value": "Token Prediction",
+      "count": 1,
+      "href": "library.html?method=Token+Prediction",
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ]
+    },
+    {
       "id": "method:Training-Time Test",
       "field": "method",
       "label": "Method",
       "value": "Training-Time Test",
       "count": 1,
       "href": "library.html?method=Training-Time+Test",
-      "sample_slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ]
-    },
-    {
-      "id": "method:Tree-Based Draft",
-      "field": "method",
-      "label": "Method",
-      "value": "Tree-Based Draft",
-      "count": 1,
-      "href": "library.html?method=Tree-Based+Draft",
       "sample_slugs": [
         "2503.01840-eagle-3-scaling-up"
       ]
@@ -2538,26 +2538,39 @@
     },
     {
       "source": "problem:Speculative Decoding",
-      "target": "method:Multi-Layer Feature Fusion",
+      "target": "method:Draft Tree",
       "source_field": "problem",
       "source_value": "Speculative Decoding",
       "target_field": "method",
-      "target_value": "Multi-Layer Feature Fusion",
+      "target_value": "Draft Tree",
       "count": 1,
-      "href": "library.html?problem=Speculative+Decoding&method=Multi-Layer+Feature+Fusion",
+      "href": "library.html?problem=Speculative+Decoding&method=Draft+Tree",
       "sample_slugs": [
         "2503.01840-eagle-3-scaling-up"
       ]
     },
     {
       "source": "problem:Speculative Decoding",
-      "target": "method:Speculative Sampling",
+      "target": "method:Feature Fusion",
       "source_field": "problem",
       "source_value": "Speculative Decoding",
       "target_field": "method",
-      "target_value": "Speculative Sampling",
+      "target_value": "Feature Fusion",
       "count": 1,
-      "href": "library.html?problem=Speculative+Decoding&method=Speculative+Sampling",
+      "href": "library.html?problem=Speculative+Decoding&method=Feature+Fusion",
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ]
+    },
+    {
+      "source": "problem:Speculative Decoding",
+      "target": "method:Token Prediction",
+      "source_field": "problem",
+      "source_value": "Speculative Decoding",
+      "target_field": "method",
+      "target_value": "Token Prediction",
+      "count": 1,
+      "href": "library.html?problem=Speculative+Decoding&method=Token+Prediction",
       "sample_slugs": [
         "2503.01840-eagle-3-scaling-up"
       ]
@@ -2571,19 +2584,6 @@
       "target_value": "Training-Time Test",
       "count": 1,
       "href": "library.html?problem=Speculative+Decoding&method=Training-Time+Test",
-      "sample_slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ]
-    },
-    {
-      "source": "problem:Speculative Decoding",
-      "target": "method:Tree-Based Draft",
-      "source_field": "problem",
-      "source_value": "Speculative Decoding",
-      "target_field": "method",
-      "target_value": "Tree-Based Draft",
-      "count": 1,
-      "href": "library.html?problem=Speculative+Decoding&method=Tree-Based+Draft",
       "sample_slugs": [
         "2503.01840-eagle-3-scaling-up"
       ]
@@ -4241,26 +4241,39 @@
     },
     {
       "source": "topic:Draft Model Training",
-      "target": "method:Multi-Layer Feature Fusion",
+      "target": "method:Draft Tree",
       "source_field": "topic",
       "source_value": "Draft Model Training",
       "target_field": "method",
-      "target_value": "Multi-Layer Feature Fusion",
+      "target_value": "Draft Tree",
       "count": 1,
-      "href": "library.html?topic=Draft+Model+Training&method=Multi-Layer+Feature+Fusion",
+      "href": "library.html?topic=Draft+Model+Training&method=Draft+Tree",
       "sample_slugs": [
         "2503.01840-eagle-3-scaling-up"
       ]
     },
     {
       "source": "topic:Draft Model Training",
-      "target": "method:Speculative Sampling",
+      "target": "method:Feature Fusion",
       "source_field": "topic",
       "source_value": "Draft Model Training",
       "target_field": "method",
-      "target_value": "Speculative Sampling",
+      "target_value": "Feature Fusion",
       "count": 1,
-      "href": "library.html?topic=Draft+Model+Training&method=Speculative+Sampling",
+      "href": "library.html?topic=Draft+Model+Training&method=Feature+Fusion",
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ]
+    },
+    {
+      "source": "topic:Draft Model Training",
+      "target": "method:Token Prediction",
+      "source_field": "topic",
+      "source_value": "Draft Model Training",
+      "target_field": "method",
+      "target_value": "Token Prediction",
+      "count": 1,
+      "href": "library.html?topic=Draft+Model+Training&method=Token+Prediction",
       "sample_slugs": [
         "2503.01840-eagle-3-scaling-up"
       ]
@@ -4274,19 +4287,6 @@
       "target_value": "Training-Time Test",
       "count": 1,
       "href": "library.html?topic=Draft+Model+Training&method=Training-Time+Test",
-      "sample_slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ]
-    },
-    {
-      "source": "topic:Draft Model Training",
-      "target": "method:Tree-Based Draft",
-      "source_field": "topic",
-      "source_value": "Draft Model Training",
-      "target_field": "method",
-      "target_value": "Tree-Based Draft",
-      "count": 1,
-      "href": "library.html?topic=Draft+Model+Training&method=Tree-Based+Draft",
       "sample_slugs": [
         "2503.01840-eagle-3-scaling-up"
       ]
@@ -5190,6 +5190,19 @@
     },
     {
       "source": "topic:LLM Inference",
+      "target": "method:Draft Tree",
+      "source_field": "topic",
+      "source_value": "LLM Inference",
+      "target_field": "method",
+      "target_value": "Draft Tree",
+      "count": 1,
+      "href": "library.html?topic=LLM+Inference&method=Draft+Tree",
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ]
+    },
+    {
+      "source": "topic:LLM Inference",
       "target": "method:dual-view attention",
       "source_field": "topic",
       "source_value": "LLM Inference",
@@ -5212,6 +5225,19 @@
       "href": "library.html?topic=LLM+Inference&method=fallback+speculation",
       "sample_slugs": [
         "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "topic:LLM Inference",
+      "target": "method:Feature Fusion",
+      "source_field": "topic",
+      "source_value": "LLM Inference",
+      "target_field": "method",
+      "target_value": "Feature Fusion",
+      "count": 1,
+      "href": "library.html?topic=LLM+Inference&method=Feature+Fusion",
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up"
       ]
     },
     {
@@ -5307,19 +5333,6 @@
     },
     {
       "source": "topic:LLM Inference",
-      "target": "method:Multi-Layer Feature Fusion",
-      "source_field": "topic",
-      "source_value": "LLM Inference",
-      "target_field": "method",
-      "target_value": "Multi-Layer Feature Fusion",
-      "count": 1,
-      "href": "library.html?topic=LLM+Inference&method=Multi-Layer+Feature+Fusion",
-      "sample_slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ]
-    },
-    {
-      "source": "topic:LLM Inference",
       "target": "method:parallel drafting",
       "source_field": "topic",
       "source_value": "LLM Inference",
@@ -5359,19 +5372,6 @@
     },
     {
       "source": "topic:LLM Inference",
-      "target": "method:Speculative Sampling",
-      "source_field": "topic",
-      "source_value": "LLM Inference",
-      "target_field": "method",
-      "target_value": "Speculative Sampling",
-      "count": 1,
-      "href": "library.html?topic=LLM+Inference&method=Speculative+Sampling",
-      "sample_slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ]
-    },
-    {
-      "source": "topic:LLM Inference",
       "target": "method:target hidden features",
       "source_field": "topic",
       "source_value": "LLM Inference",
@@ -5385,6 +5385,19 @@
     },
     {
       "source": "topic:LLM Inference",
+      "target": "method:Token Prediction",
+      "source_field": "topic",
+      "source_value": "LLM Inference",
+      "target_field": "method",
+      "target_value": "Token Prediction",
+      "count": 1,
+      "href": "library.html?topic=LLM+Inference&method=Token+Prediction",
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ]
+    },
+    {
+      "source": "topic:LLM Inference",
       "target": "method:Training-Time Test",
       "source_field": "topic",
       "source_value": "LLM Inference",
@@ -5392,19 +5405,6 @@
       "target_value": "Training-Time Test",
       "count": 1,
       "href": "library.html?topic=LLM+Inference&method=Training-Time+Test",
-      "sample_slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ]
-    },
-    {
-      "source": "topic:LLM Inference",
-      "target": "method:Tree-Based Draft",
-      "source_field": "topic",
-      "source_value": "LLM Inference",
-      "target_field": "method",
-      "target_value": "Tree-Based Draft",
-      "count": 1,
-      "href": "library.html?topic=LLM+Inference&method=Tree-Based+Draft",
       "sample_slugs": [
         "2503.01840-eagle-3-scaling-up"
       ]
@@ -6308,26 +6308,39 @@
     },
     {
       "source": "topic:Scaling Law",
-      "target": "method:Multi-Layer Feature Fusion",
+      "target": "method:Draft Tree",
       "source_field": "topic",
       "source_value": "Scaling Law",
       "target_field": "method",
-      "target_value": "Multi-Layer Feature Fusion",
+      "target_value": "Draft Tree",
       "count": 1,
-      "href": "library.html?topic=Scaling+Law&method=Multi-Layer+Feature+Fusion",
+      "href": "library.html?topic=Scaling+Law&method=Draft+Tree",
       "sample_slugs": [
         "2503.01840-eagle-3-scaling-up"
       ]
     },
     {
       "source": "topic:Scaling Law",
-      "target": "method:Speculative Sampling",
+      "target": "method:Feature Fusion",
       "source_field": "topic",
       "source_value": "Scaling Law",
       "target_field": "method",
-      "target_value": "Speculative Sampling",
+      "target_value": "Feature Fusion",
       "count": 1,
-      "href": "library.html?topic=Scaling+Law&method=Speculative+Sampling",
+      "href": "library.html?topic=Scaling+Law&method=Feature+Fusion",
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ]
+    },
+    {
+      "source": "topic:Scaling Law",
+      "target": "method:Token Prediction",
+      "source_field": "topic",
+      "source_value": "Scaling Law",
+      "target_field": "method",
+      "target_value": "Token Prediction",
+      "count": 1,
+      "href": "library.html?topic=Scaling+Law&method=Token+Prediction",
       "sample_slugs": [
         "2503.01840-eagle-3-scaling-up"
       ]
@@ -6341,19 +6354,6 @@
       "target_value": "Training-Time Test",
       "count": 1,
       "href": "library.html?topic=Scaling+Law&method=Training-Time+Test",
-      "sample_slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ]
-    },
-    {
-      "source": "topic:Scaling Law",
-      "target": "method:Tree-Based Draft",
-      "source_field": "topic",
-      "source_value": "Scaling Law",
-      "target_field": "method",
-      "target_value": "Tree-Based Draft",
-      "count": 1,
-      "href": "library.html?topic=Scaling+Law&method=Tree-Based+Draft",
       "sample_slugs": [
         "2503.01840-eagle-3-scaling-up"
       ]
@@ -6490,6 +6490,19 @@
     },
     {
       "source": "topic:Speculative Decoding",
+      "target": "method:Draft Tree",
+      "source_field": "topic",
+      "source_value": "Speculative Decoding",
+      "target_field": "method",
+      "target_value": "Draft Tree",
+      "count": 1,
+      "href": "library.html?topic=Speculative+Decoding&method=Draft+Tree",
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ]
+    },
+    {
+      "source": "topic:Speculative Decoding",
       "target": "method:dual-view attention",
       "source_field": "topic",
       "source_value": "Speculative Decoding",
@@ -6512,6 +6525,19 @@
       "href": "library.html?topic=Speculative+Decoding&method=fallback+speculation",
       "sample_slugs": [
         "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "topic:Speculative Decoding",
+      "target": "method:Feature Fusion",
+      "source_field": "topic",
+      "source_value": "Speculative Decoding",
+      "target_field": "method",
+      "target_value": "Feature Fusion",
+      "count": 1,
+      "href": "library.html?topic=Speculative+Decoding&method=Feature+Fusion",
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up"
       ]
     },
     {
@@ -6698,19 +6724,6 @@
     },
     {
       "source": "topic:Speculative Decoding",
-      "target": "method:Multi-Layer Feature Fusion",
-      "source_field": "topic",
-      "source_value": "Speculative Decoding",
-      "target_field": "method",
-      "target_value": "Multi-Layer Feature Fusion",
-      "count": 1,
-      "href": "library.html?topic=Speculative+Decoding&method=Multi-Layer+Feature+Fusion",
-      "sample_slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ]
-    },
-    {
-      "source": "topic:Speculative Decoding",
       "target": "method:p/q acceptance",
       "source_field": "topic",
       "source_value": "Speculative Decoding",
@@ -6815,19 +6828,6 @@
     },
     {
       "source": "topic:Speculative Decoding",
-      "target": "method:Speculative Sampling",
-      "source_field": "topic",
-      "source_value": "Speculative Decoding",
-      "target_field": "method",
-      "target_value": "Speculative Sampling",
-      "count": 1,
-      "href": "library.html?topic=Speculative+Decoding&method=Speculative+Sampling",
-      "sample_slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ]
-    },
-    {
-      "source": "topic:Speculative Decoding",
       "target": "method:target hidden features",
       "source_field": "topic",
       "source_value": "Speculative Decoding",
@@ -6841,6 +6841,19 @@
     },
     {
       "source": "topic:Speculative Decoding",
+      "target": "method:Token Prediction",
+      "source_field": "topic",
+      "source_value": "Speculative Decoding",
+      "target_field": "method",
+      "target_value": "Token Prediction",
+      "count": 1,
+      "href": "library.html?topic=Speculative+Decoding&method=Token+Prediction",
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ]
+    },
+    {
+      "source": "topic:Speculative Decoding",
       "target": "method:Training-Time Test",
       "source_field": "topic",
       "source_value": "Speculative Decoding",
@@ -6848,19 +6861,6 @@
       "target_value": "Training-Time Test",
       "count": 1,
       "href": "library.html?topic=Speculative+Decoding&method=Training-Time+Test",
-      "sample_slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ]
-    },
-    {
-      "source": "topic:Speculative Decoding",
-      "target": "method:Tree-Based Draft",
-      "source_field": "topic",
-      "source_value": "Speculative Decoding",
-      "target_field": "method",
-      "target_value": "Tree-Based Draft",
-      "count": 1,
-      "href": "library.html?topic=Speculative+Decoding&method=Tree-Based+Draft",
       "sample_slugs": [
         "2503.01840-eagle-3-scaling-up"
       ]
@@ -7878,19 +7878,19 @@
       ],
       "top_methods": [
         {
-          "value": "Multi-Layer Feature Fusion",
+          "value": "Draft Tree",
           "count": 1
         },
         {
-          "value": "Speculative Sampling",
+          "value": "Feature Fusion",
+          "count": 1
+        },
+        {
+          "value": "Token Prediction",
           "count": 1
         },
         {
           "value": "Training-Time Test",
-          "count": 1
-        },
-        {
-          "value": "Tree-Based Draft",
           "count": 1
         }
       ],

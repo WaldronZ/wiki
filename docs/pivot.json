@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T18:25:15",
+  "generated_at": "2026-07-21T20:41:17",
   "count": 13,
   "dimensions": [
     {
@@ -471,10 +471,10 @@
           "Speculative Decoding"
         ],
         "method": [
-          "Multi-Layer Feature Fusion",
-          "Speculative Sampling",
-          "Training-Time Test",
-          "Tree-Based Draft"
+          "Draft Tree",
+          "Feature Fusion",
+          "Token Prediction",
+          "Training-Time Test"
         ],
         "status": [
           "read"

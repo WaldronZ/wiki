@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T18:25:15",
+  "generated_at": "2026-07-21T20:41:17",
   "count": 143,
   "summary": {
     "groups": {
@@ -1030,6 +1030,20 @@
       "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
     },
     {
+      "id": "taxonomy_action:merge_candidate:methods:Draft Tree",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "方法：Draft Tree",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=Draft+Tree",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
       "id": "taxonomy_action:merge_candidate:methods:Expert Locality Routing",
       "group": "taxonomy",
       "severity": "medium",
@@ -1040,6 +1054,20 @@
       "source": "taxonomy_actions.json",
       "slugs": [
         "2607.00466-eldr"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:Feature Fusion",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "方法：Feature Fusion",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=Feature+Fusion",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
       ],
       "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
     },
@@ -1142,20 +1170,6 @@
       "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
     },
     {
-      "id": "taxonomy_action:merge_candidate:methods:Multi-Layer Feature Fusion",
-      "group": "taxonomy",
-      "severity": "medium",
-      "priority": 68,
-      "title": "方法：Multi-Layer Feature Fusion",
-      "detail": "检查是否应合并为更通用标签。",
-      "href": "library.html?method=Multi-Layer+Feature+Fusion",
-      "source": "taxonomy_actions.json",
-      "slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
-    },
-    {
       "id": "taxonomy_action:merge_candidate:methods:Signature Cache",
       "group": "taxonomy",
       "severity": "medium",
@@ -1170,13 +1184,13 @@
       "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
     },
     {
-      "id": "taxonomy_action:merge_candidate:methods:Speculative Sampling",
+      "id": "taxonomy_action:merge_candidate:methods:Token Prediction",
       "group": "taxonomy",
       "severity": "medium",
       "priority": 68,
-      "title": "方法：Speculative Sampling",
+      "title": "方法：Token Prediction",
       "detail": "检查是否应合并为更通用标签。",
-      "href": "library.html?method=Speculative+Sampling",
+      "href": "library.html?method=Token+Prediction",
       "source": "taxonomy_actions.json",
       "slugs": [
         "2503.01840-eagle-3-scaling-up"
@@ -1191,20 +1205,6 @@
       "title": "方法：Training-Time Test",
       "detail": "检查是否应合并为更通用标签。",
       "href": "library.html?method=Training-Time+Test",
-      "source": "taxonomy_actions.json",
-      "slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
-    },
-    {
-      "id": "taxonomy_action:merge_candidate:methods:Tree-Based Draft",
-      "group": "taxonomy",
-      "severity": "medium",
-      "priority": 68,
-      "title": "方法：Tree-Based Draft",
-      "detail": "检查是否应合并为更通用标签。",
-      "href": "library.html?method=Tree-Based+Draft",
       "source": "taxonomy_actions.json",
       "slugs": [
         "2503.01840-eagle-3-scaling-up"

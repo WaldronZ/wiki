@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T18:25:15",
+  "generated_at": "2026-07-21T20:41:17",
   "count": 13,
   "line_count": 6,
   "label_count": 111,
@@ -1092,97 +1092,89 @@
           "count": 1
         },
         {
-          "label": "Multi-Layer Feature Fusion",
+          "label": "Draft Tree",
           "count": 1
         },
         {
-          "label": "Speculative Sampling",
+          "label": "Feature Fusion",
+          "count": 1
+        },
+        {
+          "label": "Token Prediction",
           "count": 1
         },
         {
           "label": "Training-Time Test",
-          "count": 1
-        },
-        {
-          "label": "Tree-Based Draft",
           "count": 1
         }
       ],
       "terms": [
         {
           "term": "eagle 3",
-          "weight": 52
+          "weight": 46
         },
         {
           "term": "eagle",
-          "weight": 45
-        },
-        {
-          "term": "feature",
           "weight": 42
         },
         {
-          "term": "speculative",
+          "term": "training time",
           "weight": 38
         },
         {
+          "term": "speculative",
+          "weight": 37
+        },
+        {
           "term": "decoding",
-          "weight": 33
+          "weight": 35
         },
         {
-          "term": "training time",
-          "weight": 30
-        },
-        {
-          "term": "draft",
-          "weight": 26
+          "term": "feature",
+          "weight": 31
         },
         {
           "term": "training",
+          "weight": 26
+        },
+        {
+          "term": "prediction",
+          "weight": 23
+        },
+        {
+          "term": "draft",
           "weight": 23
         },
         {
           "term": "scaling",
-          "weight": 21
+          "weight": 22
         },
         {
-          "term": "prediction",
-          "weight": 21
-        },
-        {
-          "term": "top layer",
-          "weight": 20
-        },
-        {
-          "term": "layer",
+          "term": "time",
           "weight": 19
         },
         {
-          "term": "multi layer",
-          "weight": 18
+          "term": "test",
+          "weight": 19
+        },
+        {
+          "term": "token",
+          "weight": 19
         },
         {
           "term": "inference",
           "weight": 16
         },
         {
-          "term": "time",
-          "weight": 15
-        },
-        {
-          "term": "test",
-          "weight": 15
-        },
-        {
           "term": "llm",
-          "weight": 15
+          "weight": 16
         },
         {
-          "term": "token",
-          "weight": 12
+          "term": "top layer",
+          "weight": 14
         },
         {
-          "term": "target",
+          "term": "2024",
           "weight": 12
         },
         {
@@ -1190,39 +1182,31 @@
           "weight": 11
         },
         {
-          "term": "top",
-          "weight": 10
-        },
-        {
-          "term": "fusion",
-          "weight": 10
-        },
-        {
           "term": "law",
           "weight": 10
         },
         {
-          "term": "los",
+          "term": "alpha",
           "weight": 9
         },
         {
-          "term": "multi",
-          "weight": 9
-        },
-        {
-          "term": "figure",
-          "weight": 9
+          "term": "layer",
+          "weight": 8
         },
         {
           "term": "eagle 2",
           "weight": 8
         },
         {
-          "term": "tree",
+          "term": "top",
           "weight": 7
         },
         {
-          "term": "has",
+          "term": "constraint",
+          "weight": 7
+        },
+        {
+          "term": "tree",
           "weight": 7
         },
         {
@@ -1230,43 +1214,43 @@
           "weight": 7
         },
         {
-          "term": "去掉",
+          "term": "fusion",
           "weight": 6
         },
         {
-          "term": "text",
+          "term": "los",
           "weight": 6
         },
         {
-          "term": "fea",
+          "term": "step",
           "weight": 6
         },
         {
-          "term": "next token",
+          "term": "3 2",
           "weight": 6
         },
         {
-          "term": "2024",
+          "term": "has",
           "weight": 6
         },
         {
-          "term": "sampling",
+          "term": "2023",
           "weight": 6
         },
         {
-          "term": "llama",
+          "term": "the",
           "weight": 5
         },
         {
-          "term": "next",
+          "term": "level",
           "weight": 5
         },
         {
-          "term": "dim",
+          "term": "batch",
           "weight": 5
         },
         {
-          "term": "attention",
+          "term": "throughput",
           "weight": 5
         },
         {
@@ -1274,32 +1258,48 @@
           "weight": 4
         },
         {
-          "term": "direct",
+          "term": "zhang",
           "weight": 4
         },
         {
-          "term": "alpha",
+          "term": "2503 01840v3",
           "weight": 4
         },
         {
-          "term": "level",
+          "term": "6 5x",
           "weight": 4
         },
         {
-          "term": "high level",
+          "term": "and",
+          "weight": 4
+        },
+        {
+          "term": "text",
+          "weight": 4
+        },
+        {
+          "term": "去除",
+          "weight": 4
+        },
+        {
+          "term": "t 1",
+          "weight": 4
+        },
+        {
+          "term": "attention",
+          "weight": 4
+        },
+        {
+          "term": "size",
+          "weight": 4
+        },
+        {
+          "term": "feature level",
           "weight": 4
         },
         {
           "term": "deepseek r1",
           "weight": 4
-        },
-        {
-          "term": "3 1",
-          "weight": 4
-        },
-        {
-          "term": "language",
-          "weight": 3
         }
       ],
       "sample_slugs": [
@@ -1570,23 +1570,23 @@
       "terms": [
         {
           "term": "decoding",
-          "weight": 269
+          "weight": 271
         },
         {
           "term": "llm",
-          "weight": 204
+          "weight": 205
         },
         {
           "term": "token",
-          "weight": 191
+          "weight": 198
         },
         {
           "term": "attention",
-          "weight": 173
+          "weight": 172
         },
         {
           "term": "speculative",
-          "weight": 166
+          "weight": 165
         },
         {
           "term": "diffusion",
@@ -1598,7 +1598,7 @@
         },
         {
           "term": "parallel",
-          "weight": 116
+          "weight": 117
         },
         {
           "term": "serving",
@@ -1630,15 +1630,11 @@
         },
         {
           "term": "draft",
-          "weight": 68
+          "weight": 65
         },
         {
           "term": "kernel",
           "weight": 65
-        },
-        {
-          "term": "eagle 3",
-          "weight": 64
         },
         {
           "term": "efficient",
@@ -1649,8 +1645,8 @@
           "weight": 59
         },
         {
-          "term": "feature",
-          "weight": 59
+          "term": "eagle 3",
+          "weight": 58
         },
         {
           "term": "language",
@@ -1658,11 +1654,7 @@
         },
         {
           "term": "eagle",
-          "weight": 55
-        },
-        {
-          "term": "target",
-          "weight": 53
+          "weight": 52
         },
         {
           "term": "flashattention",
@@ -1670,7 +1662,11 @@
         },
         {
           "term": "prediction",
-          "weight": 47
+          "weight": 49
+        },
+        {
+          "term": "feature",
+          "weight": 48
         },
         {
           "term": "generation",
@@ -1681,32 +1677,36 @@
           "weight": 43
         },
         {
+          "term": "training",
+          "weight": 43
+        },
+        {
           "term": "dflash",
           "weight": 42
+        },
+        {
+          "term": "and",
+          "weight": 41
+        },
+        {
+          "term": "target",
+          "weight": 41
         },
         {
           "term": "autoregressive",
           "weight": 41
         },
         {
-          "term": "and",
-          "weight": 40
-        },
-        {
           "term": "arxiv org",
           "weight": 40
         },
         {
-          "term": "training",
+          "term": "training time",
           "weight": 40
         },
         {
           "term": "flashattention 2",
           "weight": 40
-        },
-        {
-          "term": "multi",
-          "weight": 37
         },
         {
           "term": "tree",
@@ -3584,6 +3584,161 @@
     },
     {
       "field": "methods",
+      "value": "Draft Tree",
+      "count": 1,
+      "href": "library.html?method=Draft+Tree",
+      "terms": [
+        {
+          "term": "eagle 3",
+          "weight": 46
+        },
+        {
+          "term": "eagle",
+          "weight": 42
+        },
+        {
+          "term": "training time",
+          "weight": 38
+        },
+        {
+          "term": "draft",
+          "weight": 33
+        },
+        {
+          "term": "feature",
+          "weight": 31
+        },
+        {
+          "term": "speculative",
+          "weight": 27
+        },
+        {
+          "term": "training",
+          "weight": 26
+        },
+        {
+          "term": "decoding",
+          "weight": 25
+        },
+        {
+          "term": "prediction",
+          "weight": 23
+        },
+        {
+          "term": "scaling",
+          "weight": 22
+        },
+        {
+          "term": "time",
+          "weight": 19
+        },
+        {
+          "term": "test",
+          "weight": 19
+        },
+        {
+          "term": "token",
+          "weight": 19
+        },
+        {
+          "term": "tree",
+          "weight": 17
+        },
+        {
+          "term": "inference",
+          "weight": 16
+        },
+        {
+          "term": "llm",
+          "weight": 16
+        },
+        {
+          "term": "top layer",
+          "weight": 14
+        },
+        {
+          "term": "2024",
+          "weight": 12
+        },
+        {
+          "term": "acceleration",
+          "weight": 11
+        },
+        {
+          "term": "law",
+          "weight": 10
+        },
+        {
+          "term": "alpha",
+          "weight": 9
+        },
+        {
+          "term": "layer",
+          "weight": 8
+        },
+        {
+          "term": "eagle 2",
+          "weight": 8
+        },
+        {
+          "term": "top",
+          "weight": 7
+        },
+        {
+          "term": "constraint",
+          "weight": 7
+        },
+        {
+          "term": "system",
+          "weight": 7
+        },
+        {
+          "term": "fusion",
+          "weight": 6
+        },
+        {
+          "term": "los",
+          "weight": 6
+        },
+        {
+          "term": "step",
+          "weight": 6
+        },
+        {
+          "term": "3 2",
+          "weight": 6
+        },
+        {
+          "term": "has",
+          "weight": 6
+        },
+        {
+          "term": "2023",
+          "weight": 6
+        },
+        {
+          "term": "the",
+          "weight": 5
+        },
+        {
+          "term": "level",
+          "weight": 5
+        },
+        {
+          "term": "batch",
+          "weight": 5
+        },
+        {
+          "term": "throughput",
+          "weight": 5
+        }
+      ],
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ]
+    },
+    {
+      "field": "methods",
       "value": "dual-view attention",
       "count": 1,
       "href": "library.html?method=dual-view+attention",
@@ -4045,6 +4200,161 @@
       ],
       "sample_slugs": [
         "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "field": "methods",
+      "value": "Feature Fusion",
+      "count": 1,
+      "href": "library.html?method=Feature+Fusion",
+      "terms": [
+        {
+          "term": "eagle 3",
+          "weight": 46
+        },
+        {
+          "term": "eagle",
+          "weight": 42
+        },
+        {
+          "term": "feature",
+          "weight": 41
+        },
+        {
+          "term": "training time",
+          "weight": 38
+        },
+        {
+          "term": "speculative",
+          "weight": 27
+        },
+        {
+          "term": "training",
+          "weight": 26
+        },
+        {
+          "term": "decoding",
+          "weight": 25
+        },
+        {
+          "term": "prediction",
+          "weight": 23
+        },
+        {
+          "term": "draft",
+          "weight": 23
+        },
+        {
+          "term": "scaling",
+          "weight": 22
+        },
+        {
+          "term": "time",
+          "weight": 19
+        },
+        {
+          "term": "test",
+          "weight": 19
+        },
+        {
+          "term": "token",
+          "weight": 19
+        },
+        {
+          "term": "fusion",
+          "weight": 16
+        },
+        {
+          "term": "inference",
+          "weight": 16
+        },
+        {
+          "term": "llm",
+          "weight": 16
+        },
+        {
+          "term": "top layer",
+          "weight": 14
+        },
+        {
+          "term": "2024",
+          "weight": 12
+        },
+        {
+          "term": "acceleration",
+          "weight": 11
+        },
+        {
+          "term": "law",
+          "weight": 10
+        },
+        {
+          "term": "alpha",
+          "weight": 9
+        },
+        {
+          "term": "layer",
+          "weight": 8
+        },
+        {
+          "term": "eagle 2",
+          "weight": 8
+        },
+        {
+          "term": "top",
+          "weight": 7
+        },
+        {
+          "term": "constraint",
+          "weight": 7
+        },
+        {
+          "term": "tree",
+          "weight": 7
+        },
+        {
+          "term": "system",
+          "weight": 7
+        },
+        {
+          "term": "los",
+          "weight": 6
+        },
+        {
+          "term": "step",
+          "weight": 6
+        },
+        {
+          "term": "3 2",
+          "weight": 6
+        },
+        {
+          "term": "has",
+          "weight": 6
+        },
+        {
+          "term": "2023",
+          "weight": 6
+        },
+        {
+          "term": "the",
+          "weight": 5
+        },
+        {
+          "term": "level",
+          "weight": 5
+        },
+        {
+          "term": "batch",
+          "weight": 5
+        },
+        {
+          "term": "throughput",
+          "weight": 5
+        }
+      ],
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up"
       ]
     },
     {
@@ -7306,161 +7616,6 @@
     },
     {
       "field": "methods",
-      "value": "Multi-Layer Feature Fusion",
-      "count": 1,
-      "href": "library.html?method=Multi-Layer+Feature+Fusion",
-      "terms": [
-        {
-          "term": "feature",
-          "weight": 52
-        },
-        {
-          "term": "eagle 3",
-          "weight": 52
-        },
-        {
-          "term": "eagle",
-          "weight": 45
-        },
-        {
-          "term": "multi layer",
-          "weight": 38
-        },
-        {
-          "term": "training time",
-          "weight": 30
-        },
-        {
-          "term": "layer",
-          "weight": 29
-        },
-        {
-          "term": "speculative",
-          "weight": 28
-        },
-        {
-          "term": "draft",
-          "weight": 26
-        },
-        {
-          "term": "training",
-          "weight": 23
-        },
-        {
-          "term": "decoding",
-          "weight": 23
-        },
-        {
-          "term": "scaling",
-          "weight": 21
-        },
-        {
-          "term": "prediction",
-          "weight": 21
-        },
-        {
-          "term": "fusion",
-          "weight": 20
-        },
-        {
-          "term": "top layer",
-          "weight": 20
-        },
-        {
-          "term": "multi",
-          "weight": 19
-        },
-        {
-          "term": "inference",
-          "weight": 16
-        },
-        {
-          "term": "time",
-          "weight": 15
-        },
-        {
-          "term": "test",
-          "weight": 15
-        },
-        {
-          "term": "llm",
-          "weight": 15
-        },
-        {
-          "term": "token",
-          "weight": 12
-        },
-        {
-          "term": "target",
-          "weight": 12
-        },
-        {
-          "term": "acceleration",
-          "weight": 11
-        },
-        {
-          "term": "top",
-          "weight": 10
-        },
-        {
-          "term": "law",
-          "weight": 10
-        },
-        {
-          "term": "los",
-          "weight": 9
-        },
-        {
-          "term": "figure",
-          "weight": 9
-        },
-        {
-          "term": "eagle 2",
-          "weight": 8
-        },
-        {
-          "term": "tree",
-          "weight": 7
-        },
-        {
-          "term": "has",
-          "weight": 7
-        },
-        {
-          "term": "system",
-          "weight": 7
-        },
-        {
-          "term": "去掉",
-          "weight": 6
-        },
-        {
-          "term": "text",
-          "weight": 6
-        },
-        {
-          "term": "fea",
-          "weight": 6
-        },
-        {
-          "term": "next token",
-          "weight": 6
-        },
-        {
-          "term": "2024",
-          "weight": 6
-        },
-        {
-          "term": "sampling",
-          "weight": 6
-        }
-      ],
-      "sample_slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ]
-    },
-    {
-      "field": "methods",
       "value": "online softmax",
       "count": 1,
       "href": "library.html?method=online+softmax",
@@ -9168,161 +9323,6 @@
     },
     {
       "field": "methods",
-      "value": "Speculative Sampling",
-      "count": 1,
-      "href": "library.html?method=Speculative+Sampling",
-      "terms": [
-        {
-          "term": "eagle 3",
-          "weight": 52
-        },
-        {
-          "term": "eagle",
-          "weight": 45
-        },
-        {
-          "term": "feature",
-          "weight": 42
-        },
-        {
-          "term": "speculative",
-          "weight": 38
-        },
-        {
-          "term": "training time",
-          "weight": 30
-        },
-        {
-          "term": "draft",
-          "weight": 26
-        },
-        {
-          "term": "training",
-          "weight": 23
-        },
-        {
-          "term": "decoding",
-          "weight": 23
-        },
-        {
-          "term": "scaling",
-          "weight": 21
-        },
-        {
-          "term": "prediction",
-          "weight": 21
-        },
-        {
-          "term": "top layer",
-          "weight": 20
-        },
-        {
-          "term": "layer",
-          "weight": 19
-        },
-        {
-          "term": "multi layer",
-          "weight": 18
-        },
-        {
-          "term": "sampling",
-          "weight": 16
-        },
-        {
-          "term": "inference",
-          "weight": 16
-        },
-        {
-          "term": "time",
-          "weight": 15
-        },
-        {
-          "term": "test",
-          "weight": 15
-        },
-        {
-          "term": "llm",
-          "weight": 15
-        },
-        {
-          "term": "token",
-          "weight": 12
-        },
-        {
-          "term": "target",
-          "weight": 12
-        },
-        {
-          "term": "acceleration",
-          "weight": 11
-        },
-        {
-          "term": "top",
-          "weight": 10
-        },
-        {
-          "term": "fusion",
-          "weight": 10
-        },
-        {
-          "term": "law",
-          "weight": 10
-        },
-        {
-          "term": "los",
-          "weight": 9
-        },
-        {
-          "term": "multi",
-          "weight": 9
-        },
-        {
-          "term": "figure",
-          "weight": 9
-        },
-        {
-          "term": "eagle 2",
-          "weight": 8
-        },
-        {
-          "term": "tree",
-          "weight": 7
-        },
-        {
-          "term": "has",
-          "weight": 7
-        },
-        {
-          "term": "system",
-          "weight": 7
-        },
-        {
-          "term": "去掉",
-          "weight": 6
-        },
-        {
-          "term": "text",
-          "weight": 6
-        },
-        {
-          "term": "fea",
-          "weight": 6
-        },
-        {
-          "term": "next token",
-          "weight": 6
-        },
-        {
-          "term": "2024",
-          "weight": 6
-        }
-      ],
-      "sample_slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ]
-    },
-    {
-      "field": "methods",
       "value": "target hidden features",
       "count": 1,
       "href": "library.html?method=target+hidden+features",
@@ -9633,69 +9633,61 @@
     },
     {
       "field": "methods",
-      "value": "Training-Time Test",
+      "value": "Token Prediction",
       "count": 1,
-      "href": "library.html?method=Training-Time+Test",
+      "href": "library.html?method=Token+Prediction",
       "terms": [
         {
           "term": "eagle 3",
-          "weight": 52
-        },
-        {
-          "term": "training time",
-          "weight": 50
+          "weight": 46
         },
         {
           "term": "eagle",
-          "weight": 45
-        },
-        {
-          "term": "feature",
           "weight": 42
         },
         {
-          "term": "training",
+          "term": "training time",
+          "weight": 38
+        },
+        {
+          "term": "prediction",
           "weight": 33
         },
         {
-          "term": "speculative",
-          "weight": 28
+          "term": "feature",
+          "weight": 31
         },
         {
-          "term": "draft",
+          "term": "token",
+          "weight": 29
+        },
+        {
+          "term": "speculative",
+          "weight": 27
+        },
+        {
+          "term": "training",
           "weight": 26
         },
         {
-          "term": "time",
-          "weight": 25
-        },
-        {
-          "term": "test",
-          "weight": 25
-        },
-        {
           "term": "decoding",
+          "weight": 25
+        },
+        {
+          "term": "draft",
           "weight": 23
         },
         {
           "term": "scaling",
-          "weight": 21
+          "weight": 22
         },
         {
-          "term": "prediction",
-          "weight": 21
-        },
-        {
-          "term": "top layer",
-          "weight": 20
-        },
-        {
-          "term": "layer",
+          "term": "time",
           "weight": 19
         },
         {
-          "term": "multi layer",
-          "weight": 18
+          "term": "test",
+          "weight": 19
         },
         {
           "term": "inference",
@@ -9703,14 +9695,14 @@
         },
         {
           "term": "llm",
-          "weight": 15
+          "weight": 16
         },
         {
-          "term": "token",
-          "weight": 12
+          "term": "top layer",
+          "weight": 14
         },
         {
-          "term": "target",
+          "term": "2024",
           "weight": 12
         },
         {
@@ -9718,39 +9710,31 @@
           "weight": 11
         },
         {
-          "term": "top",
-          "weight": 10
-        },
-        {
-          "term": "fusion",
-          "weight": 10
-        },
-        {
           "term": "law",
           "weight": 10
         },
         {
-          "term": "los",
+          "term": "alpha",
           "weight": 9
         },
         {
-          "term": "multi",
-          "weight": 9
-        },
-        {
-          "term": "figure",
-          "weight": 9
+          "term": "layer",
+          "weight": 8
         },
         {
           "term": "eagle 2",
           "weight": 8
         },
         {
-          "term": "tree",
+          "term": "top",
           "weight": 7
         },
         {
-          "term": "has",
+          "term": "constraint",
+          "weight": 7
+        },
+        {
+          "term": "tree",
           "weight": 7
         },
         {
@@ -9758,28 +9742,44 @@
           "weight": 7
         },
         {
-          "term": "去掉",
+          "term": "fusion",
           "weight": 6
         },
         {
-          "term": "text",
+          "term": "los",
           "weight": 6
         },
         {
-          "term": "fea",
+          "term": "step",
           "weight": 6
         },
         {
-          "term": "next token",
+          "term": "3 2",
           "weight": 6
         },
         {
-          "term": "2024",
+          "term": "has",
           "weight": 6
         },
         {
-          "term": "sampling",
+          "term": "2023",
           "weight": 6
+        },
+        {
+          "term": "the",
+          "weight": 5
+        },
+        {
+          "term": "level",
+          "weight": 5
+        },
+        {
+          "term": "batch",
+          "weight": 5
+        },
+        {
+          "term": "throughput",
+          "weight": 5
         }
       ],
       "sample_slugs": [
@@ -9788,88 +9788,76 @@
     },
     {
       "field": "methods",
-      "value": "Tree-Based Draft",
+      "value": "Training-Time Test",
       "count": 1,
-      "href": "library.html?method=Tree-Based+Draft",
+      "href": "library.html?method=Training-Time+Test",
       "terms": [
         {
+          "term": "training time",
+          "weight": 58
+        },
+        {
           "term": "eagle 3",
-          "weight": 52
+          "weight": 46
         },
         {
           "term": "eagle",
-          "weight": 45
-        },
-        {
-          "term": "feature",
           "weight": 42
         },
         {
-          "term": "draft",
+          "term": "training",
           "weight": 36
         },
         {
-          "term": "training time",
-          "weight": 30
+          "term": "feature",
+          "weight": 31
+        },
+        {
+          "term": "time",
+          "weight": 29
+        },
+        {
+          "term": "test",
+          "weight": 29
         },
         {
           "term": "speculative",
-          "weight": 28
-        },
-        {
-          "term": "training",
-          "weight": 23
+          "weight": 27
         },
         {
           "term": "decoding",
+          "weight": 25
+        },
+        {
+          "term": "prediction",
+          "weight": 23
+        },
+        {
+          "term": "draft",
           "weight": 23
         },
         {
           "term": "scaling",
-          "weight": 21
+          "weight": 22
         },
         {
-          "term": "prediction",
-          "weight": 21
-        },
-        {
-          "term": "top layer",
-          "weight": 20
-        },
-        {
-          "term": "layer",
+          "term": "token",
           "weight": 19
-        },
-        {
-          "term": "multi layer",
-          "weight": 18
-        },
-        {
-          "term": "tree",
-          "weight": 17
         },
         {
           "term": "inference",
           "weight": 16
         },
         {
-          "term": "time",
-          "weight": 15
-        },
-        {
-          "term": "test",
-          "weight": 15
-        },
-        {
           "term": "llm",
-          "weight": 15
+          "weight": 16
         },
         {
-          "term": "token",
-          "weight": 12
+          "term": "top layer",
+          "weight": 14
         },
         {
-          "term": "target",
+          "term": "2024",
           "weight": 12
         },
         {
@@ -9877,35 +9865,31 @@
           "weight": 11
         },
         {
-          "term": "top",
-          "weight": 10
-        },
-        {
-          "term": "fusion",
-          "weight": 10
-        },
-        {
           "term": "law",
           "weight": 10
         },
         {
-          "term": "los",
+          "term": "alpha",
           "weight": 9
         },
         {
-          "term": "multi",
-          "weight": 9
-        },
-        {
-          "term": "figure",
-          "weight": 9
+          "term": "layer",
+          "weight": 8
         },
         {
           "term": "eagle 2",
           "weight": 8
         },
         {
-          "term": "has",
+          "term": "top",
+          "weight": 7
+        },
+        {
+          "term": "constraint",
+          "weight": 7
+        },
+        {
+          "term": "tree",
           "weight": 7
         },
         {
@@ -9913,28 +9897,44 @@
           "weight": 7
         },
         {
-          "term": "去掉",
+          "term": "fusion",
           "weight": 6
         },
         {
-          "term": "text",
+          "term": "los",
           "weight": 6
         },
         {
-          "term": "fea",
+          "term": "step",
           "weight": 6
         },
         {
-          "term": "next token",
+          "term": "3 2",
           "weight": 6
         },
         {
-          "term": "2024",
+          "term": "has",
           "weight": 6
         },
         {
-          "term": "sampling",
+          "term": "2023",
           "weight": 6
+        },
+        {
+          "term": "the",
+          "weight": 5
+        },
+        {
+          "term": "level",
+          "weight": 5
+        },
+        {
+          "term": "batch",
+          "weight": 5
+        },
+        {
+          "term": "throughput",
+          "weight": 5
         }
       ],
       "sample_slugs": [
@@ -12276,78 +12276,70 @@
       "terms": [
         {
           "term": "eagle 3",
-          "weight": 52
+          "weight": 46
         },
         {
           "term": "eagle",
-          "weight": 45
-        },
-        {
-          "term": "feature",
           "weight": 42
         },
         {
-          "term": "speculative",
+          "term": "training time",
           "weight": 38
         },
         {
+          "term": "speculative",
+          "weight": 37
+        },
+        {
           "term": "decoding",
-          "weight": 33
+          "weight": 35
         },
         {
-          "term": "training time",
-          "weight": 30
-        },
-        {
-          "term": "draft",
-          "weight": 26
+          "term": "feature",
+          "weight": 31
         },
         {
           "term": "training",
+          "weight": 26
+        },
+        {
+          "term": "prediction",
+          "weight": 23
+        },
+        {
+          "term": "draft",
           "weight": 23
         },
         {
           "term": "scaling",
-          "weight": 21
+          "weight": 22
         },
         {
-          "term": "prediction",
-          "weight": 21
-        },
-        {
-          "term": "top layer",
-          "weight": 20
-        },
-        {
-          "term": "layer",
+          "term": "time",
           "weight": 19
         },
         {
-          "term": "multi layer",
-          "weight": 18
+          "term": "test",
+          "weight": 19
+        },
+        {
+          "term": "token",
+          "weight": 19
         },
         {
           "term": "inference",
           "weight": 16
         },
         {
-          "term": "time",
-          "weight": 15
-        },
-        {
-          "term": "test",
-          "weight": 15
-        },
-        {
           "term": "llm",
-          "weight": 15
+          "weight": 16
         },
         {
-          "term": "token",
-          "weight": 12
+          "term": "top layer",
+          "weight": 14
         },
         {
-          "term": "target",
+          "term": "2024",
           "weight": 12
         },
         {
@@ -12355,39 +12347,31 @@
           "weight": 11
         },
         {
-          "term": "top",
-          "weight": 10
-        },
-        {
-          "term": "fusion",
-          "weight": 10
-        },
-        {
           "term": "law",
           "weight": 10
         },
         {
-          "term": "los",
+          "term": "alpha",
           "weight": 9
         },
         {
-          "term": "multi",
-          "weight": 9
-        },
-        {
-          "term": "figure",
-          "weight": 9
+          "term": "layer",
+          "weight": 8
         },
         {
           "term": "eagle 2",
           "weight": 8
         },
         {
-          "term": "tree",
+          "term": "top",
           "weight": 7
         },
         {
-          "term": "has",
+          "term": "constraint",
+          "weight": 7
+        },
+        {
+          "term": "tree",
           "weight": 7
         },
         {
@@ -12395,28 +12379,44 @@
           "weight": 7
         },
         {
-          "term": "去掉",
+          "term": "fusion",
           "weight": 6
         },
         {
-          "term": "text",
+          "term": "los",
           "weight": 6
         },
         {
-          "term": "fea",
+          "term": "step",
           "weight": 6
         },
         {
-          "term": "next token",
+          "term": "3 2",
           "weight": 6
         },
         {
-          "term": "2024",
+          "term": "has",
           "weight": 6
         },
         {
-          "term": "sampling",
+          "term": "2023",
           "weight": 6
+        },
+        {
+          "term": "the",
+          "weight": 5
+        },
+        {
+          "term": "level",
+          "weight": 5
+        },
+        {
+          "term": "batch",
+          "weight": 5
+        },
+        {
+          "term": "throughput",
+          "weight": 5
         }
       ],
       "sample_slugs": [
@@ -13363,78 +13363,70 @@
       "terms": [
         {
           "term": "eagle 3",
-          "weight": 52
+          "weight": 46
         },
         {
           "term": "eagle",
-          "weight": 45
-        },
-        {
-          "term": "feature",
           "weight": 42
         },
         {
-          "term": "draft",
-          "weight": 36
+          "term": "training time",
+          "weight": 38
         },
         {
           "term": "training",
+          "weight": 36
+        },
+        {
+          "term": "draft",
           "weight": 33
         },
         {
-          "term": "training time",
-          "weight": 30
+          "term": "feature",
+          "weight": 31
         },
         {
           "term": "speculative",
-          "weight": 28
+          "weight": 27
         },
         {
           "term": "decoding",
+          "weight": 25
+        },
+        {
+          "term": "prediction",
           "weight": 23
         },
         {
           "term": "scaling",
-          "weight": 21
+          "weight": 22
         },
         {
-          "term": "prediction",
-          "weight": 21
-        },
-        {
-          "term": "top layer",
-          "weight": 20
-        },
-        {
-          "term": "layer",
+          "term": "time",
           "weight": 19
         },
         {
-          "term": "multi layer",
-          "weight": 18
+          "term": "test",
+          "weight": 19
+        },
+        {
+          "term": "token",
+          "weight": 19
         },
         {
           "term": "inference",
           "weight": 16
         },
         {
-          "term": "time",
-          "weight": 15
-        },
-        {
-          "term": "test",
-          "weight": 15
-        },
-        {
           "term": "llm",
-          "weight": 15
+          "weight": 16
         },
         {
-          "term": "token",
-          "weight": 12
+          "term": "top layer",
+          "weight": 14
         },
         {
-          "term": "target",
+          "term": "2024",
           "weight": 12
         },
         {
@@ -13442,39 +13434,31 @@
           "weight": 11
         },
         {
-          "term": "top",
-          "weight": 10
-        },
-        {
-          "term": "fusion",
-          "weight": 10
-        },
-        {
           "term": "law",
           "weight": 10
         },
         {
-          "term": "los",
+          "term": "alpha",
           "weight": 9
         },
         {
-          "term": "multi",
-          "weight": 9
-        },
-        {
-          "term": "figure",
-          "weight": 9
+          "term": "layer",
+          "weight": 8
         },
         {
           "term": "eagle 2",
           "weight": 8
         },
         {
-          "term": "tree",
+          "term": "top",
           "weight": 7
         },
         {
-          "term": "has",
+          "term": "constraint",
+          "weight": 7
+        },
+        {
+          "term": "tree",
           "weight": 7
         },
         {
@@ -13482,28 +13466,44 @@
           "weight": 7
         },
         {
-          "term": "去掉",
+          "term": "fusion",
           "weight": 6
         },
         {
-          "term": "text",
+          "term": "los",
           "weight": 6
         },
         {
-          "term": "fea",
+          "term": "step",
           "weight": 6
         },
         {
-          "term": "next token",
+          "term": "3 2",
           "weight": 6
         },
         {
-          "term": "2024",
+          "term": "has",
           "weight": 6
         },
         {
-          "term": "sampling",
+          "term": "2023",
           "weight": 6
+        },
+        {
+          "term": "the",
+          "weight": 5
+        },
+        {
+          "term": "level",
+          "weight": 5
+        },
+        {
+          "term": "batch",
+          "weight": 5
+        },
+        {
+          "term": "throughput",
+          "weight": 5
         }
       ],
       "sample_slugs": [
@@ -15070,11 +15070,11 @@
       "terms": [
         {
           "term": "decoding",
-          "weight": 182
+          "weight": 184
         },
         {
           "term": "speculative",
-          "weight": 150
+          "weight": 149
         },
         {
           "term": "diffusion",
@@ -15082,11 +15082,7 @@
         },
         {
           "term": "llm",
-          "weight": 101
-        },
-        {
-          "term": "draft",
-          "weight": 83
+          "weight": 102
         },
         {
           "term": "inference",
@@ -15094,31 +15090,35 @@
         },
         {
           "term": "token",
-          "weight": 74
+          "weight": 81
+        },
+        {
+          "term": "draft",
+          "weight": 80
         },
         {
           "term": "parallel",
-          "weight": 72
+          "weight": 73
         },
         {
           "term": "eagle 3",
-          "weight": 64
-        },
-        {
-          "term": "target",
-          "weight": 61
-        },
-        {
-          "term": "feature",
-          "weight": 59
+          "weight": 58
         },
         {
           "term": "eagle",
-          "weight": 55
+          "weight": 52
         },
         {
           "term": "cache",
           "weight": 50
+        },
+        {
+          "term": "target",
+          "weight": 49
+        },
+        {
+          "term": "feature",
+          "weight": 48
         },
         {
           "term": "arxiv",
@@ -15131,6 +15131,10 @@
         {
           "term": "block",
           "weight": 42
+        },
+        {
+          "term": "training time",
+          "weight": 40
         },
         {
           "term": "kv",
@@ -15153,10 +15157,6 @@
           "weight": 35
         },
         {
-          "term": "verification",
-          "weight": 32
-        },
-        {
           "term": "generation",
           "weight": 32
         },
@@ -15165,12 +15165,24 @@
           "weight": 32
         },
         {
-          "term": "training time",
-          "weight": 32
+          "term": "verification",
+          "weight": 31
         },
         {
           "term": "autoregressive",
           "weight": 31
+        },
+        {
+          "term": "time",
+          "weight": 29
+        },
+        {
+          "term": "training",
+          "weight": 28
+        },
+        {
+          "term": "scaling",
+          "weight": 27
         },
         {
           "term": "head",
@@ -15185,28 +15197,16 @@
           "weight": 26
         },
         {
-          "term": "scaling",
+          "term": "prediction",
           "weight": 26
         },
         {
-          "term": "time",
+          "term": "lossles",
           "weight": 25
         },
         {
           "term": "language",
           "weight": 25
-        },
-        {
-          "term": "training",
-          "weight": 25
-        },
-        {
-          "term": "prediction",
-          "weight": 24
-        },
-        {
-          "term": "lossles",
-          "weight": 24
         },
         {
           "term": "orthru",
@@ -16784,82 +16784,74 @@
       "terms": [
         {
           "term": "eagle 3",
-          "weight": 52
+          "weight": 46
         },
         {
           "term": "eagle",
-          "weight": 45
-        },
-        {
-          "term": "feature",
           "weight": 42
         },
         {
+          "term": "training time",
+          "weight": 38
+        },
+        {
           "term": "scaling",
+          "weight": 32
+        },
+        {
+          "term": "feature",
           "weight": 31
         },
         {
-          "term": "training time",
-          "weight": 30
-        },
-        {
           "term": "speculative",
-          "weight": 28
-        },
-        {
-          "term": "draft",
-          "weight": 26
+          "weight": 27
         },
         {
           "term": "training",
-          "weight": 23
+          "weight": 26
         },
         {
           "term": "decoding",
-          "weight": 23
+          "weight": 25
         },
         {
           "term": "prediction",
-          "weight": 21
+          "weight": 23
+        },
+        {
+          "term": "draft",
+          "weight": 23
         },
         {
           "term": "law",
           "weight": 20
         },
         {
-          "term": "top layer",
-          "weight": 20
-        },
-        {
-          "term": "layer",
+          "term": "time",
           "weight": 19
         },
         {
-          "term": "multi layer",
-          "weight": 18
+          "term": "test",
+          "weight": 19
+        },
+        {
+          "term": "token",
+          "weight": 19
         },
         {
           "term": "inference",
           "weight": 16
         },
         {
-          "term": "time",
-          "weight": 15
-        },
-        {
-          "term": "test",
-          "weight": 15
-        },
-        {
           "term": "llm",
-          "weight": 15
+          "weight": 16
         },
         {
-          "term": "token",
-          "weight": 12
+          "term": "top layer",
+          "weight": 14
         },
         {
-          "term": "target",
+          "term": "2024",
           "weight": 12
         },
         {
@@ -16867,35 +16859,27 @@
           "weight": 11
         },
         {
-          "term": "top",
-          "weight": 10
-        },
-        {
-          "term": "fusion",
-          "weight": 10
-        },
-        {
-          "term": "los",
+          "term": "alpha",
           "weight": 9
         },
         {
-          "term": "multi",
-          "weight": 9
-        },
-        {
-          "term": "figure",
-          "weight": 9
+          "term": "layer",
+          "weight": 8
         },
         {
           "term": "eagle 2",
           "weight": 8
         },
         {
-          "term": "tree",
+          "term": "top",
           "weight": 7
         },
         {
-          "term": "has",
+          "term": "constraint",
+          "weight": 7
+        },
+        {
+          "term": "tree",
           "weight": 7
         },
         {
@@ -16903,28 +16887,44 @@
           "weight": 7
         },
         {
-          "term": "去掉",
+          "term": "fusion",
           "weight": 6
         },
         {
-          "term": "text",
+          "term": "los",
           "weight": 6
         },
         {
-          "term": "fea",
+          "term": "step",
           "weight": 6
         },
         {
-          "term": "next token",
+          "term": "3 2",
           "weight": 6
         },
         {
-          "term": "2024",
+          "term": "has",
           "weight": 6
         },
         {
-          "term": "sampling",
+          "term": "2023",
           "weight": 6
+        },
+        {
+          "term": "the",
+          "weight": 5
+        },
+        {
+          "term": "level",
+          "weight": 5
+        },
+        {
+          "term": "batch",
+          "weight": 5
+        },
+        {
+          "term": "throughput",
+          "weight": 5
         }
       ],
       "sample_slugs": [
@@ -17094,15 +17094,15 @@
       "terms": [
         {
           "term": "decoding",
-          "weight": 316
+          "weight": 318
         },
         {
           "term": "speculative",
-          "weight": 217
+          "weight": 216
         },
         {
           "term": "token",
-          "weight": 198
+          "weight": 205
         },
         {
           "term": "diffusion",
@@ -17110,7 +17110,7 @@
         },
         {
           "term": "llm",
-          "weight": 145
+          "weight": 146
         },
         {
           "term": "inference",
@@ -17118,11 +17118,11 @@
         },
         {
           "term": "parallel",
-          "weight": 116
+          "weight": 117
         },
         {
           "term": "draft",
-          "weight": 94
+          "weight": 91
         },
         {
           "term": "acceleration",
@@ -17142,15 +17142,7 @@
         },
         {
           "term": "eagle 3",
-          "weight": 64
-        },
-        {
-          "term": "target",
-          "weight": 62
-        },
-        {
-          "term": "feature",
-          "weight": 59
+          "weight": 58
         },
         {
           "term": "cache",
@@ -17166,11 +17158,19 @@
         },
         {
           "term": "eagle",
-          "weight": 55
+          "weight": 52
         },
         {
           "term": "prediction",
-          "weight": 49
+          "weight": 51
+        },
+        {
+          "term": "target",
+          "weight": 50
+        },
+        {
+          "term": "feature",
+          "weight": 48
         },
         {
           "term": "kv",
@@ -17185,12 +17185,16 @@
           "weight": 43
         },
         {
+          "term": "training",
+          "weight": 42
+        },
+        {
           "term": "dflash",
           "weight": 42
         },
         {
           "term": "verification",
-          "weight": 41
+          "weight": 40
         },
         {
           "term": "generation",
@@ -17201,19 +17205,15 @@
           "weight": 40
         },
         {
-          "term": "training",
-          "weight": 39
+          "term": "training time",
+          "weight": 40
         },
         {
           "term": "attention",
-          "weight": 38
-        },
-        {
-          "term": "tree",
           "weight": 37
         },
         {
-          "term": "multi",
+          "term": "tree",
           "weight": 37
         },
         {
@@ -17225,15 +17225,15 @@
           "weight": 35
         },
         {
+          "term": "time",
+          "weight": 34
+        },
+        {
           "term": "dlm",
           "weight": 33
         },
         {
           "term": "semi autoregressive",
-          "weight": 32
-        },
-        {
-          "term": "training time",
           "weight": 32
         }
       ],
@@ -18185,19 +18185,19 @@
       "terms": [
         {
           "term": "decoding",
-          "weight": 265
+          "weight": 267
         },
         {
           "term": "token",
-          "weight": 191
+          "weight": 198
         },
         {
           "term": "speculative",
-          "weight": 165
+          "weight": 164
         },
         {
           "term": "llm",
-          "weight": 159
+          "weight": 160
         },
         {
           "term": "diffusion",
@@ -18209,7 +18209,7 @@
         },
         {
           "term": "parallel",
-          "weight": 113
+          "weight": 114
         },
         {
           "term": "acceleration",
@@ -18233,30 +18233,22 @@
         },
         {
           "term": "draft",
-          "weight": 68
+          "weight": 65
         },
         {
           "term": "eagle 3",
-          "weight": 64
-        },
-        {
-          "term": "feature",
-          "weight": 59
-        },
-        {
-          "term": "eagle",
-          "weight": 55
+          "weight": 58
         },
         {
           "term": "language",
           "weight": 54
         },
         {
-          "term": "target",
-          "weight": 53
+          "term": "kv",
+          "weight": 52
         },
         {
-          "term": "kv",
+          "term": "eagle",
           "weight": 52
         },
         {
@@ -18265,11 +18257,23 @@
         },
         {
           "term": "prediction",
-          "weight": 47
+          "weight": 49
+        },
+        {
+          "term": "feature",
+          "weight": 48
+        },
+        {
+          "term": "training",
+          "weight": 42
         },
         {
           "term": "dflash",
           "weight": 42
+        },
+        {
+          "term": "target",
+          "weight": 41
         },
         {
           "term": "autoregressive",
@@ -18277,6 +18281,10 @@
         },
         {
           "term": "pruning",
+          "weight": 40
+        },
+        {
+          "term": "training time",
           "weight": 40
         },
         {
@@ -18288,20 +18296,12 @@
           "weight": 39
         },
         {
-          "term": "training",
-          "weight": 39
-        },
-        {
           "term": "vlm",
           "weight": 37
         },
         {
           "term": "attention",
-          "weight": 37
-        },
-        {
-          "term": "multi",
-          "weight": 35
+          "weight": 36
         },
         {
           "term": "dspark",
@@ -18316,15 +18316,15 @@
           "weight": 32
         },
         {
-          "term": "training time",
-          "weight": 32
-        },
-        {
           "term": "eldr",
           "weight": 31
         },
         {
           "term": "moe",
+          "weight": 30
+        },
+        {
+          "term": "tree",
           "weight": 30
         }
       ],
@@ -20462,86 +20462,78 @@
         "Speculative Decoding"
       ],
       "methods": [
-        "Multi-Layer Feature Fusion",
-        "Speculative Sampling",
-        "Training-Time Test",
-        "Tree-Based Draft"
+        "Draft Tree",
+        "Feature Fusion",
+        "Token Prediction",
+        "Training-Time Test"
       ],
       "terms": [
         {
           "term": "eagle 3",
-          "weight": 52
+          "weight": 46
         },
         {
           "term": "eagle",
-          "weight": 45
-        },
-        {
-          "term": "feature",
           "weight": 42
         },
         {
           "term": "training time",
-          "weight": 30
+          "weight": 38
+        },
+        {
+          "term": "feature",
+          "weight": 31
         },
         {
           "term": "speculative",
-          "weight": 28
-        },
-        {
-          "term": "draft",
-          "weight": 26
+          "weight": 27
         },
         {
           "term": "training",
-          "weight": 23
+          "weight": 26
         },
         {
           "term": "decoding",
+          "weight": 25
+        },
+        {
+          "term": "prediction",
+          "weight": 23
+        },
+        {
+          "term": "draft",
           "weight": 23
         },
         {
           "term": "scaling",
-          "weight": 21
+          "weight": 22
         },
         {
-          "term": "prediction",
-          "weight": 21
-        },
-        {
-          "term": "top layer",
-          "weight": 20
-        },
-        {
-          "term": "layer",
+          "term": "time",
           "weight": 19
         },
         {
-          "term": "multi layer",
-          "weight": 18
+          "term": "test",
+          "weight": 19
+        },
+        {
+          "term": "token",
+          "weight": 19
         },
         {
           "term": "inference",
           "weight": 16
         },
         {
-          "term": "time",
-          "weight": 15
-        },
-        {
-          "term": "test",
-          "weight": 15
-        },
-        {
           "term": "llm",
-          "weight": 15
+          "weight": 16
         },
         {
-          "term": "token",
-          "weight": 12
+          "term": "top layer",
+          "weight": 14
         },
         {
-          "term": "target",
+          "term": "2024",
           "weight": 12
         },
         {
@@ -20549,39 +20541,31 @@
           "weight": 11
         },
         {
-          "term": "top",
-          "weight": 10
-        },
-        {
-          "term": "fusion",
-          "weight": 10
-        },
-        {
           "term": "law",
           "weight": 10
         },
         {
-          "term": "los",
+          "term": "alpha",
           "weight": 9
         },
         {
-          "term": "multi",
-          "weight": 9
-        },
-        {
-          "term": "figure",
-          "weight": 9
+          "term": "layer",
+          "weight": 8
         },
         {
           "term": "eagle 2",
           "weight": 8
         },
         {
-          "term": "tree",
+          "term": "top",
           "weight": 7
         },
         {
-          "term": "has",
+          "term": "constraint",
+          "weight": 7
+        },
+        {
+          "term": "tree",
           "weight": 7
         },
         {
@@ -20589,43 +20573,43 @@
           "weight": 7
         },
         {
-          "term": "去掉",
+          "term": "fusion",
           "weight": 6
         },
         {
-          "term": "text",
+          "term": "los",
           "weight": 6
         },
         {
-          "term": "fea",
+          "term": "step",
           "weight": 6
         },
         {
-          "term": "next token",
+          "term": "3 2",
           "weight": 6
         },
         {
-          "term": "2024",
+          "term": "has",
           "weight": 6
         },
         {
-          "term": "sampling",
+          "term": "2023",
           "weight": 6
         },
         {
-          "term": "llama",
+          "term": "the",
           "weight": 5
         },
         {
-          "term": "next",
+          "term": "level",
           "weight": 5
         },
         {
-          "term": "dim",
+          "term": "batch",
           "weight": 5
         },
         {
-          "term": "attention",
+          "term": "throughput",
           "weight": 5
         },
         {
@@ -20633,19 +20617,43 @@
           "weight": 4
         },
         {
-          "term": "direct",
+          "term": "zhang",
           "weight": 4
         },
         {
-          "term": "alpha",
+          "term": "2503 01840v3",
           "weight": 4
         },
         {
-          "term": "level",
+          "term": "6 5x",
           "weight": 4
         },
         {
-          "term": "high level",
+          "term": "and",
+          "weight": 4
+        },
+        {
+          "term": "text",
+          "weight": 4
+        },
+        {
+          "term": "去除",
+          "weight": 4
+        },
+        {
+          "term": "t 1",
+          "weight": 4
+        },
+        {
+          "term": "attention",
+          "weight": 4
+        },
+        {
+          "term": "size",
+          "weight": 4
+        },
+        {
+          "term": "feature level",
           "weight": 4
         },
         {
@@ -20658,14 +20666,6 @@
         },
         {
           "term": "language",
-          "weight": 3
-        },
-        {
-          "term": "系列",
-          "weight": 3
-        },
-        {
-          "term": "constraint",
           "weight": 3
         }
       ]

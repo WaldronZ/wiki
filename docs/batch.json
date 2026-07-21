@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T18:25:15",
+  "generated_at": "2026-07-21T20:41:17",
   "count": 13,
   "report_dir": "docs",
   "dimension_count": 11,
@@ -2504,6 +2504,33 @@
       ]
     },
     {
+      "id": "method::Draft Tree",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "Draft Tree",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=Draft+Tree",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'Draft Tree' --output docs/exports/method-draft-tree-reading-list.md",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_titles": [
+        "EAGLE-3：通过训练时测试扩展大语言模型推理加速"
+      ]
+    },
+    {
       "id": "method::dual-view attention",
       "dimension": "method",
       "dimension_label": "Method",
@@ -2555,6 +2582,33 @@
       ],
       "sample_titles": [
         "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由"
+      ]
+    },
+    {
+      "id": "method::Feature Fusion",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "Feature Fusion",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=Feature+Fusion",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'Feature Fusion' --output docs/exports/method-feature-fusion-reading-list.md",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_titles": [
+        "EAGLE-3：通过训练时测试扩展大语言模型推理加速"
       ]
     },
     {
@@ -2882,33 +2936,6 @@
       ]
     },
     {
-      "id": "method::Multi-Layer Feature Fusion",
-      "dimension": "method",
-      "dimension_label": "Method",
-      "value": "Multi-Layer Feature Fusion",
-      "count": 1,
-      "severity": "high",
-      "priority": 95,
-      "latest_year": 2025,
-      "high_importance": 0,
-      "missing_review": 1,
-      "due_review": 0,
-      "missing_taxonomy": 0,
-      "no_code": 0,
-      "recommended_action": "补 next_review 1 篇",
-      "href": "library.html?method=Multi-Layer+Feature+Fusion",
-      "export_command": "python3 scripts/export_reading_list.py docs --method 'Multi-Layer Feature Fusion' --output docs/exports/method-multi-layer-feature-fusion-reading-list.md",
-      "slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "sample_slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "sample_titles": [
-        "EAGLE-3：通过训练时测试扩展大语言模型推理加速"
-      ]
-    },
-    {
       "id": "method::parallel drafting",
       "dimension": "method",
       "dimension_label": "Method",
@@ -3098,33 +3125,6 @@
       ]
     },
     {
-      "id": "method::Speculative Sampling",
-      "dimension": "method",
-      "dimension_label": "Method",
-      "value": "Speculative Sampling",
-      "count": 1,
-      "severity": "high",
-      "priority": 95,
-      "latest_year": 2025,
-      "high_importance": 0,
-      "missing_review": 1,
-      "due_review": 0,
-      "missing_taxonomy": 0,
-      "no_code": 0,
-      "recommended_action": "补 next_review 1 篇",
-      "href": "library.html?method=Speculative+Sampling",
-      "export_command": "python3 scripts/export_reading_list.py docs --method 'Speculative Sampling' --output docs/exports/method-speculative-sampling-reading-list.md",
-      "slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "sample_slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "sample_titles": [
-        "EAGLE-3：通过训练时测试扩展大语言模型推理加速"
-      ]
-    },
-    {
       "id": "method::target hidden features",
       "dimension": "method",
       "dimension_label": "Method",
@@ -3152,6 +3152,33 @@
       ]
     },
     {
+      "id": "method::Token Prediction",
+      "dimension": "method",
+      "dimension_label": "Method",
+      "value": "Token Prediction",
+      "count": 1,
+      "severity": "high",
+      "priority": 95,
+      "latest_year": 2025,
+      "high_importance": 0,
+      "missing_review": 1,
+      "due_review": 0,
+      "missing_taxonomy": 0,
+      "no_code": 0,
+      "recommended_action": "补 next_review 1 篇",
+      "href": "library.html?method=Token+Prediction",
+      "export_command": "python3 scripts/export_reading_list.py docs --method 'Token Prediction' --output docs/exports/method-token-prediction-reading-list.md",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_titles": [
+        "EAGLE-3：通过训练时测试扩展大语言模型推理加速"
+      ]
+    },
+    {
       "id": "method::Training-Time Test",
       "dimension": "method",
       "dimension_label": "Method",
@@ -3168,33 +3195,6 @@
       "recommended_action": "补 next_review 1 篇",
       "href": "library.html?method=Training-Time+Test",
       "export_command": "python3 scripts/export_reading_list.py docs --method 'Training-Time Test' --output docs/exports/method-training-time-test-reading-list.md",
-      "slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "sample_slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "sample_titles": [
-        "EAGLE-3：通过训练时测试扩展大语言模型推理加速"
-      ]
-    },
-    {
-      "id": "method::Tree-Based Draft",
-      "dimension": "method",
-      "dimension_label": "Method",
-      "value": "Tree-Based Draft",
-      "count": 1,
-      "severity": "high",
-      "priority": 95,
-      "latest_year": 2025,
-      "high_importance": 0,
-      "missing_review": 1,
-      "due_review": 0,
-      "missing_taxonomy": 0,
-      "no_code": 0,
-      "recommended_action": "补 next_review 1 篇",
-      "href": "library.html?method=Tree-Based+Draft",
-      "export_command": "python3 scripts/export_reading_list.py docs --method 'Tree-Based Draft' --output docs/exports/method-tree-based-draft-reading-list.md",
       "slugs": [
         "2503.01840-eagle-3-scaling-up"
       ],

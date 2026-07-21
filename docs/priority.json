@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T18:25:15",
+  "generated_at": "2026-07-21T20:41:17",
   "today": "2026-07-21",
   "count": 13,
   "summary": {
@@ -703,10 +703,10 @@
         "review_plan:2503.01840-eagle-3-scaling-up",
         "taxonomy_action:merge_candidate:topics:Draft Model Training",
         "taxonomy_action:merge_candidate:topics:Scaling Law",
-        "taxonomy_action:merge_candidate:methods:Multi-Layer Feature Fusion",
-        "taxonomy_action:merge_candidate:methods:Speculative Sampling",
-        "taxonomy_action:merge_candidate:methods:Training-Time Test",
-        "taxonomy_action:merge_candidate:methods:Tree-Based Draft"
+        "taxonomy_action:merge_candidate:methods:Draft Tree",
+        "taxonomy_action:merge_candidate:methods:Feature Fusion",
+        "taxonomy_action:merge_candidate:methods:Token Prediction",
+        "taxonomy_action:merge_candidate:methods:Training-Time Test"
       ],
       "queue_hits": [
         {
@@ -1418,10 +1418,10 @@
         "review_plan:2503.01840-eagle-3-scaling-up",
         "taxonomy_action:merge_candidate:topics:Draft Model Training",
         "taxonomy_action:merge_candidate:topics:Scaling Law",
-        "taxonomy_action:merge_candidate:methods:Multi-Layer Feature Fusion",
-        "taxonomy_action:merge_candidate:methods:Speculative Sampling",
-        "taxonomy_action:merge_candidate:methods:Training-Time Test",
-        "taxonomy_action:merge_candidate:methods:Tree-Based Draft"
+        "taxonomy_action:merge_candidate:methods:Draft Tree",
+        "taxonomy_action:merge_candidate:methods:Feature Fusion",
+        "taxonomy_action:merge_candidate:methods:Token Prediction",
+        "taxonomy_action:merge_candidate:methods:Training-Time Test"
       ],
       "queue_hits": [
         {

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T18:25:15",
+  "generated_at": "2026-07-21T20:41:17",
   "count": 13,
   "line_count": 6,
   "risk_counts": {
@@ -999,19 +999,19 @@
       ],
       "top_methods": [
         {
-          "name": "Multi-Layer Feature Fusion",
+          "name": "Draft Tree",
           "count": 1
         },
         {
-          "name": "Speculative Sampling",
+          "name": "Feature Fusion",
+          "count": 1
+        },
+        {
+          "name": "Token Prediction",
           "count": 1
         },
         {
           "name": "Training-Time Test",
-          "count": 1
-        },
-        {
-          "name": "Tree-Based Draft",
           "count": 1
         }
       ],
@@ -1044,10 +1044,10 @@
             "Speculative Decoding"
           ],
           "methods": [
-            "Multi-Layer Feature Fusion",
-            "Speculative Sampling",
-            "Training-Time Test",
-            "Tree-Based Draft"
+            "Draft Tree",
+            "Feature Fusion",
+            "Token Prediction",
+            "Training-Time Test"
           ],
           "href": "2503.01840-eagle-3-scaling-up.html"
         }

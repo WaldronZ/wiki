@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T18:25:15",
+  "generated_at": "2026-07-21T20:41:17",
   "count": 13,
   "readiness_score": 43,
   "readiness_label": "needs_governance",
@@ -20,12 +20,12 @@
     {
       "href": "papers.json",
       "exists": true,
-      "size_bytes": 47648
+      "size_bytes": 47706
     },
     {
       "href": "search_index.json",
       "exists": true,
-      "size_bytes": 379779
+      "size_bytes": 386601
     },
     {
       "href": "stats.json",
@@ -50,12 +50,12 @@
     {
       "href": "taxonomy_actions.json",
       "exists": true,
-      "size_bytes": 50496
+      "size_bytes": 50452
     },
     {
       "href": "actions.json",
       "exists": true,
-      "size_bytes": 80812
+      "size_bytes": 80746
     },
     {
       "href": "workflow.json",
@@ -65,17 +65,17 @@
     {
       "href": "pivot.json",
       "exists": true,
-      "size_bytes": 34363
+      "size_bytes": 34341
     },
     {
       "href": "compare.json",
       "exists": true,
-      "size_bytes": 42230
+      "size_bytes": 42332
     },
     {
       "href": "taxonomy_map.json",
       "exists": true,
-      "size_bytes": 250281
+      "size_bytes": 249863
     },
     {
       "href": "inbox.json",
@@ -151,33 +151,33 @@
   "capacity_projection": [
     {
       "paper_count": 100,
-      "search_index_bytes": 2921377,
-      "papers_json_bytes": 366523,
-      "taxonomy_map_bytes": 1925238,
+      "search_index_bytes": 2973854,
+      "papers_json_bytes": 366969,
+      "taxonomy_map_bytes": 1922023,
       "estimated_actions": 1100,
       "recommended_mode": "static wiki"
     },
     {
       "paper_count": 500,
-      "search_index_bytes": 14606885,
-      "papers_json_bytes": 1832615,
-      "taxonomy_map_bytes": 9626192,
+      "search_index_bytes": 14869269,
+      "papers_json_bytes": 1834846,
+      "taxonomy_map_bytes": 9610115,
       "estimated_actions": 5500,
       "recommended_mode": "static wiki"
     },
     {
       "paper_count": 1000,
-      "search_index_bytes": 29213769,
-      "papers_json_bytes": 3665231,
-      "taxonomy_map_bytes": 19252385,
+      "search_index_bytes": 29738538,
+      "papers_json_bytes": 3669692,
+      "taxonomy_map_bytes": 19220231,
       "estimated_actions": 11000,
       "recommended_mode": "split indexes"
     },
     {
       "paper_count": 5000,
-      "search_index_bytes": 146068846,
-      "papers_json_bytes": 18326154,
-      "taxonomy_map_bytes": 96261923,
+      "search_index_bytes": 148692692,
+      "papers_json_bytes": 18348462,
+      "taxonomy_map_bytes": 96101154,
       "estimated_actions": 55000,
       "recommended_mode": "desktop cache / paged indexes"
     }

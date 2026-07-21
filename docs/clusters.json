@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T18:25:15",
+  "generated_at": "2026-07-21T20:41:17",
   "count": 13,
   "cluster_count": 6,
   "largest_cluster_share": 0.308,
@@ -732,19 +732,19 @@
         ],
         "methods": [
           {
-            "value": "Multi-Layer Feature Fusion",
+            "value": "Draft Tree",
             "count": 1
           },
           {
-            "value": "Speculative Sampling",
+            "value": "Feature Fusion",
+            "count": 1
+          },
+          {
+            "value": "Token Prediction",
             "count": 1
           },
           {
             "value": "Training-Time Test",
-            "count": 1
-          },
-          {
-            "value": "Tree-Based Draft",
             "count": 1
           }
         ]

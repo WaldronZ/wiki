@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T18:25:15",
+  "generated_at": "2026-07-21T20:41:17",
   "count": 13,
   "pair_count": 6,
   "cohort_count": 458,
@@ -1083,6 +1083,32 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "domains-llm-systems-methods-draft-tree",
+      "label": "LLM Systems / Draft Tree",
+      "pair": "Domain x Method",
+      "primary_field": "domains",
+      "primary_value": "LLM Systems",
+      "secondary_field": "methods",
+      "secondary_value": "Draft Tree",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?domain=LLM+Systems&method=Draft+Tree",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "domains-llm-systems-methods-dual-view-attention",
       "label": "LLM Systems / dual-view attention",
       "pair": "Domain x Method",
@@ -1132,6 +1158,32 @@
         }
       ],
       "href": "library.html?domain=LLM+Systems&method=Expert+Locality+Routing",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "domains-llm-systems-methods-feature-fusion",
+      "label": "LLM Systems / Feature Fusion",
+      "pair": "Domain x Method",
+      "primary_field": "domains",
+      "primary_value": "LLM Systems",
+      "secondary_field": "methods",
+      "secondary_value": "Feature Fusion",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?domain=LLM+Systems&method=Feature+Fusion",
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
@@ -1525,32 +1577,6 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
-      "id": "domains-llm-systems-methods-multi-layer-feature-fusion",
-      "label": "LLM Systems / Multi-Layer Feature Fusion",
-      "pair": "Domain x Method",
-      "primary_field": "domains",
-      "primary_value": "LLM Systems",
-      "secondary_field": "methods",
-      "secondary_value": "Multi-Layer Feature Fusion",
-      "count": 1,
-      "share": 0.0769,
-      "action": "singleton",
-      "severity": "medium",
-      "slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "sample_papers": [
-        {
-          "slug": "2503.01840-eagle-3-scaling-up",
-          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
-          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
-          "href": "2503.01840-eagle-3-scaling-up.html"
-        }
-      ],
-      "href": "library.html?domain=LLM+Systems&method=Multi-Layer+Feature+Fusion",
-      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
-    },
-    {
       "id": "domains-llm-systems-methods-online-softmax",
       "label": "LLM Systems / online softmax",
       "pair": "Domain x Method",
@@ -1811,32 +1837,6 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
-      "id": "domains-llm-systems-methods-speculative-sampling",
-      "label": "LLM Systems / Speculative Sampling",
-      "pair": "Domain x Method",
-      "primary_field": "domains",
-      "primary_value": "LLM Systems",
-      "secondary_field": "methods",
-      "secondary_value": "Speculative Sampling",
-      "count": 1,
-      "share": 0.0769,
-      "action": "singleton",
-      "severity": "medium",
-      "slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "sample_papers": [
-        {
-          "slug": "2503.01840-eagle-3-scaling-up",
-          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
-          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
-          "href": "2503.01840-eagle-3-scaling-up.html"
-        }
-      ],
-      "href": "library.html?domain=LLM+Systems&method=Speculative+Sampling",
-      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
-    },
-    {
       "id": "domains-llm-systems-methods-target-hidden-features",
       "label": "LLM Systems / target hidden features",
       "pair": "Domain x Method",
@@ -1889,6 +1889,32 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "domains-llm-systems-methods-token-prediction",
+      "label": "LLM Systems / Token Prediction",
+      "pair": "Domain x Method",
+      "primary_field": "domains",
+      "primary_value": "LLM Systems",
+      "secondary_field": "methods",
+      "secondary_value": "Token Prediction",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?domain=LLM+Systems&method=Token+Prediction",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "domains-llm-systems-methods-training-time-test",
       "label": "LLM Systems / Training-Time Test",
       "pair": "Domain x Method",
@@ -1912,32 +1938,6 @@
         }
       ],
       "href": "library.html?domain=LLM+Systems&method=Training-Time+Test",
-      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
-    },
-    {
-      "id": "domains-llm-systems-methods-tree-based-draft",
-      "label": "LLM Systems / Tree-Based Draft",
-      "pair": "Domain x Method",
-      "primary_field": "domains",
-      "primary_value": "LLM Systems",
-      "secondary_field": "methods",
-      "secondary_value": "Tree-Based Draft",
-      "count": 1,
-      "share": 0.0769,
-      "action": "singleton",
-      "severity": "medium",
-      "slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "sample_papers": [
-        {
-          "slug": "2503.01840-eagle-3-scaling-up",
-          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
-          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
-          "href": "2503.01840-eagle-3-scaling-up.html"
-        }
-      ],
-      "href": "library.html?domain=LLM+Systems&method=Tree-Based+Draft",
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
@@ -3137,13 +3137,13 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
-      "id": "topics-draft-model-training-methods-multi-layer-feature-fusion",
-      "label": "Draft Model Training / Multi-Layer Feature Fusion",
+      "id": "topics-draft-model-training-methods-draft-tree",
+      "label": "Draft Model Training / Draft Tree",
       "pair": "Topic x Method",
       "primary_field": "topics",
       "primary_value": "Draft Model Training",
       "secondary_field": "methods",
-      "secondary_value": "Multi-Layer Feature Fusion",
+      "secondary_value": "Draft Tree",
       "count": 1,
       "share": 0.0769,
       "action": "singleton",
@@ -3159,17 +3159,17 @@
           "href": "2503.01840-eagle-3-scaling-up.html"
         }
       ],
-      "href": "library.html?topic=Draft+Model+Training&method=Multi-Layer+Feature+Fusion",
+      "href": "library.html?topic=Draft+Model+Training&method=Draft+Tree",
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
-      "id": "topics-draft-model-training-methods-speculative-sampling",
-      "label": "Draft Model Training / Speculative Sampling",
+      "id": "topics-draft-model-training-methods-feature-fusion",
+      "label": "Draft Model Training / Feature Fusion",
       "pair": "Topic x Method",
       "primary_field": "topics",
       "primary_value": "Draft Model Training",
       "secondary_field": "methods",
-      "secondary_value": "Speculative Sampling",
+      "secondary_value": "Feature Fusion",
       "count": 1,
       "share": 0.0769,
       "action": "singleton",
@@ -3185,7 +3185,33 @@
           "href": "2503.01840-eagle-3-scaling-up.html"
         }
       ],
-      "href": "library.html?topic=Draft+Model+Training&method=Speculative+Sampling",
+      "href": "library.html?topic=Draft+Model+Training&method=Feature+Fusion",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "topics-draft-model-training-methods-token-prediction",
+      "label": "Draft Model Training / Token Prediction",
+      "pair": "Topic x Method",
+      "primary_field": "topics",
+      "primary_value": "Draft Model Training",
+      "secondary_field": "methods",
+      "secondary_value": "Token Prediction",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?topic=Draft+Model+Training&method=Token+Prediction",
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
@@ -3212,32 +3238,6 @@
         }
       ],
       "href": "library.html?topic=Draft+Model+Training&method=Training-Time+Test",
-      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
-    },
-    {
-      "id": "topics-draft-model-training-methods-tree-based-draft",
-      "label": "Draft Model Training / Tree-Based Draft",
-      "pair": "Topic x Method",
-      "primary_field": "topics",
-      "primary_value": "Draft Model Training",
-      "secondary_field": "methods",
-      "secondary_value": "Tree-Based Draft",
-      "count": 1,
-      "share": 0.0769,
-      "action": "singleton",
-      "severity": "medium",
-      "slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "sample_papers": [
-        {
-          "slug": "2503.01840-eagle-3-scaling-up",
-          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
-          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
-          "href": "2503.01840-eagle-3-scaling-up.html"
-        }
-      ],
-      "href": "library.html?topic=Draft+Model+Training&method=Tree-Based+Draft",
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
@@ -5035,6 +5035,32 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "topics-llm-inference-methods-draft-tree",
+      "label": "LLM Inference / Draft Tree",
+      "pair": "Topic x Method",
+      "primary_field": "topics",
+      "primary_value": "LLM Inference",
+      "secondary_field": "methods",
+      "secondary_value": "Draft Tree",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?topic=LLM+Inference&method=Draft+Tree",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "topics-llm-inference-methods-dual-view-attention",
       "label": "LLM Inference / dual-view attention",
       "pair": "Topic x Method",
@@ -5084,6 +5110,32 @@
         }
       ],
       "href": "library.html?topic=LLM+Inference&method=fallback+speculation",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "topics-llm-inference-methods-feature-fusion",
+      "label": "LLM Inference / Feature Fusion",
+      "pair": "Topic x Method",
+      "primary_field": "topics",
+      "primary_value": "LLM Inference",
+      "secondary_field": "methods",
+      "secondary_value": "Feature Fusion",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?topic=LLM+Inference&method=Feature+Fusion",
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
@@ -5269,32 +5321,6 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
-      "id": "topics-llm-inference-methods-multi-layer-feature-fusion",
-      "label": "LLM Inference / Multi-Layer Feature Fusion",
-      "pair": "Topic x Method",
-      "primary_field": "topics",
-      "primary_value": "LLM Inference",
-      "secondary_field": "methods",
-      "secondary_value": "Multi-Layer Feature Fusion",
-      "count": 1,
-      "share": 0.0769,
-      "action": "singleton",
-      "severity": "medium",
-      "slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "sample_papers": [
-        {
-          "slug": "2503.01840-eagle-3-scaling-up",
-          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
-          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
-          "href": "2503.01840-eagle-3-scaling-up.html"
-        }
-      ],
-      "href": "library.html?topic=LLM+Inference&method=Multi-Layer+Feature+Fusion",
-      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
-    },
-    {
       "id": "topics-llm-inference-methods-parallel-drafting",
       "label": "LLM Inference / parallel drafting",
       "pair": "Topic x Method",
@@ -5373,32 +5399,6 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
-      "id": "topics-llm-inference-methods-speculative-sampling",
-      "label": "LLM Inference / Speculative Sampling",
-      "pair": "Topic x Method",
-      "primary_field": "topics",
-      "primary_value": "LLM Inference",
-      "secondary_field": "methods",
-      "secondary_value": "Speculative Sampling",
-      "count": 1,
-      "share": 0.0769,
-      "action": "singleton",
-      "severity": "medium",
-      "slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "sample_papers": [
-        {
-          "slug": "2503.01840-eagle-3-scaling-up",
-          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
-          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
-          "href": "2503.01840-eagle-3-scaling-up.html"
-        }
-      ],
-      "href": "library.html?topic=LLM+Inference&method=Speculative+Sampling",
-      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
-    },
-    {
       "id": "topics-llm-inference-methods-target-hidden-features",
       "label": "LLM Inference / target hidden features",
       "pair": "Topic x Method",
@@ -5425,6 +5425,32 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "topics-llm-inference-methods-token-prediction",
+      "label": "LLM Inference / Token Prediction",
+      "pair": "Topic x Method",
+      "primary_field": "topics",
+      "primary_value": "LLM Inference",
+      "secondary_field": "methods",
+      "secondary_value": "Token Prediction",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?topic=LLM+Inference&method=Token+Prediction",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "topics-llm-inference-methods-training-time-test",
       "label": "LLM Inference / Training-Time Test",
       "pair": "Topic x Method",
@@ -5448,32 +5474,6 @@
         }
       ],
       "href": "library.html?topic=LLM+Inference&method=Training-Time+Test",
-      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
-    },
-    {
-      "id": "topics-llm-inference-methods-tree-based-draft",
-      "label": "LLM Inference / Tree-Based Draft",
-      "pair": "Topic x Method",
-      "primary_field": "topics",
-      "primary_value": "LLM Inference",
-      "secondary_field": "methods",
-      "secondary_value": "Tree-Based Draft",
-      "count": 1,
-      "share": 0.0769,
-      "action": "singleton",
-      "severity": "medium",
-      "slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "sample_papers": [
-        {
-          "slug": "2503.01840-eagle-3-scaling-up",
-          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
-          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
-          "href": "2503.01840-eagle-3-scaling-up.html"
-        }
-      ],
-      "href": "library.html?topic=LLM+Inference&method=Tree-Based+Draft",
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
@@ -7245,13 +7245,13 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
-      "id": "topics-scaling-law-methods-multi-layer-feature-fusion",
-      "label": "Scaling Law / Multi-Layer Feature Fusion",
+      "id": "topics-scaling-law-methods-draft-tree",
+      "label": "Scaling Law / Draft Tree",
       "pair": "Topic x Method",
       "primary_field": "topics",
       "primary_value": "Scaling Law",
       "secondary_field": "methods",
-      "secondary_value": "Multi-Layer Feature Fusion",
+      "secondary_value": "Draft Tree",
       "count": 1,
       "share": 0.0769,
       "action": "singleton",
@@ -7267,17 +7267,17 @@
           "href": "2503.01840-eagle-3-scaling-up.html"
         }
       ],
-      "href": "library.html?topic=Scaling+Law&method=Multi-Layer+Feature+Fusion",
+      "href": "library.html?topic=Scaling+Law&method=Draft+Tree",
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
-      "id": "topics-scaling-law-methods-speculative-sampling",
-      "label": "Scaling Law / Speculative Sampling",
+      "id": "topics-scaling-law-methods-feature-fusion",
+      "label": "Scaling Law / Feature Fusion",
       "pair": "Topic x Method",
       "primary_field": "topics",
       "primary_value": "Scaling Law",
       "secondary_field": "methods",
-      "secondary_value": "Speculative Sampling",
+      "secondary_value": "Feature Fusion",
       "count": 1,
       "share": 0.0769,
       "action": "singleton",
@@ -7293,7 +7293,33 @@
           "href": "2503.01840-eagle-3-scaling-up.html"
         }
       ],
-      "href": "library.html?topic=Scaling+Law&method=Speculative+Sampling",
+      "href": "library.html?topic=Scaling+Law&method=Feature+Fusion",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "topics-scaling-law-methods-token-prediction",
+      "label": "Scaling Law / Token Prediction",
+      "pair": "Topic x Method",
+      "primary_field": "topics",
+      "primary_value": "Scaling Law",
+      "secondary_field": "methods",
+      "secondary_value": "Token Prediction",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?topic=Scaling+Law&method=Token+Prediction",
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
@@ -7320,32 +7346,6 @@
         }
       ],
       "href": "library.html?topic=Scaling+Law&method=Training-Time+Test",
-      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
-    },
-    {
-      "id": "topics-scaling-law-methods-tree-based-draft",
-      "label": "Scaling Law / Tree-Based Draft",
-      "pair": "Topic x Method",
-      "primary_field": "topics",
-      "primary_value": "Scaling Law",
-      "secondary_field": "methods",
-      "secondary_value": "Tree-Based Draft",
-      "count": 1,
-      "share": 0.0769,
-      "action": "singleton",
-      "severity": "medium",
-      "slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "sample_papers": [
-        {
-          "slug": "2503.01840-eagle-3-scaling-up",
-          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
-          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
-          "href": "2503.01840-eagle-3-scaling-up.html"
-        }
-      ],
-      "href": "library.html?topic=Scaling+Law&method=Tree-Based+Draft",
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
@@ -7609,6 +7609,32 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "topics-speculative-decoding-methods-draft-tree",
+      "label": "Speculative Decoding / Draft Tree",
+      "pair": "Topic x Method",
+      "primary_field": "topics",
+      "primary_value": "Speculative Decoding",
+      "secondary_field": "methods",
+      "secondary_value": "Draft Tree",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?topic=Speculative+Decoding&method=Draft+Tree",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "topics-speculative-decoding-methods-dual-view-attention",
       "label": "Speculative Decoding / dual-view attention",
       "pair": "Topic x Method",
@@ -7658,6 +7684,32 @@
         }
       ],
       "href": "library.html?topic=Speculative+Decoding&method=fallback+speculation",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "topics-speculative-decoding-methods-feature-fusion",
+      "label": "Speculative Decoding / Feature Fusion",
+      "pair": "Topic x Method",
+      "primary_field": "topics",
+      "primary_value": "Speculative Decoding",
+      "secondary_field": "methods",
+      "secondary_value": "Feature Fusion",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?topic=Speculative+Decoding&method=Feature+Fusion",
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
@@ -8025,32 +8077,6 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
-      "id": "topics-speculative-decoding-methods-multi-layer-feature-fusion",
-      "label": "Speculative Decoding / Multi-Layer Feature Fusion",
-      "pair": "Topic x Method",
-      "primary_field": "topics",
-      "primary_value": "Speculative Decoding",
-      "secondary_field": "methods",
-      "secondary_value": "Multi-Layer Feature Fusion",
-      "count": 1,
-      "share": 0.0769,
-      "action": "singleton",
-      "severity": "medium",
-      "slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "sample_papers": [
-        {
-          "slug": "2503.01840-eagle-3-scaling-up",
-          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
-          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
-          "href": "2503.01840-eagle-3-scaling-up.html"
-        }
-      ],
-      "href": "library.html?topic=Speculative+Decoding&method=Multi-Layer+Feature+Fusion",
-      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
-    },
-    {
       "id": "topics-speculative-decoding-methods-p-q-acceptance",
       "label": "Speculative Decoding / p/q acceptance",
       "pair": "Topic x Method",
@@ -8259,32 +8285,6 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
-      "id": "topics-speculative-decoding-methods-speculative-sampling",
-      "label": "Speculative Decoding / Speculative Sampling",
-      "pair": "Topic x Method",
-      "primary_field": "topics",
-      "primary_value": "Speculative Decoding",
-      "secondary_field": "methods",
-      "secondary_value": "Speculative Sampling",
-      "count": 1,
-      "share": 0.0769,
-      "action": "singleton",
-      "severity": "medium",
-      "slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "sample_papers": [
-        {
-          "slug": "2503.01840-eagle-3-scaling-up",
-          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
-          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
-          "href": "2503.01840-eagle-3-scaling-up.html"
-        }
-      ],
-      "href": "library.html?topic=Speculative+Decoding&method=Speculative+Sampling",
-      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
-    },
-    {
       "id": "topics-speculative-decoding-methods-target-hidden-features",
       "label": "Speculative Decoding / target hidden features",
       "pair": "Topic x Method",
@@ -8311,6 +8311,32 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "topics-speculative-decoding-methods-token-prediction",
+      "label": "Speculative Decoding / Token Prediction",
+      "pair": "Topic x Method",
+      "primary_field": "topics",
+      "primary_value": "Speculative Decoding",
+      "secondary_field": "methods",
+      "secondary_value": "Token Prediction",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?topic=Speculative+Decoding&method=Token+Prediction",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "topics-speculative-decoding-methods-training-time-test",
       "label": "Speculative Decoding / Training-Time Test",
       "pair": "Topic x Method",
@@ -8334,32 +8360,6 @@
         }
       ],
       "href": "library.html?topic=Speculative+Decoding&method=Training-Time+Test",
-      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
-    },
-    {
-      "id": "topics-speculative-decoding-methods-tree-based-draft",
-      "label": "Speculative Decoding / Tree-Based Draft",
-      "pair": "Topic x Method",
-      "primary_field": "topics",
-      "primary_value": "Speculative Decoding",
-      "secondary_field": "methods",
-      "secondary_value": "Tree-Based Draft",
-      "count": 1,
-      "share": 0.0769,
-      "action": "singleton",
-      "severity": "medium",
-      "slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "sample_papers": [
-        {
-          "slug": "2503.01840-eagle-3-scaling-up",
-          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
-          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
-          "href": "2503.01840-eagle-3-scaling-up.html"
-        }
-      ],
-      "href": "library.html?topic=Speculative+Decoding&method=Tree-Based+Draft",
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
@@ -10729,13 +10729,13 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
-      "id": "research-line-speculative-decoding-methods-multi-layer-feature-fusion",
-      "label": "Speculative Decoding / Multi-Layer Feature Fusion",
+      "id": "research-line-speculative-decoding-methods-draft-tree",
+      "label": "Speculative Decoding / Draft Tree",
       "pair": "研究线 x Method",
       "primary_field": "research_line",
       "primary_value": "Speculative Decoding",
       "secondary_field": "methods",
-      "secondary_value": "Multi-Layer Feature Fusion",
+      "secondary_value": "Draft Tree",
       "count": 1,
       "share": 0.0769,
       "action": "singleton",
@@ -10751,17 +10751,17 @@
           "href": "2503.01840-eagle-3-scaling-up.html"
         }
       ],
-      "href": "library.html?line=Speculative+Decoding&method=Multi-Layer+Feature+Fusion",
+      "href": "library.html?line=Speculative+Decoding&method=Draft+Tree",
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
-      "id": "research-line-speculative-decoding-methods-speculative-sampling",
-      "label": "Speculative Decoding / Speculative Sampling",
+      "id": "research-line-speculative-decoding-methods-feature-fusion",
+      "label": "Speculative Decoding / Feature Fusion",
       "pair": "研究线 x Method",
       "primary_field": "research_line",
       "primary_value": "Speculative Decoding",
       "secondary_field": "methods",
-      "secondary_value": "Speculative Sampling",
+      "secondary_value": "Feature Fusion",
       "count": 1,
       "share": 0.0769,
       "action": "singleton",
@@ -10777,7 +10777,33 @@
           "href": "2503.01840-eagle-3-scaling-up.html"
         }
       ],
-      "href": "library.html?line=Speculative+Decoding&method=Speculative+Sampling",
+      "href": "library.html?line=Speculative+Decoding&method=Feature+Fusion",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "research-line-speculative-decoding-methods-token-prediction",
+      "label": "Speculative Decoding / Token Prediction",
+      "pair": "研究线 x Method",
+      "primary_field": "research_line",
+      "primary_value": "Speculative Decoding",
+      "secondary_field": "methods",
+      "secondary_value": "Token Prediction",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        }
+      ],
+      "href": "library.html?line=Speculative+Decoding&method=Token+Prediction",
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
@@ -10804,32 +10830,6 @@
         }
       ],
       "href": "library.html?line=Speculative+Decoding&method=Training-Time+Test",
-      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
-    },
-    {
-      "id": "research-line-speculative-decoding-methods-tree-based-draft",
-      "label": "Speculative Decoding / Tree-Based Draft",
-      "pair": "研究线 x Method",
-      "primary_field": "research_line",
-      "primary_value": "Speculative Decoding",
-      "secondary_field": "methods",
-      "secondary_value": "Tree-Based Draft",
-      "count": 1,
-      "share": 0.0769,
-      "action": "singleton",
-      "severity": "medium",
-      "slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "sample_papers": [
-        {
-          "slug": "2503.01840-eagle-3-scaling-up",
-          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
-          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
-          "href": "2503.01840-eagle-3-scaling-up.html"
-        }
-      ],
-      "href": "library.html?line=Speculative+Decoding&method=Tree-Based+Draft",
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
@@ -13053,8 +13053,10 @@
       "domains-llm-systems-methods-cuda-gpu-parallelism",
       "domains-llm-systems-methods-cuda-graph",
       "domains-llm-systems-methods-distillation",
+      "domains-llm-systems-methods-draft-tree",
       "domains-llm-systems-methods-dual-view-attention",
       "domains-llm-systems-methods-expert-locality-routing",
+      "domains-llm-systems-methods-feature-fusion",
       "domains-llm-systems-methods-finalwipe",
       "domains-llm-systems-methods-forward-kl-distillation",
       "domains-llm-systems-methods-hardware-aware-scheduling",
@@ -13070,7 +13072,6 @@
       "domains-llm-systems-methods-masked-diffusion",
       "domains-llm-systems-methods-masked-input-formulation",
       "domains-llm-systems-methods-multi-head-twig",
-      "domains-llm-systems-methods-multi-layer-feature-fusion",
       "domains-llm-systems-methods-online-softmax",
       "domains-llm-systems-methods-p-q-acceptance",
       "domains-llm-systems-methods-parallel-drafting",
@@ -13081,11 +13082,10 @@
       "domains-llm-systems-methods-sglang-serving",
       "domains-llm-systems-methods-shared-kv-cache",
       "domains-llm-systems-methods-signature-cache",
-      "domains-llm-systems-methods-speculative-sampling",
       "domains-llm-systems-methods-target-hidden-features",
       "domains-llm-systems-methods-tiling",
+      "domains-llm-systems-methods-token-prediction",
       "domains-llm-systems-methods-training-time-test",
-      "domains-llm-systems-methods-tree-based-draft",
       "domains-llm-systems-methods-tree-based-self-speculative-decoding",
       "domains-llm-systems-methods-twig-guided-token-pruning",
       "domains-llm-systems-methods-work-partitioning",
@@ -13132,10 +13132,10 @@
       "topics-distributed-inference-methods-geometric-fan-out",
       "topics-distributed-inference-methods-speculative-decoding",
       "topics-distributed-inference-methods-verification-outcome-cache",
-      "topics-draft-model-training-methods-multi-layer-feature-fusion",
-      "topics-draft-model-training-methods-speculative-sampling",
+      "topics-draft-model-training-methods-draft-tree",
+      "topics-draft-model-training-methods-feature-fusion",
+      "topics-draft-model-training-methods-token-prediction",
       "topics-draft-model-training-methods-training-time-test",
-      "topics-draft-model-training-methods-tree-based-draft",
       "topics-efficient-attention-methods-cuda-gpu-parallelism",
       "topics-efficient-attention-methods-flashattention",
       "topics-efficient-attention-methods-online-softmax",
@@ -13205,8 +13205,10 @@
       "topics-llm-inference-methods-block-diffusion",
       "topics-llm-inference-methods-cache-aware-sampling",
       "topics-llm-inference-methods-confidence-scheduled-verification",
+      "topics-llm-inference-methods-draft-tree",
       "topics-llm-inference-methods-dual-view-attention",
       "topics-llm-inference-methods-fallback-speculation",
+      "topics-llm-inference-methods-feature-fusion",
       "topics-llm-inference-methods-forward-kl-distillation",
       "topics-llm-inference-methods-geometric-fan-out",
       "topics-llm-inference-methods-hardware-aware-scheduling",
@@ -13214,14 +13216,12 @@
       "topics-llm-inference-methods-kv-injection",
       "topics-llm-inference-methods-markov-head",
       "topics-llm-inference-methods-masked-diffusion",
-      "topics-llm-inference-methods-multi-layer-feature-fusion",
       "topics-llm-inference-methods-parallel-drafting",
       "topics-llm-inference-methods-semi-autoregressive-generation",
       "topics-llm-inference-methods-shared-kv-cache",
-      "topics-llm-inference-methods-speculative-sampling",
       "topics-llm-inference-methods-target-hidden-features",
+      "topics-llm-inference-methods-token-prediction",
       "topics-llm-inference-methods-training-time-test",
-      "topics-llm-inference-methods-tree-based-draft",
       "topics-llm-inference-methods-verification-outcome-cache",
       "topics-llm-serving-methods-balanced-k-means",
       "topics-llm-serving-methods-block-diffusion",
@@ -13290,10 +13290,10 @@
       "topics-parallel-decoding-methods-p-q-acceptance",
       "topics-parallel-decoding-methods-sglang-serving",
       "topics-parallel-decoding-methods-shared-kv-cache",
-      "topics-scaling-law-methods-multi-layer-feature-fusion",
-      "topics-scaling-law-methods-speculative-sampling",
+      "topics-scaling-law-methods-draft-tree",
+      "topics-scaling-law-methods-feature-fusion",
+      "topics-scaling-law-methods-token-prediction",
       "topics-scaling-law-methods-training-time-test",
-      "topics-scaling-law-methods-tree-based-draft",
       "topics-semi-autoregressive-generation-methods-confidence-scheduled-verification",
       "topics-semi-autoregressive-generation-methods-hardware-aware-scheduling",
       "topics-semi-autoregressive-generation-methods-markov-head",
@@ -13304,8 +13304,10 @@
       "topics-speculative-decoding-methods-cache-aware-sampling",
       "topics-speculative-decoding-methods-confidence-scheduled-verification",
       "topics-speculative-decoding-methods-distillation",
+      "topics-speculative-decoding-methods-draft-tree",
       "topics-speculative-decoding-methods-dual-view-attention",
       "topics-speculative-decoding-methods-fallback-speculation",
+      "topics-speculative-decoding-methods-feature-fusion",
       "topics-speculative-decoding-methods-finalwipe",
       "topics-speculative-decoding-methods-forward-kl-distillation",
       "topics-speculative-decoding-methods-geometric-fan-out",
@@ -13320,7 +13322,6 @@
       "topics-speculative-decoding-methods-masked-diffusion",
       "topics-speculative-decoding-methods-masked-input-formulation",
       "topics-speculative-decoding-methods-multi-head-twig",
-      "topics-speculative-decoding-methods-multi-layer-feature-fusion",
       "topics-speculative-decoding-methods-p-q-acceptance",
       "topics-speculative-decoding-methods-parallel-drafting",
       "topics-speculative-decoding-methods-pruning-oriented-reinforcement-learning",
@@ -13329,10 +13330,9 @@
       "topics-speculative-decoding-methods-semi-autoregressive-generation",
       "topics-speculative-decoding-methods-sglang-serving",
       "topics-speculative-decoding-methods-shared-kv-cache",
-      "topics-speculative-decoding-methods-speculative-sampling",
       "topics-speculative-decoding-methods-target-hidden-features",
+      "topics-speculative-decoding-methods-token-prediction",
       "topics-speculative-decoding-methods-training-time-test",
-      "topics-speculative-decoding-methods-tree-based-draft",
       "topics-speculative-decoding-methods-tree-based-self-speculative-decoding",
       "topics-speculative-decoding-methods-twig-guided-token-pruning",
       "topics-speculative-decoding-methods-verification-outcome-cache",
@@ -13424,10 +13424,10 @@
       "research-line-parallel-decoding-with-diffusion-models-methods-shared-kv-cache",
       "research-line-parallel-decoding-with-diffusion-models-methods-speculative-decoding",
       "research-line-parallel-decoding-with-diffusion-models-methods-target-hidden-features",
-      "research-line-speculative-decoding-methods-multi-layer-feature-fusion",
-      "research-line-speculative-decoding-methods-speculative-sampling",
+      "research-line-speculative-decoding-methods-draft-tree",
+      "research-line-speculative-decoding-methods-feature-fusion",
+      "research-line-speculative-decoding-methods-token-prediction",
       "research-line-speculative-decoding-methods-training-time-test",
-      "research-line-speculative-decoding-methods-tree-based-draft",
       "research-line-unassigned-methods-asynchronous-decoding",
       "research-line-unassigned-methods-cache-aware-sampling",
       "research-line-unassigned-methods-fallback-speculation",

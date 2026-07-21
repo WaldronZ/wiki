@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T18:25:15",
+  "generated_at": "2026-07-21T20:41:17",
   "count": 13,
   "field_count": 10,
   "value_count": 134,
@@ -1511,6 +1511,25 @@
       "field_label": "方法",
       "english": "Method",
       "query_key": "method",
+      "value": "Draft Tree",
+      "count": 1,
+      "share": 0.0769,
+      "configured": false,
+      "definition_status": "",
+      "owner_name": "",
+      "action": "merge_candidate",
+      "severity": "medium",
+      "href": "library.html?method=Draft+Tree",
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "field": "methods",
+      "field_label": "方法",
+      "english": "Method",
+      "query_key": "method",
       "value": "dual-view attention",
       "count": 1,
       "share": 0.0769,
@@ -1560,6 +1579,25 @@
       "href": "library.html?method=fallback+speculation",
       "sample_slugs": [
         "2603.03251-speculative-speculative-decoding"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "field": "methods",
+      "field_label": "方法",
+      "english": "Method",
+      "query_key": "method",
+      "value": "Feature Fusion",
+      "count": 1,
+      "share": 0.0769,
+      "configured": false,
+      "definition_status": "",
+      "owner_name": "",
+      "action": "merge_candidate",
+      "severity": "medium",
+      "href": "library.html?method=Feature+Fusion",
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up"
       ],
       "recommendation": "检查是否应合并为更通用标签。"
     },
@@ -1929,25 +1967,6 @@
       "field_label": "方法",
       "english": "Method",
       "query_key": "method",
-      "value": "Multi-Layer Feature Fusion",
-      "count": 1,
-      "share": 0.0769,
-      "configured": false,
-      "definition_status": "",
-      "owner_name": "",
-      "action": "merge_candidate",
-      "severity": "medium",
-      "href": "library.html?method=Multi-Layer+Feature+Fusion",
-      "sample_slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "recommendation": "检查是否应合并为更通用标签。"
-    },
-    {
-      "field": "methods",
-      "field_label": "方法",
-      "english": "Method",
-      "query_key": "method",
       "value": "online softmax",
       "count": 1,
       "share": 0.0769,
@@ -2138,25 +2157,6 @@
       "field_label": "方法",
       "english": "Method",
       "query_key": "method",
-      "value": "Speculative Sampling",
-      "count": 1,
-      "share": 0.0769,
-      "configured": false,
-      "definition_status": "",
-      "owner_name": "",
-      "action": "merge_candidate",
-      "severity": "medium",
-      "href": "library.html?method=Speculative+Sampling",
-      "sample_slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "recommendation": "检查是否应合并为更通用标签。"
-    },
-    {
-      "field": "methods",
-      "field_label": "方法",
-      "english": "Method",
-      "query_key": "method",
       "value": "target hidden features",
       "count": 1,
       "share": 0.0769,
@@ -2195,7 +2195,7 @@
       "field_label": "方法",
       "english": "Method",
       "query_key": "method",
-      "value": "Training-Time Test",
+      "value": "Token Prediction",
       "count": 1,
       "share": 0.0769,
       "configured": false,
@@ -2203,7 +2203,7 @@
       "owner_name": "",
       "action": "merge_candidate",
       "severity": "medium",
-      "href": "library.html?method=Training-Time+Test",
+      "href": "library.html?method=Token+Prediction",
       "sample_slugs": [
         "2503.01840-eagle-3-scaling-up"
       ],
@@ -2214,7 +2214,7 @@
       "field_label": "方法",
       "english": "Method",
       "query_key": "method",
-      "value": "Tree-Based Draft",
+      "value": "Training-Time Test",
       "count": 1,
       "share": 0.0769,
       "configured": false,
@@ -2222,7 +2222,7 @@
       "owner_name": "",
       "action": "merge_candidate",
       "severity": "medium",
-      "href": "library.html?method=Tree-Based+Draft",
+      "href": "library.html?method=Training-Time+Test",
       "sample_slugs": [
         "2503.01840-eagle-3-scaling-up"
       ],
