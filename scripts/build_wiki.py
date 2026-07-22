@@ -22573,6 +22573,16 @@ def normalize_generated_content(path: Path, data: bytes | None) -> str:
     )
     text = re.sub(r"(最近更新|生成时间) \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}", r"\1 <TIMESTAMP>", text)
     text = re.sub(r"next_review &lt;= \d{4}-\d{2}-\d{2}", "next_review &lt;= <DATE>", text)
+    # HTML data-updated attributes
+    text = re.sub(r'data-updated="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}"', 'data-updated="<TIMESTAMP>"', text)
+    # JSON date-only fields (added_at, today)
+    text = re.sub(
+        r'("(?:added_at|today)"\s*:\s*")[^"]+(")',
+        r"\1<DATE>\2",
+        text,
+    )
+    # HTML date-only display (日期 2026-07-22)
+    text = re.sub(r"日期 \d{4}-\d{2}-\d{2}", "日期 <DATE>", text)
     return text
 
 
