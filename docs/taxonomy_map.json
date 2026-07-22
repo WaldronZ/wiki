@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T20:41:17",
+  "generated_at": "2026-07-22T13:10:32",
   "count": 13,
   "field_order": [
     {
@@ -7995,17 +7995,17 @@
     "有 2 篇论文未进入研究线，建议先分配 research_line 再细化下游分类。"
   ],
   "slug_titles": {
-    "2607.00466-eldr": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
-    "2603.03251-speculative-speculative-decoding": "推测性推测解码",
     "2503.14075-twigvlm-plus-plus": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
-    "noarxiv-2026-dspark": "DSpark：基于置信度调度的半自回归 speculative decoding",
     "2602.06036-dflash": "DFlash：用于快速 speculative decoding 的块扩散方法",
+    "2603.03251-speculative-speculative-decoding": "推测性推测解码",
     "2604.11035-introspective-dlm": "内省式扩散语言模型",
     "2605.12825-orthrus": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+    "2607.00466-eldr": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+    "noarxiv-2026-dspark": "DSpark：基于置信度调度的半自回归 speculative decoding",
+    "2501.01005-flashinfer": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
     "2503.01840-eagle-3-scaling-up": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
     "2507.11851-llm-future-mtp": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
     "2512.23424-akg-kernel-agent-multi": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
-    "2501.01005-flashinfer": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
     "2307.08691-flashattention-2": "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
     "semantic-search-evaluation": "Semantic Search Evaluation"
   }

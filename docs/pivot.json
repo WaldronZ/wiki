@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T20:41:17",
+  "generated_at": "2026-07-22T13:10:32",
   "count": 13,
   "dimensions": [
     {
@@ -77,107 +77,6 @@
   ],
   "papers": [
     {
-      "slug": "2607.00466-eldr",
-      "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
-      "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
-      "href": "2607.00466-eldr.html",
-      "dimensions": {
-        "research_line": [
-          "LLM Serving"
-        ],
-        "domain": [
-          "LLM Systems"
-        ],
-        "track": [
-          "Inference Acceleration"
-        ],
-        "problem": [
-          "MoE Serving"
-        ],
-        "topic": [
-          "Disaggregated Serving",
-          "LLM Serving",
-          "Load Balancing",
-          "MoE"
-        ],
-        "method": [
-          "Balanced K-means",
-          "Expert Locality Routing",
-          "Signature Cache"
-        ],
-        "status": [
-          "read"
-        ],
-        "reading_stage": [
-          "deep_read"
-        ],
-        "review_stage": [
-          "Unassigned"
-        ],
-        "year": [
-          "2026"
-        ],
-        "importance": [
-          "4"
-        ],
-        "has_code": [
-          "no"
-        ]
-      }
-    },
-    {
-      "slug": "2603.03251-speculative-speculative-decoding",
-      "title": "Speculative Speculative Decoding",
-      "title_zh": "推测性推测解码",
-      "href": "2603.03251-speculative-speculative-decoding.html",
-      "dimensions": {
-        "research_line": [
-          "Unassigned"
-        ],
-        "domain": [
-          "Unassigned"
-        ],
-        "track": [
-          "Unassigned"
-        ],
-        "problem": [
-          "Unassigned"
-        ],
-        "topic": [
-          "Distributed Inference",
-          "LLM Inference",
-          "Speculative Decoding",
-          "Systems Optimization"
-        ],
-        "method": [
-          "asynchronous decoding",
-          "cache-aware sampling",
-          "fallback speculation",
-          "geometric fan-out",
-          "Speculative Decoding",
-          "verification outcome cache"
-        ],
-        "status": [
-          "read"
-        ],
-        "reading_stage": [
-          "Unassigned"
-        ],
-        "review_stage": [
-          "Unassigned"
-        ],
-        "year": [
-          "2026"
-        ],
-        "importance": [
-          "4"
-        ],
-        "has_code": [
-          "yes"
-        ]
-      }
-    },
-    {
       "slug": "2503.14075-twigvlm-plus-plus",
       "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
       "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
@@ -213,59 +112,6 @@
           "pruning-oriented reinforcement learning",
           "tree-based self-speculative decoding",
           "twig-guided token pruning"
-        ],
-        "status": [
-          "read"
-        ],
-        "reading_stage": [
-          "code_checked"
-        ],
-        "review_stage": [
-          "Unassigned"
-        ],
-        "year": [
-          "2026"
-        ],
-        "importance": [
-          "4"
-        ],
-        "has_code": [
-          "yes"
-        ]
-      }
-    },
-    {
-      "slug": "noarxiv-2026-dspark",
-      "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
-      "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
-      "href": "noarxiv-2026-dspark.html",
-      "dimensions": {
-        "research_line": [
-          "LLM Serving"
-        ],
-        "domain": [
-          "LLM Systems"
-        ],
-        "track": [
-          "Inference Acceleration",
-          "Parallel Decoding"
-        ],
-        "problem": [
-          "Load-Aware Serving",
-          "Lossless Speculative Decoding"
-        ],
-        "topic": [
-          "LLM Inference",
-          "LLM Serving",
-          "Semi-Autoregressive Generation",
-          "Speculative Decoding"
-        ],
-        "method": [
-          "confidence-scheduled verification",
-          "hardware-aware scheduling",
-          "Markov head",
-          "semi-autoregressive generation",
-          "Speculative Decoding"
         ],
         "status": [
           "read"
@@ -324,6 +170,58 @@
         ],
         "reading_stage": [
           "deep_read"
+        ],
+        "review_stage": [
+          "Unassigned"
+        ],
+        "year": [
+          "2026"
+        ],
+        "importance": [
+          "4"
+        ],
+        "has_code": [
+          "yes"
+        ]
+      }
+    },
+    {
+      "slug": "2603.03251-speculative-speculative-decoding",
+      "title": "Speculative Speculative Decoding",
+      "title_zh": "推测性推测解码",
+      "href": "2603.03251-speculative-speculative-decoding.html",
+      "dimensions": {
+        "research_line": [
+          "Unassigned"
+        ],
+        "domain": [
+          "Unassigned"
+        ],
+        "track": [
+          "Unassigned"
+        ],
+        "problem": [
+          "Unassigned"
+        ],
+        "topic": [
+          "Distributed Inference",
+          "LLM Inference",
+          "Speculative Decoding",
+          "Systems Optimization"
+        ],
+        "method": [
+          "asynchronous decoding",
+          "cache-aware sampling",
+          "fallback speculation",
+          "geometric fan-out",
+          "Speculative Decoding",
+          "verification outcome cache"
+        ],
+        "status": [
+          "read"
+        ],
+        "reading_stage": [
+          "Unassigned"
         ],
         "review_stage": [
           "Unassigned"
@@ -437,6 +335,162 @@
         ],
         "year": [
           "2026"
+        ],
+        "importance": [
+          "4"
+        ],
+        "has_code": [
+          "yes"
+        ]
+      }
+    },
+    {
+      "slug": "2607.00466-eldr",
+      "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+      "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+      "href": "2607.00466-eldr.html",
+      "dimensions": {
+        "research_line": [
+          "LLM Serving"
+        ],
+        "domain": [
+          "LLM Systems"
+        ],
+        "track": [
+          "Inference Acceleration"
+        ],
+        "problem": [
+          "MoE Serving"
+        ],
+        "topic": [
+          "Disaggregated Serving",
+          "LLM Serving",
+          "Load Balancing",
+          "MoE"
+        ],
+        "method": [
+          "Balanced K-means",
+          "Expert Locality Routing",
+          "Signature Cache"
+        ],
+        "status": [
+          "read"
+        ],
+        "reading_stage": [
+          "deep_read"
+        ],
+        "review_stage": [
+          "Unassigned"
+        ],
+        "year": [
+          "2026"
+        ],
+        "importance": [
+          "4"
+        ],
+        "has_code": [
+          "no"
+        ]
+      }
+    },
+    {
+      "slug": "noarxiv-2026-dspark",
+      "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+      "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+      "href": "noarxiv-2026-dspark.html",
+      "dimensions": {
+        "research_line": [
+          "LLM Serving"
+        ],
+        "domain": [
+          "LLM Systems"
+        ],
+        "track": [
+          "Inference Acceleration",
+          "Parallel Decoding"
+        ],
+        "problem": [
+          "Load-Aware Serving",
+          "Lossless Speculative Decoding"
+        ],
+        "topic": [
+          "LLM Inference",
+          "LLM Serving",
+          "Semi-Autoregressive Generation",
+          "Speculative Decoding"
+        ],
+        "method": [
+          "confidence-scheduled verification",
+          "hardware-aware scheduling",
+          "Markov head",
+          "semi-autoregressive generation",
+          "Speculative Decoding"
+        ],
+        "status": [
+          "read"
+        ],
+        "reading_stage": [
+          "code_checked"
+        ],
+        "review_stage": [
+          "Unassigned"
+        ],
+        "year": [
+          "2026"
+        ],
+        "importance": [
+          "4"
+        ],
+        "has_code": [
+          "yes"
+        ]
+      }
+    },
+    {
+      "slug": "2501.01005-flashinfer",
+      "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
+      "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
+      "href": "2501.01005-flashinfer.html",
+      "dimensions": {
+        "research_line": [
+          "Efficient Attention Kernels"
+        ],
+        "domain": [
+          "LLM Systems"
+        ],
+        "track": [
+          "Attention Kernels",
+          "Inference Serving Systems"
+        ],
+        "problem": [
+          "Customizable Attention Serving"
+        ],
+        "topic": [
+          "Attention Kernels",
+          "GPU Systems",
+          "Inference Optimization",
+          "KV Cache",
+          "LLM Serving"
+        ],
+        "method": [
+          "block-sparse attention",
+          "composable KV-cache format",
+          "CUDA Graph",
+          "FlashAttention",
+          "JIT compilation",
+          "load-balanced scheduling"
+        ],
+        "status": [
+          "read"
+        ],
+        "reading_stage": [
+          "deep_read"
+        ],
+        "review_stage": [
+          "Unassigned"
+        ],
+        "year": [
+          "2025"
         ],
         "importance": [
           "4"
@@ -603,60 +657,6 @@
       }
     },
     {
-      "slug": "2501.01005-flashinfer",
-      "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
-      "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
-      "href": "2501.01005-flashinfer.html",
-      "dimensions": {
-        "research_line": [
-          "Efficient Attention Kernels"
-        ],
-        "domain": [
-          "LLM Systems"
-        ],
-        "track": [
-          "Attention Kernels",
-          "Inference Serving Systems"
-        ],
-        "problem": [
-          "Customizable Attention Serving"
-        ],
-        "topic": [
-          "Attention Kernels",
-          "GPU Systems",
-          "Inference Optimization",
-          "KV Cache",
-          "LLM Serving"
-        ],
-        "method": [
-          "block-sparse attention",
-          "composable KV-cache format",
-          "CUDA Graph",
-          "FlashAttention",
-          "JIT compilation",
-          "load-balanced scheduling"
-        ],
-        "status": [
-          "read"
-        ],
-        "reading_stage": [
-          "deep_read"
-        ],
-        "review_stage": [
-          "Unassigned"
-        ],
-        "year": [
-          "2025"
-        ],
-        "importance": [
-          "4"
-        ],
-        "has_code": [
-          "yes"
-        ]
-      }
-    },
-    {
       "slug": "2307.08691-flashattention-2",
       "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning",
       "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
@@ -796,39 +796,39 @@
           "count": 2
         },
         {
-          "value": "Balanced K-means",
-          "count": 1
-        },
-        {
-          "value": "Expert Locality Routing",
-          "count": 1
-        },
-        {
-          "value": "Signature Cache",
-          "count": 1
-        },
-        {
-          "value": "asynchronous decoding",
-          "count": 1
-        },
-        {
-          "value": "cache-aware sampling",
-          "count": 1
-        },
-        {
-          "value": "fallback speculation",
-          "count": 1
-        },
-        {
-          "value": "geometric fan-out",
-          "count": 1
-        },
-        {
-          "value": "verification outcome cache",
-          "count": 1
-        },
-        {
           "value": "distillation",
+          "count": 1
+        },
+        {
+          "value": "FinalWipe",
+          "count": 1
+        },
+        {
+          "value": "multi-head twig",
+          "count": 1
+        },
+        {
+          "value": "pruning-oriented reinforcement learning",
+          "count": 1
+        },
+        {
+          "value": "tree-based self-speculative decoding",
+          "count": 1
+        },
+        {
+          "value": "twig-guided token pruning",
+          "count": 1
+        },
+        {
+          "value": "block diffusion",
+          "count": 1
+        },
+        {
+          "value": "KV injection",
+          "count": 1
+        },
+        {
+          "value": "parallel drafting",
           "count": 1
         }
       ],
@@ -853,34 +853,34 @@
         },
         {
           "row": "LLM Serving",
-          "column": "Balanced K-means",
-          "count": 1,
-          "slugs": [
-            "2607.00466-eldr"
-          ]
-        },
-        {
-          "row": "LLM Serving",
-          "column": "Expert Locality Routing",
-          "count": 1,
-          "slugs": [
-            "2607.00466-eldr"
-          ]
-        },
-        {
-          "row": "LLM Serving",
-          "column": "Signature Cache",
-          "count": 1,
-          "slugs": [
-            "2607.00466-eldr"
-          ]
-        },
-        {
-          "row": "LLM Serving",
           "column": "Speculative Decoding",
           "count": 1,
           "slugs": [
             "noarxiv-2026-dspark"
+          ]
+        },
+        {
+          "row": "Parallel Decoding with Diffusion Models",
+          "column": "block diffusion",
+          "count": 1,
+          "slugs": [
+            "2602.06036-dflash"
+          ]
+        },
+        {
+          "row": "Parallel Decoding with Diffusion Models",
+          "column": "KV injection",
+          "count": 1,
+          "slugs": [
+            "2602.06036-dflash"
+          ]
+        },
+        {
+          "row": "Parallel Decoding with Diffusion Models",
+          "column": "parallel drafting",
+          "count": 1,
+          "slugs": [
+            "2602.06036-dflash"
           ]
         },
         {
@@ -893,47 +893,7 @@
         },
         {
           "row": "Unassigned",
-          "column": "asynchronous decoding",
-          "count": 1,
-          "slugs": [
-            "2603.03251-speculative-speculative-decoding"
-          ]
-        },
-        {
-          "row": "Unassigned",
-          "column": "cache-aware sampling",
-          "count": 1,
-          "slugs": [
-            "2603.03251-speculative-speculative-decoding"
-          ]
-        },
-        {
-          "row": "Unassigned",
-          "column": "fallback speculation",
-          "count": 1,
-          "slugs": [
-            "2603.03251-speculative-speculative-decoding"
-          ]
-        },
-        {
-          "row": "Unassigned",
-          "column": "geometric fan-out",
-          "count": 1,
-          "slugs": [
-            "2603.03251-speculative-speculative-decoding"
-          ]
-        },
-        {
-          "row": "Unassigned",
           "column": "Speculative Decoding",
-          "count": 1,
-          "slugs": [
-            "2603.03251-speculative-speculative-decoding"
-          ]
-        },
-        {
-          "row": "Unassigned",
-          "column": "verification outcome cache",
           "count": 1,
           "slugs": [
             "2603.03251-speculative-speculative-decoding"
@@ -942,6 +902,46 @@
         {
           "row": "VLM Acceleration",
           "column": "distillation",
+          "count": 1,
+          "slugs": [
+            "2503.14075-twigvlm-plus-plus"
+          ]
+        },
+        {
+          "row": "VLM Acceleration",
+          "column": "FinalWipe",
+          "count": 1,
+          "slugs": [
+            "2503.14075-twigvlm-plus-plus"
+          ]
+        },
+        {
+          "row": "VLM Acceleration",
+          "column": "multi-head twig",
+          "count": 1,
+          "slugs": [
+            "2503.14075-twigvlm-plus-plus"
+          ]
+        },
+        {
+          "row": "VLM Acceleration",
+          "column": "pruning-oriented reinforcement learning",
+          "count": 1,
+          "slugs": [
+            "2503.14075-twigvlm-plus-plus"
+          ]
+        },
+        {
+          "row": "VLM Acceleration",
+          "column": "tree-based self-speculative decoding",
+          "count": 1,
+          "slugs": [
+            "2503.14075-twigvlm-plus-plus"
+          ]
+        },
+        {
+          "row": "VLM Acceleration",
+          "column": "twig-guided token pruning",
           "count": 1,
           "slugs": [
             "2503.14075-twigvlm-plus-plus"
@@ -1078,11 +1078,11 @@
           "count": 8
         },
         {
-          "value": "LLM Serving",
+          "value": "LLM Inference",
           "count": 5
         },
         {
-          "value": "LLM Inference",
+          "value": "LLM Serving",
           "count": 5
         },
         {
@@ -1102,23 +1102,23 @@
           "count": 2
         },
         {
-          "value": "Disaggregated Serving",
+          "value": "Multimodal Inference",
           "count": 1
         },
         {
-          "value": "Load Balancing",
+          "value": "Vision-Language Models",
           "count": 1
         },
         {
-          "value": "MoE",
+          "value": "Visual Token Pruning",
+          "count": 1
+        },
+        {
+          "value": "VLM Acceleration",
           "count": 1
         },
         {
           "value": "Distributed Inference",
-          "count": 1
-        },
-        {
-          "value": "Systems Optimization",
           "count": 1
         }
       ],
@@ -1220,14 +1220,6 @@
         },
         {
           "row": "2026",
-          "column": "Disaggregated Serving",
-          "count": 1,
-          "slugs": [
-            "2607.00466-eldr"
-          ]
-        },
-        {
-          "row": "2026",
           "column": "Distributed Inference",
           "count": 1,
           "slugs": [
@@ -1252,26 +1244,34 @@
         },
         {
           "row": "2026",
-          "column": "Load Balancing",
+          "column": "Multimodal Inference",
           "count": 1,
           "slugs": [
-            "2607.00466-eldr"
+            "2503.14075-twigvlm-plus-plus"
           ]
         },
         {
           "row": "2026",
-          "column": "MoE",
+          "column": "Vision-Language Models",
           "count": 1,
           "slugs": [
-            "2607.00466-eldr"
+            "2503.14075-twigvlm-plus-plus"
           ]
         },
         {
           "row": "2026",
-          "column": "Systems Optimization",
+          "column": "Visual Token Pruning",
           "count": 1,
           "slugs": [
-            "2603.03251-speculative-speculative-decoding"
+            "2503.14075-twigvlm-plus-plus"
+          ]
+        },
+        {
+          "row": "2026",
+          "column": "VLM Acceleration",
+          "count": 1,
+          "slugs": [
+            "2503.14075-twigvlm-plus-plus"
           ]
         }
       ],
@@ -1296,16 +1296,12 @@
       ],
       "columns": [
         {
-          "value": "Unassigned",
-          "count": 3
-        },
-        {
           "value": "Lossless Speculative Decoding",
           "count": 3
         },
         {
-          "value": "MoE Serving",
-          "count": 1
+          "value": "Unassigned",
+          "count": 3
         },
         {
           "value": "Efficient VLM Inference",
@@ -1320,10 +1316,6 @@
           "count": 1
         },
         {
-          "value": "Load-Aware Serving",
-          "count": 1
-        },
-        {
           "value": "Parallel Diffusion Decoding",
           "count": 1
         },
@@ -1332,11 +1324,19 @@
           "count": 1
         },
         {
-          "value": "Speculative Decoding",
+          "value": "MoE Serving",
+          "count": 1
+        },
+        {
+          "value": "Load-Aware Serving",
           "count": 1
         },
         {
           "value": "Customizable Attention Serving",
+          "count": 1
+        },
+        {
+          "value": "Speculative Decoding",
           "count": 1
         },
         {

@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-21T20:41:17",
-  "today": "2026-07-21",
+  "generated_at": "2026-07-22T13:10:32",
+  "today": "2026-07-22",
   "count": 13,
   "summary": {
     "urgency": {
@@ -25,14 +25,14 @@
       "reading_stage": "",
       "review_stage": "",
       "review_state": "needs_plan",
-      "suggested_next_review": "2026-07-17",
-      "next_review": "2026-07-17",
+      "suggested_next_review": "2026-08-21",
+      "next_review": "2026-08-21",
       "priority_score": 241,
       "urgency": "high",
       "category": "review",
       "category_label": "复习",
       "reasons": [
-        "缺复习计划：建议 2026-07-17",
+        "缺复习计划：建议 2026-08-21",
         "缺必填字段：domains, tracks, problems, reading_stage",
         "弱元数据：next_review, review_stage, has_code, confidence",
         "存在 taxonomy drift，严格校验会失败",
@@ -86,14 +86,14 @@
       "reading_stage": "",
       "review_stage": "",
       "review_state": "needs_plan",
-      "suggested_next_review": "2026-08-08",
-      "next_review": "2026-08-08",
+      "suggested_next_review": "2026-08-21",
+      "next_review": "2026-08-21",
       "priority_score": 184,
       "urgency": "high",
       "category": "review",
       "category_label": "复习",
       "reasons": [
-        "缺复习计划：建议 2026-08-08",
+        "缺复习计划：建议 2026-08-21",
         "缺必填字段：domains, tracks, problems, research_line",
         "弱元数据：next_review, review_stage, confidence, reproducibility",
         "分类粒度偏稀，检索入口不足"
@@ -151,14 +151,14 @@
       "reading_stage": "",
       "review_stage": "",
       "review_state": "needs_plan",
-      "suggested_next_review": "2026-09-13",
-      "next_review": "2026-09-13",
+      "suggested_next_review": "2026-10-20",
+      "next_review": "2026-10-20",
       "priority_score": 153,
       "urgency": "high",
       "category": "review",
       "category_label": "复习",
       "reasons": [
-        "缺复习计划：建议 2026-09-13",
+        "缺复习计划：建议 2026-10-20",
         "缺必填字段：domains, tracks, problems, methods",
         "弱元数据：next_review, review_stage, has_code, confidence",
         "分类粒度偏稀，检索入口不足",
@@ -207,14 +207,14 @@
       "reading_stage": "deep_read",
       "review_stage": "",
       "review_state": "needs_plan",
-      "suggested_next_review": "2026-06-18",
-      "next_review": "2026-06-18",
+      "suggested_next_review": "2026-07-29",
+      "next_review": "2026-07-29",
       "priority_score": 140,
       "urgency": "high",
       "category": "review",
       "category_label": "复习",
       "reasons": [
-        "缺复习计划：建议 2026-06-18",
+        "缺复习计划：建议 2026-07-29",
         "弱元数据：next_review, review_stage",
         "分类粒度偏密，适合做标签归一化"
       ],
@@ -228,11 +228,11 @@
         "taxonomy_action:split_candidate:topics:Speculative Decoding",
         "taxonomy_action:split_candidate:tracks:Inference Acceleration",
         "taxonomy_action:split_candidate:domains:LLM Systems",
+        "taxonomy_action:split_candidate:status:read",
         "taxonomy_action:split_candidate:reading_stage:deep_read",
         "review_plan:2604.11035-introspective-dlm",
         "taxonomy_dense:2604.11035-introspective-dlm",
-        "taxonomy_action:merge_candidate:methods:SGLang serving",
-        "taxonomy_action:merge_candidate:methods:introspective consistency"
+        "taxonomy_action:merge_candidate:methods:SGLang serving"
       ],
       "queue_hits": [
         {
@@ -264,14 +264,14 @@
       "reading_stage": "deep_read",
       "review_stage": "",
       "review_state": "needs_plan",
-      "suggested_next_review": "2026-08-13",
-      "next_review": "2026-08-13",
+      "suggested_next_review": "2026-08-14",
+      "next_review": "2026-08-14",
       "priority_score": 139,
       "urgency": "high",
       "category": "review",
       "category_label": "复习",
       "reasons": [
-        "缺复习计划：建议 2026-08-13",
+        "缺复习计划：建议 2026-08-14",
         "弱元数据：next_review, review_stage, has_code",
         "缺代码实现观察或代码线索"
       ],
@@ -284,11 +284,11 @@
         "taxonomy_action:split_candidate:tracks:Inference Acceleration",
         "taxonomy_action:split_candidate:domains:LLM Systems",
         "taxonomy_action:split_candidate:reading_stage:deep_read",
-        "taxonomy_action:split_candidate:status:read",
         "review_plan:2607.00466-eldr",
         "taxonomy_action:merge_candidate:topics:Disaggregated Serving",
         "taxonomy_action:merge_candidate:topics:Load Balancing",
-        "taxonomy_action:merge_candidate:topics:MoE"
+        "taxonomy_action:merge_candidate:topics:MoE",
+        "taxonomy_action:merge_candidate:methods:Balanced K-means"
       ],
       "queue_hits": [
         {
@@ -313,14 +313,14 @@
       "reading_stage": "deep_read",
       "review_stage": "",
       "review_state": "needs_plan",
-      "suggested_next_review": "2026-07-30",
-      "next_review": "2026-07-30",
+      "suggested_next_review": "2026-08-14",
+      "next_review": "2026-08-14",
       "priority_score": 137,
       "urgency": "high",
       "category": "review",
       "category_label": "复习",
       "reasons": [
-        "缺复习计划：建议 2026-07-30",
+        "缺复习计划：建议 2026-08-14",
         "弱元数据：next_review, review_stage, has_code, reproducibility",
         "缺代码实现观察或代码线索"
       ],
@@ -362,14 +362,14 @@
       "reading_stage": "deep_read",
       "review_stage": "",
       "review_state": "needs_plan",
-      "suggested_next_review": "2026-06-25",
-      "next_review": "2026-06-25",
+      "suggested_next_review": "2026-08-05",
+      "next_review": "2026-08-05",
       "priority_score": 130,
       "urgency": "high",
       "category": "review",
       "category_label": "复习",
       "reasons": [
-        "缺复习计划：建议 2026-06-25",
+        "缺复习计划：建议 2026-08-05",
         "弱元数据：next_review, review_stage"
       ],
       "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review",
@@ -405,6 +405,63 @@
       ]
     },
     {
+      "slug": "2501.01005-flashinfer",
+      "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
+      "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
+      "href": "2501.01005-flashinfer.html",
+      "research_line": "Efficient Attention Kernels",
+      "line_role": "system",
+      "year": 2025,
+      "importance": 4,
+      "status": "read",
+      "reading_stage": "deep_read",
+      "review_stage": "",
+      "review_state": "needs_plan",
+      "suggested_next_review": "2026-08-21",
+      "next_review": "2026-08-21",
+      "priority_score": 128,
+      "urgency": "high",
+      "category": "review",
+      "category_label": "复习",
+      "reasons": [
+        "缺复习计划：建议 2026-08-21",
+        "弱元数据：next_review, review_stage",
+        "分类粒度偏密，适合做标签归一化"
+      ],
+      "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review",
+      "commands": [
+        "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
+        "python3 scripts/apply_review_plan.py docs --write",
+        "python3 scripts/export_taxonomy_load.py docs --format csv --signal dense_tags --output docs/exports/taxonomy-load.csv"
+      ],
+      "action_ids": [
+        "taxonomy_action:split_candidate:reading_stage:deep_read",
+        "review_plan:2501.01005-flashinfer",
+        "taxonomy_action:merge_candidate:topics:Attention Kernels",
+        "taxonomy_action:merge_candidate:topics:GPU Systems",
+        "taxonomy_action:merge_candidate:topics:Inference Optimization",
+        "taxonomy_dense:2501.01005-flashinfer",
+        "taxonomy_action:merge_candidate:tracks:Inference Serving Systems",
+        "taxonomy_action:merge_candidate:methods:CUDA Graph"
+      ],
+      "queue_hits": [
+        {
+          "id": "missing-review-plan",
+          "label": "缺复习计划",
+          "severity": "medium",
+          "preset": "schedule_review",
+          "href": "library.html?review=none&sort=importance"
+        },
+        {
+          "id": "code-unchecked",
+          "label": "有代码未检查",
+          "severity": "medium",
+          "preset": "code_check",
+          "href": "library.html?code=yes&sort=importance"
+        }
+      ]
+    },
+    {
       "slug": "2503.14075-twigvlm-plus-plus",
       "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
       "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
@@ -417,14 +474,14 @@
       "reading_stage": "code_checked",
       "review_stage": "",
       "review_state": "needs_plan",
-      "suggested_next_review": "2026-07-30",
-      "next_review": "2026-07-30",
+      "suggested_next_review": "2026-08-14",
+      "next_review": "2026-08-14",
       "priority_score": 128,
       "urgency": "high",
       "category": "review",
       "category_label": "复习",
       "reasons": [
-        "缺复习计划：建议 2026-07-30",
+        "缺复习计划：建议 2026-08-14",
         "弱元数据：next_review, review_stage, reproducibility",
         "分类粒度偏密，适合做标签归一化"
       ],
@@ -455,112 +512,6 @@
       ]
     },
     {
-      "slug": "2501.01005-flashinfer",
-      "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
-      "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
-      "href": "2501.01005-flashinfer.html",
-      "research_line": "Efficient Attention Kernels",
-      "line_role": "system",
-      "year": 2025,
-      "importance": 4,
-      "status": "read",
-      "reading_stage": "deep_read",
-      "review_stage": "",
-      "review_state": "needs_plan",
-      "suggested_next_review": "2026-07-11",
-      "next_review": "2026-07-11",
-      "priority_score": 126,
-      "urgency": "high",
-      "category": "review",
-      "category_label": "复习",
-      "reasons": [
-        "缺复习计划：建议 2026-07-11",
-        "弱元数据：next_review, review_stage",
-        "分类粒度偏密，适合做标签归一化"
-      ],
-      "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review",
-      "commands": [
-        "python3 scripts/apply_review_plan.py docs --write",
-        "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
-        "python3 scripts/export_taxonomy_load.py docs --format csv --signal dense_tags --output docs/exports/taxonomy-load.csv"
-      ],
-      "action_ids": [
-        "review_plan:2501.01005-flashinfer",
-        "taxonomy_action:merge_candidate:topics:Attention Kernels",
-        "taxonomy_action:merge_candidate:topics:GPU Systems",
-        "taxonomy_action:merge_candidate:topics:Inference Optimization",
-        "taxonomy_dense:2501.01005-flashinfer",
-        "taxonomy_action:merge_candidate:tracks:Inference Serving Systems",
-        "taxonomy_action:merge_candidate:methods:CUDA Graph",
-        "taxonomy_action:merge_candidate:methods:JIT compilation"
-      ],
-      "queue_hits": [
-        {
-          "id": "missing-review-plan",
-          "label": "缺复习计划",
-          "severity": "medium",
-          "preset": "schedule_review",
-          "href": "library.html?review=none&sort=importance"
-        },
-        {
-          "id": "code-unchecked",
-          "label": "有代码未检查",
-          "severity": "medium",
-          "preset": "code_check",
-          "href": "library.html?code=yes&sort=importance"
-        }
-      ]
-    },
-    {
-      "slug": "noarxiv-2026-dspark",
-      "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
-      "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
-      "href": "noarxiv-2026-dspark.html",
-      "research_line": "LLM Serving",
-      "line_role": "system",
-      "year": 2026,
-      "importance": 4,
-      "status": "read",
-      "reading_stage": "code_checked",
-      "review_stage": "",
-      "review_state": "needs_plan",
-      "suggested_next_review": "2026-07-21",
-      "next_review": "2026-07-21",
-      "priority_score": 120,
-      "urgency": "high",
-      "category": "review",
-      "category_label": "复习",
-      "reasons": [
-        "缺复习计划：建议 2026-07-21",
-        "弱元数据：next_review, review_stage"
-      ],
-      "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review",
-      "commands": [
-        "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
-        "python3 scripts/apply_review_plan.py docs --write",
-        "python3 scripts/apply_taxonomy_aliases.py docs --write"
-      ],
-      "action_ids": [
-        "taxonomy_action:split_candidate:topics:Speculative Decoding",
-        "taxonomy_action:split_candidate:tracks:Inference Acceleration",
-        "taxonomy_action:split_candidate:domains:LLM Systems",
-        "taxonomy_action:split_candidate:status:read",
-        "review_plan:noarxiv-2026-dspark",
-        "alias:semi autoregressive generation",
-        "taxonomy_action:merge_candidate:topics:Semi-Autoregressive Generation",
-        "taxonomy_action:merge_candidate:methods:Markov head"
-      ],
-      "queue_hits": [
-        {
-          "id": "missing-review-plan",
-          "label": "缺复习计划",
-          "severity": "medium",
-          "preset": "schedule_review",
-          "href": "library.html?review=none&sort=importance"
-        }
-      ]
-    },
-    {
       "slug": "2602.06036-dflash",
       "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
       "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
@@ -573,14 +524,14 @@
       "reading_stage": "deep_read",
       "review_stage": "",
       "review_state": "needs_plan",
-      "suggested_next_review": "2026-07-04",
-      "next_review": "2026-07-04",
+      "suggested_next_review": "2026-08-14",
+      "next_review": "2026-08-14",
       "priority_score": 120,
       "urgency": "high",
       "category": "review",
       "category_label": "复习",
       "reasons": [
-        "缺复习计划：建议 2026-07-04",
+        "缺复习计划：建议 2026-08-14",
         "弱元数据：next_review, review_stage"
       ],
       "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review",
@@ -592,8 +543,8 @@
         "taxonomy_action:split_candidate:topics:Speculative Decoding",
         "taxonomy_action:split_candidate:tracks:Inference Acceleration",
         "taxonomy_action:split_candidate:domains:LLM Systems",
-        "taxonomy_action:split_candidate:reading_stage:deep_read",
         "taxonomy_action:split_candidate:status:read",
+        "taxonomy_action:split_candidate:reading_stage:deep_read",
         "review_plan:2602.06036-dflash",
         "taxonomy_action:merge_candidate:methods:KV injection",
         "taxonomy_action:merge_candidate:methods:block diffusion"
@@ -628,14 +579,14 @@
       "reading_stage": "deep_read",
       "review_stage": "",
       "review_state": "needs_plan",
-      "suggested_next_review": "2026-07-04",
-      "next_review": "2026-07-04",
+      "suggested_next_review": "2026-08-14",
+      "next_review": "2026-08-14",
       "priority_score": 120,
       "urgency": "high",
       "category": "review",
       "category_label": "复习",
       "reasons": [
-        "缺复习计划：建议 2026-07-04",
+        "缺复习计划：建议 2026-08-14",
         "弱元数据：next_review, review_stage"
       ],
       "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review",
@@ -644,14 +595,14 @@
         "python3 scripts/apply_review_plan.py docs --write"
       ],
       "action_ids": [
+        "taxonomy_action:split_candidate:topics:Speculative Decoding",
+        "taxonomy_action:split_candidate:tracks:Inference Acceleration",
+        "taxonomy_action:split_candidate:domains:LLM Systems",
+        "taxonomy_action:split_candidate:status:read",
         "taxonomy_action:split_candidate:reading_stage:deep_read",
         "review_plan:2605.12825-orthrus",
         "taxonomy_action:merge_candidate:methods:dual-view attention",
-        "taxonomy_action:merge_candidate:methods:forward KL distillation",
-        "taxonomy_action:merge_candidate:methods:intra-model consensus",
-        "taxonomy_action:merge_candidate:methods:masked diffusion",
-        "taxonomy_action:merge_candidate:methods:shared KV cache",
-        "taxonomy_action:merge_candidate:line_role:variant"
+        "taxonomy_action:merge_candidate:methods:forward KL distillation"
       ],
       "queue_hits": [
         {
@@ -671,6 +622,55 @@
       ]
     },
     {
+      "slug": "noarxiv-2026-dspark",
+      "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+      "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+      "href": "noarxiv-2026-dspark.html",
+      "research_line": "LLM Serving",
+      "line_role": "system",
+      "year": 2026,
+      "importance": 4,
+      "status": "read",
+      "reading_stage": "code_checked",
+      "review_stage": "",
+      "review_state": "needs_plan",
+      "suggested_next_review": "2026-08-14",
+      "next_review": "2026-08-14",
+      "priority_score": 118,
+      "urgency": "high",
+      "category": "review",
+      "category_label": "复习",
+      "reasons": [
+        "缺复习计划：建议 2026-08-14",
+        "弱元数据：next_review, review_stage"
+      ],
+      "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review",
+      "commands": [
+        "python3 scripts/apply_review_plan.py docs --write",
+        "python3 scripts/apply_taxonomy_aliases.py docs --write",
+        "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+      ],
+      "action_ids": [
+        "review_plan:noarxiv-2026-dspark",
+        "alias:semi autoregressive generation",
+        "taxonomy_action:merge_candidate:topics:Semi-Autoregressive Generation",
+        "taxonomy_action:merge_candidate:methods:Markov head",
+        "taxonomy_action:merge_candidate:methods:confidence-scheduled verification",
+        "taxonomy_action:merge_candidate:methods:hardware-aware scheduling",
+        "taxonomy_action:merge_candidate:methods:semi-autoregressive generation",
+        "taxonomy_action:merge_candidate:problems:Load-Aware Serving"
+      ],
+      "queue_hits": [
+        {
+          "id": "missing-review-plan",
+          "label": "缺复习计划",
+          "severity": "medium",
+          "preset": "schedule_review",
+          "href": "library.html?review=none&sort=importance"
+        }
+      ]
+    },
+    {
       "slug": "2503.01840-eagle-3-scaling-up",
       "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
       "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
@@ -683,30 +683,30 @@
       "reading_stage": "deep_read",
       "review_stage": "",
       "review_state": "needs_plan",
-      "suggested_next_review": "2026-08-13",
-      "next_review": "2026-08-13",
-      "priority_score": 120,
+      "suggested_next_review": "2026-08-14",
+      "next_review": "2026-08-14",
+      "priority_score": 118,
       "urgency": "high",
       "category": "review",
       "category_label": "复习",
       "reasons": [
-        "缺复习计划：建议 2026-08-13",
+        "缺复习计划：建议 2026-08-14",
         "弱元数据：next_review, review_stage"
       ],
       "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review",
       "commands": [
-        "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
-        "python3 scripts/apply_review_plan.py docs --write"
+        "python3 scripts/apply_review_plan.py docs --write",
+        "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
       ],
       "action_ids": [
-        "taxonomy_action:split_candidate:reading_stage:deep_read",
         "review_plan:2503.01840-eagle-3-scaling-up",
         "taxonomy_action:merge_candidate:topics:Draft Model Training",
         "taxonomy_action:merge_candidate:topics:Scaling Law",
         "taxonomy_action:merge_candidate:methods:Draft Tree",
         "taxonomy_action:merge_candidate:methods:Feature Fusion",
         "taxonomy_action:merge_candidate:methods:Token Prediction",
-        "taxonomy_action:merge_candidate:methods:Training-Time Test"
+        "taxonomy_action:merge_candidate:methods:Training-Time Test",
+        "taxonomy_action:merge_candidate:research_line:Speculative Decoding"
       ],
       "queue_hits": [
         {
@@ -740,14 +740,14 @@
       "reading_stage": "",
       "review_stage": "",
       "review_state": "needs_plan",
-      "suggested_next_review": "2026-07-17",
-      "next_review": "2026-07-17",
+      "suggested_next_review": "2026-08-21",
+      "next_review": "2026-08-21",
       "priority_score": 241,
       "urgency": "high",
       "category": "review",
       "category_label": "复习",
       "reasons": [
-        "缺复习计划：建议 2026-07-17",
+        "缺复习计划：建议 2026-08-21",
         "缺必填字段：domains, tracks, problems, reading_stage",
         "弱元数据：next_review, review_stage, has_code, confidence",
         "存在 taxonomy drift，严格校验会失败",
@@ -801,14 +801,14 @@
       "reading_stage": "",
       "review_stage": "",
       "review_state": "needs_plan",
-      "suggested_next_review": "2026-08-08",
-      "next_review": "2026-08-08",
+      "suggested_next_review": "2026-08-21",
+      "next_review": "2026-08-21",
       "priority_score": 184,
       "urgency": "high",
       "category": "review",
       "category_label": "复习",
       "reasons": [
-        "缺复习计划：建议 2026-08-08",
+        "缺复习计划：建议 2026-08-21",
         "缺必填字段：domains, tracks, problems, research_line",
         "弱元数据：next_review, review_stage, confidence, reproducibility",
         "分类粒度偏稀，检索入口不足"
@@ -866,14 +866,14 @@
       "reading_stage": "",
       "review_stage": "",
       "review_state": "needs_plan",
-      "suggested_next_review": "2026-09-13",
-      "next_review": "2026-09-13",
+      "suggested_next_review": "2026-10-20",
+      "next_review": "2026-10-20",
       "priority_score": 153,
       "urgency": "high",
       "category": "review",
       "category_label": "复习",
       "reasons": [
-        "缺复习计划：建议 2026-09-13",
+        "缺复习计划：建议 2026-10-20",
         "缺必填字段：domains, tracks, problems, methods",
         "弱元数据：next_review, review_stage, has_code, confidence",
         "分类粒度偏稀，检索入口不足",
@@ -922,14 +922,14 @@
       "reading_stage": "deep_read",
       "review_stage": "",
       "review_state": "needs_plan",
-      "suggested_next_review": "2026-06-18",
-      "next_review": "2026-06-18",
+      "suggested_next_review": "2026-07-29",
+      "next_review": "2026-07-29",
       "priority_score": 140,
       "urgency": "high",
       "category": "review",
       "category_label": "复习",
       "reasons": [
-        "缺复习计划：建议 2026-06-18",
+        "缺复习计划：建议 2026-07-29",
         "弱元数据：next_review, review_stage",
         "分类粒度偏密，适合做标签归一化"
       ],
@@ -943,11 +943,11 @@
         "taxonomy_action:split_candidate:topics:Speculative Decoding",
         "taxonomy_action:split_candidate:tracks:Inference Acceleration",
         "taxonomy_action:split_candidate:domains:LLM Systems",
+        "taxonomy_action:split_candidate:status:read",
         "taxonomy_action:split_candidate:reading_stage:deep_read",
         "review_plan:2604.11035-introspective-dlm",
         "taxonomy_dense:2604.11035-introspective-dlm",
-        "taxonomy_action:merge_candidate:methods:SGLang serving",
-        "taxonomy_action:merge_candidate:methods:introspective consistency"
+        "taxonomy_action:merge_candidate:methods:SGLang serving"
       ],
       "queue_hits": [
         {
@@ -979,14 +979,14 @@
       "reading_stage": "deep_read",
       "review_stage": "",
       "review_state": "needs_plan",
-      "suggested_next_review": "2026-08-13",
-      "next_review": "2026-08-13",
+      "suggested_next_review": "2026-08-14",
+      "next_review": "2026-08-14",
       "priority_score": 139,
       "urgency": "high",
       "category": "review",
       "category_label": "复习",
       "reasons": [
-        "缺复习计划：建议 2026-08-13",
+        "缺复习计划：建议 2026-08-14",
         "弱元数据：next_review, review_stage, has_code",
         "缺代码实现观察或代码线索"
       ],
@@ -999,11 +999,11 @@
         "taxonomy_action:split_candidate:tracks:Inference Acceleration",
         "taxonomy_action:split_candidate:domains:LLM Systems",
         "taxonomy_action:split_candidate:reading_stage:deep_read",
-        "taxonomy_action:split_candidate:status:read",
         "review_plan:2607.00466-eldr",
         "taxonomy_action:merge_candidate:topics:Disaggregated Serving",
         "taxonomy_action:merge_candidate:topics:Load Balancing",
-        "taxonomy_action:merge_candidate:topics:MoE"
+        "taxonomy_action:merge_candidate:topics:MoE",
+        "taxonomy_action:merge_candidate:methods:Balanced K-means"
       ],
       "queue_hits": [
         {
@@ -1028,14 +1028,14 @@
       "reading_stage": "deep_read",
       "review_stage": "",
       "review_state": "needs_plan",
-      "suggested_next_review": "2026-07-30",
-      "next_review": "2026-07-30",
+      "suggested_next_review": "2026-08-14",
+      "next_review": "2026-08-14",
       "priority_score": 137,
       "urgency": "high",
       "category": "review",
       "category_label": "复习",
       "reasons": [
-        "缺复习计划：建议 2026-07-30",
+        "缺复习计划：建议 2026-08-14",
         "弱元数据：next_review, review_stage, has_code, reproducibility",
         "缺代码实现观察或代码线索"
       ],
@@ -1077,14 +1077,14 @@
       "reading_stage": "deep_read",
       "review_stage": "",
       "review_state": "needs_plan",
-      "suggested_next_review": "2026-06-25",
-      "next_review": "2026-06-25",
+      "suggested_next_review": "2026-08-05",
+      "next_review": "2026-08-05",
       "priority_score": 130,
       "urgency": "high",
       "category": "review",
       "category_label": "复习",
       "reasons": [
-        "缺复习计划：建议 2026-06-25",
+        "缺复习计划：建议 2026-08-05",
         "弱元数据：next_review, review_stage"
       ],
       "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review",
@@ -1120,6 +1120,63 @@
       ]
     },
     {
+      "slug": "2501.01005-flashinfer",
+      "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
+      "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
+      "href": "2501.01005-flashinfer.html",
+      "research_line": "Efficient Attention Kernels",
+      "line_role": "system",
+      "year": 2025,
+      "importance": 4,
+      "status": "read",
+      "reading_stage": "deep_read",
+      "review_stage": "",
+      "review_state": "needs_plan",
+      "suggested_next_review": "2026-08-21",
+      "next_review": "2026-08-21",
+      "priority_score": 128,
+      "urgency": "high",
+      "category": "review",
+      "category_label": "复习",
+      "reasons": [
+        "缺复习计划：建议 2026-08-21",
+        "弱元数据：next_review, review_stage",
+        "分类粒度偏密，适合做标签归一化"
+      ],
+      "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review",
+      "commands": [
+        "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
+        "python3 scripts/apply_review_plan.py docs --write",
+        "python3 scripts/export_taxonomy_load.py docs --format csv --signal dense_tags --output docs/exports/taxonomy-load.csv"
+      ],
+      "action_ids": [
+        "taxonomy_action:split_candidate:reading_stage:deep_read",
+        "review_plan:2501.01005-flashinfer",
+        "taxonomy_action:merge_candidate:topics:Attention Kernels",
+        "taxonomy_action:merge_candidate:topics:GPU Systems",
+        "taxonomy_action:merge_candidate:topics:Inference Optimization",
+        "taxonomy_dense:2501.01005-flashinfer",
+        "taxonomy_action:merge_candidate:tracks:Inference Serving Systems",
+        "taxonomy_action:merge_candidate:methods:CUDA Graph"
+      ],
+      "queue_hits": [
+        {
+          "id": "missing-review-plan",
+          "label": "缺复习计划",
+          "severity": "medium",
+          "preset": "schedule_review",
+          "href": "library.html?review=none&sort=importance"
+        },
+        {
+          "id": "code-unchecked",
+          "label": "有代码未检查",
+          "severity": "medium",
+          "preset": "code_check",
+          "href": "library.html?code=yes&sort=importance"
+        }
+      ]
+    },
+    {
       "slug": "2503.14075-twigvlm-plus-plus",
       "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
       "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
@@ -1132,14 +1189,14 @@
       "reading_stage": "code_checked",
       "review_stage": "",
       "review_state": "needs_plan",
-      "suggested_next_review": "2026-07-30",
-      "next_review": "2026-07-30",
+      "suggested_next_review": "2026-08-14",
+      "next_review": "2026-08-14",
       "priority_score": 128,
       "urgency": "high",
       "category": "review",
       "category_label": "复习",
       "reasons": [
-        "缺复习计划：建议 2026-07-30",
+        "缺复习计划：建议 2026-08-14",
         "弱元数据：next_review, review_stage, reproducibility",
         "分类粒度偏密，适合做标签归一化"
       ],
@@ -1170,112 +1227,6 @@
       ]
     },
     {
-      "slug": "2501.01005-flashinfer",
-      "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
-      "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
-      "href": "2501.01005-flashinfer.html",
-      "research_line": "Efficient Attention Kernels",
-      "line_role": "system",
-      "year": 2025,
-      "importance": 4,
-      "status": "read",
-      "reading_stage": "deep_read",
-      "review_stage": "",
-      "review_state": "needs_plan",
-      "suggested_next_review": "2026-07-11",
-      "next_review": "2026-07-11",
-      "priority_score": 126,
-      "urgency": "high",
-      "category": "review",
-      "category_label": "复习",
-      "reasons": [
-        "缺复习计划：建议 2026-07-11",
-        "弱元数据：next_review, review_stage",
-        "分类粒度偏密，适合做标签归一化"
-      ],
-      "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review",
-      "commands": [
-        "python3 scripts/apply_review_plan.py docs --write",
-        "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
-        "python3 scripts/export_taxonomy_load.py docs --format csv --signal dense_tags --output docs/exports/taxonomy-load.csv"
-      ],
-      "action_ids": [
-        "review_plan:2501.01005-flashinfer",
-        "taxonomy_action:merge_candidate:topics:Attention Kernels",
-        "taxonomy_action:merge_candidate:topics:GPU Systems",
-        "taxonomy_action:merge_candidate:topics:Inference Optimization",
-        "taxonomy_dense:2501.01005-flashinfer",
-        "taxonomy_action:merge_candidate:tracks:Inference Serving Systems",
-        "taxonomy_action:merge_candidate:methods:CUDA Graph",
-        "taxonomy_action:merge_candidate:methods:JIT compilation"
-      ],
-      "queue_hits": [
-        {
-          "id": "missing-review-plan",
-          "label": "缺复习计划",
-          "severity": "medium",
-          "preset": "schedule_review",
-          "href": "library.html?review=none&sort=importance"
-        },
-        {
-          "id": "code-unchecked",
-          "label": "有代码未检查",
-          "severity": "medium",
-          "preset": "code_check",
-          "href": "library.html?code=yes&sort=importance"
-        }
-      ]
-    },
-    {
-      "slug": "noarxiv-2026-dspark",
-      "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
-      "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
-      "href": "noarxiv-2026-dspark.html",
-      "research_line": "LLM Serving",
-      "line_role": "system",
-      "year": 2026,
-      "importance": 4,
-      "status": "read",
-      "reading_stage": "code_checked",
-      "review_stage": "",
-      "review_state": "needs_plan",
-      "suggested_next_review": "2026-07-21",
-      "next_review": "2026-07-21",
-      "priority_score": 120,
-      "urgency": "high",
-      "category": "review",
-      "category_label": "复习",
-      "reasons": [
-        "缺复习计划：建议 2026-07-21",
-        "弱元数据：next_review, review_stage"
-      ],
-      "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review",
-      "commands": [
-        "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
-        "python3 scripts/apply_review_plan.py docs --write",
-        "python3 scripts/apply_taxonomy_aliases.py docs --write"
-      ],
-      "action_ids": [
-        "taxonomy_action:split_candidate:topics:Speculative Decoding",
-        "taxonomy_action:split_candidate:tracks:Inference Acceleration",
-        "taxonomy_action:split_candidate:domains:LLM Systems",
-        "taxonomy_action:split_candidate:status:read",
-        "review_plan:noarxiv-2026-dspark",
-        "alias:semi autoregressive generation",
-        "taxonomy_action:merge_candidate:topics:Semi-Autoregressive Generation",
-        "taxonomy_action:merge_candidate:methods:Markov head"
-      ],
-      "queue_hits": [
-        {
-          "id": "missing-review-plan",
-          "label": "缺复习计划",
-          "severity": "medium",
-          "preset": "schedule_review",
-          "href": "library.html?review=none&sort=importance"
-        }
-      ]
-    },
-    {
       "slug": "2602.06036-dflash",
       "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
       "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
@@ -1288,14 +1239,14 @@
       "reading_stage": "deep_read",
       "review_stage": "",
       "review_state": "needs_plan",
-      "suggested_next_review": "2026-07-04",
-      "next_review": "2026-07-04",
+      "suggested_next_review": "2026-08-14",
+      "next_review": "2026-08-14",
       "priority_score": 120,
       "urgency": "high",
       "category": "review",
       "category_label": "复习",
       "reasons": [
-        "缺复习计划：建议 2026-07-04",
+        "缺复习计划：建议 2026-08-14",
         "弱元数据：next_review, review_stage"
       ],
       "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review",
@@ -1307,8 +1258,8 @@
         "taxonomy_action:split_candidate:topics:Speculative Decoding",
         "taxonomy_action:split_candidate:tracks:Inference Acceleration",
         "taxonomy_action:split_candidate:domains:LLM Systems",
-        "taxonomy_action:split_candidate:reading_stage:deep_read",
         "taxonomy_action:split_candidate:status:read",
+        "taxonomy_action:split_candidate:reading_stage:deep_read",
         "review_plan:2602.06036-dflash",
         "taxonomy_action:merge_candidate:methods:KV injection",
         "taxonomy_action:merge_candidate:methods:block diffusion"
@@ -1343,14 +1294,14 @@
       "reading_stage": "deep_read",
       "review_stage": "",
       "review_state": "needs_plan",
-      "suggested_next_review": "2026-07-04",
-      "next_review": "2026-07-04",
+      "suggested_next_review": "2026-08-14",
+      "next_review": "2026-08-14",
       "priority_score": 120,
       "urgency": "high",
       "category": "review",
       "category_label": "复习",
       "reasons": [
-        "缺复习计划：建议 2026-07-04",
+        "缺复习计划：建议 2026-08-14",
         "弱元数据：next_review, review_stage"
       ],
       "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review",
@@ -1359,14 +1310,14 @@
         "python3 scripts/apply_review_plan.py docs --write"
       ],
       "action_ids": [
+        "taxonomy_action:split_candidate:topics:Speculative Decoding",
+        "taxonomy_action:split_candidate:tracks:Inference Acceleration",
+        "taxonomy_action:split_candidate:domains:LLM Systems",
+        "taxonomy_action:split_candidate:status:read",
         "taxonomy_action:split_candidate:reading_stage:deep_read",
         "review_plan:2605.12825-orthrus",
         "taxonomy_action:merge_candidate:methods:dual-view attention",
-        "taxonomy_action:merge_candidate:methods:forward KL distillation",
-        "taxonomy_action:merge_candidate:methods:intra-model consensus",
-        "taxonomy_action:merge_candidate:methods:masked diffusion",
-        "taxonomy_action:merge_candidate:methods:shared KV cache",
-        "taxonomy_action:merge_candidate:line_role:variant"
+        "taxonomy_action:merge_candidate:methods:forward KL distillation"
       ],
       "queue_hits": [
         {
@@ -1386,6 +1337,55 @@
       ]
     },
     {
+      "slug": "noarxiv-2026-dspark",
+      "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+      "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+      "href": "noarxiv-2026-dspark.html",
+      "research_line": "LLM Serving",
+      "line_role": "system",
+      "year": 2026,
+      "importance": 4,
+      "status": "read",
+      "reading_stage": "code_checked",
+      "review_stage": "",
+      "review_state": "needs_plan",
+      "suggested_next_review": "2026-08-14",
+      "next_review": "2026-08-14",
+      "priority_score": 118,
+      "urgency": "high",
+      "category": "review",
+      "category_label": "复习",
+      "reasons": [
+        "缺复习计划：建议 2026-08-14",
+        "弱元数据：next_review, review_stage"
+      ],
+      "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review",
+      "commands": [
+        "python3 scripts/apply_review_plan.py docs --write",
+        "python3 scripts/apply_taxonomy_aliases.py docs --write",
+        "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+      ],
+      "action_ids": [
+        "review_plan:noarxiv-2026-dspark",
+        "alias:semi autoregressive generation",
+        "taxonomy_action:merge_candidate:topics:Semi-Autoregressive Generation",
+        "taxonomy_action:merge_candidate:methods:Markov head",
+        "taxonomy_action:merge_candidate:methods:confidence-scheduled verification",
+        "taxonomy_action:merge_candidate:methods:hardware-aware scheduling",
+        "taxonomy_action:merge_candidate:methods:semi-autoregressive generation",
+        "taxonomy_action:merge_candidate:problems:Load-Aware Serving"
+      ],
+      "queue_hits": [
+        {
+          "id": "missing-review-plan",
+          "label": "缺复习计划",
+          "severity": "medium",
+          "preset": "schedule_review",
+          "href": "library.html?review=none&sort=importance"
+        }
+      ]
+    },
+    {
       "slug": "2503.01840-eagle-3-scaling-up",
       "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
       "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
@@ -1398,30 +1398,30 @@
       "reading_stage": "deep_read",
       "review_stage": "",
       "review_state": "needs_plan",
-      "suggested_next_review": "2026-08-13",
-      "next_review": "2026-08-13",
-      "priority_score": 120,
+      "suggested_next_review": "2026-08-14",
+      "next_review": "2026-08-14",
+      "priority_score": 118,
       "urgency": "high",
       "category": "review",
       "category_label": "复习",
       "reasons": [
-        "缺复习计划：建议 2026-08-13",
+        "缺复习计划：建议 2026-08-14",
         "弱元数据：next_review, review_stage"
       ],
       "recommended_action": "立即处理：复习论文并更新 last_reviewed / next_review",
       "commands": [
-        "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv",
-        "python3 scripts/apply_review_plan.py docs --write"
+        "python3 scripts/apply_review_plan.py docs --write",
+        "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
       ],
       "action_ids": [
-        "taxonomy_action:split_candidate:reading_stage:deep_read",
         "review_plan:2503.01840-eagle-3-scaling-up",
         "taxonomy_action:merge_candidate:topics:Draft Model Training",
         "taxonomy_action:merge_candidate:topics:Scaling Law",
         "taxonomy_action:merge_candidate:methods:Draft Tree",
         "taxonomy_action:merge_candidate:methods:Feature Fusion",
         "taxonomy_action:merge_candidate:methods:Token Prediction",
-        "taxonomy_action:merge_candidate:methods:Training-Time Test"
+        "taxonomy_action:merge_candidate:methods:Training-Time Test",
+        "taxonomy_action:merge_candidate:research_line:Speculative Decoding"
       ],
       "queue_hits": [
         {
@@ -1453,7 +1453,7 @@
     {
       "research_line": "LLM Serving",
       "count": 3,
-      "average_score": 166.7,
+      "average_score": 166.0,
       "high": 3,
       "medium": 0,
       "top_slug": "2512.23424-akg-kernel-agent-multi"
@@ -1469,7 +1469,7 @@
     {
       "research_line": "Efficient Attention Kernels",
       "count": 2,
-      "average_score": 128.0,
+      "average_score": 129.0,
       "high": 2,
       "medium": 0,
       "top_slug": "2307.08691-flashattention-2"
@@ -1485,7 +1485,7 @@
     {
       "research_line": "Speculative Decoding",
       "count": 1,
-      "average_score": 120.0,
+      "average_score": 118.0,
       "high": 1,
       "medium": 0,
       "top_slug": "2503.01840-eagle-3-scaling-up"

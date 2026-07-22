@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T20:41:17",
+  "generated_at": "2026-07-22T13:10:32",
   "count": 13,
   "fields": [
     {
@@ -115,102 +115,6 @@
   ],
   "papers": [
     {
-      "slug": "2607.00466-eldr",
-      "href": "2607.00466-eldr.html",
-      "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
-      "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
-      "title_en": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
-      "year": 2026,
-      "arxiv_id": "2607.00466v2",
-      "arxiv_url": "https://arxiv.org/abs/2607.00466v2",
-      "code_url": "",
-      "authors": [
-        "Sangjin Choi",
-        "Sukmin Cho",
-        "Yifan Xiong",
-        "Ziyue Yang",
-        "Youngjin Kwon",
-        "Peng Cheng"
-      ],
-      "research_line": "LLM Serving",
-      "line_role": "main",
-      "domains": [
-        "LLM Systems"
-      ],
-      "tracks": [
-        "Inference Acceleration"
-      ],
-      "problems": [
-        "MoE Serving"
-      ],
-      "topics": [
-        "Disaggregated Serving",
-        "LLM Serving",
-        "Load Balancing",
-        "MoE"
-      ],
-      "methods": [
-        "Balanced K-means",
-        "Expert Locality Routing",
-        "Signature Cache"
-      ],
-      "status": "read",
-      "reading_stage": "deep_read",
-      "review_stage": "",
-      "next_review": "",
-      "importance": 4,
-      "confidence": 4,
-      "reproducibility": 3,
-      "has_code": false,
-      "excerpt": "在 PD 分离（Prefill-Decode Disaggregated）的 MoE 模型服务中，现有解码路由策略仅平衡各解码 worker 的负载，但忽略了一个关键事实：对于 MoE 模型，负载相同的 worker 延迟可能差异很大，因为每个解码步的延迟由该批次激活的**不重复专家数量**决定，而非 token 数量。本文提出 ELDR，一种专家局部性感知的解码路由策略，通过从 prefill 阶段的专家激活构建专家签名，利用平衡 K...",
-      "essence": "在 MoE 模型的 PD 分离服务中，解码延迟取决于批次中激活的不重复专家数量而非请求数量；ELDR 通过从 prefill 阶段提取专家激活签名，将激活相似专家的请求路由到同一解码 worker，从而减少每步需要加载的专家权重，实现无损的延迟降低。"
-    },
-    {
-      "slug": "2603.03251-speculative-speculative-decoding",
-      "href": "2603.03251-speculative-speculative-decoding.html",
-      "title": "Speculative Speculative Decoding",
-      "title_zh": "推测性推测解码",
-      "title_en": "Speculative Speculative Decoding",
-      "year": 2026,
-      "arxiv_id": "2603.03251",
-      "arxiv_url": "https://arxiv.org/abs/2603.03251",
-      "code_url": "https://github.com/tanishqkumar/ssd",
-      "authors": [
-        "Tanishq Kumar",
-        "Tri Dao",
-        "Avner May"
-      ],
-      "research_line": "Unassigned",
-      "line_role": "",
-      "domains": [],
-      "tracks": [],
-      "problems": [],
-      "topics": [
-        "Distributed Inference",
-        "LLM Inference",
-        "Speculative Decoding",
-        "Systems Optimization"
-      ],
-      "methods": [
-        "asynchronous decoding",
-        "cache-aware sampling",
-        "fallback speculation",
-        "geometric fan-out",
-        "Speculative Decoding",
-        "verification outcome cache"
-      ],
-      "status": "read",
-      "reading_stage": "",
-      "review_stage": "",
-      "next_review": "",
-      "importance": 4,
-      "confidence": "",
-      "reproducibility": "",
-      "has_code": true,
-      "excerpt": "中文版：本文提出 speculative speculative decoding（SSD），把普通 speculative decoding 中“先 draft、再 verify、再继续 draft”的串行依赖进一步并行化：target model 验证上一轮 speculation 时，draft model 预判可能的 verification outcomes，并提前为这些结果生成下一轮 speculation。作者将该框架优化...",
-      "essence": "如果普通 speculative decoding 像让小助手先写草稿再等老师批改，SSD 就是在老师批改时让小助手预演几种可能的批改结果，并把每种结果后的下一页都先写好。"
-    },
-    {
       "slug": "2503.14075-twigvlm-plus-plus",
       "href": "2503.14075-twigvlm-plus-plus.html",
       "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
@@ -273,61 +177,6 @@
       "essence": "它像是在一棵大树旁嫁接一根会预判路线的小枝条：先帮主干挑掉不该看的枝叶，再替主干试走几步路，让大模型少看、少等、还尽量不走错。"
     },
     {
-      "slug": "noarxiv-2026-dspark",
-      "href": "noarxiv-2026-dspark.html",
-      "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
-      "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
-      "title_en": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
-      "year": 2026,
-      "arxiv_id": "noarxiv-2026-dspark",
-      "arxiv_url": "https://arxiv.org/abs/noarxiv-2026-dspark",
-      "code_url": "https://github.com/deepseek-ai/DeepSpec/blob/main/DSpark_paper.pdf",
-      "authors": [
-        "Xin Cheng",
-        "Xingkai Yu",
-        "Chenze Shao",
-        "Jiashi Li",
-        "Yunfan Xiong",
-        "DeepSeek-AI and Peking University team"
-      ],
-      "research_line": "LLM Serving",
-      "line_role": "system",
-      "domains": [
-        "LLM Systems"
-      ],
-      "tracks": [
-        "Inference Acceleration",
-        "Parallel Decoding"
-      ],
-      "problems": [
-        "Load-Aware Serving",
-        "Lossless Speculative Decoding"
-      ],
-      "topics": [
-        "LLM Inference",
-        "LLM Serving",
-        "Semi-Autoregressive Generation",
-        "Speculative Decoding"
-      ],
-      "methods": [
-        "confidence-scheduled verification",
-        "hardware-aware scheduling",
-        "Markov head",
-        "semi-autoregressive generation",
-        "Speculative Decoding"
-      ],
-      "status": "read",
-      "reading_stage": "code_checked",
-      "review_stage": "",
-      "next_review": "",
-      "importance": 4,
-      "confidence": 4,
-      "reproducibility": 3,
-      "has_code": true,
-      "excerpt": "中文概述：DSpark 面向大模型线上 serving 中的 speculative decoding，把“draft token 怎么生成得更稳”和“target model 该验证多少 token 才划算”两个问题放在同一个框架里解决。它用 DFlash 风格的并行 backbone 负责一次性生成长 draft，再用轻量 Markov/RNN sequential head 引入块内依赖，并用 calibrated confide...",
-      "essence": "DSpark 像是在一条很忙的高速收费站前安排一位聪明的领队：先让小车队大胆排出候选路线，再只把最可能一路畅通的车放进昂贵主路验证。"
-    },
-    {
       "slug": "2602.06036-dflash",
       "href": "2602.06036-dflash.html",
       "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
@@ -377,6 +226,51 @@
       "has_code": true,
       "excerpt": "中文版：DFlash 把 diffusion language model 的角色从“独立生成器”改为 speculative decoding 中的轻量 parallel drafter：draft model 一次前向生成一个 token block，再由 target LLM 并行验证，从而保持 lossless 输出。它的关键设计是从 frozen target model 抽取多层 hidden features，经融合后注入...",
       "essence": "DFlash 像让一个动作很快的速记员先把下一小段草稿同时写出来，再让严谨的主笔一眼核对，既不改掉主笔的文风，又省下逐字落笔的等待。"
+    },
+    {
+      "slug": "2603.03251-speculative-speculative-decoding",
+      "href": "2603.03251-speculative-speculative-decoding.html",
+      "title": "Speculative Speculative Decoding",
+      "title_zh": "推测性推测解码",
+      "title_en": "Speculative Speculative Decoding",
+      "year": 2026,
+      "arxiv_id": "2603.03251",
+      "arxiv_url": "https://arxiv.org/abs/2603.03251",
+      "code_url": "https://github.com/tanishqkumar/ssd",
+      "authors": [
+        "Tanishq Kumar",
+        "Tri Dao",
+        "Avner May"
+      ],
+      "research_line": "Unassigned",
+      "line_role": "",
+      "domains": [],
+      "tracks": [],
+      "problems": [],
+      "topics": [
+        "Distributed Inference",
+        "LLM Inference",
+        "Speculative Decoding",
+        "Systems Optimization"
+      ],
+      "methods": [
+        "asynchronous decoding",
+        "cache-aware sampling",
+        "fallback speculation",
+        "geometric fan-out",
+        "Speculative Decoding",
+        "verification outcome cache"
+      ],
+      "status": "read",
+      "reading_stage": "",
+      "review_stage": "",
+      "next_review": "",
+      "importance": 4,
+      "confidence": "",
+      "reproducibility": "",
+      "has_code": true,
+      "excerpt": "中文版：本文提出 speculative speculative decoding（SSD），把普通 speculative decoding 中“先 draft、再 verify、再继续 draft”的串行依赖进一步并行化：target model 验证上一轮 speculation 时，draft model 预判可能的 verification outcomes，并提前为这些结果生成下一轮 speculation。作者将该框架优化...",
+      "essence": "如果普通 speculative decoding 像让小助手先写草稿再等老师批改，SSD 就是在老师批改时让小助手预演几种可能的批改结果，并把每种结果后的下一页都先写好。"
     },
     {
       "slug": "2604.11035-introspective-dlm",
@@ -497,6 +391,173 @@
       "has_code": true,
       "excerpt": "中文版：Orthrus 在冻结的 autoregressive LLM 内部插入轻量 trainable diffusion attention module，让 AR view 负责高质量 context / KV cache 构建，让 diffusion view 一次并行预测多个 future tokens，再由同一个 frozen AR head 做 consensus verification，从而在不改变 base mode...",
       "essence": "Orthrus 像是在老练作家的脑子里装了一个会同时写好几句草稿的小助手，但每一句交稿前都由作家本人逐字点头，所以快了，却没有换掉原来的声音。"
+    },
+    {
+      "slug": "2607.00466-eldr",
+      "href": "2607.00466-eldr.html",
+      "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+      "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+      "title_en": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+      "year": 2026,
+      "arxiv_id": "2607.00466v2",
+      "arxiv_url": "https://arxiv.org/abs/2607.00466v2",
+      "code_url": "",
+      "authors": [
+        "Sangjin Choi",
+        "Sukmin Cho",
+        "Yifan Xiong",
+        "Ziyue Yang",
+        "Youngjin Kwon",
+        "Peng Cheng"
+      ],
+      "research_line": "LLM Serving",
+      "line_role": "main",
+      "domains": [
+        "LLM Systems"
+      ],
+      "tracks": [
+        "Inference Acceleration"
+      ],
+      "problems": [
+        "MoE Serving"
+      ],
+      "topics": [
+        "Disaggregated Serving",
+        "LLM Serving",
+        "Load Balancing",
+        "MoE"
+      ],
+      "methods": [
+        "Balanced K-means",
+        "Expert Locality Routing",
+        "Signature Cache"
+      ],
+      "status": "read",
+      "reading_stage": "deep_read",
+      "review_stage": "",
+      "next_review": "",
+      "importance": 4,
+      "confidence": 4,
+      "reproducibility": 3,
+      "has_code": false,
+      "excerpt": "在 PD 分离（Prefill-Decode Disaggregated）的 MoE 模型服务中，现有解码路由策略仅平衡各解码 worker 的负载，但忽略了一个关键事实：对于 MoE 模型，负载相同的 worker 延迟可能差异很大，因为每个解码步的延迟由该批次激活的**不重复专家数量**决定，而非 token 数量。本文提出 ELDR，一种专家局部性感知的解码路由策略，通过从 prefill 阶段的专家激活构建专家签名，利用平衡 K...",
+      "essence": "在 MoE 模型的 PD 分离服务中，解码延迟取决于批次中激活的不重复专家数量而非请求数量；ELDR 通过从 prefill 阶段提取专家激活签名，将激活相似专家的请求路由到同一解码 worker，从而减少每步需要加载的专家权重，实现无损的延迟降低。"
+    },
+    {
+      "slug": "noarxiv-2026-dspark",
+      "href": "noarxiv-2026-dspark.html",
+      "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+      "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+      "title_en": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+      "year": 2026,
+      "arxiv_id": "noarxiv-2026-dspark",
+      "arxiv_url": "https://arxiv.org/abs/noarxiv-2026-dspark",
+      "code_url": "https://github.com/deepseek-ai/DeepSpec/blob/main/DSpark_paper.pdf",
+      "authors": [
+        "Xin Cheng",
+        "Xingkai Yu",
+        "Chenze Shao",
+        "Jiashi Li",
+        "Yunfan Xiong",
+        "DeepSeek-AI and Peking University team"
+      ],
+      "research_line": "LLM Serving",
+      "line_role": "system",
+      "domains": [
+        "LLM Systems"
+      ],
+      "tracks": [
+        "Inference Acceleration",
+        "Parallel Decoding"
+      ],
+      "problems": [
+        "Load-Aware Serving",
+        "Lossless Speculative Decoding"
+      ],
+      "topics": [
+        "LLM Inference",
+        "LLM Serving",
+        "Semi-Autoregressive Generation",
+        "Speculative Decoding"
+      ],
+      "methods": [
+        "confidence-scheduled verification",
+        "hardware-aware scheduling",
+        "Markov head",
+        "semi-autoregressive generation",
+        "Speculative Decoding"
+      ],
+      "status": "read",
+      "reading_stage": "code_checked",
+      "review_stage": "",
+      "next_review": "",
+      "importance": 4,
+      "confidence": 4,
+      "reproducibility": 3,
+      "has_code": true,
+      "excerpt": "中文概述：DSpark 面向大模型线上 serving 中的 speculative decoding，把“draft token 怎么生成得更稳”和“target model 该验证多少 token 才划算”两个问题放在同一个框架里解决。它用 DFlash 风格的并行 backbone 负责一次性生成长 draft，再用轻量 Markov/RNN sequential head 引入块内依赖，并用 calibrated confide...",
+      "essence": "DSpark 像是在一条很忙的高速收费站前安排一位聪明的领队：先让小车队大胆排出候选路线，再只把最可能一路畅通的车放进昂贵主路验证。"
+    },
+    {
+      "slug": "2501.01005-flashinfer",
+      "href": "2501.01005-flashinfer.html",
+      "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
+      "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
+      "title_en": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
+      "year": 2025,
+      "arxiv_id": "2501.01005v2",
+      "arxiv_url": "https://arxiv.org/abs/2501.01005v2",
+      "code_url": "https://github.com/flashinfer-ai/flashinfer",
+      "authors": [
+        "Zihao Ye",
+        "Lequn Chen",
+        "Ruihang Lai",
+        "Wuwei Lin",
+        "Yineng Zhang",
+        "Stephanie Wang",
+        "Tianqi Chen",
+        "Baris Kasikci",
+        "Vinod Grover",
+        "Arvind Krishnamurthy",
+        "Luis Ceze"
+      ],
+      "research_line": "Efficient Attention Kernels",
+      "line_role": "system",
+      "domains": [
+        "LLM Systems"
+      ],
+      "tracks": [
+        "Attention Kernels",
+        "Inference Serving Systems"
+      ],
+      "problems": [
+        "Customizable Attention Serving"
+      ],
+      "topics": [
+        "Attention Kernels",
+        "GPU Systems",
+        "Inference Optimization",
+        "KV Cache",
+        "LLM Serving"
+      ],
+      "methods": [
+        "block-sparse attention",
+        "composable KV-cache format",
+        "CUDA Graph",
+        "FlashAttention",
+        "JIT compilation",
+        "load-balanced scheduling"
+      ],
+      "status": "read",
+      "reading_stage": "deep_read",
+      "review_stage": "",
+      "next_review": "",
+      "importance": 4,
+      "confidence": 4,
+      "reproducibility": 4,
+      "has_code": true,
+      "excerpt": "中文版：FlashInfer 是一个面向 LLM online serving 的 attention kernel engine。它把 PagedAttention、RadixAttention、prefix sharing、tree attention、KV pruning 等多种 KV-cache 访问形态统一成 block-sparse / composable sparse formats，并用 CUDA/CUTLASS 模板...",
+      "essence": "FlashInfer 像给大模型服务端装了一套会认路、会排队、还会按菜谱现炒的厨房流水线：不同客人的历史上下文再杂乱，也尽量少搬、少等、少重复算。"
     },
     {
       "slug": "2503.01840-eagle-3-scaling-up",
@@ -667,67 +728,6 @@
       "essence": "这篇论文想做一个“会读硬件说明书、会拆任务、会写代码、会跑测试、会反复调优”的 AI 程序员团队，自动把普通的 PyTorch 算子改写成适配不同芯片的高性能 kernel。"
     },
     {
-      "slug": "2501.01005-flashinfer",
-      "href": "2501.01005-flashinfer.html",
-      "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
-      "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
-      "title_en": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
-      "year": 2025,
-      "arxiv_id": "2501.01005v2",
-      "arxiv_url": "https://arxiv.org/abs/2501.01005v2",
-      "code_url": "https://github.com/flashinfer-ai/flashinfer",
-      "authors": [
-        "Zihao Ye",
-        "Lequn Chen",
-        "Ruihang Lai",
-        "Wuwei Lin",
-        "Yineng Zhang",
-        "Stephanie Wang",
-        "Tianqi Chen",
-        "Baris Kasikci",
-        "Vinod Grover",
-        "Arvind Krishnamurthy",
-        "Luis Ceze"
-      ],
-      "research_line": "Efficient Attention Kernels",
-      "line_role": "system",
-      "domains": [
-        "LLM Systems"
-      ],
-      "tracks": [
-        "Attention Kernels",
-        "Inference Serving Systems"
-      ],
-      "problems": [
-        "Customizable Attention Serving"
-      ],
-      "topics": [
-        "Attention Kernels",
-        "GPU Systems",
-        "Inference Optimization",
-        "KV Cache",
-        "LLM Serving"
-      ],
-      "methods": [
-        "block-sparse attention",
-        "composable KV-cache format",
-        "CUDA Graph",
-        "FlashAttention",
-        "JIT compilation",
-        "load-balanced scheduling"
-      ],
-      "status": "read",
-      "reading_stage": "deep_read",
-      "review_stage": "",
-      "next_review": "",
-      "importance": 4,
-      "confidence": 4,
-      "reproducibility": 4,
-      "has_code": true,
-      "excerpt": "中文版：FlashInfer 是一个面向 LLM online serving 的 attention kernel engine。它把 PagedAttention、RadixAttention、prefix sharing、tree attention、KV pruning 等多种 KV-cache 访问形态统一成 block-sparse / composable sparse formats，并用 CUDA/CUTLASS 模板...",
-      "essence": "FlashInfer 像给大模型服务端装了一套会认路、会排队、还会按菜谱现炒的厨房流水线：不同客人的历史上下文再杂乱，也尽量少搬、少等、少重复算。"
-    },
-    {
       "slug": "2307.08691-flashattention-2",
       "href": "2307.08691-flashattention-2.html",
       "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning",
@@ -820,17 +820,17 @@
       "name": "缺复习计划",
       "kind": "workflow",
       "slugs": [
-        "2607.00466-eldr",
-        "2603.03251-speculative-speculative-decoding",
         "2503.14075-twigvlm-plus-plus",
-        "noarxiv-2026-dspark",
         "2602.06036-dflash",
+        "2603.03251-speculative-speculative-decoding",
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus",
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark",
+        "2501.01005-flashinfer",
         "2503.01840-eagle-3-scaling-up",
         "2507.11851-llm-future-mtp",
         "2512.23424-akg-kernel-agent-multi",
-        "2501.01005-flashinfer",
         "2307.08691-flashattention-2"
       ]
     },

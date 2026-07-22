@@ -1,51 +1,8 @@
 {
-  "generated_at": "2026-07-21T20:41:17",
+  "generated_at": "2026-07-22T13:10:32",
   "count": 13,
   "inbox_count": 0,
   "existing_papers": [
-    {
-      "slug": "2607.00466-eldr",
-      "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
-      "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
-      "title_en": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
-      "arxiv_id": "2607.00466v2",
-      "arxiv_key": "2607.00466",
-      "title_keys": [
-        "eldr expert locality aware decode routing for pd disaggregated moe serving",
-        "eldr 面向 pd 分离 moe 服务的专家局部性感知解码路由"
-      ],
-      "link_keys": [
-        "2607.00466-eldr.html",
-        "2607.00466-eldr.md",
-        "https://arxiv.org/abs/2607.00466v2"
-      ],
-      "href": "2607.00466-eldr.html",
-      "research_line": "LLM Serving",
-      "status": "read",
-      "year": 2026
-    },
-    {
-      "slug": "2603.03251-speculative-speculative-decoding",
-      "title": "Speculative Speculative Decoding",
-      "title_zh": "推测性推测解码",
-      "title_en": "Speculative Speculative Decoding",
-      "arxiv_id": "2603.03251",
-      "arxiv_key": "2603.03251",
-      "title_keys": [
-        "speculative speculative decoding",
-        "推测性推测解码"
-      ],
-      "link_keys": [
-        "2603.03251-speculative-speculative-decoding.html",
-        "2603.03251-speculative-speculative-decoding.md",
-        "https://arxiv.org/abs/2603.03251",
-        "https://github.com/tanishqkumar/ssd"
-      ],
-      "href": "2603.03251-speculative-speculative-decoding.html",
-      "research_line": "Unassigned",
-      "status": "read",
-      "year": 2026
-    },
     {
       "slug": "2503.14075-twigvlm-plus-plus",
       "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
@@ -69,28 +26,6 @@
       "year": 2026
     },
     {
-      "slug": "noarxiv-2026-dspark",
-      "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
-      "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
-      "title_en": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
-      "arxiv_id": "noarxiv-2026-dspark",
-      "arxiv_key": "noarxi",
-      "title_keys": [
-        "dspark confidence scheduled speculative decoding with semi autoregressive generation",
-        "dspark 基于置信度调度的半自回归 speculative decoding"
-      ],
-      "link_keys": [
-        "https://arxiv.org/abs/noarxiv-2026-dspark",
-        "https://github.com/deepseek-ai/deepspec/blob/main/dspark_paper.pdf",
-        "noarxiv-2026-dspark.html",
-        "noarxiv-2026-dspark.md"
-      ],
-      "href": "noarxiv-2026-dspark.html",
-      "research_line": "LLM Serving",
-      "status": "read",
-      "year": 2026
-    },
-    {
       "slug": "2602.06036-dflash",
       "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
       "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
@@ -109,6 +44,28 @@
       ],
       "href": "2602.06036-dflash.html",
       "research_line": "Parallel Decoding with Diffusion Models",
+      "status": "read",
+      "year": 2026
+    },
+    {
+      "slug": "2603.03251-speculative-speculative-decoding",
+      "title": "Speculative Speculative Decoding",
+      "title_zh": "推测性推测解码",
+      "title_en": "Speculative Speculative Decoding",
+      "arxiv_id": "2603.03251",
+      "arxiv_key": "2603.03251",
+      "title_keys": [
+        "speculative speculative decoding",
+        "推测性推测解码"
+      ],
+      "link_keys": [
+        "2603.03251-speculative-speculative-decoding.html",
+        "2603.03251-speculative-speculative-decoding.md",
+        "https://arxiv.org/abs/2603.03251",
+        "https://github.com/tanishqkumar/ssd"
+      ],
+      "href": "2603.03251-speculative-speculative-decoding.html",
+      "research_line": "Unassigned",
       "status": "read",
       "year": 2026
     },
@@ -155,6 +112,71 @@
       "research_line": "Parallel Decoding with Diffusion Models",
       "status": "read",
       "year": 2026
+    },
+    {
+      "slug": "2607.00466-eldr",
+      "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+      "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+      "title_en": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+      "arxiv_id": "2607.00466v2",
+      "arxiv_key": "2607.00466",
+      "title_keys": [
+        "eldr expert locality aware decode routing for pd disaggregated moe serving",
+        "eldr 面向 pd 分离 moe 服务的专家局部性感知解码路由"
+      ],
+      "link_keys": [
+        "2607.00466-eldr.html",
+        "2607.00466-eldr.md",
+        "https://arxiv.org/abs/2607.00466v2"
+      ],
+      "href": "2607.00466-eldr.html",
+      "research_line": "LLM Serving",
+      "status": "read",
+      "year": 2026
+    },
+    {
+      "slug": "noarxiv-2026-dspark",
+      "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+      "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+      "title_en": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+      "arxiv_id": "noarxiv-2026-dspark",
+      "arxiv_key": "noarxi",
+      "title_keys": [
+        "dspark confidence scheduled speculative decoding with semi autoregressive generation",
+        "dspark 基于置信度调度的半自回归 speculative decoding"
+      ],
+      "link_keys": [
+        "https://arxiv.org/abs/noarxiv-2026-dspark",
+        "https://github.com/deepseek-ai/deepspec/blob/main/dspark_paper.pdf",
+        "noarxiv-2026-dspark.html",
+        "noarxiv-2026-dspark.md"
+      ],
+      "href": "noarxiv-2026-dspark.html",
+      "research_line": "LLM Serving",
+      "status": "read",
+      "year": 2026
+    },
+    {
+      "slug": "2501.01005-flashinfer",
+      "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
+      "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
+      "title_en": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
+      "arxiv_id": "2501.01005v2",
+      "arxiv_key": "2501.01005",
+      "title_keys": [
+        "flashinfer efficient and customizable attention engine for llm inference serving",
+        "flashinfer 面向 llm 推理服务的高效可定制 attention 引擎"
+      ],
+      "link_keys": [
+        "2501.01005-flashinfer.html",
+        "2501.01005-flashinfer.md",
+        "https://arxiv.org/abs/2501.01005v2",
+        "https://github.com/flashinfer-ai/flashinfer"
+      ],
+      "href": "2501.01005-flashinfer.html",
+      "research_line": "Efficient Attention Kernels",
+      "status": "read",
+      "year": 2025
     },
     {
       "slug": "2503.01840-eagle-3-scaling-up",
@@ -222,28 +244,6 @@
       "year": 2025
     },
     {
-      "slug": "2501.01005-flashinfer",
-      "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
-      "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
-      "title_en": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
-      "arxiv_id": "2501.01005v2",
-      "arxiv_key": "2501.01005",
-      "title_keys": [
-        "flashinfer efficient and customizable attention engine for llm inference serving",
-        "flashinfer 面向 llm 推理服务的高效可定制 attention 引擎"
-      ],
-      "link_keys": [
-        "2501.01005-flashinfer.html",
-        "2501.01005-flashinfer.md",
-        "https://arxiv.org/abs/2501.01005v2",
-        "https://github.com/flashinfer-ai/flashinfer"
-      ],
-      "href": "2501.01005-flashinfer.html",
-      "research_line": "Efficient Attention Kernels",
-      "status": "read",
-      "year": 2025
-    },
-    {
       "slug": "2307.08691-flashattention-2",
       "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning",
       "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
@@ -299,7 +299,7 @@
     "priority": "normal",
     "tags": "",
     "note": "",
-    "added_at": "2026-07-21"
+    "added_at": "2026-07-22"
   },
   "statuses": [
     "new_candidate",

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T20:41:16",
+  "generated_at": "2026-07-22T13:10:32",
   "count": 114,
   "paper_count": 13,
   "summary": {
@@ -27,11 +27,11 @@
       "share": 0.7692,
       "href": "library.html?domain=LLM+Systems",
       "sample_slugs": [
-        "2607.00466-eldr",
         "2503.14075-twigvlm-plus-plus",
-        "noarxiv-2026-dspark",
         "2602.06036-dflash",
-        "2604.11035-introspective-dlm"
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus",
+        "2607.00466-eldr"
       ],
       "recommendation": "结构域 过大，考虑拆成更细子类。"
     },
@@ -46,11 +46,11 @@
       "share": 0.6154,
       "href": "library.html?stage=deep_read",
       "sample_slugs": [
-        "2607.00466-eldr",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus",
-        "2503.01840-eagle-3-scaling-up"
+        "2607.00466-eldr",
+        "2501.01005-flashinfer"
       ],
       "recommendation": "阅读阶段 过大，考虑拆成更细子类。"
     },
@@ -65,11 +65,11 @@
       "share": 1.0,
       "href": "library.html?status=read",
       "sample_slugs": [
-        "2607.00466-eldr",
-        "2603.03251-speculative-speculative-decoding",
         "2503.14075-twigvlm-plus-plus",
-        "noarxiv-2026-dspark",
-        "2602.06036-dflash"
+        "2602.06036-dflash",
+        "2603.03251-speculative-speculative-decoding",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus"
       ],
       "recommendation": "阅读状态 过大，考虑拆成更细子类。"
     },
@@ -84,11 +84,11 @@
       "share": 0.6154,
       "href": "library.html?topic=Speculative+Decoding",
       "sample_slugs": [
-        "2603.03251-speculative-speculative-decoding",
         "2503.14075-twigvlm-plus-plus",
-        "noarxiv-2026-dspark",
         "2602.06036-dflash",
-        "2604.11035-introspective-dlm"
+        "2603.03251-speculative-speculative-decoding",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus"
       ],
       "recommendation": "主题 过大，考虑拆成更细子类。"
     },
@@ -103,11 +103,11 @@
       "share": 0.6154,
       "href": "library.html?track=Inference+Acceleration",
       "sample_slugs": [
-        "2607.00466-eldr",
         "2503.14075-twigvlm-plus-plus",
-        "noarxiv-2026-dspark",
         "2602.06036-dflash",
-        "2604.11035-introspective-dlm"
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus",
+        "2607.00466-eldr"
       ],
       "recommendation": "方向 过大，考虑拆成更细子类。"
     },

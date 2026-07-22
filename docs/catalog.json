@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T20:41:17",
+  "generated_at": "2026-07-22T13:10:32",
   "count": 13,
   "inbox_count": 0,
   "page_count": 45,
@@ -314,7 +314,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:16",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "frontend",
         "desktop",
@@ -341,7 +341,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "search",
         "desktop"
@@ -404,7 +404,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "dashboard",
         "ops",
@@ -473,7 +473,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:16",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "quality-gate",
         "ops",
@@ -505,7 +505,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:16",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "review",
         "scheduler",
@@ -517,7 +517,7 @@
       "href": "freshness.json",
       "description": "报告新鲜度、过期分析和研究线维护队列",
       "exists": true,
-      "size_bytes": 12518,
+      "size_bytes": 12502,
       "top_level_keys": [
         "count",
         "generated_at",
@@ -550,7 +550,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:16",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "freshness",
         "maintenance"
@@ -561,7 +561,7 @@
       "href": "taxonomy_actions.json",
       "description": "分类长尾、过载和空候选治理任务",
       "exists": true,
-      "size_bytes": 50452,
+      "size_bytes": 50453,
       "top_level_keys": [
         "actions",
         "count",
@@ -588,7 +588,7 @@
         }
       ],
       "declared_count": 114,
-      "generated_at": "2026-07-21T20:41:16",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "taxonomy",
         "project-management",
@@ -600,7 +600,7 @@
       "href": "actions.json",
       "description": "统一行动队列，汇总质量、复习、分类和 inbox 任务",
       "exists": true,
-      "size_bytes": 80746,
+      "size_bytes": 80748,
       "top_level_keys": [
         "actions",
         "commands",
@@ -638,7 +638,7 @@
         }
       ],
       "declared_count": 143,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "tasks",
         "project-management",
@@ -650,7 +650,7 @@
       "href": "priority.json",
       "description": "论文级优先级决策数据，聚合复习、分类、代码和阅读信号",
       "exists": true,
-      "size_bytes": 60331,
+      "size_bytes": 60427,
       "top_level_keys": [
         "commands",
         "count",
@@ -707,7 +707,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "priority",
         "decision-support",
@@ -757,7 +757,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "command-center",
         "desktop",
@@ -824,7 +824,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [],
       "error": ""
     },
@@ -896,7 +896,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [],
       "error": ""
     },
@@ -944,7 +944,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "workflow",
         "desktop",
@@ -996,7 +996,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "workflow",
         "runtime-selector",
@@ -1008,7 +1008,7 @@
       "href": "views.json",
       "description": "共享视图、系统队列、研究线和状态工作流视图目录",
       "exists": true,
-      "size_bytes": 67733,
+      "size_bytes": 67677,
       "top_level_keys": [
         "commands",
         "configured_count",
@@ -1057,7 +1057,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "saved-views",
         "shared-views",
@@ -1070,7 +1070,7 @@
       "href": "presets.json",
       "description": "批量治理 preset、字段写入和 workflow 兼容性",
       "exists": true,
-      "size_bytes": 13387,
+      "size_bytes": 13367,
       "top_level_keys": [
         "active_status_workflow",
         "commands",
@@ -1117,7 +1117,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [],
       "error": ""
     },
@@ -1166,7 +1166,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "batch-planning",
         "classification",
@@ -1179,7 +1179,7 @@
       "href": "collections.json",
       "description": "共享视图、智能集合和研究线集合的机器可读入口",
       "exists": true,
-      "size_bytes": 42407,
+      "size_bytes": 42369,
       "top_level_keys": [
         "count",
         "generated_at",
@@ -1214,7 +1214,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "collections",
         "shared-views",
@@ -1264,7 +1264,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "coverage",
         "taxonomy",
@@ -1323,7 +1323,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "research-gaps",
         "planning",
@@ -1336,7 +1336,7 @@
       "href": "pivot.json",
       "description": "分类透视表维度、论文投影和交叉分布",
       "exists": true,
-      "size_bytes": 34341,
+      "size_bytes": 34470,
       "top_level_keys": [
         "count",
         "dimensions",
@@ -1362,7 +1362,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "analytics",
         "classification",
@@ -1406,7 +1406,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "comparison",
         "curation",
@@ -1474,7 +1474,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "taxonomy",
         "graph",
@@ -1514,7 +1514,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "taxonomy",
         "clusters",
@@ -1565,7 +1565,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "research-lines",
         "planning",
@@ -1634,7 +1634,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "ops",
         "capacity-planning",
@@ -1674,7 +1674,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "ops",
         "owners",
@@ -1686,7 +1686,7 @@
       "href": "routing.json",
       "description": "新论文分类路由画像和推荐权重",
       "exists": true,
-      "size_bytes": 408555,
+      "size_bytes": 408539,
       "top_level_keys": [
         "count",
         "generated_at",
@@ -1739,7 +1739,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "taxonomy",
         "intake",
@@ -1811,7 +1811,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "open-source",
         "contributors",
@@ -1890,7 +1890,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "release",
         "audit",
@@ -1965,7 +1965,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "intake",
         "dedupe",
@@ -2009,7 +2009,7 @@
         }
       ],
       "declared_count": 0,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "intake",
         "dedupe"
@@ -2068,7 +2068,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "dedupe",
         "quality",
@@ -2134,7 +2134,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "taxonomy",
         "registry",
@@ -2147,7 +2147,7 @@
       "href": "facets.json",
       "description": "分类字段目录、候选值规模和治理动作",
       "exists": true,
-      "size_bytes": 80495,
+      "size_bytes": 80496,
       "top_level_keys": [
         "commands",
         "count",
@@ -2193,7 +2193,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [],
       "error": ""
     },
@@ -2266,7 +2266,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:16",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [],
       "error": ""
     },
@@ -2363,7 +2363,7 @@
         }
       ],
       "declared_count": 13,
-      "generated_at": "2026-07-21T20:41:17",
+      "generated_at": "2026-07-22T13:10:32",
       "consumers": [
         "release",
         "audit",

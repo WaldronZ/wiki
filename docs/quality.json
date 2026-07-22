@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T20:41:16",
+  "generated_at": "2026-07-22T13:10:32",
   "count": 13,
   "quality_score": 75.2,
   "coverage": {
@@ -15,17 +15,17 @@
       "semantic-search-evaluation"
     ],
     "needs_review_plan": [
-      "2607.00466-eldr",
-      "2603.03251-speculative-speculative-decoding",
       "2503.14075-twigvlm-plus-plus",
-      "noarxiv-2026-dspark",
       "2602.06036-dflash",
+      "2603.03251-speculative-speculative-decoding",
       "2604.11035-introspective-dlm",
       "2605.12825-orthrus",
+      "2607.00466-eldr",
+      "noarxiv-2026-dspark",
+      "2501.01005-flashinfer",
       "2503.01840-eagle-3-scaling-up",
       "2507.11851-llm-future-mtp",
       "2512.23424-akg-kernel-agent-multi",
-      "2501.01005-flashinfer",
       "2307.08691-flashattention-2",
       "semantic-search-evaluation"
     ],
@@ -58,20 +58,35 @@
   },
   "issues": [
     {
-      "slug": "2607.00466-eldr",
-      "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
-      "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
-      "research_line": "LLM Serving",
+      "slug": "2503.14075-twigvlm-plus-plus",
+      "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+      "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+      "research_line": "VLM Acceleration",
       "importance": 4,
       "score": 88,
       "missing_fields": [],
       "weak_fields": [
         "next_review",
         "review_stage",
-        "has_code"
+        "reproducibility"
       ],
       "due_review": false,
-      "has_code": false
+      "has_code": true
+    },
+    {
+      "slug": "2602.06036-dflash",
+      "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
+      "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
+      "research_line": "Parallel Decoding with Diffusion Models",
+      "importance": 4,
+      "score": 92,
+      "missing_fields": [],
+      "weak_fields": [
+        "next_review",
+        "review_stage"
+      ],
+      "due_review": false,
+      "has_code": true
     },
     {
       "slug": "2603.03251-speculative-speculative-decoding",
@@ -98,52 +113,6 @@
       "has_code": true
     },
     {
-      "slug": "2503.14075-twigvlm-plus-plus",
-      "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
-      "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
-      "research_line": "VLM Acceleration",
-      "importance": 4,
-      "score": 88,
-      "missing_fields": [],
-      "weak_fields": [
-        "next_review",
-        "review_stage",
-        "reproducibility"
-      ],
-      "due_review": false,
-      "has_code": true
-    },
-    {
-      "slug": "noarxiv-2026-dspark",
-      "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
-      "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
-      "research_line": "LLM Serving",
-      "importance": 4,
-      "score": 92,
-      "missing_fields": [],
-      "weak_fields": [
-        "next_review",
-        "review_stage"
-      ],
-      "due_review": false,
-      "has_code": true
-    },
-    {
-      "slug": "2602.06036-dflash",
-      "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
-      "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
-      "research_line": "Parallel Decoding with Diffusion Models",
-      "importance": 4,
-      "score": 92,
-      "missing_fields": [],
-      "weak_fields": [
-        "next_review",
-        "review_stage"
-      ],
-      "due_review": false,
-      "has_code": true
-    },
-    {
       "slug": "2604.11035-introspective-dlm",
       "title": "Introspective Diffusion Language Models",
       "title_zh": "内省式扩散语言模型",
@@ -163,6 +132,52 @@
       "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion",
       "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
       "research_line": "Parallel Decoding with Diffusion Models",
+      "importance": 4,
+      "score": 92,
+      "missing_fields": [],
+      "weak_fields": [
+        "next_review",
+        "review_stage"
+      ],
+      "due_review": false,
+      "has_code": true
+    },
+    {
+      "slug": "2607.00466-eldr",
+      "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+      "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+      "research_line": "LLM Serving",
+      "importance": 4,
+      "score": 88,
+      "missing_fields": [],
+      "weak_fields": [
+        "next_review",
+        "review_stage",
+        "has_code"
+      ],
+      "due_review": false,
+      "has_code": false
+    },
+    {
+      "slug": "noarxiv-2026-dspark",
+      "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+      "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+      "research_line": "LLM Serving",
+      "importance": 4,
+      "score": 92,
+      "missing_fields": [],
+      "weak_fields": [
+        "next_review",
+        "review_stage"
+      ],
+      "due_review": false,
+      "has_code": true
+    },
+    {
+      "slug": "2501.01005-flashinfer",
+      "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
+      "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
+      "research_line": "Efficient Attention Kernels",
       "importance": 4,
       "score": 92,
       "missing_fields": [],
@@ -229,21 +244,6 @@
       "has_code": false
     },
     {
-      "slug": "2501.01005-flashinfer",
-      "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
-      "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
-      "research_line": "Efficient Attention Kernels",
-      "importance": 4,
-      "score": 92,
-      "missing_fields": [],
-      "weak_fields": [
-        "next_review",
-        "review_stage"
-      ],
-      "due_review": false,
-      "has_code": true
-    },
-    {
       "slug": "2307.08691-flashattention-2",
       "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning",
       "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
@@ -287,27 +287,6 @@
   ],
   "taxonomy_load": [
     {
-      "slug": "2603.03251-speculative-speculative-decoding",
-      "title": "Speculative Speculative Decoding",
-      "title_zh": "推测性推测解码",
-      "html_path": "2603.03251-speculative-speculative-decoding.html",
-      "research_line": "Unassigned",
-      "structure_count": 0,
-      "topic_count": 4,
-      "method_count": 6,
-      "tag_count": 10,
-      "signals": [
-        "sparse_structure"
-      ],
-      "policy": {
-        "min_structure_labels": 3,
-        "min_tags": 3,
-        "max_tags": 10,
-        "max_methods": 8
-      },
-      "recommendation": "补齐 domain / track / problem 或 topic / method，让这篇论文能被多入口检索。"
-    },
-    {
       "slug": "2503.14075-twigvlm-plus-plus",
       "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
       "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
@@ -329,11 +308,53 @@
       "recommendation": "检查 topic / method 是否过细，保留最能区分论文的标签。"
     },
     {
+      "slug": "2603.03251-speculative-speculative-decoding",
+      "title": "Speculative Speculative Decoding",
+      "title_zh": "推测性推测解码",
+      "html_path": "2603.03251-speculative-speculative-decoding.html",
+      "research_line": "Unassigned",
+      "structure_count": 0,
+      "topic_count": 4,
+      "method_count": 6,
+      "tag_count": 10,
+      "signals": [
+        "sparse_structure"
+      ],
+      "policy": {
+        "min_structure_labels": 3,
+        "min_tags": 3,
+        "max_tags": 10,
+        "max_methods": 8
+      },
+      "recommendation": "补齐 domain / track / problem 或 topic / method，让这篇论文能被多入口检索。"
+    },
+    {
       "slug": "2604.11035-introspective-dlm",
       "title": "Introspective Diffusion Language Models",
       "title_zh": "内省式扩散语言模型",
       "html_path": "2604.11035-introspective-dlm.html",
       "research_line": "Parallel Decoding with Diffusion Models",
+      "structure_count": 4,
+      "topic_count": 5,
+      "method_count": 6,
+      "tag_count": 11,
+      "signals": [
+        "dense_tags"
+      ],
+      "policy": {
+        "min_structure_labels": 3,
+        "min_tags": 3,
+        "max_tags": 10,
+        "max_methods": 8
+      },
+      "recommendation": "检查 topic / method 是否过细，保留最能区分论文的标签。"
+    },
+    {
+      "slug": "2501.01005-flashinfer",
+      "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
+      "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
+      "html_path": "2501.01005-flashinfer.html",
+      "research_line": "Efficient Attention Kernels",
       "structure_count": 4,
       "topic_count": 5,
       "method_count": 6,
@@ -370,27 +391,6 @@
         "max_methods": 8
       },
       "recommendation": "补齐 domain / track / problem 或 topic / method，让这篇论文能被多入口检索。"
-    },
-    {
-      "slug": "2501.01005-flashinfer",
-      "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
-      "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
-      "html_path": "2501.01005-flashinfer.html",
-      "research_line": "Efficient Attention Kernels",
-      "structure_count": 4,
-      "topic_count": 5,
-      "method_count": 6,
-      "tag_count": 11,
-      "signals": [
-        "dense_tags"
-      ],
-      "policy": {
-        "min_structure_labels": 3,
-        "min_tags": 3,
-        "max_tags": 10,
-        "max_methods": 8
-      },
-      "recommendation": "检查 topic / method 是否过细，保留最能区分论文的标签。"
     },
     {
       "slug": "semantic-search-evaluation",

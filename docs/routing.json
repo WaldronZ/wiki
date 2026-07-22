@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T20:41:17",
+  "generated_at": "2026-07-22T13:10:32",
   "count": 13,
   "line_count": 6,
   "label_count": 111,
@@ -1669,15 +1669,15 @@
           "weight": 48
         },
         {
-          "term": "generation",
-          "weight": 43
-        },
-        {
           "term": "pruning",
           "weight": 43
         },
         {
           "term": "training",
+          "weight": 43
+        },
+        {
+          "term": "generation",
           "weight": 43
         },
         {
@@ -1714,12 +1714,12 @@
         }
       ],
       "sample_slugs": [
-        "2607.00466-eldr",
         "2503.14075-twigvlm-plus-plus",
-        "noarxiv-2026-dspark",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
+        "2605.12825-orthrus",
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark"
       ]
     },
     {
@@ -9203,15 +9203,15 @@
           "weight": 38
         },
         {
-          "term": "parallel",
-          "weight": 37
-        },
-        {
           "term": "dflash",
           "weight": 37
         },
         {
           "term": "diffusion",
+          "weight": 37
+        },
+        {
+          "term": "parallel",
           "weight": 37
         },
         {
@@ -9227,15 +9227,15 @@
           "weight": 29
         },
         {
+          "term": "block",
+          "weight": 28
+        },
+        {
           "term": "arxiv",
           "weight": 28
         },
         {
           "term": "autoregressive",
-          "weight": 28
-        },
-        {
-          "term": "block",
           "weight": 28
         },
         {
@@ -9267,14 +9267,6 @@
           "weight": 20
         },
         {
-          "term": "ssd",
-          "weight": 19
-        },
-        {
-          "term": "generation",
-          "weight": 19
-        },
-        {
           "term": "kv",
           "weight": 19
         },
@@ -9283,15 +9275,23 @@
           "weight": 19
         },
         {
+          "term": "ssd",
+          "weight": 19
+        },
+        {
+          "term": "generation",
+          "weight": 19
+        },
+        {
+          "term": "feature",
+          "weight": 17
+        },
+        {
           "term": "acceleration",
           "weight": 17
         },
         {
           "term": "confidence",
-          "weight": 17
-        },
-        {
-          "term": "feature",
           "weight": 17
         },
         {
@@ -9307,18 +9307,18 @@
           "weight": 16
         },
         {
-          "term": "outcome",
+          "term": "2026",
           "weight": 15
         },
         {
-          "term": "2026",
+          "term": "outcome",
           "weight": 15
         }
       ],
       "sample_slugs": [
+        "2602.06036-dflash",
         "2603.03251-speculative-speculative-decoding",
-        "noarxiv-2026-dspark",
-        "2602.06036-dflash"
+        "noarxiv-2026-dspark"
       ]
     },
     {
@@ -11685,19 +11685,19 @@
           "weight": 39
         },
         {
-          "term": "autoregressive",
-          "weight": 38
-        },
-        {
           "term": "target",
           "weight": 38
         },
         {
-          "term": "serving",
-          "weight": 37
+          "term": "autoregressive",
+          "weight": 38
         },
         {
           "term": "dflash",
+          "weight": 37
+        },
+        {
+          "term": "serving",
           "weight": 37
         },
         {
@@ -11705,11 +11705,11 @@
           "weight": 35
         },
         {
-          "term": "dspark",
+          "term": "draft",
           "weight": 35
         },
         {
-          "term": "draft",
+          "term": "dspark",
           "weight": 35
         },
         {
@@ -11717,27 +11717,27 @@
           "weight": 32
         },
         {
-          "term": "arxiv",
-          "weight": 28
-        },
-        {
           "term": "block",
           "weight": 28
         },
         {
-          "term": "system",
-          "weight": 26
+          "term": "arxiv",
+          "weight": 28
         },
         {
           "term": "acceleration",
           "weight": 26
         },
         {
-          "term": "generation",
-          "weight": 24
+          "term": "system",
+          "weight": 26
         },
         {
           "term": "drafter",
+          "weight": 24
+        },
+        {
+          "term": "generation",
           "weight": 24
         },
         {
@@ -11769,6 +11769,10 @@
           "weight": 18
         },
         {
+          "term": "feature",
+          "weight": 17
+        },
+        {
           "term": "confidence",
           "weight": 17
         },
@@ -11777,8 +11781,8 @@
           "weight": 17
         },
         {
-          "term": "feature",
-          "weight": 17
+          "term": "verification",
+          "weight": 16
         },
         {
           "term": "semi",
@@ -11789,17 +11793,13 @@
           "weight": 16
         },
         {
-          "term": "verification",
-          "weight": 16
-        },
-        {
           "term": "mtp",
           "weight": 16
         }
       ],
       "sample_slugs": [
-        "noarxiv-2026-dspark",
         "2602.06036-dflash",
+        "noarxiv-2026-dspark",
         "2507.11851-llm-future-mtp"
       ]
     },
@@ -15181,7 +15181,7 @@
           "weight": 28
         },
         {
-          "term": "scaling",
+          "term": "drafter",
           "weight": 27
         },
         {
@@ -15189,7 +15189,7 @@
           "weight": 27
         },
         {
-          "term": "drafter",
+          "term": "scaling",
           "weight": 27
         },
         {
@@ -15201,11 +15201,11 @@
           "weight": 26
         },
         {
-          "term": "lossles",
+          "term": "language",
           "weight": 25
         },
         {
-          "term": "language",
+          "term": "lossles",
           "weight": 25
         },
         {
@@ -15214,10 +15214,10 @@
         }
       ],
       "sample_slugs": [
-        "2603.03251-speculative-speculative-decoding",
-        "noarxiv-2026-dspark",
         "2602.06036-dflash",
+        "2603.03251-speculative-speculative-decoding",
         "2605.12825-orthrus",
+        "noarxiv-2026-dspark",
         "2503.01840-eagle-3-scaling-up"
       ]
     },
@@ -15300,15 +15300,15 @@
           "weight": 34
         },
         {
-          "term": "semi autoregressive",
-          "weight": 32
-        },
-        {
           "term": "dlm",
           "weight": 32
         },
         {
-          "term": "eldr",
+          "term": "semi autoregressive",
+          "weight": 32
+        },
+        {
+          "term": "draft",
           "weight": 31
         },
         {
@@ -15316,15 +15316,15 @@
           "weight": 31
         },
         {
-          "term": "draft",
+          "term": "eldr",
           "weight": 31
         },
         {
-          "term": "moe",
+          "term": "introspective",
           "weight": 30
         },
         {
-          "term": "introspective",
+          "term": "moe",
           "weight": 30
         },
         {
@@ -15352,7 +15352,7 @@
           "weight": 24
         },
         {
-          "term": "aware",
+          "term": "drafter",
           "weight": 23
         },
         {
@@ -15360,23 +15360,23 @@
           "weight": 23
         },
         {
-          "term": "drafter",
+          "term": "aware",
           "weight": 23
+        },
+        {
+          "term": "language",
+          "weight": 22
         },
         {
           "term": "worker",
           "weight": 22
-        },
-        {
-          "term": "confidence scheduled",
-          "weight": 22
         }
       ],
       "sample_slugs": [
-        "2607.00466-eldr",
-        "noarxiv-2026-dspark",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark",
         "2501.01005-flashinfer"
       ]
     },
@@ -17193,6 +17193,10 @@
           "weight": 42
         },
         {
+          "term": "pruning",
+          "weight": 40
+        },
+        {
           "term": "verification",
           "weight": 40
         },
@@ -17201,16 +17205,8 @@
           "weight": 40
         },
         {
-          "term": "pruning",
-          "weight": 40
-        },
-        {
           "term": "training time",
           "weight": 40
-        },
-        {
-          "term": "attention",
-          "weight": 37
         },
         {
           "term": "tree",
@@ -17218,6 +17214,10 @@
         },
         {
           "term": "vlm",
+          "weight": 37
+        },
+        {
+          "term": "attention",
           "weight": 37
         },
         {
@@ -17238,12 +17238,12 @@
         }
       ],
       "sample_slugs": [
-        "2603.03251-speculative-speculative-decoding",
         "2503.14075-twigvlm-plus-plus",
-        "noarxiv-2026-dspark",
         "2602.06036-dflash",
+        "2603.03251-speculative-speculative-decoding",
         "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
+        "2605.12825-orthrus",
+        "noarxiv-2026-dspark"
       ]
     },
     {
@@ -18252,11 +18252,11 @@
           "weight": 52
         },
         {
-          "term": "block",
+          "term": "prediction",
           "weight": 49
         },
         {
-          "term": "prediction",
+          "term": "block",
           "weight": 49
         },
         {
@@ -18288,11 +18288,11 @@
           "weight": 40
         },
         {
-          "term": "generation",
+          "term": "cache",
           "weight": 39
         },
         {
-          "term": "cache",
+          "term": "generation",
           "weight": 39
         },
         {
@@ -18320,21 +18320,21 @@
           "weight": 31
         },
         {
-          "term": "moe",
+          "term": "tree",
           "weight": 30
         },
         {
-          "term": "tree",
+          "term": "introspective",
           "weight": 30
         }
       ],
       "sample_slugs": [
-        "2607.00466-eldr",
         "2503.14075-twigvlm-plus-plus",
-        "noarxiv-2026-dspark",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
+        "2605.12825-orthrus",
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark"
       ]
     },
     {
@@ -18535,11 +18535,11 @@
           "weight": 52
         },
         {
-          "term": "head",
+          "term": "block",
           "weight": 45
         },
         {
-          "term": "block",
+          "term": "head",
           "weight": 45
         },
         {
@@ -18575,11 +18575,11 @@
           "weight": 38
         },
         {
-          "term": "dspark",
+          "term": "draft",
           "weight": 35
         },
         {
-          "term": "draft",
+          "term": "dspark",
           "weight": 35
         },
         {
@@ -18635,19 +18635,19 @@
           "weight": 23
         },
         {
-          "term": "confidence scheduled",
+          "term": "http",
           "weight": 22
         },
         {
-          "term": "http",
+          "term": "causal",
           "weight": 22
         }
       ],
       "sample_slugs": [
-        "noarxiv-2026-dspark",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus",
+        "noarxiv-2026-dspark",
         "2507.11851-llm-future-mtp"
       ]
     },
@@ -18808,463 +18808,6 @@
     }
   ],
   "paper_signatures": [
-    {
-      "slug": "2607.00466-eldr",
-      "title": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
-      "title_en": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
-      "href": "2607.00466-eldr.html",
-      "year": 2026,
-      "research_line": "LLM Serving",
-      "domains": [
-        "LLM Systems"
-      ],
-      "tracks": [
-        "Inference Acceleration"
-      ],
-      "problems": [
-        "MoE Serving"
-      ],
-      "topics": [
-        "Disaggregated Serving",
-        "LLM Serving",
-        "Load Balancing",
-        "MoE"
-      ],
-      "methods": [
-        "Balanced K-means",
-        "Expert Locality Routing",
-        "Signature Cache"
-      ],
-      "terms": [
-        {
-          "term": "eldr",
-          "weight": 31
-        },
-        {
-          "term": "moe",
-          "weight": 30
-        },
-        {
-          "term": "serving",
-          "weight": 29
-        },
-        {
-          "term": "decode",
-          "weight": 24
-        },
-        {
-          "term": "k mean",
-          "weight": 24
-        },
-        {
-          "term": "worker",
-          "weight": 22
-        },
-        {
-          "term": "expert",
-          "weight": 21
-        },
-        {
-          "term": "llm",
-          "weight": 21
-        },
-        {
-          "term": "prefill",
-          "weight": 19
-        },
-        {
-          "term": "locality",
-          "weight": 13
-        },
-        {
-          "term": "disaggregated",
-          "weight": 12
-        },
-        {
-          "term": "mean",
-          "weight": 12
-        },
-        {
-          "term": "signature",
-          "weight": 12
-        },
-        {
-          "term": "routing",
-          "weight": 11
-        },
-        {
-          "term": "balanced",
-          "weight": 11
-        },
-        {
-          "term": "expert locality aware",
-          "weight": 10
-        },
-        {
-          "term": "tpot",
-          "weight": 10
-        },
-        {
-          "term": "pd disaggregated",
-          "weight": 8
-        },
-        {
-          "term": "prefill decode",
-          "weight": 8
-        },
-        {
-          "term": "load",
-          "weight": 8
-        },
-        {
-          "term": "cache",
-          "weight": 8
-        },
-        {
-          "term": "kv",
-          "weight": 7
-        },
-        {
-          "term": "system",
-          "weight": 7
-        },
-        {
-          "term": "inference",
-          "weight": 7
-        },
-        {
-          "term": "acceleration",
-          "weight": 7
-        },
-        {
-          "term": "balancing",
-          "weight": 6
-        },
-        {
-          "term": "hungarian balanced",
-          "weight": 6
-        },
-        {
-          "term": "0 1",
-          "weight": 6
-        },
-        {
-          "term": "aware",
-          "weight": 5
-        },
-        {
-          "term": "for",
-          "weight": 5
-        },
-        {
-          "term": "the",
-          "weight": 5
-        },
-        {
-          "term": "batch",
-          "weight": 5
-        },
-        {
-          "term": "domain",
-          "weight": 5
-        },
-        {
-          "term": "arxiv",
-          "weight": 5
-        },
-        {
-          "term": "token",
-          "weight": 4
-        },
-        {
-          "term": "通过从",
-          "weight": 4
-        },
-        {
-          "term": "kaist",
-          "weight": 4
-        },
-        {
-          "term": "microsoft",
-          "weight": 4
-        },
-        {
-          "term": "research",
-          "weight": 4
-        },
-        {
-          "term": "locality band",
-          "weight": 4
-        },
-        {
-          "term": "17 21",
-          "weight": 4
-        },
-        {
-          "term": "intra worker",
-          "weight": 4
-        },
-        {
-          "term": "inter worker",
-          "weight": 4
-        },
-        {
-          "term": "pattern",
-          "weight": 4
-        },
-        {
-          "term": "2604 23150",
-          "weight": 4
-        },
-        {
-          "term": "all",
-          "weight": 4
-        },
-        {
-          "term": "all to all",
-          "weight": 4
-        },
-        {
-          "term": "分离",
-          "weight": 3
-        },
-        {
-          "term": "模型",
-          "weight": 3
-        },
-        {
-          "term": "而非",
-          "weight": 3
-        }
-      ]
-    },
-    {
-      "slug": "2603.03251-speculative-speculative-decoding",
-      "title": "推测性推测解码",
-      "title_en": "Speculative Speculative Decoding",
-      "href": "2603.03251-speculative-speculative-decoding.html",
-      "year": 2026,
-      "research_line": "Unassigned",
-      "domains": [],
-      "tracks": [],
-      "problems": [],
-      "topics": [
-        "Distributed Inference",
-        "LLM Inference",
-        "Speculative Decoding",
-        "Systems Optimization"
-      ],
-      "methods": [
-        "asynchronous decoding",
-        "cache-aware sampling",
-        "fallback speculation",
-        "geometric fan-out",
-        "Speculative Decoding",
-        "verification outcome cache"
-      ],
-      "terms": [
-        {
-          "term": "speculative",
-          "weight": 42
-        },
-        {
-          "term": "decoding",
-          "weight": 41
-        },
-        {
-          "term": "draft",
-          "weight": 26
-        },
-        {
-          "term": "cache",
-          "weight": 26
-        },
-        {
-          "term": "fan out",
-          "weight": 20
-        },
-        {
-          "term": "ssd",
-          "weight": 19
-        },
-        {
-          "term": "speculation",
-          "weight": 15
-        },
-        {
-          "term": "outcome",
-          "weight": 15
-        },
-        {
-          "term": "verification",
-          "weight": 14
-        },
-        {
-          "term": "inference",
-          "weight": 13
-        },
-        {
-          "term": "arxiv",
-          "weight": 12
-        },
-        {
-          "term": "cache aware",
-          "weight": 12
-        },
-        {
-          "term": "token",
-          "weight": 11
-        },
-        {
-          "term": "fan",
-          "weight": 10
-        },
-        {
-          "term": "out",
-          "weight": 10
-        },
-        {
-          "term": "sampling",
-          "weight": 10
-        },
-        {
-          "term": "fallback",
-          "weight": 10
-        },
-        {
-          "term": "target",
-          "weight": 9
-        },
-        {
-          "term": "aware",
-          "weight": 9
-        },
-        {
-          "term": "geometric",
-          "weight": 8
-        },
-        {
-          "term": "unassigned",
-          "weight": 8
-        },
-        {
-          "term": "saguaro",
-          "weight": 7
-        },
-        {
-          "term": "batch",
-          "weight": 7
-        },
-        {
-          "term": "latency",
-          "weight": 7
-        },
-        {
-          "term": "distribution",
-          "weight": 7
-        },
-        {
-          "term": "tree",
-          "weight": 7
-        },
-        {
-          "term": "asynchronou",
-          "weight": 7
-        },
-        {
-          "term": "llm",
-          "weight": 7
-        },
-        {
-          "term": "2603 03251",
-          "weight": 6
-        },
-        {
-          "term": "verifier",
-          "weight": 6
-        },
-        {
-          "term": "llama",
-          "weight": 5
-        },
-        {
-          "term": "residual",
-          "weight": 5
-        },
-        {
-          "term": "time",
-          "weight": 5
-        },
-        {
-          "term": "acceptance",
-          "weight": 5
-        },
-        {
-          "term": "distributed",
-          "weight": 5
-        },
-        {
-          "term": "system",
-          "weight": 5
-        },
-        {
-          "term": "optimization",
-          "weight": 5
-        },
-        {
-          "term": "verify",
-          "weight": 4
-        },
-        {
-          "term": "arxiv org",
-          "weight": 4
-        },
-        {
-          "term": "and",
-          "weight": 4
-        },
-        {
-          "term": "length",
-          "weight": 4
-        },
-        {
-          "term": "low latency",
-          "weight": 4
-        },
-        {
-          "term": "提出",
-          "weight": 4
-        },
-        {
-          "term": "speculator",
-          "weight": 4
-        },
-        {
-          "term": "backup",
-          "weight": 4
-        },
-        {
-          "term": "llama 3 1 70b",
-          "weight": 4
-        },
-        {
-          "term": "tok",
-          "weight": 4
-        },
-        {
-          "term": "rate",
-          "weight": 4
-        },
-        {
-          "term": "2025",
-          "weight": 4
-        },
-        {
-          "term": "multi device",
-          "weight": 4
-        }
-      ]
-    },
     {
       "slug": "2503.14075-twigvlm-plus-plus",
       "title": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
@@ -19504,240 +19047,6 @@
       ]
     },
     {
-      "slug": "noarxiv-2026-dspark",
-      "title": "DSpark：基于置信度调度的半自回归 speculative decoding",
-      "title_en": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
-      "href": "noarxiv-2026-dspark.html",
-      "year": 2026,
-      "research_line": "LLM Serving",
-      "domains": [
-        "LLM Systems"
-      ],
-      "tracks": [
-        "Inference Acceleration",
-        "Parallel Decoding"
-      ],
-      "problems": [
-        "Load-Aware Serving",
-        "Lossless Speculative Decoding"
-      ],
-      "topics": [
-        "LLM Inference",
-        "LLM Serving",
-        "Semi-Autoregressive Generation",
-        "Speculative Decoding"
-      ],
-      "methods": [
-        "confidence-scheduled verification",
-        "hardware-aware scheduling",
-        "Markov head",
-        "semi-autoregressive generation",
-        "Speculative Decoding"
-      ],
-      "terms": [
-        {
-          "term": "decoding",
-          "weight": 37
-        },
-        {
-          "term": "dspark",
-          "weight": 35
-        },
-        {
-          "term": "speculative",
-          "weight": 33
-        },
-        {
-          "term": "semi autoregressive",
-          "weight": 32
-        },
-        {
-          "term": "serving",
-          "weight": 27
-        },
-        {
-          "term": "llm",
-          "weight": 25
-        },
-        {
-          "term": "confidence scheduled",
-          "weight": 22
-        },
-        {
-          "term": "autoregressive",
-          "weight": 20
-        },
-        {
-          "term": "confidence",
-          "weight": 17
-        },
-        {
-          "term": "generation",
-          "weight": 17
-        },
-        {
-          "term": "semi",
-          "weight": 16
-        },
-        {
-          "term": "draft",
-          "weight": 16
-        },
-        {
-          "term": "token",
-          "weight": 16
-        },
-        {
-          "term": "aware",
-          "weight": 16
-        },
-        {
-          "term": "head",
-          "weight": 15
-        },
-        {
-          "term": "dflash",
-          "weight": 14
-        },
-        {
-          "term": "hardware aware",
-          "weight": 14
-        },
-        {
-          "term": "load aware",
-          "weight": 14
-        },
-        {
-          "term": "system",
-          "weight": 12
-        },
-        {
-          "term": "inference",
-          "weight": 12
-        },
-        {
-          "term": "scheduled",
-          "weight": 11
-        },
-        {
-          "term": "markov",
-          "weight": 10
-        },
-        {
-          "term": "deepseek",
-          "weight": 10
-        },
-        {
-          "term": "deepseek ai",
-          "weight": 10
-        },
-        {
-          "term": "parallel",
-          "weight": 10
-        },
-        {
-          "term": "verification",
-          "weight": 10
-        },
-        {
-          "term": "drafter",
-          "weight": 10
-        },
-        {
-          "term": "target",
-          "weight": 9
-        },
-        {
-          "term": "deepseek v4",
-          "weight": 8
-        },
-        {
-          "term": "prefix",
-          "weight": 8
-        },
-        {
-          "term": "lossles",
-          "weight": 8
-        },
-        {
-          "term": "backbone",
-          "weight": 7
-        },
-        {
-          "term": "hardware",
-          "weight": 7
-        },
-        {
-          "term": "load",
-          "weight": 7
-        },
-        {
-          "term": "acceleration",
-          "weight": 7
-        },
-        {
-          "term": "2026",
-          "weight": 6
-        },
-        {
-          "term": "noarxiv 2026 dspark",
-          "weight": 6
-        },
-        {
-          "term": "eagle3",
-          "weight": 6
-        },
-        {
-          "term": "scheduling",
-          "weight": 6
-        },
-        {
-          "term": "sequential",
-          "weight": 5
-        },
-        {
-          "term": "chen",
-          "weight": 5
-        },
-        {
-          "term": "ai",
-          "weight": 5
-        },
-        {
-          "term": "scheduler",
-          "weight": 5
-        },
-        {
-          "term": "block",
-          "weight": 5
-        },
-        {
-          "term": "zhang",
-          "weight": 4
-        },
-        {
-          "term": "arxiv",
-          "weight": 4
-        },
-        {
-          "term": "pdf",
-          "weight": 4
-        },
-        {
-          "term": "github com",
-          "weight": 4
-        },
-        {
-          "term": "suffix",
-          "weight": 4
-        },
-        {
-          "term": "acceptance",
-          "weight": 4
-        }
-      ]
-    },
-    {
       "slug": "2602.06036-dflash",
       "title": "DFlash：用于快速 speculative decoding 的块扩散方法",
       "title_en": "DFlash: Block Diffusion for Flash Speculative Decoding",
@@ -19966,6 +19275,233 @@
         },
         {
           "term": "z lab",
+          "weight": 4
+        }
+      ]
+    },
+    {
+      "slug": "2603.03251-speculative-speculative-decoding",
+      "title": "推测性推测解码",
+      "title_en": "Speculative Speculative Decoding",
+      "href": "2603.03251-speculative-speculative-decoding.html",
+      "year": 2026,
+      "research_line": "Unassigned",
+      "domains": [],
+      "tracks": [],
+      "problems": [],
+      "topics": [
+        "Distributed Inference",
+        "LLM Inference",
+        "Speculative Decoding",
+        "Systems Optimization"
+      ],
+      "methods": [
+        "asynchronous decoding",
+        "cache-aware sampling",
+        "fallback speculation",
+        "geometric fan-out",
+        "Speculative Decoding",
+        "verification outcome cache"
+      ],
+      "terms": [
+        {
+          "term": "speculative",
+          "weight": 42
+        },
+        {
+          "term": "decoding",
+          "weight": 41
+        },
+        {
+          "term": "draft",
+          "weight": 26
+        },
+        {
+          "term": "cache",
+          "weight": 26
+        },
+        {
+          "term": "fan out",
+          "weight": 20
+        },
+        {
+          "term": "ssd",
+          "weight": 19
+        },
+        {
+          "term": "speculation",
+          "weight": 15
+        },
+        {
+          "term": "outcome",
+          "weight": 15
+        },
+        {
+          "term": "verification",
+          "weight": 14
+        },
+        {
+          "term": "inference",
+          "weight": 13
+        },
+        {
+          "term": "arxiv",
+          "weight": 12
+        },
+        {
+          "term": "cache aware",
+          "weight": 12
+        },
+        {
+          "term": "token",
+          "weight": 11
+        },
+        {
+          "term": "fan",
+          "weight": 10
+        },
+        {
+          "term": "out",
+          "weight": 10
+        },
+        {
+          "term": "sampling",
+          "weight": 10
+        },
+        {
+          "term": "fallback",
+          "weight": 10
+        },
+        {
+          "term": "target",
+          "weight": 9
+        },
+        {
+          "term": "aware",
+          "weight": 9
+        },
+        {
+          "term": "geometric",
+          "weight": 8
+        },
+        {
+          "term": "unassigned",
+          "weight": 8
+        },
+        {
+          "term": "saguaro",
+          "weight": 7
+        },
+        {
+          "term": "batch",
+          "weight": 7
+        },
+        {
+          "term": "latency",
+          "weight": 7
+        },
+        {
+          "term": "distribution",
+          "weight": 7
+        },
+        {
+          "term": "tree",
+          "weight": 7
+        },
+        {
+          "term": "asynchronou",
+          "weight": 7
+        },
+        {
+          "term": "llm",
+          "weight": 7
+        },
+        {
+          "term": "2603 03251",
+          "weight": 6
+        },
+        {
+          "term": "verifier",
+          "weight": 6
+        },
+        {
+          "term": "llama",
+          "weight": 5
+        },
+        {
+          "term": "residual",
+          "weight": 5
+        },
+        {
+          "term": "time",
+          "weight": 5
+        },
+        {
+          "term": "acceptance",
+          "weight": 5
+        },
+        {
+          "term": "distributed",
+          "weight": 5
+        },
+        {
+          "term": "system",
+          "weight": 5
+        },
+        {
+          "term": "optimization",
+          "weight": 5
+        },
+        {
+          "term": "verify",
+          "weight": 4
+        },
+        {
+          "term": "arxiv org",
+          "weight": 4
+        },
+        {
+          "term": "and",
+          "weight": 4
+        },
+        {
+          "term": "length",
+          "weight": 4
+        },
+        {
+          "term": "low latency",
+          "weight": 4
+        },
+        {
+          "term": "提出",
+          "weight": 4
+        },
+        {
+          "term": "speculator",
+          "weight": 4
+        },
+        {
+          "term": "backup",
+          "weight": 4
+        },
+        {
+          "term": "llama 3 1 70b",
+          "weight": 4
+        },
+        {
+          "term": "tok",
+          "weight": 4
+        },
+        {
+          "term": "rate",
+          "weight": 4
+        },
+        {
+          "term": "2025",
+          "weight": 4
+        },
+        {
+          "term": "multi device",
           "weight": 4
         }
       ]
@@ -20435,6 +19971,705 @@
         },
         {
           "term": "2602 06036",
+          "weight": 4
+        }
+      ]
+    },
+    {
+      "slug": "2607.00466-eldr",
+      "title": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+      "title_en": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+      "href": "2607.00466-eldr.html",
+      "year": 2026,
+      "research_line": "LLM Serving",
+      "domains": [
+        "LLM Systems"
+      ],
+      "tracks": [
+        "Inference Acceleration"
+      ],
+      "problems": [
+        "MoE Serving"
+      ],
+      "topics": [
+        "Disaggregated Serving",
+        "LLM Serving",
+        "Load Balancing",
+        "MoE"
+      ],
+      "methods": [
+        "Balanced K-means",
+        "Expert Locality Routing",
+        "Signature Cache"
+      ],
+      "terms": [
+        {
+          "term": "eldr",
+          "weight": 31
+        },
+        {
+          "term": "moe",
+          "weight": 30
+        },
+        {
+          "term": "serving",
+          "weight": 29
+        },
+        {
+          "term": "decode",
+          "weight": 24
+        },
+        {
+          "term": "k mean",
+          "weight": 24
+        },
+        {
+          "term": "worker",
+          "weight": 22
+        },
+        {
+          "term": "expert",
+          "weight": 21
+        },
+        {
+          "term": "llm",
+          "weight": 21
+        },
+        {
+          "term": "prefill",
+          "weight": 19
+        },
+        {
+          "term": "locality",
+          "weight": 13
+        },
+        {
+          "term": "disaggregated",
+          "weight": 12
+        },
+        {
+          "term": "mean",
+          "weight": 12
+        },
+        {
+          "term": "signature",
+          "weight": 12
+        },
+        {
+          "term": "routing",
+          "weight": 11
+        },
+        {
+          "term": "balanced",
+          "weight": 11
+        },
+        {
+          "term": "expert locality aware",
+          "weight": 10
+        },
+        {
+          "term": "tpot",
+          "weight": 10
+        },
+        {
+          "term": "pd disaggregated",
+          "weight": 8
+        },
+        {
+          "term": "prefill decode",
+          "weight": 8
+        },
+        {
+          "term": "load",
+          "weight": 8
+        },
+        {
+          "term": "cache",
+          "weight": 8
+        },
+        {
+          "term": "kv",
+          "weight": 7
+        },
+        {
+          "term": "system",
+          "weight": 7
+        },
+        {
+          "term": "inference",
+          "weight": 7
+        },
+        {
+          "term": "acceleration",
+          "weight": 7
+        },
+        {
+          "term": "balancing",
+          "weight": 6
+        },
+        {
+          "term": "hungarian balanced",
+          "weight": 6
+        },
+        {
+          "term": "0 1",
+          "weight": 6
+        },
+        {
+          "term": "aware",
+          "weight": 5
+        },
+        {
+          "term": "for",
+          "weight": 5
+        },
+        {
+          "term": "the",
+          "weight": 5
+        },
+        {
+          "term": "batch",
+          "weight": 5
+        },
+        {
+          "term": "domain",
+          "weight": 5
+        },
+        {
+          "term": "arxiv",
+          "weight": 5
+        },
+        {
+          "term": "token",
+          "weight": 4
+        },
+        {
+          "term": "通过从",
+          "weight": 4
+        },
+        {
+          "term": "kaist",
+          "weight": 4
+        },
+        {
+          "term": "microsoft",
+          "weight": 4
+        },
+        {
+          "term": "research",
+          "weight": 4
+        },
+        {
+          "term": "locality band",
+          "weight": 4
+        },
+        {
+          "term": "17 21",
+          "weight": 4
+        },
+        {
+          "term": "intra worker",
+          "weight": 4
+        },
+        {
+          "term": "inter worker",
+          "weight": 4
+        },
+        {
+          "term": "pattern",
+          "weight": 4
+        },
+        {
+          "term": "2604 23150",
+          "weight": 4
+        },
+        {
+          "term": "all",
+          "weight": 4
+        },
+        {
+          "term": "all to all",
+          "weight": 4
+        },
+        {
+          "term": "分离",
+          "weight": 3
+        },
+        {
+          "term": "模型",
+          "weight": 3
+        },
+        {
+          "term": "而非",
+          "weight": 3
+        }
+      ]
+    },
+    {
+      "slug": "noarxiv-2026-dspark",
+      "title": "DSpark：基于置信度调度的半自回归 speculative decoding",
+      "title_en": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+      "href": "noarxiv-2026-dspark.html",
+      "year": 2026,
+      "research_line": "LLM Serving",
+      "domains": [
+        "LLM Systems"
+      ],
+      "tracks": [
+        "Inference Acceleration",
+        "Parallel Decoding"
+      ],
+      "problems": [
+        "Load-Aware Serving",
+        "Lossless Speculative Decoding"
+      ],
+      "topics": [
+        "LLM Inference",
+        "LLM Serving",
+        "Semi-Autoregressive Generation",
+        "Speculative Decoding"
+      ],
+      "methods": [
+        "confidence-scheduled verification",
+        "hardware-aware scheduling",
+        "Markov head",
+        "semi-autoregressive generation",
+        "Speculative Decoding"
+      ],
+      "terms": [
+        {
+          "term": "decoding",
+          "weight": 37
+        },
+        {
+          "term": "dspark",
+          "weight": 35
+        },
+        {
+          "term": "speculative",
+          "weight": 33
+        },
+        {
+          "term": "semi autoregressive",
+          "weight": 32
+        },
+        {
+          "term": "serving",
+          "weight": 27
+        },
+        {
+          "term": "llm",
+          "weight": 25
+        },
+        {
+          "term": "confidence scheduled",
+          "weight": 22
+        },
+        {
+          "term": "autoregressive",
+          "weight": 20
+        },
+        {
+          "term": "confidence",
+          "weight": 17
+        },
+        {
+          "term": "generation",
+          "weight": 17
+        },
+        {
+          "term": "semi",
+          "weight": 16
+        },
+        {
+          "term": "draft",
+          "weight": 16
+        },
+        {
+          "term": "token",
+          "weight": 16
+        },
+        {
+          "term": "aware",
+          "weight": 16
+        },
+        {
+          "term": "head",
+          "weight": 15
+        },
+        {
+          "term": "dflash",
+          "weight": 14
+        },
+        {
+          "term": "hardware aware",
+          "weight": 14
+        },
+        {
+          "term": "load aware",
+          "weight": 14
+        },
+        {
+          "term": "system",
+          "weight": 12
+        },
+        {
+          "term": "inference",
+          "weight": 12
+        },
+        {
+          "term": "scheduled",
+          "weight": 11
+        },
+        {
+          "term": "markov",
+          "weight": 10
+        },
+        {
+          "term": "deepseek",
+          "weight": 10
+        },
+        {
+          "term": "deepseek ai",
+          "weight": 10
+        },
+        {
+          "term": "parallel",
+          "weight": 10
+        },
+        {
+          "term": "verification",
+          "weight": 10
+        },
+        {
+          "term": "drafter",
+          "weight": 10
+        },
+        {
+          "term": "target",
+          "weight": 9
+        },
+        {
+          "term": "deepseek v4",
+          "weight": 8
+        },
+        {
+          "term": "prefix",
+          "weight": 8
+        },
+        {
+          "term": "lossles",
+          "weight": 8
+        },
+        {
+          "term": "backbone",
+          "weight": 7
+        },
+        {
+          "term": "hardware",
+          "weight": 7
+        },
+        {
+          "term": "load",
+          "weight": 7
+        },
+        {
+          "term": "acceleration",
+          "weight": 7
+        },
+        {
+          "term": "2026",
+          "weight": 6
+        },
+        {
+          "term": "noarxiv 2026 dspark",
+          "weight": 6
+        },
+        {
+          "term": "eagle3",
+          "weight": 6
+        },
+        {
+          "term": "scheduling",
+          "weight": 6
+        },
+        {
+          "term": "sequential",
+          "weight": 5
+        },
+        {
+          "term": "chen",
+          "weight": 5
+        },
+        {
+          "term": "ai",
+          "weight": 5
+        },
+        {
+          "term": "scheduler",
+          "weight": 5
+        },
+        {
+          "term": "block",
+          "weight": 5
+        },
+        {
+          "term": "zhang",
+          "weight": 4
+        },
+        {
+          "term": "arxiv",
+          "weight": 4
+        },
+        {
+          "term": "pdf",
+          "weight": 4
+        },
+        {
+          "term": "github com",
+          "weight": 4
+        },
+        {
+          "term": "suffix",
+          "weight": 4
+        },
+        {
+          "term": "acceptance",
+          "weight": 4
+        }
+      ]
+    },
+    {
+      "slug": "2501.01005-flashinfer",
+      "title": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
+      "title_en": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
+      "href": "2501.01005-flashinfer.html",
+      "year": 2025,
+      "research_line": "Efficient Attention Kernels",
+      "domains": [
+        "LLM Systems"
+      ],
+      "tracks": [
+        "Attention Kernels",
+        "Inference Serving Systems"
+      ],
+      "problems": [
+        "Customizable Attention Serving"
+      ],
+      "topics": [
+        "Attention Kernels",
+        "GPU Systems",
+        "Inference Optimization",
+        "KV Cache",
+        "LLM Serving"
+      ],
+      "methods": [
+        "block-sparse attention",
+        "composable KV-cache format",
+        "CUDA Graph",
+        "FlashAttention",
+        "JIT compilation",
+        "load-balanced scheduling"
+      ],
+      "terms": [
+        {
+          "term": "attention",
+          "weight": 69
+        },
+        {
+          "term": "kernel",
+          "weight": 35
+        },
+        {
+          "term": "serving",
+          "weight": 33
+        },
+        {
+          "term": "llm",
+          "weight": 28
+        },
+        {
+          "term": "kv cache",
+          "weight": 28
+        },
+        {
+          "term": "kv",
+          "weight": 27
+        },
+        {
+          "term": "system",
+          "weight": 22
+        },
+        {
+          "term": "flashinfer",
+          "weight": 20
+        },
+        {
+          "term": "block sparse",
+          "weight": 20
+        },
+        {
+          "term": "cache",
+          "weight": 19
+        },
+        {
+          "term": "inference",
+          "weight": 16
+        },
+        {
+          "term": "load balanced",
+          "weight": 16
+        },
+        {
+          "term": "efficient",
+          "weight": 15
+        },
+        {
+          "term": "sparse",
+          "weight": 15
+        },
+        {
+          "term": "format",
+          "weight": 14
+        },
+        {
+          "term": "block",
+          "weight": 13
+        },
+        {
+          "term": "customizable",
+          "weight": 12
+        },
+        {
+          "term": "composable",
+          "weight": 12
+        },
+        {
+          "term": "cuda",
+          "weight": 12
+        },
+        {
+          "term": "flashattention",
+          "weight": 11
+        },
+        {
+          "term": "and",
+          "weight": 10
+        },
+        {
+          "term": "load",
+          "weight": 10
+        },
+        {
+          "term": "jit",
+          "weight": 9
+        },
+        {
+          "term": "engine",
+          "weight": 8
+        },
+        {
+          "term": "arxiv",
+          "weight": 8
+        },
+        {
+          "term": "balanced",
+          "weight": 8
+        },
+        {
+          "term": "graph",
+          "weight": 8
+        },
+        {
+          "term": "scheduling",
+          "weight": 8
+        },
+        {
+          "term": "prefix",
+          "weight": 7
+        },
+        {
+          "term": "tree",
+          "weight": 7
+        },
+        {
+          "term": "gpu",
+          "weight": 7
+        },
+        {
+          "term": "for",
+          "weight": 6
+        },
+        {
+          "term": "3 1",
+          "weight": 6
+        },
+        {
+          "term": "itl",
+          "weight": 6
+        },
+        {
+          "term": "scheduler",
+          "weight": 5
+        },
+        {
+          "term": "optimization",
+          "weight": 5
+        },
+        {
+          "term": "compilation",
+          "weight": 5
+        },
+        {
+          "term": "online",
+          "weight": 4
+        },
+        {
+          "term": "pagedattention",
+          "weight": 4
+        },
+        {
+          "term": "radixattention",
+          "weight": 4
+        },
+        {
+          "term": "cutlas",
+          "weight": 4
+        },
+        {
+          "term": "2501",
+          "weight": 4
+        },
+        {
+          "term": "http",
+          "weight": 4
+        },
+        {
+          "term": "arxiv org",
+          "weight": 4
+        },
+        {
+          "term": "2501 01005",
+          "weight": 4
+        },
+        {
+          "term": "flashinfer ai",
+          "weight": 4
+        },
+        {
+          "term": "query",
+          "weight": 4
+        },
+        {
+          "term": "reuse",
+          "weight": 4
+        },
+        {
+          "term": "size",
+          "weight": 4
+        },
+        {
+          "term": "generation",
           "weight": 4
         }
       ]
@@ -21128,241 +21363,6 @@
         },
         {
           "term": "dsl agnostic",
-          "weight": 4
-        }
-      ]
-    },
-    {
-      "slug": "2501.01005-flashinfer",
-      "title": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
-      "title_en": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
-      "href": "2501.01005-flashinfer.html",
-      "year": 2025,
-      "research_line": "Efficient Attention Kernels",
-      "domains": [
-        "LLM Systems"
-      ],
-      "tracks": [
-        "Attention Kernels",
-        "Inference Serving Systems"
-      ],
-      "problems": [
-        "Customizable Attention Serving"
-      ],
-      "topics": [
-        "Attention Kernels",
-        "GPU Systems",
-        "Inference Optimization",
-        "KV Cache",
-        "LLM Serving"
-      ],
-      "methods": [
-        "block-sparse attention",
-        "composable KV-cache format",
-        "CUDA Graph",
-        "FlashAttention",
-        "JIT compilation",
-        "load-balanced scheduling"
-      ],
-      "terms": [
-        {
-          "term": "attention",
-          "weight": 69
-        },
-        {
-          "term": "kernel",
-          "weight": 35
-        },
-        {
-          "term": "serving",
-          "weight": 33
-        },
-        {
-          "term": "llm",
-          "weight": 28
-        },
-        {
-          "term": "kv cache",
-          "weight": 28
-        },
-        {
-          "term": "kv",
-          "weight": 27
-        },
-        {
-          "term": "system",
-          "weight": 22
-        },
-        {
-          "term": "flashinfer",
-          "weight": 20
-        },
-        {
-          "term": "block sparse",
-          "weight": 20
-        },
-        {
-          "term": "cache",
-          "weight": 19
-        },
-        {
-          "term": "inference",
-          "weight": 16
-        },
-        {
-          "term": "load balanced",
-          "weight": 16
-        },
-        {
-          "term": "efficient",
-          "weight": 15
-        },
-        {
-          "term": "sparse",
-          "weight": 15
-        },
-        {
-          "term": "format",
-          "weight": 14
-        },
-        {
-          "term": "block",
-          "weight": 13
-        },
-        {
-          "term": "customizable",
-          "weight": 12
-        },
-        {
-          "term": "composable",
-          "weight": 12
-        },
-        {
-          "term": "cuda",
-          "weight": 12
-        },
-        {
-          "term": "flashattention",
-          "weight": 11
-        },
-        {
-          "term": "and",
-          "weight": 10
-        },
-        {
-          "term": "load",
-          "weight": 10
-        },
-        {
-          "term": "jit",
-          "weight": 9
-        },
-        {
-          "term": "engine",
-          "weight": 8
-        },
-        {
-          "term": "arxiv",
-          "weight": 8
-        },
-        {
-          "term": "balanced",
-          "weight": 8
-        },
-        {
-          "term": "graph",
-          "weight": 8
-        },
-        {
-          "term": "scheduling",
-          "weight": 8
-        },
-        {
-          "term": "prefix",
-          "weight": 7
-        },
-        {
-          "term": "tree",
-          "weight": 7
-        },
-        {
-          "term": "gpu",
-          "weight": 7
-        },
-        {
-          "term": "for",
-          "weight": 6
-        },
-        {
-          "term": "3 1",
-          "weight": 6
-        },
-        {
-          "term": "itl",
-          "weight": 6
-        },
-        {
-          "term": "scheduler",
-          "weight": 5
-        },
-        {
-          "term": "optimization",
-          "weight": 5
-        },
-        {
-          "term": "compilation",
-          "weight": 5
-        },
-        {
-          "term": "online",
-          "weight": 4
-        },
-        {
-          "term": "pagedattention",
-          "weight": 4
-        },
-        {
-          "term": "radixattention",
-          "weight": 4
-        },
-        {
-          "term": "cutlas",
-          "weight": 4
-        },
-        {
-          "term": "2501",
-          "weight": 4
-        },
-        {
-          "term": "http",
-          "weight": 4
-        },
-        {
-          "term": "arxiv org",
-          "weight": 4
-        },
-        {
-          "term": "2501 01005",
-          "weight": 4
-        },
-        {
-          "term": "flashinfer ai",
-          "weight": 4
-        },
-        {
-          "term": "query",
-          "weight": 4
-        },
-        {
-          "term": "reuse",
-          "weight": 4
-        },
-        {
-          "term": "size",
-          "weight": 4
-        },
-        {
-          "term": "generation",
           "weight": 4
         }
       ]

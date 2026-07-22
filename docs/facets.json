@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T20:41:17",
+  "generated_at": "2026-07-22T13:10:32",
   "count": 13,
   "field_count": 10,
   "value_count": 134,
@@ -212,11 +212,11 @@
       "severity": "high",
       "href": "library.html?domain=LLM+Systems",
       "sample_slugs": [
-        "2607.00466-eldr",
         "2503.14075-twigvlm-plus-plus",
-        "noarxiv-2026-dspark",
         "2602.06036-dflash",
-        "2604.11035-introspective-dlm"
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus",
+        "2607.00466-eldr"
       ],
       "recommendation": "结构域 过大，考虑拆成更细子类。"
     },
@@ -254,11 +254,11 @@
       "severity": "high",
       "href": "library.html?track=Inference+Acceleration",
       "sample_slugs": [
-        "2607.00466-eldr",
         "2503.14075-twigvlm-plus-plus",
-        "noarxiv-2026-dspark",
         "2602.06036-dflash",
-        "2604.11035-introspective-dlm"
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus",
+        "2607.00466-eldr"
       ],
       "recommendation": "方向 过大，考虑拆成更细子类。"
     },
@@ -277,10 +277,10 @@
       "severity": "none",
       "href": "library.html?track=Parallel+Decoding",
       "sample_slugs": [
-        "noarxiv-2026-dspark",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus",
+        "noarxiv-2026-dspark",
         "2507.11851-llm-future-mtp"
       ],
       "recommendation": "结构稳定，继续积累样本。"
@@ -358,8 +358,8 @@
       "severity": "none",
       "href": "library.html?problem=Lossless+Speculative+Decoding",
       "sample_slugs": [
-        "noarxiv-2026-dspark",
         "2602.06036-dflash",
+        "noarxiv-2026-dspark",
         "2507.11851-llm-future-mtp"
       ],
       "recommendation": "结构稳定，继续积累样本。"
@@ -569,11 +569,11 @@
       "severity": "high",
       "href": "library.html?topic=Speculative+Decoding",
       "sample_slugs": [
-        "2603.03251-speculative-speculative-decoding",
         "2503.14075-twigvlm-plus-plus",
-        "noarxiv-2026-dspark",
         "2602.06036-dflash",
-        "2604.11035-introspective-dlm"
+        "2603.03251-speculative-speculative-decoding",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus"
       ],
       "recommendation": "主题 过大，考虑拆成更细子类。"
     },
@@ -592,10 +592,10 @@
       "severity": "none",
       "href": "library.html?topic=LLM+Inference",
       "sample_slugs": [
-        "2603.03251-speculative-speculative-decoding",
-        "noarxiv-2026-dspark",
         "2602.06036-dflash",
+        "2603.03251-speculative-speculative-decoding",
         "2605.12825-orthrus",
+        "noarxiv-2026-dspark",
         "2503.01840-eagle-3-scaling-up"
       ],
       "recommendation": "结构稳定，继续积累样本。"
@@ -615,10 +615,10 @@
       "severity": "none",
       "href": "library.html?topic=LLM+Serving",
       "sample_slugs": [
-        "2607.00466-eldr",
-        "noarxiv-2026-dspark",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark",
         "2501.01005-flashinfer"
       ],
       "recommendation": "结构稳定，继续积累样本。"
@@ -1251,9 +1251,9 @@
       "severity": "none",
       "href": "library.html?method=Speculative+Decoding",
       "sample_slugs": [
+        "2602.06036-dflash",
         "2603.03251-speculative-speculative-decoding",
-        "noarxiv-2026-dspark",
-        "2602.06036-dflash"
+        "noarxiv-2026-dspark"
       ],
       "recommendation": "结构稳定，继续积累样本。"
     },
@@ -2458,8 +2458,8 @@
       "severity": "none",
       "href": "library.html?role=main",
       "sample_slugs": [
-        "2607.00466-eldr",
         "2503.14075-twigvlm-plus-plus",
+        "2607.00466-eldr",
         "2503.01840-eagle-3-scaling-up"
       ],
       "recommendation": "结构稳定，继续积累样本。"
@@ -2577,11 +2577,11 @@
       "severity": "high",
       "href": "library.html?status=read",
       "sample_slugs": [
-        "2607.00466-eldr",
-        "2603.03251-speculative-speculative-decoding",
         "2503.14075-twigvlm-plus-plus",
-        "noarxiv-2026-dspark",
-        "2602.06036-dflash"
+        "2602.06036-dflash",
+        "2603.03251-speculative-speculative-decoding",
+        "2604.11035-introspective-dlm",
+        "2605.12825-orthrus"
       ],
       "recommendation": "阅读状态 过大，考虑拆成更细子类。"
     },
@@ -2668,11 +2668,11 @@
       "severity": "high",
       "href": "library.html?stage=deep_read",
       "sample_slugs": [
-        "2607.00466-eldr",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus",
-        "2503.01840-eagle-3-scaling-up"
+        "2607.00466-eldr",
+        "2501.01005-flashinfer"
       ],
       "recommendation": "阅读阶段 过大，考虑拆成更细子类。"
     },
