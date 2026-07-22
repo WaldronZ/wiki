@@ -1,17 +1,15 @@
 {
-  "generated_at": "2026-07-22T13:22:15",
+  "generated_at": "2026-07-22T13:24:43",
   "today": "2026-07-22",
   "count": 13,
   "queue_count": 5,
-  "non_empty_queue_count": 3,
-  "queued_paper_total": 23,
+  "non_empty_queue_count": 2,
+  "queued_paper_total": 20,
   "severity_counts": {
-    "high": 1,
     "medium": 2
   },
   "preset_counts": {
     "code_check": 1,
-    "manual": 1,
     "schedule_review": 1
   },
   "queues": [
@@ -26,37 +24,14 @@
         "topics",
         "methods"
       ],
-      "count": 3,
-      "share": 0.2308,
+      "count": 0,
+      "share": 0.0,
       "view_state": {
         "sort": "updated"
       },
       "href": "library.html?sort=updated",
-      "slugs": [
-        "2512.23424-akg-kernel-agent-multi",
-        "2603.03251-speculative-speculative-decoding",
-        "semantic-search-evaluation"
-      ],
-      "sample_papers": [
-        {
-          "slug": "2512.23424-akg-kernel-agent-multi",
-          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
-          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
-          "href": "2512.23424-akg-kernel-agent-multi.html"
-        },
-        {
-          "slug": "2603.03251-speculative-speculative-decoding",
-          "title": "Speculative Speculative Decoding",
-          "title_zh": "推测性推测解码",
-          "href": "2603.03251-speculative-speculative-decoding.html"
-        },
-        {
-          "slug": "semantic-search-evaluation",
-          "title": "Semantic Search Evaluation",
-          "title_zh": "Semantic Search Evaluation",
-          "href": "semantic-search-evaluation.md"
-        }
-      ]
+      "slugs": [],
+      "sample_papers": []
     },
     {
       "id": "missing-review-plan",
@@ -408,49 +383,6 @@
           "title": "Speculative Speculative Decoding",
           "title_zh": "推测性推测解码",
           "href": "2603.03251-speculative-speculative-decoding.html"
-        }
-      ]
-    },
-    {
-      "id": "missing-taxonomy",
-      "label": "缺分类",
-      "severity": "high",
-      "preset": "",
-      "description": "缺 domain、topic 或 method 的论文，适合先补 frontmatter 分类。",
-      "recommended_fields": [
-        "domains",
-        "topics",
-        "methods"
-      ],
-      "count": 3,
-      "share": 0.2308,
-      "view_state": {
-        "sort": "updated"
-      },
-      "href": "library.html?sort=updated",
-      "slugs": [
-        "2512.23424-akg-kernel-agent-multi",
-        "2603.03251-speculative-speculative-decoding",
-        "semantic-search-evaluation"
-      ],
-      "sample_papers": [
-        {
-          "slug": "2512.23424-akg-kernel-agent-multi",
-          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
-          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
-          "href": "2512.23424-akg-kernel-agent-multi.html"
-        },
-        {
-          "slug": "2603.03251-speculative-speculative-decoding",
-          "title": "Speculative Speculative Decoding",
-          "title_zh": "推测性推测解码",
-          "href": "2603.03251-speculative-speculative-decoding.html"
-        },
-        {
-          "slug": "semantic-search-evaluation",
-          "title": "Semantic Search Evaluation",
-          "title_zh": "Semantic Search Evaluation",
-          "href": "semantic-search-evaluation.md"
         }
       ]
     }

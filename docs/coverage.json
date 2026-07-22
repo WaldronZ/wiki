@@ -1,15 +1,14 @@
 {
-  "generated_at": "2026-07-22T13:22:15",
+  "generated_at": "2026-07-22T13:24:43",
   "count": 13,
-  "line_count": 6,
+  "line_count": 5,
   "field_count": 6,
-  "avg_score": 84.7,
+  "avg_score": 100.0,
   "risk_counts": {
-    "high": 2,
-    "low": 4
+    "low": 5
   },
-  "weak_line_count": 2,
-  "total_missing": 12,
+  "weak_line_count": 0,
+  "total_missing": 0,
   "fields": [
     {
       "field": "domains",
@@ -49,6 +48,169 @@
     }
   ],
   "coverage": [
+    {
+      "line": "LLM Serving",
+      "href": "lines/llm-serving.html",
+      "count": 4,
+      "owner": "",
+      "team": "",
+      "cadence": "",
+      "score": 100,
+      "risk": "low",
+      "missing_total": 0,
+      "fields": [
+        {
+          "field": "domains",
+          "label": "Domain",
+          "query_key": "domain",
+          "coverage": 100,
+          "missing": 0,
+          "missing_slugs": [],
+          "unique": 2,
+          "top_values": [
+            {
+              "value": "LLM Systems",
+              "count": 2
+            },
+            {
+              "value": "AI Systems",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "field": "tracks",
+          "label": "Track",
+          "query_key": "track",
+          "coverage": 100,
+          "missing": 0,
+          "missing_slugs": [],
+          "unique": 5,
+          "top_values": [
+            {
+              "value": "Inference Acceleration",
+              "count": 2
+            },
+            {
+              "value": "Parallel Decoding",
+              "count": 1
+            },
+            {
+              "value": "Search & Retrieval",
+              "count": 1
+            },
+            {
+              "value": "Compiler/DSL",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "field": "problems",
+          "label": "Problem",
+          "query_key": "problem",
+          "coverage": 100,
+          "missing": 0,
+          "missing_slugs": [],
+          "unique": 7,
+          "top_values": [
+            {
+              "value": "MoE Serving",
+              "count": 1
+            },
+            {
+              "value": "Load-Aware Serving",
+              "count": 1
+            },
+            {
+              "value": "Lossless Speculative Decoding",
+              "count": 1
+            },
+            {
+              "value": "Semantic Search",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "field": "topics",
+          "label": "Topic",
+          "query_key": "topic",
+          "coverage": 100,
+          "missing": 0,
+          "missing_slugs": [],
+          "unique": 15,
+          "top_values": [
+            {
+              "value": "LLM Serving",
+              "count": 2
+            },
+            {
+              "value": "Disaggregated Serving",
+              "count": 1
+            },
+            {
+              "value": "Load Balancing",
+              "count": 1
+            },
+            {
+              "value": "MoE",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "field": "methods",
+          "label": "Method",
+          "query_key": "method",
+          "coverage": 100,
+          "missing": 0,
+          "missing_slugs": [],
+          "unique": 16,
+          "top_values": [
+            {
+              "value": "Balanced K-means",
+              "count": 1
+            },
+            {
+              "value": "Expert Locality Routing",
+              "count": 1
+            },
+            {
+              "value": "Signature Cache",
+              "count": 1
+            },
+            {
+              "value": "confidence-scheduled verification",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "field": "line_role",
+          "label": "Role",
+          "query_key": "role",
+          "coverage": 100,
+          "missing": 0,
+          "missing_slugs": [],
+          "unique": 3,
+          "top_values": [
+            {
+              "value": "variant",
+              "count": 2
+            },
+            {
+              "value": "main",
+              "count": 1
+            },
+            {
+              "value": "system",
+              "count": 1
+            }
+          ]
+        }
+      ]
+    },
     {
       "line": "Parallel Decoding with Diffusion Models",
       "href": "lines/parallel-decoding-with-diffusion-models.html",
@@ -197,159 +359,6 @@
       ]
     },
     {
-      "line": "LLM Serving",
-      "href": "lines/llm-serving.html",
-      "count": 3,
-      "owner": "",
-      "team": "",
-      "cadence": "",
-      "score": 83,
-      "risk": "high",
-      "missing_total": 3,
-      "fields": [
-        {
-          "field": "domains",
-          "label": "Domain",
-          "query_key": "domain",
-          "coverage": 67,
-          "missing": 1,
-          "missing_slugs": [
-            "2512.23424-akg-kernel-agent-multi"
-          ],
-          "unique": 1,
-          "top_values": [
-            {
-              "value": "LLM Systems",
-              "count": 2
-            }
-          ]
-        },
-        {
-          "field": "tracks",
-          "label": "Track",
-          "query_key": "track",
-          "coverage": 67,
-          "missing": 1,
-          "missing_slugs": [
-            "2512.23424-akg-kernel-agent-multi"
-          ],
-          "unique": 2,
-          "top_values": [
-            {
-              "value": "Inference Acceleration",
-              "count": 2
-            },
-            {
-              "value": "Parallel Decoding",
-              "count": 1
-            }
-          ]
-        },
-        {
-          "field": "problems",
-          "label": "Problem",
-          "query_key": "problem",
-          "coverage": 67,
-          "missing": 1,
-          "missing_slugs": [
-            "2512.23424-akg-kernel-agent-multi"
-          ],
-          "unique": 3,
-          "top_values": [
-            {
-              "value": "MoE Serving",
-              "count": 1
-            },
-            {
-              "value": "Load-Aware Serving",
-              "count": 1
-            },
-            {
-              "value": "Lossless Speculative Decoding",
-              "count": 1
-            }
-          ]
-        },
-        {
-          "field": "topics",
-          "label": "Topic",
-          "query_key": "topic",
-          "coverage": 100,
-          "missing": 0,
-          "missing_slugs": [],
-          "unique": 12,
-          "top_values": [
-            {
-              "value": "LLM Serving",
-              "count": 2
-            },
-            {
-              "value": "Disaggregated Serving",
-              "count": 1
-            },
-            {
-              "value": "Load Balancing",
-              "count": 1
-            },
-            {
-              "value": "MoE",
-              "count": 1
-            }
-          ]
-        },
-        {
-          "field": "methods",
-          "label": "Method",
-          "query_key": "method",
-          "coverage": 100,
-          "missing": 0,
-          "missing_slugs": [],
-          "unique": 14,
-          "top_values": [
-            {
-              "value": "Balanced K-means",
-              "count": 1
-            },
-            {
-              "value": "Expert Locality Routing",
-              "count": 1
-            },
-            {
-              "value": "Signature Cache",
-              "count": 1
-            },
-            {
-              "value": "confidence-scheduled verification",
-              "count": 1
-            }
-          ]
-        },
-        {
-          "field": "line_role",
-          "label": "Role",
-          "query_key": "role",
-          "coverage": 100,
-          "missing": 0,
-          "missing_slugs": [],
-          "unique": 3,
-          "top_values": [
-            {
-              "value": "main",
-              "count": 1
-            },
-            {
-              "value": "system",
-              "count": 1
-            },
-            {
-              "value": "tooling",
-              "count": 1
-            }
-          ]
-        }
-      ]
-    },
-    {
       "line": "Efficient Attention Kernels",
       "href": "lines/efficient-attention-kernels.html",
       "count": 2,
@@ -489,54 +498,72 @@
       ]
     },
     {
-      "line": "Unassigned",
-      "href": "library.html?line=Unassigned",
+      "line": "Speculative Decoding",
+      "href": "lines/speculative-decoding.html",
       "count": 2,
       "owner": "",
       "team": "",
       "cadence": "",
-      "score": 25,
-      "risk": "high",
-      "missing_total": 9,
+      "score": 100,
+      "risk": "low",
+      "missing_total": 0,
       "fields": [
         {
           "field": "domains",
           "label": "Domain",
           "query_key": "domain",
-          "coverage": 0,
-          "missing": 2,
-          "missing_slugs": [
-            "2603.03251-speculative-speculative-decoding",
-            "semantic-search-evaluation"
-          ],
-          "unique": 0,
-          "top_values": []
+          "coverage": 100,
+          "missing": 0,
+          "missing_slugs": [],
+          "unique": 1,
+          "top_values": [
+            {
+              "value": "LLM Systems",
+              "count": 2
+            }
+          ]
         },
         {
           "field": "tracks",
           "label": "Track",
           "query_key": "track",
-          "coverage": 0,
-          "missing": 2,
-          "missing_slugs": [
-            "2603.03251-speculative-speculative-decoding",
-            "semantic-search-evaluation"
-          ],
-          "unique": 0,
-          "top_values": []
+          "coverage": 100,
+          "missing": 0,
+          "missing_slugs": [],
+          "unique": 2,
+          "top_values": [
+            {
+              "value": "Inference Optimization",
+              "count": 1
+            },
+            {
+              "value": "Inference Acceleration",
+              "count": 1
+            }
+          ]
         },
         {
           "field": "problems",
           "label": "Problem",
           "query_key": "problem",
-          "coverage": 0,
-          "missing": 2,
-          "missing_slugs": [
-            "2603.03251-speculative-speculative-decoding",
-            "semantic-search-evaluation"
-          ],
-          "unique": 0,
-          "top_values": []
+          "coverage": 100,
+          "missing": 0,
+          "missing_slugs": [],
+          "unique": 3,
+          "top_values": [
+            {
+              "value": "Inference Latency",
+              "count": 1
+            },
+            {
+              "value": "Throughput Optimization",
+              "count": 1
+            },
+            {
+              "value": "Speculative Decoding",
+              "count": 1
+            }
+          ]
         },
         {
           "field": "topics",
@@ -545,18 +572,18 @@
           "coverage": 100,
           "missing": 0,
           "missing_slugs": [],
-          "unique": 5,
+          "unique": 6,
           "top_values": [
             {
-              "value": "Distributed Inference",
-              "count": 1
-            },
-            {
               "value": "LLM Inference",
-              "count": 1
+              "count": 2
             },
             {
               "value": "Speculative Decoding",
+              "count": 2
+            },
+            {
+              "value": "Distributed Inference",
               "count": 1
             },
             {
@@ -569,12 +596,10 @@
           "field": "methods",
           "label": "Method",
           "query_key": "method",
-          "coverage": 50,
-          "missing": 1,
-          "missing_slugs": [
-            "semantic-search-evaluation"
-          ],
-          "unique": 6,
+          "coverage": 100,
+          "missing": 0,
+          "missing_slugs": [],
+          "unique": 10,
           "top_values": [
             {
               "value": "asynchronous decoding",
@@ -598,131 +623,6 @@
           "field": "line_role",
           "label": "Role",
           "query_key": "role",
-          "coverage": 0,
-          "missing": 2,
-          "missing_slugs": [
-            "2603.03251-speculative-speculative-decoding",
-            "semantic-search-evaluation"
-          ],
-          "unique": 0,
-          "top_values": []
-        }
-      ]
-    },
-    {
-      "line": "Speculative Decoding",
-      "href": "lines/speculative-decoding.html",
-      "count": 1,
-      "owner": "",
-      "team": "",
-      "cadence": "",
-      "score": 100,
-      "risk": "low",
-      "missing_total": 0,
-      "fields": [
-        {
-          "field": "domains",
-          "label": "Domain",
-          "query_key": "domain",
-          "coverage": 100,
-          "missing": 0,
-          "missing_slugs": [],
-          "unique": 1,
-          "top_values": [
-            {
-              "value": "LLM Systems",
-              "count": 1
-            }
-          ]
-        },
-        {
-          "field": "tracks",
-          "label": "Track",
-          "query_key": "track",
-          "coverage": 100,
-          "missing": 0,
-          "missing_slugs": [],
-          "unique": 1,
-          "top_values": [
-            {
-              "value": "Inference Acceleration",
-              "count": 1
-            }
-          ]
-        },
-        {
-          "field": "problems",
-          "label": "Problem",
-          "query_key": "problem",
-          "coverage": 100,
-          "missing": 0,
-          "missing_slugs": [],
-          "unique": 1,
-          "top_values": [
-            {
-              "value": "Speculative Decoding",
-              "count": 1
-            }
-          ]
-        },
-        {
-          "field": "topics",
-          "label": "Topic",
-          "query_key": "topic",
-          "coverage": 100,
-          "missing": 0,
-          "missing_slugs": [],
-          "unique": 4,
-          "top_values": [
-            {
-              "value": "Draft Model Training",
-              "count": 1
-            },
-            {
-              "value": "LLM Inference",
-              "count": 1
-            },
-            {
-              "value": "Scaling Law",
-              "count": 1
-            },
-            {
-              "value": "Speculative Decoding",
-              "count": 1
-            }
-          ]
-        },
-        {
-          "field": "methods",
-          "label": "Method",
-          "query_key": "method",
-          "coverage": 100,
-          "missing": 0,
-          "missing_slugs": [],
-          "unique": 4,
-          "top_values": [
-            {
-              "value": "Draft Tree",
-              "count": 1
-            },
-            {
-              "value": "Feature Fusion",
-              "count": 1
-            },
-            {
-              "value": "Token Prediction",
-              "count": 1
-            },
-            {
-              "value": "Training-Time Test",
-              "count": 1
-            }
-          ]
-        },
-        {
-          "field": "line_role",
-          "label": "Role",
-          "query_key": "role",
           "coverage": 100,
           "missing": 0,
           "missing_slugs": [],
@@ -730,7 +630,7 @@
           "top_values": [
             {
               "value": "main",
-              "count": 1
+              "count": 2
             }
           ]
         }

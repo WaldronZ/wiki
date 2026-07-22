@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-22T13:22:15",
+  "generated_at": "2026-07-22T13:24:43",
   "count": 13,
   "fields": [
     {
@@ -115,6 +115,58 @@
   ],
   "papers": [
     {
+      "slug": "2603.03251-speculative-speculative-decoding",
+      "href": "2603.03251-speculative-speculative-decoding.html",
+      "title": "Speculative Speculative Decoding",
+      "title_zh": "推测性推测解码",
+      "title_en": "Speculative Speculative Decoding",
+      "year": 2026,
+      "arxiv_id": "2603.03251",
+      "arxiv_url": "https://arxiv.org/abs/2603.03251",
+      "code_url": "https://github.com/tanishqkumar/ssd",
+      "authors": [
+        "Tanishq Kumar",
+        "Tri Dao",
+        "Avner May"
+      ],
+      "research_line": "Speculative Decoding",
+      "line_role": "main",
+      "domains": [
+        "LLM Systems"
+      ],
+      "tracks": [
+        "Inference Optimization"
+      ],
+      "problems": [
+        "Inference Latency",
+        "Throughput Optimization"
+      ],
+      "topics": [
+        "Distributed Inference",
+        "LLM Inference",
+        "Speculative Decoding",
+        "Systems Optimization"
+      ],
+      "methods": [
+        "asynchronous decoding",
+        "cache-aware sampling",
+        "fallback speculation",
+        "geometric fan-out",
+        "Speculative Decoding",
+        "verification outcome cache"
+      ],
+      "status": "read",
+      "reading_stage": "deep_read",
+      "review_stage": "",
+      "next_review": "",
+      "importance": 4,
+      "confidence": 4,
+      "reproducibility": 4,
+      "has_code": true,
+      "excerpt": "中文版：本文提出 speculative speculative decoding（SSD），把普通 speculative decoding 中“先 draft、再 verify、再继续 draft”的串行依赖进一步并行化：target model 验证上一轮 speculation 时，draft model 预判可能的 verification outcomes，并提前为这些结果生成下一轮 speculation。作者将该框架优化...",
+      "essence": "如果普通 speculative decoding 像让小助手先写草稿再等老师批改，SSD 就是在老师批改时让小助手预演几种可能的批改结果，并把每种结果后的下一页都先写好。"
+    },
+    {
       "slug": "2503.14075-twigvlm-plus-plus",
       "href": "2503.14075-twigvlm-plus-plus.html",
       "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
@@ -226,51 +278,6 @@
       "has_code": true,
       "excerpt": "中文版：DFlash 把 diffusion language model 的角色从“独立生成器”改为 speculative decoding 中的轻量 parallel drafter：draft model 一次前向生成一个 token block，再由 target LLM 并行验证，从而保持 lossless 输出。它的关键设计是从 frozen target model 抽取多层 hidden features，经融合后注入...",
       "essence": "DFlash 像让一个动作很快的速记员先把下一小段草稿同时写出来，再让严谨的主笔一眼核对，既不改掉主笔的文风，又省下逐字落笔的等待。"
-    },
-    {
-      "slug": "2603.03251-speculative-speculative-decoding",
-      "href": "2603.03251-speculative-speculative-decoding.html",
-      "title": "Speculative Speculative Decoding",
-      "title_zh": "推测性推测解码",
-      "title_en": "Speculative Speculative Decoding",
-      "year": 2026,
-      "arxiv_id": "2603.03251",
-      "arxiv_url": "https://arxiv.org/abs/2603.03251",
-      "code_url": "https://github.com/tanishqkumar/ssd",
-      "authors": [
-        "Tanishq Kumar",
-        "Tri Dao",
-        "Avner May"
-      ],
-      "research_line": "Unassigned",
-      "line_role": "",
-      "domains": [],
-      "tracks": [],
-      "problems": [],
-      "topics": [
-        "Distributed Inference",
-        "LLM Inference",
-        "Speculative Decoding",
-        "Systems Optimization"
-      ],
-      "methods": [
-        "asynchronous decoding",
-        "cache-aware sampling",
-        "fallback speculation",
-        "geometric fan-out",
-        "Speculative Decoding",
-        "verification outcome cache"
-      ],
-      "status": "read",
-      "reading_stage": "",
-      "review_stage": "",
-      "next_review": "",
-      "importance": 4,
-      "confidence": "",
-      "reproducibility": "",
-      "has_code": true,
-      "excerpt": "中文版：本文提出 speculative speculative decoding（SSD），把普通 speculative decoding 中“先 draft、再 verify、再继续 draft”的串行依赖进一步并行化：target model 验证上一轮 speculation 时，draft model 预判可能的 verification outcomes，并提前为这些结果生成下一轮 speculation。作者将该框架优化...",
-      "essence": "如果普通 speculative decoding 像让小助手先写草稿再等老师批改，SSD 就是在老师批改时让小助手预演几种可能的批改结果，并把每种结果后的下一页都先写好。"
     },
     {
       "slug": "2604.11035-introspective-dlm",
@@ -499,6 +506,121 @@
       "essence": "DSpark 像是在一条很忙的高速收费站前安排一位聪明的领队：先让小车队大胆排出候选路线，再只把最可能一路畅通的车放进昂贵主路验证。"
     },
     {
+      "slug": "semantic-search-evaluation",
+      "href": "semantic-search-evaluation.html",
+      "title": "Semantic Search Evaluation",
+      "title_zh": "语义搜索评估",
+      "title_en": "Semantic Search Evaluation",
+      "year": 2025,
+      "arxiv_id": "noarxiv-semantic-search-evaluation",
+      "arxiv_url": "https://arxiv.org/abs/noarxiv-semantic-search-evaluation",
+      "code_url": "",
+      "authors": [
+        "Waldron"
+      ],
+      "research_line": "LLM Serving",
+      "line_role": "variant",
+      "domains": [
+        "AI Systems"
+      ],
+      "tracks": [
+        "Search & Retrieval"
+      ],
+      "problems": [
+        "Semantic Search",
+        "Vector Storage"
+      ],
+      "topics": [
+        "Semantic Search",
+        "SQLite",
+        "Vector Database"
+      ],
+      "methods": [
+        "Cosine Similarity",
+        "Local Hash Embeddings"
+      ],
+      "status": "read",
+      "reading_stage": "deep_read",
+      "review_stage": "",
+      "next_review": "",
+      "importance": 3,
+      "confidence": 4,
+      "reproducibility": 4,
+      "has_code": false,
+      "excerpt": "The MVP keeps semantic search optional and local: Storage: SQLite `embeddings` table. Provider: `local-hash`. Model label: `hashing-v1`. Query: Python cosine similarity over stored chunk vectors.",
+      "essence": ""
+    },
+    {
+      "slug": "2512.23424-akg-kernel-agent-multi",
+      "href": "2512.23424-akg-kernel-agent-multi.html",
+      "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+      "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+      "title_en": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+      "year": 2025,
+      "arxiv_id": "2512.23424",
+      "arxiv_url": "https://arxiv.org/abs/2512.23424v1",
+      "code_url": "",
+      "authors": [
+        "Jinye Du",
+        "Quan Yuan",
+        "Zuyao Zhang",
+        "Yanzhi Yi",
+        "Jiahui Hu",
+        "Wangyi Chen",
+        "Yiyang Zhu",
+        "Qishui Zheng",
+        "Wenxiang Zou",
+        "Xiangyu Chang",
+        "Zuohe Zheng",
+        "Zichun Ye",
+        "Chao Liu",
+        "Shanni Li",
+        "Renwei Zhang",
+        "Yiping Deng",
+        "Xinwei Hu",
+        "Xuefeng Jin",
+        "Jie Zhao"
+      ],
+      "research_line": "LLM Serving",
+      "line_role": "variant",
+      "domains": [
+        "AI Systems"
+      ],
+      "tracks": [
+        "Compiler/DSL",
+        "Kernel Optimization"
+      ],
+      "problems": [
+        "Cross-Platform Deployment",
+        "Kernel Generation"
+      ],
+      "topics": [
+        "Compiler/DSL",
+        "Hardware Acceleration",
+        "Kernel Generation",
+        "LLM Code Generation",
+        "Multi-Agent Systems"
+      ],
+      "methods": [
+        "Document-Driven Integration",
+        "Hierarchical Code Retrieval",
+        "Iterative Search-Based Optimization",
+        "Multi-Agent Workflow",
+        "Unified Sketch",
+        "Verification and Profiling Loop"
+      ],
+      "status": "read",
+      "reading_stage": "deep_read",
+      "review_stage": "",
+      "next_review": "",
+      "importance": 4,
+      "confidence": 3,
+      "reproducibility": 3,
+      "has_code": false,
+      "excerpt": "本文的贡献可以概括为：**把 LLM kernel generation 从“单模型直接写代码”改造成“带中间表示、文档注入、检索增强、验证反馈和性能搜索”的 multi-agent 工程系统**。 具体而言，AKG kernel agent 的核心由四类 agent 组成： 1. **Designer**：分析 operator specification 和硬件特性，生成一个 DSL-agnostic 的 **Unified Ske...",
+      "essence": "这篇论文想做一个“会读硬件说明书、会拆任务、会写代码、会跑测试、会反复调优”的 AI 程序员团队，自动把普通的 PyTorch 算子改写成适配不同芯片的高性能 kernel。"
+    },
+    {
       "slug": "2501.01005-flashinfer",
       "href": "2501.01005-flashinfer.html",
       "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
@@ -666,68 +788,6 @@
       "essence": "它像让一个逐字说话的人先在心里排好后面几个词，再边说边核对，不改口味，却少停顿。"
     },
     {
-      "slug": "2512.23424-akg-kernel-agent-multi",
-      "href": "2512.23424-akg-kernel-agent-multi.html",
-      "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
-      "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
-      "title_en": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
-      "year": 2025,
-      "arxiv_id": "2512.23424",
-      "arxiv_url": "https://arxiv.org/abs/2512.23424v1",
-      "code_url": "",
-      "authors": [
-        "Jinye Du",
-        "Quan Yuan",
-        "Zuyao Zhang",
-        "Yanzhi Yi",
-        "Jiahui Hu",
-        "Wangyi Chen",
-        "Yiyang Zhu",
-        "Qishui Zheng",
-        "Wenxiang Zou",
-        "Xiangyu Chang",
-        "Zuohe Zheng",
-        "Zichun Ye",
-        "Chao Liu",
-        "Shanni Li",
-        "Renwei Zhang",
-        "Yiping Deng",
-        "Xinwei Hu",
-        "Xuefeng Jin",
-        "Jie Zhao"
-      ],
-      "research_line": "LLM Serving",
-      "line_role": "tooling",
-      "domains": [],
-      "tracks": [],
-      "problems": [],
-      "topics": [
-        "Compiler/DSL",
-        "Hardware Acceleration",
-        "Kernel Generation",
-        "LLM Code Generation",
-        "Multi-Agent Systems"
-      ],
-      "methods": [
-        "Document-Driven Integration",
-        "Hierarchical Code Retrieval",
-        "Iterative Search-Based Optimization",
-        "Multi-Agent Workflow",
-        "Unified Sketch",
-        "Verification and Profiling Loop"
-      ],
-      "status": "read",
-      "reading_stage": "",
-      "review_stage": "",
-      "next_review": "",
-      "importance": 4,
-      "confidence": "",
-      "reproducibility": "",
-      "has_code": false,
-      "excerpt": "本文的贡献可以概括为：**把 LLM kernel generation 从“单模型直接写代码”改造成“带中间表示、文档注入、检索增强、验证反馈和性能搜索”的 multi-agent 工程系统**。 具体而言，AKG kernel agent 的核心由四类 agent 组成： 1. **Designer**：分析 operator specification 和硬件特性，生成一个 DSL-agnostic 的 **Unified Ske...",
-      "essence": "这篇论文想做一个“会读硬件说明书、会拆任务、会写代码、会跑测试、会反复调优”的 AI 程序员团队，自动把普通的 PyTorch 算子改写成适配不同芯片的高性能 kernel。"
-    },
-    {
       "slug": "2307.08691-flashattention-2",
       "href": "2307.08691-flashattention-2.html",
       "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning",
@@ -774,37 +834,6 @@
       "has_code": true,
       "excerpt": "中文版：FlashAttention-2 不是改变 attention 数学定义的近似方法，而是在 FlashAttention exact attention 的基础上重新设计 GPU 上的计算顺序、thread block 并行维度和 warp 内工作划分，减少 non-matmul FLOPs 与 shared memory 通信，从而把 attention kernel 的利用率推近 GEMM。",
       "essence": "FlashAttention-2 像是把一群搬砖工从“排队传砖”改成“分区同时铺墙”：砖没有少一块，墙也完全一样，但大家终于不再互相等。"
-    },
-    {
-      "slug": "semantic-search-evaluation",
-      "href": "semantic-search-evaluation.md",
-      "title": "Semantic Search Evaluation",
-      "title_zh": "Semantic Search Evaluation",
-      "title_en": "Semantic Search Evaluation",
-      "year": "",
-      "arxiv_id": "",
-      "arxiv_url": "",
-      "code_url": "",
-      "authors": [],
-      "research_line": "Unassigned",
-      "line_role": "",
-      "domains": [],
-      "tracks": [],
-      "problems": [],
-      "topics": [
-        "RAG"
-      ],
-      "methods": [],
-      "status": "read",
-      "reading_stage": "",
-      "review_stage": "",
-      "next_review": "",
-      "importance": "",
-      "confidence": "",
-      "reproducibility": "",
-      "has_code": false,
-      "excerpt": "The MVP keeps semantic search optional and local: Storage: SQLite `embeddings` table. Provider: `local-hash`. Model label: `hashing-v1`. Query: Python cosine similarity over stored chunk vectors.",
-      "essence": ""
     }
   ],
   "suggested_sets": [
@@ -820,18 +849,28 @@
       "name": "缺复习计划",
       "kind": "workflow",
       "slugs": [
+        "2603.03251-speculative-speculative-decoding",
         "2503.14075-twigvlm-plus-plus",
         "2602.06036-dflash",
-        "2603.03251-speculative-speculative-decoding",
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus",
         "2607.00466-eldr",
         "noarxiv-2026-dspark",
+        "semantic-search-evaluation",
+        "2512.23424-akg-kernel-agent-multi",
         "2501.01005-flashinfer",
         "2503.01840-eagle-3-scaling-up",
-        "2507.11851-llm-future-mtp",
+        "2507.11851-llm-future-mtp"
+      ]
+    },
+    {
+      "name": "研究线：LLM Serving",
+      "kind": "research_line",
+      "slugs": [
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark",
         "2512.23424-akg-kernel-agent-multi",
-        "2307.08691-flashattention-2"
+        "semantic-search-evaluation"
       ]
     },
     {
@@ -845,20 +884,19 @@
       ]
     },
     {
-      "name": "研究线：LLM Serving",
-      "kind": "research_line",
-      "slugs": [
-        "2607.00466-eldr",
-        "noarxiv-2026-dspark",
-        "2512.23424-akg-kernel-agent-multi"
-      ]
-    },
-    {
       "name": "研究线：Efficient Attention Kernels",
       "kind": "research_line",
       "slugs": [
         "2307.08691-flashattention-2",
         "2501.01005-flashinfer"
+      ]
+    },
+    {
+      "name": "研究线：Speculative Decoding",
+      "kind": "research_line",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding",
+        "2503.01840-eagle-3-scaling-up"
       ]
     },
     {

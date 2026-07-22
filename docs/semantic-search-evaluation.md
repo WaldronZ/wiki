@@ -1,3 +1,36 @@
+---
+slug: semantic-search-evaluation
+title: "Semantic Search Evaluation"
+title_zh: "语义搜索评估"
+title_en: "Semantic Search Evaluation"
+arxiv_id: "noarxiv-semantic-search-evaluation"
+year: 2025
+authors:
+  - Waldron
+topics:
+  - Semantic Search
+  - Vector Database
+  - SQLite
+methods:
+  - Local Hash Embeddings
+  - Cosine Similarity
+domains:
+  - AI Systems
+tracks:
+  - Search & Retrieval
+problems:
+  - Semantic Search
+  - Vector Storage
+research_line: "LLM Serving"
+line_role: "variant"
+status: read
+reading_stage: "deep_read"
+importance: 3
+confidence: 4
+reproducibility: 4
+has_code: false
+---
+
 # Semantic Search Evaluation
 
 ## Current MVP Choice

@@ -1,22 +1,22 @@
 {
-  "generated_at": "2026-07-22T13:22:15",
+  "generated_at": "2026-07-22T13:24:43",
   "count": 13,
   "inbox_count": 0,
   "lane_count": 6,
   "active_status_workflow": "personal",
-  "quality_score": 75.2,
+  "quality_score": 90.2,
   "publish_ready": false,
   "summary": {
     "papers": 13,
-    "actions": 143,
+    "actions": 148,
     "high_priority_papers": 13,
-    "high_actions": 9,
-    "medium_actions": 130,
+    "high_actions": 6,
+    "medium_actions": 138,
     "due_review": 0,
     "needs_review_plan": 13,
     "stale_reports": 0,
-    "taxonomy_registry_high": 6,
-    "taxonomy_registry_medium": 116,
+    "taxonomy_registry_high": 5,
+    "taxonomy_registry_medium": 127,
     "workflow_count": 2,
     "inbox_count": 0
   },
@@ -374,17 +374,17 @@
       "metrics": [
         {
           "label": "高风险标签",
-          "value": 6,
+          "value": 5,
           "hint": "registry high"
         },
         {
           "label": "中风险标签",
-          "value": 116,
+          "value": 127,
           "hint": "registry medium"
         },
         {
           "label": "分类任务",
-          "value": 123,
+          "value": 130,
           "hint": "taxonomy actions"
         }
       ],
@@ -760,12 +760,12 @@
         },
         {
           "label": "质量分",
-          "value": 75.2,
+          "value": 90.2,
           "hint": "quality score"
         },
         {
           "label": "High action",
-          "value": 9,
+          "value": 6,
           "hint": "blocking work"
         }
       ],
@@ -786,7 +786,7 @@
     {
       "label": "处理高优先级行动",
       "href": "actions.html?severity=high",
-      "count": 9,
+      "count": 6,
       "reason": "高优先级队列会阻碍发布或长期维护。"
     },
     {
@@ -798,7 +798,7 @@
     {
       "label": "治理标签注册表",
       "href": "registry.html?severity=high",
-      "count": 6,
+      "count": 5,
       "reason": "标签定义、alias 和过载桶决定大库检索质量。"
     },
     {

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-22T13:22:15",
+  "generated_at": "2026-07-22T13:24:43",
   "count": 13,
   "field_order": [
     {
@@ -69,7 +69,7 @@
       "field": "domain",
       "label": "Domain",
       "value": "LLM Systems",
-      "count": 10,
+      "count": 11,
       "href": "library.html?domain=LLM+Systems",
       "sample_slugs": [
         "2307.08691-flashattention-2",
@@ -78,20 +78,19 @@
         "2503.14075-twigvlm-plus-plus",
         "2507.11851-llm-future-mtp",
         "2602.06036-dflash",
-        "2604.11035-introspective-dlm",
-        "2605.12825-orthrus"
+        "2603.03251-speculative-speculative-decoding",
+        "2604.11035-introspective-dlm"
       ]
     },
     {
-      "id": "domain:Unassigned",
+      "id": "domain:AI Systems",
       "field": "domain",
       "label": "Domain",
-      "value": "Unassigned",
-      "count": 3,
-      "href": "library.html",
+      "value": "AI Systems",
+      "count": 2,
+      "href": "library.html?domain=AI+Systems",
       "sample_slugs": [
         "2512.23424-akg-kernel-agent-multi",
-        "2603.03251-speculative-speculative-decoding",
         "semantic-search-evaluation"
       ]
     },
@@ -218,6 +217,17 @@
       "href": "library.html?method=confidence-scheduled+verification",
       "sample_slugs": [
         "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "id": "method:Cosine Similarity",
+      "field": "method",
+      "label": "Method",
+      "value": "Cosine Similarity",
+      "count": 1,
+      "href": "library.html?method=Cosine+Similarity",
+      "sample_slugs": [
+        "semantic-search-evaluation"
       ]
     },
     {
@@ -463,6 +473,17 @@
       ]
     },
     {
+      "id": "method:Local Hash Embeddings",
+      "field": "method",
+      "label": "Method",
+      "value": "Local Hash Embeddings",
+      "count": 1,
+      "href": "library.html?method=Local+Hash+Embeddings",
+      "sample_slugs": [
+        "semantic-search-evaluation"
+      ]
+    },
+    {
       "id": "method:logit-shifted causal training",
       "field": "method",
       "label": "Method",
@@ -705,17 +726,6 @@
       ]
     },
     {
-      "id": "method:Unassigned",
-      "field": "method",
-      "label": "Method",
-      "value": "Unassigned",
-      "count": 1,
-      "href": "library.html",
-      "sample_slugs": [
-        "semantic-search-evaluation"
-      ]
-    },
-    {
       "id": "method:Unified Sketch",
       "field": "method",
       "label": "Method",
@@ -773,16 +783,14 @@
       ]
     },
     {
-      "id": "problem:Unassigned",
+      "id": "problem:Cross-Platform Deployment",
       "field": "problem",
       "label": "Problem",
-      "value": "Unassigned",
-      "count": 3,
-      "href": "library.html",
+      "value": "Cross-Platform Deployment",
+      "count": 1,
+      "href": "library.html?problem=Cross-Platform+Deployment",
       "sample_slugs": [
-        "2512.23424-akg-kernel-agent-multi",
-        "2603.03251-speculative-speculative-decoding",
-        "semantic-search-evaluation"
+        "2512.23424-akg-kernel-agent-multi"
       ]
     },
     {
@@ -816,6 +824,28 @@
       "href": "library.html?problem=Efficient+VLM+Inference",
       "sample_slugs": [
         "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "id": "problem:Inference Latency",
+      "field": "problem",
+      "label": "Problem",
+      "value": "Inference Latency",
+      "count": 1,
+      "href": "library.html?problem=Inference+Latency",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "id": "problem:Kernel Generation",
+      "field": "problem",
+      "label": "Problem",
+      "value": "Kernel Generation",
+      "count": 1,
+      "href": "library.html?problem=Kernel+Generation",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
       ]
     },
     {
@@ -874,6 +904,17 @@
       ]
     },
     {
+      "id": "problem:Semantic Search",
+      "field": "problem",
+      "label": "Problem",
+      "value": "Semantic Search",
+      "count": 1,
+      "href": "library.html?problem=Semantic+Search",
+      "sample_slugs": [
+        "semantic-search-evaluation"
+      ]
+    },
+    {
       "id": "problem:Speculative Decoding",
       "field": "problem",
       "label": "Problem",
@@ -885,6 +926,28 @@
       ]
     },
     {
+      "id": "problem:Throughput Optimization",
+      "field": "problem",
+      "label": "Problem",
+      "value": "Throughput Optimization",
+      "count": 1,
+      "href": "library.html?problem=Throughput+Optimization",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "id": "problem:Vector Storage",
+      "field": "problem",
+      "label": "Problem",
+      "value": "Vector Storage",
+      "count": 1,
+      "href": "library.html?problem=Vector+Storage",
+      "sample_slugs": [
+        "semantic-search-evaluation"
+      ]
+    },
+    {
       "id": "problem:Visual Token Redundancy",
       "field": "problem",
       "label": "Problem",
@@ -893,6 +956,20 @@
       "href": "library.html?problem=Visual+Token+Redundancy",
       "sample_slugs": [
         "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "id": "research_line:LLM Serving",
+      "field": "research_line",
+      "label": "Research line",
+      "value": "LLM Serving",
+      "count": 4,
+      "href": "library.html?line=LLM+Serving",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi",
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark",
+        "semantic-search-evaluation"
       ]
     },
     {
@@ -910,19 +987,6 @@
       ]
     },
     {
-      "id": "research_line:LLM Serving",
-      "field": "research_line",
-      "label": "Research line",
-      "value": "LLM Serving",
-      "count": 3,
-      "href": "library.html?line=LLM+Serving",
-      "sample_slugs": [
-        "2512.23424-akg-kernel-agent-multi",
-        "2607.00466-eldr",
-        "noarxiv-2026-dspark"
-      ]
-    },
-    {
       "id": "research_line:Efficient Attention Kernels",
       "field": "research_line",
       "label": "Research line",
@@ -935,26 +999,15 @@
       ]
     },
     {
-      "id": "research_line:Unassigned",
-      "field": "research_line",
-      "label": "Research line",
-      "value": "Unassigned",
-      "count": 2,
-      "href": "library.html",
-      "sample_slugs": [
-        "2603.03251-speculative-speculative-decoding",
-        "semantic-search-evaluation"
-      ]
-    },
-    {
       "id": "research_line:Speculative Decoding",
       "field": "research_line",
       "label": "Research line",
       "value": "Speculative Decoding",
-      "count": 1,
+      "count": 2,
       "href": "library.html?line=Speculative+Decoding",
       "sample_slugs": [
-        "2503.01840-eagle-3-scaling-up"
+        "2503.01840-eagle-3-scaling-up",
+        "2603.03251-speculative-speculative-decoding"
       ]
     },
     {
@@ -1286,17 +1339,6 @@
       ]
     },
     {
-      "id": "topic:RAG",
-      "field": "topic",
-      "label": "Topic",
-      "value": "RAG",
-      "count": 1,
-      "href": "library.html?topic=RAG",
-      "sample_slugs": [
-        "semantic-search-evaluation"
-      ]
-    },
-    {
       "id": "topic:Scaling Law",
       "field": "topic",
       "label": "Topic",
@@ -1308,6 +1350,17 @@
       ]
     },
     {
+      "id": "topic:Semantic Search",
+      "field": "topic",
+      "label": "Topic",
+      "value": "Semantic Search",
+      "count": 1,
+      "href": "library.html?topic=Semantic+Search",
+      "sample_slugs": [
+        "semantic-search-evaluation"
+      ]
+    },
+    {
       "id": "topic:Semi-Autoregressive Generation",
       "field": "topic",
       "label": "Topic",
@@ -1316,6 +1369,17 @@
       "href": "library.html?topic=Semi-Autoregressive+Generation",
       "sample_slugs": [
         "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "id": "topic:SQLite",
+      "field": "topic",
+      "label": "Topic",
+      "value": "SQLite",
+      "count": 1,
+      "href": "library.html?topic=SQLite",
+      "sample_slugs": [
+        "semantic-search-evaluation"
       ]
     },
     {
@@ -1338,6 +1402,17 @@
       "href": "library.html?topic=Transformer",
       "sample_slugs": [
         "2307.08691-flashattention-2"
+      ]
+    },
+    {
+      "id": "topic:Vector Database",
+      "field": "topic",
+      "label": "Topic",
+      "value": "Vector Database",
+      "count": 1,
+      "href": "library.html?topic=Vector+Database",
+      "sample_slugs": [
+        "semantic-search-evaluation"
       ]
     },
     {
@@ -1407,19 +1482,6 @@
       ]
     },
     {
-      "id": "track:Unassigned",
-      "field": "track",
-      "label": "Track",
-      "value": "Unassigned",
-      "count": 3,
-      "href": "library.html",
-      "sample_slugs": [
-        "2512.23424-akg-kernel-agent-multi",
-        "2603.03251-speculative-speculative-decoding",
-        "semantic-search-evaluation"
-      ]
-    },
-    {
       "id": "track:Attention Kernels",
       "field": "track",
       "label": "Track",
@@ -1432,6 +1494,28 @@
       ]
     },
     {
+      "id": "track:Compiler/DSL",
+      "field": "track",
+      "label": "Track",
+      "value": "Compiler/DSL",
+      "count": 1,
+      "href": "library.html?track=Compiler%2FDSL",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "id": "track:Inference Optimization",
+      "field": "track",
+      "label": "Track",
+      "value": "Inference Optimization",
+      "count": 1,
+      "href": "library.html?track=Inference+Optimization",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
       "id": "track:Inference Serving Systems",
       "field": "track",
       "label": "Track",
@@ -1440,6 +1524,28 @@
       "href": "library.html?track=Inference+Serving+Systems",
       "sample_slugs": [
         "2501.01005-flashinfer"
+      ]
+    },
+    {
+      "id": "track:Kernel Optimization",
+      "field": "track",
+      "label": "Track",
+      "value": "Kernel Optimization",
+      "count": 1,
+      "href": "library.html?track=Kernel+Optimization",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "id": "track:Search & Retrieval",
+      "field": "track",
+      "label": "Track",
+      "value": "Search & Retrieval",
+      "count": 1,
+      "href": "library.html?track=Search+%26+Retrieval",
+      "sample_slugs": [
+        "semantic-search-evaluation"
       ]
     },
     {
@@ -1687,6 +1793,20 @@
     },
     {
       "source": "research_line:LLM Serving",
+      "target": "domain:AI Systems",
+      "source_field": "research_line",
+      "source_value": "LLM Serving",
+      "target_field": "domain",
+      "target_value": "AI Systems",
+      "count": 2,
+      "href": "library.html?line=LLM+Serving&domain=AI+Systems",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi",
+        "semantic-search-evaluation"
+      ]
+    },
+    {
+      "source": "research_line:LLM Serving",
       "target": "domain:LLM Systems",
       "source_field": "research_line",
       "source_value": "LLM Serving",
@@ -1697,6 +1817,20 @@
       "sample_slugs": [
         "2607.00466-eldr",
         "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "source": "research_line:Speculative Decoding",
+      "target": "domain:LLM Systems",
+      "source_field": "research_line",
+      "source_value": "Speculative Decoding",
+      "target_field": "domain",
+      "target_value": "LLM Systems",
+      "count": 2,
+      "href": "library.html?line=Speculative+Decoding&domain=LLM+Systems",
+      "sample_slugs": [
+        "2503.01840-eagle-3-scaling-up",
+        "2603.03251-speculative-speculative-decoding"
       ]
     },
     {
@@ -1770,6 +1904,58 @@
       ]
     },
     {
+      "source": "domain:AI Systems",
+      "target": "track:Compiler/DSL",
+      "source_field": "domain",
+      "source_value": "AI Systems",
+      "target_field": "track",
+      "target_value": "Compiler/DSL",
+      "count": 1,
+      "href": "library.html?domain=AI+Systems&track=Compiler%2FDSL",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "domain:AI Systems",
+      "target": "track:Kernel Optimization",
+      "source_field": "domain",
+      "source_value": "AI Systems",
+      "target_field": "track",
+      "target_value": "Kernel Optimization",
+      "count": 1,
+      "href": "library.html?domain=AI+Systems&track=Kernel+Optimization",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "domain:AI Systems",
+      "target": "track:Search & Retrieval",
+      "source_field": "domain",
+      "source_value": "AI Systems",
+      "target_field": "track",
+      "target_value": "Search & Retrieval",
+      "count": 1,
+      "href": "library.html?domain=AI+Systems&track=Search+%26+Retrieval",
+      "sample_slugs": [
+        "semantic-search-evaluation"
+      ]
+    },
+    {
+      "source": "domain:LLM Systems",
+      "target": "track:Inference Optimization",
+      "source_field": "domain",
+      "source_value": "LLM Systems",
+      "target_field": "track",
+      "target_value": "Inference Optimization",
+      "count": 1,
+      "href": "library.html?domain=LLM+Systems&track=Inference+Optimization",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
       "source": "domain:LLM Systems",
       "target": "track:Inference Serving Systems",
       "source_field": "domain",
@@ -1819,6 +2005,84 @@
       "href": "library.html?domain=Multimodal+Systems&track=VLM+Acceleration",
       "sample_slugs": [
         "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Cross-Platform Deployment",
+      "target": "method:Document-Driven Integration",
+      "source_field": "problem",
+      "source_value": "Cross-Platform Deployment",
+      "target_field": "method",
+      "target_value": "Document-Driven Integration",
+      "count": 1,
+      "href": "library.html?problem=Cross-Platform+Deployment&method=Document-Driven+Integration",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "problem:Cross-Platform Deployment",
+      "target": "method:Hierarchical Code Retrieval",
+      "source_field": "problem",
+      "source_value": "Cross-Platform Deployment",
+      "target_field": "method",
+      "target_value": "Hierarchical Code Retrieval",
+      "count": 1,
+      "href": "library.html?problem=Cross-Platform+Deployment&method=Hierarchical+Code+Retrieval",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "problem:Cross-Platform Deployment",
+      "target": "method:Iterative Search-Based Optimization",
+      "source_field": "problem",
+      "source_value": "Cross-Platform Deployment",
+      "target_field": "method",
+      "target_value": "Iterative Search-Based Optimization",
+      "count": 1,
+      "href": "library.html?problem=Cross-Platform+Deployment&method=Iterative+Search-Based+Optimization",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "problem:Cross-Platform Deployment",
+      "target": "method:Multi-Agent Workflow",
+      "source_field": "problem",
+      "source_value": "Cross-Platform Deployment",
+      "target_field": "method",
+      "target_value": "Multi-Agent Workflow",
+      "count": 1,
+      "href": "library.html?problem=Cross-Platform+Deployment&method=Multi-Agent+Workflow",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "problem:Cross-Platform Deployment",
+      "target": "method:Unified Sketch",
+      "source_field": "problem",
+      "source_value": "Cross-Platform Deployment",
+      "target_field": "method",
+      "target_value": "Unified Sketch",
+      "count": 1,
+      "href": "library.html?problem=Cross-Platform+Deployment&method=Unified+Sketch",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "problem:Cross-Platform Deployment",
+      "target": "method:Verification and Profiling Loop",
+      "source_field": "problem",
+      "source_value": "Cross-Platform Deployment",
+      "target_field": "method",
+      "target_value": "Verification and Profiling Loop",
+      "count": 1,
+      "href": "library.html?problem=Cross-Platform+Deployment&method=Verification+and+Profiling+Loop",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
       ]
     },
     {
@@ -2040,6 +2304,162 @@
       "href": "library.html?problem=Efficient+VLM+Inference&method=twig-guided+token+pruning",
       "sample_slugs": [
         "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Inference Latency",
+      "target": "method:asynchronous decoding",
+      "source_field": "problem",
+      "source_value": "Inference Latency",
+      "target_field": "method",
+      "target_value": "asynchronous decoding",
+      "count": 1,
+      "href": "library.html?problem=Inference+Latency&method=asynchronous+decoding",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "problem:Inference Latency",
+      "target": "method:cache-aware sampling",
+      "source_field": "problem",
+      "source_value": "Inference Latency",
+      "target_field": "method",
+      "target_value": "cache-aware sampling",
+      "count": 1,
+      "href": "library.html?problem=Inference+Latency&method=cache-aware+sampling",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "problem:Inference Latency",
+      "target": "method:fallback speculation",
+      "source_field": "problem",
+      "source_value": "Inference Latency",
+      "target_field": "method",
+      "target_value": "fallback speculation",
+      "count": 1,
+      "href": "library.html?problem=Inference+Latency&method=fallback+speculation",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "problem:Inference Latency",
+      "target": "method:geometric fan-out",
+      "source_field": "problem",
+      "source_value": "Inference Latency",
+      "target_field": "method",
+      "target_value": "geometric fan-out",
+      "count": 1,
+      "href": "library.html?problem=Inference+Latency&method=geometric+fan-out",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "problem:Inference Latency",
+      "target": "method:Speculative Decoding",
+      "source_field": "problem",
+      "source_value": "Inference Latency",
+      "target_field": "method",
+      "target_value": "Speculative Decoding",
+      "count": 1,
+      "href": "library.html?problem=Inference+Latency&method=Speculative+Decoding",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "problem:Inference Latency",
+      "target": "method:verification outcome cache",
+      "source_field": "problem",
+      "source_value": "Inference Latency",
+      "target_field": "method",
+      "target_value": "verification outcome cache",
+      "count": 1,
+      "href": "library.html?problem=Inference+Latency&method=verification+outcome+cache",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "problem:Kernel Generation",
+      "target": "method:Document-Driven Integration",
+      "source_field": "problem",
+      "source_value": "Kernel Generation",
+      "target_field": "method",
+      "target_value": "Document-Driven Integration",
+      "count": 1,
+      "href": "library.html?problem=Kernel+Generation&method=Document-Driven+Integration",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "problem:Kernel Generation",
+      "target": "method:Hierarchical Code Retrieval",
+      "source_field": "problem",
+      "source_value": "Kernel Generation",
+      "target_field": "method",
+      "target_value": "Hierarchical Code Retrieval",
+      "count": 1,
+      "href": "library.html?problem=Kernel+Generation&method=Hierarchical+Code+Retrieval",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "problem:Kernel Generation",
+      "target": "method:Iterative Search-Based Optimization",
+      "source_field": "problem",
+      "source_value": "Kernel Generation",
+      "target_field": "method",
+      "target_value": "Iterative Search-Based Optimization",
+      "count": 1,
+      "href": "library.html?problem=Kernel+Generation&method=Iterative+Search-Based+Optimization",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "problem:Kernel Generation",
+      "target": "method:Multi-Agent Workflow",
+      "source_field": "problem",
+      "source_value": "Kernel Generation",
+      "target_field": "method",
+      "target_value": "Multi-Agent Workflow",
+      "count": 1,
+      "href": "library.html?problem=Kernel+Generation&method=Multi-Agent+Workflow",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "problem:Kernel Generation",
+      "target": "method:Unified Sketch",
+      "source_field": "problem",
+      "source_value": "Kernel Generation",
+      "target_field": "method",
+      "target_value": "Unified Sketch",
+      "count": 1,
+      "href": "library.html?problem=Kernel+Generation&method=Unified+Sketch",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "problem:Kernel Generation",
+      "target": "method:Verification and Profiling Loop",
+      "source_field": "problem",
+      "source_value": "Kernel Generation",
+      "target_field": "method",
+      "target_value": "Verification and Profiling Loop",
+      "count": 1,
+      "href": "library.html?problem=Kernel+Generation&method=Verification+and+Profiling+Loop",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
       ]
     },
     {
@@ -2537,6 +2957,32 @@
       ]
     },
     {
+      "source": "problem:Semantic Search",
+      "target": "method:Cosine Similarity",
+      "source_field": "problem",
+      "source_value": "Semantic Search",
+      "target_field": "method",
+      "target_value": "Cosine Similarity",
+      "count": 1,
+      "href": "library.html?problem=Semantic+Search&method=Cosine+Similarity",
+      "sample_slugs": [
+        "semantic-search-evaluation"
+      ]
+    },
+    {
+      "source": "problem:Semantic Search",
+      "target": "method:Local Hash Embeddings",
+      "source_field": "problem",
+      "source_value": "Semantic Search",
+      "target_field": "method",
+      "target_value": "Local Hash Embeddings",
+      "count": 1,
+      "href": "library.html?problem=Semantic+Search&method=Local+Hash+Embeddings",
+      "sample_slugs": [
+        "semantic-search-evaluation"
+      ]
+    },
+    {
       "source": "problem:Speculative Decoding",
       "target": "method:Draft Tree",
       "source_field": "problem",
@@ -2589,159 +3035,107 @@
       ]
     },
     {
-      "source": "problem:Unassigned",
+      "source": "problem:Throughput Optimization",
       "target": "method:asynchronous decoding",
       "source_field": "problem",
-      "source_value": "Unassigned",
+      "source_value": "Throughput Optimization",
       "target_field": "method",
       "target_value": "asynchronous decoding",
       "count": 1,
-      "href": "library.html?method=asynchronous+decoding",
+      "href": "library.html?problem=Throughput+Optimization&method=asynchronous+decoding",
       "sample_slugs": [
         "2603.03251-speculative-speculative-decoding"
       ]
     },
     {
-      "source": "problem:Unassigned",
+      "source": "problem:Throughput Optimization",
       "target": "method:cache-aware sampling",
       "source_field": "problem",
-      "source_value": "Unassigned",
+      "source_value": "Throughput Optimization",
       "target_field": "method",
       "target_value": "cache-aware sampling",
       "count": 1,
-      "href": "library.html?method=cache-aware+sampling",
+      "href": "library.html?problem=Throughput+Optimization&method=cache-aware+sampling",
       "sample_slugs": [
         "2603.03251-speculative-speculative-decoding"
       ]
     },
     {
-      "source": "problem:Unassigned",
-      "target": "method:Document-Driven Integration",
-      "source_field": "problem",
-      "source_value": "Unassigned",
-      "target_field": "method",
-      "target_value": "Document-Driven Integration",
-      "count": 1,
-      "href": "library.html?method=Document-Driven+Integration",
-      "sample_slugs": [
-        "2512.23424-akg-kernel-agent-multi"
-      ]
-    },
-    {
-      "source": "problem:Unassigned",
+      "source": "problem:Throughput Optimization",
       "target": "method:fallback speculation",
       "source_field": "problem",
-      "source_value": "Unassigned",
+      "source_value": "Throughput Optimization",
       "target_field": "method",
       "target_value": "fallback speculation",
       "count": 1,
-      "href": "library.html?method=fallback+speculation",
+      "href": "library.html?problem=Throughput+Optimization&method=fallback+speculation",
       "sample_slugs": [
         "2603.03251-speculative-speculative-decoding"
       ]
     },
     {
-      "source": "problem:Unassigned",
+      "source": "problem:Throughput Optimization",
       "target": "method:geometric fan-out",
       "source_field": "problem",
-      "source_value": "Unassigned",
+      "source_value": "Throughput Optimization",
       "target_field": "method",
       "target_value": "geometric fan-out",
       "count": 1,
-      "href": "library.html?method=geometric+fan-out",
+      "href": "library.html?problem=Throughput+Optimization&method=geometric+fan-out",
       "sample_slugs": [
         "2603.03251-speculative-speculative-decoding"
       ]
     },
     {
-      "source": "problem:Unassigned",
-      "target": "method:Hierarchical Code Retrieval",
-      "source_field": "problem",
-      "source_value": "Unassigned",
-      "target_field": "method",
-      "target_value": "Hierarchical Code Retrieval",
-      "count": 1,
-      "href": "library.html?method=Hierarchical+Code+Retrieval",
-      "sample_slugs": [
-        "2512.23424-akg-kernel-agent-multi"
-      ]
-    },
-    {
-      "source": "problem:Unassigned",
-      "target": "method:Iterative Search-Based Optimization",
-      "source_field": "problem",
-      "source_value": "Unassigned",
-      "target_field": "method",
-      "target_value": "Iterative Search-Based Optimization",
-      "count": 1,
-      "href": "library.html?method=Iterative+Search-Based+Optimization",
-      "sample_slugs": [
-        "2512.23424-akg-kernel-agent-multi"
-      ]
-    },
-    {
-      "source": "problem:Unassigned",
-      "target": "method:Multi-Agent Workflow",
-      "source_field": "problem",
-      "source_value": "Unassigned",
-      "target_field": "method",
-      "target_value": "Multi-Agent Workflow",
-      "count": 1,
-      "href": "library.html?method=Multi-Agent+Workflow",
-      "sample_slugs": [
-        "2512.23424-akg-kernel-agent-multi"
-      ]
-    },
-    {
-      "source": "problem:Unassigned",
+      "source": "problem:Throughput Optimization",
       "target": "method:Speculative Decoding",
       "source_field": "problem",
-      "source_value": "Unassigned",
+      "source_value": "Throughput Optimization",
       "target_field": "method",
       "target_value": "Speculative Decoding",
       "count": 1,
-      "href": "library.html?method=Speculative+Decoding",
+      "href": "library.html?problem=Throughput+Optimization&method=Speculative+Decoding",
       "sample_slugs": [
         "2603.03251-speculative-speculative-decoding"
       ]
     },
     {
-      "source": "problem:Unassigned",
-      "target": "method:Unified Sketch",
-      "source_field": "problem",
-      "source_value": "Unassigned",
-      "target_field": "method",
-      "target_value": "Unified Sketch",
-      "count": 1,
-      "href": "library.html?method=Unified+Sketch",
-      "sample_slugs": [
-        "2512.23424-akg-kernel-agent-multi"
-      ]
-    },
-    {
-      "source": "problem:Unassigned",
-      "target": "method:Verification and Profiling Loop",
-      "source_field": "problem",
-      "source_value": "Unassigned",
-      "target_field": "method",
-      "target_value": "Verification and Profiling Loop",
-      "count": 1,
-      "href": "library.html?method=Verification+and+Profiling+Loop",
-      "sample_slugs": [
-        "2512.23424-akg-kernel-agent-multi"
-      ]
-    },
-    {
-      "source": "problem:Unassigned",
+      "source": "problem:Throughput Optimization",
       "target": "method:verification outcome cache",
       "source_field": "problem",
-      "source_value": "Unassigned",
+      "source_value": "Throughput Optimization",
       "target_field": "method",
       "target_value": "verification outcome cache",
       "count": 1,
-      "href": "library.html?method=verification+outcome+cache",
+      "href": "library.html?problem=Throughput+Optimization&method=verification+outcome+cache",
       "sample_slugs": [
         "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "problem:Vector Storage",
+      "target": "method:Cosine Similarity",
+      "source_field": "problem",
+      "source_value": "Vector Storage",
+      "target_field": "method",
+      "target_value": "Cosine Similarity",
+      "count": 1,
+      "href": "library.html?problem=Vector+Storage&method=Cosine+Similarity",
+      "sample_slugs": [
+        "semantic-search-evaluation"
+      ]
+    },
+    {
+      "source": "problem:Vector Storage",
+      "target": "method:Local Hash Embeddings",
+      "source_field": "problem",
+      "source_value": "Vector Storage",
+      "target_field": "method",
+      "target_value": "Local Hash Embeddings",
+      "count": 1,
+      "href": "library.html?problem=Vector+Storage&method=Local+Hash+Embeddings",
+      "sample_slugs": [
+        "semantic-search-evaluation"
       ]
     },
     {
@@ -2820,6 +3214,71 @@
       "href": "library.html?problem=Visual+Token+Redundancy&method=twig-guided+token+pruning",
       "sample_slugs": [
         "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Cross-Platform Deployment",
+      "target": "topic:Compiler/DSL",
+      "source_field": "problem",
+      "source_value": "Cross-Platform Deployment",
+      "target_field": "topic",
+      "target_value": "Compiler/DSL",
+      "count": 1,
+      "href": "library.html?problem=Cross-Platform+Deployment&topic=Compiler%2FDSL",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "problem:Cross-Platform Deployment",
+      "target": "topic:Hardware Acceleration",
+      "source_field": "problem",
+      "source_value": "Cross-Platform Deployment",
+      "target_field": "topic",
+      "target_value": "Hardware Acceleration",
+      "count": 1,
+      "href": "library.html?problem=Cross-Platform+Deployment&topic=Hardware+Acceleration",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "problem:Cross-Platform Deployment",
+      "target": "topic:Kernel Generation",
+      "source_field": "problem",
+      "source_value": "Cross-Platform Deployment",
+      "target_field": "topic",
+      "target_value": "Kernel Generation",
+      "count": 1,
+      "href": "library.html?problem=Cross-Platform+Deployment&topic=Kernel+Generation",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "problem:Cross-Platform Deployment",
+      "target": "topic:LLM Code Generation",
+      "source_field": "problem",
+      "source_value": "Cross-Platform Deployment",
+      "target_field": "topic",
+      "target_value": "LLM Code Generation",
+      "count": 1,
+      "href": "library.html?problem=Cross-Platform+Deployment&topic=LLM+Code+Generation",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "problem:Cross-Platform Deployment",
+      "target": "topic:Multi-Agent Systems",
+      "source_field": "problem",
+      "source_value": "Cross-Platform Deployment",
+      "target_field": "topic",
+      "target_value": "Multi-Agent Systems",
+      "count": 1,
+      "href": "library.html?problem=Cross-Platform+Deployment&topic=Multi-Agent+Systems",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
       ]
     },
     {
@@ -3002,6 +3461,123 @@
       "href": "library.html?problem=Efficient+VLM+Inference&topic=VLM+Acceleration",
       "sample_slugs": [
         "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "source": "problem:Inference Latency",
+      "target": "topic:Distributed Inference",
+      "source_field": "problem",
+      "source_value": "Inference Latency",
+      "target_field": "topic",
+      "target_value": "Distributed Inference",
+      "count": 1,
+      "href": "library.html?problem=Inference+Latency&topic=Distributed+Inference",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "problem:Inference Latency",
+      "target": "topic:LLM Inference",
+      "source_field": "problem",
+      "source_value": "Inference Latency",
+      "target_field": "topic",
+      "target_value": "LLM Inference",
+      "count": 1,
+      "href": "library.html?problem=Inference+Latency&topic=LLM+Inference",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "problem:Inference Latency",
+      "target": "topic:Speculative Decoding",
+      "source_field": "problem",
+      "source_value": "Inference Latency",
+      "target_field": "topic",
+      "target_value": "Speculative Decoding",
+      "count": 1,
+      "href": "library.html?problem=Inference+Latency&topic=Speculative+Decoding",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "problem:Inference Latency",
+      "target": "topic:Systems Optimization",
+      "source_field": "problem",
+      "source_value": "Inference Latency",
+      "target_field": "topic",
+      "target_value": "Systems Optimization",
+      "count": 1,
+      "href": "library.html?problem=Inference+Latency&topic=Systems+Optimization",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "problem:Kernel Generation",
+      "target": "topic:Compiler/DSL",
+      "source_field": "problem",
+      "source_value": "Kernel Generation",
+      "target_field": "topic",
+      "target_value": "Compiler/DSL",
+      "count": 1,
+      "href": "library.html?problem=Kernel+Generation&topic=Compiler%2FDSL",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "problem:Kernel Generation",
+      "target": "topic:Hardware Acceleration",
+      "source_field": "problem",
+      "source_value": "Kernel Generation",
+      "target_field": "topic",
+      "target_value": "Hardware Acceleration",
+      "count": 1,
+      "href": "library.html?problem=Kernel+Generation&topic=Hardware+Acceleration",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "problem:Kernel Generation",
+      "target": "topic:Kernel Generation",
+      "source_field": "problem",
+      "source_value": "Kernel Generation",
+      "target_field": "topic",
+      "target_value": "Kernel Generation",
+      "count": 1,
+      "href": "library.html?problem=Kernel+Generation&topic=Kernel+Generation",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "problem:Kernel Generation",
+      "target": "topic:LLM Code Generation",
+      "source_field": "problem",
+      "source_value": "Kernel Generation",
+      "target_field": "topic",
+      "target_value": "LLM Code Generation",
+      "count": 1,
+      "href": "library.html?problem=Kernel+Generation&topic=LLM+Code+Generation",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "problem:Kernel Generation",
+      "target": "topic:Multi-Agent Systems",
+      "source_field": "problem",
+      "source_value": "Kernel Generation",
+      "target_field": "topic",
+      "target_value": "Multi-Agent Systems",
+      "count": 1,
+      "href": "library.html?problem=Kernel+Generation&topic=Multi-Agent+Systems",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
       ]
     },
     {
@@ -3382,6 +3958,45 @@
       ]
     },
     {
+      "source": "problem:Semantic Search",
+      "target": "topic:Semantic Search",
+      "source_field": "problem",
+      "source_value": "Semantic Search",
+      "target_field": "topic",
+      "target_value": "Semantic Search",
+      "count": 1,
+      "href": "library.html?problem=Semantic+Search&topic=Semantic+Search",
+      "sample_slugs": [
+        "semantic-search-evaluation"
+      ]
+    },
+    {
+      "source": "problem:Semantic Search",
+      "target": "topic:SQLite",
+      "source_field": "problem",
+      "source_value": "Semantic Search",
+      "target_field": "topic",
+      "target_value": "SQLite",
+      "count": 1,
+      "href": "library.html?problem=Semantic+Search&topic=SQLite",
+      "sample_slugs": [
+        "semantic-search-evaluation"
+      ]
+    },
+    {
+      "source": "problem:Semantic Search",
+      "target": "topic:Vector Database",
+      "source_field": "problem",
+      "source_value": "Semantic Search",
+      "target_field": "topic",
+      "target_value": "Vector Database",
+      "count": 1,
+      "href": "library.html?problem=Semantic+Search&topic=Vector+Database",
+      "sample_slugs": [
+        "semantic-search-evaluation"
+      ]
+    },
+    {
       "source": "problem:Speculative Decoding",
       "target": "topic:Draft Model Training",
       "source_field": "problem",
@@ -3434,133 +4049,94 @@
       ]
     },
     {
-      "source": "problem:Unassigned",
-      "target": "topic:Compiler/DSL",
-      "source_field": "problem",
-      "source_value": "Unassigned",
-      "target_field": "topic",
-      "target_value": "Compiler/DSL",
-      "count": 1,
-      "href": "library.html?topic=Compiler%2FDSL",
-      "sample_slugs": [
-        "2512.23424-akg-kernel-agent-multi"
-      ]
-    },
-    {
-      "source": "problem:Unassigned",
+      "source": "problem:Throughput Optimization",
       "target": "topic:Distributed Inference",
       "source_field": "problem",
-      "source_value": "Unassigned",
+      "source_value": "Throughput Optimization",
       "target_field": "topic",
       "target_value": "Distributed Inference",
       "count": 1,
-      "href": "library.html?topic=Distributed+Inference",
+      "href": "library.html?problem=Throughput+Optimization&topic=Distributed+Inference",
       "sample_slugs": [
         "2603.03251-speculative-speculative-decoding"
       ]
     },
     {
-      "source": "problem:Unassigned",
-      "target": "topic:Hardware Acceleration",
-      "source_field": "problem",
-      "source_value": "Unassigned",
-      "target_field": "topic",
-      "target_value": "Hardware Acceleration",
-      "count": 1,
-      "href": "library.html?topic=Hardware+Acceleration",
-      "sample_slugs": [
-        "2512.23424-akg-kernel-agent-multi"
-      ]
-    },
-    {
-      "source": "problem:Unassigned",
-      "target": "topic:Kernel Generation",
-      "source_field": "problem",
-      "source_value": "Unassigned",
-      "target_field": "topic",
-      "target_value": "Kernel Generation",
-      "count": 1,
-      "href": "library.html?topic=Kernel+Generation",
-      "sample_slugs": [
-        "2512.23424-akg-kernel-agent-multi"
-      ]
-    },
-    {
-      "source": "problem:Unassigned",
-      "target": "topic:LLM Code Generation",
-      "source_field": "problem",
-      "source_value": "Unassigned",
-      "target_field": "topic",
-      "target_value": "LLM Code Generation",
-      "count": 1,
-      "href": "library.html?topic=LLM+Code+Generation",
-      "sample_slugs": [
-        "2512.23424-akg-kernel-agent-multi"
-      ]
-    },
-    {
-      "source": "problem:Unassigned",
+      "source": "problem:Throughput Optimization",
       "target": "topic:LLM Inference",
       "source_field": "problem",
-      "source_value": "Unassigned",
+      "source_value": "Throughput Optimization",
       "target_field": "topic",
       "target_value": "LLM Inference",
       "count": 1,
-      "href": "library.html?topic=LLM+Inference",
+      "href": "library.html?problem=Throughput+Optimization&topic=LLM+Inference",
       "sample_slugs": [
         "2603.03251-speculative-speculative-decoding"
       ]
     },
     {
-      "source": "problem:Unassigned",
-      "target": "topic:Multi-Agent Systems",
+      "source": "problem:Throughput Optimization",
+      "target": "topic:Speculative Decoding",
       "source_field": "problem",
-      "source_value": "Unassigned",
+      "source_value": "Throughput Optimization",
       "target_field": "topic",
-      "target_value": "Multi-Agent Systems",
+      "target_value": "Speculative Decoding",
       "count": 1,
-      "href": "library.html?topic=Multi-Agent+Systems",
+      "href": "library.html?problem=Throughput+Optimization&topic=Speculative+Decoding",
       "sample_slugs": [
-        "2512.23424-akg-kernel-agent-multi"
+        "2603.03251-speculative-speculative-decoding"
       ]
     },
     {
-      "source": "problem:Unassigned",
-      "target": "topic:RAG",
+      "source": "problem:Throughput Optimization",
+      "target": "topic:Systems Optimization",
       "source_field": "problem",
-      "source_value": "Unassigned",
+      "source_value": "Throughput Optimization",
       "target_field": "topic",
-      "target_value": "RAG",
+      "target_value": "Systems Optimization",
       "count": 1,
-      "href": "library.html?topic=RAG",
+      "href": "library.html?problem=Throughput+Optimization&topic=Systems+Optimization",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "problem:Vector Storage",
+      "target": "topic:Semantic Search",
+      "source_field": "problem",
+      "source_value": "Vector Storage",
+      "target_field": "topic",
+      "target_value": "Semantic Search",
+      "count": 1,
+      "href": "library.html?problem=Vector+Storage&topic=Semantic+Search",
       "sample_slugs": [
         "semantic-search-evaluation"
       ]
     },
     {
-      "source": "problem:Unassigned",
-      "target": "topic:Speculative Decoding",
+      "source": "problem:Vector Storage",
+      "target": "topic:SQLite",
       "source_field": "problem",
-      "source_value": "Unassigned",
+      "source_value": "Vector Storage",
       "target_field": "topic",
-      "target_value": "Speculative Decoding",
+      "target_value": "SQLite",
       "count": 1,
-      "href": "library.html?topic=Speculative+Decoding",
+      "href": "library.html?problem=Vector+Storage&topic=SQLite",
       "sample_slugs": [
-        "2603.03251-speculative-speculative-decoding"
+        "semantic-search-evaluation"
       ]
     },
     {
-      "source": "problem:Unassigned",
-      "target": "topic:Systems Optimization",
+      "source": "problem:Vector Storage",
+      "target": "topic:Vector Database",
       "source_field": "problem",
-      "source_value": "Unassigned",
+      "source_value": "Vector Storage",
       "target_field": "topic",
-      "target_value": "Systems Optimization",
+      "target_value": "Vector Database",
       "count": 1,
-      "href": "library.html?topic=Systems+Optimization",
+      "href": "library.html?problem=Vector+Storage&topic=Vector+Database",
       "sample_slugs": [
-        "2603.03251-speculative-speculative-decoding"
+        "semantic-search-evaluation"
       ]
     },
     {
@@ -3629,32 +4205,6 @@
       ]
     },
     {
-      "source": "research_line:LLM Serving",
-      "target": "domain:Unassigned",
-      "source_field": "research_line",
-      "source_value": "LLM Serving",
-      "target_field": "domain",
-      "target_value": "Unassigned",
-      "count": 1,
-      "href": "library.html?line=LLM+Serving",
-      "sample_slugs": [
-        "2512.23424-akg-kernel-agent-multi"
-      ]
-    },
-    {
-      "source": "research_line:Speculative Decoding",
-      "target": "domain:LLM Systems",
-      "source_field": "research_line",
-      "source_value": "Speculative Decoding",
-      "target_field": "domain",
-      "target_value": "LLM Systems",
-      "count": 1,
-      "href": "library.html?line=Speculative+Decoding&domain=LLM+Systems",
-      "sample_slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ]
-    },
-    {
       "source": "research_line:VLM Acceleration",
       "target": "domain:LLM Systems",
       "source_field": "research_line",
@@ -3695,6 +4245,32 @@
     },
     {
       "source": "research_line:LLM Serving",
+      "target": "track:Compiler/DSL",
+      "source_field": "research_line",
+      "source_value": "LLM Serving",
+      "target_field": "track",
+      "target_value": "Compiler/DSL",
+      "count": 1,
+      "href": "library.html?line=LLM+Serving&track=Compiler%2FDSL",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "research_line:LLM Serving",
+      "target": "track:Kernel Optimization",
+      "source_field": "research_line",
+      "source_value": "LLM Serving",
+      "target_field": "track",
+      "target_value": "Kernel Optimization",
+      "count": 1,
+      "href": "library.html?line=LLM+Serving&track=Kernel+Optimization",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "research_line:LLM Serving",
       "target": "track:Parallel Decoding",
       "source_field": "research_line",
       "source_value": "LLM Serving",
@@ -3708,15 +4284,15 @@
     },
     {
       "source": "research_line:LLM Serving",
-      "target": "track:Unassigned",
+      "target": "track:Search & Retrieval",
       "source_field": "research_line",
       "source_value": "LLM Serving",
       "target_field": "track",
-      "target_value": "Unassigned",
+      "target_value": "Search & Retrieval",
       "count": 1,
-      "href": "library.html?line=LLM+Serving",
+      "href": "library.html?line=LLM+Serving&track=Search+%26+Retrieval",
       "sample_slugs": [
-        "2512.23424-akg-kernel-agent-multi"
+        "semantic-search-evaluation"
       ]
     },
     {
@@ -3730,6 +4306,19 @@
       "href": "library.html?line=Speculative+Decoding&track=Inference+Acceleration",
       "sample_slugs": [
         "2503.01840-eagle-3-scaling-up"
+      ]
+    },
+    {
+      "source": "research_line:Speculative Decoding",
+      "target": "track:Inference Optimization",
+      "source_field": "research_line",
+      "source_value": "Speculative Decoding",
+      "target_field": "track",
+      "target_value": "Inference Optimization",
+      "count": 1,
+      "href": "library.html?line=Speculative+Decoding&track=Inference+Optimization",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
       ]
     },
     {
@@ -6294,19 +6883,6 @@
       ]
     },
     {
-      "source": "topic:RAG",
-      "target": "method:Unassigned",
-      "source_field": "topic",
-      "source_value": "RAG",
-      "target_field": "method",
-      "target_value": "Unassigned",
-      "count": 1,
-      "href": "library.html?topic=RAG",
-      "sample_slugs": [
-        "semantic-search-evaluation"
-      ]
-    },
-    {
       "source": "topic:Scaling Law",
       "target": "method:Draft Tree",
       "source_field": "topic",
@@ -6356,6 +6932,32 @@
       "href": "library.html?topic=Scaling+Law&method=Training-Time+Test",
       "sample_slugs": [
         "2503.01840-eagle-3-scaling-up"
+      ]
+    },
+    {
+      "source": "topic:Semantic Search",
+      "target": "method:Cosine Similarity",
+      "source_field": "topic",
+      "source_value": "Semantic Search",
+      "target_field": "method",
+      "target_value": "Cosine Similarity",
+      "count": 1,
+      "href": "library.html?topic=Semantic+Search&method=Cosine+Similarity",
+      "sample_slugs": [
+        "semantic-search-evaluation"
+      ]
+    },
+    {
+      "source": "topic:Semantic Search",
+      "target": "method:Local Hash Embeddings",
+      "source_field": "topic",
+      "source_value": "Semantic Search",
+      "target_field": "method",
+      "target_value": "Local Hash Embeddings",
+      "count": 1,
+      "href": "library.html?topic=Semantic+Search&method=Local+Hash+Embeddings",
+      "sample_slugs": [
+        "semantic-search-evaluation"
       ]
     },
     {
@@ -6905,6 +7507,32 @@
       ]
     },
     {
+      "source": "topic:SQLite",
+      "target": "method:Cosine Similarity",
+      "source_field": "topic",
+      "source_value": "SQLite",
+      "target_field": "method",
+      "target_value": "Cosine Similarity",
+      "count": 1,
+      "href": "library.html?topic=SQLite&method=Cosine+Similarity",
+      "sample_slugs": [
+        "semantic-search-evaluation"
+      ]
+    },
+    {
+      "source": "topic:SQLite",
+      "target": "method:Local Hash Embeddings",
+      "source_field": "topic",
+      "source_value": "SQLite",
+      "target_field": "method",
+      "target_value": "Local Hash Embeddings",
+      "count": 1,
+      "href": "library.html?topic=SQLite&method=Local+Hash+Embeddings",
+      "sample_slugs": [
+        "semantic-search-evaluation"
+      ]
+    },
+    {
       "source": "topic:Systems Optimization",
       "target": "method:asynchronous decoding",
       "source_field": "topic",
@@ -7045,6 +7673,32 @@
       "href": "library.html?topic=Transformer&method=work+partitioning",
       "sample_slugs": [
         "2307.08691-flashattention-2"
+      ]
+    },
+    {
+      "source": "topic:Vector Database",
+      "target": "method:Cosine Similarity",
+      "source_field": "topic",
+      "source_value": "Vector Database",
+      "target_field": "method",
+      "target_value": "Cosine Similarity",
+      "count": 1,
+      "href": "library.html?topic=Vector+Database&method=Cosine+Similarity",
+      "sample_slugs": [
+        "semantic-search-evaluation"
+      ]
+    },
+    {
+      "source": "topic:Vector Database",
+      "target": "method:Local Hash Embeddings",
+      "source_field": "topic",
+      "source_value": "Vector Database",
+      "target_field": "method",
+      "target_value": "Local Hash Embeddings",
+      "count": 1,
+      "href": "library.html?topic=Vector+Database&method=Local+Hash+Embeddings",
+      "sample_slugs": [
+        "semantic-search-evaluation"
       ]
     },
     {
@@ -7308,6 +7962,32 @@
       ]
     },
     {
+      "source": "track:Compiler/DSL",
+      "target": "problem:Cross-Platform Deployment",
+      "source_field": "track",
+      "source_value": "Compiler/DSL",
+      "target_field": "problem",
+      "target_value": "Cross-Platform Deployment",
+      "count": 1,
+      "href": "library.html?track=Compiler%2FDSL&problem=Cross-Platform+Deployment",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "track:Compiler/DSL",
+      "target": "problem:Kernel Generation",
+      "source_field": "track",
+      "source_value": "Compiler/DSL",
+      "target_field": "problem",
+      "target_value": "Kernel Generation",
+      "count": 1,
+      "href": "library.html?track=Compiler%2FDSL&problem=Kernel+Generation",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
       "source": "track:Inference Acceleration",
       "target": "problem:Efficient VLM Inference",
       "source_field": "track",
@@ -7412,6 +8092,32 @@
       ]
     },
     {
+      "source": "track:Inference Optimization",
+      "target": "problem:Inference Latency",
+      "source_field": "track",
+      "source_value": "Inference Optimization",
+      "target_field": "problem",
+      "target_value": "Inference Latency",
+      "count": 1,
+      "href": "library.html?track=Inference+Optimization&problem=Inference+Latency",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "source": "track:Inference Optimization",
+      "target": "problem:Throughput Optimization",
+      "source_field": "track",
+      "source_value": "Inference Optimization",
+      "target_field": "problem",
+      "target_value": "Throughput Optimization",
+      "count": 1,
+      "href": "library.html?track=Inference+Optimization&problem=Throughput+Optimization",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
       "source": "track:Inference Serving Systems",
       "target": "problem:Customizable Attention Serving",
       "source_field": "track",
@@ -7422,6 +8128,32 @@
       "href": "library.html?track=Inference+Serving+Systems&problem=Customizable+Attention+Serving",
       "sample_slugs": [
         "2501.01005-flashinfer"
+      ]
+    },
+    {
+      "source": "track:Kernel Optimization",
+      "target": "problem:Cross-Platform Deployment",
+      "source_field": "track",
+      "source_value": "Kernel Optimization",
+      "target_field": "problem",
+      "target_value": "Cross-Platform Deployment",
+      "count": 1,
+      "href": "library.html?track=Kernel+Optimization&problem=Cross-Platform+Deployment",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "source": "track:Kernel Optimization",
+      "target": "problem:Kernel Generation",
+      "source_field": "track",
+      "source_value": "Kernel Optimization",
+      "target_field": "problem",
+      "target_value": "Kernel Generation",
+      "count": 1,
+      "href": "library.html?track=Kernel+Optimization&problem=Kernel+Generation",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
       ]
     },
     {
@@ -7461,6 +8193,32 @@
       "href": "library.html?track=Parallel+Decoding&problem=Parallel+Diffusion+Decoding",
       "sample_slugs": [
         "2604.11035-introspective-dlm"
+      ]
+    },
+    {
+      "source": "track:Search & Retrieval",
+      "target": "problem:Semantic Search",
+      "source_field": "track",
+      "source_value": "Search & Retrieval",
+      "target_field": "problem",
+      "target_value": "Semantic Search",
+      "count": 1,
+      "href": "library.html?track=Search+%26+Retrieval&problem=Semantic+Search",
+      "sample_slugs": [
+        "semantic-search-evaluation"
+      ]
+    },
+    {
+      "source": "track:Search & Retrieval",
+      "target": "problem:Vector Storage",
+      "source_field": "track",
+      "source_value": "Search & Retrieval",
+      "target_field": "problem",
+      "target_value": "Vector Storage",
+      "count": 1,
+      "href": "library.html?track=Search+%26+Retrieval&problem=Vector+Storage",
+      "sample_slugs": [
+        "semantic-search-evaluation"
       ]
     },
     {
@@ -7504,6 +8262,127 @@
     }
   ],
   "clusters": [
+    {
+      "research_line": "LLM Serving",
+      "count": 4,
+      "href": "library.html?line=LLM+Serving",
+      "top_domains": [
+        {
+          "value": "LLM Systems",
+          "count": 2
+        },
+        {
+          "value": "AI Systems",
+          "count": 2
+        }
+      ],
+      "top_tracks": [
+        {
+          "value": "Inference Acceleration",
+          "count": 2
+        },
+        {
+          "value": "Parallel Decoding",
+          "count": 1
+        },
+        {
+          "value": "Search & Retrieval",
+          "count": 1
+        },
+        {
+          "value": "Compiler/DSL",
+          "count": 1
+        },
+        {
+          "value": "Kernel Optimization",
+          "count": 1
+        }
+      ],
+      "top_problems": [
+        {
+          "value": "MoE Serving",
+          "count": 1
+        },
+        {
+          "value": "Load-Aware Serving",
+          "count": 1
+        },
+        {
+          "value": "Lossless Speculative Decoding",
+          "count": 1
+        },
+        {
+          "value": "Semantic Search",
+          "count": 1
+        },
+        {
+          "value": "Vector Storage",
+          "count": 1
+        },
+        {
+          "value": "Cross-Platform Deployment",
+          "count": 1
+        }
+      ],
+      "top_topics": [
+        {
+          "value": "LLM Serving",
+          "count": 2
+        },
+        {
+          "value": "Disaggregated Serving",
+          "count": 1
+        },
+        {
+          "value": "Load Balancing",
+          "count": 1
+        },
+        {
+          "value": "MoE",
+          "count": 1
+        },
+        {
+          "value": "LLM Inference",
+          "count": 1
+        },
+        {
+          "value": "Semi-Autoregressive Generation",
+          "count": 1
+        }
+      ],
+      "top_methods": [
+        {
+          "value": "Balanced K-means",
+          "count": 1
+        },
+        {
+          "value": "Expert Locality Routing",
+          "count": 1
+        },
+        {
+          "value": "Signature Cache",
+          "count": 1
+        },
+        {
+          "value": "confidence-scheduled verification",
+          "count": 1
+        },
+        {
+          "value": "hardware-aware scheduling",
+          "count": 1
+        },
+        {
+          "value": "Markov head",
+          "count": 1
+        }
+      ],
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi",
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark",
+        "semantic-search-evaluation"
+      ]
+    },
     {
       "research_line": "Parallel Decoding with Diffusion Models",
       "count": 4,
@@ -7598,98 +8477,6 @@
       ]
     },
     {
-      "research_line": "LLM Serving",
-      "count": 3,
-      "href": "library.html?line=LLM+Serving",
-      "top_domains": [
-        {
-          "value": "LLM Systems",
-          "count": 2
-        }
-      ],
-      "top_tracks": [
-        {
-          "value": "Inference Acceleration",
-          "count": 2
-        },
-        {
-          "value": "Parallel Decoding",
-          "count": 1
-        }
-      ],
-      "top_problems": [
-        {
-          "value": "MoE Serving",
-          "count": 1
-        },
-        {
-          "value": "Load-Aware Serving",
-          "count": 1
-        },
-        {
-          "value": "Lossless Speculative Decoding",
-          "count": 1
-        }
-      ],
-      "top_topics": [
-        {
-          "value": "LLM Serving",
-          "count": 2
-        },
-        {
-          "value": "Disaggregated Serving",
-          "count": 1
-        },
-        {
-          "value": "Load Balancing",
-          "count": 1
-        },
-        {
-          "value": "MoE",
-          "count": 1
-        },
-        {
-          "value": "LLM Inference",
-          "count": 1
-        },
-        {
-          "value": "Semi-Autoregressive Generation",
-          "count": 1
-        }
-      ],
-      "top_methods": [
-        {
-          "value": "Balanced K-means",
-          "count": 1
-        },
-        {
-          "value": "Expert Locality Routing",
-          "count": 1
-        },
-        {
-          "value": "Signature Cache",
-          "count": 1
-        },
-        {
-          "value": "confidence-scheduled verification",
-          "count": 1
-        },
-        {
-          "value": "hardware-aware scheduling",
-          "count": 1
-        },
-        {
-          "value": "Markov head",
-          "count": 1
-        }
-      ],
-      "slugs": [
-        "2512.23424-akg-kernel-agent-multi",
-        "2607.00466-eldr",
-        "noarxiv-2026-dspark"
-      ]
-    },
-    {
       "research_line": "Efficient Attention Kernels",
       "count": 2,
       "href": "library.html?line=Efficient+Attention+Kernels",
@@ -7777,23 +8564,50 @@
       ]
     },
     {
-      "research_line": "Unassigned",
+      "research_line": "Speculative Decoding",
       "count": 2,
-      "href": "library.html",
-      "top_domains": [],
-      "top_tracks": [],
-      "top_problems": [],
-      "top_topics": [
+      "href": "library.html?line=Speculative+Decoding",
+      "top_domains": [
         {
-          "value": "Distributed Inference",
+          "value": "LLM Systems",
+          "count": 2
+        }
+      ],
+      "top_tracks": [
+        {
+          "value": "Inference Optimization",
           "count": 1
         },
         {
-          "value": "LLM Inference",
+          "value": "Inference Acceleration",
+          "count": 1
+        }
+      ],
+      "top_problems": [
+        {
+          "value": "Inference Latency",
+          "count": 1
+        },
+        {
+          "value": "Throughput Optimization",
           "count": 1
         },
         {
           "value": "Speculative Decoding",
+          "count": 1
+        }
+      ],
+      "top_topics": [
+        {
+          "value": "LLM Inference",
+          "count": 2
+        },
+        {
+          "value": "Speculative Decoding",
+          "count": 2
+        },
+        {
+          "value": "Distributed Inference",
           "count": 1
         },
         {
@@ -7801,7 +8615,11 @@
           "count": 1
         },
         {
-          "value": "RAG",
+          "value": "Draft Model Training",
+          "count": 1
+        },
+        {
+          "value": "Scaling Law",
           "count": 1
         }
       ],
@@ -7832,70 +8650,8 @@
         }
       ],
       "slugs": [
-        "2603.03251-speculative-speculative-decoding",
-        "semantic-search-evaluation"
-      ]
-    },
-    {
-      "research_line": "Speculative Decoding",
-      "count": 1,
-      "href": "library.html?line=Speculative+Decoding",
-      "top_domains": [
-        {
-          "value": "LLM Systems",
-          "count": 1
-        }
-      ],
-      "top_tracks": [
-        {
-          "value": "Inference Acceleration",
-          "count": 1
-        }
-      ],
-      "top_problems": [
-        {
-          "value": "Speculative Decoding",
-          "count": 1
-        }
-      ],
-      "top_topics": [
-        {
-          "value": "Draft Model Training",
-          "count": 1
-        },
-        {
-          "value": "LLM Inference",
-          "count": 1
-        },
-        {
-          "value": "Scaling Law",
-          "count": 1
-        },
-        {
-          "value": "Speculative Decoding",
-          "count": 1
-        }
-      ],
-      "top_methods": [
-        {
-          "value": "Draft Tree",
-          "count": 1
-        },
-        {
-          "value": "Feature Fusion",
-          "count": 1
-        },
-        {
-          "value": "Token Prediction",
-          "count": 1
-        },
-        {
-          "value": "Training-Time Test",
-          "count": 1
-        }
-      ],
-      "slugs": [
-        "2503.01840-eagle-3-scaling-up"
+        "2503.01840-eagle-3-scaling-up",
+        "2603.03251-speculative-speculative-decoding"
       ]
     },
     {
@@ -7991,22 +8747,21 @@
   ],
   "isolated_nodes": [],
   "recommendations": [
-    "有 1 个 topic/method/problem 节点覆盖面偏大，可在 taxonomy.html 或 facets.html 中考虑拆分。",
-    "有 2 篇论文未进入研究线，建议先分配 research_line 再细化下游分类。"
+    "有 1 个 topic/method/problem 节点覆盖面偏大，可在 taxonomy.html 或 facets.html 中考虑拆分。"
   ],
   "slug_titles": {
+    "2603.03251-speculative-speculative-decoding": "推测性推测解码",
     "2503.14075-twigvlm-plus-plus": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
     "2602.06036-dflash": "DFlash：用于快速 speculative decoding 的块扩散方法",
-    "2603.03251-speculative-speculative-decoding": "推测性推测解码",
     "2604.11035-introspective-dlm": "内省式扩散语言模型",
     "2605.12825-orthrus": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
     "2607.00466-eldr": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
     "noarxiv-2026-dspark": "DSpark：基于置信度调度的半自回归 speculative decoding",
+    "semantic-search-evaluation": "语义搜索评估",
+    "2512.23424-akg-kernel-agent-multi": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
     "2501.01005-flashinfer": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
     "2503.01840-eagle-3-scaling-up": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
     "2507.11851-llm-future-mtp": "你的 LLM 知道未来：揭示它的多 token 预测潜力",
-    "2512.23424-akg-kernel-agent-multi": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
-    "2307.08691-flashattention-2": "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
-    "semantic-search-evaluation": "Semantic Search Evaluation"
+    "2307.08691-flashattention-2": "FlashAttention-2：用更好的并行性与工作划分加速 Attention"
   }
 }

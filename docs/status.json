@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-22T13:22:15",
+  "generated_at": "2026-07-22T13:24:43",
   "count": 13,
   "active_status_workflow": "personal",
   "workflow_count": 2,
@@ -116,12 +116,8 @@
           "used_configured_count": 2,
           "defined_count": 4,
           "deprecated_count": 0,
-          "empty_count": 3,
-          "empty_slugs": [
-            "2512.23424-akg-kernel-agent-multi",
-            "2603.03251-speculative-speculative-decoding",
-            "semantic-search-evaluation"
-          ],
+          "empty_count": 0,
+          "empty_slugs": [],
           "values": [
             {
               "value": "skim",
@@ -153,7 +149,7 @@
             },
             {
               "value": "deep_read",
-              "count": 8,
+              "count": 11,
               "configured": true,
               "definition": {
                 "description": "Detailed pass including equations, assumptions, ablations, and cross-paper comparison.",
@@ -253,7 +249,7 @@
         }
       },
       "unconfigured_total": 0,
-      "empty_total": 16,
+      "empty_total": 13,
       "definition_total": 12,
       "deprecated_total": 0,
       "board_href": "board.html?workflow=personal",
@@ -418,12 +414,8 @@
           "used_configured_count": 2,
           "defined_count": 5,
           "deprecated_count": 0,
-          "empty_count": 3,
-          "empty_slugs": [
-            "2512.23424-akg-kernel-agent-multi",
-            "2603.03251-speculative-speculative-decoding",
-            "semantic-search-evaluation"
-          ],
+          "empty_count": 0,
+          "empty_slugs": [],
           "values": [
             {
               "value": "skim",
@@ -455,7 +447,7 @@
             },
             {
               "value": "deep_read",
-              "count": 8,
+              "count": 11,
               "configured": true,
               "definition": {
                 "description": "Detailed pass including equations, assumptions, ablations, and cross-paper comparison.",
@@ -583,7 +575,7 @@
         }
       },
       "unconfigured_total": 1,
-      "empty_total": 16,
+      "empty_total": 13,
       "definition_total": 16,
       "deprecated_total": 0,
       "board_href": "board.html?workflow=research",
@@ -591,6 +583,19 @@
     }
   ],
   "papers": [
+    {
+      "slug": "2603.03251-speculative-speculative-decoding",
+      "title": "Speculative Speculative Decoding",
+      "title_zh": "推测性推测解码",
+      "research_line": "Speculative Decoding",
+      "line_role": "main",
+      "status": "read",
+      "reading_stage": "deep_read",
+      "review_stage": "",
+      "importance": 4,
+      "has_code": true,
+      "href": "2603.03251-speculative-speculative-decoding.html"
+    },
     {
       "slug": "2503.14075-twigvlm-plus-plus",
       "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
@@ -616,19 +621,6 @@
       "importance": 4,
       "has_code": true,
       "href": "2602.06036-dflash.html"
-    },
-    {
-      "slug": "2603.03251-speculative-speculative-decoding",
-      "title": "Speculative Speculative Decoding",
-      "title_zh": "推测性推测解码",
-      "research_line": "Unassigned",
-      "line_role": "",
-      "status": "read",
-      "reading_stage": "",
-      "review_stage": "",
-      "importance": 4,
-      "has_code": true,
-      "href": "2603.03251-speculative-speculative-decoding.html"
     },
     {
       "slug": "2604.11035-introspective-dlm",
@@ -683,6 +675,32 @@
       "href": "noarxiv-2026-dspark.html"
     },
     {
+      "slug": "semantic-search-evaluation",
+      "title": "Semantic Search Evaluation",
+      "title_zh": "语义搜索评估",
+      "research_line": "LLM Serving",
+      "line_role": "variant",
+      "status": "read",
+      "reading_stage": "deep_read",
+      "review_stage": "",
+      "importance": 3,
+      "has_code": false,
+      "href": "semantic-search-evaluation.html"
+    },
+    {
+      "slug": "2512.23424-akg-kernel-agent-multi",
+      "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+      "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+      "research_line": "LLM Serving",
+      "line_role": "variant",
+      "status": "read",
+      "reading_stage": "deep_read",
+      "review_stage": "",
+      "importance": 4,
+      "has_code": false,
+      "href": "2512.23424-akg-kernel-agent-multi.html"
+    },
+    {
       "slug": "2501.01005-flashinfer",
       "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
       "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
@@ -722,19 +740,6 @@
       "href": "2507.11851-llm-future-mtp.html"
     },
     {
-      "slug": "2512.23424-akg-kernel-agent-multi",
-      "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
-      "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
-      "research_line": "LLM Serving",
-      "line_role": "tooling",
-      "status": "read",
-      "reading_stage": "",
-      "review_stage": "",
-      "importance": 4,
-      "has_code": false,
-      "href": "2512.23424-akg-kernel-agent-multi.html"
-    },
-    {
       "slug": "2307.08691-flashattention-2",
       "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning",
       "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
@@ -746,19 +751,6 @@
       "importance": 5,
       "has_code": true,
       "href": "2307.08691-flashattention-2.html"
-    },
-    {
-      "slug": "semantic-search-evaluation",
-      "title": "Semantic Search Evaluation",
-      "title_zh": "Semantic Search Evaluation",
-      "research_line": "Unassigned",
-      "line_role": "",
-      "status": "read",
-      "reading_stage": "",
-      "review_stage": "",
-      "importance": "",
-      "has_code": false,
-      "href": "semantic-search-evaluation.md"
     }
   ],
   "defaults": {

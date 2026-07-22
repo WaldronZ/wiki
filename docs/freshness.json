@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-22T13:22:15",
+  "generated_at": "2026-07-22T13:24:43",
   "today": "2026-07-22",
   "count": 13,
   "summary": {
@@ -46,10 +46,10 @@
     },
     {
       "research_line": "LLM Serving",
-      "count": 3,
+      "count": 4,
       "average_score": 60.0,
       "state_counts": {
-        "needs_plan": 3
+        "needs_plan": 4
       },
       "risk": "medium",
       "oldest_age_days": 0,
@@ -74,20 +74,6 @@
     },
     {
       "research_line": "Speculative Decoding",
-      "count": 1,
-      "average_score": 60.0,
-      "state_counts": {
-        "needs_plan": 1
-      },
-      "risk": "medium",
-      "oldest_age_days": 0,
-      "actions": [
-        "补 last_reviewed",
-        "补 next_review"
-      ]
-    },
-    {
-      "research_line": "Unassigned",
       "count": 2,
       "average_score": 60.0,
       "state_counts": {
@@ -173,12 +159,12 @@
       "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
       "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
       "research_line": "LLM Serving",
-      "line_role": "tooling",
+      "line_role": "variant",
       "year": 2025,
       "importance": 4,
       "last_reviewed": "",
       "next_review": "",
-      "updated_at": "2026-07-22T13:10:30",
+      "updated_at": "2026-07-22T13:23:33",
       "age_days": 0,
       "year_age": 1,
       "state": "needs_plan",
@@ -372,13 +358,13 @@
       "slug": "2603.03251-speculative-speculative-decoding",
       "title": "Speculative Speculative Decoding",
       "title_zh": "推测性推测解码",
-      "research_line": "Unassigned",
-      "line_role": "",
+      "research_line": "Speculative Decoding",
+      "line_role": "main",
       "year": 2026,
       "importance": 4,
       "last_reviewed": "",
       "next_review": "",
-      "updated_at": "2026-07-22T13:10:30",
+      "updated_at": "2026-07-22T13:23:40",
       "age_days": 0,
       "year_age": 0,
       "state": "needs_plan",
@@ -421,16 +407,16 @@
     {
       "slug": "semantic-search-evaluation",
       "title": "Semantic Search Evaluation",
-      "title_zh": "Semantic Search Evaluation",
-      "research_line": "Unassigned",
-      "line_role": "",
-      "year": null,
-      "importance": 0,
+      "title_zh": "语义搜索评估",
+      "research_line": "LLM Serving",
+      "line_role": "variant",
+      "year": 2025,
+      "importance": 3,
       "last_reviewed": "",
       "next_review": "",
-      "updated_at": "2026-07-22T13:10:30",
+      "updated_at": "2026-07-22T13:24:20",
       "age_days": 0,
-      "year_age": null,
+      "year_age": 1,
       "state": "needs_plan",
       "score": 60,
       "reasons": [
@@ -441,7 +427,7 @@
         "补 next_review",
         "补 last_reviewed"
       ],
-      "html_path": "semantic-search-evaluation.md"
+      "html_path": "semantic-search-evaluation.html"
     }
   ]
 }

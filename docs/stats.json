@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-07-22T13:22:15",
+  "generated_at": "2026-07-22T13:24:43",
   "count": 13,
-  "quality_score": 75.2,
+  "quality_score": 90.2,
   "controls": {
     "active_status_workflow": "personal",
     "status": [
@@ -375,7 +375,7 @@
     }
   },
   "coverage": {
-    "taxonomy": "77%",
+    "taxonomy": "100%",
     "review_plan": "0%",
     "code_observation": "69%",
     "research_lines": 5,
@@ -383,13 +383,13 @@
   },
   "queue_sizes": {
     "quality": {
-      "missing_required_metadata": 3,
+      "missing_required_metadata": 0,
       "needs_review_plan": 13,
       "due_review": 0,
       "no_code_observation": 4,
-      "taxonomy_drift": 1,
-      "duplicate_reports": 0,
-      "taxonomy_sparse": 3,
+      "taxonomy_drift": 0,
+      "duplicate_reports": 2,
+      "taxonomy_sparse": 0,
       "taxonomy_dense": 4,
       "high_importance": 2
     },
@@ -404,7 +404,11 @@
     "domains": [
       {
         "name": "LLM Systems",
-        "count": 10
+        "count": 11
+      },
+      {
+        "name": "AI Systems",
+        "count": 2
       },
       {
         "name": "Multimodal Systems",
@@ -425,7 +429,23 @@
         "count": 2
       },
       {
+        "name": "Compiler/DSL",
+        "count": 1
+      },
+      {
+        "name": "Inference Optimization",
+        "count": 1
+      },
+      {
         "name": "Inference Serving Systems",
+        "count": 1
+      },
+      {
+        "name": "Kernel Optimization",
+        "count": 1
+      },
+      {
+        "name": "Search & Retrieval",
         "count": 1
       },
       {
@@ -439,6 +459,10 @@
         "count": 3
       },
       {
+        "name": "Cross-Platform Deployment",
+        "count": 1
+      },
+      {
         "name": "Customizable Attention Serving",
         "count": 1
       },
@@ -448,6 +472,14 @@
       },
       {
         "name": "Efficient VLM Inference",
+        "count": 1
+      },
+      {
+        "name": "Inference Latency",
+        "count": 1
+      },
+      {
+        "name": "Kernel Generation",
         "count": 1
       },
       {
@@ -468,14 +500,6 @@
       },
       {
         "name": "Parallel Diffusion Decoding",
-        "count": 1
-      },
-      {
-        "name": "Speculative Decoding",
-        "count": 1
-      },
-      {
-        "name": "Visual Token Redundancy",
         "count": 1
       }
     ],
@@ -571,22 +595,22 @@
         "count": 1
       },
       {
-        "name": "CUDA / GPU parallelism",
+        "name": "Cosine Similarity",
         "count": 1
       },
       {
-        "name": "CUDA Graph",
+        "name": "CUDA / GPU parallelism",
         "count": 1
       }
     ],
     "research_lines": [
       {
-        "name": "Parallel Decoding with Diffusion Models",
+        "name": "LLM Serving",
         "count": 4
       },
       {
-        "name": "LLM Serving",
-        "count": 3
+        "name": "Parallel Decoding with Diffusion Models",
+        "count": 4
       },
       {
         "name": "Efficient Attention Kernels",
@@ -594,7 +618,7 @@
       },
       {
         "name": "Speculative Decoding",
-        "count": 1
+        "count": 2
       },
       {
         "name": "VLM Acceleration",
@@ -626,7 +650,7 @@
     "reading_stages": [
       {
         "name": "deep_read",
-        "count": 8
+        "count": 11
       },
       {
         "name": "code_checked",
@@ -658,15 +682,14 @@
   },
   "distributions": {
     "years": {
-      "unknown": 1,
       "2026": 7,
-      "2025": 4,
+      "2025": 5,
       "2023": 1
     },
     "importance": {
-      "unknown": 1,
       "5": 2,
-      "4": 10
+      "4": 10,
+      "3": 1
     }
   },
   "taxonomy_balance": [
@@ -675,63 +698,63 @@
       "label": "结构域",
       "english": "Domain",
       "query_key": "domain",
-      "configured_count": 2,
-      "used_count": 2,
+      "configured_count": 3,
+      "used_count": 3,
       "unused_count": 0,
       "singleton_count": 1,
       "overloaded_count": 1,
       "max_value": "LLM Systems",
-      "max_count": 10,
-      "max_share": 0.7692,
-      "effective_count": 1.36,
-      "balance_score": 17
+      "max_count": 11,
+      "max_share": 0.8462,
+      "effective_count": 1.93,
+      "balance_score": 13
     },
     {
       "field": "tracks",
       "label": "方向",
       "english": "Track",
       "query_key": "track",
-      "configured_count": 5,
-      "used_count": 5,
+      "configured_count": 9,
+      "used_count": 9,
       "unused_count": 0,
-      "singleton_count": 2,
+      "singleton_count": 6,
       "overloaded_count": 1,
       "max_value": "Inference Acceleration",
       "max_count": 8,
       "max_share": 0.6154,
-      "effective_count": 3.67,
-      "balance_score": 31
+      "effective_count": 6.07,
+      "balance_score": 26
     },
     {
       "field": "problems",
       "label": "问题",
       "english": "Problem",
       "query_key": "problem",
-      "configured_count": 11,
-      "used_count": 11,
+      "configured_count": 17,
+      "used_count": 17,
       "unused_count": 0,
-      "singleton_count": 10,
+      "singleton_count": 16,
       "overloaded_count": 0,
       "max_value": "Lossless Speculative Decoding",
       "max_count": 3,
       "max_share": 0.2308,
-      "effective_count": 10.09,
-      "balance_score": 42
+      "effective_count": 15.97,
+      "balance_score": 41
     },
     {
       "field": "topics",
       "label": "主题",
       "english": "Topic",
       "query_key": "topic",
-      "configured_count": 35,
-      "used_count": 35,
+      "configured_count": 37,
+      "used_count": 37,
       "unused_count": 0,
-      "singleton_count": 28,
+      "singleton_count": 30,
       "overloaded_count": 1,
       "max_value": "Speculative Decoding",
       "max_count": 8,
       "max_share": 0.6154,
-      "effective_count": 26.49,
+      "effective_count": 28.16,
       "balance_score": 23
     },
     {
@@ -739,15 +762,15 @@
       "label": "方法",
       "english": "Method",
       "query_key": "method",
-      "configured_count": 58,
-      "used_count": 58,
+      "configured_count": 60,
+      "used_count": 60,
       "unused_count": 0,
-      "singleton_count": 55,
+      "singleton_count": 57,
       "overloaded_count": 0,
       "max_value": "Speculative Decoding",
       "max_count": 3,
       "max_share": 0.2308,
-      "effective_count": 56.22,
+      "effective_count": 58.21,
       "balance_score": 40
     },
     {
@@ -758,29 +781,29 @@
       "configured_count": 5,
       "used_count": 5,
       "unused_count": 0,
-      "singleton_count": 2,
+      "singleton_count": 1,
       "overloaded_count": 0,
       "max_value": "Parallel Decoding with Diffusion Models",
       "max_count": 4,
       "max_share": 0.3077,
-      "effective_count": 4.34,
-      "balance_score": 55
+      "effective_count": 4.48,
+      "balance_score": 62
     },
     {
       "field": "line_role",
       "label": "研究线角色",
       "english": "Line role",
       "query_key": "role",
-      "configured_count": 6,
-      "used_count": 6,
+      "configured_count": 5,
+      "used_count": 5,
       "unused_count": 0,
-      "singleton_count": 2,
+      "singleton_count": 0,
       "overloaded_count": 0,
       "max_value": "main",
-      "max_count": 3,
-      "max_share": 0.2308,
-      "effective_count": 5.59,
-      "balance_score": 64
+      "max_count": 4,
+      "max_share": 0.3077,
+      "effective_count": 4.78,
+      "balance_score": 69
     },
     {
       "field": "status",
@@ -809,10 +832,10 @@
       "singleton_count": 0,
       "overloaded_count": 1,
       "max_value": "deep_read",
-      "max_count": 8,
-      "max_share": 0.6154,
-      "effective_count": 1.65,
-      "balance_score": 38
+      "max_count": 11,
+      "max_share": 0.8462,
+      "effective_count": 1.54,
+      "balance_score": 15
     },
     {
       "field": "review_stage",
@@ -833,6 +856,21 @@
   ],
   "research_lines": [
     {
+      "name": "LLM Serving",
+      "count": 4,
+      "owner": "",
+      "team": "",
+      "cadence": "",
+      "owner_note": "",
+      "roles": {
+        "variant": 2,
+        "main": 1,
+        "system": 1
+      },
+      "code_coverage": "25%",
+      "avg_importance": 3.8
+    },
+    {
       "name": "Parallel Decoding with Diffusion Models",
       "count": 4,
       "owner": "decoding-owner",
@@ -846,21 +884,6 @@
       },
       "code_coverage": "75%",
       "avg_importance": 4.2
-    },
-    {
-      "name": "LLM Serving",
-      "count": 3,
-      "owner": "",
-      "team": "",
-      "cadence": "",
-      "owner_note": "",
-      "roles": {
-        "main": 1,
-        "system": 1,
-        "tooling": 1
-      },
-      "code_coverage": "33%",
-      "avg_importance": 4.0
     },
     {
       "name": "Efficient Attention Kernels",
@@ -877,25 +900,14 @@
       "avg_importance": 4.5
     },
     {
-      "name": "Unassigned",
+      "name": "Speculative Decoding",
       "count": 2,
       "owner": "",
       "team": "",
       "cadence": "",
       "owner_note": "",
-      "roles": {},
-      "code_coverage": "50%",
-      "avg_importance": 2.0
-    },
-    {
-      "name": "Speculative Decoding",
-      "count": 1,
-      "owner": "",
-      "team": "",
-      "cadence": "",
-      "owner_note": "",
       "roles": {
-        "main": 1
+        "main": 2
       },
       "code_coverage": "100%",
       "avg_importance": 4.0

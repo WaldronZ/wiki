@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-22T13:22:15",
+  "generated_at": "2026-07-22T13:24:43",
   "count": 13,
   "active_status_workflow": "personal",
   "workflow_count": 2,
@@ -116,12 +116,8 @@
           "used_configured_count": 2,
           "defined_count": 4,
           "deprecated_count": 0,
-          "empty_count": 3,
-          "empty_slugs": [
-            "2512.23424-akg-kernel-agent-multi",
-            "2603.03251-speculative-speculative-decoding",
-            "semantic-search-evaluation"
-          ],
+          "empty_count": 0,
+          "empty_slugs": [],
           "values": [
             {
               "value": "skim",
@@ -153,7 +149,7 @@
             },
             {
               "value": "deep_read",
-              "count": 8,
+              "count": 11,
               "configured": true,
               "definition": {
                 "description": "Detailed pass including equations, assumptions, ablations, and cross-paper comparison.",
@@ -253,7 +249,7 @@
         }
       },
       "unconfigured_total": 0,
-      "empty_total": 16,
+      "empty_total": 13,
       "definition_total": 12,
       "deprecated_total": 0,
       "board_href": "board.html?workflow=personal",
@@ -418,12 +414,8 @@
           "used_configured_count": 2,
           "defined_count": 5,
           "deprecated_count": 0,
-          "empty_count": 3,
-          "empty_slugs": [
-            "2512.23424-akg-kernel-agent-multi",
-            "2603.03251-speculative-speculative-decoding",
-            "semantic-search-evaluation"
-          ],
+          "empty_count": 0,
+          "empty_slugs": [],
           "values": [
             {
               "value": "skim",
@@ -455,7 +447,7 @@
             },
             {
               "value": "deep_read",
-              "count": 8,
+              "count": 11,
               "configured": true,
               "definition": {
                 "description": "Detailed pass including equations, assumptions, ablations, and cross-paper comparison.",
@@ -583,7 +575,7 @@
         }
       },
       "unconfigured_total": 1,
-      "empty_total": 16,
+      "empty_total": 13,
       "definition_total": 16,
       "deprecated_total": 0,
       "board_href": "board.html?workflow=research",

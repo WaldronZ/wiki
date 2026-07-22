@@ -1,16 +1,16 @@
 {
-  "generated_at": "2026-07-22T13:22:15",
+  "generated_at": "2026-07-22T13:24:43",
   "count": 13,
   "pair_count": 6,
-  "cohort_count": 458,
+  "cohort_count": 486,
   "action_counts": {
-    "singleton": 435,
-    "topic_candidate": 8,
-    "watch": 15
+    "singleton": 461,
+    "topic_candidate": 9,
+    "watch": 16
   },
   "severity_counts": {
-    "low": 23,
-    "medium": 435
+    "low": 25,
+    "medium": 461
   },
   "pair_specs": [
     {
@@ -45,6 +45,53 @@
     }
   ],
   "cohorts": [
+    {
+      "id": "research-line-llm-serving-status-read",
+      "label": "LLM Serving / read",
+      "pair": "研究线 x Status",
+      "primary_field": "research_line",
+      "primary_value": "LLM Serving",
+      "secondary_field": "status",
+      "secondary_value": "read",
+      "count": 4,
+      "share": 0.3077,
+      "action": "topic_candidate",
+      "severity": "low",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi",
+        "noarxiv-2026-dspark",
+        "2607.00466-eldr",
+        "semantic-search-evaluation"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html"
+        },
+        {
+          "slug": "noarxiv-2026-dspark",
+          "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+          "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+          "href": "noarxiv-2026-dspark.html"
+        },
+        {
+          "slug": "2607.00466-eldr",
+          "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+          "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+          "href": "2607.00466-eldr.html"
+        },
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "语义搜索评估",
+          "href": "semantic-search-evaluation.html"
+        }
+      ],
+      "href": "library.html?line=LLM+Serving&status=read",
+      "recommendation": "组合已有稳定论文簇，适合沉淀成集合视图或专题阅读清单。"
+    },
     {
       "id": "research-line-parallel-decoding-with-diffusion-models-status-read",
       "label": "Parallel Decoding with Diffusion Models / read",
@@ -137,6 +184,46 @@
         }
       ],
       "href": "library.html?line=Parallel+Decoding+with+Diffusion+Models&topic=Speculative+Decoding",
+      "recommendation": "组合已有稳定论文簇，适合沉淀成集合视图或专题阅读清单。"
+    },
+    {
+      "id": "domains-llm-systems-methods-speculative-decoding",
+      "label": "LLM Systems / Speculative Decoding",
+      "pair": "Domain x Method",
+      "primary_field": "domains",
+      "primary_value": "LLM Systems",
+      "secondary_field": "methods",
+      "secondary_value": "Speculative Decoding",
+      "count": 3,
+      "share": 0.2308,
+      "action": "topic_candidate",
+      "severity": "low",
+      "slugs": [
+        "2602.06036-dflash",
+        "noarxiv-2026-dspark",
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2602.06036-dflash",
+          "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
+          "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
+          "href": "2602.06036-dflash.html"
+        },
+        {
+          "slug": "noarxiv-2026-dspark",
+          "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+          "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+          "href": "noarxiv-2026-dspark.html"
+        },
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html"
+        }
+      ],
+      "href": "library.html?domain=LLM+Systems&method=Speculative+Decoding",
       "recommendation": "组合已有稳定论文簇，适合沉淀成集合视图或专题阅读清单。"
     },
     {
@@ -300,46 +387,6 @@
       "recommendation": "组合已有稳定论文簇，适合沉淀成集合视图或专题阅读清单。"
     },
     {
-      "id": "research-line-llm-serving-status-read",
-      "label": "LLM Serving / read",
-      "pair": "研究线 x Status",
-      "primary_field": "research_line",
-      "primary_value": "LLM Serving",
-      "secondary_field": "status",
-      "secondary_value": "read",
-      "count": 3,
-      "share": 0.2308,
-      "action": "topic_candidate",
-      "severity": "low",
-      "slugs": [
-        "2512.23424-akg-kernel-agent-multi",
-        "noarxiv-2026-dspark",
-        "2607.00466-eldr"
-      ],
-      "sample_papers": [
-        {
-          "slug": "2512.23424-akg-kernel-agent-multi",
-          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
-          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
-          "href": "2512.23424-akg-kernel-agent-multi.html"
-        },
-        {
-          "slug": "noarxiv-2026-dspark",
-          "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
-          "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
-          "href": "noarxiv-2026-dspark.html"
-        },
-        {
-          "slug": "2607.00466-eldr",
-          "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
-          "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
-          "href": "2607.00466-eldr.html"
-        }
-      ],
-      "href": "library.html?line=LLM+Serving&status=read",
-      "recommendation": "组合已有稳定论文簇，适合沉淀成集合视图或专题阅读清单。"
-    },
-    {
       "id": "research-line-parallel-decoding-with-diffusion-models-topics-diffusion-language-models",
       "label": "Parallel Decoding with Diffusion Models / Diffusion Language Models",
       "pair": "研究线 x Topic",
@@ -443,39 +490,6 @@
         }
       ],
       "href": "library.html?domain=LLM+Systems&method=gated+LoRA",
-      "recommendation": "继续观察该组合，等论文数增加后再决定是否拆分或提升为专题。"
-    },
-    {
-      "id": "domains-llm-systems-methods-speculative-decoding",
-      "label": "LLM Systems / Speculative Decoding",
-      "pair": "Domain x Method",
-      "primary_field": "domains",
-      "primary_value": "LLM Systems",
-      "secondary_field": "methods",
-      "secondary_value": "Speculative Decoding",
-      "count": 2,
-      "share": 0.1538,
-      "action": "watch",
-      "severity": "low",
-      "slugs": [
-        "2602.06036-dflash",
-        "noarxiv-2026-dspark"
-      ],
-      "sample_papers": [
-        {
-          "slug": "2602.06036-dflash",
-          "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
-          "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
-          "href": "2602.06036-dflash.html"
-        },
-        {
-          "slug": "noarxiv-2026-dspark",
-          "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
-          "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
-          "href": "noarxiv-2026-dspark.html"
-        }
-      ],
-      "href": "library.html?domain=LLM+Systems&method=Speculative+Decoding",
       "recommendation": "继续观察该组合，等论文数增加后再决定是否拆分或提升为专题。"
     },
     {
@@ -677,11 +691,11 @@
       "recommendation": "继续观察该组合，等论文数增加后再决定是否拆分或提升为专题。"
     },
     {
-      "id": "research-line-unassigned-status-read",
-      "label": "Unassigned / read",
+      "id": "research-line-speculative-decoding-status-read",
+      "label": "Speculative Decoding / read",
       "pair": "研究线 x Status",
       "primary_field": "research_line",
-      "primary_value": "Unassigned",
+      "primary_value": "Speculative Decoding",
       "secondary_field": "status",
       "secondary_value": "read",
       "count": 2,
@@ -689,15 +703,15 @@
       "action": "watch",
       "severity": "low",
       "slugs": [
-        "semantic-search-evaluation",
+        "2503.01840-eagle-3-scaling-up",
         "2603.03251-speculative-speculative-decoding"
       ],
       "sample_papers": [
         {
-          "slug": "semantic-search-evaluation",
-          "title": "Semantic Search Evaluation",
-          "title_zh": "Semantic Search Evaluation",
-          "href": "semantic-search-evaluation.md"
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
         },
         {
           "slug": "2603.03251-speculative-speculative-decoding",
@@ -706,7 +720,7 @@
           "href": "2603.03251-speculative-speculative-decoding.html"
         }
       ],
-      "href": "library.html?line=Unassigned&status=read",
+      "href": "library.html?line=Speculative+Decoding&status=read",
       "recommendation": "继续观察该组合，等论文数增加后再决定是否拆分或提升为专题。"
     },
     {
@@ -875,6 +889,306 @@
       "recommendation": "继续观察该组合，等论文数增加后再决定是否拆分或提升为专题。"
     },
     {
+      "id": "research-line-speculative-decoding-topics-llm-inference",
+      "label": "Speculative Decoding / LLM Inference",
+      "pair": "研究线 x Topic",
+      "primary_field": "research_line",
+      "primary_value": "Speculative Decoding",
+      "secondary_field": "topics",
+      "secondary_value": "LLM Inference",
+      "count": 2,
+      "share": 0.1538,
+      "action": "watch",
+      "severity": "low",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up",
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        },
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html"
+        }
+      ],
+      "href": "library.html?line=Speculative+Decoding&topic=LLM+Inference",
+      "recommendation": "继续观察该组合，等论文数增加后再决定是否拆分或提升为专题。"
+    },
+    {
+      "id": "research-line-speculative-decoding-topics-speculative-decoding",
+      "label": "Speculative Decoding / Speculative Decoding",
+      "pair": "研究线 x Topic",
+      "primary_field": "research_line",
+      "primary_value": "Speculative Decoding",
+      "secondary_field": "topics",
+      "secondary_value": "Speculative Decoding",
+      "count": 2,
+      "share": 0.1538,
+      "action": "watch",
+      "severity": "low",
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up",
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        },
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html"
+        }
+      ],
+      "href": "library.html?line=Speculative+Decoding&topic=Speculative+Decoding",
+      "recommendation": "继续观察该组合，等论文数增加后再决定是否拆分或提升为专题。"
+    },
+    {
+      "id": "domains-ai-systems-methods-cosine-similarity",
+      "label": "AI Systems / Cosine Similarity",
+      "pair": "Domain x Method",
+      "primary_field": "domains",
+      "primary_value": "AI Systems",
+      "secondary_field": "methods",
+      "secondary_value": "Cosine Similarity",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "sample_papers": [
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "语义搜索评估",
+          "href": "semantic-search-evaluation.html"
+        }
+      ],
+      "href": "library.html?domain=AI+Systems&method=Cosine+Similarity",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "domains-ai-systems-methods-document-driven-integration",
+      "label": "AI Systems / Document-Driven Integration",
+      "pair": "Domain x Method",
+      "primary_field": "domains",
+      "primary_value": "AI Systems",
+      "secondary_field": "methods",
+      "secondary_value": "Document-Driven Integration",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html"
+        }
+      ],
+      "href": "library.html?domain=AI+Systems&method=Document-Driven+Integration",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "domains-ai-systems-methods-hierarchical-code-retrieval",
+      "label": "AI Systems / Hierarchical Code Retrieval",
+      "pair": "Domain x Method",
+      "primary_field": "domains",
+      "primary_value": "AI Systems",
+      "secondary_field": "methods",
+      "secondary_value": "Hierarchical Code Retrieval",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html"
+        }
+      ],
+      "href": "library.html?domain=AI+Systems&method=Hierarchical+Code+Retrieval",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "domains-ai-systems-methods-iterative-search-based-optimization",
+      "label": "AI Systems / Iterative Search-Based Optimization",
+      "pair": "Domain x Method",
+      "primary_field": "domains",
+      "primary_value": "AI Systems",
+      "secondary_field": "methods",
+      "secondary_value": "Iterative Search-Based Optimization",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html"
+        }
+      ],
+      "href": "library.html?domain=AI+Systems&method=Iterative+Search-Based+Optimization",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "domains-ai-systems-methods-local-hash-embeddings",
+      "label": "AI Systems / Local Hash Embeddings",
+      "pair": "Domain x Method",
+      "primary_field": "domains",
+      "primary_value": "AI Systems",
+      "secondary_field": "methods",
+      "secondary_value": "Local Hash Embeddings",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "sample_papers": [
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "语义搜索评估",
+          "href": "semantic-search-evaluation.html"
+        }
+      ],
+      "href": "library.html?domain=AI+Systems&method=Local+Hash+Embeddings",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "domains-ai-systems-methods-multi-agent-workflow",
+      "label": "AI Systems / Multi-Agent Workflow",
+      "pair": "Domain x Method",
+      "primary_field": "domains",
+      "primary_value": "AI Systems",
+      "secondary_field": "methods",
+      "secondary_value": "Multi-Agent Workflow",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html"
+        }
+      ],
+      "href": "library.html?domain=AI+Systems&method=Multi-Agent+Workflow",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "domains-ai-systems-methods-unified-sketch",
+      "label": "AI Systems / Unified Sketch",
+      "pair": "Domain x Method",
+      "primary_field": "domains",
+      "primary_value": "AI Systems",
+      "secondary_field": "methods",
+      "secondary_value": "Unified Sketch",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html"
+        }
+      ],
+      "href": "library.html?domain=AI+Systems&method=Unified+Sketch",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "domains-ai-systems-methods-verification-and-profiling-loop",
+      "label": "AI Systems / Verification and Profiling Loop",
+      "pair": "Domain x Method",
+      "primary_field": "domains",
+      "primary_value": "AI Systems",
+      "secondary_field": "methods",
+      "secondary_value": "Verification and Profiling Loop",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html"
+        }
+      ],
+      "href": "library.html?domain=AI+Systems&method=Verification+and+Profiling+Loop",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "domains-llm-systems-methods-asynchronous-decoding",
+      "label": "LLM Systems / asynchronous decoding",
+      "pair": "Domain x Method",
+      "primary_field": "domains",
+      "primary_value": "LLM Systems",
+      "secondary_field": "methods",
+      "secondary_value": "asynchronous decoding",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html"
+        }
+      ],
+      "href": "library.html?domain=LLM+Systems&method=asynchronous+decoding",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "domains-llm-systems-methods-balanced-k-means",
       "label": "LLM Systems / Balanced K-means",
       "pair": "Domain x Method",
@@ -950,6 +1264,32 @@
         }
       ],
       "href": "library.html?domain=LLM+Systems&method=block-sparse+attention",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "domains-llm-systems-methods-cache-aware-sampling",
+      "label": "LLM Systems / cache-aware sampling",
+      "pair": "Domain x Method",
+      "primary_field": "domains",
+      "primary_value": "LLM Systems",
+      "secondary_field": "methods",
+      "secondary_value": "cache-aware sampling",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html"
+        }
+      ],
+      "href": "library.html?domain=LLM+Systems&method=cache-aware+sampling",
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
@@ -1161,6 +1501,32 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "domains-llm-systems-methods-fallback-speculation",
+      "label": "LLM Systems / fallback speculation",
+      "pair": "Domain x Method",
+      "primary_field": "domains",
+      "primary_value": "LLM Systems",
+      "secondary_field": "methods",
+      "secondary_value": "fallback speculation",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html"
+        }
+      ],
+      "href": "library.html?domain=LLM+Systems&method=fallback+speculation",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "domains-llm-systems-methods-feature-fusion",
       "label": "LLM Systems / Feature Fusion",
       "pair": "Domain x Method",
@@ -1236,6 +1602,32 @@
         }
       ],
       "href": "library.html?domain=LLM+Systems&method=forward+KL+distillation",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "domains-llm-systems-methods-geometric-fan-out",
+      "label": "LLM Systems / geometric fan-out",
+      "pair": "Domain x Method",
+      "primary_field": "domains",
+      "primary_value": "LLM Systems",
+      "secondary_field": "methods",
+      "secondary_value": "geometric fan-out",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html"
+        }
+      ],
+      "href": "library.html?domain=LLM+Systems&method=geometric+fan-out",
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
@@ -1990,6 +2382,32 @@
         }
       ],
       "href": "library.html?domain=LLM+Systems&method=twig-guided+token+pruning",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "domains-llm-systems-methods-verification-outcome-cache",
+      "label": "LLM Systems / verification outcome cache",
+      "pair": "Domain x Method",
+      "primary_field": "domains",
+      "primary_value": "LLM Systems",
+      "secondary_field": "methods",
+      "secondary_value": "verification outcome cache",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html"
+        }
+      ],
+      "href": "library.html?domain=LLM+Systems&method=verification+outcome+cache",
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
@@ -7349,6 +7767,58 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "topics-semantic-search-methods-cosine-similarity",
+      "label": "Semantic Search / Cosine Similarity",
+      "pair": "Topic x Method",
+      "primary_field": "topics",
+      "primary_value": "Semantic Search",
+      "secondary_field": "methods",
+      "secondary_value": "Cosine Similarity",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "sample_papers": [
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "语义搜索评估",
+          "href": "semantic-search-evaluation.html"
+        }
+      ],
+      "href": "library.html?topic=Semantic+Search&method=Cosine+Similarity",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "topics-semantic-search-methods-local-hash-embeddings",
+      "label": "Semantic Search / Local Hash Embeddings",
+      "pair": "Topic x Method",
+      "primary_field": "topics",
+      "primary_value": "Semantic Search",
+      "secondary_field": "methods",
+      "secondary_value": "Local Hash Embeddings",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "sample_papers": [
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "语义搜索评估",
+          "href": "semantic-search-evaluation.html"
+        }
+      ],
+      "href": "library.html?topic=Semantic+Search&method=Local+Hash+Embeddings",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "topics-semi-autoregressive-generation-methods-confidence-scheduled-verification",
       "label": "Semi-Autoregressive Generation / confidence-scheduled verification",
       "pair": "Topic x Method",
@@ -8441,6 +8911,58 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "topics-sqlite-methods-cosine-similarity",
+      "label": "SQLite / Cosine Similarity",
+      "pair": "Topic x Method",
+      "primary_field": "topics",
+      "primary_value": "SQLite",
+      "secondary_field": "methods",
+      "secondary_value": "Cosine Similarity",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "sample_papers": [
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "语义搜索评估",
+          "href": "semantic-search-evaluation.html"
+        }
+      ],
+      "href": "library.html?topic=SQLite&method=Cosine+Similarity",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "topics-sqlite-methods-local-hash-embeddings",
+      "label": "SQLite / Local Hash Embeddings",
+      "pair": "Topic x Method",
+      "primary_field": "topics",
+      "primary_value": "SQLite",
+      "secondary_field": "methods",
+      "secondary_value": "Local Hash Embeddings",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "sample_papers": [
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "语义搜索评估",
+          "href": "semantic-search-evaluation.html"
+        }
+      ],
+      "href": "library.html?topic=SQLite&method=Local+Hash+Embeddings",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "topics-systems-optimization-methods-asynchronous-decoding",
       "label": "Systems Optimization / asynchronous decoding",
       "pair": "Topic x Method",
@@ -8724,6 +9246,58 @@
         }
       ],
       "href": "library.html?topic=Transformer&method=work+partitioning",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "topics-vector-database-methods-cosine-similarity",
+      "label": "Vector Database / Cosine Similarity",
+      "pair": "Topic x Method",
+      "primary_field": "topics",
+      "primary_value": "Vector Database",
+      "secondary_field": "methods",
+      "secondary_value": "Cosine Similarity",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "sample_papers": [
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "语义搜索评估",
+          "href": "semantic-search-evaluation.html"
+        }
+      ],
+      "href": "library.html?topic=Vector+Database&method=Cosine+Similarity",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "topics-vector-database-methods-local-hash-embeddings",
+      "label": "Vector Database / Local Hash Embeddings",
+      "pair": "Topic x Method",
+      "primary_field": "topics",
+      "primary_value": "Vector Database",
+      "secondary_field": "methods",
+      "secondary_value": "Local Hash Embeddings",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "sample_papers": [
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "语义搜索评估",
+          "href": "semantic-search-evaluation.html"
+        }
+      ],
+      "href": "library.html?topic=Vector+Database&method=Local+Hash+Embeddings",
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
@@ -9247,6 +9821,58 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "tracks-compiler-dsl-problems-cross-platform-deployment",
+      "label": "Compiler/DSL / Cross-Platform Deployment",
+      "pair": "Track x Problem",
+      "primary_field": "tracks",
+      "primary_value": "Compiler/DSL",
+      "secondary_field": "problems",
+      "secondary_value": "Cross-Platform Deployment",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html"
+        }
+      ],
+      "href": "library.html?track=Compiler%2FDSL&problem=Cross-Platform+Deployment",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "tracks-compiler-dsl-problems-kernel-generation",
+      "label": "Compiler/DSL / Kernel Generation",
+      "pair": "Track x Problem",
+      "primary_field": "tracks",
+      "primary_value": "Compiler/DSL",
+      "secondary_field": "problems",
+      "secondary_value": "Kernel Generation",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html"
+        }
+      ],
+      "href": "library.html?track=Compiler%2FDSL&problem=Kernel+Generation",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "tracks-inference-acceleration-problems-efficient-vlm-inference",
       "label": "Inference Acceleration / Efficient VLM Inference",
       "pair": "Track x Problem",
@@ -9455,6 +10081,58 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "tracks-inference-optimization-problems-inference-latency",
+      "label": "Inference Optimization / Inference Latency",
+      "pair": "Track x Problem",
+      "primary_field": "tracks",
+      "primary_value": "Inference Optimization",
+      "secondary_field": "problems",
+      "secondary_value": "Inference Latency",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html"
+        }
+      ],
+      "href": "library.html?track=Inference+Optimization&problem=Inference+Latency",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "tracks-inference-optimization-problems-throughput-optimization",
+      "label": "Inference Optimization / Throughput Optimization",
+      "pair": "Track x Problem",
+      "primary_field": "tracks",
+      "primary_value": "Inference Optimization",
+      "secondary_field": "problems",
+      "secondary_value": "Throughput Optimization",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html"
+        }
+      ],
+      "href": "library.html?track=Inference+Optimization&problem=Throughput+Optimization",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "tracks-inference-serving-systems-problems-customizable-attention-serving",
       "label": "Inference Serving Systems / Customizable Attention Serving",
       "pair": "Track x Problem",
@@ -9478,6 +10156,58 @@
         }
       ],
       "href": "library.html?track=Inference+Serving+Systems&problem=Customizable+Attention+Serving",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "tracks-kernel-optimization-problems-cross-platform-deployment",
+      "label": "Kernel Optimization / Cross-Platform Deployment",
+      "pair": "Track x Problem",
+      "primary_field": "tracks",
+      "primary_value": "Kernel Optimization",
+      "secondary_field": "problems",
+      "secondary_value": "Cross-Platform Deployment",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html"
+        }
+      ],
+      "href": "library.html?track=Kernel+Optimization&problem=Cross-Platform+Deployment",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "tracks-kernel-optimization-problems-kernel-generation",
+      "label": "Kernel Optimization / Kernel Generation",
+      "pair": "Track x Problem",
+      "primary_field": "tracks",
+      "primary_value": "Kernel Optimization",
+      "secondary_field": "problems",
+      "secondary_value": "Kernel Generation",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html"
+        }
+      ],
+      "href": "library.html?track=Kernel+Optimization&problem=Kernel+Generation",
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
@@ -9556,6 +10286,58 @@
         }
       ],
       "href": "library.html?track=Parallel+Decoding&problem=Parallel+Diffusion+Decoding",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "tracks-search-retrieval-problems-semantic-search",
+      "label": "Search & Retrieval / Semantic Search",
+      "pair": "Track x Problem",
+      "primary_field": "tracks",
+      "primary_value": "Search & Retrieval",
+      "secondary_field": "problems",
+      "secondary_value": "Semantic Search",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "sample_papers": [
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "语义搜索评估",
+          "href": "semantic-search-evaluation.html"
+        }
+      ],
+      "href": "library.html?track=Search+%26+Retrieval&problem=Semantic+Search",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "tracks-search-retrieval-problems-vector-storage",
+      "label": "Search & Retrieval / Vector Storage",
+      "pair": "Track x Problem",
+      "primary_field": "tracks",
+      "primary_value": "Search & Retrieval",
+      "secondary_field": "problems",
+      "secondary_value": "Vector Storage",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "sample_papers": [
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "语义搜索评估",
+          "href": "semantic-search-evaluation.html"
+        }
+      ],
+      "href": "library.html?track=Search+%26+Retrieval&problem=Vector+Storage",
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
@@ -9923,6 +10705,32 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "research-line-llm-serving-methods-cosine-similarity",
+      "label": "LLM Serving / Cosine Similarity",
+      "pair": "研究线 x Method",
+      "primary_field": "research_line",
+      "primary_value": "LLM Serving",
+      "secondary_field": "methods",
+      "secondary_value": "Cosine Similarity",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "sample_papers": [
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "语义搜索评估",
+          "href": "semantic-search-evaluation.html"
+        }
+      ],
+      "href": "library.html?line=LLM+Serving&method=Cosine+Similarity",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "research-line-llm-serving-methods-document-driven-integration",
       "label": "LLM Serving / Document-Driven Integration",
       "pair": "研究线 x Method",
@@ -10050,6 +10858,32 @@
         }
       ],
       "href": "library.html?line=LLM+Serving&method=Iterative+Search-Based+Optimization",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "research-line-llm-serving-methods-local-hash-embeddings",
+      "label": "LLM Serving / Local Hash Embeddings",
+      "pair": "研究线 x Method",
+      "primary_field": "research_line",
+      "primary_value": "LLM Serving",
+      "secondary_field": "methods",
+      "secondary_value": "Local Hash Embeddings",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "sample_papers": [
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "语义搜索评估",
+          "href": "semantic-search-evaluation.html"
+        }
+      ],
+      "href": "library.html?line=LLM+Serving&method=Local+Hash+Embeddings",
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
@@ -10729,6 +11563,58 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "research-line-speculative-decoding-methods-asynchronous-decoding",
+      "label": "Speculative Decoding / asynchronous decoding",
+      "pair": "研究线 x Method",
+      "primary_field": "research_line",
+      "primary_value": "Speculative Decoding",
+      "secondary_field": "methods",
+      "secondary_value": "asynchronous decoding",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html"
+        }
+      ],
+      "href": "library.html?line=Speculative+Decoding&method=asynchronous+decoding",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "research-line-speculative-decoding-methods-cache-aware-sampling",
+      "label": "Speculative Decoding / cache-aware sampling",
+      "pair": "研究线 x Method",
+      "primary_field": "research_line",
+      "primary_value": "Speculative Decoding",
+      "secondary_field": "methods",
+      "secondary_value": "cache-aware sampling",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html"
+        }
+      ],
+      "href": "library.html?line=Speculative+Decoding&method=cache-aware+sampling",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "research-line-speculative-decoding-methods-draft-tree",
       "label": "Speculative Decoding / Draft Tree",
       "pair": "研究线 x Method",
@@ -10755,6 +11641,32 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "research-line-speculative-decoding-methods-fallback-speculation",
+      "label": "Speculative Decoding / fallback speculation",
+      "pair": "研究线 x Method",
+      "primary_field": "research_line",
+      "primary_value": "Speculative Decoding",
+      "secondary_field": "methods",
+      "secondary_value": "fallback speculation",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html"
+        }
+      ],
+      "href": "library.html?line=Speculative+Decoding&method=fallback+speculation",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "research-line-speculative-decoding-methods-feature-fusion",
       "label": "Speculative Decoding / Feature Fusion",
       "pair": "研究线 x Method",
@@ -10778,6 +11690,58 @@
         }
       ],
       "href": "library.html?line=Speculative+Decoding&method=Feature+Fusion",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "research-line-speculative-decoding-methods-geometric-fan-out",
+      "label": "Speculative Decoding / geometric fan-out",
+      "pair": "研究线 x Method",
+      "primary_field": "research_line",
+      "primary_value": "Speculative Decoding",
+      "secondary_field": "methods",
+      "secondary_value": "geometric fan-out",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html"
+        }
+      ],
+      "href": "library.html?line=Speculative+Decoding&method=geometric+fan-out",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "research-line-speculative-decoding-methods-speculative-decoding",
+      "label": "Speculative Decoding / Speculative Decoding",
+      "pair": "研究线 x Method",
+      "primary_field": "research_line",
+      "primary_value": "Speculative Decoding",
+      "secondary_field": "methods",
+      "secondary_value": "Speculative Decoding",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html"
+        }
+      ],
+      "href": "library.html?line=Speculative+Decoding&method=Speculative+Decoding",
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
@@ -10833,141 +11797,11 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
-      "id": "research-line-unassigned-methods-asynchronous-decoding",
-      "label": "Unassigned / asynchronous decoding",
+      "id": "research-line-speculative-decoding-methods-verification-outcome-cache",
+      "label": "Speculative Decoding / verification outcome cache",
       "pair": "研究线 x Method",
       "primary_field": "research_line",
-      "primary_value": "Unassigned",
-      "secondary_field": "methods",
-      "secondary_value": "asynchronous decoding",
-      "count": 1,
-      "share": 0.0769,
-      "action": "singleton",
-      "severity": "medium",
-      "slugs": [
-        "2603.03251-speculative-speculative-decoding"
-      ],
-      "sample_papers": [
-        {
-          "slug": "2603.03251-speculative-speculative-decoding",
-          "title": "Speculative Speculative Decoding",
-          "title_zh": "推测性推测解码",
-          "href": "2603.03251-speculative-speculative-decoding.html"
-        }
-      ],
-      "href": "library.html?line=Unassigned&method=asynchronous+decoding",
-      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
-    },
-    {
-      "id": "research-line-unassigned-methods-cache-aware-sampling",
-      "label": "Unassigned / cache-aware sampling",
-      "pair": "研究线 x Method",
-      "primary_field": "research_line",
-      "primary_value": "Unassigned",
-      "secondary_field": "methods",
-      "secondary_value": "cache-aware sampling",
-      "count": 1,
-      "share": 0.0769,
-      "action": "singleton",
-      "severity": "medium",
-      "slugs": [
-        "2603.03251-speculative-speculative-decoding"
-      ],
-      "sample_papers": [
-        {
-          "slug": "2603.03251-speculative-speculative-decoding",
-          "title": "Speculative Speculative Decoding",
-          "title_zh": "推测性推测解码",
-          "href": "2603.03251-speculative-speculative-decoding.html"
-        }
-      ],
-      "href": "library.html?line=Unassigned&method=cache-aware+sampling",
-      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
-    },
-    {
-      "id": "research-line-unassigned-methods-fallback-speculation",
-      "label": "Unassigned / fallback speculation",
-      "pair": "研究线 x Method",
-      "primary_field": "research_line",
-      "primary_value": "Unassigned",
-      "secondary_field": "methods",
-      "secondary_value": "fallback speculation",
-      "count": 1,
-      "share": 0.0769,
-      "action": "singleton",
-      "severity": "medium",
-      "slugs": [
-        "2603.03251-speculative-speculative-decoding"
-      ],
-      "sample_papers": [
-        {
-          "slug": "2603.03251-speculative-speculative-decoding",
-          "title": "Speculative Speculative Decoding",
-          "title_zh": "推测性推测解码",
-          "href": "2603.03251-speculative-speculative-decoding.html"
-        }
-      ],
-      "href": "library.html?line=Unassigned&method=fallback+speculation",
-      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
-    },
-    {
-      "id": "research-line-unassigned-methods-geometric-fan-out",
-      "label": "Unassigned / geometric fan-out",
-      "pair": "研究线 x Method",
-      "primary_field": "research_line",
-      "primary_value": "Unassigned",
-      "secondary_field": "methods",
-      "secondary_value": "geometric fan-out",
-      "count": 1,
-      "share": 0.0769,
-      "action": "singleton",
-      "severity": "medium",
-      "slugs": [
-        "2603.03251-speculative-speculative-decoding"
-      ],
-      "sample_papers": [
-        {
-          "slug": "2603.03251-speculative-speculative-decoding",
-          "title": "Speculative Speculative Decoding",
-          "title_zh": "推测性推测解码",
-          "href": "2603.03251-speculative-speculative-decoding.html"
-        }
-      ],
-      "href": "library.html?line=Unassigned&method=geometric+fan-out",
-      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
-    },
-    {
-      "id": "research-line-unassigned-methods-speculative-decoding",
-      "label": "Unassigned / Speculative Decoding",
-      "pair": "研究线 x Method",
-      "primary_field": "research_line",
-      "primary_value": "Unassigned",
-      "secondary_field": "methods",
-      "secondary_value": "Speculative Decoding",
-      "count": 1,
-      "share": 0.0769,
-      "action": "singleton",
-      "severity": "medium",
-      "slugs": [
-        "2603.03251-speculative-speculative-decoding"
-      ],
-      "sample_papers": [
-        {
-          "slug": "2603.03251-speculative-speculative-decoding",
-          "title": "Speculative Speculative Decoding",
-          "title_zh": "推测性推测解码",
-          "href": "2603.03251-speculative-speculative-decoding.html"
-        }
-      ],
-      "href": "library.html?line=Unassigned&method=Speculative+Decoding",
-      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
-    },
-    {
-      "id": "research-line-unassigned-methods-verification-outcome-cache",
-      "label": "Unassigned / verification outcome cache",
-      "pair": "研究线 x Method",
-      "primary_field": "research_line",
-      "primary_value": "Unassigned",
+      "primary_value": "Speculative Decoding",
       "secondary_field": "methods",
       "secondary_value": "verification outcome cache",
       "count": 1,
@@ -10985,7 +11819,7 @@
           "href": "2603.03251-speculative-speculative-decoding.html"
         }
       ],
-      "href": "library.html?line=Unassigned&method=verification+outcome+cache",
+      "href": "library.html?line=Speculative+Decoding&method=verification+outcome+cache",
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
@@ -11142,32 +11976,6 @@
         }
       ],
       "href": "library.html?line=VLM+Acceleration&method=twig-guided+token+pruning",
-      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
-    },
-    {
-      "id": "research-line-speculative-decoding-status-read",
-      "label": "Speculative Decoding / read",
-      "pair": "研究线 x Status",
-      "primary_field": "research_line",
-      "primary_value": "Speculative Decoding",
-      "secondary_field": "status",
-      "secondary_value": "read",
-      "count": 1,
-      "share": 0.0769,
-      "action": "singleton",
-      "severity": "medium",
-      "slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "sample_papers": [
-        {
-          "slug": "2503.01840-eagle-3-scaling-up",
-          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
-          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
-          "href": "2503.01840-eagle-3-scaling-up.html"
-        }
-      ],
-      "href": "library.html?line=Speculative+Decoding&status=read",
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
@@ -11665,6 +12473,32 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "research-line-llm-serving-topics-semantic-search",
+      "label": "LLM Serving / Semantic Search",
+      "pair": "研究线 x Topic",
+      "primary_field": "research_line",
+      "primary_value": "LLM Serving",
+      "secondary_field": "topics",
+      "secondary_value": "Semantic Search",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "sample_papers": [
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "语义搜索评估",
+          "href": "semantic-search-evaluation.html"
+        }
+      ],
+      "href": "library.html?line=LLM+Serving&topic=Semantic+Search",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "research-line-llm-serving-topics-semi-autoregressive-generation",
       "label": "LLM Serving / Semi-Autoregressive Generation",
       "pair": "研究线 x Topic",
@@ -11714,6 +12548,58 @@
         }
       ],
       "href": "library.html?line=LLM+Serving&topic=Speculative+Decoding",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "research-line-llm-serving-topics-sqlite",
+      "label": "LLM Serving / SQLite",
+      "pair": "研究线 x Topic",
+      "primary_field": "research_line",
+      "primary_value": "LLM Serving",
+      "secondary_field": "topics",
+      "secondary_value": "SQLite",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "sample_papers": [
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "语义搜索评估",
+          "href": "semantic-search-evaluation.html"
+        }
+      ],
+      "href": "library.html?line=LLM+Serving&topic=SQLite",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
+      "id": "research-line-llm-serving-topics-vector-database",
+      "label": "LLM Serving / Vector Database",
+      "pair": "研究线 x Topic",
+      "primary_field": "research_line",
+      "primary_value": "LLM Serving",
+      "secondary_field": "topics",
+      "secondary_value": "Vector Database",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "sample_papers": [
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "语义搜索评估",
+          "href": "semantic-search-evaluation.html"
+        }
+      ],
+      "href": "library.html?line=LLM+Serving&topic=Vector+Database",
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
@@ -11821,6 +12707,32 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
+      "id": "research-line-speculative-decoding-topics-distributed-inference",
+      "label": "Speculative Decoding / Distributed Inference",
+      "pair": "研究线 x Topic",
+      "primary_field": "research_line",
+      "primary_value": "Speculative Decoding",
+      "secondary_field": "topics",
+      "secondary_value": "Distributed Inference",
+      "count": 1,
+      "share": 0.0769,
+      "action": "singleton",
+      "severity": "medium",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html"
+        }
+      ],
+      "href": "library.html?line=Speculative+Decoding&topic=Distributed+Inference",
+      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+    },
+    {
       "id": "research-line-speculative-decoding-topics-draft-model-training",
       "label": "Speculative Decoding / Draft Model Training",
       "pair": "研究线 x Topic",
@@ -11844,32 +12756,6 @@
         }
       ],
       "href": "library.html?line=Speculative+Decoding&topic=Draft+Model+Training",
-      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
-    },
-    {
-      "id": "research-line-speculative-decoding-topics-llm-inference",
-      "label": "Speculative Decoding / LLM Inference",
-      "pair": "研究线 x Topic",
-      "primary_field": "research_line",
-      "primary_value": "Speculative Decoding",
-      "secondary_field": "topics",
-      "secondary_value": "LLM Inference",
-      "count": 1,
-      "share": 0.0769,
-      "action": "singleton",
-      "severity": "medium",
-      "slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "sample_papers": [
-        {
-          "slug": "2503.01840-eagle-3-scaling-up",
-          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
-          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
-          "href": "2503.01840-eagle-3-scaling-up.html"
-        }
-      ],
-      "href": "library.html?line=Speculative+Decoding&topic=LLM+Inference",
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
@@ -11899,141 +12785,11 @@
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
-      "id": "research-line-speculative-decoding-topics-speculative-decoding",
-      "label": "Speculative Decoding / Speculative Decoding",
+      "id": "research-line-speculative-decoding-topics-systems-optimization",
+      "label": "Speculative Decoding / Systems Optimization",
       "pair": "研究线 x Topic",
       "primary_field": "research_line",
       "primary_value": "Speculative Decoding",
-      "secondary_field": "topics",
-      "secondary_value": "Speculative Decoding",
-      "count": 1,
-      "share": 0.0769,
-      "action": "singleton",
-      "severity": "medium",
-      "slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "sample_papers": [
-        {
-          "slug": "2503.01840-eagle-3-scaling-up",
-          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
-          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
-          "href": "2503.01840-eagle-3-scaling-up.html"
-        }
-      ],
-      "href": "library.html?line=Speculative+Decoding&topic=Speculative+Decoding",
-      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
-    },
-    {
-      "id": "research-line-unassigned-topics-distributed-inference",
-      "label": "Unassigned / Distributed Inference",
-      "pair": "研究线 x Topic",
-      "primary_field": "research_line",
-      "primary_value": "Unassigned",
-      "secondary_field": "topics",
-      "secondary_value": "Distributed Inference",
-      "count": 1,
-      "share": 0.0769,
-      "action": "singleton",
-      "severity": "medium",
-      "slugs": [
-        "2603.03251-speculative-speculative-decoding"
-      ],
-      "sample_papers": [
-        {
-          "slug": "2603.03251-speculative-speculative-decoding",
-          "title": "Speculative Speculative Decoding",
-          "title_zh": "推测性推测解码",
-          "href": "2603.03251-speculative-speculative-decoding.html"
-        }
-      ],
-      "href": "library.html?line=Unassigned&topic=Distributed+Inference",
-      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
-    },
-    {
-      "id": "research-line-unassigned-topics-llm-inference",
-      "label": "Unassigned / LLM Inference",
-      "pair": "研究线 x Topic",
-      "primary_field": "research_line",
-      "primary_value": "Unassigned",
-      "secondary_field": "topics",
-      "secondary_value": "LLM Inference",
-      "count": 1,
-      "share": 0.0769,
-      "action": "singleton",
-      "severity": "medium",
-      "slugs": [
-        "2603.03251-speculative-speculative-decoding"
-      ],
-      "sample_papers": [
-        {
-          "slug": "2603.03251-speculative-speculative-decoding",
-          "title": "Speculative Speculative Decoding",
-          "title_zh": "推测性推测解码",
-          "href": "2603.03251-speculative-speculative-decoding.html"
-        }
-      ],
-      "href": "library.html?line=Unassigned&topic=LLM+Inference",
-      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
-    },
-    {
-      "id": "research-line-unassigned-topics-rag",
-      "label": "Unassigned / RAG",
-      "pair": "研究线 x Topic",
-      "primary_field": "research_line",
-      "primary_value": "Unassigned",
-      "secondary_field": "topics",
-      "secondary_value": "RAG",
-      "count": 1,
-      "share": 0.0769,
-      "action": "singleton",
-      "severity": "medium",
-      "slugs": [
-        "semantic-search-evaluation"
-      ],
-      "sample_papers": [
-        {
-          "slug": "semantic-search-evaluation",
-          "title": "Semantic Search Evaluation",
-          "title_zh": "Semantic Search Evaluation",
-          "href": "semantic-search-evaluation.md"
-        }
-      ],
-      "href": "library.html?line=Unassigned&topic=RAG",
-      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
-    },
-    {
-      "id": "research-line-unassigned-topics-speculative-decoding",
-      "label": "Unassigned / Speculative Decoding",
-      "pair": "研究线 x Topic",
-      "primary_field": "research_line",
-      "primary_value": "Unassigned",
-      "secondary_field": "topics",
-      "secondary_value": "Speculative Decoding",
-      "count": 1,
-      "share": 0.0769,
-      "action": "singleton",
-      "severity": "medium",
-      "slugs": [
-        "2603.03251-speculative-speculative-decoding"
-      ],
-      "sample_papers": [
-        {
-          "slug": "2603.03251-speculative-speculative-decoding",
-          "title": "Speculative Speculative Decoding",
-          "title_zh": "推测性推测解码",
-          "href": "2603.03251-speculative-speculative-decoding.html"
-        }
-      ],
-      "href": "library.html?line=Unassigned&topic=Speculative+Decoding",
-      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
-    },
-    {
-      "id": "research-line-unassigned-topics-systems-optimization",
-      "label": "Unassigned / Systems Optimization",
-      "pair": "研究线 x Topic",
-      "primary_field": "research_line",
-      "primary_value": "Unassigned",
       "secondary_field": "topics",
       "secondary_value": "Systems Optimization",
       "count": 1,
@@ -12051,7 +12807,7 @@
           "href": "2603.03251-speculative-speculative-decoding.html"
         }
       ],
-      "href": "library.html?line=Unassigned&topic=Systems+Optimization",
+      "href": "library.html?line=Speculative+Decoding&topic=Systems+Optimization",
       "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
     },
     {
@@ -12187,6 +12943,53 @@
   ],
   "top_cohorts": [
     {
+      "id": "research-line-llm-serving-status-read",
+      "label": "LLM Serving / read",
+      "pair": "研究线 x Status",
+      "primary_field": "research_line",
+      "primary_value": "LLM Serving",
+      "secondary_field": "status",
+      "secondary_value": "read",
+      "count": 4,
+      "share": 0.3077,
+      "action": "topic_candidate",
+      "severity": "low",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi",
+        "noarxiv-2026-dspark",
+        "2607.00466-eldr",
+        "semantic-search-evaluation"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html"
+        },
+        {
+          "slug": "noarxiv-2026-dspark",
+          "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+          "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+          "href": "noarxiv-2026-dspark.html"
+        },
+        {
+          "slug": "2607.00466-eldr",
+          "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+          "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+          "href": "2607.00466-eldr.html"
+        },
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "语义搜索评估",
+          "href": "semantic-search-evaluation.html"
+        }
+      ],
+      "href": "library.html?line=LLM+Serving&status=read",
+      "recommendation": "组合已有稳定论文簇，适合沉淀成集合视图或专题阅读清单。"
+    },
+    {
       "id": "research-line-parallel-decoding-with-diffusion-models-status-read",
       "label": "Parallel Decoding with Diffusion Models / read",
       "pair": "研究线 x Status",
@@ -12278,6 +13081,46 @@
         }
       ],
       "href": "library.html?line=Parallel+Decoding+with+Diffusion+Models&topic=Speculative+Decoding",
+      "recommendation": "组合已有稳定论文簇，适合沉淀成集合视图或专题阅读清单。"
+    },
+    {
+      "id": "domains-llm-systems-methods-speculative-decoding",
+      "label": "LLM Systems / Speculative Decoding",
+      "pair": "Domain x Method",
+      "primary_field": "domains",
+      "primary_value": "LLM Systems",
+      "secondary_field": "methods",
+      "secondary_value": "Speculative Decoding",
+      "count": 3,
+      "share": 0.2308,
+      "action": "topic_candidate",
+      "severity": "low",
+      "slugs": [
+        "2602.06036-dflash",
+        "noarxiv-2026-dspark",
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "sample_papers": [
+        {
+          "slug": "2602.06036-dflash",
+          "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
+          "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
+          "href": "2602.06036-dflash.html"
+        },
+        {
+          "slug": "noarxiv-2026-dspark",
+          "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+          "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+          "href": "noarxiv-2026-dspark.html"
+        },
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html"
+        }
+      ],
+      "href": "library.html?domain=LLM+Systems&method=Speculative+Decoding",
       "recommendation": "组合已有稳定论文簇，适合沉淀成集合视图或专题阅读清单。"
     },
     {
@@ -12441,46 +13284,6 @@
       "recommendation": "组合已有稳定论文簇，适合沉淀成集合视图或专题阅读清单。"
     },
     {
-      "id": "research-line-llm-serving-status-read",
-      "label": "LLM Serving / read",
-      "pair": "研究线 x Status",
-      "primary_field": "research_line",
-      "primary_value": "LLM Serving",
-      "secondary_field": "status",
-      "secondary_value": "read",
-      "count": 3,
-      "share": 0.2308,
-      "action": "topic_candidate",
-      "severity": "low",
-      "slugs": [
-        "2512.23424-akg-kernel-agent-multi",
-        "noarxiv-2026-dspark",
-        "2607.00466-eldr"
-      ],
-      "sample_papers": [
-        {
-          "slug": "2512.23424-akg-kernel-agent-multi",
-          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
-          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
-          "href": "2512.23424-akg-kernel-agent-multi.html"
-        },
-        {
-          "slug": "noarxiv-2026-dspark",
-          "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
-          "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
-          "href": "noarxiv-2026-dspark.html"
-        },
-        {
-          "slug": "2607.00466-eldr",
-          "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
-          "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
-          "href": "2607.00466-eldr.html"
-        }
-      ],
-      "href": "library.html?line=LLM+Serving&status=read",
-      "recommendation": "组合已有稳定论文簇，适合沉淀成集合视图或专题阅读清单。"
-    },
-    {
       "id": "research-line-parallel-decoding-with-diffusion-models-topics-diffusion-language-models",
       "label": "Parallel Decoding with Diffusion Models / Diffusion Language Models",
       "pair": "研究线 x Topic",
@@ -12584,39 +13387,6 @@
         }
       ],
       "href": "library.html?domain=LLM+Systems&method=gated+LoRA",
-      "recommendation": "继续观察该组合，等论文数增加后再决定是否拆分或提升为专题。"
-    },
-    {
-      "id": "domains-llm-systems-methods-speculative-decoding",
-      "label": "LLM Systems / Speculative Decoding",
-      "pair": "Domain x Method",
-      "primary_field": "domains",
-      "primary_value": "LLM Systems",
-      "secondary_field": "methods",
-      "secondary_value": "Speculative Decoding",
-      "count": 2,
-      "share": 0.1538,
-      "action": "watch",
-      "severity": "low",
-      "slugs": [
-        "2602.06036-dflash",
-        "noarxiv-2026-dspark"
-      ],
-      "sample_papers": [
-        {
-          "slug": "2602.06036-dflash",
-          "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
-          "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
-          "href": "2602.06036-dflash.html"
-        },
-        {
-          "slug": "noarxiv-2026-dspark",
-          "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
-          "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
-          "href": "noarxiv-2026-dspark.html"
-        }
-      ],
-      "href": "library.html?domain=LLM+Systems&method=Speculative+Decoding",
       "recommendation": "继续观察该组合，等论文数增加后再决定是否拆分或提升为专题。"
     },
     {
@@ -12818,11 +13588,11 @@
       "recommendation": "继续观察该组合，等论文数增加后再决定是否拆分或提升为专题。"
     },
     {
-      "id": "research-line-unassigned-status-read",
-      "label": "Unassigned / read",
+      "id": "research-line-speculative-decoding-status-read",
+      "label": "Speculative Decoding / read",
       "pair": "研究线 x Status",
       "primary_field": "research_line",
-      "primary_value": "Unassigned",
+      "primary_value": "Speculative Decoding",
       "secondary_field": "status",
       "secondary_value": "read",
       "count": 2,
@@ -12830,15 +13600,15 @@
       "action": "watch",
       "severity": "low",
       "slugs": [
-        "semantic-search-evaluation",
+        "2503.01840-eagle-3-scaling-up",
         "2603.03251-speculative-speculative-decoding"
       ],
       "sample_papers": [
         {
-          "slug": "semantic-search-evaluation",
-          "title": "Semantic Search Evaluation",
-          "title_zh": "Semantic Search Evaluation",
-          "href": "semantic-search-evaluation.md"
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
         },
         {
           "slug": "2603.03251-speculative-speculative-decoding",
@@ -12847,7 +13617,7 @@
           "href": "2603.03251-speculative-speculative-decoding.html"
         }
       ],
-      "href": "library.html?line=Unassigned&status=read",
+      "href": "library.html?line=Speculative+Decoding&status=read",
       "recommendation": "继续观察该组合，等论文数增加后再决定是否拆分或提升为专题。"
     },
     {
@@ -13016,38 +13786,55 @@
       "recommendation": "继续观察该组合，等论文数增加后再决定是否拆分或提升为专题。"
     },
     {
-      "id": "domains-llm-systems-methods-balanced-k-means",
-      "label": "LLM Systems / Balanced K-means",
-      "pair": "Domain x Method",
-      "primary_field": "domains",
-      "primary_value": "LLM Systems",
-      "secondary_field": "methods",
-      "secondary_value": "Balanced K-means",
-      "count": 1,
-      "share": 0.0769,
-      "action": "singleton",
-      "severity": "medium",
+      "id": "research-line-speculative-decoding-topics-llm-inference",
+      "label": "Speculative Decoding / LLM Inference",
+      "pair": "研究线 x Topic",
+      "primary_field": "research_line",
+      "primary_value": "Speculative Decoding",
+      "secondary_field": "topics",
+      "secondary_value": "LLM Inference",
+      "count": 2,
+      "share": 0.1538,
+      "action": "watch",
+      "severity": "low",
       "slugs": [
-        "2607.00466-eldr"
+        "2503.01840-eagle-3-scaling-up",
+        "2603.03251-speculative-speculative-decoding"
       ],
       "sample_papers": [
         {
-          "slug": "2607.00466-eldr",
-          "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
-          "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
-          "href": "2607.00466-eldr.html"
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html"
+        },
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html"
         }
       ],
-      "href": "library.html?domain=LLM+Systems&method=Balanced+K-means",
-      "recommendation": "单篇组合适合检查标签是否过细，或作为专题阅读清单的起点。"
+      "href": "library.html?line=Speculative+Decoding&topic=LLM+Inference",
+      "recommendation": "继续观察该组合，等论文数增加后再决定是否拆分或提升为专题。"
     }
   ],
   "queues": {
     "split_candidates": [],
     "singletons": [
+      "domains-ai-systems-methods-cosine-similarity",
+      "domains-ai-systems-methods-document-driven-integration",
+      "domains-ai-systems-methods-hierarchical-code-retrieval",
+      "domains-ai-systems-methods-iterative-search-based-optimization",
+      "domains-ai-systems-methods-local-hash-embeddings",
+      "domains-ai-systems-methods-multi-agent-workflow",
+      "domains-ai-systems-methods-unified-sketch",
+      "domains-ai-systems-methods-verification-and-profiling-loop",
+      "domains-llm-systems-methods-asynchronous-decoding",
       "domains-llm-systems-methods-balanced-k-means",
       "domains-llm-systems-methods-block-diffusion",
       "domains-llm-systems-methods-block-sparse-attention",
+      "domains-llm-systems-methods-cache-aware-sampling",
       "domains-llm-systems-methods-composable-kv-cache-format",
       "domains-llm-systems-methods-confidence-scheduled-verification",
       "domains-llm-systems-methods-cuda-gpu-parallelism",
@@ -13056,9 +13843,11 @@
       "domains-llm-systems-methods-draft-tree",
       "domains-llm-systems-methods-dual-view-attention",
       "domains-llm-systems-methods-expert-locality-routing",
+      "domains-llm-systems-methods-fallback-speculation",
       "domains-llm-systems-methods-feature-fusion",
       "domains-llm-systems-methods-finalwipe",
       "domains-llm-systems-methods-forward-kl-distillation",
+      "domains-llm-systems-methods-geometric-fan-out",
       "domains-llm-systems-methods-hardware-aware-scheduling",
       "domains-llm-systems-methods-intra-model-consensus",
       "domains-llm-systems-methods-introspective-consistency",
@@ -13088,6 +13877,7 @@
       "domains-llm-systems-methods-training-time-test",
       "domains-llm-systems-methods-tree-based-self-speculative-decoding",
       "domains-llm-systems-methods-twig-guided-token-pruning",
+      "domains-llm-systems-methods-verification-outcome-cache",
       "domains-llm-systems-methods-work-partitioning",
       "domains-multimodal-systems-methods-distillation",
       "domains-multimodal-systems-methods-finalwipe",
@@ -13294,6 +14084,8 @@
       "topics-scaling-law-methods-feature-fusion",
       "topics-scaling-law-methods-token-prediction",
       "topics-scaling-law-methods-training-time-test",
+      "topics-semantic-search-methods-cosine-similarity",
+      "topics-semantic-search-methods-local-hash-embeddings",
       "topics-semi-autoregressive-generation-methods-confidence-scheduled-verification",
       "topics-semi-autoregressive-generation-methods-hardware-aware-scheduling",
       "topics-semi-autoregressive-generation-methods-markov-head",
@@ -13336,6 +14128,8 @@
       "topics-speculative-decoding-methods-tree-based-self-speculative-decoding",
       "topics-speculative-decoding-methods-twig-guided-token-pruning",
       "topics-speculative-decoding-methods-verification-outcome-cache",
+      "topics-sqlite-methods-cosine-similarity",
+      "topics-sqlite-methods-local-hash-embeddings",
       "topics-systems-optimization-methods-asynchronous-decoding",
       "topics-systems-optimization-methods-cache-aware-sampling",
       "topics-systems-optimization-methods-fallback-speculation",
@@ -13347,6 +14141,8 @@
       "topics-transformer-methods-online-softmax",
       "topics-transformer-methods-tiling",
       "topics-transformer-methods-work-partitioning",
+      "topics-vector-database-methods-cosine-similarity",
+      "topics-vector-database-methods-local-hash-embeddings",
       "topics-vision-language-models-methods-distillation",
       "topics-vision-language-models-methods-finalwipe",
       "topics-vision-language-models-methods-multi-head-twig",
@@ -13367,6 +14163,8 @@
       "topics-vlm-acceleration-methods-twig-guided-token-pruning",
       "tracks-attention-kernels-problems-customizable-attention-serving",
       "tracks-attention-kernels-problems-efficient-exact-attention",
+      "tracks-compiler-dsl-problems-cross-platform-deployment",
+      "tracks-compiler-dsl-problems-kernel-generation",
       "tracks-inference-acceleration-problems-efficient-vlm-inference",
       "tracks-inference-acceleration-problems-load-aware-serving",
       "tracks-inference-acceleration-problems-long-response-decoding",
@@ -13375,10 +14173,16 @@
       "tracks-inference-acceleration-problems-parallel-diffusion-decoding",
       "tracks-inference-acceleration-problems-speculative-decoding",
       "tracks-inference-acceleration-problems-visual-token-redundancy",
+      "tracks-inference-optimization-problems-inference-latency",
+      "tracks-inference-optimization-problems-throughput-optimization",
       "tracks-inference-serving-systems-problems-customizable-attention-serving",
+      "tracks-kernel-optimization-problems-cross-platform-deployment",
+      "tracks-kernel-optimization-problems-kernel-generation",
       "tracks-parallel-decoding-problems-load-aware-serving",
       "tracks-parallel-decoding-problems-memory-efficient-parallel-token-generation",
       "tracks-parallel-decoding-problems-parallel-diffusion-decoding",
+      "tracks-search-retrieval-problems-semantic-search",
+      "tracks-search-retrieval-problems-vector-storage",
       "tracks-vlm-acceleration-problems-efficient-vlm-inference",
       "tracks-vlm-acceleration-problems-long-response-decoding",
       "tracks-vlm-acceleration-problems-visual-token-redundancy",
@@ -13393,11 +14197,13 @@
       "research-line-efficient-attention-kernels-methods-work-partitioning",
       "research-line-llm-serving-methods-balanced-k-means",
       "research-line-llm-serving-methods-confidence-scheduled-verification",
+      "research-line-llm-serving-methods-cosine-similarity",
       "research-line-llm-serving-methods-document-driven-integration",
       "research-line-llm-serving-methods-expert-locality-routing",
       "research-line-llm-serving-methods-hardware-aware-scheduling",
       "research-line-llm-serving-methods-hierarchical-code-retrieval",
       "research-line-llm-serving-methods-iterative-search-based-optimization",
+      "research-line-llm-serving-methods-local-hash-embeddings",
       "research-line-llm-serving-methods-markov-head",
       "research-line-llm-serving-methods-multi-agent-workflow",
       "research-line-llm-serving-methods-semi-autoregressive-generation",
@@ -13424,23 +14230,22 @@
       "research-line-parallel-decoding-with-diffusion-models-methods-shared-kv-cache",
       "research-line-parallel-decoding-with-diffusion-models-methods-speculative-decoding",
       "research-line-parallel-decoding-with-diffusion-models-methods-target-hidden-features",
+      "research-line-speculative-decoding-methods-asynchronous-decoding",
+      "research-line-speculative-decoding-methods-cache-aware-sampling",
       "research-line-speculative-decoding-methods-draft-tree",
+      "research-line-speculative-decoding-methods-fallback-speculation",
       "research-line-speculative-decoding-methods-feature-fusion",
+      "research-line-speculative-decoding-methods-geometric-fan-out",
+      "research-line-speculative-decoding-methods-speculative-decoding",
       "research-line-speculative-decoding-methods-token-prediction",
       "research-line-speculative-decoding-methods-training-time-test",
-      "research-line-unassigned-methods-asynchronous-decoding",
-      "research-line-unassigned-methods-cache-aware-sampling",
-      "research-line-unassigned-methods-fallback-speculation",
-      "research-line-unassigned-methods-geometric-fan-out",
-      "research-line-unassigned-methods-speculative-decoding",
-      "research-line-unassigned-methods-verification-outcome-cache",
+      "research-line-speculative-decoding-methods-verification-outcome-cache",
       "research-line-vlm-acceleration-methods-distillation",
       "research-line-vlm-acceleration-methods-finalwipe",
       "research-line-vlm-acceleration-methods-multi-head-twig",
       "research-line-vlm-acceleration-methods-pruning-oriented-reinforcement-learning",
       "research-line-vlm-acceleration-methods-tree-based-self-speculative-decoding",
       "research-line-vlm-acceleration-methods-twig-guided-token-pruning",
-      "research-line-speculative-decoding-status-read",
       "research-line-vlm-acceleration-status-read",
       "research-line-efficient-attention-kernels-topics-attention-kernels",
       "research-line-efficient-attention-kernels-topics-efficient-attention",
@@ -13460,21 +14265,19 @@
       "research-line-llm-serving-topics-load-balancing",
       "research-line-llm-serving-topics-moe",
       "research-line-llm-serving-topics-multi-agent-systems",
+      "research-line-llm-serving-topics-semantic-search",
       "research-line-llm-serving-topics-semi-autoregressive-generation",
       "research-line-llm-serving-topics-speculative-decoding",
+      "research-line-llm-serving-topics-sqlite",
+      "research-line-llm-serving-topics-vector-database",
       "research-line-parallel-decoding-with-diffusion-models-topics-efficient-inference",
       "research-line-parallel-decoding-with-diffusion-models-topics-kv-cache",
       "research-line-parallel-decoding-with-diffusion-models-topics-multi-token-prediction",
       "research-line-parallel-decoding-with-diffusion-models-topics-non-autoregressive-generation",
+      "research-line-speculative-decoding-topics-distributed-inference",
       "research-line-speculative-decoding-topics-draft-model-training",
-      "research-line-speculative-decoding-topics-llm-inference",
       "research-line-speculative-decoding-topics-scaling-law",
-      "research-line-speculative-decoding-topics-speculative-decoding",
-      "research-line-unassigned-topics-distributed-inference",
-      "research-line-unassigned-topics-llm-inference",
-      "research-line-unassigned-topics-rag",
-      "research-line-unassigned-topics-speculative-decoding",
-      "research-line-unassigned-topics-systems-optimization",
+      "research-line-speculative-decoding-topics-systems-optimization",
       "research-line-vlm-acceleration-topics-multimodal-inference",
       "research-line-vlm-acceleration-topics-speculative-decoding",
       "research-line-vlm-acceleration-topics-vision-language-models",
@@ -13482,13 +14285,14 @@
       "research-line-vlm-acceleration-topics-vlm-acceleration"
     ],
     "topic_candidates": [
+      "research-line-llm-serving-status-read",
       "research-line-parallel-decoding-with-diffusion-models-status-read",
       "research-line-parallel-decoding-with-diffusion-models-topics-speculative-decoding",
+      "domains-llm-systems-methods-speculative-decoding",
       "topics-llm-inference-methods-speculative-decoding",
       "topics-speculative-decoding-methods-speculative-decoding",
       "tracks-inference-acceleration-problems-lossless-speculative-decoding",
       "tracks-parallel-decoding-problems-lossless-speculative-decoding",
-      "research-line-llm-serving-status-read",
       "research-line-parallel-decoding-with-diffusion-models-topics-diffusion-language-models"
     ]
   },

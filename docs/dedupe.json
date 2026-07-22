@@ -1,17 +1,64 @@
 {
-  "generated_at": "2026-07-22T13:22:15",
+  "generated_at": "2026-07-22T13:24:43",
   "count": 13,
   "inbox_count": 0,
-  "duplicate_report_count": 0,
+  "duplicate_report_count": 1,
   "inbox_duplicate_count": 0,
-  "group_count": 0,
-  "report_groups": [],
+  "group_count": 1,
+  "report_groups": [
+    {
+      "id": "report-1",
+      "scope": "library",
+      "kind": "arxiv_id",
+      "key": "noarxi",
+      "count": 2,
+      "severity": "high",
+      "slugs": [
+        "noarxiv-2026-dspark",
+        "semantic-search-evaluation"
+      ],
+      "papers": [
+        {
+          "slug": "noarxiv-2026-dspark",
+          "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+          "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+          "arxiv_id": "noarxiv-2026-dspark",
+          "href": "noarxiv-2026-dspark.html",
+          "research_line": "Unassigned",
+          "status": "",
+          "year": "",
+          "importance": "",
+          "has_code": false
+        },
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "语义搜索评估",
+          "arxiv_id": "noarxiv-semantic-search-evaluation",
+          "href": "semantic-search-evaluation.html",
+          "research_line": "Unassigned",
+          "status": "",
+          "year": "",
+          "importance": "",
+          "has_code": false
+        }
+      ],
+      "item_ids": [],
+      "items": [],
+      "matched_slugs": [
+        "noarxiv-2026-dspark",
+        "semantic-search-evaluation"
+      ],
+      "recommended_action": "保留主报告，合并补充内容后删除或重命名重复报告。",
+      "href": "quality.html"
+    }
+  ],
   "inbox_groups": [],
   "summary": {
-    "high": 0,
+    "high": 1,
     "medium": 0,
     "low": 0,
-    "clean_reports": true,
+    "clean_reports": false,
     "clean_inbox": true
   },
   "csv_columns": [

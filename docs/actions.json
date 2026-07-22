@@ -1,61 +1,34 @@
 {
-  "generated_at": "2026-07-22T13:22:15",
-  "count": 143,
+  "generated_at": "2026-07-22T13:24:43",
+  "count": 148,
   "summary": {
     "groups": {
-      "metadata": 3,
-      "taxonomy": 123,
+      "dedupe": 1,
+      "taxonomy": 130,
       "review": 13,
       "quality": 4
     },
     "severity": {
-      "high": 9,
-      "medium": 130,
+      "high": 6,
+      "medium": 138,
       "low": 4
     }
   },
   "actions": [
     {
-      "id": "metadata_missing:2512.23424-akg-kernel-agent-multi",
-      "group": "metadata",
+      "id": "duplicate_reports:arxiv_id:noarxiv-2026-dspark-semantic-search-evaluation",
+      "group": "dedupe",
       "severity": "high",
-      "priority": 106,
-      "title": "补必填元数据：AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
-      "detail": "domains, tracks, problems, reading_stage",
-      "href": "library.html?q=2512.23424-akg-kernel-agent-multi",
-      "source": "quality.json",
-      "slugs": [
-        "2512.23424-akg-kernel-agent-multi"
-      ],
-      "command": "python3 scripts/apply_library_metadata.py docs --input <csv>"
-    },
-    {
-      "id": "metadata_missing:2603.03251-speculative-speculative-decoding",
-      "group": "metadata",
-      "severity": "high",
-      "priority": 106,
-      "title": "补必填元数据：推测性推测解码",
-      "detail": "domains, tracks, problems, research_line, line_role, reading_stage",
-      "href": "library.html?q=2603.03251-speculative-speculative-decoding",
-      "source": "quality.json",
-      "slugs": [
-        "2603.03251-speculative-speculative-decoding"
-      ],
-      "command": "python3 scripts/apply_library_metadata.py docs --input <csv>"
-    },
-    {
-      "id": "taxonomy_drift:line_role:tooling:2512.23424-akg-kernel-agent-multi",
-      "group": "taxonomy",
-      "severity": "high",
-      "priority": 106,
-      "title": "处理 taxonomy drift：AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
-      "detail": "line_role = tooling 不在允许值中。",
+      "priority": 108,
+      "title": "合并重复报告：noarxiv-2026-dspark, semantic-search-evaluation",
+      "detail": "reason=arxiv_id value=noarxi",
       "href": "quality.html",
       "source": "quality.json",
       "slugs": [
-        "2512.23424-akg-kernel-agent-multi"
+        "noarxiv-2026-dspark",
+        "semantic-search-evaluation"
       ],
-      "command": "python3 scripts/validate_wiki.py docs --strict-taxonomy"
+      "command": "python3 scripts/check_quality.py docs"
     },
     {
       "id": "taxonomy_action:split_candidate:topics:Speculative Decoding",
@@ -67,9 +40,9 @@
       "href": "library.html?topic=Speculative+Decoding",
       "source": "taxonomy_actions.json",
       "slugs": [
+        "2603.03251-speculative-speculative-decoding",
         "2503.14075-twigvlm-plus-plus",
         "2602.06036-dflash",
-        "2603.03251-speculative-speculative-decoding",
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus"
       ],
@@ -103,11 +76,11 @@
       "href": "library.html?domain=LLM+Systems",
       "source": "taxonomy_actions.json",
       "slugs": [
+        "2603.03251-speculative-speculative-decoding",
         "2503.14075-twigvlm-plus-plus",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
-        "2605.12825-orthrus",
-        "2607.00466-eldr"
+        "2605.12825-orthrus"
       ],
       "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
     },
@@ -121,9 +94,9 @@
       "href": "library.html?status=read",
       "source": "taxonomy_actions.json",
       "slugs": [
+        "2603.03251-speculative-speculative-decoding",
         "2503.14075-twigvlm-plus-plus",
         "2602.06036-dflash",
-        "2603.03251-speculative-speculative-decoding",
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus"
       ],
@@ -139,27 +112,13 @@
       "href": "library.html?stage=deep_read",
       "source": "taxonomy_actions.json",
       "slugs": [
+        "2603.03251-speculative-speculative-decoding",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus",
-        "2607.00466-eldr",
-        "2501.01005-flashinfer"
+        "2607.00466-eldr"
       ],
       "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
-    },
-    {
-      "id": "metadata_missing:semantic-search-evaluation",
-      "group": "metadata",
-      "severity": "high",
-      "priority": 98,
-      "title": "补必填元数据：Semantic Search Evaluation",
-      "detail": "domains, tracks, problems, methods, research_line, line_role, reading_stage",
-      "href": "library.html?q=semantic-search-evaluation",
-      "source": "quality.json",
-      "slugs": [
-        "semantic-search-evaluation"
-      ],
-      "command": "python3 scripts/apply_library_metadata.py docs --input <csv>"
     },
     {
       "id": "review_plan:2307.08691-flashattention-2",
@@ -195,7 +154,7 @@
       "severity": "medium",
       "priority": 72,
       "title": "补复习计划：AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
-      "detail": "建议 next_review = 2026-08-21",
+      "detail": "建议 next_review = 2026-07-30",
       "href": "2512.23424-akg-kernel-agent-multi.html",
       "source": "review.json",
       "slugs": [
@@ -330,34 +289,6 @@
       "command": "python3 scripts/apply_review_plan.py docs --write"
     },
     {
-      "id": "taxonomy_sparse:2512.23424-akg-kernel-agent-multi",
-      "group": "taxonomy",
-      "severity": "medium",
-      "priority": 72,
-      "title": "补分类粒度：AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
-      "detail": "结构分类或 topic/method 偏少，检索入口不足。",
-      "href": "library.html?q=2512.23424-akg-kernel-agent-multi",
-      "source": "quality.json",
-      "slugs": [
-        "2512.23424-akg-kernel-agent-multi"
-      ],
-      "command": "python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv"
-    },
-    {
-      "id": "taxonomy_sparse:2603.03251-speculative-speculative-decoding",
-      "group": "taxonomy",
-      "severity": "medium",
-      "priority": 72,
-      "title": "补分类粒度：推测性推测解码",
-      "detail": "结构分类或 topic/method 偏少，检索入口不足。",
-      "href": "library.html?q=2603.03251-speculative-speculative-decoding",
-      "source": "quality.json",
-      "slugs": [
-        "2603.03251-speculative-speculative-decoding"
-      ],
-      "command": "python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv"
-    },
-    {
       "id": "alias:semi autoregressive generation",
       "group": "taxonomy",
       "severity": "medium",
@@ -370,6 +301,20 @@
         "noarxiv-2026-dspark"
       ],
       "command": "python3 scripts/apply_taxonomy_aliases.py docs --write"
+    },
+    {
+      "id": "review_plan:semantic-search-evaluation",
+      "group": "review",
+      "severity": "medium",
+      "priority": 70,
+      "title": "补复习计划：语义搜索评估",
+      "detail": "建议 next_review = 2026-09-20",
+      "href": "semantic-search-evaluation.html",
+      "source": "review.json",
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "command": "python3 scripts/apply_review_plan.py docs --write"
     },
     {
       "id": "taxonomy_action:merge_candidate:topics:Efficient Attention",
@@ -960,6 +905,34 @@
       "command": "python3 scripts/export_taxonomy_load.py docs --format csv --signal dense_tags --output docs/exports/taxonomy-load.csv"
     },
     {
+      "id": "taxonomy_action:merge_candidate:tracks:Compiler/DSL",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "方向：Compiler/DSL",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?track=Compiler%2FDSL",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:tracks:Inference Optimization",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "方向：Inference Optimization",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?track=Inference+Optimization",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
       "id": "taxonomy_action:merge_candidate:tracks:Inference Serving Systems",
       "group": "taxonomy",
       "severity": "medium",
@@ -970,6 +943,20 @@
       "source": "taxonomy_actions.json",
       "slugs": [
         "2501.01005-flashinfer"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:tracks:Kernel Optimization",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "方向：Kernel Optimization",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?track=Kernel+Optimization",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
       ],
       "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
     },
@@ -1632,48 +1619,6 @@
       "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
     },
     {
-      "id": "taxonomy_action:merge_candidate:line_role:tooling",
-      "group": "taxonomy",
-      "severity": "medium",
-      "priority": 68,
-      "title": "研究线角色：tooling",
-      "detail": "检查是否应合并为更通用标签。",
-      "href": "library.html?role=tooling",
-      "source": "taxonomy_actions.json",
-      "slugs": [
-        "2512.23424-akg-kernel-agent-multi"
-      ],
-      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
-    },
-    {
-      "id": "taxonomy_action:merge_candidate:line_role:variant",
-      "group": "taxonomy",
-      "severity": "medium",
-      "priority": 68,
-      "title": "研究线角色：variant",
-      "detail": "检查是否应合并为更通用标签。",
-      "href": "library.html?role=variant",
-      "source": "taxonomy_actions.json",
-      "slugs": [
-        "2605.12825-orthrus"
-      ],
-      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
-    },
-    {
-      "id": "taxonomy_action:merge_candidate:research_line:Speculative Decoding",
-      "group": "taxonomy",
-      "severity": "medium",
-      "priority": 68,
-      "title": "研究线：Speculative Decoding",
-      "detail": "检查是否应合并为更通用标签。",
-      "href": "library.html?line=Speculative+Decoding",
-      "source": "taxonomy_actions.json",
-      "slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
-    },
-    {
       "id": "taxonomy_action:merge_candidate:research_line:VLM Acceleration",
       "group": "taxonomy",
       "severity": "medium",
@@ -1702,6 +1647,20 @@
       "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
     },
     {
+      "id": "taxonomy_action:merge_candidate:problems:Cross-Platform Deployment",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "问题：Cross-Platform Deployment",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?problem=Cross-Platform+Deployment",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
       "id": "taxonomy_action:merge_candidate:problems:Customizable Attention Serving",
       "group": "taxonomy",
       "severity": "medium",
@@ -1726,6 +1685,34 @@
       "source": "taxonomy_actions.json",
       "slugs": [
         "2503.14075-twigvlm-plus-plus"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:problems:Inference Latency",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "问题：Inference Latency",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?problem=Inference+Latency",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:problems:Kernel Generation",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "问题：Kernel Generation",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?problem=Kernel+Generation",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
       ],
       "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
     },
@@ -1800,6 +1787,20 @@
       "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
     },
     {
+      "id": "taxonomy_action:merge_candidate:problems:Throughput Optimization",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 68,
+      "title": "问题：Throughput Optimization",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?problem=Throughput+Optimization",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
       "id": "taxonomy_action:merge_candidate:problems:Visual Token Redundancy",
       "group": "taxonomy",
       "severity": "medium",
@@ -1814,41 +1815,111 @@
       "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
     },
     {
-      "id": "review_plan:semantic-search-evaluation",
-      "group": "review",
-      "severity": "medium",
-      "priority": 64,
-      "title": "补复习计划：Semantic Search Evaluation",
-      "detail": "建议 next_review = 2026-10-20",
-      "href": "semantic-search-evaluation.md",
-      "source": "review.json",
-      "slugs": [
-        "semantic-search-evaluation"
-      ],
-      "command": "python3 scripts/apply_review_plan.py docs --write"
-    },
-    {
-      "id": "taxonomy_sparse:semantic-search-evaluation",
+      "id": "taxonomy_action:merge_candidate:topics:SQLite",
       "group": "taxonomy",
       "severity": "medium",
-      "priority": 64,
-      "title": "补分类粒度：Semantic Search Evaluation",
-      "detail": "结构分类或 topic/method 偏少，检索入口不足。",
-      "href": "library.html?q=semantic-search-evaluation",
-      "source": "quality.json",
-      "slugs": [
-        "semantic-search-evaluation"
-      ],
-      "command": "python3 scripts/export_taxonomy_load.py docs --format patch --output docs/exports/taxonomy-load-patch.csv"
-    },
-    {
-      "id": "taxonomy_action:merge_candidate:topics:RAG",
-      "group": "taxonomy",
-      "severity": "medium",
-      "priority": 60,
-      "title": "主题：RAG",
+      "priority": 66,
+      "title": "主题：SQLite",
       "detail": "检查是否应合并为更通用标签。",
-      "href": "library.html?topic=RAG",
+      "href": "library.html?topic=SQLite",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:topics:Semantic Search",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 66,
+      "title": "主题：Semantic Search",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?topic=Semantic+Search",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:topics:Vector Database",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 66,
+      "title": "主题：Vector Database",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?topic=Vector+Database",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:tracks:Search & Retrieval",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 66,
+      "title": "方向：Search & Retrieval",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?track=Search+%26+Retrieval",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:Cosine Similarity",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 66,
+      "title": "方法：Cosine Similarity",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=Cosine+Similarity",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:methods:Local Hash Embeddings",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 66,
+      "title": "方法：Local Hash Embeddings",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?method=Local+Hash+Embeddings",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:problems:Semantic Search",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 66,
+      "title": "问题：Semantic Search",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?problem=Semantic+Search",
+      "source": "taxonomy_actions.json",
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
+    },
+    {
+      "id": "taxonomy_action:merge_candidate:problems:Vector Storage",
+      "group": "taxonomy",
+      "severity": "medium",
+      "priority": 66,
+      "title": "问题：Vector Storage",
+      "detail": "检查是否应合并为更通用标签。",
+      "href": "library.html?problem=Vector+Storage",
       "source": "taxonomy_actions.json",
       "slugs": [
         "semantic-search-evaluation"
@@ -2009,10 +2080,10 @@
       "id": "code_observation:semantic-search-evaluation",
       "group": "quality",
       "severity": "low",
-      "priority": 30,
-      "title": "补代码观察：Semantic Search Evaluation",
+      "priority": 36,
+      "title": "补代码观察：语义搜索评估",
       "detail": "缺少 has_code 或代码实现观察线索。",
-      "href": "semantic-search-evaluation.md",
+      "href": "semantic-search-evaluation.html",
       "source": "quality.json",
       "slugs": [
         "semantic-search-evaluation"

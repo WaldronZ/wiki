@@ -1,9 +1,232 @@
 {
-  "generated_at": "2026-07-22T13:22:15",
+  "generated_at": "2026-07-22T13:24:43",
   "count": 13,
-  "cluster_count": 6,
+  "cluster_count": 5,
   "largest_cluster_share": 0.308,
   "clusters": [
+    {
+      "id": "llm-serving",
+      "name": "LLM Serving",
+      "research_line": "LLM Serving",
+      "href": "lines/llm-serving.html",
+      "count": 4,
+      "share": 0.308,
+      "risk": "medium",
+      "risk_reasons": [
+        "split candidates available"
+      ],
+      "owner": "",
+      "team": "",
+      "cadence": "",
+      "year_span": [
+        2025,
+        2026
+      ],
+      "status_counts": [
+        {
+          "value": "read",
+          "count": 4
+        }
+      ],
+      "role_counts": [
+        {
+          "value": "variant",
+          "count": 2
+        },
+        {
+          "value": "main",
+          "count": 1
+        },
+        {
+          "value": "system",
+          "count": 1
+        }
+      ],
+      "top_labels": {
+        "domains": [
+          {
+            "value": "LLM Systems",
+            "count": 2
+          },
+          {
+            "value": "AI Systems",
+            "count": 2
+          }
+        ],
+        "tracks": [
+          {
+            "value": "Inference Acceleration",
+            "count": 2
+          },
+          {
+            "value": "Parallel Decoding",
+            "count": 1
+          },
+          {
+            "value": "Search & Retrieval",
+            "count": 1
+          },
+          {
+            "value": "Compiler/DSL",
+            "count": 1
+          },
+          {
+            "value": "Kernel Optimization",
+            "count": 1
+          }
+        ],
+        "problems": [
+          {
+            "value": "MoE Serving",
+            "count": 1
+          },
+          {
+            "value": "Load-Aware Serving",
+            "count": 1
+          },
+          {
+            "value": "Lossless Speculative Decoding",
+            "count": 1
+          },
+          {
+            "value": "Semantic Search",
+            "count": 1
+          },
+          {
+            "value": "Vector Storage",
+            "count": 1
+          },
+          {
+            "value": "Cross-Platform Deployment",
+            "count": 1
+          },
+          {
+            "value": "Kernel Generation",
+            "count": 1
+          }
+        ],
+        "topics": [
+          {
+            "value": "LLM Serving",
+            "count": 2
+          },
+          {
+            "value": "Disaggregated Serving",
+            "count": 1
+          },
+          {
+            "value": "Load Balancing",
+            "count": 1
+          },
+          {
+            "value": "MoE",
+            "count": 1
+          },
+          {
+            "value": "LLM Inference",
+            "count": 1
+          },
+          {
+            "value": "Semi-Autoregressive Generation",
+            "count": 1
+          },
+          {
+            "value": "Speculative Decoding",
+            "count": 1
+          },
+          {
+            "value": "Semantic Search",
+            "count": 1
+          }
+        ],
+        "methods": [
+          {
+            "value": "Balanced K-means",
+            "count": 1
+          },
+          {
+            "value": "Expert Locality Routing",
+            "count": 1
+          },
+          {
+            "value": "Signature Cache",
+            "count": 1
+          },
+          {
+            "value": "confidence-scheduled verification",
+            "count": 1
+          },
+          {
+            "value": "hardware-aware scheduling",
+            "count": 1
+          },
+          {
+            "value": "Markov head",
+            "count": 1
+          },
+          {
+            "value": "semi-autoregressive generation",
+            "count": 1
+          },
+          {
+            "value": "Speculative Decoding",
+            "count": 1
+          }
+        ]
+      },
+      "split_candidates": [
+        {
+          "field": "topics",
+          "value": "LLM Serving",
+          "count": 2,
+          "share": 0.5,
+          "href": "library.html?topic=LLM+Serving"
+        },
+        {
+          "field": "tracks",
+          "value": "Inference Acceleration",
+          "count": 2,
+          "share": 0.5,
+          "href": "library.html?track=Inference+Acceleration"
+        }
+      ],
+      "representative_slugs": [
+        "noarxiv-2026-dspark",
+        "2607.00466-eldr",
+        "2512.23424-akg-kernel-agent-multi",
+        "semantic-search-evaluation"
+      ],
+      "representative_papers": [
+        {
+          "slug": "noarxiv-2026-dspark",
+          "title": "DSpark：基于置信度调度的半自回归 speculative decoding",
+          "href": "noarxiv-2026-dspark.html",
+          "importance": 4,
+          "year": 2026
+        },
+        {
+          "slug": "2607.00466-eldr",
+          "title": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+          "href": "2607.00466-eldr.html",
+          "importance": 4,
+          "year": 2026
+        },
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html",
+          "importance": 4,
+          "year": 2025
+        },
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "语义搜索评估",
+          "href": "semantic-search-evaluation.html",
+          "importance": 3,
+          "year": 2025
+        }
+      ]
+    },
     {
       "id": "parallel-decoding-with-diffusion-models",
       "name": "Parallel Decoding with Diffusion Models",
@@ -224,189 +447,6 @@
       ]
     },
     {
-      "id": "llm-serving",
-      "name": "LLM Serving",
-      "research_line": "LLM Serving",
-      "href": "lines/llm-serving.html",
-      "count": 3,
-      "share": 0.231,
-      "risk": "low",
-      "risk_reasons": [
-        "healthy cluster"
-      ],
-      "owner": "",
-      "team": "",
-      "cadence": "",
-      "year_span": [
-        2025,
-        2026
-      ],
-      "status_counts": [
-        {
-          "value": "read",
-          "count": 3
-        }
-      ],
-      "role_counts": [
-        {
-          "value": "main",
-          "count": 1
-        },
-        {
-          "value": "system",
-          "count": 1
-        },
-        {
-          "value": "tooling",
-          "count": 1
-        }
-      ],
-      "top_labels": {
-        "domains": [
-          {
-            "value": "LLM Systems",
-            "count": 2
-          }
-        ],
-        "tracks": [
-          {
-            "value": "Inference Acceleration",
-            "count": 2
-          },
-          {
-            "value": "Parallel Decoding",
-            "count": 1
-          }
-        ],
-        "problems": [
-          {
-            "value": "MoE Serving",
-            "count": 1
-          },
-          {
-            "value": "Load-Aware Serving",
-            "count": 1
-          },
-          {
-            "value": "Lossless Speculative Decoding",
-            "count": 1
-          }
-        ],
-        "topics": [
-          {
-            "value": "LLM Serving",
-            "count": 2
-          },
-          {
-            "value": "Disaggregated Serving",
-            "count": 1
-          },
-          {
-            "value": "Load Balancing",
-            "count": 1
-          },
-          {
-            "value": "MoE",
-            "count": 1
-          },
-          {
-            "value": "LLM Inference",
-            "count": 1
-          },
-          {
-            "value": "Semi-Autoregressive Generation",
-            "count": 1
-          },
-          {
-            "value": "Speculative Decoding",
-            "count": 1
-          },
-          {
-            "value": "Compiler/DSL",
-            "count": 1
-          }
-        ],
-        "methods": [
-          {
-            "value": "Balanced K-means",
-            "count": 1
-          },
-          {
-            "value": "Expert Locality Routing",
-            "count": 1
-          },
-          {
-            "value": "Signature Cache",
-            "count": 1
-          },
-          {
-            "value": "confidence-scheduled verification",
-            "count": 1
-          },
-          {
-            "value": "hardware-aware scheduling",
-            "count": 1
-          },
-          {
-            "value": "Markov head",
-            "count": 1
-          },
-          {
-            "value": "semi-autoregressive generation",
-            "count": 1
-          },
-          {
-            "value": "Speculative Decoding",
-            "count": 1
-          }
-        ]
-      },
-      "split_candidates": [
-        {
-          "field": "topics",
-          "value": "LLM Serving",
-          "count": 2,
-          "share": 0.667,
-          "href": "library.html?topic=LLM+Serving"
-        },
-        {
-          "field": "tracks",
-          "value": "Inference Acceleration",
-          "count": 2,
-          "share": 0.667,
-          "href": "library.html?track=Inference+Acceleration"
-        }
-      ],
-      "representative_slugs": [
-        "noarxiv-2026-dspark",
-        "2607.00466-eldr",
-        "2512.23424-akg-kernel-agent-multi"
-      ],
-      "representative_papers": [
-        {
-          "slug": "noarxiv-2026-dspark",
-          "title": "DSpark：基于置信度调度的半自回归 speculative decoding",
-          "href": "noarxiv-2026-dspark.html",
-          "importance": 4,
-          "year": 2026
-        },
-        {
-          "slug": "2607.00466-eldr",
-          "title": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
-          "href": "2607.00466-eldr.html",
-          "importance": 4,
-          "year": 2026
-        },
-        {
-          "slug": "2512.23424-akg-kernel-agent-multi",
-          "title": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
-          "href": "2512.23424-akg-kernel-agent-multi.html",
-          "importance": 4,
-          "year": 2025
-        }
-      ]
-    },
-    {
       "id": "efficient-attention-kernels",
       "name": "Efficient Attention Kernels",
       "research_line": "Efficient Attention Kernels",
@@ -559,10 +599,10 @@
       ]
     },
     {
-      "id": "unassigned",
-      "name": "Unassigned",
-      "research_line": "Unassigned",
-      "href": "library.html?line=Unassigned",
+      "id": "speculative-decoding",
+      "name": "Speculative Decoding",
+      "research_line": "Speculative Decoding",
+      "href": "lines/speculative-decoding.html",
       "count": 2,
       "share": 0.154,
       "risk": "low",
@@ -573,7 +613,7 @@
       "team": "",
       "cadence": "",
       "year_span": [
-        2026,
+        2025,
         2026
       ],
       "status_counts": [
@@ -584,25 +624,52 @@
       ],
       "role_counts": [
         {
-          "value": "unclassified",
+          "value": "main",
           "count": 2
         }
       ],
       "top_labels": {
-        "domains": [],
-        "tracks": [],
-        "problems": [],
-        "topics": [
+        "domains": [
           {
-            "value": "Distributed Inference",
+            "value": "LLM Systems",
+            "count": 2
+          }
+        ],
+        "tracks": [
+          {
+            "value": "Inference Optimization",
             "count": 1
           },
           {
-            "value": "LLM Inference",
+            "value": "Inference Acceleration",
+            "count": 1
+          }
+        ],
+        "problems": [
+          {
+            "value": "Inference Latency",
+            "count": 1
+          },
+          {
+            "value": "Throughput Optimization",
             "count": 1
           },
           {
             "value": "Speculative Decoding",
+            "count": 1
+          }
+        ],
+        "topics": [
+          {
+            "value": "LLM Inference",
+            "count": 2
+          },
+          {
+            "value": "Speculative Decoding",
+            "count": 2
+          },
+          {
+            "value": "Distributed Inference",
             "count": 1
           },
           {
@@ -610,7 +677,11 @@
             "count": 1
           },
           {
-            "value": "RAG",
+            "value": "Draft Model Training",
+            "count": 1
+          },
+          {
+            "value": "Scaling Law",
             "count": 1
           }
         ],
@@ -638,13 +709,21 @@
           {
             "value": "verification outcome cache",
             "count": 1
+          },
+          {
+            "value": "Draft Tree",
+            "count": 1
+          },
+          {
+            "value": "Feature Fusion",
+            "count": 1
           }
         ]
       },
       "split_candidates": [],
       "representative_slugs": [
         "2603.03251-speculative-speculative-decoding",
-        "semantic-search-evaluation"
+        "2503.01840-eagle-3-scaling-up"
       ],
       "representative_papers": [
         {
@@ -654,106 +733,6 @@
           "importance": 4,
           "year": 2026
         },
-        {
-          "slug": "semantic-search-evaluation",
-          "title": "Semantic Search Evaluation",
-          "href": "semantic-search-evaluation.md",
-          "importance": "",
-          "year": ""
-        }
-      ]
-    },
-    {
-      "id": "speculative-decoding",
-      "name": "Speculative Decoding",
-      "research_line": "Speculative Decoding",
-      "href": "lines/speculative-decoding.html",
-      "count": 1,
-      "share": 0.077,
-      "risk": "medium",
-      "risk_reasons": [
-        "single-paper cluster"
-      ],
-      "owner": "",
-      "team": "",
-      "cadence": "",
-      "year_span": [
-        2025,
-        2025
-      ],
-      "status_counts": [
-        {
-          "value": "read",
-          "count": 1
-        }
-      ],
-      "role_counts": [
-        {
-          "value": "main",
-          "count": 1
-        }
-      ],
-      "top_labels": {
-        "domains": [
-          {
-            "value": "LLM Systems",
-            "count": 1
-          }
-        ],
-        "tracks": [
-          {
-            "value": "Inference Acceleration",
-            "count": 1
-          }
-        ],
-        "problems": [
-          {
-            "value": "Speculative Decoding",
-            "count": 1
-          }
-        ],
-        "topics": [
-          {
-            "value": "Draft Model Training",
-            "count": 1
-          },
-          {
-            "value": "LLM Inference",
-            "count": 1
-          },
-          {
-            "value": "Scaling Law",
-            "count": 1
-          },
-          {
-            "value": "Speculative Decoding",
-            "count": 1
-          }
-        ],
-        "methods": [
-          {
-            "value": "Draft Tree",
-            "count": 1
-          },
-          {
-            "value": "Feature Fusion",
-            "count": 1
-          },
-          {
-            "value": "Token Prediction",
-            "count": 1
-          },
-          {
-            "value": "Training-Time Test",
-            "count": 1
-          }
-        ]
-      },
-      "split_candidates": [],
-      "representative_slugs": [
-        "2503.01840-eagle-3-scaling-up"
-      ],
-      "representative_papers": [
         {
           "slug": "2503.01840-eagle-3-scaling-up",
           "title": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",

@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-07-22T13:22:15",
+  "generated_at": "2026-07-22T13:24:43",
   "count": 13,
-  "label_count": 133,
+  "label_count": 143,
   "configured_label_count": 32,
   "alias_count": 3,
   "labels": [
@@ -38,7 +38,7 @@
           "label": "研究线",
           "english": "Research line",
           "query_key": "line",
-          "count": 1,
+          "count": 2,
           "configured": false,
           "href": "library.html?line=Speculative+Decoding"
         },
@@ -63,7 +63,7 @@
         "research_line",
         "topics"
       ],
-      "total_count": 13,
+      "total_count": 14,
       "paper_count": 8,
       "slugs": [
         "2503.01840-eagle-3-scaling-up",
@@ -118,7 +118,7 @@
           "title_zh": "推测性推测解码",
           "href": "2603.03251-speculative-speculative-decoding.html",
           "year": 2026,
-          "research_line": "Unassigned",
+          "research_line": "Speculative Decoding",
           "importance": 4
         },
         {
@@ -195,7 +195,7 @@
           "label": "结构域",
           "english": "Domain",
           "query_key": "domain",
-          "count": 10,
+          "count": 11,
           "configured": true,
           "href": "library.html?domain=LLM+Systems",
           "definition": {
@@ -208,8 +208,8 @@
       "field_names": [
         "domains"
       ],
-      "total_count": 10,
-      "paper_count": 10,
+      "total_count": 11,
+      "paper_count": 11,
       "slugs": [
         "2307.08691-flashattention-2",
         "2501.01005-flashinfer",
@@ -217,6 +217,7 @@
         "2503.14075-twigvlm-plus-plus",
         "2507.11851-llm-future-mtp",
         "2602.06036-dflash",
+        "2603.03251-speculative-speculative-decoding",
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus",
         "2607.00466-eldr",
@@ -278,6 +279,15 @@
           "importance": 4
         },
         {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html",
+          "year": 2026,
+          "research_line": "Speculative Decoding",
+          "importance": 4
+        },
+        {
           "slug": "2604.11035-introspective-dlm",
           "title": "Introspective Diffusion Language Models",
           "title_zh": "内省式扩散语言模型",
@@ -285,15 +295,6 @@
           "year": 2026,
           "research_line": "Parallel Decoding with Diffusion Models",
           "importance": 5
-        },
-        {
-          "slug": "2605.12825-orthrus",
-          "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion",
-          "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
-          "href": "2605.12825-orthrus.html",
-          "year": 2026,
-          "research_line": "Parallel Decoding with Diffusion Models",
-          "importance": 4
         }
       ],
       "aliases": [],
@@ -323,6 +324,132 @@
       "severity": "high",
       "recommended_action": "检查该标签是否过宽，必要时拆成更具体的 topic/method/problem。",
       "query_href": "library.html?domain=LLM+Systems"
+    },
+    {
+      "id": "llm-serving",
+      "label": "LLM Serving",
+      "key": "llm serving",
+      "fields": [
+        {
+          "field": "research_line",
+          "label": "研究线",
+          "english": "Research line",
+          "query_key": "line",
+          "count": 4,
+          "configured": false,
+          "href": "library.html?line=LLM+Serving"
+        },
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 5,
+          "configured": false,
+          "href": "library.html?topic=LLM+Serving"
+        }
+      ],
+      "field_names": [
+        "research_line",
+        "topics"
+      ],
+      "total_count": 9,
+      "paper_count": 7,
+      "slugs": [
+        "2501.01005-flashinfer",
+        "2512.23424-akg-kernel-agent-multi",
+        "2602.06036-dflash",
+        "2604.11035-introspective-dlm",
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark",
+        "semantic-search-evaluation"
+      ],
+      "papers": [
+        {
+          "slug": "2501.01005-flashinfer",
+          "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
+          "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
+          "href": "2501.01005-flashinfer.html",
+          "year": 2025,
+          "research_line": "Efficient Attention Kernels",
+          "importance": 4
+        },
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html",
+          "year": 2025,
+          "research_line": "LLM Serving",
+          "importance": 4
+        },
+        {
+          "slug": "2602.06036-dflash",
+          "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
+          "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
+          "href": "2602.06036-dflash.html",
+          "year": 2026,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        },
+        {
+          "slug": "2604.11035-introspective-dlm",
+          "title": "Introspective Diffusion Language Models",
+          "title_zh": "内省式扩散语言模型",
+          "href": "2604.11035-introspective-dlm.html",
+          "year": 2026,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 5
+        },
+        {
+          "slug": "2607.00466-eldr",
+          "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+          "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+          "href": "2607.00466-eldr.html",
+          "year": 2026,
+          "research_line": "LLM Serving",
+          "importance": 4
+        },
+        {
+          "slug": "noarxiv-2026-dspark",
+          "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+          "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+          "href": "noarxiv-2026-dspark.html",
+          "year": 2026,
+          "research_line": "LLM Serving",
+          "importance": 4
+        },
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "语义搜索评估",
+          "href": "semantic-search-evaluation.html",
+          "year": 2025,
+          "research_line": "LLM Serving",
+          "importance": 3
+        }
+      ],
+      "aliases": [
+        "serving systems"
+      ],
+      "alias_count": 1,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "cross_field",
+        "has_aliases",
+        "undefined_label",
+        "unowned_research_line"
+      ],
+      "severity": "high",
+      "recommended_action": "给这条 research_line 在 taxonomy.json 的 research_line_owners 中补 owner/team/cadence。",
+      "query_href": "library.html?topic=LLM+Serving"
     },
     {
       "id": "inference-acceleration",
@@ -447,122 +574,6 @@
       "query_href": "library.html?track=Inference+Acceleration"
     },
     {
-      "id": "llm-serving",
-      "label": "LLM Serving",
-      "key": "llm serving",
-      "fields": [
-        {
-          "field": "research_line",
-          "label": "研究线",
-          "english": "Research line",
-          "query_key": "line",
-          "count": 3,
-          "configured": false,
-          "href": "library.html?line=LLM+Serving"
-        },
-        {
-          "field": "topics",
-          "label": "主题",
-          "english": "Topic",
-          "query_key": "topic",
-          "count": 5,
-          "configured": false,
-          "href": "library.html?topic=LLM+Serving"
-        }
-      ],
-      "field_names": [
-        "research_line",
-        "topics"
-      ],
-      "total_count": 8,
-      "paper_count": 6,
-      "slugs": [
-        "2501.01005-flashinfer",
-        "2512.23424-akg-kernel-agent-multi",
-        "2602.06036-dflash",
-        "2604.11035-introspective-dlm",
-        "2607.00466-eldr",
-        "noarxiv-2026-dspark"
-      ],
-      "papers": [
-        {
-          "slug": "2501.01005-flashinfer",
-          "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
-          "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
-          "href": "2501.01005-flashinfer.html",
-          "year": 2025,
-          "research_line": "Efficient Attention Kernels",
-          "importance": 4
-        },
-        {
-          "slug": "2512.23424-akg-kernel-agent-multi",
-          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
-          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
-          "href": "2512.23424-akg-kernel-agent-multi.html",
-          "year": 2025,
-          "research_line": "LLM Serving",
-          "importance": 4
-        },
-        {
-          "slug": "2602.06036-dflash",
-          "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
-          "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
-          "href": "2602.06036-dflash.html",
-          "year": 2026,
-          "research_line": "Parallel Decoding with Diffusion Models",
-          "importance": 4
-        },
-        {
-          "slug": "2604.11035-introspective-dlm",
-          "title": "Introspective Diffusion Language Models",
-          "title_zh": "内省式扩散语言模型",
-          "href": "2604.11035-introspective-dlm.html",
-          "year": 2026,
-          "research_line": "Parallel Decoding with Diffusion Models",
-          "importance": 5
-        },
-        {
-          "slug": "2607.00466-eldr",
-          "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
-          "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
-          "href": "2607.00466-eldr.html",
-          "year": 2026,
-          "research_line": "LLM Serving",
-          "importance": 4
-        },
-        {
-          "slug": "noarxiv-2026-dspark",
-          "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
-          "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
-          "href": "noarxiv-2026-dspark.html",
-          "year": 2026,
-          "research_line": "LLM Serving",
-          "importance": 4
-        }
-      ],
-      "aliases": [
-        "serving systems"
-      ],
-      "alias_count": 1,
-      "configured": false,
-      "configured_fields": [],
-      "definitions": [],
-      "definition_count": 0,
-      "definition_status": "",
-      "description": "",
-      "owner": {},
-      "owner_name": "",
-      "signals": [
-        "cross_field",
-        "has_aliases",
-        "undefined_label",
-        "unowned_research_line"
-      ],
-      "severity": "high",
-      "recommended_action": "给这条 research_line 在 taxonomy.json 的 research_line_owners 中补 owner/team/cadence。",
-      "query_href": "library.html?topic=LLM+Serving"
-    },
-    {
       "id": "vlm-acceleration",
       "label": "VLM Acceleration",
       "key": "vlm acceleration",
@@ -635,58 +646,6 @@
       "severity": "high",
       "recommended_action": "给这条 research_line 在 taxonomy.json 的 research_line_owners 中补 owner/team/cadence。",
       "query_href": "library.html?track=VLM+Acceleration"
-    },
-    {
-      "id": "tooling",
-      "label": "tooling",
-      "key": "tooling",
-      "fields": [
-        {
-          "field": "line_role",
-          "label": "研究线角色",
-          "english": "Line role",
-          "query_key": "role",
-          "count": 1,
-          "configured": false,
-          "href": "library.html?role=tooling"
-        }
-      ],
-      "field_names": [
-        "line_role"
-      ],
-      "total_count": 1,
-      "paper_count": 1,
-      "slugs": [
-        "2512.23424-akg-kernel-agent-multi"
-      ],
-      "papers": [
-        {
-          "slug": "2512.23424-akg-kernel-agent-multi",
-          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
-          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
-          "href": "2512.23424-akg-kernel-agent-multi.html",
-          "year": 2025,
-          "research_line": "LLM Serving",
-          "importance": 4
-        }
-      ],
-      "aliases": [],
-      "alias_count": 0,
-      "configured": false,
-      "configured_fields": [],
-      "definitions": [],
-      "definition_count": 0,
-      "definition_status": "",
-      "description": "",
-      "owner": {},
-      "owner_name": "",
-      "signals": [
-        "singleton",
-        "unconfigured_value"
-      ],
-      "severity": "high",
-      "recommended_action": "确认这是新流程值还是拼写漂移：前者写入 taxonomy.json，后者批量修正报告 frontmatter。",
-      "query_href": "library.html?role=tooling"
     },
     {
       "id": "parallel-decoding",
@@ -857,7 +816,7 @@
           "title_zh": "推测性推测解码",
           "href": "2603.03251-speculative-speculative-decoding.html",
           "year": 2026,
-          "research_line": "Unassigned",
+          "research_line": "Speculative Decoding",
           "importance": 4
         },
         {
@@ -1132,6 +1091,130 @@
       "query_href": "library.html?problem=Lossless+Speculative+Decoding"
     },
     {
+      "id": "ai-systems",
+      "label": "AI Systems",
+      "key": "ai systems",
+      "fields": [
+        {
+          "field": "domains",
+          "label": "结构域",
+          "english": "Domain",
+          "query_key": "domain",
+          "count": 2,
+          "configured": false,
+          "href": "library.html?domain=AI+Systems"
+        }
+      ],
+      "field_names": [
+        "domains"
+      ],
+      "total_count": 2,
+      "paper_count": 2,
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi",
+        "semantic-search-evaluation"
+      ],
+      "papers": [
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html",
+          "year": 2025,
+          "research_line": "LLM Serving",
+          "importance": 4
+        },
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "语义搜索评估",
+          "href": "semantic-search-evaluation.html",
+          "year": 2025,
+          "research_line": "LLM Serving",
+          "importance": 3
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "给该标签补 label_definitions 说明，或确认它应合并到已有规范标签。",
+      "query_href": "library.html?domain=AI+Systems"
+    },
+    {
+      "id": "compiler-dsl",
+      "label": "Compiler/DSL",
+      "key": "compiler dsl",
+      "fields": [
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?topic=Compiler%2FDSL"
+        },
+        {
+          "field": "tracks",
+          "label": "方向",
+          "english": "Track",
+          "query_key": "track",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?track=Compiler%2FDSL"
+        }
+      ],
+      "field_names": [
+        "topics",
+        "tracks"
+      ],
+      "total_count": 2,
+      "paper_count": 1,
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "papers": [
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html",
+          "year": 2025,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "cross_field",
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "确认同名标签跨字段语义是否一致；若语义不同，改名让字段职责更清楚。",
+      "query_href": "library.html?track=Compiler%2FDSL"
+    },
+    {
       "id": "gated-lora",
       "label": "gated LoRA",
       "key": "gated lora",
@@ -1191,6 +1274,141 @@
       "severity": "medium",
       "recommended_action": "给该标签补 label_definitions 说明，或确认它应合并到已有规范标签。",
       "query_href": "library.html?method=gated+LoRA"
+    },
+    {
+      "id": "inference-optimization",
+      "label": "Inference Optimization",
+      "key": "inference optimization",
+      "fields": [
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?topic=Inference+Optimization"
+        },
+        {
+          "field": "tracks",
+          "label": "方向",
+          "english": "Track",
+          "query_key": "track",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?track=Inference+Optimization"
+        }
+      ],
+      "field_names": [
+        "topics",
+        "tracks"
+      ],
+      "total_count": 2,
+      "paper_count": 2,
+      "slugs": [
+        "2501.01005-flashinfer",
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "papers": [
+        {
+          "slug": "2501.01005-flashinfer",
+          "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
+          "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
+          "href": "2501.01005-flashinfer.html",
+          "year": 2025,
+          "research_line": "Efficient Attention Kernels",
+          "importance": 4
+        },
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html",
+          "year": 2026,
+          "research_line": "Speculative Decoding",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "cross_field",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "确认同名标签跨字段语义是否一致；若语义不同，改名让字段职责更清楚。",
+      "query_href": "library.html?track=Inference+Optimization"
+    },
+    {
+      "id": "kernel-generation",
+      "label": "Kernel Generation",
+      "key": "kernel generation",
+      "fields": [
+        {
+          "field": "problems",
+          "label": "问题",
+          "english": "Problem",
+          "query_key": "problem",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?problem=Kernel+Generation"
+        },
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?topic=Kernel+Generation"
+        }
+      ],
+      "field_names": [
+        "problems",
+        "topics"
+      ],
+      "total_count": 2,
+      "paper_count": 1,
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "papers": [
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html",
+          "year": 2025,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "cross_field",
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "确认同名标签跨字段语义是否一致；若语义不同，改名让字段职责更清楚。",
+      "query_href": "library.html?topic=Kernel+Generation"
     },
     {
       "id": "kv-cache",
@@ -1315,6 +1533,69 @@
       "query_href": "library.html?topic=LLM"
     },
     {
+      "id": "semantic-search",
+      "label": "Semantic Search",
+      "key": "semantic search",
+      "fields": [
+        {
+          "field": "problems",
+          "label": "问题",
+          "english": "Problem",
+          "query_key": "problem",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?problem=Semantic+Search"
+        },
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?topic=Semantic+Search"
+        }
+      ],
+      "field_names": [
+        "problems",
+        "topics"
+      ],
+      "total_count": 2,
+      "paper_count": 1,
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "papers": [
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "语义搜索评估",
+          "href": "semantic-search-evaluation.html",
+          "year": 2025,
+          "research_line": "LLM Serving",
+          "importance": 3
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "cross_field",
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "确认同名标签跨字段语义是否一致；若语义不同，改名让字段职责更清楚。",
+      "query_href": "library.html?topic=Semantic+Search"
+    },
+    {
       "id": "semi-autoregressive-generation",
       "label": "Semi-Autoregressive Generation",
       "key": "semi autoregressive generation",
@@ -1407,7 +1688,7 @@
           "title_zh": "推测性推测解码",
           "href": "2603.03251-speculative-speculative-decoding.html",
           "year": 2026,
-          "research_line": "Unassigned",
+          "research_line": "Speculative Decoding",
           "importance": 4
         }
       ],
@@ -1615,7 +1896,7 @@
           "title_zh": "推测性推测解码",
           "href": "2603.03251-speculative-speculative-decoding.html",
           "year": 2026,
-          "research_line": "Unassigned",
+          "research_line": "Speculative Decoding",
           "importance": 4
         }
       ],
@@ -1636,58 +1917,6 @@
       "severity": "medium",
       "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
       "query_href": "library.html?method=cache-aware+sampling"
-    },
-    {
-      "id": "compiler-dsl",
-      "label": "Compiler/DSL",
-      "key": "compiler dsl",
-      "fields": [
-        {
-          "field": "topics",
-          "label": "主题",
-          "english": "Topic",
-          "query_key": "topic",
-          "count": 1,
-          "configured": false,
-          "href": "library.html?topic=Compiler%2FDSL"
-        }
-      ],
-      "field_names": [
-        "topics"
-      ],
-      "total_count": 1,
-      "paper_count": 1,
-      "slugs": [
-        "2512.23424-akg-kernel-agent-multi"
-      ],
-      "papers": [
-        {
-          "slug": "2512.23424-akg-kernel-agent-multi",
-          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
-          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
-          "href": "2512.23424-akg-kernel-agent-multi.html",
-          "year": 2025,
-          "research_line": "LLM Serving",
-          "importance": 4
-        }
-      ],
-      "aliases": [],
-      "alias_count": 0,
-      "configured": false,
-      "configured_fields": [],
-      "definitions": [],
-      "definition_count": 0,
-      "definition_status": "",
-      "description": "",
-      "owner": {},
-      "owner_name": "",
-      "signals": [
-        "singleton",
-        "undefined_label"
-      ],
-      "severity": "medium",
-      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
-      "query_href": "library.html?topic=Compiler%2FDSL"
     },
     {
       "id": "composable-kv-cache-format",
@@ -1792,6 +2021,110 @@
       "severity": "medium",
       "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
       "query_href": "library.html?method=confidence-scheduled+verification"
+    },
+    {
+      "id": "cosine-similarity",
+      "label": "Cosine Similarity",
+      "key": "cosine similarity",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=Cosine+Similarity"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "papers": [
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "语义搜索评估",
+          "href": "semantic-search-evaluation.html",
+          "year": 2025,
+          "research_line": "LLM Serving",
+          "importance": 3
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=Cosine+Similarity"
+    },
+    {
+      "id": "cross-platform-deployment",
+      "label": "Cross-Platform Deployment",
+      "key": "cross platform deployment",
+      "fields": [
+        {
+          "field": "problems",
+          "label": "问题",
+          "english": "Problem",
+          "query_key": "problem",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?problem=Cross-Platform+Deployment"
+        }
+      ],
+      "field_names": [
+        "problems"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "papers": [
+        {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html",
+          "year": 2025,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?problem=Cross-Platform+Deployment"
     },
     {
       "id": "cuda-gpu-parallelism",
@@ -2083,7 +2416,7 @@
           "title_zh": "推测性推测解码",
           "href": "2603.03251-speculative-speculative-decoding.html",
           "year": 2026,
-          "research_line": "Unassigned",
+          "research_line": "Speculative Decoding",
           "importance": 4
         }
       ],
@@ -2603,7 +2936,7 @@
           "title_zh": "推测性推测解码",
           "href": "2603.03251-speculative-speculative-decoding.html",
           "year": 2026,
-          "research_line": "Unassigned",
+          "research_line": "Speculative Decoding",
           "importance": 4
         }
       ],
@@ -2811,7 +3144,7 @@
           "title_zh": "推测性推测解码",
           "href": "2603.03251-speculative-speculative-decoding.html",
           "year": 2026,
-          "research_line": "Unassigned",
+          "research_line": "Speculative Decoding",
           "importance": 4
         }
       ],
@@ -3094,36 +3427,36 @@
       "query_href": "library.html?method=Hierarchical+Code+Retrieval"
     },
     {
-      "id": "inference-optimization",
-      "label": "Inference Optimization",
-      "key": "inference optimization",
+      "id": "inference-latency",
+      "label": "Inference Latency",
+      "key": "inference latency",
       "fields": [
         {
-          "field": "topics",
-          "label": "主题",
-          "english": "Topic",
-          "query_key": "topic",
+          "field": "problems",
+          "label": "问题",
+          "english": "Problem",
+          "query_key": "problem",
           "count": 1,
           "configured": false,
-          "href": "library.html?topic=Inference+Optimization"
+          "href": "library.html?problem=Inference+Latency"
         }
       ],
       "field_names": [
-        "topics"
+        "problems"
       ],
       "total_count": 1,
       "paper_count": 1,
       "slugs": [
-        "2501.01005-flashinfer"
+        "2603.03251-speculative-speculative-decoding"
       ],
       "papers": [
         {
-          "slug": "2501.01005-flashinfer",
-          "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
-          "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
-          "href": "2501.01005-flashinfer.html",
-          "year": 2025,
-          "research_line": "Efficient Attention Kernels",
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html",
+          "year": 2026,
+          "research_line": "Speculative Decoding",
           "importance": 4
         }
       ],
@@ -3143,7 +3476,7 @@
       ],
       "severity": "medium",
       "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
-      "query_href": "library.html?topic=Inference+Optimization"
+      "query_href": "library.html?problem=Inference+Latency"
     },
     {
       "id": "inference-serving-systems",
@@ -3458,22 +3791,22 @@
       "query_href": "library.html?method=JIT+compilation"
     },
     {
-      "id": "kernel-generation",
-      "label": "Kernel Generation",
-      "key": "kernel generation",
+      "id": "kernel-optimization",
+      "label": "Kernel Optimization",
+      "key": "kernel optimization",
       "fields": [
         {
-          "field": "topics",
-          "label": "主题",
-          "english": "Topic",
-          "query_key": "topic",
+          "field": "tracks",
+          "label": "方向",
+          "english": "Track",
+          "query_key": "track",
           "count": 1,
           "configured": false,
-          "href": "library.html?topic=Kernel+Generation"
+          "href": "library.html?track=Kernel+Optimization"
         }
       ],
       "field_names": [
-        "topics"
+        "tracks"
       ],
       "total_count": 1,
       "paper_count": 1,
@@ -3507,7 +3840,7 @@
       ],
       "severity": "medium",
       "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
-      "query_href": "library.html?topic=Kernel+Generation"
+      "query_href": "library.html?track=Kernel+Optimization"
     },
     {
       "id": "kv-injection",
@@ -3820,6 +4153,58 @@
       "severity": "medium",
       "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
       "query_href": "library.html?method=load-balanced+scheduling"
+    },
+    {
+      "id": "local-hash-embeddings",
+      "label": "Local Hash Embeddings",
+      "key": "local hash embeddings",
+      "fields": [
+        {
+          "field": "methods",
+          "label": "方法",
+          "english": "Method",
+          "query_key": "method",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?method=Local+Hash+Embeddings"
+        }
+      ],
+      "field_names": [
+        "methods"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "papers": [
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "语义搜索评估",
+          "href": "semantic-search-evaluation.html",
+          "year": 2025,
+          "research_line": "LLM Serving",
+          "importance": 3
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?method=Local+Hash+Embeddings"
     },
     {
       "id": "logit-shifted-causal-training",
@@ -4966,58 +5351,6 @@
       "query_href": "library.html?method=quadratic+speculative+decoding"
     },
     {
-      "id": "rag",
-      "label": "RAG",
-      "key": "rag",
-      "fields": [
-        {
-          "field": "topics",
-          "label": "主题",
-          "english": "Topic",
-          "query_key": "topic",
-          "count": 1,
-          "configured": false,
-          "href": "library.html?topic=RAG"
-        }
-      ],
-      "field_names": [
-        "topics"
-      ],
-      "total_count": 1,
-      "paper_count": 1,
-      "slugs": [
-        "semantic-search-evaluation"
-      ],
-      "papers": [
-        {
-          "slug": "semantic-search-evaluation",
-          "title": "Semantic Search Evaluation",
-          "title_zh": "Semantic Search Evaluation",
-          "href": "semantic-search-evaluation.md",
-          "year": "",
-          "research_line": "Unassigned",
-          "importance": ""
-        }
-      ],
-      "aliases": [],
-      "alias_count": 0,
-      "configured": false,
-      "configured_fields": [],
-      "definitions": [],
-      "definition_count": 0,
-      "definition_status": "",
-      "description": "",
-      "owner": {},
-      "owner_name": "",
-      "signals": [
-        "singleton",
-        "undefined_label"
-      ],
-      "severity": "medium",
-      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
-      "query_href": "library.html?topic=RAG"
-    },
-    {
       "id": "sampler-head",
       "label": "sampler head",
       "key": "sampler head",
@@ -5120,6 +5453,58 @@
       "severity": "medium",
       "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
       "query_href": "library.html?topic=Scaling+Law"
+    },
+    {
+      "id": "search-retrieval",
+      "label": "Search & Retrieval",
+      "key": "search retrieval",
+      "fields": [
+        {
+          "field": "tracks",
+          "label": "方向",
+          "english": "Track",
+          "query_key": "track",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?track=Search+%26+Retrieval"
+        }
+      ],
+      "field_names": [
+        "tracks"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "papers": [
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "语义搜索评估",
+          "href": "semantic-search-evaluation.html",
+          "year": 2025,
+          "research_line": "LLM Serving",
+          "importance": 3
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?track=Search+%26+Retrieval"
     },
     {
       "id": "sglang-serving",
@@ -5278,6 +5663,58 @@
       "query_href": "library.html?method=Signature+Cache"
     },
     {
+      "id": "sqlite",
+      "label": "SQLite",
+      "key": "sqlite",
+      "fields": [
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?topic=SQLite"
+        }
+      ],
+      "field_names": [
+        "topics"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "papers": [
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "语义搜索评估",
+          "href": "semantic-search-evaluation.html",
+          "year": 2025,
+          "research_line": "LLM Serving",
+          "importance": 3
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?topic=SQLite"
+    },
+    {
       "id": "systems-optimization",
       "label": "Systems Optimization",
       "key": "systems optimization",
@@ -5307,7 +5744,7 @@
           "title_zh": "推测性推测解码",
           "href": "2603.03251-speculative-speculative-decoding.html",
           "year": 2026,
-          "research_line": "Unassigned",
+          "research_line": "Speculative Decoding",
           "importance": 4
         }
       ],
@@ -5380,6 +5817,58 @@
       "severity": "medium",
       "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
       "query_href": "library.html?method=target+hidden+features"
+    },
+    {
+      "id": "throughput-optimization",
+      "label": "Throughput Optimization",
+      "key": "throughput optimization",
+      "fields": [
+        {
+          "field": "problems",
+          "label": "问题",
+          "english": "Problem",
+          "query_key": "problem",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?problem=Throughput+Optimization"
+        }
+      ],
+      "field_names": [
+        "problems"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "papers": [
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html",
+          "year": 2026,
+          "research_line": "Speculative Decoding",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?problem=Throughput+Optimization"
     },
     {
       "id": "tiling",
@@ -5746,6 +6235,110 @@
       "query_href": "library.html?method=Unified+Sketch"
     },
     {
+      "id": "vector-database",
+      "label": "Vector Database",
+      "key": "vector database",
+      "fields": [
+        {
+          "field": "topics",
+          "label": "主题",
+          "english": "Topic",
+          "query_key": "topic",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?topic=Vector+Database"
+        }
+      ],
+      "field_names": [
+        "topics"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "papers": [
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "语义搜索评估",
+          "href": "semantic-search-evaluation.html",
+          "year": 2025,
+          "research_line": "LLM Serving",
+          "importance": 3
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?topic=Vector+Database"
+    },
+    {
+      "id": "vector-storage",
+      "label": "Vector Storage",
+      "key": "vector storage",
+      "fields": [
+        {
+          "field": "problems",
+          "label": "问题",
+          "english": "Problem",
+          "query_key": "problem",
+          "count": 1,
+          "configured": false,
+          "href": "library.html?problem=Vector+Storage"
+        }
+      ],
+      "field_names": [
+        "problems"
+      ],
+      "total_count": 1,
+      "paper_count": 1,
+      "slugs": [
+        "semantic-search-evaluation"
+      ],
+      "papers": [
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "语义搜索评估",
+          "href": "semantic-search-evaluation.html",
+          "year": 2025,
+          "research_line": "LLM Serving",
+          "importance": 3
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": false,
+      "configured_fields": [],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [
+        "singleton",
+        "undefined_label"
+      ],
+      "severity": "medium",
+      "recommended_action": "单例标签适合观察或合并，除非它代表明确的新研究方向。",
+      "query_href": "library.html?problem=Vector+Storage"
+    },
+    {
       "id": "verification-and-profiling-loop",
       "label": "Verification and Profiling Loop",
       "key": "verification and profiling loop",
@@ -5827,7 +6420,7 @@
           "title_zh": "推测性推测解码",
           "href": "2603.03251-speculative-speculative-decoding.html",
           "year": 2026,
-          "research_line": "Unassigned",
+          "research_line": "Speculative Decoding",
           "importance": 4
         }
       ],
@@ -7074,7 +7667,7 @@
           "title_zh": "推测性推测解码",
           "href": "2603.03251-speculative-speculative-decoding.html",
           "year": 2026,
-          "research_line": "Unassigned",
+          "research_line": "Speculative Decoding",
           "importance": 4
         }
       ],
@@ -7114,7 +7707,7 @@
           "label": "阅读阶段",
           "english": "Reading stage",
           "query_key": "stage",
-          "count": 8,
+          "count": 11,
           "configured": true,
           "href": "library.html?stage=deep_read",
           "definition": {
@@ -7127,17 +7720,20 @@
       "field_names": [
         "reading_stage"
       ],
-      "total_count": 8,
-      "paper_count": 8,
+      "total_count": 11,
+      "paper_count": 11,
       "slugs": [
         "2307.08691-flashattention-2",
         "2501.01005-flashinfer",
         "2503.01840-eagle-3-scaling-up",
         "2507.11851-llm-future-mtp",
+        "2512.23424-akg-kernel-agent-multi",
         "2602.06036-dflash",
+        "2603.03251-speculative-speculative-decoding",
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus",
-        "2607.00466-eldr"
+        "2607.00466-eldr",
+        "semantic-search-evaluation"
       ],
       "papers": [
         {
@@ -7177,12 +7773,30 @@
           "importance": 4
         },
         {
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html",
+          "year": 2025,
+          "research_line": "LLM Serving",
+          "importance": 4
+        },
+        {
           "slug": "2602.06036-dflash",
           "title": "DFlash: Block Diffusion for Flash Speculative Decoding",
           "title_zh": "DFlash：用于快速 speculative decoding 的块扩散方法",
           "href": "2602.06036-dflash.html",
           "year": 2026,
           "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        },
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html",
+          "year": 2026,
+          "research_line": "Speculative Decoding",
           "importance": 4
         },
         {
@@ -7193,24 +7807,6 @@
           "year": 2026,
           "research_line": "Parallel Decoding with Diffusion Models",
           "importance": 5
-        },
-        {
-          "slug": "2605.12825-orthrus",
-          "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion",
-          "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
-          "href": "2605.12825-orthrus.html",
-          "year": 2026,
-          "research_line": "Parallel Decoding with Diffusion Models",
-          "importance": 4
-        },
-        {
-          "slug": "2607.00466-eldr",
-          "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
-          "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
-          "href": "2607.00466-eldr.html",
-          "year": 2026,
-          "research_line": "LLM Serving",
-          "importance": 4
         }
       ],
       "aliases": [],
@@ -7238,6 +7834,87 @@
       "severity": "ok",
       "recommended_action": "当前标签状态稳定。",
       "query_href": "library.html?stage=deep_read"
+    },
+    {
+      "id": "main",
+      "label": "main",
+      "key": "main",
+      "fields": [
+        {
+          "field": "line_role",
+          "label": "研究线角色",
+          "english": "Line role",
+          "query_key": "role",
+          "count": 4,
+          "configured": true,
+          "href": "library.html?role=main"
+        }
+      ],
+      "field_names": [
+        "line_role"
+      ],
+      "total_count": 4,
+      "paper_count": 4,
+      "slugs": [
+        "2503.01840-eagle-3-scaling-up",
+        "2503.14075-twigvlm-plus-plus",
+        "2603.03251-speculative-speculative-decoding",
+        "2607.00466-eldr"
+      ],
+      "papers": [
+        {
+          "slug": "2503.01840-eagle-3-scaling-up",
+          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
+          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
+          "href": "2503.01840-eagle-3-scaling-up.html",
+          "year": 2025,
+          "research_line": "Speculative Decoding",
+          "importance": 4
+        },
+        {
+          "slug": "2503.14075-twigvlm-plus-plus",
+          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
+          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
+          "href": "2503.14075-twigvlm-plus-plus.html",
+          "year": 2026,
+          "research_line": "VLM Acceleration",
+          "importance": 4
+        },
+        {
+          "slug": "2603.03251-speculative-speculative-decoding",
+          "title": "Speculative Speculative Decoding",
+          "title_zh": "推测性推测解码",
+          "href": "2603.03251-speculative-speculative-decoding.html",
+          "year": 2026,
+          "research_line": "Speculative Decoding",
+          "importance": 4
+        },
+        {
+          "slug": "2607.00466-eldr",
+          "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+          "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
+          "href": "2607.00466-eldr.html",
+          "year": 2026,
+          "research_line": "LLM Serving",
+          "importance": 4
+        }
+      ],
+      "aliases": [],
+      "alias_count": 0,
+      "configured": true,
+      "configured_fields": [
+        "line_role"
+      ],
+      "definitions": [],
+      "definition_count": 0,
+      "definition_status": "",
+      "description": "",
+      "owner": {},
+      "owner_name": "",
+      "signals": [],
+      "severity": "ok",
+      "recommended_action": "当前标签状态稳定。",
+      "query_href": "library.html?role=main"
     },
     {
       "id": "parallel-decoding-with-diffusion-models",
@@ -7338,9 +8015,9 @@
       "query_href": "library.html?line=Parallel+Decoding+with+Diffusion+Models"
     },
     {
-      "id": "main",
-      "label": "main",
-      "key": "main",
+      "id": "variant",
+      "label": "variant",
+      "key": "variant",
       "fields": [
         {
           "field": "line_role",
@@ -7349,7 +8026,7 @@
           "query_key": "role",
           "count": 3,
           "configured": true,
-          "href": "library.html?role=main"
+          "href": "library.html?role=variant"
         }
       ],
       "field_names": [
@@ -7358,37 +8035,37 @@
       "total_count": 3,
       "paper_count": 3,
       "slugs": [
-        "2503.01840-eagle-3-scaling-up",
-        "2503.14075-twigvlm-plus-plus",
-        "2607.00466-eldr"
+        "2512.23424-akg-kernel-agent-multi",
+        "2605.12825-orthrus",
+        "semantic-search-evaluation"
       ],
       "papers": [
         {
-          "slug": "2503.01840-eagle-3-scaling-up",
-          "title": "EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test",
-          "title_zh": "EAGLE-3：通过训练时测试扩展大语言模型推理加速",
-          "href": "2503.01840-eagle-3-scaling-up.html",
+          "slug": "2512.23424-akg-kernel-agent-multi",
+          "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+          "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+          "href": "2512.23424-akg-kernel-agent-multi.html",
           "year": 2025,
-          "research_line": "Speculative Decoding",
-          "importance": 4
-        },
-        {
-          "slug": "2503.14075-twigvlm-plus-plus",
-          "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
-          "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
-          "href": "2503.14075-twigvlm-plus-plus.html",
-          "year": 2026,
-          "research_line": "VLM Acceleration",
-          "importance": 4
-        },
-        {
-          "slug": "2607.00466-eldr",
-          "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
-          "title_zh": "ELDR：面向 PD 分离 MoE 服务的专家局部性感知解码路由",
-          "href": "2607.00466-eldr.html",
-          "year": 2026,
           "research_line": "LLM Serving",
           "importance": 4
+        },
+        {
+          "slug": "2605.12825-orthrus",
+          "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion",
+          "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
+          "href": "2605.12825-orthrus.html",
+          "year": 2026,
+          "research_line": "Parallel Decoding with Diffusion Models",
+          "importance": 4
+        },
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "语义搜索评估",
+          "href": "semantic-search-evaluation.html",
+          "year": 2025,
+          "research_line": "LLM Serving",
+          "importance": 3
         }
       ],
       "aliases": [],
@@ -7406,7 +8083,7 @@
       "signals": [],
       "severity": "ok",
       "recommended_action": "当前标签状态稳定。",
-      "query_href": "library.html?role=main"
+      "query_href": "library.html?role=variant"
     },
     {
       "id": "code-checked",
@@ -7818,91 +8495,39 @@
       "severity": "ok",
       "recommended_action": "当前标签状态稳定。",
       "query_href": "library.html?role=system"
-    },
-    {
-      "id": "variant",
-      "label": "variant",
-      "key": "variant",
-      "fields": [
-        {
-          "field": "line_role",
-          "label": "研究线角色",
-          "english": "Line role",
-          "query_key": "role",
-          "count": 1,
-          "configured": true,
-          "href": "library.html?role=variant"
-        }
-      ],
-      "field_names": [
-        "line_role"
-      ],
-      "total_count": 1,
-      "paper_count": 1,
-      "slugs": [
-        "2605.12825-orthrus"
-      ],
-      "papers": [
-        {
-          "slug": "2605.12825-orthrus",
-          "title": "Orthrus: Memory-Efficient Parallel Token Generation via Dual-View Diffusion",
-          "title_zh": "Orthrus：通过双视角扩散实现内存高效的并行 token 生成",
-          "href": "2605.12825-orthrus.html",
-          "year": 2026,
-          "research_line": "Parallel Decoding with Diffusion Models",
-          "importance": 4
-        }
-      ],
-      "aliases": [],
-      "alias_count": 0,
-      "configured": true,
-      "configured_fields": [
-        "line_role"
-      ],
-      "definitions": [],
-      "definition_count": 0,
-      "definition_status": "",
-      "description": "",
-      "owner": {},
-      "owner_name": "",
-      "signals": [],
-      "severity": "ok",
-      "recommended_action": "当前标签状态稳定。",
-      "query_href": "library.html?role=variant"
     }
   ],
   "summary": {
-    "high": 6,
-    "medium": 116,
+    "high": 5,
+    "medium": 127,
     "low": 0,
     "ok": 11,
-    "cross_field": 6,
-    "singleton": 93,
+    "cross_field": 10,
+    "singleton": 101,
     "unused_configured": 17,
     "unowned_research_line": 2,
     "defined": 25,
     "deprecated_in_use": 0,
-    "undefined_label": 100
+    "undefined_label": 111
   },
   "field_counts": {
-    "domains": 2,
-    "line_role": 8,
-    "methods": 58,
-    "problems": 11,
+    "domains": 3,
+    "line_role": 7,
+    "methods": 60,
+    "problems": 17,
     "reading_stage": 5,
     "research_line": 5,
     "review_stage": 4,
     "status": 9,
-    "topics": 35,
-    "tracks": 5
+    "topics": 37,
+    "tracks": 9
   },
   "signals": {
-    "cross_field": 6,
+    "cross_field": 10,
     "has_aliases": 3,
     "overloaded": 3,
-    "singleton": 93,
-    "unconfigured_value": 1,
-    "undefined_label": 100,
+    "singleton": 101,
+    "undefined_label": 111,
     "unowned_research_line": 2,
     "unused_configured": 17
   },

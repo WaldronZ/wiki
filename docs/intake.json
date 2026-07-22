@@ -1,8 +1,30 @@
 {
-  "generated_at": "2026-07-22T13:22:15",
+  "generated_at": "2026-07-22T13:24:43",
   "count": 13,
   "inbox_count": 0,
   "existing_papers": [
+    {
+      "slug": "2603.03251-speculative-speculative-decoding",
+      "title": "Speculative Speculative Decoding",
+      "title_zh": "推测性推测解码",
+      "title_en": "Speculative Speculative Decoding",
+      "arxiv_id": "2603.03251",
+      "arxiv_key": "2603.03251",
+      "title_keys": [
+        "speculative speculative decoding",
+        "推测性推测解码"
+      ],
+      "link_keys": [
+        "2603.03251-speculative-speculative-decoding.html",
+        "2603.03251-speculative-speculative-decoding.md",
+        "https://arxiv.org/abs/2603.03251",
+        "https://github.com/tanishqkumar/ssd"
+      ],
+      "href": "2603.03251-speculative-speculative-decoding.html",
+      "research_line": "Speculative Decoding",
+      "status": "read",
+      "year": 2026
+    },
     {
       "slug": "2503.14075-twigvlm-plus-plus",
       "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
@@ -44,28 +66,6 @@
       ],
       "href": "2602.06036-dflash.html",
       "research_line": "Parallel Decoding with Diffusion Models",
-      "status": "read",
-      "year": 2026
-    },
-    {
-      "slug": "2603.03251-speculative-speculative-decoding",
-      "title": "Speculative Speculative Decoding",
-      "title_zh": "推测性推测解码",
-      "title_en": "Speculative Speculative Decoding",
-      "arxiv_id": "2603.03251",
-      "arxiv_key": "2603.03251",
-      "title_keys": [
-        "speculative speculative decoding",
-        "推测性推测解码"
-      ],
-      "link_keys": [
-        "2603.03251-speculative-speculative-decoding.html",
-        "2603.03251-speculative-speculative-decoding.md",
-        "https://arxiv.org/abs/2603.03251",
-        "https://github.com/tanishqkumar/ssd"
-      ],
-      "href": "2603.03251-speculative-speculative-decoding.html",
-      "research_line": "Unassigned",
       "status": "read",
       "year": 2026
     },
@@ -157,6 +157,49 @@
       "year": 2026
     },
     {
+      "slug": "semantic-search-evaluation",
+      "title": "Semantic Search Evaluation",
+      "title_zh": "语义搜索评估",
+      "title_en": "Semantic Search Evaluation",
+      "arxiv_id": "noarxiv-semantic-search-evaluation",
+      "arxiv_key": "noarxi",
+      "title_keys": [
+        "semantic search evaluation",
+        "语义搜索评估"
+      ],
+      "link_keys": [
+        "https://arxiv.org/abs/noarxiv-semantic-search-evaluation",
+        "semantic-search-evaluation.html",
+        "semantic-search-evaluation.md"
+      ],
+      "href": "semantic-search-evaluation.html",
+      "research_line": "LLM Serving",
+      "status": "read",
+      "year": 2025
+    },
+    {
+      "slug": "2512.23424-akg-kernel-agent-multi",
+      "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+      "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+      "title_en": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+      "arxiv_id": "2512.23424",
+      "arxiv_key": "2512.23424",
+      "title_keys": [
+        "akg kernel agent a multi agent framework for cross platform kernel synthesis",
+        "akg kernel agent 用于跨平台 kernel 合成的多智能体框架"
+      ],
+      "link_keys": [
+        "2512.23424-akg-kernel-agent-multi.html",
+        "2512.23424-akg-kernel-agent-multi.md",
+        "https://arxiv.org/abs/2512.23424",
+        "https://arxiv.org/abs/2512.23424v1"
+      ],
+      "href": "2512.23424-akg-kernel-agent-multi.html",
+      "research_line": "LLM Serving",
+      "status": "read",
+      "year": 2025
+    },
+    {
       "slug": "2501.01005-flashinfer",
       "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
       "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
@@ -222,28 +265,6 @@
       "year": 2025
     },
     {
-      "slug": "2512.23424-akg-kernel-agent-multi",
-      "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
-      "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
-      "title_en": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
-      "arxiv_id": "2512.23424",
-      "arxiv_key": "2512.23424",
-      "title_keys": [
-        "akg kernel agent a multi agent framework for cross platform kernel synthesis",
-        "akg kernel agent 用于跨平台 kernel 合成的多智能体框架"
-      ],
-      "link_keys": [
-        "2512.23424-akg-kernel-agent-multi.html",
-        "2512.23424-akg-kernel-agent-multi.md",
-        "https://arxiv.org/abs/2512.23424",
-        "https://arxiv.org/abs/2512.23424v1"
-      ],
-      "href": "2512.23424-akg-kernel-agent-multi.html",
-      "research_line": "LLM Serving",
-      "status": "read",
-      "year": 2025
-    },
-    {
       "slug": "2307.08691-flashattention-2",
       "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning",
       "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
@@ -264,24 +285,6 @@
       "research_line": "Efficient Attention Kernels",
       "status": "read",
       "year": 2023
-    },
-    {
-      "slug": "semantic-search-evaluation",
-      "title": "Semantic Search Evaluation",
-      "title_zh": "Semantic Search Evaluation",
-      "title_en": "",
-      "arxiv_id": "",
-      "arxiv_key": "",
-      "title_keys": [
-        "semantic search evaluation"
-      ],
-      "link_keys": [
-        "semantic-search-evaluation.md"
-      ],
-      "href": "semantic-search-evaluation.md",
-      "research_line": "Unassigned",
-      "status": "read",
-      "year": ""
     }
   ],
   "inbox_items": [],

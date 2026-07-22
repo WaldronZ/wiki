@@ -1,50 +1,43 @@
 {
-  "generated_at": "2026-07-22T13:22:15",
+  "generated_at": "2026-07-22T13:24:43",
   "count": 13,
-  "quality_score": 75.2,
+  "quality_score": 90.2,
   "coverage": {
-    "taxonomy": "77%",
+    "taxonomy": "100%",
     "review_plan": "0%",
     "code_observation": "69%",
     "research_lines": 5
   },
   "queues": {
-    "missing_required_metadata": [
-      "2603.03251-speculative-speculative-decoding",
-      "2512.23424-akg-kernel-agent-multi",
-      "semantic-search-evaluation"
-    ],
+    "missing_required_metadata": [],
     "needs_review_plan": [
+      "2603.03251-speculative-speculative-decoding",
       "2503.14075-twigvlm-plus-plus",
       "2602.06036-dflash",
-      "2603.03251-speculative-speculative-decoding",
       "2604.11035-introspective-dlm",
       "2605.12825-orthrus",
       "2607.00466-eldr",
       "noarxiv-2026-dspark",
+      "semantic-search-evaluation",
+      "2512.23424-akg-kernel-agent-multi",
       "2501.01005-flashinfer",
       "2503.01840-eagle-3-scaling-up",
       "2507.11851-llm-future-mtp",
-      "2512.23424-akg-kernel-agent-multi",
-      "2307.08691-flashattention-2",
-      "semantic-search-evaluation"
+      "2307.08691-flashattention-2"
     ],
     "due_review": [],
     "no_code_observation": [
       "2607.00466-eldr",
-      "2507.11851-llm-future-mtp",
+      "semantic-search-evaluation",
       "2512.23424-akg-kernel-agent-multi",
+      "2507.11851-llm-future-mtp"
+    ],
+    "taxonomy_drift": [],
+    "duplicate_reports": [
+      "noarxiv-2026-dspark",
       "semantic-search-evaluation"
     ],
-    "taxonomy_drift": [
-      "2512.23424-akg-kernel-agent-multi"
-    ],
-    "duplicate_reports": [],
-    "taxonomy_sparse": [
-      "2512.23424-akg-kernel-agent-multi",
-      "2603.03251-speculative-speculative-decoding",
-      "semantic-search-evaluation"
-    ],
+    "taxonomy_sparse": [],
     "taxonomy_dense": [
       "2501.01005-flashinfer",
       "2503.14075-twigvlm-plus-plus",
@@ -57,6 +50,21 @@
     ]
   },
   "issues": [
+    {
+      "slug": "2603.03251-speculative-speculative-decoding",
+      "title": "Speculative Speculative Decoding",
+      "title_zh": "推测性推测解码",
+      "research_line": "Speculative Decoding",
+      "importance": 4,
+      "score": 92,
+      "missing_fields": [],
+      "weak_fields": [
+        "next_review",
+        "review_stage"
+      ],
+      "due_review": false,
+      "has_code": true
+    },
     {
       "slug": "2503.14075-twigvlm-plus-plus",
       "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
@@ -84,30 +92,6 @@
       "weak_fields": [
         "next_review",
         "review_stage"
-      ],
-      "due_review": false,
-      "has_code": true
-    },
-    {
-      "slug": "2603.03251-speculative-speculative-decoding",
-      "title": "Speculative Speculative Decoding",
-      "title_zh": "推测性推测解码",
-      "research_line": "Unassigned",
-      "importance": 4,
-      "score": 24,
-      "missing_fields": [
-        "domains",
-        "tracks",
-        "problems",
-        "research_line",
-        "line_role",
-        "reading_stage"
-      ],
-      "weak_fields": [
-        "next_review",
-        "review_stage",
-        "confidence",
-        "reproducibility"
       ],
       "due_review": false,
       "has_code": true
@@ -174,6 +158,38 @@
       "has_code": true
     },
     {
+      "slug": "semantic-search-evaluation",
+      "title": "Semantic Search Evaluation",
+      "title_zh": "语义搜索评估",
+      "research_line": "LLM Serving",
+      "importance": 3,
+      "score": 88,
+      "missing_fields": [],
+      "weak_fields": [
+        "next_review",
+        "review_stage",
+        "has_code"
+      ],
+      "due_review": false,
+      "has_code": false
+    },
+    {
+      "slug": "2512.23424-akg-kernel-agent-multi",
+      "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+      "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+      "research_line": "LLM Serving",
+      "importance": 4,
+      "score": 88,
+      "missing_fields": [],
+      "weak_fields": [
+        "next_review",
+        "review_stage",
+        "has_code"
+      ],
+      "due_review": false,
+      "has_code": false
+    },
+    {
       "slug": "2501.01005-flashinfer",
       "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
       "title_zh": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
@@ -221,29 +237,6 @@
       "has_code": false
     },
     {
-      "slug": "2512.23424-akg-kernel-agent-multi",
-      "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
-      "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
-      "research_line": "LLM Serving",
-      "importance": 4,
-      "score": 40,
-      "missing_fields": [
-        "domains",
-        "tracks",
-        "problems",
-        "reading_stage"
-      ],
-      "weak_fields": [
-        "next_review",
-        "review_stage",
-        "has_code",
-        "confidence",
-        "reproducibility"
-      ],
-      "due_review": false,
-      "has_code": false
-    },
-    {
       "slug": "2307.08691-flashattention-2",
       "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning",
       "title_zh": "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
@@ -257,32 +250,6 @@
       ],
       "due_review": false,
       "has_code": true
-    },
-    {
-      "slug": "semantic-search-evaluation",
-      "title": "Semantic Search Evaluation",
-      "title_zh": "Semantic Search Evaluation",
-      "research_line": "Unassigned",
-      "importance": 0,
-      "score": 10,
-      "missing_fields": [
-        "domains",
-        "tracks",
-        "problems",
-        "methods",
-        "research_line",
-        "line_role",
-        "reading_stage"
-      ],
-      "weak_fields": [
-        "next_review",
-        "review_stage",
-        "has_code",
-        "confidence",
-        "reproducibility"
-      ],
-      "due_review": false,
-      "has_code": false
     }
   ],
   "taxonomy_load": [
@@ -308,17 +275,17 @@
       "recommendation": "检查 topic / method 是否过细，保留最能区分论文的标签。"
     },
     {
-      "slug": "2603.03251-speculative-speculative-decoding",
-      "title": "Speculative Speculative Decoding",
-      "title_zh": "推测性推测解码",
-      "html_path": "2603.03251-speculative-speculative-decoding.html",
-      "research_line": "Unassigned",
-      "structure_count": 0,
-      "topic_count": 4,
+      "slug": "2604.11035-introspective-dlm",
+      "title": "Introspective Diffusion Language Models",
+      "title_zh": "内省式扩散语言模型",
+      "html_path": "2604.11035-introspective-dlm.html",
+      "research_line": "Parallel Decoding with Diffusion Models",
+      "structure_count": 4,
+      "topic_count": 5,
       "method_count": 6,
-      "tag_count": 10,
+      "tag_count": 11,
       "signals": [
-        "sparse_structure"
+        "dense_tags"
       ],
       "policy": {
         "min_structure_labels": 3,
@@ -326,15 +293,15 @@
         "max_tags": 10,
         "max_methods": 8
       },
-      "recommendation": "补齐 domain / track / problem 或 topic / method，让这篇论文能被多入口检索。"
+      "recommendation": "检查 topic / method 是否过细，保留最能区分论文的标签。"
     },
     {
-      "slug": "2604.11035-introspective-dlm",
-      "title": "Introspective Diffusion Language Models",
-      "title_zh": "内省式扩散语言模型",
-      "html_path": "2604.11035-introspective-dlm.html",
-      "research_line": "Parallel Decoding with Diffusion Models",
-      "structure_count": 4,
+      "slug": "2512.23424-akg-kernel-agent-multi",
+      "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+      "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+      "html_path": "2512.23424-akg-kernel-agent-multi.html",
+      "research_line": "LLM Serving",
+      "structure_count": 5,
       "topic_count": 5,
       "method_count": 6,
       "tag_count": 11,
@@ -369,50 +336,6 @@
         "max_methods": 8
       },
       "recommendation": "检查 topic / method 是否过细，保留最能区分论文的标签。"
-    },
-    {
-      "slug": "2512.23424-akg-kernel-agent-multi",
-      "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
-      "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
-      "html_path": "2512.23424-akg-kernel-agent-multi.html",
-      "research_line": "LLM Serving",
-      "structure_count": 0,
-      "topic_count": 5,
-      "method_count": 6,
-      "tag_count": 11,
-      "signals": [
-        "sparse_structure",
-        "dense_tags"
-      ],
-      "policy": {
-        "min_structure_labels": 3,
-        "min_tags": 3,
-        "max_tags": 10,
-        "max_methods": 8
-      },
-      "recommendation": "补齐 domain / track / problem 或 topic / method，让这篇论文能被多入口检索。"
-    },
-    {
-      "slug": "semantic-search-evaluation",
-      "title": "Semantic Search Evaluation",
-      "title_zh": "Semantic Search Evaluation",
-      "html_path": "semantic-search-evaluation.html",
-      "research_line": "Unassigned",
-      "structure_count": 0,
-      "topic_count": 1,
-      "method_count": 0,
-      "tag_count": 1,
-      "signals": [
-        "sparse_structure",
-        "sparse_tags"
-      ],
-      "policy": {
-        "min_structure_labels": 3,
-        "min_tags": 3,
-        "max_tags": 10,
-        "max_methods": 8
-      },
-      "recommendation": "补齐 domain / track / problem 或 topic / method，让这篇论文能被多入口检索。"
     }
   ],
   "governance_policy": {
@@ -441,24 +364,7 @@
       "missing_high_min": 2
     }
   },
-  "taxonomy_drift": [
-    {
-      "slug": "2512.23424-akg-kernel-agent-multi",
-      "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
-      "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
-      "field": "line_role",
-      "value": "tooling",
-      "allowed": [
-        "foundation",
-        "baseline",
-        "main",
-        "system",
-        "variant",
-        "followup",
-        "survey"
-      ]
-    }
-  ],
+  "taxonomy_drift": [],
   "label_alias_suggestions": [
     {
       "fingerprint": "semi autoregressive generation",
@@ -497,5 +403,30 @@
       ]
     }
   ],
-  "duplicate_reports": []
+  "duplicate_reports": [
+    {
+      "reason": "arxiv_id",
+      "value": "noarxi",
+      "slugs": [
+        "noarxiv-2026-dspark",
+        "semantic-search-evaluation"
+      ],
+      "papers": [
+        {
+          "slug": "noarxiv-2026-dspark",
+          "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+          "title_zh": "DSpark：基于置信度调度的半自回归 speculative decoding",
+          "arxiv_id": "noarxiv-2026-dspark",
+          "html_path": "noarxiv-2026-dspark.html"
+        },
+        {
+          "slug": "semantic-search-evaluation",
+          "title": "Semantic Search Evaluation",
+          "title_zh": "语义搜索评估",
+          "arxiv_id": "noarxiv-semantic-search-evaluation",
+          "html_path": "semantic-search-evaluation.html"
+        }
+      ]
+    }
+  ]
 }

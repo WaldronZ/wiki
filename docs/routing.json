@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-22T13:22:15",
+  "generated_at": "2026-07-22T13:24:43",
   "count": 13,
-  "line_count": 6,
-  "label_count": 111,
+  "line_count": 5,
+  "label_count": 126,
   "paper_count": 13,
   "tokenizer": {
     "version": 1,
@@ -45,6 +45,263 @@
     "paper_text": 1
   },
   "line_profiles": [
+    {
+      "line": "LLM Serving",
+      "count": 4,
+      "href": "lines/llm-serving.html",
+      "owner": "",
+      "team": "",
+      "top_labels": [
+        {
+          "label": "LLM Systems",
+          "count": 2
+        },
+        {
+          "label": "Inference Acceleration",
+          "count": 2
+        },
+        {
+          "label": "LLM Serving",
+          "count": 2
+        },
+        {
+          "label": "Speculative Decoding",
+          "count": 2
+        },
+        {
+          "label": "AI Systems",
+          "count": 2
+        },
+        {
+          "label": "Semantic Search",
+          "count": 2
+        },
+        {
+          "label": "Compiler/DSL",
+          "count": 2
+        },
+        {
+          "label": "Kernel Generation",
+          "count": 2
+        },
+        {
+          "label": "MoE Serving",
+          "count": 1
+        },
+        {
+          "label": "Disaggregated Serving",
+          "count": 1
+        },
+        {
+          "label": "Load Balancing",
+          "count": 1
+        },
+        {
+          "label": "MoE",
+          "count": 1
+        }
+      ],
+      "terms": [
+        {
+          "term": "llm",
+          "weight": 92
+        },
+        {
+          "term": "serving",
+          "weight": 85
+        },
+        {
+          "term": "kernel",
+          "weight": 55
+        },
+        {
+          "term": "system",
+          "weight": 40
+        },
+        {
+          "term": "generation",
+          "weight": 38
+        },
+        {
+          "term": "search",
+          "weight": 38
+        },
+        {
+          "term": "decoding",
+          "weight": 37
+        },
+        {
+          "term": "multi agent",
+          "weight": 36
+        },
+        {
+          "term": "dspark",
+          "weight": 35
+        },
+        {
+          "term": "speculative",
+          "weight": 33
+        },
+        {
+          "term": "agent",
+          "weight": 33
+        },
+        {
+          "term": "semi autoregressive",
+          "weight": 32
+        },
+        {
+          "term": "eldr",
+          "weight": 31
+        },
+        {
+          "term": "moe",
+          "weight": 30
+        },
+        {
+          "term": "dsl",
+          "weight": 29
+        },
+        {
+          "term": "ai",
+          "weight": 27
+        },
+        {
+          "term": "decode",
+          "weight": 24
+        },
+        {
+          "term": "k mean",
+          "weight": 24
+        },
+        {
+          "term": "semantic",
+          "weight": 24
+        },
+        {
+          "term": "expert",
+          "weight": 22
+        },
+        {
+          "term": "worker",
+          "weight": 22
+        },
+        {
+          "term": "confidence scheduled",
+          "weight": 22
+        },
+        {
+          "term": "aware",
+          "weight": 21
+        },
+        {
+          "term": "token",
+          "weight": 20
+        },
+        {
+          "term": "the",
+          "weight": 20
+        },
+        {
+          "term": "autoregressive",
+          "weight": 20
+        },
+        {
+          "term": "prefill",
+          "weight": 19
+        },
+        {
+          "term": "inference",
+          "weight": 19
+        },
+        {
+          "term": "acceleration",
+          "weight": 19
+        },
+        {
+          "term": "multi",
+          "weight": 19
+        },
+        {
+          "term": "cros platform",
+          "weight": 18
+        },
+        {
+          "term": "confidence",
+          "weight": 17
+        },
+        {
+          "term": "load",
+          "weight": 16
+        },
+        {
+          "term": "semi",
+          "weight": 16
+        },
+        {
+          "term": "draft",
+          "weight": 16
+        },
+        {
+          "term": "vector",
+          "weight": 16
+        },
+        {
+          "term": "optimization",
+          "weight": 16
+        },
+        {
+          "term": "text",
+          "weight": 15
+        },
+        {
+          "term": "head",
+          "weight": 15
+        },
+        {
+          "term": "verification",
+          "weight": 15
+        },
+        {
+          "term": "retrieval",
+          "weight": 15
+        },
+        {
+          "term": "and",
+          "weight": 14
+        },
+        {
+          "term": "code",
+          "weight": 14
+        },
+        {
+          "term": "dflash",
+          "weight": 14
+        },
+        {
+          "term": "hardware aware",
+          "weight": 14
+        },
+        {
+          "term": "load aware",
+          "weight": 14
+        },
+        {
+          "term": "sqlite",
+          "weight": 14
+        },
+        {
+          "term": "document driven",
+          "weight": 14
+        }
+      ],
+      "sample_slugs": [
+        "noarxiv-2026-dspark",
+        "2607.00466-eldr",
+        "2512.23424-akg-kernel-agent-multi",
+        "semantic-search-evaluation"
+      ]
+    },
     {
       "line": "Parallel Decoding with Diffusion Models",
       "count": 4,
@@ -303,262 +560,6 @@
       ]
     },
     {
-      "line": "LLM Serving",
-      "count": 3,
-      "href": "lines/llm-serving.html",
-      "owner": "",
-      "team": "",
-      "top_labels": [
-        {
-          "label": "LLM Systems",
-          "count": 2
-        },
-        {
-          "label": "Inference Acceleration",
-          "count": 2
-        },
-        {
-          "label": "LLM Serving",
-          "count": 2
-        },
-        {
-          "label": "Speculative Decoding",
-          "count": 2
-        },
-        {
-          "label": "MoE Serving",
-          "count": 1
-        },
-        {
-          "label": "Disaggregated Serving",
-          "count": 1
-        },
-        {
-          "label": "Load Balancing",
-          "count": 1
-        },
-        {
-          "label": "MoE",
-          "count": 1
-        },
-        {
-          "label": "Balanced K-means",
-          "count": 1
-        },
-        {
-          "label": "Expert Locality Routing",
-          "count": 1
-        },
-        {
-          "label": "Signature Cache",
-          "count": 1
-        },
-        {
-          "label": "Parallel Decoding",
-          "count": 1
-        }
-      ],
-      "terms": [
-        {
-          "term": "llm",
-          "weight": 84
-        },
-        {
-          "term": "serving",
-          "weight": 77
-        },
-        {
-          "term": "kernel",
-          "weight": 42
-        },
-        {
-          "term": "decoding",
-          "weight": 37
-        },
-        {
-          "term": "multi agent",
-          "weight": 36
-        },
-        {
-          "term": "dspark",
-          "weight": 35
-        },
-        {
-          "term": "speculative",
-          "weight": 33
-        },
-        {
-          "term": "agent",
-          "weight": 33
-        },
-        {
-          "term": "generation",
-          "weight": 32
-        },
-        {
-          "term": "semi autoregressive",
-          "weight": 32
-        },
-        {
-          "term": "eldr",
-          "weight": 31
-        },
-        {
-          "term": "moe",
-          "weight": 30
-        },
-        {
-          "term": "system",
-          "weight": 26
-        },
-        {
-          "term": "decode",
-          "weight": 24
-        },
-        {
-          "term": "k mean",
-          "weight": 24
-        },
-        {
-          "term": "expert",
-          "weight": 22
-        },
-        {
-          "term": "worker",
-          "weight": 22
-        },
-        {
-          "term": "confidence scheduled",
-          "weight": 22
-        },
-        {
-          "term": "dsl",
-          "weight": 22
-        },
-        {
-          "term": "aware",
-          "weight": 21
-        },
-        {
-          "term": "token",
-          "weight": 20
-        },
-        {
-          "term": "autoregressive",
-          "weight": 20
-        },
-        {
-          "term": "prefill",
-          "weight": 19
-        },
-        {
-          "term": "inference",
-          "weight": 19
-        },
-        {
-          "term": "acceleration",
-          "weight": 19
-        },
-        {
-          "term": "multi",
-          "weight": 19
-        },
-        {
-          "term": "confidence",
-          "weight": 17
-        },
-        {
-          "term": "load",
-          "weight": 16
-        },
-        {
-          "term": "semi",
-          "weight": 16
-        },
-        {
-          "term": "draft",
-          "weight": 16
-        },
-        {
-          "term": "text",
-          "weight": 15
-        },
-        {
-          "term": "head",
-          "weight": 15
-        },
-        {
-          "term": "verification",
-          "weight": 15
-        },
-        {
-          "term": "code",
-          "weight": 14
-        },
-        {
-          "term": "dflash",
-          "weight": 14
-        },
-        {
-          "term": "hardware aware",
-          "weight": 14
-        },
-        {
-          "term": "load aware",
-          "weight": 14
-        },
-        {
-          "term": "document driven",
-          "weight": 14
-        },
-        {
-          "term": "locality",
-          "weight": 13
-        },
-        {
-          "term": "ai",
-          "weight": 13
-        },
-        {
-          "term": "mathcal",
-          "weight": 13
-        },
-        {
-          "term": "routing",
-          "weight": 12
-        },
-        {
-          "term": "disaggregated",
-          "weight": 12
-        },
-        {
-          "term": "mean",
-          "weight": 12
-        },
-        {
-          "term": "signature",
-          "weight": 12
-        },
-        {
-          "term": "deepseek",
-          "weight": 12
-        },
-        {
-          "term": "hardware",
-          "weight": 12
-        },
-        {
-          "term": "unified",
-          "weight": 12
-        }
-      ],
-      "sample_slugs": [
-        "noarxiv-2026-dspark",
-        "2607.00466-eldr",
-        "2512.23424-akg-kernel-agent-multi"
-      ]
-    },
-    {
       "line": "Efficient Attention Kernels",
       "count": 2,
       "href": "lines/efficient-attention-kernels.html",
@@ -814,22 +815,38 @@
       ]
     },
     {
-      "line": "Unassigned",
+      "line": "Speculative Decoding",
       "count": 2,
-      "href": "library.html?line=Unassigned",
+      "href": "lines/speculative-decoding.html",
       "owner": "",
       "team": "",
       "top_labels": [
         {
           "label": "Speculative Decoding",
+          "count": 4
+        },
+        {
+          "label": "LLM Systems",
           "count": 2
         },
         {
-          "label": "Distributed Inference",
+          "label": "LLM Inference",
+          "count": 2
+        },
+        {
+          "label": "Inference Optimization",
           "count": 1
         },
         {
-          "label": "LLM Inference",
+          "label": "Inference Latency",
+          "count": 1
+        },
+        {
+          "label": "Throughput Optimization",
+          "count": 1
+        },
+        {
+          "label": "Distributed Inference",
           "count": 1
         },
         {
@@ -851,36 +868,68 @@
         {
           "label": "geometric fan-out",
           "count": 1
-        },
-        {
-          "label": "verification outcome cache",
-          "count": 1
-        },
-        {
-          "label": "RAG",
-          "count": 1
         }
       ],
       "terms": [
         {
           "term": "speculative",
-          "weight": 42
+          "weight": 87
         },
         {
           "term": "decoding",
-          "weight": 41
+          "weight": 84
         },
         {
           "term": "draft",
-          "weight": 26
+          "weight": 49
+        },
+        {
+          "term": "eagle 3",
+          "weight": 46
+        },
+        {
+          "term": "inference",
+          "weight": 42
+        },
+        {
+          "term": "eagle",
+          "weight": 42
+        },
+        {
+          "term": "training time",
+          "weight": 38
+        },
+        {
+          "term": "feature",
+          "weight": 31
+        },
+        {
+          "term": "token",
+          "weight": 30
+        },
+        {
+          "term": "llm",
+          "weight": 30
         },
         {
           "term": "cache",
           "weight": 26
         },
         {
-          "term": "unassigned",
+          "term": "training",
           "weight": 26
+        },
+        {
+          "term": "prediction",
+          "weight": 25
+        },
+        {
+          "term": "time",
+          "weight": 24
+        },
+        {
+          "term": "scaling",
+          "weight": 24
         },
         {
           "term": "fan out",
@@ -891,8 +940,16 @@
           "weight": 19
         },
         {
-          "term": "the",
-          "weight": 17
+          "term": "system",
+          "weight": 19
+        },
+        {
+          "term": "test",
+          "weight": 19
+        },
+        {
+          "term": "optimization",
+          "weight": 18
         },
         {
           "term": "speculation",
@@ -903,31 +960,51 @@
           "weight": 15
         },
         {
+          "term": "arxiv",
+          "weight": 15
+        },
+        {
           "term": "verification",
           "weight": 14
         },
         {
-          "term": "inference",
+          "term": "tree",
+          "weight": 14
+        },
+        {
+          "term": "2024",
+          "weight": 14
+        },
+        {
+          "term": "top layer",
+          "weight": 14
+        },
+        {
+          "term": "latency",
           "weight": 13
         },
         {
-          "term": "arxiv",
-          "weight": 12
+          "term": "throughput",
+          "weight": 13
         },
         {
           "term": "cache aware",
           "weight": 12
         },
         {
-          "term": "and",
-          "weight": 11
+          "term": "sampling",
+          "weight": 12
         },
         {
-          "term": "token",
-          "weight": 11
+          "term": "batch",
+          "weight": 12
         },
         {
-          "term": "search",
+          "term": "acceleration",
+          "weight": 12
+        },
+        {
+          "term": "law",
           "weight": 11
         },
         {
@@ -939,7 +1016,7 @@
           "weight": 10
         },
         {
-          "term": "sampling",
+          "term": "aware",
           "weight": 10
         },
         {
@@ -951,15 +1028,7 @@
           "weight": 9
         },
         {
-          "term": "aware",
-          "weight": 9
-        },
-        {
-          "term": "semantic",
-          "weight": 9
-        },
-        {
-          "term": "sqlite",
+          "term": "alpha",
           "weight": 9
         },
         {
@@ -967,342 +1036,36 @@
           "weight": 8
         },
         {
-          "term": "local",
+          "term": "llama",
           "weight": 8
         },
         {
-          "term": "saguaro",
-          "weight": 7
+          "term": "the",
+          "weight": 8
         },
         {
-          "term": "batch",
-          "weight": 7
-        },
-        {
-          "term": "latency",
-          "weight": 7
-        },
-        {
-          "term": "distribution",
-          "weight": 7
-        },
-        {
-          "term": "tree",
-          "weight": 7
-        },
-        {
-          "term": "asynchronou",
-          "weight": 7
-        },
-        {
-          "term": "llm",
-          "weight": 7
-        },
-        {
-          "term": "2603 03251",
-          "weight": 6
-        },
-        {
-          "term": "verifier",
-          "weight": 6
-        },
-        {
-          "term": "mvp",
-          "weight": 6
-        },
-        {
-          "term": "llama",
-          "weight": 5
-        },
-        {
-          "term": "path",
-          "weight": 5
-        },
-        {
-          "term": "residual",
-          "weight": 5
-        },
-        {
-          "term": "time",
-          "weight": 5
+          "term": "and",
+          "weight": 8
         },
         {
           "term": "acceptance",
-          "weight": 5
-        },
-        {
-          "term": "distributed",
-          "weight": 5
-        },
-        {
-          "term": "system",
-          "weight": 5
-        },
-        {
-          "term": "optimization",
-          "weight": 5
-        },
-        {
-          "term": "embedding",
-          "weight": 5
-        },
-        {
-          "term": "vector",
-          "weight": 5
-        },
-        {
-          "term": "api",
-          "weight": 5
-        }
-      ],
-      "sample_slugs": [
-        "2603.03251-speculative-speculative-decoding",
-        "semantic-search-evaluation"
-      ]
-    },
-    {
-      "line": "Speculative Decoding",
-      "count": 1,
-      "href": "lines/speculative-decoding.html",
-      "owner": "",
-      "team": "",
-      "top_labels": [
-        {
-          "label": "Speculative Decoding",
-          "count": 2
-        },
-        {
-          "label": "LLM Systems",
-          "count": 1
-        },
-        {
-          "label": "Inference Acceleration",
-          "count": 1
-        },
-        {
-          "label": "Draft Model Training",
-          "count": 1
-        },
-        {
-          "label": "LLM Inference",
-          "count": 1
-        },
-        {
-          "label": "Scaling Law",
-          "count": 1
-        },
-        {
-          "label": "Draft Tree",
-          "count": 1
-        },
-        {
-          "label": "Feature Fusion",
-          "count": 1
-        },
-        {
-          "label": "Token Prediction",
-          "count": 1
-        },
-        {
-          "label": "Training-Time Test",
-          "count": 1
-        }
-      ],
-      "terms": [
-        {
-          "term": "eagle 3",
-          "weight": 46
-        },
-        {
-          "term": "eagle",
-          "weight": 42
-        },
-        {
-          "term": "training time",
-          "weight": 38
-        },
-        {
-          "term": "speculative",
-          "weight": 37
-        },
-        {
-          "term": "decoding",
-          "weight": 35
-        },
-        {
-          "term": "feature",
-          "weight": 31
-        },
-        {
-          "term": "training",
-          "weight": 26
-        },
-        {
-          "term": "prediction",
-          "weight": 23
-        },
-        {
-          "term": "draft",
-          "weight": 23
-        },
-        {
-          "term": "scaling",
-          "weight": 22
-        },
-        {
-          "term": "time",
-          "weight": 19
-        },
-        {
-          "term": "test",
-          "weight": 19
-        },
-        {
-          "term": "token",
-          "weight": 19
-        },
-        {
-          "term": "inference",
-          "weight": 16
-        },
-        {
-          "term": "llm",
-          "weight": 16
-        },
-        {
-          "term": "top layer",
-          "weight": 14
-        },
-        {
-          "term": "2024",
-          "weight": 12
-        },
-        {
-          "term": "acceleration",
-          "weight": 11
-        },
-        {
-          "term": "law",
-          "weight": 10
-        },
-        {
-          "term": "alpha",
-          "weight": 9
-        },
-        {
-          "term": "layer",
-          "weight": 8
-        },
-        {
-          "term": "eagle 2",
           "weight": 8
         },
         {
           "term": "top",
-          "weight": 7
-        },
-        {
-          "term": "constraint",
-          "weight": 7
-        },
-        {
-          "term": "tree",
-          "weight": 7
-        },
-        {
-          "term": "system",
-          "weight": 7
-        },
-        {
-          "term": "fusion",
-          "weight": 6
-        },
-        {
-          "term": "los",
-          "weight": 6
-        },
-        {
-          "term": "step",
-          "weight": 6
-        },
-        {
-          "term": "3 2",
-          "weight": 6
-        },
-        {
-          "term": "has",
-          "weight": 6
+          "weight": 8
         },
         {
           "term": "2023",
-          "weight": 6
+          "weight": 8
         },
         {
-          "term": "the",
-          "weight": 5
-        },
-        {
-          "term": "level",
-          "weight": 5
-        },
-        {
-          "term": "batch",
-          "weight": 5
-        },
-        {
-          "term": "throughput",
-          "weight": 5
-        },
-        {
-          "term": "via",
-          "weight": 4
-        },
-        {
-          "term": "zhang",
-          "weight": 4
-        },
-        {
-          "term": "2503 01840v3",
-          "weight": 4
-        },
-        {
-          "term": "6 5x",
-          "weight": 4
-        },
-        {
-          "term": "and",
-          "weight": 4
-        },
-        {
-          "term": "text",
-          "weight": 4
-        },
-        {
-          "term": "去除",
-          "weight": 4
-        },
-        {
-          "term": "t 1",
-          "weight": 4
-        },
-        {
-          "term": "attention",
-          "weight": 4
-        },
-        {
-          "term": "size",
-          "weight": 4
-        },
-        {
-          "term": "feature level",
-          "weight": 4
-        },
-        {
-          "term": "deepseek r1",
-          "weight": 4
+          "term": "layer",
+          "weight": 8
         }
       ],
       "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding",
         "2503.01840-eagle-3-scaling-up"
       ]
     },
@@ -1564,109 +1327,289 @@
   "label_profiles": [
     {
       "field": "domains",
+      "value": "AI Systems",
+      "count": 2,
+      "href": "library.html?domain=AI+Systems",
+      "terms": [
+        {
+          "term": "kernel",
+          "weight": 55
+        },
+        {
+          "term": "search",
+          "weight": 38
+        },
+        {
+          "term": "llm",
+          "weight": 36
+        },
+        {
+          "term": "multi agent",
+          "weight": 36
+        },
+        {
+          "term": "agent",
+          "weight": 33
+        },
+        {
+          "term": "ai",
+          "weight": 32
+        },
+        {
+          "term": "system",
+          "weight": 31
+        },
+        {
+          "term": "dsl",
+          "weight": 29
+        },
+        {
+          "term": "semantic",
+          "weight": 22
+        },
+        {
+          "term": "generation",
+          "weight": 20
+        },
+        {
+          "term": "serving",
+          "weight": 19
+        },
+        {
+          "term": "multi",
+          "weight": 18
+        },
+        {
+          "term": "cros platform",
+          "weight": 18
+        },
+        {
+          "term": "vector",
+          "weight": 16
+        },
+        {
+          "term": "optimization",
+          "weight": 16
+        },
+        {
+          "term": "retrieval",
+          "weight": 15
+        },
+        {
+          "term": "the",
+          "weight": 14
+        },
+        {
+          "term": "sqlite",
+          "weight": 14
+        },
+        {
+          "term": "document driven",
+          "weight": 14
+        },
+        {
+          "term": "local",
+          "weight": 13
+        },
+        {
+          "term": "compiler",
+          "weight": 13
+        },
+        {
+          "term": "mathcal",
+          "weight": 13
+        },
+        {
+          "term": "and",
+          "weight": 12
+        },
+        {
+          "term": "unified",
+          "weight": 12
+        },
+        {
+          "term": "sketch",
+          "weight": 12
+        },
+        {
+          "term": "code",
+          "weight": 12
+        },
+        {
+          "term": "embedding",
+          "weight": 11
+        },
+        {
+          "term": "api",
+          "weight": 11
+        },
+        {
+          "term": "storage",
+          "weight": 10
+        },
+        {
+          "term": "akg",
+          "weight": 10
+        },
+        {
+          "term": "mathbf",
+          "weight": 10
+        },
+        {
+          "term": "cros",
+          "weight": 9
+        },
+        {
+          "term": "platform",
+          "weight": 9
+        },
+        {
+          "term": "shape",
+          "weight": 9
+        },
+        {
+          "term": "text",
+          "weight": 9
+        },
+        {
+          "term": "cosine",
+          "weight": 8
+        }
+      ],
+      "sample_slugs": [
+        "semantic-search-evaluation",
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "field": "domains",
       "value": "LLM Systems",
-      "count": 10,
+      "count": 11,
       "href": "library.html?domain=LLM+Systems",
       "terms": [
         {
           "term": "decoding",
-          "weight": 271
+          "weight": 320
         },
         {
           "term": "llm",
-          "weight": 205
-        },
-        {
-          "term": "token",
-          "weight": 198
-        },
-        {
-          "term": "attention",
-          "weight": 172
+          "weight": 219
         },
         {
           "term": "speculative",
-          "weight": 165
+          "weight": 215
+        },
+        {
+          "term": "token",
+          "weight": 209
+        },
+        {
+          "term": "attention",
+          "weight": 173
+        },
+        {
+          "term": "inference",
+          "weight": 159
         },
         {
           "term": "diffusion",
           "weight": 148
         },
         {
-          "term": "inference",
-          "weight": 133
-        },
-        {
           "term": "parallel",
-          "weight": 117
-        },
-        {
-          "term": "serving",
-          "weight": 115
+          "weight": 120
         },
         {
           "term": "system",
-          "weight": 107
+          "weight": 119
+        },
+        {
+          "term": "serving",
+          "weight": 117
         },
         {
           "term": "arxiv",
+          "weight": 103
+        },
+        {
+          "term": "draft",
           "weight": 91
         },
         {
           "term": "acceleration",
-          "weight": 88
+          "weight": 89
+        },
+        {
+          "term": "cache",
+          "weight": 85
+        },
+        {
+          "term": "kv",
+          "weight": 83
         },
         {
           "term": "head",
           "weight": 82
         },
         {
-          "term": "kv",
-          "weight": 81
-        },
-        {
           "term": "block",
           "weight": 79
         },
         {
-          "term": "draft",
-          "weight": 65
-        },
-        {
           "term": "kernel",
-          "weight": 65
+          "weight": 66
         },
         {
           "term": "efficient",
           "weight": 60
         },
         {
-          "term": "cache",
-          "weight": 59
+          "term": "language",
+          "weight": 58
         },
         {
           "term": "eagle 3",
           "weight": 58
         },
         {
-          "term": "language",
-          "weight": 56
-        },
-        {
           "term": "eagle",
           "weight": 52
+        },
+        {
+          "term": "prediction",
+          "weight": 51
         },
         {
           "term": "flashattention",
           "weight": 51
         },
         {
-          "term": "prediction",
-          "weight": 49
+          "term": "target",
+          "weight": 50
         },
         {
           "term": "feature",
           "weight": 48
+        },
+        {
+          "term": "and",
+          "weight": 45
+        },
+        {
+          "term": "generation",
+          "weight": 45
+        },
+        {
+          "term": "arxiv org",
+          "weight": 44
+        },
+        {
+          "term": "tree",
+          "weight": 44
+        },
+        {
+          "term": "autoregressive",
+          "weight": 43
         },
         {
           "term": "pruning",
@@ -1677,49 +1620,25 @@
           "weight": 43
         },
         {
-          "term": "generation",
-          "weight": 43
-        },
-        {
           "term": "dflash",
           "weight": 42
         },
         {
-          "term": "and",
-          "weight": 41
-        },
-        {
-          "term": "target",
-          "weight": 41
-        },
-        {
-          "term": "autoregressive",
-          "weight": 41
-        },
-        {
-          "term": "arxiv org",
+          "term": "verification",
           "weight": 40
         },
         {
-          "term": "training time",
+          "term": "http",
           "weight": 40
-        },
-        {
-          "term": "flashattention 2",
-          "weight": 40
-        },
-        {
-          "term": "tree",
-          "weight": 37
         }
       ],
       "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding",
         "2503.14075-twigvlm-plus-plus",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus",
-        "2607.00466-eldr",
-        "noarxiv-2026-dspark"
+        "2607.00466-eldr"
       ]
     },
     {
@@ -1885,11 +1804,11 @@
       "terms": [
         {
           "term": "decoding",
-          "weight": 51
+          "weight": 59
         },
         {
           "term": "speculative",
-          "weight": 42
+          "weight": 50
         },
         {
           "term": "draft",
@@ -1900,12 +1819,20 @@
           "weight": 26
         },
         {
+          "term": "inference",
+          "weight": 26
+        },
+        {
           "term": "fan out",
           "weight": 20
         },
         {
           "term": "ssd",
           "weight": 19
+        },
+        {
+          "term": "optimization",
+          "weight": 18
         },
         {
           "term": "asynchronou",
@@ -1924,7 +1851,11 @@
           "weight": 14
         },
         {
-          "term": "inference",
+          "term": "llm",
+          "weight": 14
+        },
+        {
+          "term": "latency",
           "weight": 13
         },
         {
@@ -1933,6 +1864,10 @@
         },
         {
           "term": "cache aware",
+          "weight": 12
+        },
+        {
+          "term": "system",
           "weight": 12
         },
         {
@@ -1968,7 +1903,7 @@
           "weight": 8
         },
         {
-          "term": "unassigned",
+          "term": "throughput",
           "weight": 8
         },
         {
@@ -1980,19 +1915,11 @@
           "weight": 7
         },
         {
-          "term": "latency",
-          "weight": 7
-        },
-        {
           "term": "distribution",
           "weight": 7
         },
         {
           "term": "tree",
-          "weight": 7
-        },
-        {
-          "term": "llm",
           "weight": 7
         },
         {
@@ -2017,14 +1944,6 @@
         },
         {
           "term": "acceptance",
-          "weight": 5
-        },
-        {
-          "term": "distributed",
-          "weight": 5
-        },
-        {
-          "term": "system",
           "weight": 5
         }
       ],
@@ -2505,11 +2424,11 @@
       "terms": [
         {
           "term": "speculative",
-          "weight": 42
+          "weight": 50
         },
         {
           "term": "decoding",
-          "weight": 41
+          "weight": 49
         },
         {
           "term": "cache",
@@ -2521,6 +2440,10 @@
         },
         {
           "term": "draft",
+          "weight": 26
+        },
+        {
+          "term": "inference",
           "weight": 26
         },
         {
@@ -2540,6 +2463,10 @@
           "weight": 19
         },
         {
+          "term": "optimization",
+          "weight": 18
+        },
+        {
           "term": "speculation",
           "weight": 15
         },
@@ -2552,11 +2479,19 @@
           "weight": 14
         },
         {
-          "term": "inference",
+          "term": "llm",
+          "weight": 14
+        },
+        {
+          "term": "latency",
           "weight": 13
         },
         {
           "term": "arxiv",
+          "weight": 12
+        },
+        {
+          "term": "system",
           "weight": 12
         },
         {
@@ -2584,7 +2519,7 @@
           "weight": 8
         },
         {
-          "term": "unassigned",
+          "term": "throughput",
           "weight": 8
         },
         {
@@ -2593,10 +2528,6 @@
         },
         {
           "term": "batch",
-          "weight": 7
-        },
-        {
-          "term": "latency",
           "weight": 7
         },
         {
@@ -2609,10 +2540,6 @@
         },
         {
           "term": "asynchronou",
-          "weight": 7
-        },
-        {
-          "term": "llm",
           "weight": 7
         },
         {
@@ -2637,14 +2564,6 @@
         },
         {
           "term": "acceptance",
-          "weight": 5
-        },
-        {
-          "term": "distributed",
-          "weight": 5
-        },
-        {
-          "term": "system",
           "weight": 5
         }
       ],
@@ -2960,6 +2879,161 @@
       ],
       "sample_slugs": [
         "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "field": "methods",
+      "value": "Cosine Similarity",
+      "count": 1,
+      "href": "library.html?method=Cosine+Similarity",
+      "terms": [
+        {
+          "term": "search",
+          "weight": 29
+        },
+        {
+          "term": "semantic",
+          "weight": 20
+        },
+        {
+          "term": "cosine",
+          "weight": 17
+        },
+        {
+          "term": "similarity",
+          "weight": 17
+        },
+        {
+          "term": "vector",
+          "weight": 16
+        },
+        {
+          "term": "the",
+          "weight": 14
+        },
+        {
+          "term": "sqlite",
+          "weight": 14
+        },
+        {
+          "term": "local",
+          "weight": 13
+        },
+        {
+          "term": "storage",
+          "weight": 10
+        },
+        {
+          "term": "embedding",
+          "weight": 10
+        },
+        {
+          "term": "llm",
+          "weight": 8
+        },
+        {
+          "term": "serving",
+          "weight": 8
+        },
+        {
+          "term": "and",
+          "weight": 7
+        },
+        {
+          "term": "hash",
+          "weight": 7
+        },
+        {
+          "term": "ai",
+          "weight": 7
+        },
+        {
+          "term": "system",
+          "weight": 7
+        },
+        {
+          "term": "retrieval",
+          "weight": 7
+        },
+        {
+          "term": "mvp",
+          "weight": 6
+        },
+        {
+          "term": "database",
+          "weight": 6
+        },
+        {
+          "term": "api",
+          "weight": 5
+        },
+        {
+          "term": "keep",
+          "weight": 4
+        },
+        {
+          "term": "provider",
+          "weight": 4
+        },
+        {
+          "term": "local hash",
+          "weight": 4
+        },
+        {
+          "term": "hashing v1",
+          "weight": 4
+        },
+        {
+          "term": "sqlite vec",
+          "weight": 4
+        },
+        {
+          "term": "sqlite vss",
+          "weight": 4
+        },
+        {
+          "term": "evaluation",
+          "weight": 3
+        },
+        {
+          "term": "table",
+          "weight": 3
+        },
+        {
+          "term": "path",
+          "weight": 3
+        },
+        {
+          "term": "upgrade",
+          "weight": 3
+        },
+        {
+          "term": "for",
+          "weight": 3
+        },
+        {
+          "term": "need",
+          "weight": 3
+        },
+        {
+          "term": "variant",
+          "weight": 3
+        },
+        {
+          "term": "optional",
+          "weight": 2
+        },
+        {
+          "term": "label",
+          "weight": 2
+        },
+        {
+          "term": "hashing",
+          "weight": 2
+        }
+      ],
+      "sample_slugs": [
+        "semantic-search-evaluation"
       ]
     },
     {
@@ -3435,7 +3509,7 @@
       "terms": [
         {
           "term": "kernel",
-          "weight": 42
+          "weight": 55
         },
         {
           "term": "multi agent",
@@ -3450,12 +3524,16 @@
           "weight": 33
         },
         {
+          "term": "dsl",
+          "weight": 29
+        },
+        {
           "term": "llm",
           "weight": 28
         },
         {
-          "term": "dsl",
-          "weight": 22
+          "term": "generation",
+          "weight": 20
         },
         {
           "term": "driven",
@@ -3463,6 +3541,10 @@
         },
         {
           "term": "multi",
+          "weight": 18
+        },
+        {
+          "term": "cros platform",
           "weight": 18
         },
         {
@@ -3474,8 +3556,20 @@
           "weight": 17
         },
         {
-          "term": "generation",
+          "term": "optimization",
+          "weight": 16
+        },
+        {
+          "term": "ai",
+          "weight": 15
+        },
+        {
+          "term": "system",
           "weight": 14
+        },
+        {
+          "term": "compiler",
+          "weight": 13
         },
         {
           "term": "mathcal",
@@ -3506,6 +3600,14 @@
           "weight": 10
         },
         {
+          "term": "cros",
+          "weight": 9
+        },
+        {
+          "term": "platform",
+          "weight": 9
+        },
+        {
           "term": "shape",
           "weight": 9
         },
@@ -3514,16 +3616,8 @@
           "weight": 9
         },
         {
-          "term": "optimization",
-          "weight": 9
-        },
-        {
           "term": "text",
           "weight": 9
-        },
-        {
-          "term": "ai",
-          "weight": 8
         },
         {
           "term": "iterative",
@@ -3538,10 +3632,6 @@
           "weight": 8
         },
         {
-          "term": "system",
-          "weight": 7
-        },
-        {
           "term": "profiling",
           "weight": 7
         },
@@ -3554,27 +3644,11 @@
           "weight": 7
         },
         {
-          "term": "cros platform",
-          "weight": 6
-        },
-        {
           "term": "designer",
           "weight": 6
         },
         {
           "term": "pytorch",
-          "weight": 6
-        },
-        {
-          "term": "gpu",
-          "weight": 6
-        },
-        {
-          "term": "npu",
-          "weight": 6
-        },
-        {
-          "term": "api",
           "weight": 6
         }
       ],
@@ -4055,11 +4129,11 @@
       "terms": [
         {
           "term": "speculative",
-          "weight": 42
+          "weight": 50
         },
         {
           "term": "decoding",
-          "weight": 41
+          "weight": 49
         },
         {
           "term": "draft",
@@ -4067,6 +4141,10 @@
         },
         {
           "term": "cache",
+          "weight": 26
+        },
+        {
+          "term": "inference",
           "weight": 26
         },
         {
@@ -4086,6 +4164,10 @@
           "weight": 19
         },
         {
+          "term": "optimization",
+          "weight": 18
+        },
+        {
           "term": "outcome",
           "weight": 15
         },
@@ -4094,7 +4176,11 @@
           "weight": 14
         },
         {
-          "term": "inference",
+          "term": "llm",
+          "weight": 14
+        },
+        {
+          "term": "latency",
           "weight": 13
         },
         {
@@ -4103,6 +4189,10 @@
         },
         {
           "term": "cache aware",
+          "weight": 12
+        },
+        {
+          "term": "system",
           "weight": 12
         },
         {
@@ -4134,7 +4224,7 @@
           "weight": 8
         },
         {
-          "term": "unassigned",
+          "term": "throughput",
           "weight": 8
         },
         {
@@ -4143,10 +4233,6 @@
         },
         {
           "term": "batch",
-          "weight": 7
-        },
-        {
-          "term": "latency",
           "weight": 7
         },
         {
@@ -4159,10 +4245,6 @@
         },
         {
           "term": "asynchronou",
-          "weight": 7
-        },
-        {
-          "term": "llm",
           "weight": 7
         },
         {
@@ -4187,14 +4269,6 @@
         },
         {
           "term": "acceptance",
-          "weight": 5
-        },
-        {
-          "term": "distributed",
-          "weight": 5
-        },
-        {
-          "term": "system",
           "weight": 5
         }
       ],
@@ -4987,11 +5061,11 @@
       "terms": [
         {
           "term": "speculative",
-          "weight": 42
+          "weight": 50
         },
         {
           "term": "decoding",
-          "weight": 41
+          "weight": 49
         },
         {
           "term": "fan out",
@@ -5003,6 +5077,10 @@
         },
         {
           "term": "cache",
+          "weight": 26
+        },
+        {
+          "term": "inference",
           "weight": 26
         },
         {
@@ -5022,6 +5100,10 @@
           "weight": 18
         },
         {
+          "term": "optimization",
+          "weight": 18
+        },
+        {
           "term": "speculation",
           "weight": 15
         },
@@ -5034,7 +5116,11 @@
           "weight": 14
         },
         {
-          "term": "inference",
+          "term": "llm",
+          "weight": 14
+        },
+        {
+          "term": "latency",
           "weight": 13
         },
         {
@@ -5043,6 +5129,10 @@
         },
         {
           "term": "cache aware",
+          "weight": 12
+        },
+        {
+          "term": "system",
           "weight": 12
         },
         {
@@ -5066,7 +5156,7 @@
           "weight": 9
         },
         {
-          "term": "unassigned",
+          "term": "throughput",
           "weight": 8
         },
         {
@@ -5075,10 +5165,6 @@
         },
         {
           "term": "batch",
-          "weight": 7
-        },
-        {
-          "term": "latency",
           "weight": 7
         },
         {
@@ -5091,10 +5177,6 @@
         },
         {
           "term": "asynchronou",
-          "weight": 7
-        },
-        {
-          "term": "llm",
           "weight": 7
         },
         {
@@ -5119,14 +5201,6 @@
         },
         {
           "term": "acceptance",
-          "weight": 5
-        },
-        {
-          "term": "distributed",
-          "weight": 5
-        },
-        {
-          "term": "system",
           "weight": 5
         }
       ],
@@ -5297,7 +5371,7 @@
       "terms": [
         {
           "term": "kernel",
-          "weight": 42
+          "weight": 55
         },
         {
           "term": "multi agent",
@@ -5308,6 +5382,10 @@
           "weight": 33
         },
         {
+          "term": "dsl",
+          "weight": 29
+        },
+        {
           "term": "llm",
           "weight": 28
         },
@@ -5316,8 +5394,8 @@
           "weight": 22
         },
         {
-          "term": "dsl",
-          "weight": 22
+          "term": "generation",
+          "weight": 20
         },
         {
           "term": "retrieval",
@@ -5328,16 +5406,32 @@
           "weight": 18
         },
         {
+          "term": "cros platform",
+          "weight": 18
+        },
+        {
           "term": "hierarchical",
           "weight": 17
         },
         {
-          "term": "generation",
+          "term": "optimization",
+          "weight": 16
+        },
+        {
+          "term": "ai",
+          "weight": 15
+        },
+        {
+          "term": "system",
           "weight": 14
         },
         {
           "term": "document driven",
           "weight": 14
+        },
+        {
+          "term": "compiler",
+          "weight": 13
         },
         {
           "term": "mathcal",
@@ -5364,6 +5458,14 @@
           "weight": 10
         },
         {
+          "term": "cros",
+          "weight": 9
+        },
+        {
+          "term": "platform",
+          "weight": 9
+        },
+        {
           "term": "shape",
           "weight": 9
         },
@@ -5372,16 +5474,8 @@
           "weight": 9
         },
         {
-          "term": "optimization",
-          "weight": 9
-        },
-        {
           "term": "text",
           "weight": 9
-        },
-        {
-          "term": "ai",
-          "weight": 8
         },
         {
           "term": "driven",
@@ -5394,10 +5488,6 @@
         {
           "term": "coder",
           "weight": 8
-        },
-        {
-          "term": "system",
-          "weight": 7
         },
         {
           "term": "profiling",
@@ -5416,27 +5506,11 @@
           "weight": 7
         },
         {
-          "term": "cros platform",
-          "weight": 6
-        },
-        {
           "term": "designer",
           "weight": 6
         },
         {
           "term": "pytorch",
-          "weight": 6
-        },
-        {
-          "term": "gpu",
-          "weight": 6
-        },
-        {
-          "term": "npu",
-          "weight": 6
-        },
-        {
-          "term": "api",
           "weight": 6
         }
       ],
@@ -5917,7 +5991,7 @@
       "terms": [
         {
           "term": "kernel",
-          "weight": 42
+          "weight": 55
         },
         {
           "term": "multi agent",
@@ -5928,19 +6002,23 @@
           "weight": 33
         },
         {
+          "term": "dsl",
+          "weight": 29
+        },
+        {
           "term": "llm",
           "weight": 28
         },
         {
-          "term": "dsl",
-          "weight": 22
+          "term": "optimization",
+          "weight": 26
+        },
+        {
+          "term": "generation",
+          "weight": 20
         },
         {
           "term": "search",
-          "weight": 19
-        },
-        {
-          "term": "optimization",
           "weight": 19
         },
         {
@@ -5952,12 +6030,24 @@
           "weight": 18
         },
         {
-          "term": "generation",
+          "term": "cros platform",
+          "weight": 18
+        },
+        {
+          "term": "ai",
+          "weight": 15
+        },
+        {
+          "term": "system",
           "weight": 14
         },
         {
           "term": "document driven",
           "weight": 14
+        },
+        {
+          "term": "compiler",
+          "weight": 13
         },
         {
           "term": "mathcal",
@@ -5988,16 +6078,20 @@
           "weight": 10
         },
         {
+          "term": "cros",
+          "weight": 9
+        },
+        {
+          "term": "platform",
+          "weight": 9
+        },
+        {
           "term": "shape",
           "weight": 9
         },
         {
           "term": "text",
           "weight": 9
-        },
-        {
-          "term": "ai",
-          "weight": 8
         },
         {
           "term": "driven",
@@ -6010,10 +6104,6 @@
         {
           "term": "retrieval",
           "weight": 8
-        },
-        {
-          "term": "system",
-          "weight": 7
         },
         {
           "term": "profiling",
@@ -6036,27 +6126,11 @@
           "weight": 7
         },
         {
-          "term": "cros platform",
-          "weight": 6
-        },
-        {
           "term": "designer",
           "weight": 6
         },
         {
           "term": "pytorch",
-          "weight": 6
-        },
-        {
-          "term": "gpu",
-          "weight": 6
-        },
-        {
-          "term": "npu",
-          "weight": 6
-        },
-        {
-          "term": "api",
           "weight": 6
         }
       ],
@@ -6682,6 +6756,161 @@
       ],
       "sample_slugs": [
         "2501.01005-flashinfer"
+      ]
+    },
+    {
+      "field": "methods",
+      "value": "Local Hash Embeddings",
+      "count": 1,
+      "href": "library.html?method=Local+Hash+Embeddings",
+      "terms": [
+        {
+          "term": "search",
+          "weight": 29
+        },
+        {
+          "term": "local",
+          "weight": 23
+        },
+        {
+          "term": "embedding",
+          "weight": 20
+        },
+        {
+          "term": "semantic",
+          "weight": 20
+        },
+        {
+          "term": "hash",
+          "weight": 17
+        },
+        {
+          "term": "vector",
+          "weight": 16
+        },
+        {
+          "term": "the",
+          "weight": 14
+        },
+        {
+          "term": "sqlite",
+          "weight": 14
+        },
+        {
+          "term": "storage",
+          "weight": 10
+        },
+        {
+          "term": "llm",
+          "weight": 8
+        },
+        {
+          "term": "serving",
+          "weight": 8
+        },
+        {
+          "term": "and",
+          "weight": 7
+        },
+        {
+          "term": "cosine",
+          "weight": 7
+        },
+        {
+          "term": "similarity",
+          "weight": 7
+        },
+        {
+          "term": "ai",
+          "weight": 7
+        },
+        {
+          "term": "system",
+          "weight": 7
+        },
+        {
+          "term": "retrieval",
+          "weight": 7
+        },
+        {
+          "term": "mvp",
+          "weight": 6
+        },
+        {
+          "term": "database",
+          "weight": 6
+        },
+        {
+          "term": "api",
+          "weight": 5
+        },
+        {
+          "term": "keep",
+          "weight": 4
+        },
+        {
+          "term": "provider",
+          "weight": 4
+        },
+        {
+          "term": "local hash",
+          "weight": 4
+        },
+        {
+          "term": "hashing v1",
+          "weight": 4
+        },
+        {
+          "term": "sqlite vec",
+          "weight": 4
+        },
+        {
+          "term": "sqlite vss",
+          "weight": 4
+        },
+        {
+          "term": "evaluation",
+          "weight": 3
+        },
+        {
+          "term": "table",
+          "weight": 3
+        },
+        {
+          "term": "path",
+          "weight": 3
+        },
+        {
+          "term": "upgrade",
+          "weight": 3
+        },
+        {
+          "term": "for",
+          "weight": 3
+        },
+        {
+          "term": "need",
+          "weight": 3
+        },
+        {
+          "term": "variant",
+          "weight": 3
+        },
+        {
+          "term": "optional",
+          "weight": 2
+        },
+        {
+          "term": "label",
+          "weight": 2
+        },
+        {
+          "term": "hashing",
+          "weight": 2
+        }
+      ],
+      "sample_slugs": [
+        "semantic-search-evaluation"
       ]
     },
     {
@@ -7315,12 +7544,16 @@
           "weight": 56
         },
         {
+          "term": "kernel",
+          "weight": 55
+        },
+        {
           "term": "agent",
           "weight": 43
         },
         {
-          "term": "kernel",
-          "weight": 42
+          "term": "dsl",
+          "weight": 29
         },
         {
           "term": "multi",
@@ -7331,20 +7564,36 @@
           "weight": 28
         },
         {
-          "term": "dsl",
-          "weight": 22
+          "term": "generation",
+          "weight": 20
+        },
+        {
+          "term": "cros platform",
+          "weight": 18
         },
         {
           "term": "workflow",
           "weight": 16
         },
         {
-          "term": "generation",
+          "term": "optimization",
+          "weight": 16
+        },
+        {
+          "term": "ai",
+          "weight": 15
+        },
+        {
+          "term": "system",
           "weight": 14
         },
         {
           "term": "document driven",
           "weight": 14
+        },
+        {
+          "term": "compiler",
+          "weight": 13
         },
         {
           "term": "mathcal",
@@ -7375,6 +7624,14 @@
           "weight": 10
         },
         {
+          "term": "cros",
+          "weight": 9
+        },
+        {
+          "term": "platform",
+          "weight": 9
+        },
+        {
           "term": "shape",
           "weight": 9
         },
@@ -7383,16 +7640,8 @@
           "weight": 9
         },
         {
-          "term": "optimization",
-          "weight": 9
-        },
-        {
           "term": "text",
           "weight": 9
-        },
-        {
-          "term": "ai",
-          "weight": 8
         },
         {
           "term": "driven",
@@ -7409,10 +7658,6 @@
         {
           "term": "retrieval",
           "weight": 8
-        },
-        {
-          "term": "system",
-          "weight": 7
         },
         {
           "term": "profiling",
@@ -7435,23 +7680,7 @@
           "weight": 7
         },
         {
-          "term": "cros platform",
-          "weight": 6
-        },
-        {
           "term": "designer",
-          "weight": 6
-        },
-        {
-          "term": "pytorch",
-          "weight": 6
-        },
-        {
-          "term": "gpu",
-          "weight": 6
-        },
-        {
-          "term": "npu",
           "weight": 6
         }
       ],
@@ -9172,19 +9401,23 @@
       "terms": [
         {
           "term": "decoding",
-          "weight": 136
+          "weight": 144
         },
         {
           "term": "speculative",
-          "weight": 118
+          "weight": 126
+        },
+        {
+          "term": "llm",
+          "weight": 64
         },
         {
           "term": "draft",
           "weight": 57
         },
         {
-          "term": "llm",
-          "weight": 57
+          "term": "inference",
+          "weight": 53
         },
         {
           "term": "target",
@@ -9195,12 +9428,12 @@
           "weight": 40
         },
         {
-          "term": "inference",
-          "weight": 40
-        },
-        {
           "term": "serving",
           "weight": 38
+        },
+        {
+          "term": "parallel",
+          "weight": 37
         },
         {
           "term": "dflash",
@@ -9208,10 +9441,6 @@
         },
         {
           "term": "diffusion",
-          "weight": 37
-        },
-        {
-          "term": "parallel",
           "weight": 37
         },
         {
@@ -9223,12 +9452,12 @@
           "weight": 32
         },
         {
-          "term": "cache",
-          "weight": 29
+          "term": "system",
+          "weight": 31
         },
         {
-          "term": "block",
-          "weight": 28
+          "term": "cache",
+          "weight": 29
         },
         {
           "term": "arxiv",
@@ -9239,16 +9468,16 @@
           "weight": 28
         },
         {
+          "term": "block",
+          "weight": 28
+        },
+        {
           "term": "verification",
           "weight": 25
         },
         {
           "term": "aware",
           "weight": 25
-        },
-        {
-          "term": "system",
-          "weight": 24
         },
         {
           "term": "drafter",
@@ -9267,14 +9496,6 @@
           "weight": 20
         },
         {
-          "term": "kv",
-          "weight": 19
-        },
-        {
-          "term": "head",
-          "weight": 19
-        },
-        {
           "term": "ssd",
           "weight": 19
         },
@@ -9283,11 +9504,23 @@
           "weight": 19
         },
         {
-          "term": "feature",
-          "weight": 17
+          "term": "kv",
+          "weight": 19
+        },
+        {
+          "term": "head",
+          "weight": 19
+        },
+        {
+          "term": "optimization",
+          "weight": 18
         },
         {
           "term": "acceleration",
+          "weight": 17
+        },
+        {
+          "term": "feature",
           "weight": 17
         },
         {
@@ -9299,25 +9532,21 @@
           "weight": 16
         },
         {
+          "term": "latency",
+          "weight": 16
+        },
+        {
           "term": "hardware aware",
           "weight": 16
         },
         {
           "term": "semi",
           "weight": 16
-        },
-        {
-          "term": "2026",
-          "weight": 15
-        },
-        {
-          "term": "outcome",
-          "weight": 15
         }
       ],
       "sample_slugs": [
-        "2602.06036-dflash",
         "2603.03251-speculative-speculative-decoding",
+        "2602.06036-dflash",
         "noarxiv-2026-dspark"
       ]
     },
@@ -10259,7 +10488,7 @@
       "terms": [
         {
           "term": "kernel",
-          "weight": 42
+          "weight": 55
         },
         {
           "term": "multi agent",
@@ -10268,6 +10497,10 @@
         {
           "term": "agent",
           "weight": 33
+        },
+        {
+          "term": "dsl",
+          "weight": 29
         },
         {
           "term": "llm",
@@ -10282,20 +10515,36 @@
           "weight": 22
         },
         {
-          "term": "dsl",
-          "weight": 22
+          "term": "generation",
+          "weight": 20
         },
         {
           "term": "multi",
           "weight": 18
         },
         {
-          "term": "generation",
+          "term": "cros platform",
+          "weight": 18
+        },
+        {
+          "term": "optimization",
+          "weight": 16
+        },
+        {
+          "term": "ai",
+          "weight": 15
+        },
+        {
+          "term": "system",
           "weight": 14
         },
         {
           "term": "document driven",
           "weight": 14
+        },
+        {
+          "term": "compiler",
+          "weight": 13
         },
         {
           "term": "mathcal",
@@ -10318,6 +10567,14 @@
           "weight": 10
         },
         {
+          "term": "cros",
+          "weight": 9
+        },
+        {
+          "term": "platform",
+          "weight": 9
+        },
+        {
           "term": "shape",
           "weight": 9
         },
@@ -10326,16 +10583,8 @@
           "weight": 9
         },
         {
-          "term": "optimization",
-          "weight": 9
-        },
-        {
           "term": "text",
           "weight": 9
-        },
-        {
-          "term": "ai",
-          "weight": 8
         },
         {
           "term": "driven",
@@ -10352,10 +10601,6 @@
         {
           "term": "retrieval",
           "weight": 8
-        },
-        {
-          "term": "system",
-          "weight": 7
         },
         {
           "term": "profiling",
@@ -10378,27 +10623,11 @@
           "weight": 7
         },
         {
-          "term": "cros platform",
-          "weight": 6
-        },
-        {
           "term": "designer",
           "weight": 6
         },
         {
           "term": "pytorch",
-          "weight": 6
-        },
-        {
-          "term": "gpu",
-          "weight": 6
-        },
-        {
-          "term": "npu",
-          "weight": 6
-        },
-        {
-          "term": "api",
           "weight": 6
         }
       ],
@@ -10414,7 +10643,7 @@
       "terms": [
         {
           "term": "kernel",
-          "weight": 42
+          "weight": 55
         },
         {
           "term": "multi agent",
@@ -10425,15 +10654,23 @@
           "weight": 33
         },
         {
+          "term": "dsl",
+          "weight": 29
+        },
+        {
           "term": "llm",
           "weight": 28
         },
         {
-          "term": "dsl",
-          "weight": 22
+          "term": "generation",
+          "weight": 20
         },
         {
           "term": "multi",
+          "weight": 18
+        },
+        {
+          "term": "cros platform",
           "weight": 18
         },
         {
@@ -10445,6 +10682,10 @@
           "weight": 16
         },
         {
+          "term": "optimization",
+          "weight": 16
+        },
+        {
           "term": "verification",
           "weight": 15
         },
@@ -10453,12 +10694,20 @@
           "weight": 15
         },
         {
-          "term": "generation",
+          "term": "ai",
+          "weight": 15
+        },
+        {
+          "term": "system",
           "weight": 14
         },
         {
           "term": "document driven",
           "weight": 14
+        },
+        {
+          "term": "compiler",
+          "weight": 13
         },
         {
           "term": "mathcal",
@@ -10489,6 +10738,14 @@
           "weight": 10
         },
         {
+          "term": "cros",
+          "weight": 9
+        },
+        {
+          "term": "platform",
+          "weight": 9
+        },
+        {
           "term": "shape",
           "weight": 9
         },
@@ -10497,16 +10754,8 @@
           "weight": 9
         },
         {
-          "term": "optimization",
-          "weight": 9
-        },
-        {
           "term": "text",
           "weight": 9
-        },
-        {
-          "term": "ai",
-          "weight": 8
         },
         {
           "term": "driven",
@@ -10525,10 +10774,6 @@
           "weight": 8
         },
         {
-          "term": "system",
-          "weight": 7
-        },
-        {
           "term": "memory",
           "weight": 7
         },
@@ -10539,22 +10784,6 @@
         {
           "term": "integration",
           "weight": 7
-        },
-        {
-          "term": "hierarchical",
-          "weight": 7
-        },
-        {
-          "term": "cros platform",
-          "weight": 6
-        },
-        {
-          "term": "designer",
-          "weight": 6
-        },
-        {
-          "term": "pytorch",
-          "weight": 6
         }
       ],
       "sample_slugs": [
@@ -10569,11 +10798,11 @@
       "terms": [
         {
           "term": "speculative",
-          "weight": 42
+          "weight": 50
         },
         {
           "term": "decoding",
-          "weight": 41
+          "weight": 49
         },
         {
           "term": "cache",
@@ -10581,6 +10810,10 @@
         },
         {
           "term": "draft",
+          "weight": 26
+        },
+        {
+          "term": "inference",
           "weight": 26
         },
         {
@@ -10600,11 +10833,19 @@
           "weight": 19
         },
         {
+          "term": "optimization",
+          "weight": 18
+        },
+        {
           "term": "speculation",
           "weight": 15
         },
         {
-          "term": "inference",
+          "term": "llm",
+          "weight": 14
+        },
+        {
+          "term": "latency",
           "weight": 13
         },
         {
@@ -10613,6 +10854,10 @@
         },
         {
           "term": "cache aware",
+          "weight": 12
+        },
+        {
+          "term": "system",
           "weight": 12
         },
         {
@@ -10648,7 +10893,7 @@
           "weight": 8
         },
         {
-          "term": "unassigned",
+          "term": "throughput",
           "weight": 8
         },
         {
@@ -10657,10 +10902,6 @@
         },
         {
           "term": "batch",
-          "weight": 7
-        },
-        {
-          "term": "latency",
           "weight": 7
         },
         {
@@ -10673,10 +10914,6 @@
         },
         {
           "term": "asynchronou",
-          "weight": 7
-        },
-        {
-          "term": "llm",
           "weight": 7
         },
         {
@@ -10701,14 +10938,6 @@
         },
         {
           "term": "acceptance",
-          "weight": 5
-        },
-        {
-          "term": "distributed",
-          "weight": 5
-        },
-        {
-          "term": "system",
           "weight": 5
         }
       ],
@@ -10869,6 +11098,161 @@
       ],
       "sample_slugs": [
         "2307.08691-flashattention-2"
+      ]
+    },
+    {
+      "field": "problems",
+      "value": "Cross-Platform Deployment",
+      "count": 1,
+      "href": "library.html?problem=Cross-Platform+Deployment",
+      "terms": [
+        {
+          "term": "kernel",
+          "weight": 55
+        },
+        {
+          "term": "cros platform",
+          "weight": 38
+        },
+        {
+          "term": "multi agent",
+          "weight": 36
+        },
+        {
+          "term": "agent",
+          "weight": 33
+        },
+        {
+          "term": "dsl",
+          "weight": 29
+        },
+        {
+          "term": "llm",
+          "weight": 28
+        },
+        {
+          "term": "generation",
+          "weight": 20
+        },
+        {
+          "term": "cros",
+          "weight": 19
+        },
+        {
+          "term": "platform",
+          "weight": 19
+        },
+        {
+          "term": "multi",
+          "weight": 18
+        },
+        {
+          "term": "deployment",
+          "weight": 16
+        },
+        {
+          "term": "optimization",
+          "weight": 16
+        },
+        {
+          "term": "ai",
+          "weight": 15
+        },
+        {
+          "term": "system",
+          "weight": 14
+        },
+        {
+          "term": "document driven",
+          "weight": 14
+        },
+        {
+          "term": "compiler",
+          "weight": 13
+        },
+        {
+          "term": "mathcal",
+          "weight": 13
+        },
+        {
+          "term": "unified",
+          "weight": 12
+        },
+        {
+          "term": "sketch",
+          "weight": 12
+        },
+        {
+          "term": "code",
+          "weight": 12
+        },
+        {
+          "term": "serving",
+          "weight": 11
+        },
+        {
+          "term": "akg",
+          "weight": 10
+        },
+        {
+          "term": "mathbf",
+          "weight": 10
+        },
+        {
+          "term": "shape",
+          "weight": 9
+        },
+        {
+          "term": "search",
+          "weight": 9
+        },
+        {
+          "term": "text",
+          "weight": 9
+        },
+        {
+          "term": "driven",
+          "weight": 8
+        },
+        {
+          "term": "iterative",
+          "weight": 8
+        },
+        {
+          "term": "coder",
+          "weight": 8
+        },
+        {
+          "term": "retrieval",
+          "weight": 8
+        },
+        {
+          "term": "profiling",
+          "weight": 7
+        },
+        {
+          "term": "memory",
+          "weight": 7
+        },
+        {
+          "term": "document",
+          "weight": 7
+        },
+        {
+          "term": "integration",
+          "weight": 7
+        },
+        {
+          "term": "hierarchical",
+          "weight": 7
+        },
+        {
+          "term": "designer",
+          "weight": 6
+        }
+      ],
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
       ]
     },
     {
@@ -11334,6 +11718,316 @@
       ],
       "sample_slugs": [
         "2503.14075-twigvlm-plus-plus"
+      ]
+    },
+    {
+      "field": "problems",
+      "value": "Inference Latency",
+      "count": 1,
+      "href": "library.html?problem=Inference+Latency",
+      "terms": [
+        {
+          "term": "speculative",
+          "weight": 50
+        },
+        {
+          "term": "decoding",
+          "weight": 49
+        },
+        {
+          "term": "inference",
+          "weight": 36
+        },
+        {
+          "term": "draft",
+          "weight": 26
+        },
+        {
+          "term": "cache",
+          "weight": 26
+        },
+        {
+          "term": "latency",
+          "weight": 23
+        },
+        {
+          "term": "fan out",
+          "weight": 20
+        },
+        {
+          "term": "ssd",
+          "weight": 19
+        },
+        {
+          "term": "optimization",
+          "weight": 18
+        },
+        {
+          "term": "speculation",
+          "weight": 15
+        },
+        {
+          "term": "outcome",
+          "weight": 15
+        },
+        {
+          "term": "verification",
+          "weight": 14
+        },
+        {
+          "term": "llm",
+          "weight": 14
+        },
+        {
+          "term": "arxiv",
+          "weight": 12
+        },
+        {
+          "term": "cache aware",
+          "weight": 12
+        },
+        {
+          "term": "system",
+          "weight": 12
+        },
+        {
+          "term": "token",
+          "weight": 11
+        },
+        {
+          "term": "fan",
+          "weight": 10
+        },
+        {
+          "term": "out",
+          "weight": 10
+        },
+        {
+          "term": "sampling",
+          "weight": 10
+        },
+        {
+          "term": "fallback",
+          "weight": 10
+        },
+        {
+          "term": "target",
+          "weight": 9
+        },
+        {
+          "term": "aware",
+          "weight": 9
+        },
+        {
+          "term": "geometric",
+          "weight": 8
+        },
+        {
+          "term": "throughput",
+          "weight": 8
+        },
+        {
+          "term": "saguaro",
+          "weight": 7
+        },
+        {
+          "term": "batch",
+          "weight": 7
+        },
+        {
+          "term": "distribution",
+          "weight": 7
+        },
+        {
+          "term": "tree",
+          "weight": 7
+        },
+        {
+          "term": "asynchronou",
+          "weight": 7
+        },
+        {
+          "term": "2603 03251",
+          "weight": 6
+        },
+        {
+          "term": "verifier",
+          "weight": 6
+        },
+        {
+          "term": "llama",
+          "weight": 5
+        },
+        {
+          "term": "residual",
+          "weight": 5
+        },
+        {
+          "term": "time",
+          "weight": 5
+        },
+        {
+          "term": "acceptance",
+          "weight": 5
+        }
+      ],
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "field": "problems",
+      "value": "Kernel Generation",
+      "count": 1,
+      "href": "library.html?problem=Kernel+Generation",
+      "terms": [
+        {
+          "term": "kernel",
+          "weight": 65
+        },
+        {
+          "term": "multi agent",
+          "weight": 36
+        },
+        {
+          "term": "agent",
+          "weight": 33
+        },
+        {
+          "term": "generation",
+          "weight": 30
+        },
+        {
+          "term": "dsl",
+          "weight": 29
+        },
+        {
+          "term": "llm",
+          "weight": 28
+        },
+        {
+          "term": "multi",
+          "weight": 18
+        },
+        {
+          "term": "cros platform",
+          "weight": 18
+        },
+        {
+          "term": "optimization",
+          "weight": 16
+        },
+        {
+          "term": "ai",
+          "weight": 15
+        },
+        {
+          "term": "system",
+          "weight": 14
+        },
+        {
+          "term": "document driven",
+          "weight": 14
+        },
+        {
+          "term": "compiler",
+          "weight": 13
+        },
+        {
+          "term": "mathcal",
+          "weight": 13
+        },
+        {
+          "term": "unified",
+          "weight": 12
+        },
+        {
+          "term": "sketch",
+          "weight": 12
+        },
+        {
+          "term": "code",
+          "weight": 12
+        },
+        {
+          "term": "serving",
+          "weight": 11
+        },
+        {
+          "term": "akg",
+          "weight": 10
+        },
+        {
+          "term": "mathbf",
+          "weight": 10
+        },
+        {
+          "term": "cros",
+          "weight": 9
+        },
+        {
+          "term": "platform",
+          "weight": 9
+        },
+        {
+          "term": "shape",
+          "weight": 9
+        },
+        {
+          "term": "search",
+          "weight": 9
+        },
+        {
+          "term": "text",
+          "weight": 9
+        },
+        {
+          "term": "driven",
+          "weight": 8
+        },
+        {
+          "term": "iterative",
+          "weight": 8
+        },
+        {
+          "term": "coder",
+          "weight": 8
+        },
+        {
+          "term": "retrieval",
+          "weight": 8
+        },
+        {
+          "term": "profiling",
+          "weight": 7
+        },
+        {
+          "term": "memory",
+          "weight": 7
+        },
+        {
+          "term": "document",
+          "weight": 7
+        },
+        {
+          "term": "integration",
+          "weight": 7
+        },
+        {
+          "term": "hierarchical",
+          "weight": 7
+        },
+        {
+          "term": "designer",
+          "weight": 6
+        },
+        {
+          "term": "pytorch",
+          "weight": 6
+        }
+      ],
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
       ]
     },
     {
@@ -12270,6 +12964,161 @@
     },
     {
       "field": "problems",
+      "value": "Semantic Search",
+      "count": 1,
+      "href": "library.html?problem=Semantic+Search",
+      "terms": [
+        {
+          "term": "search",
+          "weight": 39
+        },
+        {
+          "term": "semantic",
+          "weight": 30
+        },
+        {
+          "term": "vector",
+          "weight": 16
+        },
+        {
+          "term": "the",
+          "weight": 14
+        },
+        {
+          "term": "sqlite",
+          "weight": 14
+        },
+        {
+          "term": "local",
+          "weight": 13
+        },
+        {
+          "term": "storage",
+          "weight": 10
+        },
+        {
+          "term": "embedding",
+          "weight": 10
+        },
+        {
+          "term": "llm",
+          "weight": 8
+        },
+        {
+          "term": "serving",
+          "weight": 8
+        },
+        {
+          "term": "and",
+          "weight": 7
+        },
+        {
+          "term": "hash",
+          "weight": 7
+        },
+        {
+          "term": "cosine",
+          "weight": 7
+        },
+        {
+          "term": "similarity",
+          "weight": 7
+        },
+        {
+          "term": "ai",
+          "weight": 7
+        },
+        {
+          "term": "system",
+          "weight": 7
+        },
+        {
+          "term": "retrieval",
+          "weight": 7
+        },
+        {
+          "term": "mvp",
+          "weight": 6
+        },
+        {
+          "term": "database",
+          "weight": 6
+        },
+        {
+          "term": "api",
+          "weight": 5
+        },
+        {
+          "term": "keep",
+          "weight": 4
+        },
+        {
+          "term": "provider",
+          "weight": 4
+        },
+        {
+          "term": "local hash",
+          "weight": 4
+        },
+        {
+          "term": "hashing v1",
+          "weight": 4
+        },
+        {
+          "term": "sqlite vec",
+          "weight": 4
+        },
+        {
+          "term": "sqlite vss",
+          "weight": 4
+        },
+        {
+          "term": "evaluation",
+          "weight": 3
+        },
+        {
+          "term": "table",
+          "weight": 3
+        },
+        {
+          "term": "path",
+          "weight": 3
+        },
+        {
+          "term": "upgrade",
+          "weight": 3
+        },
+        {
+          "term": "for",
+          "weight": 3
+        },
+        {
+          "term": "need",
+          "weight": 3
+        },
+        {
+          "term": "variant",
+          "weight": 3
+        },
+        {
+          "term": "optional",
+          "weight": 2
+        },
+        {
+          "term": "label",
+          "weight": 2
+        },
+        {
+          "term": "hashing",
+          "weight": 2
+        }
+      ],
+      "sample_slugs": [
+        "semantic-search-evaluation"
+      ]
+    },
+    {
+      "field": "problems",
       "value": "Speculative Decoding",
       "count": 1,
       "href": "library.html?problem=Speculative+Decoding",
@@ -12421,6 +13270,316 @@
       ],
       "sample_slugs": [
         "2503.01840-eagle-3-scaling-up"
+      ]
+    },
+    {
+      "field": "problems",
+      "value": "Throughput Optimization",
+      "count": 1,
+      "href": "library.html?problem=Throughput+Optimization",
+      "terms": [
+        {
+          "term": "speculative",
+          "weight": 50
+        },
+        {
+          "term": "decoding",
+          "weight": 49
+        },
+        {
+          "term": "optimization",
+          "weight": 28
+        },
+        {
+          "term": "draft",
+          "weight": 26
+        },
+        {
+          "term": "cache",
+          "weight": 26
+        },
+        {
+          "term": "inference",
+          "weight": 26
+        },
+        {
+          "term": "fan out",
+          "weight": 20
+        },
+        {
+          "term": "ssd",
+          "weight": 19
+        },
+        {
+          "term": "throughput",
+          "weight": 18
+        },
+        {
+          "term": "speculation",
+          "weight": 15
+        },
+        {
+          "term": "outcome",
+          "weight": 15
+        },
+        {
+          "term": "verification",
+          "weight": 14
+        },
+        {
+          "term": "llm",
+          "weight": 14
+        },
+        {
+          "term": "latency",
+          "weight": 13
+        },
+        {
+          "term": "arxiv",
+          "weight": 12
+        },
+        {
+          "term": "cache aware",
+          "weight": 12
+        },
+        {
+          "term": "system",
+          "weight": 12
+        },
+        {
+          "term": "token",
+          "weight": 11
+        },
+        {
+          "term": "fan",
+          "weight": 10
+        },
+        {
+          "term": "out",
+          "weight": 10
+        },
+        {
+          "term": "sampling",
+          "weight": 10
+        },
+        {
+          "term": "fallback",
+          "weight": 10
+        },
+        {
+          "term": "target",
+          "weight": 9
+        },
+        {
+          "term": "aware",
+          "weight": 9
+        },
+        {
+          "term": "geometric",
+          "weight": 8
+        },
+        {
+          "term": "saguaro",
+          "weight": 7
+        },
+        {
+          "term": "batch",
+          "weight": 7
+        },
+        {
+          "term": "distribution",
+          "weight": 7
+        },
+        {
+          "term": "tree",
+          "weight": 7
+        },
+        {
+          "term": "asynchronou",
+          "weight": 7
+        },
+        {
+          "term": "2603 03251",
+          "weight": 6
+        },
+        {
+          "term": "verifier",
+          "weight": 6
+        },
+        {
+          "term": "llama",
+          "weight": 5
+        },
+        {
+          "term": "residual",
+          "weight": 5
+        },
+        {
+          "term": "time",
+          "weight": 5
+        },
+        {
+          "term": "acceptance",
+          "weight": 5
+        }
+      ],
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "field": "problems",
+      "value": "Vector Storage",
+      "count": 1,
+      "href": "library.html?problem=Vector+Storage",
+      "terms": [
+        {
+          "term": "search",
+          "weight": 29
+        },
+        {
+          "term": "vector",
+          "weight": 26
+        },
+        {
+          "term": "storage",
+          "weight": 20
+        },
+        {
+          "term": "semantic",
+          "weight": 20
+        },
+        {
+          "term": "the",
+          "weight": 14
+        },
+        {
+          "term": "sqlite",
+          "weight": 14
+        },
+        {
+          "term": "local",
+          "weight": 13
+        },
+        {
+          "term": "embedding",
+          "weight": 10
+        },
+        {
+          "term": "llm",
+          "weight": 8
+        },
+        {
+          "term": "serving",
+          "weight": 8
+        },
+        {
+          "term": "and",
+          "weight": 7
+        },
+        {
+          "term": "hash",
+          "weight": 7
+        },
+        {
+          "term": "cosine",
+          "weight": 7
+        },
+        {
+          "term": "similarity",
+          "weight": 7
+        },
+        {
+          "term": "ai",
+          "weight": 7
+        },
+        {
+          "term": "system",
+          "weight": 7
+        },
+        {
+          "term": "retrieval",
+          "weight": 7
+        },
+        {
+          "term": "mvp",
+          "weight": 6
+        },
+        {
+          "term": "database",
+          "weight": 6
+        },
+        {
+          "term": "api",
+          "weight": 5
+        },
+        {
+          "term": "keep",
+          "weight": 4
+        },
+        {
+          "term": "provider",
+          "weight": 4
+        },
+        {
+          "term": "local hash",
+          "weight": 4
+        },
+        {
+          "term": "hashing v1",
+          "weight": 4
+        },
+        {
+          "term": "sqlite vec",
+          "weight": 4
+        },
+        {
+          "term": "sqlite vss",
+          "weight": 4
+        },
+        {
+          "term": "evaluation",
+          "weight": 3
+        },
+        {
+          "term": "table",
+          "weight": 3
+        },
+        {
+          "term": "path",
+          "weight": 3
+        },
+        {
+          "term": "upgrade",
+          "weight": 3
+        },
+        {
+          "term": "for",
+          "weight": 3
+        },
+        {
+          "term": "need",
+          "weight": 3
+        },
+        {
+          "term": "variant",
+          "weight": 3
+        },
+        {
+          "term": "optional",
+          "weight": 2
+        },
+        {
+          "term": "label",
+          "weight": 2
+        },
+        {
+          "term": "hashing",
+          "weight": 2
+        }
+      ],
+      "sample_slugs": [
+        "semantic-search-evaluation"
       ]
     },
     {
@@ -12741,7 +13900,11 @@
       "terms": [
         {
           "term": "kernel",
-          "weight": 42
+          "weight": 55
+        },
+        {
+          "term": "dsl",
+          "weight": 39
         },
         {
           "term": "multi agent",
@@ -12752,23 +13915,35 @@
           "weight": 33
         },
         {
-          "term": "dsl",
-          "weight": 32
-        },
-        {
           "term": "llm",
           "weight": 28
+        },
+        {
+          "term": "compiler",
+          "weight": 23
+        },
+        {
+          "term": "generation",
+          "weight": 20
         },
         {
           "term": "multi",
           "weight": 18
         },
         {
-          "term": "compiler",
+          "term": "cros platform",
+          "weight": 18
+        },
+        {
+          "term": "optimization",
           "weight": 16
         },
         {
-          "term": "generation",
+          "term": "ai",
+          "weight": 15
+        },
+        {
+          "term": "system",
           "weight": 14
         },
         {
@@ -12804,6 +13979,14 @@
           "weight": 10
         },
         {
+          "term": "cros",
+          "weight": 9
+        },
+        {
+          "term": "platform",
+          "weight": 9
+        },
+        {
           "term": "shape",
           "weight": 9
         },
@@ -12812,16 +13995,8 @@
           "weight": 9
         },
         {
-          "term": "optimization",
-          "weight": 9
-        },
-        {
           "term": "text",
           "weight": 9
-        },
-        {
-          "term": "ai",
-          "weight": 8
         },
         {
           "term": "driven",
@@ -12838,10 +14013,6 @@
         {
           "term": "retrieval",
           "weight": 8
-        },
-        {
-          "term": "system",
-          "weight": 7
         },
         {
           "term": "profiling",
@@ -12864,23 +14035,11 @@
           "weight": 7
         },
         {
-          "term": "cros platform",
-          "weight": 6
-        },
-        {
           "term": "designer",
           "weight": 6
         },
         {
           "term": "pytorch",
-          "weight": 6
-        },
-        {
-          "term": "gpu",
-          "weight": 6
-        },
-        {
-          "term": "npu",
           "weight": 6
         }
       ],
@@ -13208,11 +14367,15 @@
       "terms": [
         {
           "term": "speculative",
-          "weight": 42
+          "weight": 50
         },
         {
           "term": "decoding",
-          "weight": 41
+          "weight": 49
+        },
+        {
+          "term": "inference",
+          "weight": 36
         },
         {
           "term": "draft",
@@ -13223,16 +14386,16 @@
           "weight": 26
         },
         {
-          "term": "inference",
-          "weight": 23
-        },
-        {
           "term": "fan out",
           "weight": 20
         },
         {
           "term": "ssd",
           "weight": 19
+        },
+        {
+          "term": "optimization",
+          "weight": 18
         },
         {
           "term": "distributed",
@@ -13251,11 +14414,23 @@
           "weight": 14
         },
         {
+          "term": "llm",
+          "weight": 14
+        },
+        {
+          "term": "latency",
+          "weight": 13
+        },
+        {
           "term": "arxiv",
           "weight": 12
         },
         {
           "term": "cache aware",
+          "weight": 12
+        },
+        {
+          "term": "system",
           "weight": 12
         },
         {
@@ -13291,7 +14466,7 @@
           "weight": 8
         },
         {
-          "term": "unassigned",
+          "term": "throughput",
           "weight": 8
         },
         {
@@ -13300,10 +14475,6 @@
         },
         {
           "term": "batch",
-          "weight": 7
-        },
-        {
-          "term": "latency",
           "weight": 7
         },
         {
@@ -13316,10 +14487,6 @@
         },
         {
           "term": "asynchronou",
-          "weight": 7
-        },
-        {
-          "term": "llm",
           "weight": 7
         },
         {
@@ -13340,14 +14507,6 @@
         },
         {
           "term": "time",
-          "weight": 5
-        },
-        {
-          "term": "acceptance",
-          "weight": 5
-        },
-        {
-          "term": "system",
           "weight": 5
         }
       ],
@@ -14138,7 +15297,7 @@
       "terms": [
         {
           "term": "kernel",
-          "weight": 42
+          "weight": 55
         },
         {
           "term": "multi agent",
@@ -14149,16 +15308,28 @@
           "weight": 33
         },
         {
+          "term": "dsl",
+          "weight": 29
+        },
+        {
           "term": "llm",
           "weight": 28
         },
         {
-          "term": "dsl",
-          "weight": 22
+          "term": "generation",
+          "weight": 20
         },
         {
           "term": "multi",
           "weight": 18
+        },
+        {
+          "term": "cros platform",
+          "weight": 18
+        },
+        {
+          "term": "optimization",
+          "weight": 16
         },
         {
           "term": "hardware",
@@ -14169,12 +15340,20 @@
           "weight": 15
         },
         {
-          "term": "generation",
+          "term": "ai",
+          "weight": 15
+        },
+        {
+          "term": "system",
           "weight": 14
         },
         {
           "term": "document driven",
           "weight": 14
+        },
+        {
+          "term": "compiler",
+          "weight": 13
         },
         {
           "term": "mathcal",
@@ -14205,6 +15384,14 @@
           "weight": 10
         },
         {
+          "term": "cros",
+          "weight": 9
+        },
+        {
+          "term": "platform",
+          "weight": 9
+        },
+        {
           "term": "shape",
           "weight": 9
         },
@@ -14213,16 +15400,8 @@
           "weight": 9
         },
         {
-          "term": "optimization",
-          "weight": 9
-        },
-        {
           "term": "text",
           "weight": 9
-        },
-        {
-          "term": "ai",
-          "weight": 8
         },
         {
           "term": "driven",
@@ -14239,10 +15418,6 @@
         {
           "term": "retrieval",
           "weight": 8
-        },
-        {
-          "term": "system",
-          "weight": 7
         },
         {
           "term": "profiling",
@@ -14263,22 +15438,6 @@
         {
           "term": "hierarchical",
           "weight": 7
-        },
-        {
-          "term": "cros platform",
-          "weight": 6
-        },
-        {
-          "term": "designer",
-          "weight": 6
-        },
-        {
-          "term": "pytorch",
-          "weight": 6
-        },
-        {
-          "term": "gpu",
-          "weight": 6
         }
       ],
       "sample_slugs": [
@@ -14448,7 +15607,7 @@
       "terms": [
         {
           "term": "kernel",
-          "weight": 52
+          "weight": 65
         },
         {
           "term": "multi agent",
@@ -14459,24 +15618,44 @@
           "weight": 33
         },
         {
-          "term": "llm",
-          "weight": 28
-        },
-        {
           "term": "generation",
-          "weight": 24
+          "weight": 30
         },
         {
           "term": "dsl",
-          "weight": 22
+          "weight": 29
+        },
+        {
+          "term": "llm",
+          "weight": 28
         },
         {
           "term": "multi",
           "weight": 18
         },
         {
+          "term": "cros platform",
+          "weight": 18
+        },
+        {
+          "term": "optimization",
+          "weight": 16
+        },
+        {
+          "term": "ai",
+          "weight": 15
+        },
+        {
+          "term": "system",
+          "weight": 14
+        },
+        {
           "term": "document driven",
           "weight": 14
+        },
+        {
+          "term": "compiler",
+          "weight": 13
         },
         {
           "term": "mathcal",
@@ -14507,6 +15686,14 @@
           "weight": 10
         },
         {
+          "term": "cros",
+          "weight": 9
+        },
+        {
+          "term": "platform",
+          "weight": 9
+        },
+        {
           "term": "shape",
           "weight": 9
         },
@@ -14515,16 +15702,8 @@
           "weight": 9
         },
         {
-          "term": "optimization",
-          "weight": 9
-        },
-        {
           "term": "text",
           "weight": 9
-        },
-        {
-          "term": "ai",
-          "weight": 8
         },
         {
           "term": "driven",
@@ -14541,10 +15720,6 @@
         {
           "term": "retrieval",
           "weight": 8
-        },
-        {
-          "term": "system",
-          "weight": 7
         },
         {
           "term": "profiling",
@@ -14567,27 +15742,11 @@
           "weight": 7
         },
         {
-          "term": "cros platform",
-          "weight": 6
-        },
-        {
           "term": "designer",
           "weight": 6
         },
         {
           "term": "pytorch",
-          "weight": 6
-        },
-        {
-          "term": "gpu",
-          "weight": 6
-        },
-        {
-          "term": "npu",
-          "weight": 6
-        },
-        {
-          "term": "api",
           "weight": 6
         }
       ],
@@ -14915,7 +16074,7 @@
       "terms": [
         {
           "term": "kernel",
-          "weight": 42
+          "weight": 55
         },
         {
           "term": "llm",
@@ -14931,14 +16090,14 @@
         },
         {
           "term": "generation",
-          "weight": 24
-        },
-        {
-          "term": "code",
-          "weight": 22
+          "weight": 30
         },
         {
           "term": "dsl",
+          "weight": 29
+        },
+        {
+          "term": "code",
           "weight": 22
         },
         {
@@ -14946,8 +16105,28 @@
           "weight": 18
         },
         {
+          "term": "cros platform",
+          "weight": 18
+        },
+        {
+          "term": "optimization",
+          "weight": 16
+        },
+        {
+          "term": "ai",
+          "weight": 15
+        },
+        {
+          "term": "system",
+          "weight": 14
+        },
+        {
           "term": "document driven",
           "weight": 14
+        },
+        {
+          "term": "compiler",
+          "weight": 13
         },
         {
           "term": "mathcal",
@@ -14974,6 +16153,14 @@
           "weight": 10
         },
         {
+          "term": "cros",
+          "weight": 9
+        },
+        {
+          "term": "platform",
+          "weight": 9
+        },
+        {
           "term": "shape",
           "weight": 9
         },
@@ -14982,16 +16169,8 @@
           "weight": 9
         },
         {
-          "term": "optimization",
-          "weight": 9
-        },
-        {
           "term": "text",
           "weight": 9
-        },
-        {
-          "term": "ai",
-          "weight": 8
         },
         {
           "term": "driven",
@@ -15008,10 +16187,6 @@
         {
           "term": "retrieval",
           "weight": 8
-        },
-        {
-          "term": "system",
-          "weight": 7
         },
         {
           "term": "profiling",
@@ -15034,27 +16209,11 @@
           "weight": 7
         },
         {
-          "term": "cros platform",
-          "weight": 6
-        },
-        {
           "term": "designer",
           "weight": 6
         },
         {
           "term": "pytorch",
-          "weight": 6
-        },
-        {
-          "term": "gpu",
-          "weight": 6
-        },
-        {
-          "term": "npu",
-          "weight": 6
-        },
-        {
-          "term": "api",
           "weight": 6
         }
       ],
@@ -15070,23 +16229,23 @@
       "terms": [
         {
           "term": "decoding",
-          "weight": 184
+          "weight": 192
         },
         {
           "term": "speculative",
-          "weight": 149
+          "weight": 157
+        },
+        {
+          "term": "llm",
+          "weight": 109
         },
         {
           "term": "diffusion",
           "weight": 103
         },
         {
-          "term": "llm",
-          "weight": 102
-        },
-        {
           "term": "inference",
-          "weight": 82
+          "weight": 95
         },
         {
           "term": "token",
@@ -15125,6 +16284,10 @@
           "weight": 45
         },
         {
+          "term": "system",
+          "weight": 45
+        },
+        {
           "term": "dflash",
           "weight": 42
         },
@@ -15142,10 +16305,6 @@
         },
         {
           "term": "serving",
-          "weight": 38
-        },
-        {
-          "term": "system",
           "weight": 38
         },
         {
@@ -15181,15 +16340,15 @@
           "weight": 28
         },
         {
+          "term": "scaling",
+          "weight": 27
+        },
+        {
           "term": "drafter",
           "weight": 27
         },
         {
           "term": "head",
-          "weight": 27
-        },
-        {
-          "term": "scaling",
           "weight": 27
         },
         {
@@ -15201,11 +16360,11 @@
           "weight": 26
         },
         {
-          "term": "language",
+          "term": "lossles",
           "weight": 25
         },
         {
-          "term": "lossles",
+          "term": "language",
           "weight": 25
         },
         {
@@ -15214,8 +16373,8 @@
         }
       ],
       "sample_slugs": [
-        "2602.06036-dflash",
         "2603.03251-speculative-speculative-decoding",
+        "2602.06036-dflash",
         "2605.12825-orthrus",
         "noarxiv-2026-dspark",
         "2503.01840-eagle-3-scaling-up"
@@ -15856,12 +17015,16 @@
           "weight": 56
         },
         {
+          "term": "kernel",
+          "weight": 55
+        },
+        {
           "term": "agent",
           "weight": 43
         },
         {
-          "term": "kernel",
-          "weight": 42
+          "term": "dsl",
+          "weight": 29
         },
         {
           "term": "multi",
@@ -15872,20 +17035,32 @@
           "weight": 28
         },
         {
-          "term": "dsl",
-          "weight": 22
-        },
-        {
           "term": "system",
-          "weight": 17
+          "weight": 24
         },
         {
           "term": "generation",
-          "weight": 14
+          "weight": 20
+        },
+        {
+          "term": "cros platform",
+          "weight": 18
+        },
+        {
+          "term": "optimization",
+          "weight": 16
+        },
+        {
+          "term": "ai",
+          "weight": 15
         },
         {
           "term": "document driven",
           "weight": 14
+        },
+        {
+          "term": "compiler",
+          "weight": 13
         },
         {
           "term": "mathcal",
@@ -15916,6 +17091,14 @@
           "weight": 10
         },
         {
+          "term": "cros",
+          "weight": 9
+        },
+        {
+          "term": "platform",
+          "weight": 9
+        },
+        {
           "term": "shape",
           "weight": 9
         },
@@ -15924,16 +17107,8 @@
           "weight": 9
         },
         {
-          "term": "optimization",
-          "weight": 9
-        },
-        {
           "term": "text",
           "weight": 9
-        },
-        {
-          "term": "ai",
-          "weight": 8
         },
         {
           "term": "driven",
@@ -15972,27 +17147,11 @@
           "weight": 7
         },
         {
-          "term": "cros platform",
-          "weight": 6
-        },
-        {
           "term": "designer",
           "weight": 6
         },
         {
           "term": "pytorch",
-          "weight": 6
-        },
-        {
-          "term": "gpu",
-          "weight": 6
-        },
-        {
-          "term": "npu",
-          "weight": 6
-        },
-        {
-          "term": "api",
           "weight": 6
         }
       ],
@@ -16623,161 +17782,6 @@
     },
     {
       "field": "topics",
-      "value": "RAG",
-      "count": 1,
-      "href": "library.html?topic=RAG",
-      "terms": [
-        {
-          "term": "rag",
-          "weight": 15
-        },
-        {
-          "term": "the",
-          "weight": 14
-        },
-        {
-          "term": "search",
-          "weight": 11
-        },
-        {
-          "term": "semantic",
-          "weight": 9
-        },
-        {
-          "term": "sqlite",
-          "weight": 9
-        },
-        {
-          "term": "local",
-          "weight": 8
-        },
-        {
-          "term": "unassigned",
-          "weight": 8
-        },
-        {
-          "term": "and",
-          "weight": 7
-        },
-        {
-          "term": "mvp",
-          "weight": 6
-        },
-        {
-          "term": "embedding",
-          "weight": 5
-        },
-        {
-          "term": "vector",
-          "weight": 5
-        },
-        {
-          "term": "api",
-          "weight": 5
-        },
-        {
-          "term": "keep",
-          "weight": 4
-        },
-        {
-          "term": "storage",
-          "weight": 4
-        },
-        {
-          "term": "provider",
-          "weight": 4
-        },
-        {
-          "term": "local hash",
-          "weight": 4
-        },
-        {
-          "term": "hashing v1",
-          "weight": 4
-        },
-        {
-          "term": "sqlite vec",
-          "weight": 4
-        },
-        {
-          "term": "sqlite vss",
-          "weight": 4
-        },
-        {
-          "term": "evaluation",
-          "weight": 3
-        },
-        {
-          "term": "table",
-          "weight": 3
-        },
-        {
-          "term": "path",
-          "weight": 3
-        },
-        {
-          "term": "upgrade",
-          "weight": 3
-        },
-        {
-          "term": "for",
-          "weight": 3
-        },
-        {
-          "term": "need",
-          "weight": 3
-        },
-        {
-          "term": "optional",
-          "weight": 2
-        },
-        {
-          "term": "hash",
-          "weight": 2
-        },
-        {
-          "term": "label",
-          "weight": 2
-        },
-        {
-          "term": "hashing",
-          "weight": 2
-        },
-        {
-          "term": "query",
-          "weight": 2
-        },
-        {
-          "term": "python",
-          "weight": 2
-        },
-        {
-          "term": "cosine",
-          "weight": 2
-        },
-        {
-          "term": "similarity",
-          "weight": 2
-        },
-        {
-          "term": "over",
-          "weight": 2
-        },
-        {
-          "term": "stored",
-          "weight": 2
-        },
-        {
-          "term": "chunk",
-          "weight": 2
-        }
-      ],
-      "sample_slugs": [
-        "semantic-search-evaluation"
-      ]
-    },
-    {
-      "field": "topics",
       "value": "Scaling Law",
       "count": 1,
       "href": "library.html?topic=Scaling+Law",
@@ -16929,6 +17933,161 @@
       ],
       "sample_slugs": [
         "2503.01840-eagle-3-scaling-up"
+      ]
+    },
+    {
+      "field": "topics",
+      "value": "Semantic Search",
+      "count": 1,
+      "href": "library.html?topic=Semantic+Search",
+      "terms": [
+        {
+          "term": "search",
+          "weight": 39
+        },
+        {
+          "term": "semantic",
+          "weight": 30
+        },
+        {
+          "term": "vector",
+          "weight": 16
+        },
+        {
+          "term": "the",
+          "weight": 14
+        },
+        {
+          "term": "sqlite",
+          "weight": 14
+        },
+        {
+          "term": "local",
+          "weight": 13
+        },
+        {
+          "term": "storage",
+          "weight": 10
+        },
+        {
+          "term": "embedding",
+          "weight": 10
+        },
+        {
+          "term": "llm",
+          "weight": 8
+        },
+        {
+          "term": "serving",
+          "weight": 8
+        },
+        {
+          "term": "and",
+          "weight": 7
+        },
+        {
+          "term": "hash",
+          "weight": 7
+        },
+        {
+          "term": "cosine",
+          "weight": 7
+        },
+        {
+          "term": "similarity",
+          "weight": 7
+        },
+        {
+          "term": "ai",
+          "weight": 7
+        },
+        {
+          "term": "system",
+          "weight": 7
+        },
+        {
+          "term": "retrieval",
+          "weight": 7
+        },
+        {
+          "term": "mvp",
+          "weight": 6
+        },
+        {
+          "term": "database",
+          "weight": 6
+        },
+        {
+          "term": "api",
+          "weight": 5
+        },
+        {
+          "term": "keep",
+          "weight": 4
+        },
+        {
+          "term": "provider",
+          "weight": 4
+        },
+        {
+          "term": "local hash",
+          "weight": 4
+        },
+        {
+          "term": "hashing v1",
+          "weight": 4
+        },
+        {
+          "term": "sqlite vec",
+          "weight": 4
+        },
+        {
+          "term": "sqlite vss",
+          "weight": 4
+        },
+        {
+          "term": "evaluation",
+          "weight": 3
+        },
+        {
+          "term": "table",
+          "weight": 3
+        },
+        {
+          "term": "path",
+          "weight": 3
+        },
+        {
+          "term": "upgrade",
+          "weight": 3
+        },
+        {
+          "term": "for",
+          "weight": 3
+        },
+        {
+          "term": "need",
+          "weight": 3
+        },
+        {
+          "term": "variant",
+          "weight": 3
+        },
+        {
+          "term": "optional",
+          "weight": 2
+        },
+        {
+          "term": "label",
+          "weight": 2
+        },
+        {
+          "term": "hashing",
+          "weight": 2
+        }
+      ],
+      "sample_slugs": [
+        "semantic-search-evaluation"
       ]
     },
     {
@@ -17094,27 +18253,27 @@
       "terms": [
         {
           "term": "decoding",
-          "weight": 318
+          "weight": 326
         },
         {
           "term": "speculative",
-          "weight": 216
+          "weight": 224
         },
         {
           "term": "token",
           "weight": 205
         },
         {
+          "term": "llm",
+          "weight": 153
+        },
+        {
           "term": "diffusion",
           "weight": 148
         },
         {
-          "term": "llm",
-          "weight": 146
-        },
-        {
           "term": "inference",
-          "weight": 123
+          "weight": 136
         },
         {
           "term": "parallel",
@@ -17138,7 +18297,7 @@
         },
         {
           "term": "system",
-          "weight": 66
+          "weight": 73
         },
         {
           "term": "eagle 3",
@@ -17193,10 +18352,6 @@
           "weight": 42
         },
         {
-          "term": "pruning",
-          "weight": 40
-        },
-        {
           "term": "verification",
           "weight": 40
         },
@@ -17205,8 +18360,16 @@
           "weight": 40
         },
         {
+          "term": "pruning",
+          "weight": 40
+        },
+        {
           "term": "training time",
           "weight": 40
+        },
+        {
+          "term": "attention",
+          "weight": 37
         },
         {
           "term": "tree",
@@ -17214,10 +18377,6 @@
         },
         {
           "term": "vlm",
-          "weight": 37
-        },
-        {
-          "term": "attention",
           "weight": 37
         },
         {
@@ -17238,12 +18397,167 @@
         }
       ],
       "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding",
         "2503.14075-twigvlm-plus-plus",
         "2602.06036-dflash",
-        "2603.03251-speculative-speculative-decoding",
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus",
         "noarxiv-2026-dspark"
+      ]
+    },
+    {
+      "field": "topics",
+      "value": "SQLite",
+      "count": 1,
+      "href": "library.html?topic=SQLite",
+      "terms": [
+        {
+          "term": "search",
+          "weight": 29
+        },
+        {
+          "term": "sqlite",
+          "weight": 24
+        },
+        {
+          "term": "semantic",
+          "weight": 20
+        },
+        {
+          "term": "vector",
+          "weight": 16
+        },
+        {
+          "term": "the",
+          "weight": 14
+        },
+        {
+          "term": "local",
+          "weight": 13
+        },
+        {
+          "term": "storage",
+          "weight": 10
+        },
+        {
+          "term": "embedding",
+          "weight": 10
+        },
+        {
+          "term": "llm",
+          "weight": 8
+        },
+        {
+          "term": "serving",
+          "weight": 8
+        },
+        {
+          "term": "and",
+          "weight": 7
+        },
+        {
+          "term": "hash",
+          "weight": 7
+        },
+        {
+          "term": "cosine",
+          "weight": 7
+        },
+        {
+          "term": "similarity",
+          "weight": 7
+        },
+        {
+          "term": "ai",
+          "weight": 7
+        },
+        {
+          "term": "system",
+          "weight": 7
+        },
+        {
+          "term": "retrieval",
+          "weight": 7
+        },
+        {
+          "term": "mvp",
+          "weight": 6
+        },
+        {
+          "term": "database",
+          "weight": 6
+        },
+        {
+          "term": "api",
+          "weight": 5
+        },
+        {
+          "term": "keep",
+          "weight": 4
+        },
+        {
+          "term": "provider",
+          "weight": 4
+        },
+        {
+          "term": "local hash",
+          "weight": 4
+        },
+        {
+          "term": "hashing v1",
+          "weight": 4
+        },
+        {
+          "term": "sqlite vec",
+          "weight": 4
+        },
+        {
+          "term": "sqlite vss",
+          "weight": 4
+        },
+        {
+          "term": "evaluation",
+          "weight": 3
+        },
+        {
+          "term": "table",
+          "weight": 3
+        },
+        {
+          "term": "path",
+          "weight": 3
+        },
+        {
+          "term": "upgrade",
+          "weight": 3
+        },
+        {
+          "term": "for",
+          "weight": 3
+        },
+        {
+          "term": "need",
+          "weight": 3
+        },
+        {
+          "term": "variant",
+          "weight": 3
+        },
+        {
+          "term": "optional",
+          "weight": 2
+        },
+        {
+          "term": "label",
+          "weight": 2
+        },
+        {
+          "term": "hashing",
+          "weight": 2
+        }
+      ],
+      "sample_slugs": [
+        "semantic-search-evaluation"
       ]
     },
     {
@@ -17254,11 +18568,15 @@
       "terms": [
         {
           "term": "speculative",
-          "weight": 42
+          "weight": 50
         },
         {
           "term": "decoding",
-          "weight": 41
+          "weight": 49
+        },
+        {
+          "term": "optimization",
+          "weight": 28
         },
         {
           "term": "draft",
@@ -17269,20 +18587,20 @@
           "weight": 26
         },
         {
+          "term": "inference",
+          "weight": 26
+        },
+        {
+          "term": "system",
+          "weight": 22
+        },
+        {
           "term": "fan out",
           "weight": 20
         },
         {
           "term": "ssd",
           "weight": 19
-        },
-        {
-          "term": "system",
-          "weight": 15
-        },
-        {
-          "term": "optimization",
-          "weight": 15
         },
         {
           "term": "speculation",
@@ -17297,7 +18615,11 @@
           "weight": 14
         },
         {
-          "term": "inference",
+          "term": "llm",
+          "weight": 14
+        },
+        {
+          "term": "latency",
           "weight": 13
         },
         {
@@ -17341,7 +18663,7 @@
           "weight": 8
         },
         {
-          "term": "unassigned",
+          "term": "throughput",
           "weight": 8
         },
         {
@@ -17350,10 +18672,6 @@
         },
         {
           "term": "batch",
-          "weight": 7
-        },
-        {
-          "term": "latency",
           "weight": 7
         },
         {
@@ -17366,10 +18684,6 @@
         },
         {
           "term": "asynchronou",
-          "weight": 7
-        },
-        {
-          "term": "llm",
           "weight": 7
         },
         {
@@ -17554,6 +18868,161 @@
       ],
       "sample_slugs": [
         "2307.08691-flashattention-2"
+      ]
+    },
+    {
+      "field": "topics",
+      "value": "Vector Database",
+      "count": 1,
+      "href": "library.html?topic=Vector+Database",
+      "terms": [
+        {
+          "term": "search",
+          "weight": 29
+        },
+        {
+          "term": "vector",
+          "weight": 26
+        },
+        {
+          "term": "semantic",
+          "weight": 20
+        },
+        {
+          "term": "database",
+          "weight": 16
+        },
+        {
+          "term": "the",
+          "weight": 14
+        },
+        {
+          "term": "sqlite",
+          "weight": 14
+        },
+        {
+          "term": "local",
+          "weight": 13
+        },
+        {
+          "term": "storage",
+          "weight": 10
+        },
+        {
+          "term": "embedding",
+          "weight": 10
+        },
+        {
+          "term": "llm",
+          "weight": 8
+        },
+        {
+          "term": "serving",
+          "weight": 8
+        },
+        {
+          "term": "and",
+          "weight": 7
+        },
+        {
+          "term": "hash",
+          "weight": 7
+        },
+        {
+          "term": "cosine",
+          "weight": 7
+        },
+        {
+          "term": "similarity",
+          "weight": 7
+        },
+        {
+          "term": "ai",
+          "weight": 7
+        },
+        {
+          "term": "system",
+          "weight": 7
+        },
+        {
+          "term": "retrieval",
+          "weight": 7
+        },
+        {
+          "term": "mvp",
+          "weight": 6
+        },
+        {
+          "term": "api",
+          "weight": 5
+        },
+        {
+          "term": "keep",
+          "weight": 4
+        },
+        {
+          "term": "provider",
+          "weight": 4
+        },
+        {
+          "term": "local hash",
+          "weight": 4
+        },
+        {
+          "term": "hashing v1",
+          "weight": 4
+        },
+        {
+          "term": "sqlite vec",
+          "weight": 4
+        },
+        {
+          "term": "sqlite vss",
+          "weight": 4
+        },
+        {
+          "term": "evaluation",
+          "weight": 3
+        },
+        {
+          "term": "table",
+          "weight": 3
+        },
+        {
+          "term": "path",
+          "weight": 3
+        },
+        {
+          "term": "upgrade",
+          "weight": 3
+        },
+        {
+          "term": "for",
+          "weight": 3
+        },
+        {
+          "term": "need",
+          "weight": 3
+        },
+        {
+          "term": "variant",
+          "weight": 3
+        },
+        {
+          "term": "optional",
+          "weight": 2
+        },
+        {
+          "term": "label",
+          "weight": 2
+        },
+        {
+          "term": "hashing",
+          "weight": 2
+        }
+      ],
+      "sample_slugs": [
+        "semantic-search-evaluation"
       ]
     },
     {
@@ -18179,6 +19648,161 @@
     },
     {
       "field": "tracks",
+      "value": "Compiler/DSL",
+      "count": 1,
+      "href": "library.html?track=Compiler%2FDSL",
+      "terms": [
+        {
+          "term": "kernel",
+          "weight": 55
+        },
+        {
+          "term": "dsl",
+          "weight": 39
+        },
+        {
+          "term": "multi agent",
+          "weight": 36
+        },
+        {
+          "term": "agent",
+          "weight": 33
+        },
+        {
+          "term": "llm",
+          "weight": 28
+        },
+        {
+          "term": "compiler",
+          "weight": 23
+        },
+        {
+          "term": "generation",
+          "weight": 20
+        },
+        {
+          "term": "multi",
+          "weight": 18
+        },
+        {
+          "term": "cros platform",
+          "weight": 18
+        },
+        {
+          "term": "optimization",
+          "weight": 16
+        },
+        {
+          "term": "ai",
+          "weight": 15
+        },
+        {
+          "term": "system",
+          "weight": 14
+        },
+        {
+          "term": "document driven",
+          "weight": 14
+        },
+        {
+          "term": "mathcal",
+          "weight": 13
+        },
+        {
+          "term": "unified",
+          "weight": 12
+        },
+        {
+          "term": "sketch",
+          "weight": 12
+        },
+        {
+          "term": "code",
+          "weight": 12
+        },
+        {
+          "term": "serving",
+          "weight": 11
+        },
+        {
+          "term": "akg",
+          "weight": 10
+        },
+        {
+          "term": "mathbf",
+          "weight": 10
+        },
+        {
+          "term": "cros",
+          "weight": 9
+        },
+        {
+          "term": "platform",
+          "weight": 9
+        },
+        {
+          "term": "shape",
+          "weight": 9
+        },
+        {
+          "term": "search",
+          "weight": 9
+        },
+        {
+          "term": "text",
+          "weight": 9
+        },
+        {
+          "term": "driven",
+          "weight": 8
+        },
+        {
+          "term": "iterative",
+          "weight": 8
+        },
+        {
+          "term": "coder",
+          "weight": 8
+        },
+        {
+          "term": "retrieval",
+          "weight": 8
+        },
+        {
+          "term": "profiling",
+          "weight": 7
+        },
+        {
+          "term": "memory",
+          "weight": 7
+        },
+        {
+          "term": "document",
+          "weight": 7
+        },
+        {
+          "term": "integration",
+          "weight": 7
+        },
+        {
+          "term": "hierarchical",
+          "weight": 7
+        },
+        {
+          "term": "designer",
+          "weight": 6
+        },
+        {
+          "term": "pytorch",
+          "weight": 6
+        }
+      ],
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ]
+    },
+    {
+      "field": "tracks",
       "value": "Inference Acceleration",
       "count": 8,
       "href": "library.html?track=Inference+Acceleration",
@@ -18339,6 +19963,161 @@
     },
     {
       "field": "tracks",
+      "value": "Inference Optimization",
+      "count": 1,
+      "href": "library.html?track=Inference+Optimization",
+      "terms": [
+        {
+          "term": "speculative",
+          "weight": 50
+        },
+        {
+          "term": "decoding",
+          "weight": 49
+        },
+        {
+          "term": "inference",
+          "weight": 36
+        },
+        {
+          "term": "optimization",
+          "weight": 28
+        },
+        {
+          "term": "draft",
+          "weight": 26
+        },
+        {
+          "term": "cache",
+          "weight": 26
+        },
+        {
+          "term": "fan out",
+          "weight": 20
+        },
+        {
+          "term": "ssd",
+          "weight": 19
+        },
+        {
+          "term": "speculation",
+          "weight": 15
+        },
+        {
+          "term": "outcome",
+          "weight": 15
+        },
+        {
+          "term": "verification",
+          "weight": 14
+        },
+        {
+          "term": "llm",
+          "weight": 14
+        },
+        {
+          "term": "latency",
+          "weight": 13
+        },
+        {
+          "term": "arxiv",
+          "weight": 12
+        },
+        {
+          "term": "cache aware",
+          "weight": 12
+        },
+        {
+          "term": "system",
+          "weight": 12
+        },
+        {
+          "term": "token",
+          "weight": 11
+        },
+        {
+          "term": "fan",
+          "weight": 10
+        },
+        {
+          "term": "out",
+          "weight": 10
+        },
+        {
+          "term": "sampling",
+          "weight": 10
+        },
+        {
+          "term": "fallback",
+          "weight": 10
+        },
+        {
+          "term": "target",
+          "weight": 9
+        },
+        {
+          "term": "aware",
+          "weight": 9
+        },
+        {
+          "term": "geometric",
+          "weight": 8
+        },
+        {
+          "term": "throughput",
+          "weight": 8
+        },
+        {
+          "term": "saguaro",
+          "weight": 7
+        },
+        {
+          "term": "batch",
+          "weight": 7
+        },
+        {
+          "term": "distribution",
+          "weight": 7
+        },
+        {
+          "term": "tree",
+          "weight": 7
+        },
+        {
+          "term": "asynchronou",
+          "weight": 7
+        },
+        {
+          "term": "2603 03251",
+          "weight": 6
+        },
+        {
+          "term": "verifier",
+          "weight": 6
+        },
+        {
+          "term": "llama",
+          "weight": 5
+        },
+        {
+          "term": "residual",
+          "weight": 5
+        },
+        {
+          "term": "time",
+          "weight": 5
+        },
+        {
+          "term": "acceptance",
+          "weight": 5
+        }
+      ],
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ]
+    },
+    {
+      "field": "tracks",
       "value": "Inference Serving Systems",
       "count": 1,
       "href": "library.html?track=Inference+Serving+Systems",
@@ -18490,6 +20269,161 @@
       ],
       "sample_slugs": [
         "2501.01005-flashinfer"
+      ]
+    },
+    {
+      "field": "tracks",
+      "value": "Kernel Optimization",
+      "count": 1,
+      "href": "library.html?track=Kernel+Optimization",
+      "terms": [
+        {
+          "term": "kernel",
+          "weight": 65
+        },
+        {
+          "term": "multi agent",
+          "weight": 36
+        },
+        {
+          "term": "agent",
+          "weight": 33
+        },
+        {
+          "term": "dsl",
+          "weight": 29
+        },
+        {
+          "term": "llm",
+          "weight": 28
+        },
+        {
+          "term": "optimization",
+          "weight": 26
+        },
+        {
+          "term": "generation",
+          "weight": 20
+        },
+        {
+          "term": "multi",
+          "weight": 18
+        },
+        {
+          "term": "cros platform",
+          "weight": 18
+        },
+        {
+          "term": "ai",
+          "weight": 15
+        },
+        {
+          "term": "system",
+          "weight": 14
+        },
+        {
+          "term": "document driven",
+          "weight": 14
+        },
+        {
+          "term": "compiler",
+          "weight": 13
+        },
+        {
+          "term": "mathcal",
+          "weight": 13
+        },
+        {
+          "term": "unified",
+          "weight": 12
+        },
+        {
+          "term": "sketch",
+          "weight": 12
+        },
+        {
+          "term": "code",
+          "weight": 12
+        },
+        {
+          "term": "serving",
+          "weight": 11
+        },
+        {
+          "term": "akg",
+          "weight": 10
+        },
+        {
+          "term": "mathbf",
+          "weight": 10
+        },
+        {
+          "term": "cros",
+          "weight": 9
+        },
+        {
+          "term": "platform",
+          "weight": 9
+        },
+        {
+          "term": "shape",
+          "weight": 9
+        },
+        {
+          "term": "search",
+          "weight": 9
+        },
+        {
+          "term": "text",
+          "weight": 9
+        },
+        {
+          "term": "driven",
+          "weight": 8
+        },
+        {
+          "term": "iterative",
+          "weight": 8
+        },
+        {
+          "term": "coder",
+          "weight": 8
+        },
+        {
+          "term": "retrieval",
+          "weight": 8
+        },
+        {
+          "term": "profiling",
+          "weight": 7
+        },
+        {
+          "term": "memory",
+          "weight": 7
+        },
+        {
+          "term": "document",
+          "weight": 7
+        },
+        {
+          "term": "integration",
+          "weight": 7
+        },
+        {
+          "term": "hierarchical",
+          "weight": 7
+        },
+        {
+          "term": "designer",
+          "weight": 6
+        },
+        {
+          "term": "pytorch",
+          "weight": 6
+        }
+      ],
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
       ]
     },
     {
@@ -18653,6 +20587,161 @@
     },
     {
       "field": "tracks",
+      "value": "Search & Retrieval",
+      "count": 1,
+      "href": "library.html?track=Search+%26+Retrieval",
+      "terms": [
+        {
+          "term": "search",
+          "weight": 39
+        },
+        {
+          "term": "semantic",
+          "weight": 20
+        },
+        {
+          "term": "retrieval",
+          "weight": 17
+        },
+        {
+          "term": "vector",
+          "weight": 16
+        },
+        {
+          "term": "the",
+          "weight": 14
+        },
+        {
+          "term": "sqlite",
+          "weight": 14
+        },
+        {
+          "term": "local",
+          "weight": 13
+        },
+        {
+          "term": "storage",
+          "weight": 10
+        },
+        {
+          "term": "embedding",
+          "weight": 10
+        },
+        {
+          "term": "llm",
+          "weight": 8
+        },
+        {
+          "term": "serving",
+          "weight": 8
+        },
+        {
+          "term": "and",
+          "weight": 7
+        },
+        {
+          "term": "hash",
+          "weight": 7
+        },
+        {
+          "term": "cosine",
+          "weight": 7
+        },
+        {
+          "term": "similarity",
+          "weight": 7
+        },
+        {
+          "term": "ai",
+          "weight": 7
+        },
+        {
+          "term": "system",
+          "weight": 7
+        },
+        {
+          "term": "mvp",
+          "weight": 6
+        },
+        {
+          "term": "database",
+          "weight": 6
+        },
+        {
+          "term": "api",
+          "weight": 5
+        },
+        {
+          "term": "keep",
+          "weight": 4
+        },
+        {
+          "term": "provider",
+          "weight": 4
+        },
+        {
+          "term": "local hash",
+          "weight": 4
+        },
+        {
+          "term": "hashing v1",
+          "weight": 4
+        },
+        {
+          "term": "sqlite vec",
+          "weight": 4
+        },
+        {
+          "term": "sqlite vss",
+          "weight": 4
+        },
+        {
+          "term": "evaluation",
+          "weight": 3
+        },
+        {
+          "term": "table",
+          "weight": 3
+        },
+        {
+          "term": "path",
+          "weight": 3
+        },
+        {
+          "term": "upgrade",
+          "weight": 3
+        },
+        {
+          "term": "for",
+          "weight": 3
+        },
+        {
+          "term": "need",
+          "weight": 3
+        },
+        {
+          "term": "variant",
+          "weight": 3
+        },
+        {
+          "term": "optional",
+          "weight": 2
+        },
+        {
+          "term": "label",
+          "weight": 2
+        },
+        {
+          "term": "hashing",
+          "weight": 2
+        }
+      ],
+      "sample_slugs": [
+        "semantic-search-evaluation"
+      ]
+    },
+    {
+      "field": "tracks",
       "value": "VLM Acceleration",
       "count": 1,
       "href": "library.html?track=VLM+Acceleration",
@@ -18808,6 +20897,240 @@
     }
   ],
   "paper_signatures": [
+    {
+      "slug": "2603.03251-speculative-speculative-decoding",
+      "title": "推测性推测解码",
+      "title_en": "Speculative Speculative Decoding",
+      "href": "2603.03251-speculative-speculative-decoding.html",
+      "year": 2026,
+      "research_line": "Speculative Decoding",
+      "domains": [
+        "LLM Systems"
+      ],
+      "tracks": [
+        "Inference Optimization"
+      ],
+      "problems": [
+        "Inference Latency",
+        "Throughput Optimization"
+      ],
+      "topics": [
+        "Distributed Inference",
+        "LLM Inference",
+        "Speculative Decoding",
+        "Systems Optimization"
+      ],
+      "methods": [
+        "asynchronous decoding",
+        "cache-aware sampling",
+        "fallback speculation",
+        "geometric fan-out",
+        "Speculative Decoding",
+        "verification outcome cache"
+      ],
+      "terms": [
+        {
+          "term": "speculative",
+          "weight": 50
+        },
+        {
+          "term": "decoding",
+          "weight": 49
+        },
+        {
+          "term": "draft",
+          "weight": 26
+        },
+        {
+          "term": "cache",
+          "weight": 26
+        },
+        {
+          "term": "inference",
+          "weight": 26
+        },
+        {
+          "term": "fan out",
+          "weight": 20
+        },
+        {
+          "term": "ssd",
+          "weight": 19
+        },
+        {
+          "term": "optimization",
+          "weight": 18
+        },
+        {
+          "term": "speculation",
+          "weight": 15
+        },
+        {
+          "term": "outcome",
+          "weight": 15
+        },
+        {
+          "term": "verification",
+          "weight": 14
+        },
+        {
+          "term": "llm",
+          "weight": 14
+        },
+        {
+          "term": "latency",
+          "weight": 13
+        },
+        {
+          "term": "arxiv",
+          "weight": 12
+        },
+        {
+          "term": "cache aware",
+          "weight": 12
+        },
+        {
+          "term": "system",
+          "weight": 12
+        },
+        {
+          "term": "token",
+          "weight": 11
+        },
+        {
+          "term": "fan",
+          "weight": 10
+        },
+        {
+          "term": "out",
+          "weight": 10
+        },
+        {
+          "term": "sampling",
+          "weight": 10
+        },
+        {
+          "term": "fallback",
+          "weight": 10
+        },
+        {
+          "term": "target",
+          "weight": 9
+        },
+        {
+          "term": "aware",
+          "weight": 9
+        },
+        {
+          "term": "geometric",
+          "weight": 8
+        },
+        {
+          "term": "throughput",
+          "weight": 8
+        },
+        {
+          "term": "saguaro",
+          "weight": 7
+        },
+        {
+          "term": "batch",
+          "weight": 7
+        },
+        {
+          "term": "distribution",
+          "weight": 7
+        },
+        {
+          "term": "tree",
+          "weight": 7
+        },
+        {
+          "term": "asynchronou",
+          "weight": 7
+        },
+        {
+          "term": "2603 03251",
+          "weight": 6
+        },
+        {
+          "term": "verifier",
+          "weight": 6
+        },
+        {
+          "term": "llama",
+          "weight": 5
+        },
+        {
+          "term": "residual",
+          "weight": 5
+        },
+        {
+          "term": "time",
+          "weight": 5
+        },
+        {
+          "term": "acceptance",
+          "weight": 5
+        },
+        {
+          "term": "distributed",
+          "weight": 5
+        },
+        {
+          "term": "verify",
+          "weight": 4
+        },
+        {
+          "term": "arxiv org",
+          "weight": 4
+        },
+        {
+          "term": "and",
+          "weight": 4
+        },
+        {
+          "term": "length",
+          "weight": 4
+        },
+        {
+          "term": "low latency",
+          "weight": 4
+        },
+        {
+          "term": "提出",
+          "weight": 4
+        },
+        {
+          "term": "speculator",
+          "weight": 4
+        },
+        {
+          "term": "backup",
+          "weight": 4
+        },
+        {
+          "term": "llama 3 1 70b",
+          "weight": 4
+        },
+        {
+          "term": "tok",
+          "weight": 4
+        },
+        {
+          "term": "rate",
+          "weight": 4
+        },
+        {
+          "term": "2025",
+          "weight": 4
+        },
+        {
+          "term": "multi device",
+          "weight": 4
+        }
+      ]
+    },
     {
       "slug": "2503.14075-twigvlm-plus-plus",
       "title": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
@@ -19275,233 +21598,6 @@
         },
         {
           "term": "z lab",
-          "weight": 4
-        }
-      ]
-    },
-    {
-      "slug": "2603.03251-speculative-speculative-decoding",
-      "title": "推测性推测解码",
-      "title_en": "Speculative Speculative Decoding",
-      "href": "2603.03251-speculative-speculative-decoding.html",
-      "year": 2026,
-      "research_line": "Unassigned",
-      "domains": [],
-      "tracks": [],
-      "problems": [],
-      "topics": [
-        "Distributed Inference",
-        "LLM Inference",
-        "Speculative Decoding",
-        "Systems Optimization"
-      ],
-      "methods": [
-        "asynchronous decoding",
-        "cache-aware sampling",
-        "fallback speculation",
-        "geometric fan-out",
-        "Speculative Decoding",
-        "verification outcome cache"
-      ],
-      "terms": [
-        {
-          "term": "speculative",
-          "weight": 42
-        },
-        {
-          "term": "decoding",
-          "weight": 41
-        },
-        {
-          "term": "draft",
-          "weight": 26
-        },
-        {
-          "term": "cache",
-          "weight": 26
-        },
-        {
-          "term": "fan out",
-          "weight": 20
-        },
-        {
-          "term": "ssd",
-          "weight": 19
-        },
-        {
-          "term": "speculation",
-          "weight": 15
-        },
-        {
-          "term": "outcome",
-          "weight": 15
-        },
-        {
-          "term": "verification",
-          "weight": 14
-        },
-        {
-          "term": "inference",
-          "weight": 13
-        },
-        {
-          "term": "arxiv",
-          "weight": 12
-        },
-        {
-          "term": "cache aware",
-          "weight": 12
-        },
-        {
-          "term": "token",
-          "weight": 11
-        },
-        {
-          "term": "fan",
-          "weight": 10
-        },
-        {
-          "term": "out",
-          "weight": 10
-        },
-        {
-          "term": "sampling",
-          "weight": 10
-        },
-        {
-          "term": "fallback",
-          "weight": 10
-        },
-        {
-          "term": "target",
-          "weight": 9
-        },
-        {
-          "term": "aware",
-          "weight": 9
-        },
-        {
-          "term": "geometric",
-          "weight": 8
-        },
-        {
-          "term": "unassigned",
-          "weight": 8
-        },
-        {
-          "term": "saguaro",
-          "weight": 7
-        },
-        {
-          "term": "batch",
-          "weight": 7
-        },
-        {
-          "term": "latency",
-          "weight": 7
-        },
-        {
-          "term": "distribution",
-          "weight": 7
-        },
-        {
-          "term": "tree",
-          "weight": 7
-        },
-        {
-          "term": "asynchronou",
-          "weight": 7
-        },
-        {
-          "term": "llm",
-          "weight": 7
-        },
-        {
-          "term": "2603 03251",
-          "weight": 6
-        },
-        {
-          "term": "verifier",
-          "weight": 6
-        },
-        {
-          "term": "llama",
-          "weight": 5
-        },
-        {
-          "term": "residual",
-          "weight": 5
-        },
-        {
-          "term": "time",
-          "weight": 5
-        },
-        {
-          "term": "acceptance",
-          "weight": 5
-        },
-        {
-          "term": "distributed",
-          "weight": 5
-        },
-        {
-          "term": "system",
-          "weight": 5
-        },
-        {
-          "term": "optimization",
-          "weight": 5
-        },
-        {
-          "term": "verify",
-          "weight": 4
-        },
-        {
-          "term": "arxiv org",
-          "weight": 4
-        },
-        {
-          "term": "and",
-          "weight": 4
-        },
-        {
-          "term": "length",
-          "weight": 4
-        },
-        {
-          "term": "low latency",
-          "weight": 4
-        },
-        {
-          "term": "提出",
-          "weight": 4
-        },
-        {
-          "term": "speculator",
-          "weight": 4
-        },
-        {
-          "term": "backup",
-          "weight": 4
-        },
-        {
-          "term": "llama 3 1 70b",
-          "weight": 4
-        },
-        {
-          "term": "tok",
-          "weight": 4
-        },
-        {
-          "term": "rate",
-          "weight": 4
-        },
-        {
-          "term": "2025",
-          "weight": 4
-        },
-        {
-          "term": "multi device",
           "weight": 4
         }
       ]
@@ -20440,6 +22536,471 @@
       ]
     },
     {
+      "slug": "semantic-search-evaluation",
+      "title": "语义搜索评估",
+      "title_en": "Semantic Search Evaluation",
+      "href": "semantic-search-evaluation.html",
+      "year": 2025,
+      "research_line": "LLM Serving",
+      "domains": [
+        "AI Systems"
+      ],
+      "tracks": [
+        "Search & Retrieval"
+      ],
+      "problems": [
+        "Semantic Search",
+        "Vector Storage"
+      ],
+      "topics": [
+        "Semantic Search",
+        "SQLite",
+        "Vector Database"
+      ],
+      "methods": [
+        "Cosine Similarity",
+        "Local Hash Embeddings"
+      ],
+      "terms": [
+        {
+          "term": "search",
+          "weight": 29
+        },
+        {
+          "term": "semantic",
+          "weight": 20
+        },
+        {
+          "term": "vector",
+          "weight": 16
+        },
+        {
+          "term": "the",
+          "weight": 14
+        },
+        {
+          "term": "sqlite",
+          "weight": 14
+        },
+        {
+          "term": "local",
+          "weight": 13
+        },
+        {
+          "term": "storage",
+          "weight": 10
+        },
+        {
+          "term": "embedding",
+          "weight": 10
+        },
+        {
+          "term": "llm",
+          "weight": 8
+        },
+        {
+          "term": "serving",
+          "weight": 8
+        },
+        {
+          "term": "and",
+          "weight": 7
+        },
+        {
+          "term": "hash",
+          "weight": 7
+        },
+        {
+          "term": "cosine",
+          "weight": 7
+        },
+        {
+          "term": "similarity",
+          "weight": 7
+        },
+        {
+          "term": "ai",
+          "weight": 7
+        },
+        {
+          "term": "system",
+          "weight": 7
+        },
+        {
+          "term": "retrieval",
+          "weight": 7
+        },
+        {
+          "term": "mvp",
+          "weight": 6
+        },
+        {
+          "term": "database",
+          "weight": 6
+        },
+        {
+          "term": "api",
+          "weight": 5
+        },
+        {
+          "term": "keep",
+          "weight": 4
+        },
+        {
+          "term": "provider",
+          "weight": 4
+        },
+        {
+          "term": "local hash",
+          "weight": 4
+        },
+        {
+          "term": "hashing v1",
+          "weight": 4
+        },
+        {
+          "term": "sqlite vec",
+          "weight": 4
+        },
+        {
+          "term": "sqlite vss",
+          "weight": 4
+        },
+        {
+          "term": "evaluation",
+          "weight": 3
+        },
+        {
+          "term": "table",
+          "weight": 3
+        },
+        {
+          "term": "path",
+          "weight": 3
+        },
+        {
+          "term": "upgrade",
+          "weight": 3
+        },
+        {
+          "term": "for",
+          "weight": 3
+        },
+        {
+          "term": "need",
+          "weight": 3
+        },
+        {
+          "term": "variant",
+          "weight": 3
+        },
+        {
+          "term": "optional",
+          "weight": 2
+        },
+        {
+          "term": "label",
+          "weight": 2
+        },
+        {
+          "term": "hashing",
+          "weight": 2
+        },
+        {
+          "term": "query",
+          "weight": 2
+        },
+        {
+          "term": "python",
+          "weight": 2
+        },
+        {
+          "term": "over",
+          "weight": 2
+        },
+        {
+          "term": "stored",
+          "weight": 2
+        },
+        {
+          "term": "chunk",
+          "weight": 2
+        },
+        {
+          "term": "current",
+          "weight": 2
+        },
+        {
+          "term": "stable",
+          "weight": 2
+        },
+        {
+          "term": "semantic search",
+          "weight": 2
+        },
+        {
+          "term": "native",
+          "weight": 2
+        },
+        {
+          "term": "option",
+          "weight": 2
+        },
+        {
+          "term": "vec",
+          "weight": 2
+        },
+        {
+          "term": "future",
+          "weight": 2
+        },
+        {
+          "term": "pre v1",
+          "weight": 2
+        },
+        {
+          "term": "dependency",
+          "weight": 2
+        }
+      ]
+    },
+    {
+      "slug": "2512.23424-akg-kernel-agent-multi",
+      "title": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
+      "title_en": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
+      "href": "2512.23424-akg-kernel-agent-multi.html",
+      "year": 2025,
+      "research_line": "LLM Serving",
+      "domains": [
+        "AI Systems"
+      ],
+      "tracks": [
+        "Compiler/DSL",
+        "Kernel Optimization"
+      ],
+      "problems": [
+        "Cross-Platform Deployment",
+        "Kernel Generation"
+      ],
+      "topics": [
+        "Compiler/DSL",
+        "Hardware Acceleration",
+        "Kernel Generation",
+        "LLM Code Generation",
+        "Multi-Agent Systems"
+      ],
+      "methods": [
+        "Document-Driven Integration",
+        "Hierarchical Code Retrieval",
+        "Iterative Search-Based Optimization",
+        "Multi-Agent Workflow",
+        "Unified Sketch",
+        "Verification and Profiling Loop"
+      ],
+      "terms": [
+        {
+          "term": "kernel",
+          "weight": 55
+        },
+        {
+          "term": "multi agent",
+          "weight": 36
+        },
+        {
+          "term": "agent",
+          "weight": 33
+        },
+        {
+          "term": "dsl",
+          "weight": 29
+        },
+        {
+          "term": "llm",
+          "weight": 28
+        },
+        {
+          "term": "generation",
+          "weight": 20
+        },
+        {
+          "term": "multi",
+          "weight": 18
+        },
+        {
+          "term": "cros platform",
+          "weight": 18
+        },
+        {
+          "term": "optimization",
+          "weight": 16
+        },
+        {
+          "term": "ai",
+          "weight": 15
+        },
+        {
+          "term": "system",
+          "weight": 14
+        },
+        {
+          "term": "document driven",
+          "weight": 14
+        },
+        {
+          "term": "compiler",
+          "weight": 13
+        },
+        {
+          "term": "mathcal",
+          "weight": 13
+        },
+        {
+          "term": "unified",
+          "weight": 12
+        },
+        {
+          "term": "sketch",
+          "weight": 12
+        },
+        {
+          "term": "code",
+          "weight": 12
+        },
+        {
+          "term": "serving",
+          "weight": 11
+        },
+        {
+          "term": "akg",
+          "weight": 10
+        },
+        {
+          "term": "mathbf",
+          "weight": 10
+        },
+        {
+          "term": "cros",
+          "weight": 9
+        },
+        {
+          "term": "platform",
+          "weight": 9
+        },
+        {
+          "term": "shape",
+          "weight": 9
+        },
+        {
+          "term": "search",
+          "weight": 9
+        },
+        {
+          "term": "text",
+          "weight": 9
+        },
+        {
+          "term": "driven",
+          "weight": 8
+        },
+        {
+          "term": "iterative",
+          "weight": 8
+        },
+        {
+          "term": "coder",
+          "weight": 8
+        },
+        {
+          "term": "retrieval",
+          "weight": 8
+        },
+        {
+          "term": "profiling",
+          "weight": 7
+        },
+        {
+          "term": "memory",
+          "weight": 7
+        },
+        {
+          "term": "document",
+          "weight": 7
+        },
+        {
+          "term": "integration",
+          "weight": 7
+        },
+        {
+          "term": "hierarchical",
+          "weight": 7
+        },
+        {
+          "term": "designer",
+          "weight": 6
+        },
+        {
+          "term": "pytorch",
+          "weight": 6
+        },
+        {
+          "term": "gpu",
+          "weight": 6
+        },
+        {
+          "term": "npu",
+          "weight": 6
+        },
+        {
+          "term": "api",
+          "weight": 6
+        },
+        {
+          "term": "island",
+          "weight": 6
+        },
+        {
+          "term": "workflow",
+          "weight": 6
+        },
+        {
+          "term": "loop",
+          "weight": 6
+        },
+        {
+          "term": "deployment",
+          "weight": 6
+        },
+        {
+          "term": "operator",
+          "weight": 5
+        },
+        {
+          "term": "reference",
+          "weight": 5
+        },
+        {
+          "term": "error",
+          "weight": 5
+        },
+        {
+          "term": "hardware",
+          "weight": 5
+        },
+        {
+          "term": "acceleration",
+          "weight": 5
+        },
+        {
+          "term": "verification",
+          "weight": 5
+        },
+        {
+          "term": "and",
+          "weight": 5
+        }
+      ]
+    },
+    {
       "slug": "2501.01005-flashinfer",
       "title": "FlashInfer：面向 LLM 推理服务的高效可定制 Attention 引擎",
       "title_en": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
@@ -21140,234 +23701,6 @@
       ]
     },
     {
-      "slug": "2512.23424-akg-kernel-agent-multi",
-      "title": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
-      "title_en": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
-      "href": "2512.23424-akg-kernel-agent-multi.html",
-      "year": 2025,
-      "research_line": "LLM Serving",
-      "domains": [],
-      "tracks": [],
-      "problems": [],
-      "topics": [
-        "Compiler/DSL",
-        "Hardware Acceleration",
-        "Kernel Generation",
-        "LLM Code Generation",
-        "Multi-Agent Systems"
-      ],
-      "methods": [
-        "Document-Driven Integration",
-        "Hierarchical Code Retrieval",
-        "Iterative Search-Based Optimization",
-        "Multi-Agent Workflow",
-        "Unified Sketch",
-        "Verification and Profiling Loop"
-      ],
-      "terms": [
-        {
-          "term": "kernel",
-          "weight": 42
-        },
-        {
-          "term": "multi agent",
-          "weight": 36
-        },
-        {
-          "term": "agent",
-          "weight": 33
-        },
-        {
-          "term": "llm",
-          "weight": 28
-        },
-        {
-          "term": "dsl",
-          "weight": 22
-        },
-        {
-          "term": "multi",
-          "weight": 18
-        },
-        {
-          "term": "generation",
-          "weight": 14
-        },
-        {
-          "term": "document driven",
-          "weight": 14
-        },
-        {
-          "term": "mathcal",
-          "weight": 13
-        },
-        {
-          "term": "unified",
-          "weight": 12
-        },
-        {
-          "term": "sketch",
-          "weight": 12
-        },
-        {
-          "term": "code",
-          "weight": 12
-        },
-        {
-          "term": "serving",
-          "weight": 11
-        },
-        {
-          "term": "akg",
-          "weight": 10
-        },
-        {
-          "term": "mathbf",
-          "weight": 10
-        },
-        {
-          "term": "shape",
-          "weight": 9
-        },
-        {
-          "term": "search",
-          "weight": 9
-        },
-        {
-          "term": "optimization",
-          "weight": 9
-        },
-        {
-          "term": "text",
-          "weight": 9
-        },
-        {
-          "term": "ai",
-          "weight": 8
-        },
-        {
-          "term": "driven",
-          "weight": 8
-        },
-        {
-          "term": "iterative",
-          "weight": 8
-        },
-        {
-          "term": "coder",
-          "weight": 8
-        },
-        {
-          "term": "retrieval",
-          "weight": 8
-        },
-        {
-          "term": "system",
-          "weight": 7
-        },
-        {
-          "term": "profiling",
-          "weight": 7
-        },
-        {
-          "term": "memory",
-          "weight": 7
-        },
-        {
-          "term": "document",
-          "weight": 7
-        },
-        {
-          "term": "integration",
-          "weight": 7
-        },
-        {
-          "term": "hierarchical",
-          "weight": 7
-        },
-        {
-          "term": "cros platform",
-          "weight": 6
-        },
-        {
-          "term": "designer",
-          "weight": 6
-        },
-        {
-          "term": "pytorch",
-          "weight": 6
-        },
-        {
-          "term": "gpu",
-          "weight": 6
-        },
-        {
-          "term": "npu",
-          "weight": 6
-        },
-        {
-          "term": "api",
-          "weight": 6
-        },
-        {
-          "term": "island",
-          "weight": 6
-        },
-        {
-          "term": "workflow",
-          "weight": 6
-        },
-        {
-          "term": "compiler",
-          "weight": 6
-        },
-        {
-          "term": "loop",
-          "weight": 6
-        },
-        {
-          "term": "operator",
-          "weight": 5
-        },
-        {
-          "term": "reference",
-          "weight": 5
-        },
-        {
-          "term": "error",
-          "weight": 5
-        },
-        {
-          "term": "hardware",
-          "weight": 5
-        },
-        {
-          "term": "acceleration",
-          "weight": 5
-        },
-        {
-          "term": "verification",
-          "weight": 5
-        },
-        {
-          "term": "and",
-          "weight": 5
-        },
-        {
-          "term": "for",
-          "weight": 4
-        },
-        {
-          "term": "synthesi",
-          "weight": 4
-        },
-        {
-          "term": "dsl agnostic",
-          "weight": 4
-        }
-      ]
-    },
-    {
       "slug": "2307.08691-flashattention-2",
       "title": "FlashAttention-2：用更好的并行性与工作划分加速 Attention",
       "title_en": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning",
@@ -21596,223 +23929,6 @@
         {
           "term": "split k",
           "weight": 4
-        }
-      ]
-    },
-    {
-      "slug": "semantic-search-evaluation",
-      "title": "Semantic Search Evaluation",
-      "title_en": "",
-      "href": "semantic-search-evaluation.md",
-      "year": null,
-      "research_line": "Unassigned",
-      "domains": [],
-      "tracks": [],
-      "problems": [],
-      "topics": [
-        "RAG"
-      ],
-      "methods": [],
-      "terms": [
-        {
-          "term": "the",
-          "weight": 14
-        },
-        {
-          "term": "search",
-          "weight": 11
-        },
-        {
-          "term": "semantic",
-          "weight": 9
-        },
-        {
-          "term": "sqlite",
-          "weight": 9
-        },
-        {
-          "term": "local",
-          "weight": 8
-        },
-        {
-          "term": "unassigned",
-          "weight": 8
-        },
-        {
-          "term": "and",
-          "weight": 7
-        },
-        {
-          "term": "mvp",
-          "weight": 6
-        },
-        {
-          "term": "embedding",
-          "weight": 5
-        },
-        {
-          "term": "vector",
-          "weight": 5
-        },
-        {
-          "term": "api",
-          "weight": 5
-        },
-        {
-          "term": "rag",
-          "weight": 5
-        },
-        {
-          "term": "keep",
-          "weight": 4
-        },
-        {
-          "term": "storage",
-          "weight": 4
-        },
-        {
-          "term": "provider",
-          "weight": 4
-        },
-        {
-          "term": "local hash",
-          "weight": 4
-        },
-        {
-          "term": "hashing v1",
-          "weight": 4
-        },
-        {
-          "term": "sqlite vec",
-          "weight": 4
-        },
-        {
-          "term": "sqlite vss",
-          "weight": 4
-        },
-        {
-          "term": "evaluation",
-          "weight": 3
-        },
-        {
-          "term": "table",
-          "weight": 3
-        },
-        {
-          "term": "path",
-          "weight": 3
-        },
-        {
-          "term": "upgrade",
-          "weight": 3
-        },
-        {
-          "term": "for",
-          "weight": 3
-        },
-        {
-          "term": "need",
-          "weight": 3
-        },
-        {
-          "term": "optional",
-          "weight": 2
-        },
-        {
-          "term": "hash",
-          "weight": 2
-        },
-        {
-          "term": "label",
-          "weight": 2
-        },
-        {
-          "term": "hashing",
-          "weight": 2
-        },
-        {
-          "term": "query",
-          "weight": 2
-        },
-        {
-          "term": "python",
-          "weight": 2
-        },
-        {
-          "term": "cosine",
-          "weight": 2
-        },
-        {
-          "term": "similarity",
-          "weight": 2
-        },
-        {
-          "term": "over",
-          "weight": 2
-        },
-        {
-          "term": "stored",
-          "weight": 2
-        },
-        {
-          "term": "chunk",
-          "weight": 2
-        },
-        {
-          "term": "current",
-          "weight": 2
-        },
-        {
-          "term": "stable",
-          "weight": 2
-        },
-        {
-          "term": "semantic search",
-          "weight": 2
-        },
-        {
-          "term": "native",
-          "weight": 2
-        },
-        {
-          "term": "option",
-          "weight": 2
-        },
-        {
-          "term": "vec",
-          "weight": 2
-        },
-        {
-          "term": "future",
-          "weight": 2
-        },
-        {
-          "term": "pre v1",
-          "weight": 2
-        },
-        {
-          "term": "dependency",
-          "weight": 2
-        },
-        {
-          "term": "vss",
-          "weight": 2
-        },
-        {
-          "term": "can",
-          "weight": 2
-        },
-        {
-          "term": "but",
-          "weight": 2
-        },
-        {
-          "term": "than",
-          "weight": 2
-        },
-        {
-          "term": "chroma",
-          "weight": 2
         }
       ]
     }

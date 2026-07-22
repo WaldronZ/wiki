@@ -1,22 +1,22 @@
 {
-  "generated_at": "2026-07-22T13:22:15",
+  "generated_at": "2026-07-22T13:24:43",
   "count": 13,
-  "owner_count": 6,
-  "unassigned_line_count": 4,
+  "owner_count": 5,
+  "unassigned_line_count": 3,
   "owners": [
     {
       "owner": "Unassigned",
       "team": "",
       "line_count": 1,
-      "paper_count": 3,
+      "paper_count": 4,
       "risk_points": 11,
       "queues": {
-        "missing_taxonomy": 1,
-        "needs_review_plan": 3,
+        "missing_taxonomy": 0,
+        "needs_review_plan": 4,
         "due_review": 0,
         "freshness_due": 0,
         "stale": 0,
-        "no_code_observation": 2
+        "no_code_observation": 3
       },
       "lines": [
         {
@@ -26,70 +26,28 @@
           "team": "",
           "cadence": "",
           "note": "",
-          "count": 3,
-          "avg_importance": 4.0,
-          "code_coverage": "33%",
-          "risk": "high",
+          "count": 4,
+          "avg_importance": 3.8,
+          "code_coverage": "25%",
+          "risk": "medium",
           "risk_points": 11,
           "queues": {
-            "missing_taxonomy": 1,
-            "needs_review_plan": 3,
+            "missing_taxonomy": 0,
+            "needs_review_plan": 4,
             "due_review": 0,
             "freshness_due": 0,
             "stale": 0,
-            "no_code_observation": 2
+            "no_code_observation": 3
           },
           "sample_slugs": [
             "2607.00466-eldr",
             "noarxiv-2026-dspark",
+            "semantic-search-evaluation",
             "2512.23424-akg-kernel-agent-multi"
           ]
         }
       ],
-      "risk": "high"
-    },
-    {
-      "owner": "Unassigned",
-      "team": "",
-      "line_count": 1,
-      "paper_count": 2,
-      "risk_points": 11,
-      "queues": {
-        "missing_taxonomy": 2,
-        "needs_review_plan": 2,
-        "due_review": 0,
-        "freshness_due": 0,
-        "stale": 0,
-        "no_code_observation": 1
-      },
-      "lines": [
-        {
-          "line": "Unassigned",
-          "href": "library.html?line=Unassigned",
-          "owner": "Unassigned",
-          "team": "",
-          "cadence": "",
-          "note": "",
-          "count": 2,
-          "avg_importance": 2.0,
-          "code_coverage": "50%",
-          "risk": "high",
-          "risk_points": 11,
-          "queues": {
-            "missing_taxonomy": 2,
-            "needs_review_plan": 2,
-            "due_review": 0,
-            "freshness_due": 0,
-            "stale": 0,
-            "no_code_observation": 1
-          },
-          "sample_slugs": [
-            "2603.03251-speculative-speculative-decoding",
-            "semantic-search-evaluation"
-          ]
-        }
-      ],
-      "risk": "high"
+      "risk": "medium"
     },
     {
       "owner": "decoding-owner",
@@ -183,11 +141,11 @@
       "owner": "Unassigned",
       "team": "",
       "line_count": 1,
-      "paper_count": 1,
-      "risk_points": 2,
+      "paper_count": 2,
+      "risk_points": 4,
       "queues": {
         "missing_taxonomy": 0,
-        "needs_review_plan": 1,
+        "needs_review_plan": 2,
         "due_review": 0,
         "freshness_due": 0,
         "stale": 0,
@@ -201,20 +159,21 @@
           "team": "",
           "cadence": "",
           "note": "",
-          "count": 1,
+          "count": 2,
           "avg_importance": 4.0,
           "code_coverage": "100%",
           "risk": "medium",
-          "risk_points": 2,
+          "risk_points": 4,
           "queues": {
             "missing_taxonomy": 0,
-            "needs_review_plan": 1,
+            "needs_review_plan": 2,
             "due_review": 0,
             "freshness_due": 0,
             "stale": 0,
             "no_code_observation": 0
           },
           "sample_slugs": [
+            "2603.03251-speculative-speculative-decoding",
             "2503.01840-eagle-3-scaling-up"
           ]
         }
@@ -272,48 +231,24 @@
       "team": "",
       "cadence": "",
       "note": "",
-      "count": 3,
-      "avg_importance": 4.0,
-      "code_coverage": "33%",
-      "risk": "high",
+      "count": 4,
+      "avg_importance": 3.8,
+      "code_coverage": "25%",
+      "risk": "medium",
       "risk_points": 11,
       "queues": {
-        "missing_taxonomy": 1,
-        "needs_review_plan": 3,
+        "missing_taxonomy": 0,
+        "needs_review_plan": 4,
         "due_review": 0,
         "freshness_due": 0,
         "stale": 0,
-        "no_code_observation": 2
+        "no_code_observation": 3
       },
       "sample_slugs": [
         "2607.00466-eldr",
         "noarxiv-2026-dspark",
+        "semantic-search-evaluation",
         "2512.23424-akg-kernel-agent-multi"
-      ]
-    },
-    {
-      "line": "Unassigned",
-      "href": "library.html?line=Unassigned",
-      "owner": "Unassigned",
-      "team": "",
-      "cadence": "",
-      "note": "",
-      "count": 2,
-      "avg_importance": 2.0,
-      "code_coverage": "50%",
-      "risk": "high",
-      "risk_points": 11,
-      "queues": {
-        "missing_taxonomy": 2,
-        "needs_review_plan": 2,
-        "due_review": 0,
-        "freshness_due": 0,
-        "stale": 0,
-        "no_code_observation": 1
-      },
-      "sample_slugs": [
-        "2603.03251-speculative-speculative-decoding",
-        "semantic-search-evaluation"
       ]
     },
     {
@@ -375,20 +310,21 @@
       "team": "",
       "cadence": "",
       "note": "",
-      "count": 1,
+      "count": 2,
       "avg_importance": 4.0,
       "code_coverage": "100%",
       "risk": "medium",
-      "risk_points": 2,
+      "risk_points": 4,
       "queues": {
         "missing_taxonomy": 0,
-        "needs_review_plan": 1,
+        "needs_review_plan": 2,
         "due_review": 0,
         "freshness_due": 0,
         "stale": 0,
         "no_code_observation": 0
       },
       "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding",
         "2503.01840-eagle-3-scaling-up"
       ]
     },

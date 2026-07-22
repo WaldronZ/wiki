@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-07-22T13:22:15",
+  "generated_at": "2026-07-22T13:24:43",
   "count": 13,
-  "readiness_score": 43,
+  "readiness_score": 40,
   "readiness_label": "needs_governance",
-  "line_count": 6,
+  "line_count": 5,
   "largest_line_share": 0.308,
-  "taxonomy_node_count": 121,
-  "taxonomy_edge_count": 462,
-  "taxonomy_edges_per_paper": 35.5,
+  "taxonomy_node_count": 131,
+  "taxonomy_edge_count": 512,
+  "taxonomy_edges_per_paper": 39.4,
   "status_workflow": {
     "active": "personal",
     "workflow_count": 2,
@@ -20,62 +20,62 @@
     {
       "href": "papers.json",
       "exists": true,
-      "size_bytes": 47706
+      "size_bytes": 49021
     },
     {
       "href": "search_index.json",
       "exists": true,
-      "size_bytes": 386601
+      "size_bytes": 386619
     },
     {
       "href": "stats.json",
       "exists": true,
-      "size_bytes": 22062
+      "size_bytes": 22261
     },
     {
       "href": "quality.json",
       "exists": true,
-      "size_bytes": 14758
+      "size_bytes": 12945
     },
     {
       "href": "review.json",
       "exists": true,
-      "size_bytes": 8913
+      "size_bytes": 8928
     },
     {
       "href": "freshness.json",
       "exists": true,
-      "size_bytes": 12502
+      "size_bytes": 12227
     },
     {
       "href": "taxonomy_actions.json",
       "exists": true,
-      "size_bytes": 50453
+      "size_bytes": 55363
     },
     {
       "href": "actions.json",
       "exists": true,
-      "size_bytes": 80748
+      "size_bytes": 83514
     },
     {
       "href": "workflow.json",
       "exists": true,
-      "size_bytes": 23505
+      "size_bytes": 23187
     },
     {
       "href": "pivot.json",
       "exists": true,
-      "size_bytes": 34470
+      "size_bytes": 35320
     },
     {
       "href": "compare.json",
       "exists": true,
-      "size_bytes": 42332
+      "size_bytes": 43284
     },
     {
       "href": "taxonomy_map.json",
       "exists": true,
-      "size_bytes": 249863
+      "size_bytes": 275633
     },
     {
       "href": "inbox.json",
@@ -85,13 +85,13 @@
   ],
   "queue_sizes": {
     "quality": {
-      "missing_required_metadata": 3,
+      "missing_required_metadata": 0,
       "needs_review_plan": 13,
       "due_review": 0,
       "no_code_observation": 4,
-      "taxonomy_drift": 1,
-      "duplicate_reports": 0,
-      "taxonomy_sparse": 3,
+      "taxonomy_drift": 0,
+      "duplicate_reports": 2,
+      "taxonomy_sparse": 0,
       "taxonomy_dense": 4,
       "high_importance": 2
     },
@@ -107,10 +107,19 @@
       "stale": 0,
       "aging": 0
     },
-    "actions": 143,
+    "actions": 148,
     "inbox": 0
   },
   "bottlenecks": [
+    {
+      "severity": "high",
+      "rank": 90,
+      "area": "dedupe",
+      "signal": "2 个重复报告相关条目",
+      "recommendation": "发布前先处理重复报告，避免开源协作里同一论文被多份报告分裂。",
+      "href": "quality.html",
+      "command": ""
+    },
     {
       "severity": "high",
       "rank": 90,
@@ -124,7 +133,7 @@
       "severity": "high",
       "rank": 90,
       "area": "taxonomy",
-      "signal": "sparse=3, dense=4, drift=1",
+      "signal": "sparse=0, dense=4, drift=0",
       "recommendation": "优先处理 taxonomy drift，再用分类图谱和 facets 拆分过载节点、合并长尾标签。",
       "href": "facets.html",
       "command": "python3 scripts/export_taxonomy_actions.py docs --format project --output docs/exports/taxonomy-project.csv"
@@ -133,7 +142,7 @@
       "severity": "medium",
       "rank": 60,
       "area": "operations",
-      "signal": "143 个统一行动项",
+      "signal": "148 个统一行动项",
       "recommendation": "行动队列已经偏长，建议导出项目任务并按 owner/status 分派。",
       "href": "actions.html",
       "command": "python3 scripts/export_actions.py docs --format project --output docs/exports/actions-project.csv"
@@ -142,7 +151,7 @@
       "severity": "low",
       "rank": 30,
       "area": "taxonomy_graph",
-      "signal": "平均每篇 35.5 条分类边",
+      "signal": "平均每篇 39.4 条分类边",
       "recommendation": "分类图谱边密度偏高，后续可限制 topic/method 数或提高标签合并频率。",
       "href": "taxonomy_map.html",
       "command": ""
@@ -151,34 +160,34 @@
   "capacity_projection": [
     {
       "paper_count": 100,
-      "search_index_bytes": 2973854,
-      "papers_json_bytes": 366969,
-      "taxonomy_map_bytes": 1922023,
-      "estimated_actions": 1100,
+      "search_index_bytes": 2973992,
+      "papers_json_bytes": 377085,
+      "taxonomy_map_bytes": 2120254,
+      "estimated_actions": 1138,
       "recommended_mode": "static wiki"
     },
     {
       "paper_count": 500,
-      "search_index_bytes": 14869269,
-      "papers_json_bytes": 1834846,
-      "taxonomy_map_bytes": 9610115,
-      "estimated_actions": 5500,
+      "search_index_bytes": 14869962,
+      "papers_json_bytes": 1885423,
+      "taxonomy_map_bytes": 10601269,
+      "estimated_actions": 5692,
       "recommended_mode": "static wiki"
     },
     {
       "paper_count": 1000,
-      "search_index_bytes": 29738538,
-      "papers_json_bytes": 3669692,
-      "taxonomy_map_bytes": 19220231,
-      "estimated_actions": 11000,
+      "search_index_bytes": 29739923,
+      "papers_json_bytes": 3770846,
+      "taxonomy_map_bytes": 21202538,
+      "estimated_actions": 11385,
       "recommended_mode": "split indexes"
     },
     {
       "paper_count": 5000,
-      "search_index_bytes": 148692692,
-      "papers_json_bytes": 18348462,
-      "taxonomy_map_bytes": 96101154,
-      "estimated_actions": 55000,
+      "search_index_bytes": 148699615,
+      "papers_json_bytes": 18854231,
+      "taxonomy_map_bytes": 106012692,
+      "estimated_actions": 56923,
       "recommended_mode": "desktop cache / paged indexes"
     }
   ],

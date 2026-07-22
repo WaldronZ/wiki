@@ -1,31 +1,21 @@
 {
-  "generated_at": "2026-07-22T13:22:15",
+  "generated_at": "2026-07-22T13:24:43",
   "count": 13,
-  "average_score": 74.8,
+  "average_score": 86.5,
   "ready_count": 0,
   "needs_curation_count": 13,
   "level_counts": {
-    "triage": 3,
-    "usable": 10
+    "usable": 13
   },
   "field_gap_counts": {
-    "domains": 3,
     "has_code": 4,
-    "importance": 1,
-    "line_role": 2,
-    "methods": 1,
     "next_review": 13,
-    "problems": 3,
-    "reading_stage": 3,
-    "research_line": 2,
-    "review_stage": 13,
-    "tracks": 3
+    "review_stage": 13
   },
   "weak_field_counts": {
-    "domains": 9,
+    "domains": 12,
     "problems": 8,
-    "topics": 1,
-    "tracks": 3
+    "tracks": 5
   },
   "field_contract": [
     {
@@ -122,258 +112,27 @@
   ],
   "papers": [
     {
-      "slug": "semantic-search-evaluation",
-      "title": "Semantic Search Evaluation",
-      "title_zh": "Semantic Search Evaluation",
-      "href": "semantic-search-evaluation.md",
-      "year": "",
-      "research_line": "Unassigned",
-      "line_role": "",
-      "status": "read",
-      "reading_stage": "",
-      "review_stage": "",
-      "importance": "",
-      "score": 16,
-      "level": "triage",
-      "missing_fields": [
-        "research_line",
-        "line_role",
-        "domains",
-        "tracks",
-        "problems",
-        "methods",
-        "reading_stage",
-        "review_stage",
-        "importance",
-        "next_review",
-        "has_code"
-      ],
-      "weak_fields": [
-        "topics"
-      ],
-      "field_status": {
-        "research_line": {
-          "present": false,
-          "count": 0,
-          "weight": 15
-        },
-        "line_role": {
-          "present": false,
-          "count": 0,
-          "weight": 8
-        },
-        "domains": {
-          "present": false,
-          "count": 0,
-          "weight": 8
-        },
-        "tracks": {
-          "present": false,
-          "count": 0,
-          "weight": 8
-        },
-        "problems": {
-          "present": false,
-          "count": 0,
-          "weight": 8
-        },
-        "topics": {
-          "present": true,
-          "count": 1,
-          "weight": 8
-        },
-        "methods": {
-          "present": false,
-          "count": 0,
-          "weight": 8
-        },
-        "status": {
-          "present": true,
-          "count": 1,
-          "weight": 8
-        },
-        "reading_stage": {
-          "present": false,
-          "count": 0,
-          "weight": 7
-        },
-        "review_stage": {
-          "present": false,
-          "count": 0,
-          "weight": 6
-        },
-        "importance": {
-          "present": false,
-          "count": 0,
-          "weight": 5
-        },
-        "next_review": {
-          "present": false,
-          "count": 0,
-          "weight": 6
-        },
-        "has_code": {
-          "present": false,
-          "count": 0,
-          "weight": 5
-        }
-      },
-      "patch_columns": [
-        "slug",
-        "research_line",
-        "line_role",
-        "domains",
-        "tracks",
-        "problems",
-        "methods",
-        "reading_stage",
-        "review_stage",
-        "importance",
-        "next_review",
-        "has_code",
-        "topics"
-      ],
-      "actions": [
-        "补齐缺失 frontmatter 字段",
-        "扩充稀疏 taxonomy 标签",
-        "安排复习日期",
-        "补充代码实现观察或标记无代码"
-      ],
-      "recommendation": "优先补齐研究线与结构分类，让论文进入正确的长期知识架构。"
-    },
-    {
-      "slug": "2603.03251-speculative-speculative-decoding",
-      "title": "Speculative Speculative Decoding",
-      "title_zh": "推测性推测解码",
-      "href": "2603.03251-speculative-speculative-decoding.html",
-      "year": 2026,
-      "research_line": "Unassigned",
-      "line_role": "",
-      "status": "read",
-      "reading_stage": "",
-      "review_stage": "",
-      "importance": 4,
-      "score": 34,
-      "level": "triage",
-      "missing_fields": [
-        "research_line",
-        "line_role",
-        "domains",
-        "tracks",
-        "problems",
-        "reading_stage",
-        "review_stage",
-        "next_review"
-      ],
-      "weak_fields": [],
-      "field_status": {
-        "research_line": {
-          "present": false,
-          "count": 0,
-          "weight": 15
-        },
-        "line_role": {
-          "present": false,
-          "count": 0,
-          "weight": 8
-        },
-        "domains": {
-          "present": false,
-          "count": 0,
-          "weight": 8
-        },
-        "tracks": {
-          "present": false,
-          "count": 0,
-          "weight": 8
-        },
-        "problems": {
-          "present": false,
-          "count": 0,
-          "weight": 8
-        },
-        "topics": {
-          "present": true,
-          "count": 4,
-          "weight": 8
-        },
-        "methods": {
-          "present": true,
-          "count": 6,
-          "weight": 8
-        },
-        "status": {
-          "present": true,
-          "count": 1,
-          "weight": 8
-        },
-        "reading_stage": {
-          "present": false,
-          "count": 0,
-          "weight": 7
-        },
-        "review_stage": {
-          "present": false,
-          "count": 0,
-          "weight": 6
-        },
-        "importance": {
-          "present": true,
-          "count": 1,
-          "weight": 5
-        },
-        "next_review": {
-          "present": false,
-          "count": 0,
-          "weight": 6
-        },
-        "has_code": {
-          "present": true,
-          "count": 1,
-          "weight": 5
-        }
-      },
-      "patch_columns": [
-        "slug",
-        "research_line",
-        "line_role",
-        "domains",
-        "tracks",
-        "problems",
-        "reading_stage",
-        "review_stage",
-        "next_review"
-      ],
-      "actions": [
-        "补齐缺失 frontmatter 字段",
-        "安排复习日期"
-      ],
-      "recommendation": "优先补齐研究线与结构分类，让论文进入正确的长期知识架构。"
-    },
-    {
       "slug": "2512.23424-akg-kernel-agent-multi",
       "title": "AKG kernel Agent: A Multi-Agent Framework for Cross-Platform Kernel Synthesis",
       "title_zh": "AKG kernel Agent：用于跨平台 Kernel 合成的多智能体框架",
       "href": "2512.23424-akg-kernel-agent-multi.html",
       "year": 2025,
       "research_line": "LLM Serving",
-      "line_role": "tooling",
+      "line_role": "variant",
       "status": "read",
-      "reading_stage": "",
+      "reading_stage": "deep_read",
       "review_stage": "",
       "importance": 4,
-      "score": 52,
-      "level": "triage",
+      "score": 83,
+      "level": "usable",
       "missing_fields": [
-        "domains",
-        "tracks",
-        "problems",
-        "reading_stage",
         "review_stage",
         "next_review",
         "has_code"
       ],
-      "weak_fields": [],
+      "weak_fields": [
+        "domains"
+      ],
       "field_status": {
         "research_line": {
           "present": true,
@@ -386,18 +145,18 @@
           "weight": 8
         },
         "domains": {
-          "present": false,
-          "count": 0,
+          "present": true,
+          "count": 1,
           "weight": 8
         },
         "tracks": {
-          "present": false,
-          "count": 0,
+          "present": true,
+          "count": 2,
           "weight": 8
         },
         "problems": {
-          "present": false,
-          "count": 0,
+          "present": true,
+          "count": 2,
           "weight": 8
         },
         "topics": {
@@ -416,8 +175,8 @@
           "weight": 8
         },
         "reading_stage": {
-          "present": false,
-          "count": 0,
+          "present": true,
+          "count": 1,
           "weight": 7
         },
         "review_stage": {
@@ -443,20 +202,18 @@
       },
       "patch_columns": [
         "slug",
-        "domains",
-        "tracks",
-        "problems",
-        "reading_stage",
         "review_stage",
         "next_review",
-        "has_code"
+        "has_code",
+        "domains"
       ],
       "actions": [
         "补齐缺失 frontmatter 字段",
+        "扩充稀疏 taxonomy 标签",
         "安排复习日期",
         "补充代码实现观察或标记无代码"
       ],
-      "recommendation": "优先补齐研究线与结构分类，让论文进入正确的长期知识架构。"
+      "recommendation": "补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。"
     },
     {
       "slug": "2607.00466-eldr",
@@ -557,6 +314,112 @@
         "domains",
         "tracks",
         "problems"
+      ],
+      "actions": [
+        "补齐缺失 frontmatter 字段",
+        "扩充稀疏 taxonomy 标签",
+        "安排复习日期",
+        "补充代码实现观察或标记无代码"
+      ],
+      "recommendation": "补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。"
+    },
+    {
+      "slug": "semantic-search-evaluation",
+      "title": "Semantic Search Evaluation",
+      "title_zh": "语义搜索评估",
+      "href": "semantic-search-evaluation.html",
+      "year": 2025,
+      "research_line": "LLM Serving",
+      "line_role": "variant",
+      "status": "read",
+      "reading_stage": "deep_read",
+      "review_stage": "",
+      "importance": 3,
+      "score": 83,
+      "level": "usable",
+      "missing_fields": [
+        "review_stage",
+        "next_review",
+        "has_code"
+      ],
+      "weak_fields": [
+        "domains",
+        "tracks"
+      ],
+      "field_status": {
+        "research_line": {
+          "present": true,
+          "count": 1,
+          "weight": 15
+        },
+        "line_role": {
+          "present": true,
+          "count": 1,
+          "weight": 8
+        },
+        "domains": {
+          "present": true,
+          "count": 1,
+          "weight": 8
+        },
+        "tracks": {
+          "present": true,
+          "count": 1,
+          "weight": 8
+        },
+        "problems": {
+          "present": true,
+          "count": 2,
+          "weight": 8
+        },
+        "topics": {
+          "present": true,
+          "count": 3,
+          "weight": 8
+        },
+        "methods": {
+          "present": true,
+          "count": 2,
+          "weight": 8
+        },
+        "status": {
+          "present": true,
+          "count": 1,
+          "weight": 8
+        },
+        "reading_stage": {
+          "present": true,
+          "count": 1,
+          "weight": 7
+        },
+        "review_stage": {
+          "present": false,
+          "count": 0,
+          "weight": 6
+        },
+        "importance": {
+          "present": true,
+          "count": 1,
+          "weight": 5
+        },
+        "next_review": {
+          "present": false,
+          "count": 0,
+          "weight": 6
+        },
+        "has_code": {
+          "present": false,
+          "count": 0,
+          "weight": 5
+        }
+      },
+      "patch_columns": [
+        "slug",
+        "review_stage",
+        "next_review",
+        "has_code",
+        "domains",
+        "tracks"
       ],
       "actions": [
         "补齐缺失 frontmatter 字段",
@@ -1396,6 +1259,109 @@
       "recommendation": "补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。"
     },
     {
+      "slug": "2603.03251-speculative-speculative-decoding",
+      "title": "Speculative Speculative Decoding",
+      "title_zh": "推测性推测解码",
+      "href": "2603.03251-speculative-speculative-decoding.html",
+      "year": 2026,
+      "research_line": "Speculative Decoding",
+      "line_role": "main",
+      "status": "read",
+      "reading_stage": "deep_read",
+      "review_stage": "",
+      "importance": 4,
+      "score": 88,
+      "level": "usable",
+      "missing_fields": [
+        "review_stage",
+        "next_review"
+      ],
+      "weak_fields": [
+        "domains",
+        "tracks"
+      ],
+      "field_status": {
+        "research_line": {
+          "present": true,
+          "count": 1,
+          "weight": 15
+        },
+        "line_role": {
+          "present": true,
+          "count": 1,
+          "weight": 8
+        },
+        "domains": {
+          "present": true,
+          "count": 1,
+          "weight": 8
+        },
+        "tracks": {
+          "present": true,
+          "count": 1,
+          "weight": 8
+        },
+        "problems": {
+          "present": true,
+          "count": 2,
+          "weight": 8
+        },
+        "topics": {
+          "present": true,
+          "count": 4,
+          "weight": 8
+        },
+        "methods": {
+          "present": true,
+          "count": 6,
+          "weight": 8
+        },
+        "status": {
+          "present": true,
+          "count": 1,
+          "weight": 8
+        },
+        "reading_stage": {
+          "present": true,
+          "count": 1,
+          "weight": 7
+        },
+        "review_stage": {
+          "present": false,
+          "count": 0,
+          "weight": 6
+        },
+        "importance": {
+          "present": true,
+          "count": 1,
+          "weight": 5
+        },
+        "next_review": {
+          "present": false,
+          "count": 0,
+          "weight": 6
+        },
+        "has_code": {
+          "present": true,
+          "count": 1,
+          "weight": 5
+        }
+      },
+      "patch_columns": [
+        "slug",
+        "review_stage",
+        "next_review",
+        "domains",
+        "tracks"
+      ],
+      "actions": [
+        "补齐缺失 frontmatter 字段",
+        "扩充稀疏 taxonomy 标签",
+        "安排复习日期"
+      ],
+      "recommendation": "补充 topic / method，让论文能通过交叉筛选和相似论文发现被找回。"
+    },
+    {
       "slug": "2503.14075-twigvlm-plus-plus",
       "title": "Growing a Multi-head Twig via Distillation and Reinforcement Learning to Accelerate Large Vision-Language Models",
       "title_zh": "通过蒸馏与强化学习生长多头 Twig 以加速大型视觉语言模型",
@@ -1494,30 +1460,14 @@
     }
   ],
   "queues": {
-    "triage": [
-      "semantic-search-evaluation",
-      "2603.03251-speculative-speculative-decoding",
-      "2512.23424-akg-kernel-agent-multi"
-    ],
-    "needs_curation": [
-      "semantic-search-evaluation",
-      "2603.03251-speculative-speculative-decoding",
-      "2512.23424-akg-kernel-agent-multi"
-    ],
-    "missing_research_line": [
-      "semantic-search-evaluation",
-      "2603.03251-speculative-speculative-decoding"
-    ],
-    "missing_taxonomy": [
-      "semantic-search-evaluation",
-      "2603.03251-speculative-speculative-decoding",
-      "2512.23424-akg-kernel-agent-multi"
-    ],
+    "triage": [],
+    "needs_curation": [],
+    "missing_research_line": [],
+    "missing_taxonomy": [],
     "missing_review": [
-      "semantic-search-evaluation",
-      "2603.03251-speculative-speculative-decoding",
       "2512.23424-akg-kernel-agent-multi",
       "2607.00466-eldr",
+      "semantic-search-evaluation",
       "2507.11851-llm-future-mtp",
       "2307.08691-flashattention-2",
       "2501.01005-flashinfer",
@@ -1526,6 +1476,7 @@
       "2604.11035-introspective-dlm",
       "2605.12825-orthrus",
       "2503.01840-eagle-3-scaling-up",
+      "2603.03251-speculative-speculative-decoding",
       "2503.14075-twigvlm-plus-plus"
     ],
     "ready": []

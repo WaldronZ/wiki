@@ -1,17 +1,17 @@
 {
-  "generated_at": "2026-07-22T13:22:15",
+  "generated_at": "2026-07-22T13:24:43",
   "count": 13,
   "field_count": 10,
-  "value_count": 134,
+  "value_count": 148,
   "summary": {
     "configured_values": 33,
     "fields": 10,
     "high": 5,
-    "medium": 109,
-    "merge_candidate": 100,
-    "none": 20,
+    "medium": 120,
+    "merge_candidate": 111,
+    "none": 23,
     "split_candidate": 5,
-    "stable": 20,
+    "stable": 23,
     "unused_config": 9
   },
   "fields": [
@@ -21,16 +21,16 @@
       "english": "Domain",
       "query_key": "domain",
       "is_list": true,
-      "configured_count": 2,
-      "used_count": 2,
+      "configured_count": 3,
+      "used_count": 3,
       "unused_count": 0,
       "singleton_count": 1,
       "overloaded_count": 1,
       "max_value": "LLM Systems",
-      "max_count": 10,
-      "max_share": 0.7692,
-      "effective_count": 1.36,
-      "balance_score": 17,
+      "max_count": 11,
+      "max_share": 0.8462,
+      "effective_count": 1.93,
+      "balance_score": 13,
       "href": "library.html"
     },
     {
@@ -39,16 +39,16 @@
       "english": "Track",
       "query_key": "track",
       "is_list": true,
-      "configured_count": 5,
-      "used_count": 5,
+      "configured_count": 9,
+      "used_count": 9,
       "unused_count": 0,
-      "singleton_count": 2,
+      "singleton_count": 6,
       "overloaded_count": 1,
       "max_value": "Inference Acceleration",
       "max_count": 8,
       "max_share": 0.6154,
-      "effective_count": 3.67,
-      "balance_score": 31,
+      "effective_count": 6.07,
+      "balance_score": 26,
       "href": "library.html"
     },
     {
@@ -57,16 +57,16 @@
       "english": "Problem",
       "query_key": "problem",
       "is_list": true,
-      "configured_count": 11,
-      "used_count": 11,
+      "configured_count": 17,
+      "used_count": 17,
       "unused_count": 0,
-      "singleton_count": 10,
+      "singleton_count": 16,
       "overloaded_count": 0,
       "max_value": "Lossless Speculative Decoding",
       "max_count": 3,
       "max_share": 0.2308,
-      "effective_count": 10.09,
-      "balance_score": 42,
+      "effective_count": 15.97,
+      "balance_score": 41,
       "href": "library.html"
     },
     {
@@ -75,15 +75,15 @@
       "english": "Topic",
       "query_key": "topic",
       "is_list": true,
-      "configured_count": 35,
-      "used_count": 35,
+      "configured_count": 37,
+      "used_count": 37,
       "unused_count": 0,
-      "singleton_count": 28,
+      "singleton_count": 30,
       "overloaded_count": 1,
       "max_value": "Speculative Decoding",
       "max_count": 8,
       "max_share": 0.6154,
-      "effective_count": 26.49,
+      "effective_count": 28.16,
       "balance_score": 23,
       "href": "library.html"
     },
@@ -93,15 +93,15 @@
       "english": "Method",
       "query_key": "method",
       "is_list": true,
-      "configured_count": 58,
-      "used_count": 58,
+      "configured_count": 60,
+      "used_count": 60,
       "unused_count": 0,
-      "singleton_count": 55,
+      "singleton_count": 57,
       "overloaded_count": 0,
       "max_value": "Speculative Decoding",
       "max_count": 3,
       "max_share": 0.2308,
-      "effective_count": 56.22,
+      "effective_count": 58.21,
       "balance_score": 40,
       "href": "library.html"
     },
@@ -114,13 +114,13 @@
       "configured_count": 5,
       "used_count": 5,
       "unused_count": 0,
-      "singleton_count": 2,
+      "singleton_count": 1,
       "overloaded_count": 0,
       "max_value": "Parallel Decoding with Diffusion Models",
       "max_count": 4,
       "max_share": 0.3077,
-      "effective_count": 4.34,
-      "balance_score": 55,
+      "effective_count": 4.48,
+      "balance_score": 62,
       "href": "library.html"
     },
     {
@@ -129,16 +129,16 @@
       "english": "Line role",
       "query_key": "role",
       "is_list": false,
-      "configured_count": 6,
-      "used_count": 6,
+      "configured_count": 5,
+      "used_count": 5,
       "unused_count": 0,
-      "singleton_count": 2,
+      "singleton_count": 0,
       "overloaded_count": 0,
       "max_value": "main",
-      "max_count": 3,
-      "max_share": 0.2308,
-      "effective_count": 5.59,
-      "balance_score": 64,
+      "max_count": 4,
+      "max_share": 0.3077,
+      "effective_count": 4.78,
+      "balance_score": 69,
       "href": "library.html"
     },
     {
@@ -171,10 +171,10 @@
       "singleton_count": 0,
       "overloaded_count": 1,
       "max_value": "deep_read",
-      "max_count": 8,
-      "max_share": 0.6154,
-      "effective_count": 1.65,
-      "balance_score": 38,
+      "max_count": 11,
+      "max_share": 0.8462,
+      "effective_count": 1.54,
+      "balance_score": 15,
       "href": "library.html"
     },
     {
@@ -203,8 +203,8 @@
       "english": "Domain",
       "query_key": "domain",
       "value": "LLM Systems",
-      "count": 10,
-      "share": 0.7692,
+      "count": 11,
+      "share": 0.8462,
       "configured": true,
       "definition_status": "active",
       "owner_name": "systems",
@@ -212,13 +212,33 @@
       "severity": "high",
       "href": "library.html?domain=LLM+Systems",
       "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding",
         "2503.14075-twigvlm-plus-plus",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
-        "2605.12825-orthrus",
-        "2607.00466-eldr"
+        "2605.12825-orthrus"
       ],
       "recommendation": "结构域 过大，考虑拆成更细子类。"
+    },
+    {
+      "field": "domains",
+      "field_label": "结构域",
+      "english": "Domain",
+      "query_key": "domain",
+      "value": "AI Systems",
+      "count": 2,
+      "share": 0.1538,
+      "configured": false,
+      "definition_status": "",
+      "owner_name": "",
+      "action": "stable",
+      "severity": "none",
+      "href": "library.html?domain=AI+Systems",
+      "sample_slugs": [
+        "semantic-search-evaluation",
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "recommendation": "结构稳定，继续积累样本。"
     },
     {
       "field": "domains",
@@ -310,6 +330,44 @@
       "field_label": "方向",
       "english": "Track",
       "query_key": "track",
+      "value": "Compiler/DSL",
+      "count": 1,
+      "share": 0.0769,
+      "configured": false,
+      "definition_status": "",
+      "owner_name": "",
+      "action": "merge_candidate",
+      "severity": "medium",
+      "href": "library.html?track=Compiler%2FDSL",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "field": "tracks",
+      "field_label": "方向",
+      "english": "Track",
+      "query_key": "track",
+      "value": "Inference Optimization",
+      "count": 1,
+      "share": 0.0769,
+      "configured": false,
+      "definition_status": "",
+      "owner_name": "",
+      "action": "merge_candidate",
+      "severity": "medium",
+      "href": "library.html?track=Inference+Optimization",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "field": "tracks",
+      "field_label": "方向",
+      "english": "Track",
+      "query_key": "track",
       "value": "Inference Serving Systems",
       "count": 1,
       "share": 0.0769,
@@ -321,6 +379,44 @@
       "href": "library.html?track=Inference+Serving+Systems",
       "sample_slugs": [
         "2501.01005-flashinfer"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "field": "tracks",
+      "field_label": "方向",
+      "english": "Track",
+      "query_key": "track",
+      "value": "Kernel Optimization",
+      "count": 1,
+      "share": 0.0769,
+      "configured": false,
+      "definition_status": "",
+      "owner_name": "",
+      "action": "merge_candidate",
+      "severity": "medium",
+      "href": "library.html?track=Kernel+Optimization",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "field": "tracks",
+      "field_label": "方向",
+      "english": "Track",
+      "query_key": "track",
+      "value": "Search & Retrieval",
+      "count": 1,
+      "share": 0.0769,
+      "configured": false,
+      "definition_status": "",
+      "owner_name": "",
+      "action": "merge_candidate",
+      "severity": "medium",
+      "href": "library.html?track=Search+%26+Retrieval",
+      "sample_slugs": [
+        "semantic-search-evaluation"
       ],
       "recommendation": "检查是否应合并为更通用标签。"
     },
@@ -363,6 +459,25 @@
         "2507.11851-llm-future-mtp"
       ],
       "recommendation": "结构稳定，继续积累样本。"
+    },
+    {
+      "field": "problems",
+      "field_label": "问题",
+      "english": "Problem",
+      "query_key": "problem",
+      "value": "Cross-Platform Deployment",
+      "count": 1,
+      "share": 0.0769,
+      "configured": false,
+      "definition_status": "",
+      "owner_name": "",
+      "action": "merge_candidate",
+      "severity": "medium",
+      "href": "library.html?problem=Cross-Platform+Deployment",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
     },
     {
       "field": "problems",
@@ -418,6 +533,44 @@
       "href": "library.html?problem=Efficient+VLM+Inference",
       "sample_slugs": [
         "2503.14075-twigvlm-plus-plus"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "field": "problems",
+      "field_label": "问题",
+      "english": "Problem",
+      "query_key": "problem",
+      "value": "Inference Latency",
+      "count": 1,
+      "share": 0.0769,
+      "configured": false,
+      "definition_status": "",
+      "owner_name": "",
+      "action": "merge_candidate",
+      "severity": "medium",
+      "href": "library.html?problem=Inference+Latency",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "field": "problems",
+      "field_label": "问题",
+      "english": "Problem",
+      "query_key": "problem",
+      "value": "Kernel Generation",
+      "count": 1,
+      "share": 0.0769,
+      "configured": false,
+      "definition_status": "",
+      "owner_name": "",
+      "action": "merge_candidate",
+      "severity": "medium",
+      "href": "library.html?problem=Kernel+Generation",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
       ],
       "recommendation": "检查是否应合并为更通用标签。"
     },
@@ -521,6 +674,25 @@
       "field_label": "问题",
       "english": "Problem",
       "query_key": "problem",
+      "value": "Semantic Search",
+      "count": 1,
+      "share": 0.0769,
+      "configured": false,
+      "definition_status": "",
+      "owner_name": "",
+      "action": "merge_candidate",
+      "severity": "medium",
+      "href": "library.html?problem=Semantic+Search",
+      "sample_slugs": [
+        "semantic-search-evaluation"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "field": "problems",
+      "field_label": "问题",
+      "english": "Problem",
+      "query_key": "problem",
       "value": "Speculative Decoding",
       "count": 1,
       "share": 0.0769,
@@ -532,6 +704,44 @@
       "href": "library.html?problem=Speculative+Decoding",
       "sample_slugs": [
         "2503.01840-eagle-3-scaling-up"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "field": "problems",
+      "field_label": "问题",
+      "english": "Problem",
+      "query_key": "problem",
+      "value": "Throughput Optimization",
+      "count": 1,
+      "share": 0.0769,
+      "configured": false,
+      "definition_status": "",
+      "owner_name": "",
+      "action": "merge_candidate",
+      "severity": "medium",
+      "href": "library.html?problem=Throughput+Optimization",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "field": "problems",
+      "field_label": "问题",
+      "english": "Problem",
+      "query_key": "problem",
+      "value": "Vector Storage",
+      "count": 1,
+      "share": 0.0769,
+      "configured": false,
+      "definition_status": "",
+      "owner_name": "",
+      "action": "merge_candidate",
+      "severity": "medium",
+      "href": "library.html?problem=Vector+Storage",
+      "sample_slugs": [
+        "semantic-search-evaluation"
       ],
       "recommendation": "检查是否应合并为更通用标签。"
     },
@@ -569,9 +779,9 @@
       "severity": "high",
       "href": "library.html?topic=Speculative+Decoding",
       "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding",
         "2503.14075-twigvlm-plus-plus",
         "2602.06036-dflash",
-        "2603.03251-speculative-speculative-decoding",
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus"
       ],
@@ -592,8 +802,8 @@
       "severity": "none",
       "href": "library.html?topic=LLM+Inference",
       "sample_slugs": [
-        "2602.06036-dflash",
         "2603.03251-speculative-speculative-decoding",
+        "2602.06036-dflash",
         "2605.12825-orthrus",
         "noarxiv-2026-dspark",
         "2503.01840-eagle-3-scaling-up"
@@ -1089,25 +1299,6 @@
       "field_label": "主题",
       "english": "Topic",
       "query_key": "topic",
-      "value": "RAG",
-      "count": 1,
-      "share": 0.0769,
-      "configured": false,
-      "definition_status": "",
-      "owner_name": "",
-      "action": "merge_candidate",
-      "severity": "medium",
-      "href": "library.html?topic=RAG",
-      "sample_slugs": [
-        "semantic-search-evaluation"
-      ],
-      "recommendation": "检查是否应合并为更通用标签。"
-    },
-    {
-      "field": "topics",
-      "field_label": "主题",
-      "english": "Topic",
-      "query_key": "topic",
       "value": "Scaling Law",
       "count": 1,
       "share": 0.0769,
@@ -1127,6 +1318,25 @@
       "field_label": "主题",
       "english": "Topic",
       "query_key": "topic",
+      "value": "Semantic Search",
+      "count": 1,
+      "share": 0.0769,
+      "configured": false,
+      "definition_status": "",
+      "owner_name": "",
+      "action": "merge_candidate",
+      "severity": "medium",
+      "href": "library.html?topic=Semantic+Search",
+      "sample_slugs": [
+        "semantic-search-evaluation"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "field": "topics",
+      "field_label": "主题",
+      "english": "Topic",
+      "query_key": "topic",
       "value": "Semi-Autoregressive Generation",
       "count": 1,
       "share": 0.0769,
@@ -1138,6 +1348,25 @@
       "href": "library.html?topic=Semi-Autoregressive+Generation",
       "sample_slugs": [
         "noarxiv-2026-dspark"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "field": "topics",
+      "field_label": "主题",
+      "english": "Topic",
+      "query_key": "topic",
+      "value": "SQLite",
+      "count": 1,
+      "share": 0.0769,
+      "configured": false,
+      "definition_status": "",
+      "owner_name": "",
+      "action": "merge_candidate",
+      "severity": "medium",
+      "href": "library.html?topic=SQLite",
+      "sample_slugs": [
+        "semantic-search-evaluation"
       ],
       "recommendation": "检查是否应合并为更通用标签。"
     },
@@ -1176,6 +1405,25 @@
       "href": "library.html?topic=Transformer",
       "sample_slugs": [
         "2307.08691-flashattention-2"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "field": "topics",
+      "field_label": "主题",
+      "english": "Topic",
+      "query_key": "topic",
+      "value": "Vector Database",
+      "count": 1,
+      "share": 0.0769,
+      "configured": false,
+      "definition_status": "",
+      "owner_name": "",
+      "action": "merge_candidate",
+      "severity": "medium",
+      "href": "library.html?topic=Vector+Database",
+      "sample_slugs": [
+        "semantic-search-evaluation"
       ],
       "recommendation": "检查是否应合并为更通用标签。"
     },
@@ -1251,8 +1499,8 @@
       "severity": "none",
       "href": "library.html?method=Speculative+Decoding",
       "sample_slugs": [
-        "2602.06036-dflash",
         "2603.03251-speculative-speculative-decoding",
+        "2602.06036-dflash",
         "noarxiv-2026-dspark"
       ],
       "recommendation": "结构稳定，继续积累样本。"
@@ -1427,6 +1675,25 @@
       "href": "library.html?method=confidence-scheduled+verification",
       "sample_slugs": [
         "noarxiv-2026-dspark"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "field": "methods",
+      "field_label": "方法",
+      "english": "Method",
+      "query_key": "method",
+      "value": "Cosine Similarity",
+      "count": 1,
+      "share": 0.0769,
+      "configured": false,
+      "definition_status": "",
+      "owner_name": "",
+      "action": "merge_candidate",
+      "severity": "medium",
+      "href": "library.html?method=Cosine+Similarity",
+      "sample_slugs": [
+        "semantic-search-evaluation"
       ],
       "recommendation": "检查是否应合并为更通用标签。"
     },
@@ -1845,6 +2112,25 @@
       "href": "library.html?method=load-balanced+scheduling",
       "sample_slugs": [
         "2501.01005-flashinfer"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "field": "methods",
+      "field_label": "方法",
+      "english": "Method",
+      "query_key": "method",
+      "value": "Local Hash Embeddings",
+      "count": 1,
+      "share": 0.0769,
+      "configured": false,
+      "definition_status": "",
+      "owner_name": "",
+      "action": "merge_candidate",
+      "severity": "medium",
+      "href": "library.html?method=Local+Hash+Embeddings",
+      "sample_slugs": [
+        "semantic-search-evaluation"
       ],
       "recommendation": "检查是否应合并为更通用标签。"
     },
@@ -2347,6 +2633,28 @@
       "field_label": "研究线",
       "english": "Research line",
       "query_key": "line",
+      "value": "LLM Serving",
+      "count": 4,
+      "share": 0.3077,
+      "configured": false,
+      "definition_status": "",
+      "owner_name": "",
+      "action": "stable",
+      "severity": "none",
+      "href": "library.html?line=LLM+Serving",
+      "sample_slugs": [
+        "2607.00466-eldr",
+        "noarxiv-2026-dspark",
+        "semantic-search-evaluation",
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "recommendation": "结构稳定，继续积累样本。"
+    },
+    {
+      "field": "research_line",
+      "field_label": "研究线",
+      "english": "Research line",
+      "query_key": "line",
       "value": "Parallel Decoding with Diffusion Models",
       "count": 4,
       "share": 0.3077,
@@ -2361,27 +2669,6 @@
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus",
         "2507.11851-llm-future-mtp"
-      ],
-      "recommendation": "结构稳定，继续积累样本。"
-    },
-    {
-      "field": "research_line",
-      "field_label": "研究线",
-      "english": "Research line",
-      "query_key": "line",
-      "value": "LLM Serving",
-      "count": 3,
-      "share": 0.2308,
-      "configured": false,
-      "definition_status": "",
-      "owner_name": "",
-      "action": "stable",
-      "severity": "none",
-      "href": "library.html?line=LLM+Serving",
-      "sample_slugs": [
-        "2607.00466-eldr",
-        "noarxiv-2026-dspark",
-        "2512.23424-akg-kernel-agent-multi"
       ],
       "recommendation": "结构稳定，继续积累样本。"
     },
@@ -2411,18 +2698,19 @@
       "english": "Research line",
       "query_key": "line",
       "value": "Speculative Decoding",
-      "count": 1,
-      "share": 0.0769,
+      "count": 2,
+      "share": 0.1538,
       "configured": false,
       "definition_status": "",
       "owner_name": "",
-      "action": "merge_candidate",
-      "severity": "medium",
+      "action": "stable",
+      "severity": "none",
       "href": "library.html?line=Speculative+Decoding",
       "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding",
         "2503.01840-eagle-3-scaling-up"
       ],
-      "recommendation": "检查是否应合并为更通用标签。"
+      "recommendation": "结构稳定，继续积累样本。"
     },
     {
       "field": "research_line",
@@ -2449,8 +2737,8 @@
       "english": "Line role",
       "query_key": "role",
       "value": "main",
-      "count": 3,
-      "share": 0.2308,
+      "count": 4,
+      "share": 0.3077,
       "configured": true,
       "definition_status": "",
       "owner_name": "",
@@ -2458,9 +2746,31 @@
       "severity": "none",
       "href": "library.html?role=main",
       "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding",
         "2503.14075-twigvlm-plus-plus",
         "2607.00466-eldr",
         "2503.01840-eagle-3-scaling-up"
+      ],
+      "recommendation": "结构稳定，继续积累样本。"
+    },
+    {
+      "field": "line_role",
+      "field_label": "研究线角色",
+      "english": "Line role",
+      "query_key": "role",
+      "value": "variant",
+      "count": 3,
+      "share": 0.2308,
+      "configured": true,
+      "definition_status": "",
+      "owner_name": "",
+      "action": "stable",
+      "severity": "none",
+      "href": "library.html?role=variant",
+      "sample_slugs": [
+        "2605.12825-orthrus",
+        "semantic-search-evaluation",
+        "2512.23424-akg-kernel-agent-multi"
       ],
       "recommendation": "结构稳定，继续积累样本。"
     },
@@ -2525,44 +2835,6 @@
       "recommendation": "结构稳定，继续积累样本。"
     },
     {
-      "field": "line_role",
-      "field_label": "研究线角色",
-      "english": "Line role",
-      "query_key": "role",
-      "value": "tooling",
-      "count": 1,
-      "share": 0.0769,
-      "configured": false,
-      "definition_status": "",
-      "owner_name": "",
-      "action": "merge_candidate",
-      "severity": "medium",
-      "href": "library.html?role=tooling",
-      "sample_slugs": [
-        "2512.23424-akg-kernel-agent-multi"
-      ],
-      "recommendation": "检查是否应合并为更通用标签。"
-    },
-    {
-      "field": "line_role",
-      "field_label": "研究线角色",
-      "english": "Line role",
-      "query_key": "role",
-      "value": "variant",
-      "count": 1,
-      "share": 0.0769,
-      "configured": true,
-      "definition_status": "",
-      "owner_name": "",
-      "action": "merge_candidate",
-      "severity": "medium",
-      "href": "library.html?role=variant",
-      "sample_slugs": [
-        "2605.12825-orthrus"
-      ],
-      "recommendation": "检查是否应合并为更通用标签。"
-    },
-    {
       "field": "status",
       "field_label": "阅读状态",
       "english": "Status",
@@ -2577,9 +2849,9 @@
       "severity": "high",
       "href": "library.html?status=read",
       "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding",
         "2503.14075-twigvlm-plus-plus",
         "2602.06036-dflash",
-        "2603.03251-speculative-speculative-decoding",
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus"
       ],
@@ -2659,8 +2931,8 @@
       "english": "Reading stage",
       "query_key": "stage",
       "value": "deep_read",
-      "count": 8,
-      "share": 0.6154,
+      "count": 11,
+      "share": 0.8462,
       "configured": true,
       "definition_status": "active",
       "owner_name": "workflow",
@@ -2668,11 +2940,11 @@
       "severity": "high",
       "href": "library.html?stage=deep_read",
       "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus",
-        "2607.00466-eldr",
-        "2501.01005-flashinfer"
+        "2607.00466-eldr"
       ],
       "recommendation": "阅读阶段 过大，考虑拆成更细子类。"
     },

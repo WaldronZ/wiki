@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-07-22T13:22:15",
-  "count": 114,
+  "generated_at": "2026-07-22T13:24:43",
+  "count": 125,
   "paper_count": 13,
   "summary": {
-    "merge_candidate": 100,
+    "merge_candidate": 111,
     "split_candidate": 5,
     "unused_config": 9,
     "watch": 0
@@ -23,15 +23,15 @@
       "field_label": "结构域",
       "field_en": "Domain",
       "value": "LLM Systems",
-      "count": 10,
-      "share": 0.7692,
+      "count": 11,
+      "share": 0.8462,
       "href": "library.html?domain=LLM+Systems",
       "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding",
         "2503.14075-twigvlm-plus-plus",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
-        "2605.12825-orthrus",
-        "2607.00466-eldr"
+        "2605.12825-orthrus"
       ],
       "recommendation": "结构域 过大，考虑拆成更细子类。"
     },
@@ -42,15 +42,15 @@
       "field_label": "阅读阶段",
       "field_en": "Reading stage",
       "value": "deep_read",
-      "count": 8,
-      "share": 0.6154,
+      "count": 11,
+      "share": 0.8462,
       "href": "library.html?stage=deep_read",
       "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding",
         "2602.06036-dflash",
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus",
-        "2607.00466-eldr",
-        "2501.01005-flashinfer"
+        "2607.00466-eldr"
       ],
       "recommendation": "阅读阶段 过大，考虑拆成更细子类。"
     },
@@ -65,9 +65,9 @@
       "share": 1.0,
       "href": "library.html?status=read",
       "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding",
         "2503.14075-twigvlm-plus-plus",
         "2602.06036-dflash",
-        "2603.03251-speculative-speculative-decoding",
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus"
       ],
@@ -84,9 +84,9 @@
       "share": 0.6154,
       "href": "library.html?topic=Speculative+Decoding",
       "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding",
         "2503.14075-twigvlm-plus-plus",
         "2602.06036-dflash",
-        "2603.03251-speculative-speculative-decoding",
         "2604.11035-introspective-dlm",
         "2605.12825-orthrus"
       ],
@@ -123,36 +123,6 @@
       "href": "library.html?domain=Multimodal+Systems",
       "sample_slugs": [
         "2503.14075-twigvlm-plus-plus"
-      ],
-      "recommendation": "检查是否应合并为更通用标签。"
-    },
-    {
-      "action": "merge_candidate",
-      "severity": "medium",
-      "field": "line_role",
-      "field_label": "研究线角色",
-      "field_en": "Line role",
-      "value": "tooling",
-      "count": 1,
-      "share": 0.0769,
-      "href": "library.html?role=tooling",
-      "sample_slugs": [
-        "2512.23424-akg-kernel-agent-multi"
-      ],
-      "recommendation": "检查是否应合并为更通用标签。"
-    },
-    {
-      "action": "merge_candidate",
-      "severity": "medium",
-      "field": "line_role",
-      "field_label": "研究线角色",
-      "field_en": "Line role",
-      "value": "variant",
-      "count": 1,
-      "share": 0.0769,
-      "href": "library.html?role=variant",
-      "sample_slugs": [
-        "2605.12825-orthrus"
       ],
       "recommendation": "检查是否应合并为更通用标签。"
     },
@@ -258,6 +228,21 @@
       "href": "library.html?method=confidence-scheduled+verification",
       "sample_slugs": [
         "noarxiv-2026-dspark"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "methods",
+      "field_label": "方法",
+      "field_en": "Method",
+      "value": "Cosine Similarity",
+      "count": 1,
+      "share": 0.0769,
+      "href": "library.html?method=Cosine+Similarity",
+      "sample_slugs": [
+        "semantic-search-evaluation"
       ],
       "recommendation": "检查是否应合并为更通用标签。"
     },
@@ -588,6 +573,21 @@
       "href": "library.html?method=load-balanced+scheduling",
       "sample_slugs": [
         "2501.01005-flashinfer"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "methods",
+      "field_label": "方法",
+      "field_en": "Method",
+      "value": "Local Hash Embeddings",
+      "count": 1,
+      "share": 0.0769,
+      "href": "library.html?method=Local+Hash+Embeddings",
+      "sample_slugs": [
+        "semantic-search-evaluation"
       ],
       "recommendation": "检查是否应合并为更通用标签。"
     },
@@ -987,6 +987,21 @@
       "field": "problems",
       "field_label": "问题",
       "field_en": "Problem",
+      "value": "Cross-Platform Deployment",
+      "count": 1,
+      "share": 0.0769,
+      "href": "library.html?problem=Cross-Platform+Deployment",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "problems",
+      "field_label": "问题",
+      "field_en": "Problem",
       "value": "Customizable Attention Serving",
       "count": 1,
       "share": 0.0769,
@@ -1023,6 +1038,36 @@
       "href": "library.html?problem=Efficient+VLM+Inference",
       "sample_slugs": [
         "2503.14075-twigvlm-plus-plus"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "problems",
+      "field_label": "问题",
+      "field_en": "Problem",
+      "value": "Inference Latency",
+      "count": 1,
+      "share": 0.0769,
+      "href": "library.html?problem=Inference+Latency",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "problems",
+      "field_label": "问题",
+      "field_en": "Problem",
+      "value": "Kernel Generation",
+      "count": 1,
+      "share": 0.0769,
+      "href": "library.html?problem=Kernel+Generation",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
       ],
       "recommendation": "检查是否应合并为更通用标签。"
     },
@@ -1107,6 +1152,21 @@
       "field": "problems",
       "field_label": "问题",
       "field_en": "Problem",
+      "value": "Semantic Search",
+      "count": 1,
+      "share": 0.0769,
+      "href": "library.html?problem=Semantic+Search",
+      "sample_slugs": [
+        "semantic-search-evaluation"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "problems",
+      "field_label": "问题",
+      "field_en": "Problem",
       "value": "Speculative Decoding",
       "count": 1,
       "share": 0.0769,
@@ -1122,27 +1182,42 @@
       "field": "problems",
       "field_label": "问题",
       "field_en": "Problem",
-      "value": "Visual Token Redundancy",
+      "value": "Throughput Optimization",
       "count": 1,
       "share": 0.0769,
-      "href": "library.html?problem=Visual+Token+Redundancy",
+      "href": "library.html?problem=Throughput+Optimization",
       "sample_slugs": [
-        "2503.14075-twigvlm-plus-plus"
+        "2603.03251-speculative-speculative-decoding"
       ],
       "recommendation": "检查是否应合并为更通用标签。"
     },
     {
       "action": "merge_candidate",
       "severity": "medium",
-      "field": "research_line",
-      "field_label": "研究线",
-      "field_en": "Research line",
-      "value": "Speculative Decoding",
+      "field": "problems",
+      "field_label": "问题",
+      "field_en": "Problem",
+      "value": "Vector Storage",
       "count": 1,
       "share": 0.0769,
-      "href": "library.html?line=Speculative+Decoding",
+      "href": "library.html?problem=Vector+Storage",
       "sample_slugs": [
-        "2503.01840-eagle-3-scaling-up"
+        "semantic-search-evaluation"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "problems",
+      "field_label": "问题",
+      "field_en": "Problem",
+      "value": "Visual Token Redundancy",
+      "count": 1,
+      "share": 0.0769,
+      "href": "library.html?problem=Visual+Token+Redundancy",
+      "sample_slugs": [
+        "2503.14075-twigvlm-plus-plus"
       ],
       "recommendation": "检查是否应合并为更通用标签。"
     },
@@ -1467,21 +1542,6 @@
       "field": "topics",
       "field_label": "主题",
       "field_en": "Topic",
-      "value": "RAG",
-      "count": 1,
-      "share": 0.0769,
-      "href": "library.html?topic=RAG",
-      "sample_slugs": [
-        "semantic-search-evaluation"
-      ],
-      "recommendation": "检查是否应合并为更通用标签。"
-    },
-    {
-      "action": "merge_candidate",
-      "severity": "medium",
-      "field": "topics",
-      "field_label": "主题",
-      "field_en": "Topic",
       "value": "Scaling Law",
       "count": 1,
       "share": 0.0769,
@@ -1497,12 +1557,42 @@
       "field": "topics",
       "field_label": "主题",
       "field_en": "Topic",
+      "value": "Semantic Search",
+      "count": 1,
+      "share": 0.0769,
+      "href": "library.html?topic=Semantic+Search",
+      "sample_slugs": [
+        "semantic-search-evaluation"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "topics",
+      "field_label": "主题",
+      "field_en": "Topic",
       "value": "Semi-Autoregressive Generation",
       "count": 1,
       "share": 0.0769,
       "href": "library.html?topic=Semi-Autoregressive+Generation",
       "sample_slugs": [
         "noarxiv-2026-dspark"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "topics",
+      "field_label": "主题",
+      "field_en": "Topic",
+      "value": "SQLite",
+      "count": 1,
+      "share": 0.0769,
+      "href": "library.html?topic=SQLite",
+      "sample_slugs": [
+        "semantic-search-evaluation"
       ],
       "recommendation": "检查是否应合并为更通用标签。"
     },
@@ -1533,6 +1623,21 @@
       "href": "library.html?topic=Transformer",
       "sample_slugs": [
         "2307.08691-flashattention-2"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "topics",
+      "field_label": "主题",
+      "field_en": "Topic",
+      "value": "Vector Database",
+      "count": 1,
+      "share": 0.0769,
+      "href": "library.html?topic=Vector+Database",
+      "sample_slugs": [
+        "semantic-search-evaluation"
       ],
       "recommendation": "检查是否应合并为更通用标签。"
     },
@@ -1587,12 +1692,72 @@
       "field": "tracks",
       "field_label": "方向",
       "field_en": "Track",
+      "value": "Compiler/DSL",
+      "count": 1,
+      "share": 0.0769,
+      "href": "library.html?track=Compiler%2FDSL",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "tracks",
+      "field_label": "方向",
+      "field_en": "Track",
+      "value": "Inference Optimization",
+      "count": 1,
+      "share": 0.0769,
+      "href": "library.html?track=Inference+Optimization",
+      "sample_slugs": [
+        "2603.03251-speculative-speculative-decoding"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "tracks",
+      "field_label": "方向",
+      "field_en": "Track",
       "value": "Inference Serving Systems",
       "count": 1,
       "share": 0.0769,
       "href": "library.html?track=Inference+Serving+Systems",
       "sample_slugs": [
         "2501.01005-flashinfer"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "tracks",
+      "field_label": "方向",
+      "field_en": "Track",
+      "value": "Kernel Optimization",
+      "count": 1,
+      "share": 0.0769,
+      "href": "library.html?track=Kernel+Optimization",
+      "sample_slugs": [
+        "2512.23424-akg-kernel-agent-multi"
+      ],
+      "recommendation": "检查是否应合并为更通用标签。"
+    },
+    {
+      "action": "merge_candidate",
+      "severity": "medium",
+      "field": "tracks",
+      "field_label": "方向",
+      "field_en": "Track",
+      "value": "Search & Retrieval",
+      "count": 1,
+      "share": 0.0769,
+      "href": "library.html?track=Search+%26+Retrieval",
+      "sample_slugs": [
+        "semantic-search-evaluation"
       ],
       "recommendation": "检查是否应合并为更通用标签。"
     },
